@@ -38,6 +38,7 @@ ASM	:= nasm
 CP	:= cp
 MV	:= mv
 MKDIR	:= mkdir
+GIT	:= git
 
 MKISO	:= grub-mkrescue
 MKIRD	:= $(TLSDIR)/mkinitrd/mkinitrd
@@ -116,5 +117,5 @@ dist-clean: clean
 
 git: dist-clean
 	$(GIT) add .
-	$(GIT) commit -a -m $(DATE)
-	$(GIT) push origin master
+	$(GIT) commit -a -m "$(DATE)"
+	$(GIT) push origin master -f
