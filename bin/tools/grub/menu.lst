@@ -1,0 +1,8 @@
+
+default 0
+timeout 30
+
+title aPlus
+kernel /aplus
+module /initrd
+boot
