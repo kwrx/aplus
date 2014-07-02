@@ -26,6 +26,8 @@ BINDIR 	:= $(PRJDIR)/bin
 INCDIR 	:= $(PRJDIR)/src/include
 USRDIR 	:= $(PRJDIR)/usr
 IRDDIR	:= $(PRJDIR)/initrd
+APPDIR	:= $(PRJDIR)/usr/apps/bin
+MODDIR	:= $(PRJDIR)/usr/modules/bin
 
 TARGET 	:= i586-elf
 PREFIX 	:= $(BINDIR)
@@ -89,7 +91,14 @@ $(OUTPUT).elf : $(OFILES)
 	@echo " ASM\t" $(notdir $<)
 	@$(ASM) $(AFLAGS) $< -o $@	
 
-initrd: $(OUTPUT).elf
+
+userdev: $(OUTPUT).elf
+	@cd usr/modules && $(MAKE) && $(MAKE) install && $(MAKE) clean
+	@cd usr/apps && $(MAKE) && $(MAKE) install && $(MAKE) clean
+	@$(CP) $(APPDIR)/* $(IRDDIR)
+	@$(CP) $(MODDIR)/* $(IRDDIR)
+
+initrd: userdev
 	@echo " MKIRD\t" $(notdir $(IFILES))
 	@$(MKIRD) $(IRDDIR) $(notdir $(IFILES))
 	@$(MV) $(IRDDIR)/initrd.img $(RAMDISK)
@@ -109,6 +118,8 @@ run: iso
 clean:
 	-@$(RM) $(OFILES)
 	-@$(RM) -r iso
+	@cd usr/modules && $(MAKE) clean
+	@cd usr/apps && $(MAKE) clean
 
 dist-clean: clean
 	-@$(RM) $(OUTPUT).elf
@@ -116,6 +127,6 @@ dist-clean: clean
 	-@$(RM) $(RAMDISK)
 
 git: dist-clean
-	$(GIT) add .
-	$(GIT) commit -a -m "$(DATE)"
-	$(GIT) push origin master -f
+	@$(GIT) add .
+	@$(GIT) commit -a -m "$(DATE)"
+	@$(GIT) push origin master -f
