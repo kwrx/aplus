@@ -89,12 +89,12 @@ Linker script and memory map
  *(.multiboot)
  .multiboot     0x0000000000100000       0x20 /home/antonio/Projects/aPlus/src/arch/loader.o
 
-.text           0x0000000000100020     0xfe8d
+.text           0x0000000000100020    0x103ad
                 0x0000000000100020                text = .
                 0x0000000000100020                _text = .
                 0x0000000000100020                __text = .
  *(.text)
- .text          0x0000000000100020      0x6ab /home/antonio/Projects/aPlus/src/arch/task.o
+ .text          0x0000000000100020      0x6c6 /home/antonio/Projects/aPlus/src/arch/task.o
                 0x0000000000100155                task_init
                 0x000000000010025b                task_create_with_data
                 0x00000000001003ec                task_zombie
@@ -109,745 +109,747 @@ Linker script and memory map
                 0x0000000000100621                task_exit
                 0x000000000010063d                task_getbypid
                 0x0000000000100677                task_wait
- .text          0x00000000001006cb     0x15a5 /home/antonio/Projects/aPlus/src/arch/syscall.o
-                0x0000000000100891                syscall__exit
-                0x00000000001008b4                syscall__chown
-                0x000000000010091a                syscall__close
-                0x000000000010099f                syscall(...)(long long,...)(char, void,...)
-                0x0000000000100cdd                syscall__fork
-                0x0000000000100cf5                syscall__fstat
-                0x0000000000100eb1                syscall__getpid
-                0x0000000000100ecd                syscall_gettimeofday
-                0x0000000000100f2d                syscall__kill
-                0x0000000000100f9a                syscall__link
-                0x0000000000100fb2                syscall__lseek
-                0x00000000001010d2                syscall__open
-                0x0000000000101187                syscall__read
-                0x000000000010124b                syscall__readlink
-                0x00000000001012c7                syscall__stat
-                0x00000000001013cb                syscall__symlink
-                0x00000000001014d6                syscall__times
-                0x0000000000101541                syscall__unlink
-                0x0000000000101546                syscall__wait
-                0x0000000000101567                syscall__write
-                0x000000000010162b                syscall__readdir
-                0x00000000001016f4                syscall_ioctl
-                0x0000000000101798                syscall_mount
-                0x0000000000101892                syscall_umount
-                0x00000000001018fd                syscall_tell
-                0x000000000010198e                syscall___get_argv
-                0x00000000001019ab                syscall___get_env
-                0x00000000001019c8                syscall_pipe
-                0x0000000000101b0c                syscall_chdir
-                0x0000000000101b6f                syscall___install_signal_handler
-                0x0000000000101ba4                syscall_malloc
-                0x0000000000101bb7                syscall_free
-                0x0000000000101bca                syscall_handler
- .text          0x0000000000101c70      0x5cc /home/antonio/Projects/aPlus/src/arch/mm.o
-                0x0000000000101d14                mm_alloc
-                0x0000000000101d59                mm_free
-                0x0000000000101d79                mm_enablepaging
-                0x0000000000101da3                mm_disablepaging
-                0x0000000000101dbd                vmm_switch
-                0x0000000000101ded                vmm_map
-                0x0000000000101eba                vmm_unmap
-                0x0000000000101f22                mm_create_addrspace
-                0x0000000000101f7f                mm_map_kernel
-                0x0000000000101fae                kmalloc
-                0x0000000000102032                kfree
-                0x00000000001020da                mm_init
-                0x0000000000102165                pagefault_handler
- .text          0x000000000010223c     0x10fe /home/antonio/Projects/aPlus/src/arch/desc.o
-                0x0000000000102258                gdt_load
-                0x0000000000102275                idt_load
-                0x000000000010227d                isr_stub
-                0x00000000001022a5                irq_stub
-                0x00000000001022cd                isr_handler
-                0x00000000001023af                irq_handler
-                0x0000000000102416                pit_handler
-                0x00000000001024dd                desc_init
-                0x00000000001030d2                irq_set
-                0x0000000000103104                irq_unset
-                0x0000000000103169                pit_gettime
-                0x000000000010332a                pit_getticks
- .text          0x000000000010333a      0x9a2 /home/antonio/Projects/aPlus/src/arch/screen.o
-                0x0000000000103491                video_putc
-                0x0000000000103767                video_puts
-                0x00000000001037a8                video_getc
-                0x000000000010382f                video_clear
-                0x00000000001038a6                video_init
- .text          0x0000000000103cdc      0x66d /home/antonio/Projects/aPlus/src/vfs.o
-                0x0000000000103d5e                fs_ioctl
-                0x0000000000103da4                fs_read
-                0x0000000000103dea                fs_write
-                0x0000000000103e30                fs_trunc
-                0x0000000000103e68                fs_allocate
-                0x0000000000103ea7                fs_readdir
-                0x0000000000103edf                fs_finddir
-                0x0000000000103f1e                fs_creat
-                0x0000000000103f64                fs_remove
-                0x0000000000103fa3                fs_destroy
-                0x0000000000103fdb                fs_nextinode
-                0x0000000000103fee                fs_chroot
-                0x0000000000104031                fs_mount
-                0x00000000001040cf                fs_umount
-                0x0000000000104139                vfs_init
- .text          0x0000000000104349      0x219 /home/antonio/Projects/aPlus/src/elf.o
-                0x0000000000104399                elf_check_file
-                0x0000000000104432                elf_check_supported
-                0x00000000001044fd                elf_load_file
- .text          0x0000000000104562       0xbd /home/antonio/Projects/aPlus/src/panic.o
-                0x00000000001045b2                __panic
- .text          0x000000000010461f      0x8a9 /home/antonio/Projects/aPlus/src/crt0.o
-                0x000000000010461f                _exit
-                0x0000000000104645                chown
-                0x0000000000104684                close
-                0x00000000001046b9                execve
-                0x00000000001046ea                fork
-                0x0000000000104721                fstat
-                0x0000000000104754                getpid
-                0x000000000010478b                gettimeofday
-                0x00000000001047be                isatty
-                0x00000000001047cf                kill
-                0x0000000000104802                link
-                0x0000000000104835                lseek
-                0x0000000000104866                open
-                0x0000000000104897                read
-                0x00000000001048c8                readlink
-                0x00000000001048f9                sbrk
-                0x000000000010492f                stat
-                0x0000000000104962                symlink
-                0x0000000000104995                times
-                0x00000000001049ca                unlink
-                0x00000000001049ff                wait
-                0x0000000000104a34                write
-                0x0000000000104a65                readdir
-                0x0000000000104aaf                ioctl
-                0x0000000000104ae0                mount
-                0x0000000000104b0d                umount2
-                0x0000000000104b40                umount
-                0x0000000000104b5b                tell
-                0x0000000000104b90                __get_argv
-                0x0000000000104bc7                __get_env
-                0x0000000000104bfe                pipe
-                0x0000000000104c33                chdir
-                0x0000000000104c68                __install_signal_handler
-                0x0000000000104c9d                malloc
-                0x0000000000104cd2                free
-                0x0000000000104cfb                opendir
-                0x0000000000104d5c                closedir
-                0x0000000000104d98                rewinddir
-                0x0000000000104dba                seekdir
-                0x0000000000104dda                telldir
-                0x0000000000104dfc                scandir
-                0x0000000000104e06                _malloc_r
-                0x0000000000104e19                _free_r
-                0x0000000000104e2c                _calloc_r
-                0x0000000000104e4a                _realloc_r
-                0x0000000000104eb5                __signal_handler__
- .text          0x0000000000104ec8      0x674 /home/antonio/Projects/aPlus/src/rootfs.o
-                0x0000000000104ec8                rootfs_readdir
-                0x0000000000104fb9                rootfs_finddir
-                0x000000000010508e                rootfs_remove
-                0x00000000001051de                rootfs_creat
-                0x00000000001054a6                rootfs_init
- .text          0x000000000010553c      0x2dd /home/antonio/Projects/aPlus/src/tty.o
-                0x000000000010558c                tty_ioctl
-                0x000000000010560f                tty_read
-                0x00000000001056d2                tty_write
-                0x0000000000105731                tty_trunc
-                0x0000000000105752                tty_init
- .text          0x0000000000105819       0xc3 /home/antonio/Projects/aPlus/src/spinlock.o
-                0x0000000000105819                spinlock_lock
-                0x0000000000105865                spinlock_unlock
-                0x0000000000105893                spinlock_trylock
- .text          0x00000000001058dc       0xab /home/antonio/Projects/aPlus/src/main.o
-                0x00000000001058dc                sysidle
-                0x00000000001058f7                main
- .text          0x0000000000105987       0x58 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
-                0x0000000000105987                initfs_mount
- .text          0x00000000001059df      0x510 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
-                0x00000000001059df                initfs_read
-                0x0000000000105ae9                initfs_readdir
-                0x0000000000105bdc                initfs_finddir
- .text          0x0000000000105eef      0x30f /home/antonio/Projects/aPlus/src/fs/ramdev.o
-                0x0000000000105f3f                ramdev_read
-                0x000000000010602e                ramdev_write
-                0x000000000010611d                ramdev_destroy
-                0x0000000000106148                ramdev_create
- .text          0x00000000001061fe      0x2af /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
-                0x00000000001061fe                procfs_task_create
- .text          0x00000000001064ad      0x305 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
-                0x00000000001064ad                procfs_cmdline_read
-                0x0000000000106506                procfs_cmdline_destroy
-                0x0000000000106531                procfs_cmdline_create
- .text          0x00000000001067b2       0xe4 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
-                0x00000000001067b2                procfs_mount
- .text          0x0000000000106896      0x1fb /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
-                0x0000000000106896                procfs_cwd_create
- .text          0x0000000000106a91      0x352 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
-                0x0000000000106a91                procfs_filesystems_updatebuf
-                0x0000000000106b35                procfs_filesystems_read
-                0x0000000000106b8e                procfs_filesystems_destroy
-                0x0000000000106bb9                procfs_filesystems_create
- .text          0x0000000000106de3      0x2ff /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
-                0x0000000000106de3                procfs_environ_read
-                0x0000000000106e3c                procfs_environ_destroy
-                0x0000000000106e67                procfs_environ_create
- .text          0x00000000001070e2      0x33a /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
-                0x0000000000107178                procfs_meminfo_read
-                0x00000000001071e2                procfs_meminfo_destroy
-                0x000000000010720d                procfs_meminfo_create
- .text          0x000000000010741c      0x92e /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
-                0x00000000001074b3                procfs_add_inode
-                0x0000000000107544                procfs_readdir
-                0x00000000001076fd                procfs_finddir
-                0x00000000001078a0                procfs_remove
-                0x0000000000107a0f                procfs_creat
-                0x0000000000107cd8                procfs_destroy
- .text          0x0000000000107d4a      0x650 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
-                0x0000000000107d4a                procfs_fd_readdir
-                0x0000000000107e7f                procfs_fd_finddir
-                0x00000000001081b0                procfs_fd_create
- .text          0x000000000010839a      0x30b /home/antonio/Projects/aPlus/src/fs/pipe.o
-                0x000000000010839a                pipe_read
-                0x00000000001084ac                pipe_write
-                0x0000000000108581                pipe_destroy
-                0x00000000001085bf                pipe_create
- .text          0x00000000001086a5      0x138 /home/antonio/Projects/aPlus/src/initrd.o
-                0x00000000001086f5                initrd_init
- *fill*         0x00000000001087dd        0x3 
- .text          0x00000000001087e0       0x68 /home/antonio/Projects/aPlus/src/arch/loader.o
-                0x00000000001087e0                _start
-                0x0000000000108840                mbd
-                0x0000000000108844                magic
- *fill*         0x0000000000108848        0x8 
- .text          0x0000000000108850      0x220 /home/antonio/Projects/aPlus/src/arch/_desc.o
-                0x0000000000108850                isr0
-                0x0000000000108859                isr1
-                0x0000000000108862                isr2
-                0x000000000010886b                isr3
-                0x0000000000108874                isr4
-                0x000000000010887d                isr5
-                0x0000000000108886                isr6
-                0x000000000010888f                isr7
-                0x0000000000108898                isr8
-                0x000000000010889f                isr9
-                0x00000000001088a8                isr10
-                0x00000000001088af                isr11
-                0x00000000001088b6                isr12
-                0x00000000001088bd                isr13
-                0x00000000001088c4                isr15
-                0x00000000001088cd                isr16
-                0x00000000001088d6                isr17
-                0x00000000001088df                isr18
-                0x00000000001088e8                isr19
-                0x00000000001088f1                isr20
-                0x00000000001088fa                isr21
-                0x0000000000108903                isr22
-                0x000000000010890c                isr23
-                0x0000000000108915                isr24
-                0x000000000010891e                isr25
-                0x0000000000108927                isr26
-                0x0000000000108930                isr27
-                0x0000000000108939                isr28
-                0x0000000000108942                isr29
-                0x000000000010894b                isr30
-                0x0000000000108954                isr31
-                0x000000000010895d                irq1
-                0x0000000000108966                irq2
-                0x000000000010896f                irq3
-                0x0000000000108978                irq4
-                0x0000000000108981                irq5
-                0x000000000010898a                irq6
-                0x0000000000108993                irq7
-                0x000000000010899c                irq8
-                0x00000000001089a5                irq9
-                0x00000000001089ae                irq10
-                0x00000000001089b7                irq11
-                0x00000000001089c0                irq12
-                0x00000000001089c9                irq13
-                0x00000000001089d2                irq14
-                0x00000000001089db                irq15
-                0x00000000001089e4                irq0
-                0x0000000000108a15                isr0x80
-                0x0000000000108a46                isr14
- .text          0x0000000000108a70      0x14c /usr/local/cross/i586-elf/lib/libx86.a(int86.o)
-                0x0000000000108a70                int86
- *fill*         0x0000000000108bbc        0x4 
- .text          0x0000000000108bc0        0x6 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
-                0x0000000000108bc0                __errno
- .text          0x0000000000108bc6        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
- *fill*         0x0000000000108bc6        0x2 
- .text          0x0000000000108bc8       0x48 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memcpy.o)
-                0x0000000000108bc8                memcpy
- .text          0x0000000000108c10       0x88 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memset.o)
-                0x0000000000108c10                memset
- *fill*         0x0000000000108c98        0x8 
- .text          0x0000000000108ca0      0x78a /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
-                0x0000000000108fb0                mktime
- *fill*         0x000000000010942a        0x6 
- .text          0x0000000000109430      0x6a0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
-                0x0000000000109430                __tzcalc_limits
-                0x0000000000109670                _mktm_r
- .text          0x0000000000109ad0      0x29c /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
-                0x0000000000109ad0                _init_signal_r
-                0x0000000000109b30                _signal_r
-                0x0000000000109b90                _raise_r
-                0x0000000000109c40                __sigtramp_r
-                0x0000000000109ce0                raise
-                0x0000000000109d00                signal
-                0x0000000000109d30                _init_signal
-                0x0000000000109d50                __sigtramp
- *fill*         0x0000000000109d6c        0x4 
- .text          0x0000000000109d70       0x55 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
-                0x0000000000109d70                _kill_r
-                0x0000000000109dc0                _getpid_r
- *fill*         0x0000000000109dc5        0xb 
- .text          0x0000000000109dd0       0xdc /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
-                0x0000000000109dd0                _sprintf_r
-                0x0000000000109e40                sprintf
- *fill*         0x0000000000109eac        0x4 
- .text          0x0000000000109eb0       0x6e /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
-                0x0000000000109eb0                strcat
- *fill*         0x0000000000109f1e        0x2 
- .text          0x0000000000109f20       0xfc /usr/local/cross/i586-elf/lib/libc.a(lib_a-strchr.o)
-                0x0000000000109f20                strchr
- *fill*         0x000000000010a01c        0x4 
- .text          0x000000000010a020       0x73 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
-                0x000000000010a020                strcmp
- *fill*         0x000000000010a093        0xd 
- .text          0x000000000010a0a0       0x60 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
-                0x000000000010a0a0                strcpy
- .text          0x000000000010a100       0x1c /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
-                0x000000000010a100                strdup
- *fill*         0x000000000010a11c        0x4 
- .text          0x000000000010a120       0x44 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
-                0x000000000010a120                _strdup_r
- *fill*         0x000000000010a164        0xc 
- .text          0x000000000010a170       0x79 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strlen.o)
-                0x000000000010a170                strlen
- *fill*         0x000000000010a1e9        0x7 
- .text          0x000000000010a1f0       0xa0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
-                0x000000000010a1f0                strncpy
- .text          0x000000000010a290     0x20de /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
-                0x000000000010a290                _svfprintf_r
- *fill*         0x000000000010c36e        0x2 
- .text          0x000000000010c370       0x45 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
-                0x000000000010c370                time
- *fill*         0x000000000010c3b5        0xb 
- .text          0x000000000010c3c0       0x11 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
-                0x000000000010c3c0                __tz_lock
-                0x000000000010c3d0                __tz_unlock
- .text          0x000000000010c3d1        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
- *fill*         0x000000000010c3d1        0xf 
- .text          0x000000000010c3e0       0x9c /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
-                0x000000000010c3e0                _vsprintf_r
-                0x000000000010c450                vsprintf
- *fill*         0x000000000010c47c        0x4 
- .text          0x000000000010c480       0x5f /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
-                0x000000000010c480                div
- *fill*         0x000000000010c4df        0x1 
- .text          0x000000000010c4e0     0x16f7 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
-                0x000000000010c6f0                _dtoa_r
- *fill*         0x000000000010dbd7        0x9 
- .text          0x000000000010dbe0       0x44 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
-                0x000000000010dbe0                _gettimeofday_r
- *fill*         0x000000000010dc24        0xc 
- .text          0x000000000010dc30        0x6 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
-                0x000000000010dc30                __gettzinfo
- *fill*         0x000000000010dc36        0xa 
- .text          0x000000000010dc40       0xf6 /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
-                0x000000000010dc40                _setlocale_r
-                0x000000000010dcb0                __locale_charset
-                0x000000000010dcc0                __locale_mb_cur_max
-                0x000000000010dcd0                __locale_msgcharset
-                0x000000000010dce0                __locale_cjk_lang
-                0x000000000010dcf0                _localeconv_r
-                0x000000000010dd00                setlocale
-                0x000000000010dd30                localeconv
- *fill*         0x000000000010dd36        0xa 
- .text          0x000000000010dd40       0x95 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memchr.o)
-                0x000000000010dd40                memchr
- *fill*         0x000000000010ddd5        0xb 
- .text          0x000000000010dde0      0xf38 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
-                0x000000000010dde0                _Balloc
-                0x000000000010de80                _Bfree
-                0x000000000010dea0                __multadd
-                0x000000000010dfb0                __s2b
-                0x000000000010e0c0                __hi0bits
-                0x000000000010e130                __lo0bits
-                0x000000000010e1c0                __i2b
-                0x000000000010e1f0                __multiply
-                0x000000000010e410                __pow5mult
-                0x000000000010e530                __lshift
-                0x000000000010e680                __mcmp
-                0x000000000010e6e0                __mdiff
-                0x000000000010e870                __ulp
-                0x000000000010e900                __b2d
-                0x000000000010ea10                __d2b
-                0x000000000010eb40                __ratio
-                0x000000000010ebe0                _mprec_log10
-                0x000000000010ec20                __copybits
-                0x000000000010ec90                __any_on
- *fill*         0x000000000010ed18        0x8 
- .text          0x000000000010ed20       0x61 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
-                0x000000000010ed20                __fpclassifyd
- *fill*         0x000000000010ed81        0xf 
- .text          0x000000000010ed90     0x1082 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
-                0x000000000010ed90                __ssprint_r
-                0x000000000010efd0                _svfiprintf_r
- *fill*         0x000000000010fe12        0xe 
- .text          0x000000000010fe20       0x8d /usr/local/cross/i586-elf/lib/libc.a(lib_a-memmove.o)
-                0x000000000010fe20                memmove
+                0x00000000001006cb                task_waitpid
+ .text          0x00000000001006e6     0x15a5 /home/antonio/Projects/aPlus/src/arch/syscall.o
+                0x00000000001008ac                syscall__exit
+                0x00000000001008cf                syscall__chown
+                0x0000000000100935                syscall__close
+                0x00000000001009ba                syscall(...)(long long,...)(char, void,...)
+                0x0000000000100cf8                syscall__fork
+                0x0000000000100d10                syscall__fstat
+                0x0000000000100ecc                syscall__getpid
+                0x0000000000100ee8                syscall_gettimeofday
+                0x0000000000100f48                syscall__kill
+                0x0000000000100fb5                syscall__link
+                0x0000000000100fcd                syscall__lseek
+                0x00000000001010ed                syscall__open
+                0x00000000001011a2                syscall__read
+                0x0000000000101266                syscall__readlink
+                0x00000000001012e2                syscall__stat
+                0x00000000001013e6                syscall__symlink
+                0x00000000001014f1                syscall__times
+                0x000000000010155c                syscall__unlink
+                0x0000000000101561                syscall__wait
+                0x0000000000101582                syscall__write
+                0x0000000000101646                syscall__readdir
+                0x000000000010170f                syscall_ioctl
+                0x00000000001017b3                syscall_mount
+                0x00000000001018ad                syscall_umount
+                0x0000000000101918                syscall_tell
+                0x00000000001019a9                syscall___get_argv
+                0x00000000001019c6                syscall___get_env
+                0x00000000001019e3                syscall_pipe
+                0x0000000000101b27                syscall_chdir
+                0x0000000000101b8a                syscall___install_signal_handler
+                0x0000000000101bbf                syscall_malloc
+                0x0000000000101bd2                syscall_free
+                0x0000000000101be5                syscall_handler
+ .text          0x0000000000101c8b      0x5cc /home/antonio/Projects/aPlus/src/arch/mm.o
+                0x0000000000101d2f                mm_alloc
+                0x0000000000101d74                mm_free
+                0x0000000000101d94                mm_enablepaging
+                0x0000000000101dbe                mm_disablepaging
+                0x0000000000101dd8                vmm_switch
+                0x0000000000101e08                vmm_map
+                0x0000000000101ed5                vmm_unmap
+                0x0000000000101f3d                mm_create_addrspace
+                0x0000000000101f9a                mm_map_kernel
+                0x0000000000101fc9                kmalloc
+                0x000000000010204d                kfree
+                0x00000000001020f5                mm_init
+                0x0000000000102180                pagefault_handler
+ .text          0x0000000000102257     0x10fe /home/antonio/Projects/aPlus/src/arch/desc.o
+                0x0000000000102273                gdt_load
+                0x0000000000102290                idt_load
+                0x0000000000102298                isr_stub
+                0x00000000001022c0                irq_stub
+                0x00000000001022e8                isr_handler
+                0x00000000001023ca                irq_handler
+                0x0000000000102431                pit_handler
+                0x00000000001024f8                desc_init
+                0x00000000001030ed                irq_set
+                0x000000000010311f                irq_unset
+                0x0000000000103184                pit_gettime
+                0x0000000000103345                pit_getticks
+ .text          0x0000000000103355      0x9a2 /home/antonio/Projects/aPlus/src/arch/screen.o
+                0x00000000001034ac                video_putc
+                0x0000000000103782                video_puts
+                0x00000000001037c3                video_getc
+                0x000000000010384a                video_clear
+                0x00000000001038c1                video_init
+ .text          0x0000000000103cf7      0x66d /home/antonio/Projects/aPlus/src/vfs.o
+                0x0000000000103d79                fs_ioctl
+                0x0000000000103dbf                fs_read
+                0x0000000000103e05                fs_write
+                0x0000000000103e4b                fs_trunc
+                0x0000000000103e83                fs_allocate
+                0x0000000000103ec2                fs_readdir
+                0x0000000000103efa                fs_finddir
+                0x0000000000103f39                fs_creat
+                0x0000000000103f7f                fs_remove
+                0x0000000000103fbe                fs_destroy
+                0x0000000000103ff6                fs_nextinode
+                0x0000000000104009                fs_chroot
+                0x000000000010404c                fs_mount
+                0x00000000001040ea                fs_umount
+                0x0000000000104154                vfs_init
+ .text          0x0000000000104364      0x70a /home/antonio/Projects/aPlus/src/elf.o
+                0x00000000001043b4                elf_check_file
+                0x000000000010444d                elf_check_supported
+                0x0000000000104a14                elf_load_file
+ .text          0x0000000000104a6e       0xbd /home/antonio/Projects/aPlus/src/panic.o
+                0x0000000000104abe                __panic
+ .text          0x0000000000104b2b      0x8a9 /home/antonio/Projects/aPlus/src/crt0.o
+                0x0000000000104b2b                _exit
+                0x0000000000104b51                chown
+                0x0000000000104b90                close
+                0x0000000000104bc5                execve
+                0x0000000000104bf6                fork
+                0x0000000000104c2d                fstat
+                0x0000000000104c60                getpid
+                0x0000000000104c97                gettimeofday
+                0x0000000000104cca                isatty
+                0x0000000000104cdb                kill
+                0x0000000000104d0e                link
+                0x0000000000104d41                lseek
+                0x0000000000104d72                open
+                0x0000000000104da3                read
+                0x0000000000104dd4                readlink
+                0x0000000000104e05                sbrk
+                0x0000000000104e3b                stat
+                0x0000000000104e6e                symlink
+                0x0000000000104ea1                times
+                0x0000000000104ed6                unlink
+                0x0000000000104f0b                wait
+                0x0000000000104f40                write
+                0x0000000000104f71                readdir
+                0x0000000000104fbb                ioctl
+                0x0000000000104fec                mount
+                0x0000000000105019                umount2
+                0x000000000010504c                umount
+                0x0000000000105067                tell
+                0x000000000010509c                __get_argv
+                0x00000000001050d3                __get_env
+                0x000000000010510a                pipe
+                0x000000000010513f                chdir
+                0x0000000000105174                __install_signal_handler
+                0x00000000001051a9                malloc
+                0x00000000001051de                free
+                0x0000000000105207                opendir
+                0x0000000000105268                closedir
+                0x00000000001052a4                rewinddir
+                0x00000000001052c6                seekdir
+                0x00000000001052e6                telldir
+                0x0000000000105308                scandir
+                0x0000000000105312                _malloc_r
+                0x0000000000105325                _free_r
+                0x0000000000105338                _calloc_r
+                0x0000000000105356                _realloc_r
+                0x00000000001053c1                __signal_handler__
+ .text          0x00000000001053d4      0x674 /home/antonio/Projects/aPlus/src/rootfs.o
+                0x00000000001053d4                rootfs_readdir
+                0x00000000001054c5                rootfs_finddir
+                0x000000000010559a                rootfs_remove
+                0x00000000001056ea                rootfs_creat
+                0x00000000001059b2                rootfs_init
+ .text          0x0000000000105a48      0x2dd /home/antonio/Projects/aPlus/src/tty.o
+                0x0000000000105a98                tty_ioctl
+                0x0000000000105b1b                tty_read
+                0x0000000000105bde                tty_write
+                0x0000000000105c3d                tty_trunc
+                0x0000000000105c5e                tty_init
+ .text          0x0000000000105d25       0xc3 /home/antonio/Projects/aPlus/src/spinlock.o
+                0x0000000000105d25                spinlock_lock
+                0x0000000000105d71                spinlock_unlock
+                0x0000000000105d9f                spinlock_trylock
+ .text          0x0000000000105de8       0xab /home/antonio/Projects/aPlus/src/main.o
+                0x0000000000105de8                sysidle
+                0x0000000000105e03                main
+ .text          0x0000000000105e93       0x58 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
+                0x0000000000105e93                initfs_mount
+ .text          0x0000000000105eeb      0x510 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
+                0x0000000000105eeb                initfs_read
+                0x0000000000105ff5                initfs_readdir
+                0x00000000001060e8                initfs_finddir
+ .text          0x00000000001063fb      0x30f /home/antonio/Projects/aPlus/src/fs/ramdev.o
+                0x000000000010644b                ramdev_read
+                0x000000000010653a                ramdev_write
+                0x0000000000106629                ramdev_destroy
+                0x0000000000106654                ramdev_create
+ .text          0x000000000010670a      0x2af /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
+                0x000000000010670a                procfs_task_create
+ .text          0x00000000001069b9      0x305 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
+                0x00000000001069b9                procfs_cmdline_read
+                0x0000000000106a12                procfs_cmdline_destroy
+                0x0000000000106a3d                procfs_cmdline_create
+ .text          0x0000000000106cbe       0xe4 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
+                0x0000000000106cbe                procfs_mount
+ .text          0x0000000000106da2      0x1fb /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
+                0x0000000000106da2                procfs_cwd_create
+ .text          0x0000000000106f9d      0x352 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
+                0x0000000000106f9d                procfs_filesystems_updatebuf
+                0x0000000000107041                procfs_filesystems_read
+                0x000000000010709a                procfs_filesystems_destroy
+                0x00000000001070c5                procfs_filesystems_create
+ .text          0x00000000001072ef      0x2ff /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
+                0x00000000001072ef                procfs_environ_read
+                0x0000000000107348                procfs_environ_destroy
+                0x0000000000107373                procfs_environ_create
+ .text          0x00000000001075ee      0x33a /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
+                0x0000000000107684                procfs_meminfo_read
+                0x00000000001076ee                procfs_meminfo_destroy
+                0x0000000000107719                procfs_meminfo_create
+ .text          0x0000000000107928      0x92e /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
+                0x00000000001079bf                procfs_add_inode
+                0x0000000000107a50                procfs_readdir
+                0x0000000000107c09                procfs_finddir
+                0x0000000000107dac                procfs_remove
+                0x0000000000107f1b                procfs_creat
+                0x00000000001081e4                procfs_destroy
+ .text          0x0000000000108256      0x650 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
+                0x0000000000108256                procfs_fd_readdir
+                0x000000000010838b                procfs_fd_finddir
+                0x00000000001086bc                procfs_fd_create
+ .text          0x00000000001088a6      0x30b /home/antonio/Projects/aPlus/src/fs/pipe.o
+                0x00000000001088a6                pipe_read
+                0x00000000001089b8                pipe_write
+                0x0000000000108a8d                pipe_destroy
+                0x0000000000108acb                pipe_create
+ .text          0x0000000000108bb1      0x138 /home/antonio/Projects/aPlus/src/initrd.o
+                0x0000000000108c01                initrd_init
+ *fill*         0x0000000000108ce9       0x17 
+ .text          0x0000000000108d00       0x68 /home/antonio/Projects/aPlus/src/arch/loader.o
+                0x0000000000108d00                _start
+                0x0000000000108d60                mbd
+                0x0000000000108d64                magic
+ *fill*         0x0000000000108d68        0x8 
+ .text          0x0000000000108d70      0x220 /home/antonio/Projects/aPlus/src/arch/_desc.o
+                0x0000000000108d70                isr0
+                0x0000000000108d79                isr1
+                0x0000000000108d82                isr2
+                0x0000000000108d8b                isr3
+                0x0000000000108d94                isr4
+                0x0000000000108d9d                isr5
+                0x0000000000108da6                isr6
+                0x0000000000108daf                isr7
+                0x0000000000108db8                isr8
+                0x0000000000108dbf                isr9
+                0x0000000000108dc8                isr10
+                0x0000000000108dcf                isr11
+                0x0000000000108dd6                isr12
+                0x0000000000108ddd                isr13
+                0x0000000000108de4                isr15
+                0x0000000000108ded                isr16
+                0x0000000000108df6                isr17
+                0x0000000000108dff                isr18
+                0x0000000000108e08                isr19
+                0x0000000000108e11                isr20
+                0x0000000000108e1a                isr21
+                0x0000000000108e23                isr22
+                0x0000000000108e2c                isr23
+                0x0000000000108e35                isr24
+                0x0000000000108e3e                isr25
+                0x0000000000108e47                isr26
+                0x0000000000108e50                isr27
+                0x0000000000108e59                isr28
+                0x0000000000108e62                isr29
+                0x0000000000108e6b                isr30
+                0x0000000000108e74                isr31
+                0x0000000000108e7d                irq1
+                0x0000000000108e86                irq2
+                0x0000000000108e8f                irq3
+                0x0000000000108e98                irq4
+                0x0000000000108ea1                irq5
+                0x0000000000108eaa                irq6
+                0x0000000000108eb3                irq7
+                0x0000000000108ebc                irq8
+                0x0000000000108ec5                irq9
+                0x0000000000108ece                irq10
+                0x0000000000108ed7                irq11
+                0x0000000000108ee0                irq12
+                0x0000000000108ee9                irq13
+                0x0000000000108ef2                irq14
+                0x0000000000108efb                irq15
+                0x0000000000108f04                irq0
+                0x0000000000108f35                isr0x80
+                0x0000000000108f66                isr14
+ .text          0x0000000000108f90      0x14c /usr/local/cross/i586-elf/lib/libx86.a(int86.o)
+                0x0000000000108f90                int86
+ *fill*         0x00000000001090dc        0x4 
+ .text          0x00000000001090e0        0x6 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
+                0x00000000001090e0                __errno
+ .text          0x00000000001090e6        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
+ *fill*         0x00000000001090e6        0x2 
+ .text          0x00000000001090e8       0x48 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memcpy.o)
+                0x00000000001090e8                memcpy
+ .text          0x0000000000109130       0x88 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memset.o)
+                0x0000000000109130                memset
+ *fill*         0x00000000001091b8        0x8 
+ .text          0x00000000001091c0      0x78a /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
+                0x00000000001094d0                mktime
+ *fill*         0x000000000010994a        0x6 
+ .text          0x0000000000109950      0x6a0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
+                0x0000000000109950                __tzcalc_limits
+                0x0000000000109b90                _mktm_r
+ .text          0x0000000000109ff0      0x29c /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
+                0x0000000000109ff0                _init_signal_r
+                0x000000000010a050                _signal_r
+                0x000000000010a0b0                _raise_r
+                0x000000000010a160                __sigtramp_r
+                0x000000000010a200                raise
+                0x000000000010a220                signal
+                0x000000000010a250                _init_signal
+                0x000000000010a270                __sigtramp
+ *fill*         0x000000000010a28c        0x4 
+ .text          0x000000000010a290       0x55 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
+                0x000000000010a290                _kill_r
+                0x000000000010a2e0                _getpid_r
+ *fill*         0x000000000010a2e5        0xb 
+ .text          0x000000000010a2f0       0xdc /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
+                0x000000000010a2f0                _sprintf_r
+                0x000000000010a360                sprintf
+ *fill*         0x000000000010a3cc        0x4 
+ .text          0x000000000010a3d0       0x6e /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
+                0x000000000010a3d0                strcat
+ *fill*         0x000000000010a43e        0x2 
+ .text          0x000000000010a440       0xfc /usr/local/cross/i586-elf/lib/libc.a(lib_a-strchr.o)
+                0x000000000010a440                strchr
+ *fill*         0x000000000010a53c        0x4 
+ .text          0x000000000010a540       0x73 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
+                0x000000000010a540                strcmp
+ *fill*         0x000000000010a5b3        0xd 
+ .text          0x000000000010a5c0       0x60 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
+                0x000000000010a5c0                strcpy
+ .text          0x000000000010a620       0x1c /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
+                0x000000000010a620                strdup
+ *fill*         0x000000000010a63c        0x4 
+ .text          0x000000000010a640       0x44 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
+                0x000000000010a640                _strdup_r
+ *fill*         0x000000000010a684        0xc 
+ .text          0x000000000010a690       0x79 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strlen.o)
+                0x000000000010a690                strlen
+ *fill*         0x000000000010a709        0x7 
+ .text          0x000000000010a710       0xa0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
+                0x000000000010a710                strncpy
+ .text          0x000000000010a7b0     0x20de /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
+                0x000000000010a7b0                _svfprintf_r
+ *fill*         0x000000000010c88e        0x2 
+ .text          0x000000000010c890       0x45 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
+                0x000000000010c890                time
+ *fill*         0x000000000010c8d5        0xb 
+ .text          0x000000000010c8e0       0x11 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
+                0x000000000010c8e0                __tz_lock
+                0x000000000010c8f0                __tz_unlock
+ .text          0x000000000010c8f1        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
+ *fill*         0x000000000010c8f1        0xf 
+ .text          0x000000000010c900       0x9c /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
+                0x000000000010c900                _vsprintf_r
+                0x000000000010c970                vsprintf
+ *fill*         0x000000000010c99c        0x4 
+ .text          0x000000000010c9a0       0x5f /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
+                0x000000000010c9a0                div
+ *fill*         0x000000000010c9ff        0x1 
+ .text          0x000000000010ca00     0x16f7 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
+                0x000000000010cc10                _dtoa_r
+ *fill*         0x000000000010e0f7        0x9 
+ .text          0x000000000010e100       0x44 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
+                0x000000000010e100                _gettimeofday_r
+ *fill*         0x000000000010e144        0xc 
+ .text          0x000000000010e150        0x6 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
+                0x000000000010e150                __gettzinfo
+ *fill*         0x000000000010e156        0xa 
+ .text          0x000000000010e160       0xf6 /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
+                0x000000000010e160                _setlocale_r
+                0x000000000010e1d0                __locale_charset
+                0x000000000010e1e0                __locale_mb_cur_max
+                0x000000000010e1f0                __locale_msgcharset
+                0x000000000010e200                __locale_cjk_lang
+                0x000000000010e210                _localeconv_r
+                0x000000000010e220                setlocale
+                0x000000000010e250                localeconv
+ *fill*         0x000000000010e256        0xa 
+ .text          0x000000000010e260       0x95 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memchr.o)
+                0x000000000010e260                memchr
+ *fill*         0x000000000010e2f5        0xb 
+ .text          0x000000000010e300      0xf38 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
+                0x000000000010e300                _Balloc
+                0x000000000010e3a0                _Bfree
+                0x000000000010e3c0                __multadd
+                0x000000000010e4d0                __s2b
+                0x000000000010e5e0                __hi0bits
+                0x000000000010e650                __lo0bits
+                0x000000000010e6e0                __i2b
+                0x000000000010e710                __multiply
+                0x000000000010e930                __pow5mult
+                0x000000000010ea50                __lshift
+                0x000000000010eba0                __mcmp
+                0x000000000010ec00                __mdiff
+                0x000000000010ed90                __ulp
+                0x000000000010ee20                __b2d
+                0x000000000010ef30                __d2b
+                0x000000000010f060                __ratio
+                0x000000000010f100                _mprec_log10
+                0x000000000010f140                __copybits
+                0x000000000010f1b0                __any_on
+ *fill*         0x000000000010f238        0x8 
+ .text          0x000000000010f240       0x61 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
+                0x000000000010f240                __fpclassifyd
+ *fill*         0x000000000010f2a1        0xf 
+ .text          0x000000000010f2b0     0x1082 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
+                0x000000000010f2b0                __ssprint_r
+                0x000000000010f4f0                _svfiprintf_r
+ *fill*         0x0000000000110332        0xe 
+ .text          0x0000000000110340       0x8d /usr/local/cross/i586-elf/lib/libc.a(lib_a-memmove.o)
+                0x0000000000110340                memmove
 
-.iplt           0x000000000010feb0        0x0
+.iplt           0x00000000001103d0        0x0
  .iplt          0x0000000000000000        0x0 /home/antonio/Projects/aPlus/src/arch/task.o
 
-.rodata         0x000000000010fec0      0xd0c
-                0x000000000010fec0                rodata = .
-                0x000000000010fec0                _rodata = .
-                0x000000000010fec0                __rodata = .
+.rodata         0x00000000001103e0      0xe2c
+                0x00000000001103e0                rodata = .
+                0x00000000001103e0                _rodata = .
+                0x00000000001103e0                __rodata = .
  *(.rodata*)
- .rodata        0x000000000010fec0       0x20 /home/antonio/Projects/aPlus/src/arch/task.o
- .rodata        0x000000000010fee0       0x97 /home/antonio/Projects/aPlus/src/arch/syscall.o
- *fill*         0x000000000010ff77        0x1 
- .rodata        0x000000000010ff78       0x9c /home/antonio/Projects/aPlus/src/arch/mm.o
- .rodata        0x0000000000110014      0x183 /home/antonio/Projects/aPlus/src/arch/desc.o
- *fill*         0x0000000000110197        0x1 
- .rodata        0x0000000000110198       0x38 /home/antonio/Projects/aPlus/src/arch/screen.o
- .rodata        0x00000000001101d0        0x2 /home/antonio/Projects/aPlus/src/vfs.o
- *fill*         0x00000000001101d2        0x2 
- .rodata        0x00000000001101d4      0x12e /home/antonio/Projects/aPlus/src/elf.o
- *fill*         0x0000000000110302        0x2 
- .rodata        0x0000000000110304       0x20 /home/antonio/Projects/aPlus/src/panic.o
- .rodata        0x0000000000110324       0x34 /home/antonio/Projects/aPlus/src/rootfs.o
- .rodata        0x0000000000110358       0x50 /home/antonio/Projects/aPlus/src/tty.o
- .rodata        0x00000000001103a8       0x4f /home/antonio/Projects/aPlus/src/main.o
- .rodata        0x00000000001103f7        0x5 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
- .rodata        0x00000000001103fc       0x29 /home/antonio/Projects/aPlus/src/fs/ramdev.o
- .rodata        0x0000000000110425        0x3 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
- .rodata        0x0000000000110428        0xa /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
- .rodata        0x0000000000110432        0x4 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
- .rodata        0x0000000000110436       0x10 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
- .rodata        0x0000000000110446        0xa /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
- .rodata        0x0000000000110450       0x90 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
- .rodata        0x00000000001104e0        0x8 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
- .rodata        0x00000000001104e8        0xb /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
+ .rodata        0x00000000001103e0       0x7b /home/antonio/Projects/aPlus/src/arch/task.o
+ *fill*         0x000000000011045b        0x1 
+ .rodata        0x000000000011045c       0x97 /home/antonio/Projects/aPlus/src/arch/syscall.o
  *fill*         0x00000000001104f3        0x1 
- .rodata        0x00000000001104f4       0xa5 /home/antonio/Projects/aPlus/src/initrd.o
- *fill*         0x0000000000110599        0x3 
- .rodata        0x000000000011059c        0x4 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
-                0x000000000011059c                _global_impure_ptr
+ .rodata        0x00000000001104f4       0x9c /home/antonio/Projects/aPlus/src/arch/mm.o
+ .rodata        0x0000000000110590      0x183 /home/antonio/Projects/aPlus/src/arch/desc.o
+ *fill*         0x0000000000110713        0x1 
+ .rodata        0x0000000000110714       0x38 /home/antonio/Projects/aPlus/src/arch/screen.o
+ .rodata        0x000000000011074c        0x2 /home/antonio/Projects/aPlus/src/vfs.o
+ *fill*         0x000000000011074e        0x2 
+ .rodata        0x0000000000110750      0x1f7 /home/antonio/Projects/aPlus/src/elf.o
+ *fill*         0x0000000000110947        0x1 
+ .rodata        0x0000000000110948       0x20 /home/antonio/Projects/aPlus/src/panic.o
+ .rodata        0x0000000000110968       0x34 /home/antonio/Projects/aPlus/src/rootfs.o
+ .rodata        0x000000000011099c       0x50 /home/antonio/Projects/aPlus/src/tty.o
+ .rodata        0x00000000001109ec       0x4f /home/antonio/Projects/aPlus/src/main.o
+ .rodata        0x0000000000110a3b        0x5 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
+ .rodata        0x0000000000110a40       0x29 /home/antonio/Projects/aPlus/src/fs/ramdev.o
+ .rodata        0x0000000000110a69        0x3 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
+ .rodata        0x0000000000110a6c        0xa /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
+ .rodata        0x0000000000110a76        0x4 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
+ .rodata        0x0000000000110a7a       0x10 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
+ .rodata        0x0000000000110a8a        0xa /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
+ .rodata        0x0000000000110a94       0x90 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
+ .rodata        0x0000000000110b24        0x8 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
+ .rodata        0x0000000000110b2c        0xb /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
+ *fill*         0x0000000000110b37        0x1 
+ .rodata        0x0000000000110b38       0xa5 /home/antonio/Projects/aPlus/src/initrd.o
+ *fill*         0x0000000000110bdd        0x3 
+ .rodata        0x0000000000110be0        0x4 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
+                0x0000000000110be0                _global_impure_ptr
  .rodata.str1.1
-                0x00000000001105a0        0x2 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
- *fill*         0x00000000001105a2       0x1e 
- .rodata        0x00000000001105c0       0x70 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
- *fill*         0x0000000000110630       0x10 
- .rodata        0x0000000000110640       0x80 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
+                0x0000000000110be4        0x2 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
+ *fill*         0x0000000000110be6       0x1a 
+ .rodata        0x0000000000110c00       0x70 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
+ *fill*         0x0000000000110c70       0x10 
+ .rodata        0x0000000000110c80       0x80 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
  .rodata.str1.1
-                0x00000000001106c0       0x3b /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
- *fill*         0x00000000001106fb        0x1 
- .rodata        0x00000000001106fc      0x184 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
+                0x0000000000110d00       0x3b /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
+ *fill*         0x0000000000110d3b        0x1 
+ .rodata        0x0000000000110d3c      0x184 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
  .rodata.str1.1
-                0x0000000000110880        0x4 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
+                0x0000000000110ec0        0x4 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
  .rodata.str1.1
-                0x0000000000110884        0xd /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
+                0x0000000000110ec4        0xd /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
                                           0xf (size before relaxing)
- *fill*         0x0000000000110891        0x3 
- .rodata.cst4   0x0000000000110894       0x18 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
- *fill*         0x00000000001108ac        0x4 
- .rodata.cst8   0x00000000001108b0       0x18 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
+ *fill*         0x0000000000110ed1        0x3 
+ .rodata.cst4   0x0000000000110ed4       0x18 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
+ *fill*         0x0000000000110eec        0x4 
+ .rodata.cst8   0x0000000000110ef0       0x18 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
  .rodata.str1.1
-                0x00000000001108c8        0x8 /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
+                0x0000000000110f08        0x8 /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
                                           0xb (size before relaxing)
- *fill*         0x00000000001108d0       0x10 
- .rodata        0x00000000001108e0      0x168 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
-                0x0000000000110900                __mprec_tinytens
-                0x0000000000110940                __mprec_bigtens
-                0x0000000000110980                __mprec_tens
+ *fill*         0x0000000000110f10       0x10 
+ .rodata        0x0000000000110f20      0x168 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
+                0x0000000000110f40                __mprec_tinytens
+                0x0000000000110f80                __mprec_bigtens
+                0x0000000000110fc0                __mprec_tens
  .rodata.cst4   0x0000000000000000        0x4 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
  .rodata.str1.1
                 0x0000000000000000       0x29 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
- .rodata        0x0000000000110a48      0x184 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
+ .rodata        0x0000000000111088      0x184 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
 
-.eh_frame       0x0000000000110bcc     0x2884
- .eh_frame      0x0000000000110bcc      0x244 /home/antonio/Projects/aPlus/src/arch/task.o
- .eh_frame      0x0000000000110e10      0x474 /home/antonio/Projects/aPlus/src/arch/syscall.o
+.eh_frame       0x000000000011120c     0x29e4
+ .eh_frame      0x000000000011120c      0x260 /home/antonio/Projects/aPlus/src/arch/task.o
+ .eh_frame      0x000000000011146c      0x474 /home/antonio/Projects/aPlus/src/arch/syscall.o
                                         0x48c (size before relaxing)
- .eh_frame      0x0000000000111284      0x280 /home/antonio/Projects/aPlus/src/arch/mm.o
+ .eh_frame      0x00000000001118e0      0x280 /home/antonio/Projects/aPlus/src/arch/mm.o
                                         0x298 (size before relaxing)
- .eh_frame      0x0000000000111504      0x154 /home/antonio/Projects/aPlus/src/arch/desc.o
+ .eh_frame      0x0000000000111b60      0x154 /home/antonio/Projects/aPlus/src/arch/desc.o
                                         0x16c (size before relaxing)
- .eh_frame      0x0000000000111658      0x128 /home/antonio/Projects/aPlus/src/arch/screen.o
+ .eh_frame      0x0000000000111cb4      0x128 /home/antonio/Projects/aPlus/src/arch/screen.o
                                         0x140 (size before relaxing)
- .eh_frame      0x0000000000111780      0x20c /home/antonio/Projects/aPlus/src/vfs.o
+ .eh_frame      0x0000000000111ddc      0x20c /home/antonio/Projects/aPlus/src/vfs.o
                                         0x224 (size before relaxing)
- .eh_frame      0x000000000011198c       0x80 /home/antonio/Projects/aPlus/src/elf.o
-                                         0x98 (size before relaxing)
- .eh_frame      0x0000000000111a0c       0x3c /home/antonio/Projects/aPlus/src/panic.o
+ .eh_frame      0x0000000000111fe8      0x1c4 /home/antonio/Projects/aPlus/src/elf.o
+                                        0x1dc (size before relaxing)
+ .eh_frame      0x00000000001121ac       0x3c /home/antonio/Projects/aPlus/src/panic.o
                                          0x54 (size before relaxing)
- .eh_frame      0x0000000000111a48      0x734 /home/antonio/Projects/aPlus/src/crt0.o
+ .eh_frame      0x00000000001121e8      0x734 /home/antonio/Projects/aPlus/src/crt0.o
                                         0x74c (size before relaxing)
- .eh_frame      0x000000000011217c       0xa0 /home/antonio/Projects/aPlus/src/rootfs.o
+ .eh_frame      0x000000000011291c       0xa0 /home/antonio/Projects/aPlus/src/rootfs.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x000000000011221c       0xc0 /home/antonio/Projects/aPlus/src/tty.o
+ .eh_frame      0x00000000001129bc       0xc0 /home/antonio/Projects/aPlus/src/tty.o
                                          0xd8 (size before relaxing)
- .eh_frame      0x00000000001122dc       0x60 /home/antonio/Projects/aPlus/src/spinlock.o
+ .eh_frame      0x0000000000112a7c       0x60 /home/antonio/Projects/aPlus/src/spinlock.o
                                          0x78 (size before relaxing)
- .eh_frame      0x000000000011233c       0x3c /home/antonio/Projects/aPlus/src/main.o
+ .eh_frame      0x0000000000112adc       0x3c /home/antonio/Projects/aPlus/src/main.o
                                          0x54 (size before relaxing)
- .eh_frame      0x0000000000112378       0x20 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
+ .eh_frame      0x0000000000112b18       0x20 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000112398       0x60 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
+ .eh_frame      0x0000000000112b38       0x60 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
                                          0x78 (size before relaxing)
- .eh_frame      0x00000000001123f8       0xa0 /home/antonio/Projects/aPlus/src/fs/ramdev.o
+ .eh_frame      0x0000000000112b98       0xa0 /home/antonio/Projects/aPlus/src/fs/ramdev.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x0000000000112498       0x20 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
+ .eh_frame      0x0000000000112c38       0x20 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
                                          0x38 (size before relaxing)
- .eh_frame      0x00000000001124b8       0x60 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
+ .eh_frame      0x0000000000112c58       0x60 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000000000112518       0x20 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
+ .eh_frame      0x0000000000112cb8       0x20 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000112538       0x20 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
+ .eh_frame      0x0000000000112cd8       0x20 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000112558       0x80 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
+ .eh_frame      0x0000000000112cf8       0x80 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
                                          0x98 (size before relaxing)
- .eh_frame      0x00000000001125d8       0x60 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
+ .eh_frame      0x0000000000112d78       0x60 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000000000112638       0x80 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
+ .eh_frame      0x0000000000112dd8       0x80 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
                                          0x98 (size before relaxing)
- .eh_frame      0x00000000001126b8      0x100 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
+ .eh_frame      0x0000000000112e58      0x100 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
                                         0x118 (size before relaxing)
- .eh_frame      0x00000000001127b8       0x60 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
+ .eh_frame      0x0000000000112f58       0x60 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
                                          0x78 (size before relaxing)
- .eh_frame      0x0000000000112818       0x8c /home/antonio/Projects/aPlus/src/fs/pipe.o
+ .eh_frame      0x0000000000112fb8       0x8c /home/antonio/Projects/aPlus/src/fs/pipe.o
                                          0xa4 (size before relaxing)
- .eh_frame      0x00000000001128a4       0x40 /home/antonio/Projects/aPlus/src/initrd.o
+ .eh_frame      0x0000000000113044       0x40 /home/antonio/Projects/aPlus/src/initrd.o
                                          0x58 (size before relaxing)
- .eh_frame      0x00000000001128e4       0x14 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
+ .eh_frame      0x0000000000113084       0x14 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
                                          0x2c (size before relaxing)
- .eh_frame      0x00000000001128f8       0x70 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
+ .eh_frame      0x0000000000113098       0x70 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
                                          0x88 (size before relaxing)
- .eh_frame      0x0000000000112968       0x98 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
+ .eh_frame      0x0000000000113108       0x98 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
                                          0xb0 (size before relaxing)
- .eh_frame      0x0000000000112a00      0x138 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
+ .eh_frame      0x00000000001131a0      0x138 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
                                         0x150 (size before relaxing)
- .eh_frame      0x0000000000112b38       0x34 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
+ .eh_frame      0x00000000001132d8       0x34 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
                                          0x4c (size before relaxing)
- .eh_frame      0x0000000000112b6c       0x38 /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
+ .eh_frame      0x000000000011330c       0x38 /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
                                          0x50 (size before relaxing)
- .eh_frame      0x0000000000112ba4       0x2c /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
+ .eh_frame      0x0000000000113344       0x2c /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
                                          0x44 (size before relaxing)
- .eh_frame      0x0000000000112bd0       0x24 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
+ .eh_frame      0x0000000000113370       0x24 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
                                          0x3c (size before relaxing)
- .eh_frame      0x0000000000112bf4       0x30 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
+ .eh_frame      0x0000000000113394       0x30 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
                                          0x48 (size before relaxing)
- .eh_frame      0x0000000000112c24       0x18 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
+ .eh_frame      0x00000000001133c4       0x18 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
                                          0x30 (size before relaxing)
- .eh_frame      0x0000000000112c3c       0x34 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
+ .eh_frame      0x00000000001133dc       0x34 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
                                          0x4c (size before relaxing)
- .eh_frame      0x0000000000112c70       0x4c /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
+ .eh_frame      0x0000000000113410       0x4c /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
                                          0x64 (size before relaxing)
- .eh_frame      0x0000000000112cbc       0x44 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
+ .eh_frame      0x000000000011345c       0x44 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
                                          0x5c (size before relaxing)
- .eh_frame      0x0000000000112d00       0x24 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
+ .eh_frame      0x00000000001134a0       0x24 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
                                          0x3c (size before relaxing)
- .eh_frame      0x0000000000112d24       0x28 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
+ .eh_frame      0x00000000001134c4       0x28 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
                                          0x40 (size before relaxing)
- .eh_frame      0x0000000000112d4c       0x34 /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
+ .eh_frame      0x00000000001134ec       0x34 /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
                                          0x4c (size before relaxing)
- .eh_frame      0x0000000000112d80       0x14 /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
+ .eh_frame      0x0000000000113520       0x14 /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
                                          0x2c (size before relaxing)
- .eh_frame      0x0000000000112d94       0xc4 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
+ .eh_frame      0x0000000000113534       0xc4 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
                                          0xdc (size before relaxing)
- .eh_frame      0x0000000000112e58       0x20 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
+ .eh_frame      0x00000000001135f8       0x20 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
                                          0x38 (size before relaxing)
- .eh_frame      0x0000000000112e78       0x14 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
+ .eh_frame      0x0000000000113618       0x14 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
                                          0x2c (size before relaxing)
- .eh_frame      0x0000000000112e8c       0xbc /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
+ .eh_frame      0x000000000011362c       0xbc /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
                                          0xd4 (size before relaxing)
- .eh_frame      0x0000000000112f48      0x438 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
+ .eh_frame      0x00000000001136e8      0x438 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
                                         0x450 (size before relaxing)
- .eh_frame      0x0000000000113380       0x20 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
+ .eh_frame      0x0000000000113b20       0x20 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
                                          0x38 (size before relaxing)
- .eh_frame      0x00000000001133a0       0xb0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
+ .eh_frame      0x0000000000113b40       0xb0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
                                          0xc8 (size before relaxing)
 
-.rel.dyn        0x0000000000113450        0x0
+.rel.dyn        0x0000000000113bf0        0x0
  .rel.iplt      0x0000000000000000        0x0 /home/antonio/Projects/aPlus/src/arch/task.o
  .rel.text      0x0000000000000000        0x0 /home/antonio/Projects/aPlus/src/arch/task.o
  .rel.multiboot
                 0x0000000000000000        0x0 /home/antonio/Projects/aPlus/src/arch/task.o
 
-.data           0x0000000000113460      0x7dc
-                0x0000000000113460                data = .
-                0x0000000000113460                _data = .
-                0x0000000000113460                __data = .
+.data           0x0000000000113c00      0x7dc
+                0x0000000000113c00                data = .
+                0x0000000000113c00                _data = .
+                0x0000000000113c00                __data = .
  *(.data)
- .data          0x0000000000113460        0x0 /home/antonio/Projects/aPlus/src/arch/task.o
- .data          0x0000000000113460        0x0 /home/antonio/Projects/aPlus/src/arch/syscall.o
- .data          0x0000000000113460        0x0 /home/antonio/Projects/aPlus/src/arch/mm.o
- .data          0x0000000000113460       0x80 /home/antonio/Projects/aPlus/src/arch/desc.o
- .data          0x00000000001134e0      0x206 /home/antonio/Projects/aPlus/src/arch/screen.o
-                0x00000000001134e0                vkscan
-                0x00000000001136e0                videoattr
- .data          0x00000000001136e6        0x0 /home/antonio/Projects/aPlus/src/vfs.o
- .data          0x00000000001136e6        0x0 /home/antonio/Projects/aPlus/src/elf.o
- .data          0x00000000001136e6        0x0 /home/antonio/Projects/aPlus/src/panic.o
- .data          0x00000000001136e6        0x0 /home/antonio/Projects/aPlus/src/crt0.o
- .data          0x00000000001136e6        0x0 /home/antonio/Projects/aPlus/src/rootfs.o
- .data          0x00000000001136e6        0x1 /home/antonio/Projects/aPlus/src/tty.o
- .data          0x00000000001136e7        0x0 /home/antonio/Projects/aPlus/src/spinlock.o
- *fill*         0x00000000001136e7        0x1 
- .data          0x00000000001136e8       0x20 /home/antonio/Projects/aPlus/src/main.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/ramdev.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/fs/pipe.o
- .data          0x0000000000113708        0x0 /home/antonio/Projects/aPlus/src/initrd.o
- .data          0x0000000000113708        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
- *fill*         0x0000000000113708       0x18 
- .data          0x0000000000113720      0x444 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
-                0x0000000000113720                _impure_ptr
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memcpy.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memset.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strchr.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strlen.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
- .data          0x0000000000113b64        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
- .data          0x0000000000113b64        0x8 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
-                0x0000000000113b64                _tzname
- .data          0x0000000000113b6c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
- .data          0x0000000000113b6c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
- .data          0x0000000000113b6c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
- .data          0x0000000000113b6c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
- *fill*         0x0000000000113b6c       0x14 
- .data          0x0000000000113b80       0x40 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
- .data          0x0000000000113bc0       0x7c /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
-                0x0000000000113c38                __mb_cur_max
- .data          0x0000000000113c3c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memchr.o)
- .data          0x0000000000113c3c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
- .data          0x0000000000113c3c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
- .data          0x0000000000113c3c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
- .data          0x0000000000113c3c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memmove.o)
+ .data          0x0000000000113c00        0x0 /home/antonio/Projects/aPlus/src/arch/task.o
+ .data          0x0000000000113c00        0x0 /home/antonio/Projects/aPlus/src/arch/syscall.o
+ .data          0x0000000000113c00        0x0 /home/antonio/Projects/aPlus/src/arch/mm.o
+ .data          0x0000000000113c00       0x80 /home/antonio/Projects/aPlus/src/arch/desc.o
+ .data          0x0000000000113c80      0x206 /home/antonio/Projects/aPlus/src/arch/screen.o
+                0x0000000000113c80                vkscan
+                0x0000000000113e80                videoattr
+ .data          0x0000000000113e86        0x0 /home/antonio/Projects/aPlus/src/vfs.o
+ .data          0x0000000000113e86        0x0 /home/antonio/Projects/aPlus/src/elf.o
+ .data          0x0000000000113e86        0x0 /home/antonio/Projects/aPlus/src/panic.o
+ .data          0x0000000000113e86        0x0 /home/antonio/Projects/aPlus/src/crt0.o
+ .data          0x0000000000113e86        0x0 /home/antonio/Projects/aPlus/src/rootfs.o
+ .data          0x0000000000113e86        0x1 /home/antonio/Projects/aPlus/src/tty.o
+ .data          0x0000000000113e87        0x0 /home/antonio/Projects/aPlus/src/spinlock.o
+ *fill*         0x0000000000113e87        0x1 
+ .data          0x0000000000113e88       0x20 /home/antonio/Projects/aPlus/src/main.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/ramdev.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/fs/pipe.o
+ .data          0x0000000000113ea8        0x0 /home/antonio/Projects/aPlus/src/initrd.o
+ .data          0x0000000000113ea8        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
+ *fill*         0x0000000000113ea8       0x18 
+ .data          0x0000000000113ec0      0x444 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
+                0x0000000000113ec0                _impure_ptr
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memcpy.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memset.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strchr.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strlen.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
+ .data          0x0000000000114304        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
+ .data          0x0000000000114304        0x8 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
+                0x0000000000114304                _tzname
+ .data          0x000000000011430c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
+ .data          0x000000000011430c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
+ .data          0x000000000011430c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
+ .data          0x000000000011430c        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
+ *fill*         0x000000000011430c       0x14 
+ .data          0x0000000000114320       0x40 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
+ .data          0x0000000000114360       0x7c /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
+                0x00000000001143d8                __mb_cur_max
+ .data          0x00000000001143dc        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memchr.o)
+ .data          0x00000000001143dc        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
+ .data          0x00000000001143dc        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
+ .data          0x00000000001143dc        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
+ .data          0x00000000001143dc        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memmove.o)
 
-.igot.plt       0x0000000000113c3c        0x0
+.igot.plt       0x00000000001143dc        0x0
  .igot.plt      0x0000000000000000        0x0 /home/antonio/Projects/aPlus/src/arch/task.o
 
-.bss            0x0000000000113c40     0x6a14
-                0x0000000000113c40                bss = .
-                0x0000000000113c40                _bss = .
-                0x0000000000113c40                __bss = .
+.bss            0x00000000001143e0     0x6a14
+                0x00000000001143e0                bss = .
+                0x00000000001143e0                _bss = .
+                0x00000000001143e0                __bss = .
  *(COMMON)
- COMMON         0x0000000000113c40        0x4 /home/antonio/Projects/aPlus/src/vfs.o
-                0x0000000000113c40                fs_root
- COMMON         0x0000000000113c44        0x4 /home/antonio/Projects/aPlus/src/crt0.o
-                0x0000000000113c44                errno
+ COMMON         0x00000000001143e0        0x4 /home/antonio/Projects/aPlus/src/vfs.o
+                0x00000000001143e0                fs_root
+ COMMON         0x00000000001143e4        0x4 /home/antonio/Projects/aPlus/src/crt0.o
+                0x00000000001143e4                errno
  *(.bss)
- *fill*         0x0000000000113c48       0x18 
- .bss           0x0000000000113c60      0x420 /home/antonio/Projects/aPlus/src/arch/task.o
-                0x0000000000113c60                current_task
-                0x0000000000113c64                task_queue
-                0x0000000000113c68                kernel_task
- .bss           0x0000000000114080      0x404 /home/antonio/Projects/aPlus/src/arch/syscall.o
- *fill*         0x0000000000114484       0x1c 
- .bss           0x00000000001144a0      0x420 /home/antonio/Projects/aPlus/src/arch/mm.o
-                0x00000000001144a0                mm_totalmemory
-                0x00000000001144a4                mm_usedmemory
-                0x00000000001144a8                mm_directory
-                0x00000000001144ac                kernel_directory
- .bss           0x00000000001148c0      0x8e4 /home/antonio/Projects/aPlus/src/arch/desc.o
-                0x00000000001148c0                keyboard_ready
- .bss           0x00000000001151a4       0x1c /home/antonio/Projects/aPlus/src/arch/screen.o
-                0x00000000001151a4                videopos
- .bss           0x00000000001151c0        0x4 /home/antonio/Projects/aPlus/src/vfs.o
- *fill*         0x00000000001151c4       0x1c 
- .bss           0x00000000001151e0      0x400 /home/antonio/Projects/aPlus/src/elf.o
- .bss           0x00000000001155e0      0x400 /home/antonio/Projects/aPlus/src/panic.o
- .bss           0x00000000001159e0        0x4 /home/antonio/Projects/aPlus/src/crt0.o
- .bss           0x00000000001159e4        0x4 /home/antonio/Projects/aPlus/src/rootfs.o
-                0x00000000001159e4                rootfs_queue
- *fill*         0x00000000001159e8       0x18 
- .bss           0x0000000000115a00      0x400 /home/antonio/Projects/aPlus/src/tty.o
- .bss           0x0000000000115e00        0x0 /home/antonio/Projects/aPlus/src/spinlock.o
- .bss           0x0000000000115e00        0x4 /home/antonio/Projects/aPlus/src/main.o
-                0x0000000000115e00                end_kernel
- .bss           0x0000000000115e04        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
- .bss           0x0000000000115e04        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
- *fill*         0x0000000000115e04       0x1c 
- .bss           0x0000000000115e20      0x400 /home/antonio/Projects/aPlus/src/fs/ramdev.o
- .bss           0x0000000000116220        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
- .bss           0x0000000000116220        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
- .bss           0x0000000000116220        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
- .bss           0x0000000000116220        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
- .bss           0x0000000000116220        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
- .bss           0x0000000000116220        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
- .bss           0x0000000000116220        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
- .bss           0x0000000000116220       0x10 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
- .bss           0x0000000000116230       0x10 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
- .bss           0x0000000000116240        0x0 /home/antonio/Projects/aPlus/src/fs/pipe.o
- .bss           0x0000000000116240      0x400 /home/antonio/Projects/aPlus/src/initrd.o
- .bss           0x0000000000116640     0x4000 /home/antonio/Projects/aPlus/src/arch/loader.o
-                0x000000000011a640                initial_stack_ptr
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memcpy.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memset.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strchr.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strlen.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
- .bss           0x000000000011a640        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
- .bss           0x000000000011a640        0x8 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
-                0x000000000011a640                _timezone
-                0x000000000011a644                _daylight
- .bss           0x000000000011a648        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
- .bss           0x000000000011a648        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
- .bss           0x000000000011a648        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
- .bss           0x000000000011a648        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
- .bss           0x000000000011a648        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
- .bss           0x000000000011a648        0xc /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
-                0x000000000011a648                _PathLocale
-                0x000000000011a64c                __mlocale_changed
-                0x000000000011a650                __nlocale_changed
- .bss           0x000000000011a654        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memchr.o)
- .bss           0x000000000011a654        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
- .bss           0x000000000011a654        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
- .bss           0x000000000011a654        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
- .bss           0x000000000011a654        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memmove.o)
+ *fill*         0x00000000001143e8       0x18 
+ .bss           0x0000000000114400      0x420 /home/antonio/Projects/aPlus/src/arch/task.o
+                0x0000000000114400                current_task
+                0x0000000000114404                task_queue
+                0x0000000000114408                kernel_task
+ .bss           0x0000000000114820      0x404 /home/antonio/Projects/aPlus/src/arch/syscall.o
+ *fill*         0x0000000000114c24       0x1c 
+ .bss           0x0000000000114c40      0x420 /home/antonio/Projects/aPlus/src/arch/mm.o
+                0x0000000000114c40                mm_totalmemory
+                0x0000000000114c44                mm_usedmemory
+                0x0000000000114c48                mm_directory
+                0x0000000000114c4c                kernel_directory
+ .bss           0x0000000000115060      0x8e4 /home/antonio/Projects/aPlus/src/arch/desc.o
+                0x0000000000115060                keyboard_ready
+ .bss           0x0000000000115944       0x1c /home/antonio/Projects/aPlus/src/arch/screen.o
+                0x0000000000115944                videopos
+ .bss           0x0000000000115960        0x4 /home/antonio/Projects/aPlus/src/vfs.o
+ *fill*         0x0000000000115964       0x1c 
+ .bss           0x0000000000115980      0x400 /home/antonio/Projects/aPlus/src/elf.o
+ .bss           0x0000000000115d80      0x400 /home/antonio/Projects/aPlus/src/panic.o
+ .bss           0x0000000000116180        0x4 /home/antonio/Projects/aPlus/src/crt0.o
+ .bss           0x0000000000116184        0x4 /home/antonio/Projects/aPlus/src/rootfs.o
+                0x0000000000116184                rootfs_queue
+ *fill*         0x0000000000116188       0x18 
+ .bss           0x00000000001161a0      0x400 /home/antonio/Projects/aPlus/src/tty.o
+ .bss           0x00000000001165a0        0x0 /home/antonio/Projects/aPlus/src/spinlock.o
+ .bss           0x00000000001165a0        0x4 /home/antonio/Projects/aPlus/src/main.o
+                0x00000000001165a0                end_kernel
+ .bss           0x00000000001165a4        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs_mount.o
+ .bss           0x00000000001165a4        0x0 /home/antonio/Projects/aPlus/src/fs/initfs/initfs.o
+ *fill*         0x00000000001165a4       0x1c 
+ .bss           0x00000000001165c0      0x400 /home/antonio/Projects/aPlus/src/fs/ramdev.o
+ .bss           0x00000000001169c0        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_task.o
+ .bss           0x00000000001169c0        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cmdline.o
+ .bss           0x00000000001169c0        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_mount.o
+ .bss           0x00000000001169c0        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_cwd.o
+ .bss           0x00000000001169c0        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_filesystems.o
+ .bss           0x00000000001169c0        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_environ.o
+ .bss           0x00000000001169c0        0x0 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_meminfo.o
+ .bss           0x00000000001169c0       0x10 /home/antonio/Projects/aPlus/src/fs/procfs/procfs.o
+ .bss           0x00000000001169d0       0x10 /home/antonio/Projects/aPlus/src/fs/procfs/procfs_fd.o
+ .bss           0x00000000001169e0        0x0 /home/antonio/Projects/aPlus/src/fs/pipe.o
+ .bss           0x00000000001169e0      0x400 /home/antonio/Projects/aPlus/src/initrd.o
+ .bss           0x0000000000116de0     0x4000 /home/antonio/Projects/aPlus/src/arch/loader.o
+                0x000000000011ade0                initial_stack_ptr
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-errno.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-impure.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memcpy.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memset.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktime.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mktm_r.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signal.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-signalr.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-sprintf.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcat.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strchr.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcmp.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strcpy.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strdup_r.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strlen.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-strncpy.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfprintf.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-time.o)
+ .bss           0x000000000011ade0        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzlock.o)
+ .bss           0x000000000011ade0        0x8 /usr/local/cross/i586-elf/lib/libc.a(lib_a-tzvars.o)
+                0x000000000011ade0                _timezone
+                0x000000000011ade4                _daylight
+ .bss           0x000000000011ade8        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-vsprintf.o)
+ .bss           0x000000000011ade8        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-div.o)
+ .bss           0x000000000011ade8        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-dtoa.o)
+ .bss           0x000000000011ade8        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettimeofdayr.o)
+ .bss           0x000000000011ade8        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-gettzinfo.o)
+ .bss           0x000000000011ade8        0xc /usr/local/cross/i586-elf/lib/libc.a(lib_a-locale.o)
+                0x000000000011ade8                _PathLocale
+                0x000000000011adec                __mlocale_changed
+                0x000000000011adf0                __nlocale_changed
+ .bss           0x000000000011adf4        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memchr.o)
+ .bss           0x000000000011adf4        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-mprec.o)
+ .bss           0x000000000011adf4        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-s_fpclassify.o)
+ .bss           0x000000000011adf4        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-svfiprintf.o)
+ .bss           0x000000000011adf4        0x0 /usr/local/cross/i586-elf/lib/libc.a(lib_a-memmove.o)
                 0x000000000011b000                . = ALIGN (0x1000)
                 0x000000000011c000                . = (. + 0x1000)
 
@@ -911,9 +913,30 @@ Linker script and memory map
                 0x000000000011e240                __fsys_end = .
                 0x000000000011f000                . = ALIGN (0x1000)
                 0x0000000000120000                . = (. + 0x1000)
-                0x0000000000120000                end = .
-                0x0000000000120000                _end = .
-                0x0000000000120000                __end = .
+
+.kernel_symbols
+                0x0000000000120000       0x38
+                0x0000000000120000                kernel_symbols_start = .
+                0x0000000000120000                _kernel_symbols_start = .
+                0x0000000000120000                __kernel_symbols_start = .
+ *(.kernel_symbols)
+ .kernel_symbols
+                0x0000000000120000       0x38 /home/antonio/Projects/aPlus/src/arch/task.o
+                0x0000000000120000                kernel_symbol__task_zombie
+                0x0000000000120008                kernel_symbol__task_idle
+                0x0000000000120010                kernel_symbol__task_wakeup
+                0x0000000000120018                kernel_symbol__task_waitpid
+                0x0000000000120020                kernel_symbol__task_setpriority
+                0x0000000000120028                kernel_symbol__sched_enable
+                0x0000000000120030                kernel_symbol__sched_disable
+                0x0000000000120038                kernel_symbols_end = .
+                0x0000000000120038                _kernel_symbols_end = .
+                0x0000000000120038                __kernel_symbols_end = .
+                0x0000000000121000                . = ALIGN (0x1000)
+                0x0000000000122000                . = (. + 0x1000)
+                0x0000000000122000                end = .
+                0x0000000000122000                _end = .
+                0x0000000000122000                __end = .
 LOAD /home/antonio/Projects/aPlus/src/arch/task.o
 LOAD /home/antonio/Projects/aPlus/src/arch/syscall.o
 LOAD /home/antonio/Projects/aPlus/src/arch/mm.o

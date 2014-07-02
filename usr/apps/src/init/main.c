@@ -15,7 +15,6 @@
 clock_t ec;
 clock_t sc;
 
-#define _b __asm__ ("int $3");
 
 void load_modules(char** argv, char** env) {	
 	chdir("/ramdisk");
@@ -29,8 +28,10 @@ void load_modules(char** argv, char** env) {
 	while(ent = (struct dirent*) readdir(rd)) {
 		char* p = (char*) ((uint32_t)ent->d_name + strlen(ent->d_name) - 3);
 		
-		if(strcmp(p, ".km") == 0)
+		if(strcmp(p, ".km") == 0) {
+			printf("init: loading %s\n", ent->d_name);			
 			execve(ent->d_name, argv, env);
+		}
 	}
 	
 	closedir(rd);

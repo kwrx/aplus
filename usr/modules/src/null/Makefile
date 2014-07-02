@@ -44,7 +44,7 @@ LIBS	:= -lx86 -lm -lc -lgcc
 CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -O2 -I include -std=c99
 CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -O2 -I include
 AFLAGS	:= $(DEFINES) -f elf
-LFLAGS	:= -static -T $(LDDIR)/link.ld
+LFLAGS	:= -T $(LDDIR)/link.ld -r
 
 CFILES 	:= $(shell find $(SRCDIR) -type f -name "*.c")
 CXXFILES:= $(shell find $(SRCDIR) -type f -name "*.cpp")

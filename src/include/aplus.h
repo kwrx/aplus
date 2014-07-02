@@ -119,5 +119,19 @@ static inline void kprintf(char* fmt, ...) {
 
 extern void __panic(char*, char*, char*, int);
 #define panic(msg) __panic(msg, __FILE__, __func__, __LINE__)
+
+
+
+
+struct kernel_symbol {
+	char* name;
+	void* handler;
+} __attribute__((packed));
+
+
+#define EXPORT(f)																				\
+	struct kernel_symbol kernel_symbol__##f __attribute__((section(".kernel_symbols"))) = {		\
+		#f, (void*) f																			\
+	}
 	
 #endif

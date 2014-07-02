@@ -73,8 +73,4 @@ int main() {
 	task_create(NULL, sysidle);
 	
 	execve("/ramdisk/init", argv_init, env_init);
-	
-	/* TODO */
-	/* ADDING ELF RELOC */
-	/* ADDING SPECIAL ELF TYPE FOR MODULES */
 }

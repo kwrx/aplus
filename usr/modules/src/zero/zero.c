@@ -43,9 +43,8 @@ int zero_read(struct inode* ino, uint32_t length, void* buf) {
 }
 
 int main(int argc, char** argv) {	
-	
-	printf("zero: todo...\n");
-	
+	task_zombie();
+
 	return 0;
 }
 

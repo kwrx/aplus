@@ -142,6 +142,7 @@ void task_zombie() {
 		for(;;);
 		
 	current_task->state = TASK_STATE_ZOMBIE;
+	for(;;);
 }
 
 void task_idle() {
@@ -273,3 +274,17 @@ void task_wait(task_t* child) {
 	if(wakeup)
 		task_wakeup();
 }
+
+void task_waitpid(int pid) {
+	task_wait(task_getbypid(pid));
+}
+
+
+EXPORT(task_zombie);
+EXPORT(task_idle);
+EXPORT(task_wakeup);
+EXPORT(task_waitpid);
+EXPORT(task_setpriority);
+
+EXPORT(sched_enable);
+EXPORT(sched_disable);

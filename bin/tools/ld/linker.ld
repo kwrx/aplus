@@ -80,6 +80,21 @@ SECTIONS {
 	
 	. =  ALIGN(0x1000);
 	. += 0x1000;
+
+	.kernel_symbols : AT(ADDR(.kernel_symbols) - 0x00000000) {
+		kernel_symbols_start = .;
+		_kernel_symbols_start = .;
+		__kernel_symbols_start = .;
+
+		*(.kernel_symbols)
+
+		kernel_symbols_end = .;
+		_kernel_symbols_end = .;
+		__kernel_symbols_end = .;
+	}
+
+	. = ALIGN(0x1000);
+	. += 0x1000;
 	
 	end = .;
 	_end = .;
