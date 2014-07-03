@@ -29,7 +29,7 @@
 EXTERN uint32_t __pthread_counts;
 EXTERN pthread_context_t* __pthread_queue;
 
-int pthread_detach(pthread_t thread) {
+PUBLIC int pthread_detach(pthread_t thread) {
 	if(!thread) {
 		errno = EINVAL;
 		return 1;
@@ -41,7 +41,7 @@ int pthread_detach(pthread_t thread) {
 	}
 
 	pthread_context_t* ctx = (pthread_context_t*) thread;
-	if(kill(ctx->tid, 1) == 0)
+	if(__os_thread_kill(ctx->tid, 1) == 0)
 		ctx->once.done = 1;
 	else {
 		errno = ESRCH;

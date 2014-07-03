@@ -25,22 +25,22 @@
 
 #include "pthread_internal.h"
 
-int pthread_cancel(pthread_t thread) {
+PUBLIC int pthread_cancel(pthread_t thread) {
 	return pthread_detach(thread);
 }
 
 
-int pthread_setcancelstate(int state, int *oldstate) {
+PUBLIC int pthread_setcancelstate(int state, int *oldstate) {
 	errno = ENOSYS;
 	return 1;
 }
 
 
-int pthread_setcanceltype(int type, int *oldtype) {
+PUBLIC int pthread_setcanceltype(int type, int *oldtype) {
 	errno = ENOSYS;
 	return 1;
 }
 
-void pthread_testcancel(void) {
+PUBLIC void pthread_testcancel(void) {
 	/* Boh ?? */
 }

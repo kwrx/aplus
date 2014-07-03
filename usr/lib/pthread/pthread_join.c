@@ -25,7 +25,7 @@
 
 #include "pthread_internal.h"
 
-int pthread_join(pthread_t thread, void **value_ptr) {
+PUBLIC int pthread_join(pthread_t thread, void **value_ptr) {
 	if(!thread) {
 		errno = EINVAL;
 		return 1;
@@ -33,7 +33,7 @@ int pthread_join(pthread_t thread, void **value_ptr) {
 
 	pthread_context_t* ctx = (pthread_context_t*) thread;
 	
-	aplus_thread_idle();
+	__os_thread_idle();
 	while(ctx->once.done == 0) {
 		#if ARCH==X86
 			__asm__ __volatile__ ("pause");
@@ -43,7 +43,7 @@ int pthread_join(pthread_t thread, void **value_ptr) {
 			/* Nothing */
 		#endif
 	}
-	aplus_thread_wakeup();
+	__os_thread_wakeup();
 
 	if(value_ptr)
 		*value_ptr = ctx->exitval;

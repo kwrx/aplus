@@ -1,6 +1,6 @@
 
 //
-//  pthread_self.c
+//  pthread_sched.c
 //
 //  Author:
 //       Antonio Natale <inferdevil97@gmail.com>
@@ -25,24 +25,22 @@
 
 #include "pthread_internal.h"
 
+PUBLIC int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param) {
+	errno = ENOSYS;
+	return 1;
+}
 
-EXTERN pthread_context_t* __pthread_queue;
+PUBLIC int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param) {
+	errno = ENOSYS;
+	return 1;
+}
 
-PUBLIC pthread_t pthread_self(void) {
-	if(!__pthread_queue) {
-		errno = ESRCH;
-		return 0;
-	}
+PUBLIC int pthread_setconcurrency(int level) {
+	errno = ENOSYS;
+	return 1;
+}
 
-	int pid = getpid();
-	pthread_context_t* tmp = __pthread_queue;
-	while(tmp) {
-		if(tmp->tid == pid)
-			return (pthread_t) tmp;
-
-		tmp = tmp->next;
-	}
-
-	errno = ESRCH;
-	return 0;
+PUBLIC int pthread_getconcurrency(void) {
+	errno = ENOSYS;
+	return 1;
 }

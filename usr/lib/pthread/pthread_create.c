@@ -31,7 +31,10 @@ PUBLIC pthread_context_t* __pthread_queue = 0;
 
 PRIVATE void __pthread_handler__() {
 	pthread_context_t* ctx = 0;
+
+#ifdef APLUS
 	__asm__ __volatile__ ("" : "=a"(ctx));
+#endif
 
 	if(ctx == NULL)
 		_exit(-1);
@@ -62,9 +65,18 @@ PUBLIC int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void *(
 	ctx->once.done = 0;
 	ctx->once.started = -1;
 	ctx->next = 0;
+	memset(ctx->keys, 0, sizeof(__pthread_key_t) * PTHREAD_KEYS_MAX);
 
 	if(attr)
 		memcpy(&ctx->attr, attr, sizeof(pthread_attr_t));
+
+	if(ctx->attr.inheritsched == PTHREAD_INHERIT_SCHED) {
+		pthread_t px = pthread_self();
+		if(px) {
+			pthread_context_t* inh = (pthread_context_t*) px;
+			pthread_attr_setschedparam(&ctx->attr, &inh->attr.param);
+		}
+	}
 
 	if(ctx->attr.param.sched_priority == 0)
 		ctx->attr.param.sched_priority = TASK_PRIORITY_NORMAL;
@@ -84,6 +96,6 @@ PUBLIC int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void *(
 	}
 
 
-	ctx->tid = aplus_thread_create(__pthread_handler__, ctx, ctx->attr.param.sched_priority);
+	ctx->tid = __os_thread_create(__pthread_handler__, ctx, ctx->attr.param.sched_priority);
 	return 0;
 }

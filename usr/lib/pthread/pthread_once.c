@@ -1,6 +1,6 @@
 
 //
-//  pthread_self.c
+//  pthread_once.c
 //
 //  Author:
 //       Antonio Natale <inferdevil97@gmail.com>
@@ -25,24 +25,7 @@
 
 #include "pthread_internal.h"
 
-
-EXTERN pthread_context_t* __pthread_queue;
-
-PUBLIC pthread_t pthread_self(void) {
-	if(!__pthread_queue) {
-		errno = ESRCH;
-		return 0;
-	}
-
-	int pid = getpid();
-	pthread_context_t* tmp = __pthread_queue;
-	while(tmp) {
-		if(tmp->tid == pid)
-			return (pthread_t) tmp;
-
-		tmp = tmp->next;
-	}
-
-	errno = ESRCH;
-	return 0;
+PUBLIC int pthread_once(pthread_once_t *once_control, void (*init_routine)(void)) {
+	errno = ENOSYS;
+	return 1;
 }
