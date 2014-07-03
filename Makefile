@@ -28,6 +28,7 @@ USRDIR 	:= $(PRJDIR)/usr
 IRDDIR	:= $(PRJDIR)/initrd
 APPDIR	:= $(PRJDIR)/usr/apps/bin
 MODDIR	:= $(PRJDIR)/usr/modules/bin
+ULBDIR	:= /usr/local/cross/src
 
 TARGET 	:= i586-elf
 PREFIX 	:= $(BINDIR)
@@ -127,6 +128,9 @@ dist-clean: clean
 	-@$(RM) $(RAMDISK)
 
 git: dist-clean
+	@$(MKDIR) $(USRDIR)/lib
+	@$(CP) $(ULBDIR)/* $(USRDIR)/lib -r
 	@$(GIT) add .
 	@$(GIT) commit -a -m "$(DATE)"
 	@$(GIT) push origin master -f
+	@$(RM) $(USRDIR)/lib -r
