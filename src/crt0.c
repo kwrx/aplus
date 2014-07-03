@@ -194,12 +194,31 @@ int __install_signal_handler(void* handler) {
 	sc(29, handler, 0, 0, 0, 0);
 }
 
-void* malloc(size_t size) {
+
+void* _malloc_r(struct _reent* reent, size_t size) {
 	sc(30, size, 0, 0, 0, 0);
 }
 
-void free(void* ptr) {
+void _free_r(struct _reent* reent, void* ptr) {
 	sc_noret(31, ptr, 0, 0, 0, 0);
+}
+
+void* _calloc_r(struct _reent* reent, size_t nmemb, size_t size) {
+	return _malloc_r(reent, nmemb * size);
+}
+
+
+void* _realloc_r(struct _reent* reent, void* ptr, size_t size) {
+	if(size == 0) {
+		_free_r(reent, ptr);
+		return NULL;
+	}
+	
+	void* ret = _malloc_r(reent, size);
+	memcpy(ret, ptr, size);
+	
+	_free_r(reent, ptr);
+	return ret;
 }
 
 int aplus_thread_create(uint32_t entry, void* param, int priority) {
@@ -217,6 +236,8 @@ void aplus_thread_wakeup() {
 void aplus_thread_zombie() {
 	sc_noret(35, 0, 0, 0, 0, 0);
 }
+
+
 
 #define O_RDONLY	0
 
@@ -278,34 +299,6 @@ int scandir(const char *pathname, struct dirent ***namelist, int (*select)(const
 	/* WTF */
 	return -1;
 }
-
-
-void* _malloc_r(struct _reent* r, size_t size) {
-	return malloc(size);
-}
-
-void _free_r(struct _reent* r, void* ptr) {
-	free(ptr);
-}
-
-void* _calloc_r(struct _reent* r, size_t nmemb, size_t size) {
-	return _malloc_r(r, nmemb * size);
-}
-
-
-void* _realloc_r(struct _reent* r, void* ptr, size_t size) {
-	if(size == NULL) {
-		_free_r(r, ptr);
-		return NULL;
-	}
-	
-	void* ret = _malloc_r(r, size);
-	memcpy(ret, ptr, size);
-	
-	_free_r(r, ptr);
-	return ret;
-}
-
 
 
 
