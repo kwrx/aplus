@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <signal.h>
 
 
 #include <aplus.h>
@@ -42,8 +43,15 @@ int zero_read(struct inode* ino, uint32_t length, void* buf) {
 	return length;
 }
 
+
+void* thread_handle(void* p) {
+	printf("Weila from thread %d\n", getpid());
+
+	return NULL;
+}
+
 int main(int argc, char** argv) {	
-	task_zombie();
+	
 
 	return 0;
 }

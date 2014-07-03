@@ -38,7 +38,7 @@ GIT	:= git
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -lx86 -lm -lc -lgcc
+LIBS	:= -lx86 -lpthread -lm -lc -lgcc
 
 CFLAGS	:= $(DEFINES) -w -O2 -I include -std=c99
 CXXFLAGS:= $(DEFINES) -w -O2 -I include

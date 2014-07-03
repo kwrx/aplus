@@ -30,6 +30,7 @@
 #include <sys/times.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -201,6 +202,21 @@ void free(void* ptr) {
 	sc_noret(31, ptr, 0, 0, 0, 0);
 }
 
+int aplus_thread_create(uint32_t entry, void* param, int priority) {
+	sc(32, entry, param, priority, 0, 0);
+}
+
+void aplus_thread_idle() {
+	sc_noret(33, 0, 0, 0, 0, 0);
+}
+
+void aplus_thread_wakeup() {
+	sc_noret(34, 0, 0, 0, 0, 0);
+}
+
+void aplus_thread_zombie() {
+	sc_noret(35, 0, 0, 0, 0, 0);
+}
 
 #define O_RDONLY	0
 
@@ -289,6 +305,7 @@ void* _realloc_r(struct _reent* r, void* ptr, size_t size) {
 	_free_r(r, ptr);
 	return ret;
 }
+
 
 
 

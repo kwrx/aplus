@@ -10,13 +10,16 @@
 #include <sys/times.h>
 #include <time.h>
 
+#include "../../../../src/include/aplus.h"
+
+#include <pthread.h>
 
 
 clock_t ec;
 clock_t sc;
 
 
-void load_modules(char** argv, char** env) {	
+void load_modules(char** argv, char** env) {
 	chdir("/ramdisk");
 	DIR* rd = (DIR*) opendir("/ramdisk");
 	if(!rd) {
@@ -29,8 +32,13 @@ void load_modules(char** argv, char** env) {
 		char* p = (char*) ((uint32_t)ent->d_name + strlen(ent->d_name) - 3);
 		
 		if(strcmp(p, ".km") == 0) {
-			printf("init: loading %s\n", ent->d_name);			
-			execve(ent->d_name, argv, env);
+			printf("init: loading %-60s", ent->d_name);
+
+			int ret = execve(ent->d_name, argv, env);
+			if(ret == 0)
+				printf("[OK]\n");
+			else
+				printf("[%d]\n", ret);
 		}
 	}
 	
@@ -43,9 +51,17 @@ void load_system() {
 	
 }
 
+
+
 int main(int argc, char** argv) {
+	sc = clock();
+
 	load_modules(argv, environ);
 	load_system();
-	
+
+	ec = clock();
+
+	printf("System loaded in %fs\n", (double)(ec - sc) / (double) CLOCKS_PER_SEC);
+
 	return 0;
 }

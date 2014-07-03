@@ -38,7 +38,7 @@ GIT	:= git
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -lx86 -lm -lc -lgcc
+LIBS	:= -lx86 -lOSMesa16 -lm -lc -lgcc
 
 CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -c -O2 -I include -std=c99
 CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -c -O2 -I include

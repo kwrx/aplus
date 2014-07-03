@@ -176,6 +176,22 @@ void sched_disable() {
 }
 
 
+int task_dosignal(task_t* t, void* prev_vmm) {
+	if(t->signal_sig != 0) {
+		if(t->signal_handler) {
+			vmm_switch(current_task->vmm);
+			t->signal_handler(current_task->signal_sig);
+			vmm_switch(prev_vmm);
+		}
+
+		task_exit2(current_task, current_task->signal_sig);
+		return 0;
+	}
+
+	return 1;
+}
+
+
 uint32_t schedule(uint32_t esp) {
 	if(!sched_enabled)
 		return esp;
@@ -195,11 +211,16 @@ uint32_t schedule(uint32_t esp) {
 	time_to_sched = 0;
 		
 	current_task->esp = esp;
-	
+	void* prev_vmm = current_task->vmm;	
+
 	while(1) {
 		current_task = current_task->next;
 		if(!current_task)
 			current_task = task_queue;
+
+
+		if(task_dosignal(current_task, prev_vmm) == 0)
+			continue;
 			
 		if(current_task->state == TASK_STATE_ZOMBIE)
 			continue;
@@ -226,6 +247,7 @@ int task_exit2(task_t* t, int status) {
 	
 	sched_disable();
 	
+	t->exitcode = status;
 	t->state = TASK_STATE_KILLED;
 
 	if(t->prev)
@@ -233,8 +255,6 @@ int task_exit2(task_t* t, int status) {
 		
 	if(t->next)
 		t->next->prev = t->prev;
-	
-	kprintf("task %d exited with status: %d\n", t->pid, status);
 	
 	sched_enable();
 	
@@ -259,9 +279,9 @@ task_t* task_getbypid(int pid) {
 }
 
 
-void task_wait(task_t* child) {
+int task_wait(task_t* child) {
 	if(!child)
-		return;
+		return -1;
 		
 	int wakeup = 0;	
 	if(current_task->state == TASK_STATE_RUNNING)
@@ -273,10 +293,12 @@ void task_wait(task_t* child) {
 	
 	if(wakeup)
 		task_wakeup();
+
+	return child->exitcode;
 }
 
-void task_waitpid(int pid) {
-	task_wait(task_getbypid(pid));
+int task_waitpid(int pid) {
+	return task_wait(task_getbypid(pid));
 }
 
 

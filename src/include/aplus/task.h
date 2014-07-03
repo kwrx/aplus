@@ -48,6 +48,7 @@ typedef struct task {
 	
 	uint32_t state;
 	uint32_t priority;
+	uint32_t exitcode;
 	
 	void* vmm;
 	
@@ -60,8 +61,8 @@ typedef struct task {
 	inode_t* cwd;
 	inode_t* exe;
 	
-	void  (*signal_handler) (int sig);
-	
+	void (*signal_handler) (int sig);
+	int signal_sig;
 	
 	struct task* prev;
 	struct task* next;

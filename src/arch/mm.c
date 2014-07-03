@@ -213,6 +213,12 @@ int mm_init() {
 		vmm_map(kernel_directory, i, i);
 		i += 4096;
 	}
+
+	i = 0xE0000000;
+	while(i < 0xF0000000) {
+		vmm_map(kernel_directory, i, i);
+		i += 4096;
+	}
 	
 	
 	vmm_switch(kernel_directory);
@@ -245,3 +251,11 @@ void pagefault_handler(regs_t* r) {
 	kprintf("\b\b) at address 0x%x\n", addr);
 	panic("Page fault");
 }
+
+EXPORT(mm_create_addrspace);
+EXPORT(mm_map_kernel);
+EXPORT(mm_enablepaging);
+EXPORT(mm_disablepaging);
+EXPORT(vmm_switch);
+EXPORT(vmm_map);
+EXPORT(vmm_unmap);

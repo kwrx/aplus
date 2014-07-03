@@ -200,9 +200,9 @@ syscall(_execve, 3) {
 	
 	uint32_t pmm = kmalloc(size);
 	if(fs_read(fd, fd->length, pmm) != fd->length) {
-		kprintf("execve: could not real all executable\n");
+		kprintf("execve: could not read all executable\n");
+
 		kfree(pmm);
-		
 		errno = -EIO;
 		return -1;
 	}
@@ -235,9 +235,7 @@ syscall(_execve, 3) {
 		vmm_map(t->vmm, i + pmm, i + EXECVE_DEFAULT_ADDRESS);
 
 	sched_enable();
-	task_wait(t);
-	
-	return 0;
+	return task_wait(t);
 }
 
 syscall(_fork, 4) {
@@ -316,14 +314,13 @@ syscall(_kill, 8) {
 		errno = -ESRCH;
 		return -1;
 	}
-	
-	if(!t->signal_handler) {
-		errno = -ENOSYS;
+
+	if(t == kernel_task) {
+		errno = -EACCES;
 		return -1;
 	}
-	
-	t->state = TASK_STATE_RUNNING;
-	t->signal_handler(par1);
+
+	t->signal_sig = par1;
 	return 0;
 }
 
@@ -768,6 +765,24 @@ syscall(malloc, 30) {
 
 syscall(free, 31) {
 	kfree(par0);
+}
+
+syscall(aplus_thread_create, 32) {
+	task_t* t = task_create_with_data(current_task->vmm, par0, par1);
+	t->priority = par2;
+	return t->pid;
+}
+
+syscall(aplus_thread_idle, 33) {
+	task_idle();
+}
+
+syscall(aplus_thread_wakeup, 34) {
+	task_wakeup();
+}
+
+syscall(aplus_thread_zombie, 35) {
+	task_zombie();
 }
 
 uint32_t syscall_handler(regs_t* r) {

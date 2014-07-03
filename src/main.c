@@ -54,11 +54,13 @@ void sysidle() {
 		__asm__ __volatile__ ("pause");
 }
 
+
 int main() {
 
 	end_kernel = (uint32_t) &end;
 	if(mbd->mods_count > 0)
 		end_kernel = ((uint32_t*)mbd->mods_addr)[1];
+
 
 	mm_init();
 	video_init();
@@ -68,7 +70,7 @@ int main() {
 	rootfs_init();
 	tty_init();
 	initrd_init();
-	
+
 	task_idle();
 	task_create(NULL, sysidle);
 	
