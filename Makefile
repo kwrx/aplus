@@ -19,6 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+include config.mk
+
 PRJDIR 	:= $(PWD)
 SRCDIR 	:= $(PRJDIR)/src
 TLSDIR 	:= $(PRJDIR)/bin/tools
@@ -32,6 +35,9 @@ ULBDIR	:= /usr/local/cross/src
 
 TARGET 	:= i586-elf
 PREFIX 	:= $(BINDIR)
+OUTPUT	:= $(BINDIR)/aplus
+RAMDISK	:= $(BINDIR)/initrd.img
+DATE	:= $(shell date -R)
 
 CC	:= $(TARGET)-gcc
 CXX	:= $(TARGET)-g++
@@ -48,14 +54,14 @@ MKIRD	:= $(TLSDIR)/mkinitrd/mkinitrd
 VM	:= qemu
 
 ARCH	:= X86
-DEFINES	:= -D$(ARCH) -DDEBUG -DAPLUS -DVIDEOMODE
+DEFINES	:= -D$(ARCH) -DAPLUS
 LIBS	:= -lx86 -lm -lc -lgcc
 
 CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -c -masm=intel -ffreestanding -fno-builtin -std=c99
 CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -c -masm=intel -ffreestanding -fno-builtin -fno-rtti -fno-exceptions -fpermissive
 AFLAGS	:= $(DEFINES) -f elf
 LFLAGS	:= -Bstatic -T $(TLSDIR)/ld/linker.ld -Map $(BINDIR)/aplus.map
-VMFLAGS	:= -vga std -serial stdio -cdrom
+VMFLAGS	:= -vga std -serial stdio -cdrom $(OUTPUT).iso
 MIFLAGS	:= -o
 
 CFILES 	:= $(shell find $(SRCDIR) -type f -name "*.c")
@@ -67,10 +73,23 @@ IFILES	:= $(shell find $(IRDDIR) -type f -name "*")
 SFILES 	:= $(CFILES) $(CXXFILES) $(AFILES)
 OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
 
-OUTPUT	:= $(BINDIR)/aplus
-RAMDISK	:= $(BINDIR)/initrd.img
 
-DATE	:= $(shell date -R)
+ifeq ($(EMU), bochs)
+DEFINES	+= -DBOCHS
+
+VM		:= bochs
+VMFLAGS	:= -q -f $(TLSDIR)/bochs/bochsrc.bxrc
+endif
+
+ifeq ($(DEBUG), true)
+DEFINES += -DDEBUG
+endif
+
+ifeq ($(VMODE), true)
+DEFINES	+= -DVIDEOMODE
+endif
+
+
 
 .PHONY: all iso run clean dist-clean
 
@@ -115,7 +134,7 @@ iso: initrd
 	@$(MKISO) $(MIFLAGS) $(OUTPUT).iso iso > /dev/null
 	@$(RM) -r iso
 run: iso
-	@$(VM) $(VMFLAGS) $(OUTPUT).iso
+	@$(VM) $(VMFLAGS)
 clean:
 	-@$(RM) $(OFILES)
 	-@$(RM) -r iso

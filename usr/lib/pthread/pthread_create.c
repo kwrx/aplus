@@ -29,11 +29,14 @@
 PUBLIC uint32_t __pthread_counts = 0;
 PUBLIC pthread_context_t* __pthread_queue = 0;
 
+#ifdef APLUS
 PRIVATE void __pthread_handler__() {
 	pthread_context_t* ctx = 0;
-
-#ifdef APLUS
 	__asm__ __volatile__ ("" : "=a"(ctx));
+
+#else
+
+PRIVATE void __pthread_handler__(pthread_context_t* ctx) {
 #endif
 
 	if(ctx == NULL)

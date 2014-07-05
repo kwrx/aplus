@@ -47,8 +47,10 @@ static char* env_init[] = {
 
 
 void sysidle() {
-	task_setpriority(TASK_PRIORITY_LOW);
-	task_idle();
+	task_setpriority(TASK_PRIORITY_MIN);
+
+	int pid = fork();
+	kprintf("fork() return %d from %d\n", pid, getpid());
 
 	for(;;)
 		__asm__ __volatile__ ("pause");
@@ -74,5 +76,7 @@ int main() {
 	task_idle();
 	task_create(NULL, sysidle);
 	
-	execve("/ramdisk/init", argv_init, env_init);
+	
+
+	//execve("/ramdisk/init", argv_init, env_init);
 }

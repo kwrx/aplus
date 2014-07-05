@@ -43,9 +43,9 @@
 
 typedef struct task {
 	uint32_t pid;
-	uint32_t esp;
-	uint64_t time;
-	
+	uint32_t stack;
+
+	uint64_t clock;
 	uint32_t state;
 	uint32_t priority;
 	uint32_t exitcode;
@@ -53,7 +53,8 @@ typedef struct task {
 	void* vmm;
 	
 	void* image;
-	void* symtable;
+	uint32_t imagelen;
+
 	char** argv;
 	char** environ;
 	

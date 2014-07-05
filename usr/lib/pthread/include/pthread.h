@@ -110,7 +110,7 @@ typedef struct pthread_cond {
 	handle_t semaphore;
 } pthread_cond_t;
 
-#define PTHREAD_COND_INITIALIZER ((pthread_cont_t) -1)
+#define PTHREAD_COND_INITIALIZER ((pthread_cond_t) -1)
 
 
 

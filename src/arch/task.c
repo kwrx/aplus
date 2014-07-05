@@ -29,6 +29,7 @@
 #include <aplus/task.h>
 #include <aplus/spinlock.h>
 
+extern uint32_t kernel_initial_stack;
 extern inode_t* fs_root;
 extern void* kernel_directory;
 
@@ -79,7 +80,7 @@ int task_init() {
 	memset(current_task, 0, sizeof(task_t));
 	
 	current_task->pid = next_pid++;
-	current_task->esp = make_stack(__task_idle, 0);
+	current_task->stack = make_stack(__task_idle, NULL);
 	current_task->vmm = kernel_directory;
 	current_task->cwd = fs_root;
 	current_task->state = TASK_STATE_RUNNING;
@@ -102,14 +103,14 @@ task_t* task_create_with_data(void* vmm, uint32_t eip, void* data) {
 
 
 	t->pid = next_pid++;
-	t->esp = make_stack(eip, data);
+	t->stack = make_stack(eip, data);
 	t->cwd = current_task->cwd;
 	t->state = TASK_STATE_RUNNING;
 	t->priority = TASK_PRIORITY_NORMAL;
 	t->signal_handler = 0;
-	t->symtable = 0;
 	t->argv = 0;
 	t->image = 0;
+	t->imagelen = 0;
 	t->environ = current_task->environ;
 	t->parent = current_task;
 	
@@ -200,7 +201,7 @@ uint32_t schedule(uint32_t esp) {
 		return esp;
 		
 	time_to_sched += 1;
-	current_task->time += 1;
+	current_task->clock += 1;
 		
 	if(current_task->state != TASK_STATE_RUNNING)
 		time_to_sched = current_task->priority;
@@ -210,7 +211,7 @@ uint32_t schedule(uint32_t esp) {
 		
 	time_to_sched = 0;
 		
-	current_task->esp = esp;
+	current_task->stack = esp;
 	void* prev_vmm = current_task->vmm;	
 
 	while(1) {
@@ -230,7 +231,7 @@ uint32_t schedule(uint32_t esp) {
 	
 	
 	vmm_switch(current_task->vmm);
-	return current_task->esp;
+	return current_task->stack;
 }
 
 

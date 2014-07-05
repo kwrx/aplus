@@ -44,12 +44,6 @@ int zero_read(struct inode* ino, uint32_t length, void* buf) {
 }
 
 
-void* thread_handle(void* p) {
-	printf("Weila from thread %d\n", getpid());
-
-	return NULL;
-}
-
 int main(int argc, char** argv) {	
 	
 

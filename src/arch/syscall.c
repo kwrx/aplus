@@ -167,10 +167,10 @@ syscall(_close, 2) {
 
 
 
+#define EXECVE_DEFAULT_ADDRESS	0xC0000000
 
 syscall(_execve, 3) {
 
-#define EXECVE_DEFAULT_ADDRESS	0xC0000000
 #define duplicate(dst, src)																\
 	int dst##_index = 0;																\
 	while(src[dst##_index]) {															\
@@ -218,17 +218,13 @@ syscall(_execve, 3) {
 		return -1;
 	}
 	
-	
-	char** argv = kmalloc(BUFSIZ);
-	char** env = kmalloc(BUFSIZ);
-	
-	duplicate(argv, ((char**)par1));
-	duplicate(env, ((char**)par2));
+
 	
 	task_t* t = task_create(NULL, entry);
 	t->image = pmm;
-	t->argv = argv;
-	t->environ = env;
+	t->imagelen = size;
+	t->argv = par1;
+	t->environ = par2;
 	t->exe = fd;
 	
 	for(int i = 0; i < size; i += 4096)
@@ -238,9 +234,39 @@ syscall(_execve, 3) {
 	return task_wait(t);
 }
 
+
+
+
 syscall(_fork, 4) {
-	errno = -ENOSYS;
-	return -1;
+	extern int forkchild();
+	sched_disable();
+
+	uint32_t parent_stack;
+	__asm__ __volatile__ ("mov eax, esp" : "=a"(parent_stack));
+
+	task_t* child = task_create_with_data(NULL, forkchild, parent_stack);
+	child->argv = current_task->argv;
+	child->environ = current_task->environ;
+	child->exe = current_task->exe;
+
+	uint32_t pstack = kmalloc(TASK_STACKSIZE);
+	memcpy(pstack, parent_stack & ~0xFFF, TASK_STACKSIZE);
+
+	vmm_map(child->vmm, pstack, parent_stack & ~0xFFF);
+	
+
+	if(current_task->image) {
+		child->image = kmalloc(current_task->imagelen);
+		child->imagelen = current_task->imagelen;
+
+		memcpy(child->image, current_task->image, child->imagelen);
+
+		for(int i = 0; i < child->imagelen; i += 4096)
+			vmm_map(child->vmm, i + child->image, i + EXECVE_DEFAULT_ADDRESS);
+	}
+
+	sched_enable();
+	return child->pid;
 }
 
 syscall(_fstat, 5) {
@@ -509,7 +535,7 @@ syscall(_times, 16) {
 		return -1;
 	}
 	
-	p->tms_utime = current_task->time;
+	p->tms_utime = current_task->clock;
 	p->tms_stime = 0;
 	p->tms_cutime = 0;
 	p->tms_cstime = 0;

@@ -47,51 +47,6 @@ typedef struct pthread_context {
 } pthread_context_t;
 
 
-/* OS */
-#ifdef APLUS
-EXTERN int aplus_thread_create(uint32_t entry, void* param, int priority);
-EXTERN void aplus_thread_idle();
-EXTERN void aplus_thread_wakeup();
-
-/* unistd.h "kill(pid, sig)" */
-#define aplus_thread_kill(tid, sig) kill(tid, sig)
-
-#endif
-
-PRIVATE inline int __os_thread_create(uint32_t entry, void* param, int priority) {
-#ifdef APLUS
-	return aplus_thread_create(entry, param, priority);
-#else
-	errno = ENOSYS;
-	return 1;
-#endif
-}
-
-PRIVATE inline void __os_thread_idle() {
-#ifdef APLUS
-	aplus_thread_idle();
-#else
-	errno = ENOSYS;
-#endif
-}
-
-
-PRIVATE inline void __os_thread_wakeup() {
-#ifdef APLUS
-	aplus_thread_wakeup();
-#else
-	errno = ENOSYS;
-#endif
-}
-
-PRIVATE inline int __os_thread_kill(int tid, int sig) {
-#ifdef APLUS
-	aplus_thread_kill(tid, sig);
-#else
-	errno = ENOSYS;
-	return 1;
-#endif
-}
-
+#include "pthread_os.h"
 
 #endif

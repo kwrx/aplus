@@ -27,12 +27,12 @@ MEMINFO			equ		1 << 1
 FLAGS			equ		MALIGN | MEMINFO
 MAGIC			equ		0x1BADB002
 CHECKSUM		equ		-(MAGIC + FLAGS)
-STACKSIZE		equ		0x4000
+STACKSIZE		equ		0x1000
 
 global _start
 global magic
 global mbd
-global initial_stack_ptr
+global kernel_initial_stack
 
 extern main
 extern text
@@ -57,7 +57,7 @@ _start:
 	mov [mbd], ebx
 	mov [magic], eax
 
-	mov esp, initial_stack_ptr
+	mov esp, kernel_initial_stack;
 	
 	call enable_fpu
 	call enable_sse
@@ -97,6 +97,6 @@ mbd dd 0
 magic dd 0	
 	
 section .bss
-align 32
+align 0x1000
 stack_ptr_s resb STACKSIZE
-initial_stack_ptr:
+kernel_initial_stack:

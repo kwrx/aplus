@@ -1,6 +1,6 @@
 
 //
-//  pthread_self.c
+//  pthread_condattr.c
 //
 //  Author:
 //       Antonio Natale <inferdevil97@gmail.com>
@@ -25,24 +25,46 @@
 
 #include "pthread_internal.h"
 
-
-EXTERN pthread_context_t* __pthread_queue;
-
-PUBLIC pthread_t pthread_self(void) {
-	if(!__pthread_queue) {
-		errno = ESRCH;
-		return 0;
+PUBLIC int pthread_condattr_init(pthread_condattr_t *attr) {
+	if(!attr) {
+		errno = EINVAL;
+		return 1;
 	}
 
-	int tid = __os_gettid();
-	pthread_context_t* tmp = __pthread_queue;
-	while(tmp) {
-		if(tmp->tid == tid)
-			return (pthread_t) tmp;
+	attr->pshared = 0;
+	return 0;
+}
 
-		tmp = tmp->next;
+
+PUBLIC int pthread_condattr_destroy(pthread_condattr_t *attr) {
+	if(!attr) {
+		errno = EINVAL;
+		return 1;
 	}
 
-	errno = ESRCH;
+	attr->pshared = 0;
+	return 0;
+}
+
+
+PUBLIC int pthread_condattr_getpshared(const pthread_condattr_t *attr, int *pshared) {
+	if(!attr) {
+		errno = EINVAL;
+		return 1;
+	}
+
+	
+	*pshared = attr->pshared;
+	return 0;
+}
+
+
+PUBLIC int pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared) {
+	if(!attr) {
+		errno = EINVAL;
+		return 1;
+	}
+
+	attr->pshared = pshared;
 	return 0;
 }
