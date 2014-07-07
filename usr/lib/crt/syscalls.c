@@ -194,9 +194,6 @@ int __install_signal_handler(void* handler) {
 }
 
 
-
-#define O_RDONLY	0
-
 DIR* opendir(const char* name) {
 	int fd = open(name, O_RDONLY, S_IFDIR);
 	if(fd < 0) {
@@ -297,4 +294,8 @@ void aplus_thread_wakeup() {
 
 void aplus_thread_zombie() {
 	sc_noret(35, 0, 0, 0, 0, 0);
+}
+
+void* aplus_device_create(char* path, int mode) {
+	sc(36, path, mode, 0, 0, 0);
 }

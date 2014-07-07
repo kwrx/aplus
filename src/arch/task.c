@@ -48,26 +48,26 @@ static uint32_t time_to_sched = 0;
 
 
 static void* make_stack(uint32_t eip, void* data) {
-	uint32_t* stack = kmalloc(TASK_STACKSIZE) + TASK_STACKSIZE;
-	*--stack = 0x0202;
-	*--stack = 0x08;
-	*--stack = eip;
+	uint32_t* pstack = kmalloc(TASK_STACKSIZE) + TASK_STACKSIZE;
+	*--pstack = 0x0202;
+	*--pstack = 0x08;
+	*--pstack = eip;
 	
-	*--stack = data;
-	*--stack = 0;
-	*--stack = 0;
-	*--stack = 0;
-	*--stack = 0;
-	*--stack = 0;
-	*--stack = 0;
-	*--stack = 0;
+	*--pstack = data;
+	*--pstack = 0;
+	*--pstack = 0; 
+	*--pstack = 0; 
+	*--pstack = 0; 
+	*--pstack = 0; 
+	*--pstack = 0; 
+	*--pstack = 0; 
 
-	*--stack = 0x10;
-	*--stack = 0x10;
-	*--stack = 0x10;
-	*--stack = 0x10;
+	*--pstack = 0x10; 
+	*--pstack = 0x10; 
+	*--pstack = 0x10; 
+	*--pstack = 0x10;
 
-	return (void*) stack;
+	return (void*) pstack;
 }
 
 static void __task_idle() {
@@ -101,10 +101,9 @@ task_t* task_create_with_data(void* vmm, uint32_t eip, void* data) {
 	task_t* t = kmalloc(sizeof(task_t));
 	memset(t, 0, sizeof(task_t));
 
-
 	t->pid = next_pid++;
-	t->stack = make_stack(eip, data);
 	t->cwd = current_task->cwd;
+	t->stack = make_stack(eip, data);
 	t->state = TASK_STATE_RUNNING;
 	t->priority = TASK_PRIORITY_NORMAL;
 	t->signal_handler = 0;
@@ -115,7 +114,7 @@ task_t* task_create_with_data(void* vmm, uint32_t eip, void* data) {
 	t->parent = current_task;
 	
 	for(int i = 0; i < TASK_MAX_FD; i++)
-		t->fd[i] = current_task->fd[i];
+		t->fd[i] = 0;
 		
 		
 	if(vmm == NULL) {
@@ -135,7 +134,6 @@ task_t* task_create_with_data(void* vmm, uint32_t eip, void* data) {
 
 	return t;
 }
-
 
 
 void task_zombie() {
@@ -300,6 +298,16 @@ int task_wait(task_t* child) {
 
 int task_waitpid(int pid) {
 	return task_wait(task_getbypid(pid));
+}
+
+
+
+void task_clonefd(task_t* child) {
+	if(current_task == NULL)
+		return;
+
+	for(int i = 0; i < TASK_MAX_FD; i++)
+		child->fd[i] = current_task->fd[i];
 }
 
 

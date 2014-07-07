@@ -57,6 +57,17 @@ void sysidle() {
 }
 
 
+
+int symlinks_init() {
+	symlink("/dev/tty0", "/dev/stdin");
+	symlink("/dev/tty0", "/dev/stdout");
+	symlink("/dev/tty0", "/dev/stderr");
+}
+
+int mounts_init() {
+	mount("", "/proc", "procfs", NULL, NULL);
+}
+
 int main() {
 
 	end_kernel = (uint32_t) &end;
@@ -72,11 +83,13 @@ int main() {
 	rootfs_init();
 	tty_init();
 	initrd_init();
+	symlinks_init();
+	mounts_init();
+
 
 	task_idle();
 	task_create(NULL, sysidle);
-	
-	
 
-	//execve("/ramdisk/init", argv_init, env_init);
+
+	execve("/ramdisk/init", argv_init, env_init);
 }

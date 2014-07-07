@@ -23,6 +23,7 @@
 #ifndef _APLUS_H
 #define _APLUS_H
 
+
 #include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
@@ -99,7 +100,6 @@ typedef struct regs {
 
 
 #ifdef DEBUG
-
 static inline void kprintf(char* fmt, ...) {
 	static char __kprintf_buf[1024];
 	memset(__kprintf_buf, 0, 1024);
@@ -133,5 +133,6 @@ struct kernel_symbol {
 	struct kernel_symbol kernel_symbol__##f __attribute__((section(".kernel_symbols"))) = {		\
 		#f, (void*) f																			\
 	}
-	
+
+
 #endif

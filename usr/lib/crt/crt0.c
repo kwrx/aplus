@@ -24,10 +24,20 @@
 extern "C" {
 #endif
 
+
+#include <fcntl.h>
 #include "syscalls.c"
 
-void __signal_handler__(int sig) {
+
+static void __signal_handler__(int sig) {
 	raise(sig);
+}
+
+static void __open_stdio__() {
+
+	open("/dev/stdin", O_RDWR, 0644);
+	open("/dev/stdout", O_RDWR, 0644);
+	open("/dev/stderr", O_RDWR, 0644);
 }
 
 
@@ -53,6 +63,10 @@ void _start() {
 	if(argv)
 		while(argv[argc])
 			argc++;
+
+
+
+	__open_stdio__();
 
 	//__do_global_ctors_aux();
 	int retcode = main(argc, argv, env);

@@ -48,7 +48,7 @@ void load_modules(char** argv, char** env) {
 
 
 void load_system() {
-	
+
 }
 
 
@@ -56,8 +56,8 @@ void load_system() {
 int main(int argc, char** argv) {
 	sc = clock();
 
-	load_modules(argv, environ);
 	load_system();
+	load_modules(argv, environ);
 
 	ec = clock();
 

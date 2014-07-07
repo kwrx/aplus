@@ -54,8 +54,22 @@ MKIRD	:= $(TLSDIR)/mkinitrd/mkinitrd
 VM	:= qemu
 
 ARCH	:= X86
-DEFINES	:= -D$(ARCH) -DAPLUS
 LIBS	:= -lx86 -lm -lc -lgcc
+
+DEFINES	:= -D$(ARCH) -DAPLUS
+
+ifeq ($(VMODE), true)
+DEFINES	+= -DVIDEOMODE
+endif
+
+ifeq ($(DEBUG), true)
+DEFINES	+= -DDEBUG
+endif
+
+ifeq ($(EMU), bochs)
+DEFINES	+= -DBOCHS
+endif
+
 
 CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -c -masm=intel -ffreestanding -fno-builtin -std=c99
 CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -c -masm=intel -ffreestanding -fno-builtin -fno-rtti -fno-exceptions -fpermissive
@@ -75,19 +89,11 @@ OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
 
 
 ifeq ($(EMU), bochs)
-DEFINES	+= -DBOCHS
-
 VM		:= bochs
 VMFLAGS	:= -q -f $(TLSDIR)/bochs/bochsrc.bxrc
 endif
 
-ifeq ($(DEBUG), true)
-DEFINES += -DDEBUG
-endif
 
-ifeq ($(VMODE), true)
-DEFINES	+= -DVIDEOMODE
-endif
 
 
 

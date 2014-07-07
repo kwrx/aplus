@@ -89,7 +89,7 @@ static inode_t* open_inode(char* name, int flags, int mode) {
 			
 			index = fs_finddir(index, s);
 			if(!index) {
-				errno = -ENOENT;
+				errno = ENOENT;
 				return -1;
 			}
 			
@@ -101,18 +101,24 @@ static inode_t* open_inode(char* name, int flags, int mode) {
 				if(flags & O_CREAT) {
 					ent = fs_creat(index, s, mode);
 				} else {
-					errno = -ENOENT;
+					errno = ENOENT;
 					return -1;
 				}
 			} else {
 				if(flags & O_CREAT && flags & O_EXCL) {
-					errno = -EEXIST;
+					errno = EEXIST;
 					return -1;
 				}
 			}
+
+			//if(spinlock_trylock(&ent->flock) != 0) {
+				//errno = EACCES;
+				//return -1;
+			//}
 			
 			if(flags & O_TRUNC)
 				fs_trunc(ent);
+
 			
 			return ent;
 		}
@@ -149,13 +155,13 @@ syscall(_close, 2) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
@@ -166,8 +172,6 @@ syscall(_close, 2) {
 }
 
 
-
-#define EXECVE_DEFAULT_ADDRESS	0xC0000000
 
 syscall(_execve, 3) {
 
@@ -188,7 +192,7 @@ syscall(_execve, 3) {
 	if(!fd) {
 		kprintf("execve: \"%s\" not found!\n", par0);
 
-		errno = -ENOENT;
+		errno = ENOENT;
 		return -1;
 	}
 		
@@ -203,7 +207,7 @@ syscall(_execve, 3) {
 		kprintf("execve: could not read all executable\n");
 
 		kfree(pmm);
-		errno = -EIO;
+		errno = EIO;
 		return -1;
 	}
 	
@@ -214,7 +218,7 @@ syscall(_execve, 3) {
 		kprintf("execve: could not load elf executable\n");
 	
 		kfree(pmm);
-		errno = -ENOEXEC;
+		errno = ENOEXEC;
 		return -1;
 	}
 	
@@ -228,7 +232,7 @@ syscall(_execve, 3) {
 	t->exe = fd;
 	
 	for(int i = 0; i < size; i += 4096)
-		vmm_map(t->vmm, i + pmm, i + EXECVE_DEFAULT_ADDRESS);
+		vmm_map(t->vmm, i + pmm, i + VIRTUAL_CODE_ADDRESS);
 
 	sched_enable();
 	return task_wait(t);
@@ -238,35 +242,8 @@ syscall(_execve, 3) {
 
 
 syscall(_fork, 4) {
-	extern int forkchild();
-	sched_disable();
-
-	uint32_t parent_stack;
-	__asm__ __volatile__ ("mov eax, esp" : "=a"(parent_stack));
-
-	task_t* child = task_create_with_data(NULL, forkchild, parent_stack);
-	child->argv = current_task->argv;
-	child->environ = current_task->environ;
-	child->exe = current_task->exe;
-
-	uint32_t pstack = kmalloc(TASK_STACKSIZE);
-	memcpy(pstack, parent_stack & ~0xFFF, TASK_STACKSIZE);
-
-	vmm_map(child->vmm, pstack, parent_stack & ~0xFFF);
-	
-
-	if(current_task->image) {
-		child->image = kmalloc(current_task->imagelen);
-		child->imagelen = current_task->imagelen;
-
-		memcpy(child->image, current_task->image, child->imagelen);
-
-		for(int i = 0; i < child->imagelen; i += 4096)
-			vmm_map(child->vmm, i + child->image, i + EXECVE_DEFAULT_ADDRESS);
-	}
-
-	sched_enable();
-	return child->pid;
+	errno = ENOSYS;	
+	return -1;
 }
 
 syscall(_fstat, 5) {
@@ -274,20 +251,20 @@ syscall(_fstat, 5) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
 	
 	struct stat* st = (struct stat*) par1;
 	if(!st) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	
@@ -324,7 +301,7 @@ syscall(_getpid, 6) {
 syscall(gettimeofday, 7) {
 	struct timeval* p = (struct timeval*) par0;
 	if(!p) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	
@@ -337,12 +314,12 @@ syscall(gettimeofday, 7) {
 syscall(_kill, 8) {
 	task_t* t = task_getbypid(par0);
 	if(!t) {
-		errno = -ESRCH;
+		errno = ESRCH;
 		return -1;
 	}
 
 	if(t == kernel_task) {
-		errno = -EACCES;
+		errno = EACCES;
 		return -1;
 	}
 
@@ -351,7 +328,7 @@ syscall(_kill, 8) {
 }
 
 syscall(_link, 9) {
-	errno = -ENOSYS;
+	errno = ENOSYS;
 	return -1;
 }
 
@@ -360,18 +337,18 @@ syscall(_lseek, 10) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
 	if(par1 > ino->length) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	
@@ -386,7 +363,7 @@ syscall(_lseek, 10) {
 			ino->position += par1;
 			break;
 		default:
-			errno = -EINVAL;
+			errno = EINVAL;
 			return -1;
 	}
 	
@@ -412,15 +389,14 @@ syscall(_open, 11) {
 	uint32_t entry = 0;
 	while(current_task->fd[entry]) {
 		if(entry >= TASK_MAX_FD) {
-			errno = -EMFILE;
+			errno = EMFILE;
 			return -1;
 		}
 		
 		entry++;
 	}
+
 		
-		
-	spinlock_lock(&f->flock);		
 	current_task->fd[entry] = f;
 	return entry;
 }
@@ -431,13 +407,13 @@ syscall(_read, 12) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
@@ -457,13 +433,13 @@ syscall(_readlink, 13) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
@@ -476,7 +452,7 @@ syscall(_stat, 14) {
 	struct stat* st = par1;
 	
 	if(!name || !st) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	
@@ -498,24 +474,24 @@ syscall(_symlink, 15) {
 	char* d = par1;
 	
 	if(!s || !d) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	
 	inode_t* is = open_inode(s, O_RDONLY, 0644);
 	if(is == -1) {
-		errno = -ENOENT;
+		errno = ENOENT;
 		return -1;
 	}
 	
 	if(is->links_count > INODE_MAX_LINKS) {
-		errno = -EMLINK;
+		errno = EMLINK;
 		return -1;
 	}
 	
 	inode_t* id = open_inode(d, O_RDONLY | O_CREAT | O_EXCL, S_IFLNK);
 	if(id == -1) {
-		errno = -ENOENT;
+		errno = ENOENT;
 		return -1;
 	}
 	
@@ -531,7 +507,7 @@ syscall(_times, 16) {
 
 	struct tms* p = par0;
 	if(!p) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	
@@ -559,13 +535,13 @@ syscall(_write, 19) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
@@ -584,13 +560,13 @@ syscall(_readdir, 20) {
 		return 0;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return 0;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return 0;
 	}
 	
@@ -599,7 +575,7 @@ syscall(_readdir, 20) {
 			ino = ino->link;
 			
 	if(!(ino->mask & S_IFDIR)) {
-		errno = -ENOTDIR;
+		errno = ENOTDIR;
 		return 0;
 	}
 	
@@ -613,13 +589,13 @@ syscall(ioctl, 21) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
@@ -678,13 +654,13 @@ syscall(tell, 24) {
 		return -1;
 		
 	if(par0 > TASK_MAX_FD) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 		
 	inode_t* ino = current_task->fd[par0];
 	if(!ino) {
-		errno = -EBADF;
+		errno = EBADF;
 		return -1;
 	}
 	
@@ -723,7 +699,7 @@ syscall(pipe, 27) {
 	if(!p) {
 		kfree(b);
 		
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 	
@@ -732,7 +708,7 @@ syscall(pipe, 27) {
 	uint32_t entry = 0;
 	while(current_task->fd[entry]) {
 		if(entry >= TASK_MAX_FD) {
-			errno = -EMFILE;
+			errno = EMFILE;
 			return -1;
 		}
 		
@@ -745,7 +721,7 @@ syscall(pipe, 27) {
 	entry = 0;
 	while(current_task->fd[entry]) {
 		if(entry >= TASK_MAX_FD) {
-			errno = -EMFILE;
+			errno = EMFILE;
 			return -1;
 		}
 		
@@ -796,6 +772,9 @@ syscall(free, 31) {
 syscall(aplus_thread_create, 32) {
 	task_t* t = task_create_with_data(current_task->vmm, par0, par1);
 	t->priority = par2;
+
+	task_clonefd(t);
+
 	return t->pid;
 }
 
@@ -809,6 +788,20 @@ syscall(aplus_thread_wakeup, 34) {
 
 syscall(aplus_thread_zombie, 35) {
 	task_zombie();
+}
+
+syscall(aplus_device_create, 36) {
+	if(!current_task)
+		return 0;
+
+	int fd = open(par0, O_CREAT | O_EXCL, par1);
+	if(fd < 0)
+		return 0;
+	
+	inode_t* rn = current_task->fd[fd];
+	close(fd);
+
+	return rn;
 }
 
 uint32_t syscall_handler(regs_t* r) {
@@ -827,6 +820,6 @@ uint32_t syscall_handler(regs_t* r) {
 	
 	kprintf("syscall: handler %d not found\n", r->eax);
 	
-	errno = -ENOSYS;
+	errno = ENOSYS;
 	return -1;
 }

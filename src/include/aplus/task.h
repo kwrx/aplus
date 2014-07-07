@@ -40,6 +40,11 @@
 #define TASK_PRIORITY_MAX		100
 
 
+#define VIRTUAL_CODE_ADDRESS	0xC0000000
+#define VIRTUAL_STACK_ADDRESS	0xF0000000
+
+#define VIRTUAL_STACK_LENGTH	TASK_STACKSIZE
+
 
 typedef struct task {
 	uint32_t pid;

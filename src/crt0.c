@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/times.h>
+#include <fcntl.h>
 #include <dirent.h>
 #include <unistd.h>
 #include <stdint.h>
@@ -237,9 +238,11 @@ void aplus_thread_zombie() {
 	sc_noret(35, 0, 0, 0, 0, 0);
 }
 
+void* aplus_device_create(char* path, int mode) {
+	sc(36, path, mode, 0, 0, 0);
+}
 
 
-#define O_RDONLY	0
 
 DIR* opendir(const char* name) {
 	int fd = open(name, O_RDONLY, S_IFDIR);
