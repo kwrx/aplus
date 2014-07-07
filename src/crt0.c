@@ -51,6 +51,9 @@ int errno;
 	__asm__ __volatile__ ("int 0x80" : : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f))
 
 
+
+
+
 void _exit(int status) {
 	sc_noret(0, status, 0, 0, 0, 0);
 	for(;;);
