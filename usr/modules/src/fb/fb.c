@@ -64,6 +64,17 @@ static bga_write(uint16_t index, uint16_t value) {
 	outw(VBE_DISPI_IOPORT_DATA, value);
 }
 
+static void video_reset() {
+	int fd = open("/dev/tty0", O_RDONLY, 0644);
+	if(fd < 0)
+		return -1;
+		
+	ioctl(fd, IOCTL_TTY_RESET, 0);
+	close(fd);
+	
+	return 0;
+}
+
 int fb_ioctl(struct inode* ino, int req, void* buf) {
 	switch(req) {
 		case IOCTL_FB_DISABLE:
@@ -109,8 +120,7 @@ int fb_ioctl(struct inode* ino, int req, void* buf) {
 			bga_write(VBE_DISPI_INDEX_VIRT_HEIGHT, *(int*) buf);
 			break;
 		case IOCTL_FB_CLOSE:
-			//video_init();
-			break;
+			return video_reset();
 		default:
 			return -1;
 	}
@@ -126,7 +136,6 @@ int main(int argc, char** argv) {
 		printf("fb: could not create device file!\n");
 		return -1;
 	}
-
 
 	dev->ioctl = fb_ioctl;	
 	return 0;

@@ -77,7 +77,7 @@ void _start() {
 	int retcode = main(argc, argv, env);
 	//__do_global_dtors_aux();
 
-	_exit(retcode);
+	exit(retcode);
 }
 
 #ifdef __cplusplus

@@ -389,7 +389,6 @@
     <None Include="bin\tools\ld\linker.ld" />
     <None Include="bin\tools\mkinitrd\mkinitrd" />
     <None Include="bin\tools\mkinitrd\src\main.c" />
-    <None Include="initrd\dash" />
     <None Include="initrd\fb.km" />
     <None Include="initrd\init" />
     <None Include="initrd\null.km" />
@@ -449,6 +448,9 @@
     <None Include="usr\apps\src\sh\main.c" />
     <None Include="usr\apps\src\sh\Makefile" />
     <None Include="usr\apps\src\sh\sh.h" />
+    <None Include="usr\apps\src\vgui\main.c" />
+    <None Include="usr\apps\src\vgui\Makefile" />
+    <None Include="usr\apps\src\vgui\vgui.h" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\fs\sfs\" />

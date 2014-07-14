@@ -68,6 +68,10 @@ int tty_ioctl(struct inode* ino, int req, void* buf) {
 			video_clear();
 			break;
 			
+		case IOCTL_TTY_RESET:
+			video_init();
+			break;
+			
 		default:
 			return -1;
 	}
