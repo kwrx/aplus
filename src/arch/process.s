@@ -2,5 +2,12 @@
 
 global read_eip
 read_eip:
-	mov eax, [esp]
+	pop eax
+	jmp eax
+ret
+
+global write_eip
+write_eip:
+	mov ecx, [esp + 4]
+	jmp ecx
 ret

@@ -97,8 +97,10 @@ IRQ 14
 IRQ 15
 
 
-extern pit_handler
+
 global irq0
+extern pit_handler
+
 irq0:
 	sti
 	pusha
@@ -113,10 +115,11 @@ irq0:
 	mov es, eax
 	mov gs, eax
 	
+
 	push esp
 	call pit_handler
 	mov esp, eax
-	
+
 	mov al, 0x20
 	mov dx, 0x20
 	out dx, al
@@ -130,7 +133,11 @@ irq0:
 iret
 
 
+
+
 extern syscall_handler
+extern errno
+
 global isr0x80
 
 syscall_retval dd 0
@@ -149,6 +156,7 @@ isr0x80:
 	mov es, eax
 	mov gs, eax
 	
+
 	mov eax, esp
 	push eax
 	call syscall_handler
@@ -163,6 +171,7 @@ isr0x80:
 	sti
 	
 	mov eax, [syscall_retval]
+	mov ebx, [errno]
 iret
 	
 	
@@ -186,8 +195,8 @@ isr14:
 	mov eax, esp
 	push eax
 	call pagefault_handler
-	
 	pop eax
+
 	pop gs
 	pop fs
 	pop es

@@ -54,7 +54,7 @@ MKIRD	:= $(TLSDIR)/mkinitrd/mkinitrd
 VM	:= qemu
 
 ARCH	:= X86
-LIBS	:= -lx86 -lm -lc -lgcc
+LIBS	:= -lx86 -lm -lposix -lc -lgcc
 
 DEFINES	:= -D$(ARCH) -DAPLUS
 

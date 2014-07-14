@@ -21,5 +21,5 @@
 
 
 EMU 	:= qemu
-DEBUG 	:= true
+DEBUG 	:= false
 VMODE	:= true

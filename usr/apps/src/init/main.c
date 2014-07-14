@@ -48,9 +48,8 @@ void load_modules(char** argv, char** env) {
 
 
 void load_system() {
-
+	mount("", "/proc", "procfs", NULL, NULL);
 }
-
 
 
 int main(int argc, char** argv) {
@@ -61,7 +60,9 @@ int main(int argc, char** argv) {
 
 	ec = clock();
 
-	printf("System loaded in %fs\n", (double)(ec - sc) / (double) CLOCKS_PER_SEC);
+	printf("System loaded in %gs\n\n", (double)(ec - sc) / (double) CLOCKS_PER_SEC);
+
+	execlp(getenv("SHELL"), getenv("SHELL"), 0);
 
 	return 0;
 }

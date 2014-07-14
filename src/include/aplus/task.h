@@ -22,6 +22,8 @@
 
 #include <stdint.h>
 #include <sys/times.h>
+
+#include <aplus.h>
 #include <aplus/vfs.h>
 
 #define TASK_MAX_FD		512
@@ -41,9 +43,14 @@
 
 
 #define VIRTUAL_CODE_ADDRESS	0xC0000000
-#define VIRTUAL_STACK_ADDRESS	0xF0000000
+#define VIRTUAL_CODE_LENGTH		0x400000
 
+#define VIRTUAL_STACK_ADDRESS	0xF0000000
 #define VIRTUAL_STACK_LENGTH	TASK_STACKSIZE
+
+typedef struct task_stack {
+	uint32_t gs, fs, es, ds, edi, esi, ebp, esp, ebx, edx, ecx, eax, eip, cs, eflags, useresp;
+} __attribute__((packed)) task_stack_t;
 
 
 typedef struct task {

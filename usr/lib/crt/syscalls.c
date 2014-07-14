@@ -34,19 +34,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <stdarg.h>
 
 #include <errno.h>
 #undef errno
 int errno;
 
 
-#define sc(n, b, c, d, e, f)																			\
-	int r;																								\
-	__asm__ __volatile__ ("int 0x80" : "=a"(r) : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f));		\
+#define sc(n, b, c, d, e, f)																						\
+	int r;																											\
+	__asm__ __volatile__ ("int 0x80" : "=a"(r), "=b"(errno) : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f));		\
 	return r
 	
-#define sc_noret(n, b, c, d, e, f)																		\
-	__asm__ __volatile__ ("int 0x80" : : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f))
+#define sc_noret(n, b, c, d, e, f)																					\
+	__asm__ __volatile__ ("int 0x80" : "=b"(errno) : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f))
+
 
 
 void _exit(int status) {
@@ -98,7 +100,12 @@ off_t lseek(int file, off_t ptr, int dir) {
 	sc(10, file, ptr, dir, 0, 0);
 }
 
-int open(const char* file, int flags, int mode) {
+int open(const char* file, int flags, ...) {
+	va_list lt;
+	va_start(lt, flags);
+	int mode = va_arg(lt, int);
+	va_end(lt);
+
 	sc(11, file, flags, mode, 0, 0);
 }
 
@@ -194,66 +201,6 @@ int __install_signal_handler(void* handler) {
 }
 
 
-DIR* opendir(const char* name) {
-	int fd = open(name, O_RDONLY, S_IFDIR);
-	if(fd < 0) {
-		errno = -ENOENT;
-		return 0;
-	}
-	
-	DIR* d = malloc(sizeof(DIR));
-	d->fd = fd;
-	d->position = 0;
-	
-	return d;
-}
-
-int closedir(DIR* dir) {
-	if(!dir) {
-		errno = -EINVAL;
-		return -1;
-	}
-
-	close(dir->fd);
-	free(dir);
-	
-	return 0;
-}
-
-void rewinddir(DIR* dir) {
-	if(!dir) {
-		errno = -EINVAL;
-		return;
-	}
-
-	dir->position = 0;
-}
-
-void seekdir(DIR* dir, off_t offset) {
-	if(!dir) {
-		errno = -EINVAL;
-		return;
-	}
-
-	dir->position = offset;
-}
-
-off_t telldir(DIR* dir) {
-	if(!dir) {
-		errno = -EINVAL;
-		return -1;
-	}
-
-	return dir->position;
-}
-
-int scandir(const char *pathname, struct dirent ***namelist, int (*select)(const struct dirent *), int (*compar)(const struct dirent **, const struct dirent **)) {
-	/* WTF */
-	return -1;
-}
-
-
-
 void* _malloc_r(struct _reent* reent, size_t size) {
 	sc(30, size, 0, 0, 0, 0);
 }
@@ -298,4 +245,76 @@ void aplus_thread_zombie() {
 
 void* aplus_device_create(char* path, int mode) {
 	sc(36, path, mode, 0, 0, 0);
+}
+
+
+int fcntl(int fd, int cmd, ...) {
+	va_list lt;
+	va_start(lt, cmd);
+	int arg = va_arg(lt, int);
+	va_end(lt);
+
+	sc(37, fd, cmd, arg, 0, 0);
+}
+
+
+
+
+DIR* opendir(const char* name) {
+	int fd = open(name, O_RDONLY, S_IFDIR);
+	if(fd < 0) {
+		errno = ENOENT;
+		return 0;
+	}
+	
+	DIR* d = malloc(sizeof(DIR));
+	d->fd = fd;
+	d->position = 0;
+	
+	return d;
+}
+
+int closedir(DIR* dir) {
+	if(!dir) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	close(dir->fd);
+	free(dir);
+	
+	return 0;
+}
+
+void rewinddir(DIR* dir) {
+	if(!dir) {
+		errno = EINVAL;
+		return;
+	}
+
+	dir->position = 0;
+}
+
+void seekdir(DIR* dir, off_t offset) {
+	if(!dir) {
+		errno = EINVAL;
+		return;
+	}
+
+	dir->position = offset;
+}
+
+off_t telldir(DIR* dir) {
+	if(!dir) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	return dir->position;
+}
+
+int scandir(const char *pathname, struct dirent ***namelist, int (*select)(const struct dirent *), int (*compar)(const struct dirent **, const struct dirent **)) {
+	/* WTF */
+	errno = ENOSYS;
+	return -1;
 }

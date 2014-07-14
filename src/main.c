@@ -31,42 +31,26 @@
 extern uint32_t end;
 uint32_t end_kernel = 0;
 
-static char* argv_init[] = {
-	"init",
-	0
-};
 
 static char* env_init[] = {
-	"PATH=/ramdisk;/bin",
+	"PATH=/bin:/usr/bin:/ramdisk",
 	"USER=liveuser",
-	"HOME=/",
+	"HOME=/home",
 	"OS=aPlus",
-	"SH=/bin/sh",
+	"SHELL=sh",
 	0
 };
+extern char** environ;
 
 
 void sysidle() {
 	task_setpriority(TASK_PRIORITY_MIN);
-
-	int pid = fork();
-	kprintf("fork() return %d from %d\n", pid, getpid());
 
 	for(;;)
 		__asm__ __volatile__ ("pause");
 }
 
 
-
-int symlinks_init() {
-	symlink("/dev/tty0", "/dev/stdin");
-	symlink("/dev/tty0", "/dev/stdout");
-	symlink("/dev/tty0", "/dev/stderr");
-}
-
-int mounts_init() {
-	mount("", "/proc", "procfs", NULL, NULL);
-}
 
 int main() {
 
@@ -83,13 +67,21 @@ int main() {
 	rootfs_init();
 	tty_init();
 	initrd_init();
-	symlinks_init();
-	mounts_init();
+	
+
+	symlink("/dev/tty0", "/dev/stdin");
+	symlink("/dev/tty0", "/dev/stdout");
+	symlink("/dev/tty0", "/dev/stderr");
 
 
 	task_idle();
 	task_create(NULL, sysidle);
 
+	environ = env_init;
 
-	execve("/ramdisk/init", argv_init, env_init);
+#ifdef VMODE
+	execlp("init", "init", "-v", 0);
+#else
+	execlp("init", "init", 0);
+#endif
 }

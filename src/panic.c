@@ -39,6 +39,6 @@ void __panic(char* msg, char* source, char* func, int line) {
 		
 	if(current_task == kernel_task)
 		for(;;);
-	for(;;);
+
 	_exit(-1);
 }

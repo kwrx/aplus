@@ -36,23 +36,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <stdarg.h>
 
 #include <errno.h>
 #undef errno
 int errno;
 
 
-#define sc(n, b, c, d, e, f)																			\
-	int r;																								\
-	__asm__ __volatile__ ("int 0x80" : "=a"(r) : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f));		\
+#define sc(n, b, c, d, e, f)																						\
+	int r;																											\
+	__asm__ __volatile__ ("int 0x80" : "=a"(r), "=b"(errno) : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f));		\
 	return r
 	
-#define sc_noret(n, b, c, d, e, f)																		\
-	__asm__ __volatile__ ("int 0x80" : : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f))
-
-
-
-
+#define sc_noret(n, b, c, d, e, f)																					\
+	__asm__ __volatile__ ("int 0x80" : "=b"(errno) : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f))
 
 void _exit(int status) {
 	sc_noret(0, status, 0, 0, 0, 0);
@@ -103,7 +100,12 @@ off_t lseek(int file, off_t ptr, int dir) {
 	sc(10, file, ptr, dir, 0, 0);
 }
 
-int open(const char* file, int flags, int mode) {
+int open(const char* file, int flags, ...) {
+	va_list lt;
+	va_start(lt, flags);
+	int mode = va_arg(lt, int);
+	va_end(lt);
+
 	sc(11, file, flags, mode, 0, 0);
 }
 
@@ -245,12 +247,21 @@ void* aplus_device_create(char* path, int mode) {
 	sc(36, path, mode, 0, 0, 0);
 }
 
+int fcntl(int fd, int cmd, ...) {
+	va_list lt;
+	va_start(lt, cmd);
+	int arg = va_arg(lt, int);
+	va_end(lt);
+
+	sc(37, fd, cmd, arg, 0, 0);
+}
+
 
 
 DIR* opendir(const char* name) {
 	int fd = open(name, O_RDONLY, S_IFDIR);
 	if(fd < 0) {
-		errno = -ENOENT;
+		errno = ENOENT;
 		return 0;
 	}
 	
@@ -263,7 +274,7 @@ DIR* opendir(const char* name) {
 
 int closedir(DIR* dir) {
 	if(!dir) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 
@@ -275,7 +286,7 @@ int closedir(DIR* dir) {
 
 void rewinddir(DIR* dir) {
 	if(!dir) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return;
 	}
 
@@ -285,7 +296,7 @@ void rewinddir(DIR* dir) {
 
 void seekdir(DIR* dir, off_t offset) {
 	if(!dir) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return;
 	}
 
@@ -294,7 +305,7 @@ void seekdir(DIR* dir, off_t offset) {
 
 off_t telldir(DIR* dir) {
 	if(!dir) {
-		errno = -EINVAL;
+		errno = EINVAL;
 		return -1;
 	}
 
@@ -303,6 +314,7 @@ off_t telldir(DIR* dir) {
 
 int scandir(const char *pathname, struct dirent ***namelist, int (*select)(const struct dirent *), int (*compar)(const struct dirent **, const struct dirent **)) {
 	/* WTF */
+	errno = ENOSYS;
 	return -1;
 }
 
@@ -310,25 +322,52 @@ int scandir(const char *pathname, struct dirent ***namelist, int (*select)(const
 
 
 
-void __signal_handler__(int sig) {
+#if 0 /* Kernel land */
+
+static void __signal_handler__(int sig) {
+	perror(strsignal(sig));
 	raise(sig);
 }
 
+static void __open_stdio__() {
+	open("/dev/stdin", O_RDWR, 0644);
+	open("/dev/stdout", O_RDWR, 0644);
+	open("/dev/stderr", O_RDWR, 0644);
+}
 
-#if 0 /* Kernel Land */
 
 void _start() {
-	char** argv = __get_argv();
-	int argc = 0;
-	
-	while(argv[argc])
-		argc++;
-		
+	extern int main();
+	extern void _init_signal();
+	extern void __do_global_ctors_aux();
+	extern void __do_global_dtors_aux();
+	extern int __bss_start;
+	extern int _end;
+
+	int i;
+	for(i = (int)&__bss_start; i < (int)&_end; i++)
+		*(char*) i = 0;
+
+
+	__open_stdio__();
+
 	__install_signal_handler(__signal_handler__);
 	_init_signal();
-	
-	extern int main(int argc, char** argv);
-	_exit(main(argc, argv));
+
+	int argc;
+	char** argv = __get_argv();
+	char** env = __get_env();
+
+	if(argv)
+		while(argv[argc])
+			argc++;
+
+
+	//__do_global_ctors_aux();
+	int retcode = main(argc, argv, env);
+	//__do_global_dtors_aux();
+
+	_exit(retcode);
 }
 
 #endif

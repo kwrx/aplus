@@ -25,6 +25,8 @@
 #include <stdint.h>
 #include <errno.h>
 #include <stdint.h>
+
+
 #include <aplus.h>
 #include <aplus/task.h>
 #include <aplus/spinlock.h>
@@ -38,8 +40,6 @@ static uint64_t next_pid = 0;
 volatile task_t* current_task = 0;
 volatile task_t* task_queue = 0;
 volatile task_t* kernel_task = 0;
-
-
 
 static uint8_t sched_enabled = 0;
 static uint32_t time_to_sched = 0;
@@ -116,7 +116,6 @@ task_t* task_create_with_data(void* vmm, uint32_t eip, void* data) {
 	for(int i = 0; i < TASK_MAX_FD; i++)
 		t->fd[i] = 0;
 		
-		
 	if(vmm == NULL) {
 		t->vmm = mm_create_addrspace();
 		mm_map_kernel(t->vmm);
@@ -191,12 +190,12 @@ int task_dosignal(task_t* t, void* prev_vmm) {
 }
 
 
-uint32_t schedule(uint32_t esp) {
+uint32_t schedule(uint32_t stack) {
 	if(!sched_enabled)
-		return esp;
+		return stack;
 		
 	if(!current_task)
-		return esp;
+		return stack;
 		
 	time_to_sched += 1;
 	current_task->clock += 1;
@@ -205,12 +204,13 @@ uint32_t schedule(uint32_t esp) {
 		time_to_sched = current_task->priority;
 		
 	if(time_to_sched < current_task->priority)
-		return esp;
+		return stack;
 		
 	time_to_sched = 0;
-		
-	current_task->stack = esp;
-	void* prev_vmm = current_task->vmm;	
+
+	
+	current_task->stack = stack;
+	void* prev_vmm = current_task->vmm;
 
 	while(1) {
 		current_task = current_task->next;
@@ -256,7 +256,6 @@ int task_exit2(task_t* t, int status) {
 		t->next->prev = t->prev;
 	
 	sched_enable();
-	
 	return 0;
 }
 
@@ -308,6 +307,11 @@ void task_clonefd(task_t* child) {
 
 	for(int i = 0; i < TASK_MAX_FD; i++)
 		child->fd[i] = current_task->fd[i];
+}
+
+
+task_t* task_fork() {
+	return NULL;
 }
 
 

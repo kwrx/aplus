@@ -189,7 +189,7 @@ syscall(_execve, 3) {
 
 		
 	inode_t* fd = open_inode(par0, O_RDONLY, 0644);
-	if(!fd) {
+	if(fd == -1) {
 		kprintf("execve: \"%s\" not found!\n", par0);
 
 		errno = ENOENT;
@@ -223,12 +223,17 @@ syscall(_execve, 3) {
 	}
 	
 
+	char** env = kmalloc(1024);
+	char** argv = kmalloc(1024);
+	
+	duplicate(env, ((char**)par2));
+	duplicate(argv, ((char**)par1));
 	
 	task_t* t = task_create(NULL, entry);
 	t->image = pmm;
 	t->imagelen = size;
-	t->argv = par1;
-	t->environ = par2;
+	t->argv = argv;
+	t->environ = env;
 	t->exe = fd;
 	
 	for(int i = 0; i < size; i += 4096)
@@ -242,8 +247,11 @@ syscall(_execve, 3) {
 
 
 syscall(_fork, 4) {
-	errno = ENOSYS;	
-	return -1;
+	task_t* child = task_fork();
+	if(child)
+		return child->pid;
+	else
+		return -1;
 }
 
 syscall(_fstat, 5) {
@@ -306,7 +314,7 @@ syscall(gettimeofday, 7) {
 	}
 	
 	p->tv_sec = pit_gettime();
-	p->tv_usec = pit_getticks() * CLOCKS_PER_SEC;
+	p->tv_usec = pit_getticks() * 1000;
 	
 	return 0;
 }
@@ -328,8 +336,7 @@ syscall(_kill, 8) {
 }
 
 syscall(_link, 9) {
-	errno = ENOSYS;
-	return -1;
+	return symlink(par0, par1);
 }
 
 syscall(_lseek, 10) {
@@ -520,14 +527,33 @@ syscall(_times, 16) {
 }
 
 syscall(_unlink, 17) {
+	inode_t* lnk = open_inode(par0, O_RDONLY, 0644);
+	if(lnk == -1) {
+		errno = ENOENT;
+		return -1;
+	}
 	
+	if(lnk->parent) {
+		if(S_ISLNK(lnk->mask))
+			if(lnk->link)
+				if(lnk->link->links_count > 0)
+					lnk->link->links_count -= 1;
+					
+		if(fs_remove(lnk->parent, lnk->name) != 0)
+			return -1;
+			
+		return 0;
+	}
+	
+	errno = EIO;
+	return -1;
 }
 
 syscall(_wait, 18) {
 	if(!current_task)
 		return -1;
 		
-	current_task->state = TASK_STATE_IDLE;
+	task_idle();
 }
 
 syscall(_write, 19) {
@@ -742,7 +768,7 @@ syscall(chdir, 28) {
 		return -1;
 		
 	inode_t* d = open_inode(par0, O_RDONLY, 0);
-	if(!d)
+	if(d == -1)
 		return -1;
 		
 	current_task->cwd = (inode_t*) d;
@@ -804,6 +830,12 @@ syscall(aplus_device_create, 36) {
 	return rn;
 }
 
+syscall(fcntl, 37) {
+	errno = ENOSYS;
+	return -1;
+}
+
+
 uint32_t syscall_handler(regs_t* r) {
 
 	syscall_handler_t* handlers = (syscall_handler_t*) &syscall_handlers_start;
@@ -811,7 +843,7 @@ uint32_t syscall_handler(regs_t* r) {
 	while(handlers < &syscall_handlers_end) {
 		if(handlers->magic != SYSCALL_MAGIC)
 			break;
-			
+	
 		if(handlers->number == r->eax)
 			return handlers->handler(r->ebx, r->ecx, r->edx, r->esi, r->edi);
 			

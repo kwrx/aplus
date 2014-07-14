@@ -20,21 +20,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
 
 #include <fcntl.h>
+#include <string.h>
 #include "syscalls.c"
 
 
+extern char** environ;
+
 static void __signal_handler__(int sig) {
+	perror(strsignal(sig));
 	raise(sig);
 }
 
 static void __open_stdio__() {
-
 	open("/dev/stdin", O_RDWR, 0644);
 	open("/dev/stdout", O_RDWR, 0644);
 	open("/dev/stderr", O_RDWR, 0644);
@@ -53,6 +57,9 @@ void _start() {
 	for(i = (int)&__bss_start; i < (int)&_end; i++)
 		*(char*) i = 0;
 
+
+	__open_stdio__();
+
 	__install_signal_handler(__signal_handler__);
 	_init_signal();
 
@@ -64,9 +71,7 @@ void _start() {
 		while(argv[argc])
 			argc++;
 
-
-
-	__open_stdio__();
+	environ = env;
 
 	//__do_global_ctors_aux();
 	int retcode = main(argc, argv, env);

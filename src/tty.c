@@ -105,7 +105,7 @@ int tty_read(struct inode* ino, uint32_t length, void* buf) {
 	}
 	
 	video_putc('\n');
-	((uint8_t*) buf) [i++] = 0;
+	((uint8_t*) buf) [i] = 0;
 	
 	
 	ino->position = videopos;
