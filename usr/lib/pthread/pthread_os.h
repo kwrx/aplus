@@ -11,8 +11,8 @@ EXTERN void aplus_thread_wakeup();
 
 /* Hooks */
 #define __os_thread_create(e, a, p)			aplus_thread_create(e, a, p)
-#define __os_thread_idle()					aplus_thread_idle()
-#define __os_thread_wakeup()				aplus_thread_wakeup()
+#define __os_thread_idle()					__idle()
+#define __os_thread_wakeup()				__wakeup()
 #define __os_thread_kill(t, s)				kill(t, s)
 #define __os_gettid()						getpid()
 

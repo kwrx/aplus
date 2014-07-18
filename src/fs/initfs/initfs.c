@@ -83,7 +83,7 @@ struct dirent* initfs_readdir(struct inode* ino) {
 	
 	struct dirent* ent = kmalloc(sizeof(struct dirent));
 	strcpy(ent->d_name, tmp->name);
-	ent->d_ino = fs_nextinode();
+	ent->d_ino = fs_geninode(ent->d_name);
 	
 	kfree(tmp);
 
@@ -122,8 +122,9 @@ struct inode* initfs_finddir(struct inode* ino, char* name) {
 			inode_t* f = kmalloc(sizeof(inode_t));
 			memset(f, 0, sizeof(inode_t));
 			
+			f->parent = ino;
 			strcpy(f->name, name);
-			f->inode = fs_nextinode();
+			f->inode = fs_geninode(f->name);
 			f->uid = f->gid = f->position = 0;
 			f->mask = S_IFREG;
 			
@@ -151,7 +152,6 @@ struct inode* initfs_finddir(struct inode* ino, char* name) {
 			
 			memset(f->reserved, 0, INODE_RESERVED_SIZE);
 			
-			f->parent = ino;
 			f->link = 0;
 			f->dev = ino->dev;
 			

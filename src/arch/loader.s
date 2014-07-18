@@ -39,6 +39,7 @@ extern text
 extern bss
 extern end
 extern multiboot
+extern memset
 
 
 section .multiboot
@@ -63,11 +64,27 @@ _start:
 	call enable_sse
 	call init_kb
 	call main
+	call reboot
+
+
+
+reboot:
+	cli
+	mov cx, 0x02
+	mov dx, 0x64
+.L1:
+	and cx, 0x02
+	jz .L2
 	
-hang:
-	nop
-	pause
-	jmp hang
+	in al, dx
+	mov cx, ax
+	jmp .L1
+.L2:	
+	mov al, 0xFE
+	out dx, al
+	jmp $
+ret
+
 
 enable_fpu:
 	finit

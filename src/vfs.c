@@ -36,8 +36,6 @@
 
 volatile inode_t* fs_root;
 
-static uint32_t next_inode = 0;
-
 
 static fsys_t* find_fsys(char* name) {
 	extern uint32_t fsys_start;
@@ -136,7 +134,8 @@ int fs_destroy(struct inode* ino) {
 	return 0;
 }
 
-uint32_t fs_nextinode() {
+uint32_t fs_geninode(char* name) {
+	static int next_inode = 0;
 	return next_inode++;
 }
 
@@ -145,10 +144,6 @@ int fs_chroot(struct inode* ino) {
 		errno = -EINVAL;
 		return -1;
 	}
-	
-	
-	if(fs_root)
-		kfree(fs_root);
 	
 	fs_root = ino;
 	return 0;
@@ -191,7 +186,7 @@ int vfs_init() {
 	memset(fs_root, 0, sizeof(inode_t));
 
 	strcpy(fs_root->name, "/");
-	fs_root->inode = fs_nextinode();
+	fs_root->inode = fs_geninode(fs_root->name);
 	fs_root->uid = fs_root->gid = fs_root->length = fs_root->position = 0;
 	fs_root->mask = S_IFDIR;
 	

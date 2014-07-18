@@ -41,7 +41,7 @@ static void procfs_meminfo_updatebuf(char* buf) {
 
 	sprintf	(
 				buf, 
-				"MemTotal:\t%8d kB\nMemFree:\t%8d kB\nHighTotal:\t%8d kB\nHighFree:\t%8d kB\nLowTotal:\t%8d kB\nLowFree:\t%8d kB\nSwapTotal:\t%8d kB\nSwapFree:\t%8d kB",
+				"MemTotal:\t%8d kB\nMemFree:\t%8d kB\nHighTotal:\t%8d kB\nHighFree:\t%8d kB\nLowTotal:\t%8d kB\nLowFree:\t%8d kB\nSwapTotal:\t%8d kB\nSwapFree:\t%8d kB\n",
 				mem_total,
 				mem_total - mem_used,
 				(0),
@@ -60,11 +60,20 @@ int procfs_meminfo_read(struct inode* ino, uint32_t size, void* buf) {
 	if(!size)
 		return 0;
 		
-	if(size > BUFSIZ)
+	if(ino->position > ino->length)
 		return 0;
 		
-	procfs_meminfo_updatebuf(ino->disk_ptr);
-	return strlen(strncpy(buf, ino->disk_ptr, size));
+	if(ino->position + size > ino->length)
+		size = ino->length - ino->position;	
+		
+	if(size > ino->length)
+		return 0;
+		
+	
+	strncpy(buf, ino->disk_ptr + ino->position, size);
+	
+	ino->position += size;
+	return size;
 }
 
 
@@ -80,12 +89,15 @@ inode_t* procfs_meminfo_create(inode_t* parent) {
 		
 	char* arg = kmalloc(BUFSIZ);
 	memset(arg, 0, BUFSIZ);
+	
+	procfs_meminfo_updatebuf(arg);
 
 	inode_t* node = kmalloc(sizeof(inode_t));
 	memset(node, 0, sizeof(inode_t));
 	
+	node->parent = parent;
 	strcpy(node->name, "meminfo");
-	node->inode = fs_nextinode();
+	node->inode = fs_geninode(node->name);
 	node->uid = node->gid = node->position = 0;
 	node->length = BUFSIZ;
 	node->mask = S_IFREG;
@@ -111,7 +123,7 @@ inode_t* procfs_meminfo_create(inode_t* parent) {
 	
 	memset(node->reserved, 0, INODE_RESERVED_SIZE);
 	
-	node->parent = parent;
+	
 	node->link = 0;
 	node->dev = parent->dev;
 	

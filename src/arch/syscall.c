@@ -31,9 +31,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+
 #include <aplus.h>
 #include <aplus/task.h>
 #include <aplus/spinlock.h>
+
+#include <setjmp.h>
 
 #define SYSCALL_MAGIC		0x0BADC0DE
 
@@ -93,6 +96,10 @@ static inode_t* open_inode(char* name, int flags, int mode) {
 				return -1;
 			}
 			
+			if(S_ISLNK(index->mask))
+				if(index->link)
+					index = index->link;
+			
 			s = p;
 		} else {
 			
@@ -111,6 +118,20 @@ static inode_t* open_inode(char* name, int flags, int mode) {
 				}
 			}
 
+			if(!(flags & O_NOFOLLOW))
+				if(S_ISLNK(ent->mask))
+					if(ent->link)
+						ent = ent->link;
+						
+				
+						
+			if(flags & O_DIRECTORY) {
+				if(!(S_ISDIR(ent->mask & S_IFDIR))) {
+					errno = ENOTDIR;
+					return -1;
+				}
+			}
+
 			//if(spinlock_trylock(&ent->flock) != 0) {
 				//errno = EACCES;
 				//return -1;
@@ -118,7 +139,7 @@ static inode_t* open_inode(char* name, int flags, int mode) {
 			
 			if(flags & O_TRUNC)
 				fs_trunc(ent);
-
+			
 			
 			return ent;
 		}
@@ -203,16 +224,17 @@ syscall(_execve, 3) {
 	size = (size & ~0xFFF) + 0x1000;
 	
 	uint32_t pmm = kmalloc(size);
-	if(fs_read(fd, fd->length, pmm) != fd->length) {
+	int br = 0;
+	if((br = fs_read(fd, fd->length, pmm)) != fd->length) {
 		kprintf("execve: could not read all executable\n");
-
+		
 		kfree(pmm);
 		errno = EIO;
 		return -1;
 	}
 	
 	
-	void* entry = elf_load_file(pmm);
+	void* entry = elf_load_file(pmm, size);
 	if(entry == NULL) {
 	
 		kprintf("execve: could not load elf executable\n");
@@ -240,18 +262,74 @@ syscall(_execve, 3) {
 		vmm_map(t->vmm, i + pmm, i + VIRTUAL_CODE_ADDRESS);
 
 	sched_enable();
-	return task_wait(t);
+	int retcode = task_wait(t);
+	
+
+	kfree(pmm);
+	return retcode;
 }
 
 
 
+static jmp_buf env;
+
+static void child_eip() {
+	longjmp(env, 1);
+}
 
 syscall(_fork, 4) {
-	task_t* child = task_fork();
-	if(child)
-		return child->pid;
-	else
+	if(!current_task)
 		return -1;
+		
+	int ret = setjmp(env);
+	if(ret == 0) {
+		sched_disable();
+		task_t* tsk = task_create(NULL, child_eip);
+		if(!tsk) {
+			errno = EFAULT;
+			return -1;
+		}
+		
+		if(current_task->image && (current_task->imagelen > 0)) {
+			tsk->imagelen = current_task->imagelen;
+			tsk->image = kmalloc(tsk->imagelen);
+			
+			for(int i = 0; i < tsk->imagelen; i += 4096)
+				vmm_map(tsk->vmm, i + (uint32_t) tsk->image, i + VIRTUAL_CODE_ADDRESS);
+			
+			memcpy(tsk->image, current_task->image, tsk->imagelen);
+		}
+		
+		task_clonefd(tsk);
+		tsk->cwd = current_task->cwd;
+		tsk->argv = current_task->argv;
+		tsk->environ = current_task->environ;
+		tsk->exe = current_task->exe;
+		tsk->priority = current_task->priority;
+		tsk->state = current_task->state;
+		tsk->signal_handler = current_task->signal_handler;
+		
+		
+		
+		
+		uint32_t oldesp = env->esp;
+		uint32_t oldebp = env->ebp;
+			
+		uint32_t stackbuf = (uint32_t) kmalloc(4096);	
+			
+		uint32_t newesp = (uint32_t) stackbuf | (oldesp & 0xFFF);
+		uint32_t newebp = (uint32_t) stackbuf | (oldebp & 0xFFF);
+		
+		for(int i = 0; i < 4096; i++)
+			((uint8_t*) stackbuf)[i] = ((uint8_t*) (oldesp & ~0xFFF))[i];
+			
+		env->esp = newesp;
+		env->ebp = newebp;
+		
+		sched_enable();
+		return tsk->pid;
+	} else
+		return 0;
 }
 
 syscall(_fstat, 5) {
@@ -527,7 +605,7 @@ syscall(_times, 16) {
 }
 
 syscall(_unlink, 17) {
-	inode_t* lnk = open_inode(par0, O_RDONLY, 0644);
+	inode_t* lnk = open_inode(par0, O_RDONLY | O_NOFOLLOW, 0644);
 	if(lnk == -1) {
 		errno = ENOENT;
 		return -1;
@@ -767,7 +845,7 @@ syscall(chdir, 28) {
 	if(!par0)
 		return -1;
 		
-	inode_t* d = open_inode(par0, O_RDONLY, 0);
+	inode_t* d = open_inode(par0, O_RDONLY | O_DIRECTORY, 0);
 	if(d == -1)
 		return -1;
 		
@@ -804,15 +882,15 @@ syscall(aplus_thread_create, 32) {
 	return t->pid;
 }
 
-syscall(aplus_thread_idle, 33) {
+syscall(__idle, 33) {
 	task_idle();
 }
 
-syscall(aplus_thread_wakeup, 34) {
+syscall(__wakeup, 34) {
 	task_wakeup();
 }
 
-syscall(aplus_thread_zombie, 35) {
+syscall(__zombie, 35) {
 	task_zombie();
 }
 
@@ -833,6 +911,16 @@ syscall(aplus_device_create, 36) {
 syscall(fcntl, 37) {
 	errno = ENOSYS;
 	return -1;
+}
+
+syscall(chroot, 38) {
+	inode_t* ino = open_inode(par0, O_RDONLY | O_DIRECTORY, 0);
+	if(!ino) {
+		errno = ENOENT;
+		return -1;
+	}
+	
+	return fs_chroot(ino);
 }
 
 

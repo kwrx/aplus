@@ -113,7 +113,7 @@ struct dirent* procfs_readdir(struct inode* ino) {
 		
 		sprintf(name, "%d", t->pid);
 		
-		inode = fs_nextinode();
+		inode = t->pid;
 	} else {
 		procfs_inode_t* tmp = ino->dev->disk_ptr;
 		
@@ -137,7 +137,7 @@ struct dirent* procfs_readdir(struct inode* ino) {
 		}
 		
 		name = tmp->inode->name;
-		ino = tmp->inode->inode;
+		inode = tmp->inode->inode;
 	}
 	
 	struct dirent* ent = kmalloc(sizeof(struct dirent));
@@ -274,8 +274,9 @@ struct inode* procfs_creat(struct inode* ino, char* name, int mode) {
 	inode_t* f = kmalloc(sizeof(inode_t));
 	memset(f, 0, sizeof(inode_t));
 	
+	f->parent = ino;
 	strcpy(f->name, name);
-	f->inode = fs_nextinode();
+	f->inode = fs_geninode(f->name);
 	f->uid = f->gid = f->length = f->position = 0;
 	f->mask = mode;
 	
@@ -308,7 +309,7 @@ struct inode* procfs_creat(struct inode* ino, char* name, int mode) {
 	
 	memset(f->reserved, 0, INODE_RESERVED_SIZE);
 	
-	f->parent = ino;
+	
 	f->link = 0;
 	f->dev = ino->dev;
 	

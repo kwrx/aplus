@@ -93,6 +93,27 @@
 	inx(w, uint16_t, ax)
 	inx(l, uint32_t, eax)
 	
+#define outsx(n, t, reg)											\
+	static inline void outs##n(uint16_t p, t* v, uint32_t len) {	\
+		for(int i = 0; i < len; i++)								\
+			out##n(p, v[i]);										\
+	}
+	
+	outsx(b, uint8_t, al)
+	outsx(w, uint16_t, ax)
+	outsx(l, uint32_t, eax)
+	
+	
+#define insx(n, t, reg)												\
+	static inline t ins##n(uint16_t p, t* v, uint32_t len) {		\
+		for(int i = 0; i < len; i++)								\
+			v[i] = in##n(p);										\
+	}
+	
+	insx(b, uint8_t, al)
+	insx(w, uint16_t, ax)
+	insx(l, uint32_t, eax)
+	
 	
 typedef struct regs {
 	uint32_t gs, fs, es, ds, edi, esi, ebp, esp, ebx, edx, ecx, eax, int_no, err_code, eip, cs, eflags, useresp;
@@ -100,7 +121,7 @@ typedef struct regs {
 
 
 
-
+#ifdef APLUS_KERNEL
 #ifdef DEBUG
 static inline void kprintf(char* fmt, ...) {
 	static char __kprintf_buf[1024];
@@ -124,7 +145,6 @@ extern void __panic(char*, char*, char*, int);
 
 
 
-
 struct kernel_symbol {
 	char* name;
 	void* handler;
@@ -136,5 +156,6 @@ struct kernel_symbol {
 		#f, (void*) f																			\
 	}
 
+#endif
 
 #endif

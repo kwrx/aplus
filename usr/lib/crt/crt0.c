@@ -25,6 +25,8 @@
 extern "C" {
 #endif
 
+void* __dso_handle = 0;
+
 
 #include <fcntl.h>
 #include <string.h>

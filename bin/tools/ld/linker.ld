@@ -36,17 +36,7 @@ SECTIONS {
 	
         *(.data)
     }
- 
-    .bss : AT(ADDR(.bss) - 0x00000000) {
-		bss = .;
-		_bss = .;
-		__bss = .;
-	
-        *(COMMON)
-        *(.bss)
-    }
-
-	
+ 	
 	. =  ALIGN(0x1000);
 	. += 0x1000;
 
@@ -95,6 +85,16 @@ SECTIONS {
 
 	. = ALIGN(0x1000);
 	. += 0x1000;
+	
+	
+	.bss : AT(ADDR(.bss) - 0x00000000) {
+		bss = .;
+		_bss = .;
+		__bss = .;
+	
+        *(COMMON)
+        *(.bss)
+    }
 	
 	end = .;
 	_end = .;

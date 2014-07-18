@@ -36,10 +36,20 @@ int procfs_cmdline_read(struct inode* ino, uint32_t size, void* buf) {
 	if(!size)
 		return 0;
 		
-	if(size > BUFSIZ)
+	if(ino->position > ino->length)
 		return 0;
 		
-	return strlen(strncpy(buf, ino->disk_ptr, size));
+	if(ino->position + size > ino->length)
+		size = ino->length - ino->position;	
+		
+	if(size > ino->length)
+		return 0;
+		
+	
+	strncpy(buf, ino->disk_ptr + ino->position, size);
+	
+	ino->position += size;
+	return size;
 }
 
 
@@ -74,8 +84,9 @@ inode_t* procfs_cmdline_create(inode_t* parent, task_t* t) {
 	inode_t* node = kmalloc(sizeof(inode_t));
 	memset(node, 0, sizeof(inode_t));
 	
+	node->parent = parent;
 	strcpy(node->name, "cmdline");
-	node->inode = fs_nextinode();
+	node->inode = fs_geninode(node->name);
 	node->uid = node->gid = node->position = 0;
 	node->length = BUFSIZ;
 	node->mask = S_IFREG;
@@ -101,7 +112,7 @@ inode_t* procfs_cmdline_create(inode_t* parent, task_t* t) {
 	
 	memset(node->reserved, 0, INODE_RESERVED_SIZE);
 	
-	node->parent = parent;
+	
 	node->link = 0;
 	node->dev = parent->dev;
 	

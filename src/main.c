@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#define DEBUG
 #include <aplus.h>
 #include <aplus/task.h>
 
@@ -30,6 +31,13 @@
 
 extern uint32_t end;
 uint32_t end_kernel = 0;
+
+
+int stampa(char* m) {
+	kprintf(m);
+}
+
+EXPORT(stampa);
 
 
 static char* env_init[] = {

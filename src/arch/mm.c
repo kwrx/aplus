@@ -20,8 +20,11 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 #include <stdint.h>
 #include <stddef.h>
+
+#define DEBUG
 #include <aplus.h>
 #include <aplus/spinlock.h>
 
@@ -48,8 +51,33 @@ uint32_t mm_usedmemory = 0;
 pdirectory_t* mm_directory = 0;
 pdirectory_t* kernel_directory = 0;
 
+#ifdef MMU_BITMAP
+static uint8_t mm_bitmap[1024 * 1024] = { 0 };
+#endif
+
 
 void* mm_alloc(int count) {
+#ifdef MMU_BITMAP
+	for(int i = 0; i < sizeof(mm_bitmap); i++) {
+		if(mm_bitmap[i])
+			continue;
+		
+		int c = count;
+		while(c--) {
+			if(mm_bitmap[i + c])
+				continue;
+		}
+		
+		c = count;
+		while(c--)
+			mm_bitmap[i + c] = 1;
+			
+		mm_usedmemory += (count * CHUNK_SIZE);
+		return (void*) (i * 4096);
+	}
+	
+	return 0;
+#else
 	static uint32_t maddr = 0;
 	uint32_t addr = maddr;
 	
@@ -58,12 +86,21 @@ void* mm_alloc(int count) {
 		
 	end_kernel = maddr;
 	return (void*) addr;
+#endif
 }
 
 void mm_free(void* block, int count) {
+#ifdef MMU_BITMAP	
+	mm_usedmemory -= (count * CHUNK_SIZE);
+	
+	while(count--)
+		mm_bitmap[(uint32_t)block / 4096 + count] = 0;
+
+#else
 	mm_usedmemory -= (count * CHUNK_SIZE);
 	
 	/* Nothing */
+#endif
 }
 
 
@@ -160,15 +197,16 @@ void* kmalloc(size_t size) {
 		
 	int chunks = size / 4096 + 1;
 	
-	void* ch = mm_alloc(chunks);
-	for(int i = 0, frame = (uint32_t)ch; i < chunks; i++, frame += 4096)
+	void* ch = mm_alloc(chunks + 1);
+	for(int i = 0, frame = (uint32_t)ch; i <= chunks; i++, frame += 4096)
 		vmm_map(mm_directory, frame, frame);
+		
 							
-	/* chunk_t* head = (chunk_t*) ((uint32_t)ch);
+	chunk_t* head = (chunk_t*) ch;
 	head->magic = CHUNK_MAGIC;
 	head->size = size;
 	
-	ch = (void*) ((uint32_t) head + sizeof(chunk_t)); */
+	ch = (uint32_t)ch + CHUNK_SIZE;
 				
 	__unlock
 	
@@ -180,7 +218,7 @@ void kfree(void* ptr) {
 	if(!ptr)
 		return;
 		
-	chunk_t* head = (chunk_t*) ((uint32_t) ptr - sizeof(chunk_t));
+	chunk_t* head = (chunk_t*) ((uint32_t) ptr - CHUNK_SIZE);
 	if(head->magic != CHUNK_MAGIC)
 		return;
 		
@@ -190,9 +228,8 @@ void kfree(void* ptr) {
 	head->magic = 0;
 	head->size = 0;
 	
-	mm_free(head, chunks);
-	
-	for(int i = 0, frame = (uint32_t)head; i < chunks; i++, frame += 4096)
+	mm_free(head, chunks + 1);
+	for(int i = 0, frame = (uint32_t)head; i <= chunks; i++, frame += 4096)
 		vmm_unmap(mm_directory, frame);
 		
 	__unlock
@@ -202,6 +239,10 @@ void kfree(void* ptr) {
 int mm_init() {
 	mm_totalmemory = (mbd->mem_lower + mbd->mem_upper) * 1024;
 	mm_usedmemory = 0;
+	
+#ifdef MMU_BITMAP
+	memset(mm_bitmap, 0, sizeof(mm_bitmap));
+#endif
 
 	mm_alloc(end_kernel / 4096 + 1);
 	

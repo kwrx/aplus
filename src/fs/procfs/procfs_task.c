@@ -38,8 +38,9 @@ inode_t* procfs_task_create(inode_t* parent, task_t* t) {
 	
 	sprintf(pbuf, "%d", t->pid);
 	
+	node->parent = parent;
 	strcpy(node->name, pbuf);
-	node->inode = fs_nextinode();
+	node->inode = t->pid;
 	node->uid = node->gid = node->position = 0;
 	node->length = 0;
 	node->mask = S_IFDIR;
@@ -65,7 +66,7 @@ inode_t* procfs_task_create(inode_t* parent, task_t* t) {
 	
 	memset(node->reserved, 0, INODE_RESERVED_SIZE);
 	
-	node->parent = parent;
+	
 	node->link = 0;
 	node->dev = parent->dev;
 	

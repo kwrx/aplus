@@ -448,3 +448,6 @@ uint64_t pit_gettime() {
 uint32_t pit_getticks() {
 	return pit_ticks;
 }
+
+EXPORT(irq_set);
+EXPORT(irq_unset);

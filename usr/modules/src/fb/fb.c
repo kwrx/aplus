@@ -64,7 +64,7 @@ static bga_write(uint16_t index, uint16_t value) {
 	outw(VBE_DISPI_IOPORT_DATA, value);
 }
 
-static void video_reset() {
+static int video_reset() {
 	int fd = open("/dev/tty0", O_RDONLY, 0644);
 	if(fd < 0)
 		return -1;
@@ -129,7 +129,7 @@ int fb_ioctl(struct inode* ino, int req, void* buf) {
 }
 
 
-int main(int argc, char** argv) {
+int cmain(int argc, char** argv) {
 	
 	inode_t* dev = aplus_device_create("/dev/fb0", S_IFBLK);
 	if(!dev) {

@@ -451,8 +451,35 @@
     <None Include="usr\apps\src\vgui\main.c" />
     <None Include="usr\apps\src\vgui\Makefile" />
     <None Include="usr\apps\src\vgui\vgui.h" />
+    <None Include="usr\apps\src\js\Makefile" />
+    <None Include="usr\apps\src\js\TinyJS.cpp" />
+    <None Include="usr\apps\src\js\TinyJS.h" />
+    <None Include="usr\apps\src\js\TinyJS_Functions.cpp" />
+    <None Include="usr\apps\src\js\TinyJS_Functions.h" />
+    <None Include="usr\apps\src\js\TinyJS_MathFunctions.cpp" />
+    <None Include="usr\apps\src\js\TinyJS_MathFunctions.h" />
+    <None Include="usr\apps\src\js\Main.cpp" />
+    <None Include="usr\apps\src\cat\main.c" />
+    <None Include="usr\apps\src\cat\Makefile" />
+    <None Include="usr\modules\src\atapi\Makefile" />
+    <None Include="usr\modules\src\atapi\atapi.c" />
+    <None Include="usr\modules\src\atapi\atapi.h" />
+    <None Include="src\fs\iso9660\iso9660_mount.c" />
+    <None Include="src\fs\iso9660\iso9660_check.c" />
+    <None Include="src\fs\iso9660\iso9660.h" />
+    <None Include="src\fs\iso9660\iso9660_readdir.c" />
+    <None Include="src\fs\iso9660\iso9660.c" />
+    <None Include="src\fs\iso9660\iso9660_finddir.c" />
+    <None Include="usr\apps\src\ls\main.c" />
+    <None Include="usr\apps\src\ls\Makefile" />
+    <None Include="src\fs\iso9660\iso9660_read.c" />
+    <None Include="usr\modules\src\atapi\main.c" />
+    <None Include="usr\modules\src\fb\main.c" />
+    <None Include="usr\modules\src\null\main.c" />
+    <None Include="usr\modules\src\zero\main.c" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\fs\sfs\" />
+    <Folder Include="src\fs\iso9660\" />
   </ItemGroup>
 </Project>

@@ -171,8 +171,9 @@ struct inode* rootfs_creat(struct inode* ino, char* name, int mode) {
 	inode_t* f = kmalloc(sizeof(inode_t));
 	memset(f, 0, sizeof(inode_t));
 	
+	f->parent = ino;
 	strcpy(f->name, name);
-	f->inode = fs_nextinode();
+	f->inode = fs_geninode(f->name);
 	f->uid = f->gid = f->length = f->position = 0;
 	f->mask = mode;
 	
@@ -205,7 +206,7 @@ struct inode* rootfs_creat(struct inode* ino, char* name, int mode) {
 	
 	memset(f->reserved, 0, INODE_RESERVED_SIZE);
 	
-	f->parent = ino;
+
 	f->link = 0;
 	f->dev = fs_root;
 	

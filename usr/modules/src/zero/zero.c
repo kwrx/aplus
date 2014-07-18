@@ -44,7 +44,7 @@ int zero_read(struct inode* ino, uint32_t length, void* buf) {
 }
 
 
-int main(int argc, char** argv) {
+int cmain(int argc, char** argv) {
 
 	inode_t* dev = aplus_device_create("/dev/zero", S_IFCHR);
 	if(!dev) {

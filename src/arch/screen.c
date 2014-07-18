@@ -21,9 +21,11 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <time.h>
 #include <aplus.h>
 #include <aplus/int86.h>
 #include <aplus/spinlock.h>
+#include <aplus/task.h>
 
 
 #define GFX_ADDR         0x3CE
@@ -155,7 +157,7 @@ static void kbhandler(regs_t* r) {
 static char kbtochar() {
 	
 	while(keyboard_ready == 0)
-		__asm__ __volatile__  ("pause");
+		__asm__ __volatile__  ("inb 0x60; pause");
 	
 	keyboard_ready = 0;
 	
@@ -267,15 +269,14 @@ int video_puts(char* s) {
 
 char video_getc() {
 	__lock
-
-	while(inb(0x64) & 0x02);
+	char ch = 0;
+	
 	
 	irq_set(1, kbhandler);
 	
-	char ch = 0;
+	task_idle();
 	while((ch = kbtochar()) == 0);
-		
-	while(inb(0x64) & 0x02);
+	task_wakeup();
 
 	irq_unset(1);
 	

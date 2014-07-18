@@ -54,9 +54,9 @@ MKIRD	:= $(TLSDIR)/mkinitrd/mkinitrd
 VM	:= qemu
 
 ARCH	:= X86
-LIBS	:= -lx86 -lm -lposix -lc -lgcc
+LIBS	:= -lelfldr -lx86 -lm -lposix -lc -lgcc
 
-DEFINES	:= -D$(ARCH) -DAPLUS
+DEFINES	:= -D$(ARCH) -DAPLUS -DAPLUS_KERNEL
 
 ifeq ($(VMODE), true)
 DEFINES	+= -DVIDEOMODE
@@ -119,13 +119,13 @@ $(OUTPUT).elf : $(OFILES)
 
 
 userdev: $(OUTPUT).elf
-	@cd usr/modules && $(MAKE) && $(MAKE) install && $(MAKE) clean
-	@cd usr/apps && $(MAKE) && $(MAKE) install && $(MAKE) clean
-	@$(CP) $(APPDIR)/* $(IRDDIR)
-	@$(CP) $(MODDIR)/* $(IRDDIR)
+	@cd usr/modules && $(MAKE) && $(MAKE) install
+	@cd usr/apps && $(MAKE) && $(MAKE) install
 
 initrd: userdev
 	@echo " MKIRD\t" $(notdir $(IFILES))
+	@$(CP) $(MODDIR)/* $(IRDDIR)
+	@$(CP) $(APPDIR)/init $(IRDDIR)
 	@$(MKIRD) $(IRDDIR) $(notdir $(IFILES))
 	@$(MV) $(IRDDIR)/initrd.img $(RAMDISK)
 
@@ -133,9 +133,16 @@ iso: initrd
 	-@$(MKDIR) iso
 	-@$(MKDIR) iso/boot
 	-@$(MKDIR) iso/boot/grub
+	-@$(MKDIR) iso/bin
+	-@$(MKDIR) iso/etc
+	-@$(MKDIR) iso/lib
+	-@$(MKDIR) iso/include
+	-@$(MKDIR) iso/home
+	-@$(MKDIR) iso/sys
 	@$(CP) $(OUTPUT).elf iso/aplus
 	@$(CP) $(RAMDISK) iso/initrd
 	@$(CP) $(TLSDIR)/grub2/grub.cfg iso/boot/grub
+	@$(CP) $(APPDIR)/* iso/bin
 	@echo " MKISO\t" $(OUTPUT).iso
 	@$(MKISO) $(MIFLAGS) $(OUTPUT).iso iso > /dev/null
 	@$(RM) -r iso

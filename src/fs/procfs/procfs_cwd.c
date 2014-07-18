@@ -37,8 +37,9 @@ inode_t* procfs_cwd_create(inode_t* parent, task_t* t) {
 	inode_t* node = kmalloc(sizeof(inode_t));
 	memset(node, 0, sizeof(inode_t));
 	
+	node->parent = parent;
 	strcpy(node->name, "cwd");
-	node->inode = fs_nextinode();
+	node->inode = fs_geninode(node->name);
 	node->uid = node->gid = node->position = 0;
 	node->length = 0;
 	node->mask = S_IFLNK;
@@ -64,7 +65,7 @@ inode_t* procfs_cwd_create(inode_t* parent, task_t* t) {
 	
 	memset(node->reserved, 0, INODE_RESERVED_SIZE);
 	
-	node->parent = parent;
+	
 	node->link = t->cwd;
 	node->dev = parent->dev;
 	

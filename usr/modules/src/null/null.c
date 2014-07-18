@@ -28,7 +28,7 @@
 #include <aplus.h>
 
 
-int main(int argc, char** argv) {	
+int cmain(int argc, char** argv) {	
 	int fd = open("/dev/null", O_CREAT | O_EXCL, S_IFCHR);
 	
 	if(fd < 0) {

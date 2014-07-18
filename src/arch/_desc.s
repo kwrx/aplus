@@ -136,7 +136,7 @@ iret
 
 
 extern syscall_handler
-extern errno
+extern __errno
 
 global isr0x80
 
@@ -170,8 +170,9 @@ isr0x80:
 	popa
 	sti
 	
+	call __errno
+	mov ebx, [eax]
 	mov eax, [syscall_retval]
-	mov ebx, [errno]
 iret
 	
 	

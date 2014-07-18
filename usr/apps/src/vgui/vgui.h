@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 
-#define VIDEOCONFIG_PATH	"/ramdisk/video.conf"
+#define VIDEOCONFIG_PATH	"/sys/video.conf"
 
 #define VGUI_DEFAULT_WIDTH	800
 #define VGUI_DEFAULT_HEIGHT	600

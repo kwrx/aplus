@@ -55,6 +55,11 @@ char* getcwd(char* buf, size_t size) {
 	memset(tmpbuf, 0, 1024);
 	strcat(tmpbuf, ".");
 
+	if(curr_ino == root_ino) {
+		strcat_inv(buf, "/");
+		return buf;
+	}
+
 
 	while(curr_ino != root_ino) {
 		if(stat(tmpbuf, &st) != 0)
@@ -72,8 +77,10 @@ char* getcwd(char* buf, size_t size) {
 
 		struct dirent* ent;
 		while(ent = readdir(dir)) {
-			if(ent->d_ino == curr_ino)
+			if(ent->d_ino == curr_ino) {
 				strcat_inv(buf, ent->d_name);
+				strcat_inv(buf, "/");			
+			}
 
 			free(ent);
 		}
@@ -81,6 +88,5 @@ char* getcwd(char* buf, size_t size) {
 		closedir(dir);
 	}
 
-	strcat_inv(buf, "/");
 	return buf;
 }

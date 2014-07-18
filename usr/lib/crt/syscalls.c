@@ -37,12 +37,10 @@
 #include <stdarg.h>
 
 #include <errno.h>
-#undef errno
-int errno;
 
 
 #define sc(n, b, c, d, e, f)																						\
-	int r;																											\
+	int r, er;																											\
 	__asm__ __volatile__ ("int 0x80" : "=a"(r), "=b"(errno) : "a"(n), "b"(b), "c"(c), "d"(d), "S"(e), "D"(f));		\
 	return r
 	
@@ -231,15 +229,15 @@ int aplus_thread_create(uint32_t entry, void* param, int priority) {
 	sc(32, entry, param, priority, 0, 0);
 }
 
-void aplus_thread_idle() {
+void __idle() {
 	sc_noret(33, 0, 0, 0, 0, 0);
 }
 
-void aplus_thread_wakeup() {
+void __wakeup() {
 	sc_noret(34, 0, 0, 0, 0, 0);
 }
 
-void aplus_thread_zombie() {
+void __zombie() {
 	sc_noret(35, 0, 0, 0, 0, 0);
 }
 
@@ -256,6 +254,11 @@ int fcntl(int fd, int cmd, ...) {
 
 	sc(37, fd, cmd, arg, 0, 0);
 }
+
+int chroot(const char* path) {
+	sc(38, path, 0, 0, 0, 0);
+}
+
 
 
 

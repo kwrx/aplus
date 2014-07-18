@@ -63,3 +63,4 @@ int spinlock_trylock(spinlock_t* lock) {
 	*lock = 1;
 	return 0;
 }
+

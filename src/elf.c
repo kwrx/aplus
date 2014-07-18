@@ -3,6 +3,10 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <aplus.h>
+#include <aplus/elfldr.h>
+
+
+#define ELF_ENTRYPOINT	"_start"
 
 #define ELF_NIDENT	16
 
@@ -224,7 +228,20 @@ int elf_check_supported(Elf32_Ehdr* hdr) {
 }
 
 
-static void* elf_lookup_symbol(Elf32_Ehdr* hdr, const char* name) {
+static void* elf_lookup_symbol(elf_module_t* elf, const char* name) {
+	elf_symbol_t* symtab = elf->e_symtab;
+	while(symtab) {
+		if(strcmp(symtab->name, name) == 0)
+			return symtab->addr;
+			
+		symtab = symtab->next;
+	}
+	
+	return NULL;
+}
+
+
+static void* elf_resolve_symbol(elf_module_t* elf, const char* name) {
 	extern uint32_t kernel_symbols_start;
 	extern uint32_t kernel_symbols_end;
 
@@ -241,172 +258,59 @@ static void* elf_lookup_symbol(Elf32_Ehdr* hdr, const char* name) {
 		s += sizeof(struct kernel_symbol);
 	}
 
-	return NULL;
+	return elf_lookup_symbol(elf, name);
 }
 
-static Elf32_Shdr* elf_sheader(Elf32_Ehdr* hdr) {
-	return (Elf32_Shdr*) ((int)hdr + hdr->e_shoff);
-}
-
-static Elf32_Shdr* elf_section(Elf32_Ehdr* hdr, int idx) {
-	return &elf_sheader(hdr) [idx];
-}
-
-static char* elf_str_table(Elf32_Ehdr* hdr) {
-	if(hdr->e_shstrndx == SHN_UNDEF)
-		return NULL;
-
-	return (char*)hdr + elf_section(hdr, hdr->e_shstrndx)->sh_offset;
-}
-
-static char* elf_lookup_string(Elf32_Ehdr* hdr, int offset) {
-	char* strtab = elf_str_table(hdr);
-	if(strtab == NULL)
-		return NULL;
-
-	return strtab + offset;
-}
-
-static uint32_t elf_get_symval(Elf32_Ehdr* hdr, int table, uint32_t idx) {
-	if(table == SHN_UNDEF || idx == SHN_UNDEF)
-		return 0;
-
-
-	Elf32_Shdr* symtab = elf_section(hdr, table);
-	if(idx >= symtab->sh_size) {
-		kprintf("elf: Symbol index out of range (%d:%u)\n", table, idx);
-		return ELF_RELOC_ERR;
-	}
-
-	uint32_t symaddr = (uint32_t) hdr + symtab->sh_offset;
-	Elf32_Sym* symbol = &((Elf32_Sym*) symaddr) [idx];
-
-	Elf32_Shdr* strtab = elf_section(hdr, symtab->sh_link);
-	const char* name = (const char*) ((uint32_t) hdr + strtab->sh_offset + symbol->st_name);
-
-	if(symbol->st_shndx == SHN_UNDEF) {
-		void* addr = elf_lookup_symbol(hdr, name);
-		if(addr == NULL) {
-			if(ELF32_ST_BIND(symbol->st_info) & STB_WEAK) {
-				return 0;
-			} else {
-				kprintf("elf: undefinited external symbol: %s\n", name);
-				return ELF_RELOC_ERR;
-			}
-		} else {
-			return (uint32_t) addr;
-		}		
-	} else if(symbol->st_shndx == SHN_ABS) {
-		return symbol->st_value;
-	} else {
-		Elf32_Shdr* target = elf_section(hdr, symbol->st_shndx);
-		return (uint32_t) hdr + symbol->st_value + target->sh_offset;
-	}
-
-	return ELF_RELOC_ERR;
-}
-
-static uint32_t elf_do_reloc(Elf32_Ehdr* hdr, Elf32_Rel* rel, Elf32_Shdr* reltab) {
-
-	Elf32_Shdr* target = elf_section(hdr, reltab->sh_info);
+static int elf_define_symbol(elf_module_t* elf, char* name, void* addr) {
+	elf_symbol_t* symtab = elf->e_symtab;
 	
-	uint32_t addr = (uint32_t)hdr + target->sh_offset;
-	uint32_t* ref = (uint32_t*) (addr + rel->r_offset);
-
-	uint32_t symval = 0;
-	if(ELF32_R_SYM(rel->r_info) != SHN_UNDEF) {
-		symval = elf_get_symval(hdr, reltab->sh_link, ELF32_R_SYM(rel->r_info));
-		if(symval == ELF_RELOC_ERR)
-			return ELF_RELOC_ERR;
-	}
-
-
-	switch(ELF32_R_TYPE(rel->r_info)) {
-		case R_386_NONE:
-			break;
-
-		case R_386_32:
-			*ref = DO_386_32(symval, *ref);
-			break;
-		
-		case R_386_PC32:
-			*ref = DO_386_PC32(symval, *ref, (uint32_t) ref);
-			break;
-
-		default:
-			kprintf("elf: unsupported relocation type (%d)\n", ELF32_R_TYPE(rel->r_info));
-			return ELF_RELOC_ERR;
-	}
-
-	return symval;
-}
-
-static int elf_load_stage1(Elf32_Ehdr* hdr) {
-
-	Elf32_Shdr* shdr = elf_sheader(hdr);
-
-	for(uint32_t i = 0; i < hdr->e_shnum; i++) {
-		Elf32_Shdr* section = &shdr[i];
-
-		if(section->sh_type == SHT_NOBITS) {
-			if(!section->sh_size)
-				continue;
-
-			if(section->sh_flags & SHF_ALLOC) {
-				void* m = kmalloc(section->sh_size);
-				memset(m, 0, section->sh_size);
-
-				//section->sh_offset = (uint32_t) m - (uint32_t) hdr;
-			}
+	while(symtab) {
+		if(strcmp(symtab->name, name) == 0) {
+			kprintf("elf: duplicate definition of \"%s\"\n", name);
+			return -1;
 		}
+		
+		symtab = symtab->next;
 	}
-
+	
+	symtab = (elf_symbol_t*) malloc(sizeof(elf_symbol_t) + strlen(name) + 1);
+	strcpy(symtab->name, name);
+	symtab->addr = addr;
+	symtab->next = elf->e_symtab;
+	elf->e_symtab = symtab;
+	
 	return 0;
 }
 
-static int elf_load_stage2(Elf32_Ehdr* hdr) {
 
-	Elf32_Shdr* shdr = elf_sheader(hdr);
+void* elf_load_rel(void* image, size_t size, char* symstart) {
+	elf_module_t* elf = kmalloc(sizeof(elf_module_t));
+	memset(elf, 0, sizeof(elf_module_t));
 	
-	uint32_t i, idx;
-	for(i = 0; i < hdr->e_shnum; i++){
-		Elf32_Shdr* section = &shdr[i];
-		
-		if(section->sh_type == SHT_REL) {
-			for(idx = 0; idx < section->sh_size / section->sh_entsize; idx++) {
-				Elf32_Rel* reltab = &((Elf32_Rel*)((uint32_t)hdr + section->sh_offset)) [idx];
-				if(elf_do_reloc(hdr, reltab, section) == ELF_RELOC_ERR){
-					kprintf("elf: failed to relocate symbol\n");
-					return ELF_RELOC_ERR;
-				}
-			}
-		}
-	}
-
-	return 0;
-}
-
-static void* elf_load_rel(Elf32_Ehdr* hdr) {
-
-	int result = elf_load_stage1(hdr);
-	if(result == ELF_RELOC_ERR) {
-		kprintf("elf: unable to load relocatable ELF in stage1\n");
+	int err;
+	
+	elf_module_link_cbs_t link = {
+		elf_resolve_symbol,
+		elf_define_symbol
+	};
+	
+	if((err = elf_module_init(elf, image, size)) < 0) {
+		kprintf("elf: could not init elf relocatable (%d)\n", err);
 		return NULL;
 	}
-
-	result = elf_load_stage2(hdr);
-	if(result == ELF_RELOC_ERR) {
-		kprintf("elf: unable to load relocatable ELF in stage2\n");
-		return NULL;
+	
+	void* core = kmalloc(size);
+	if((err = elf_module_load(elf, core, &link)) < 0) {
+		kprintf("elf: error loading elf relocatable (%d)\n", err);
+		return NULL;	
 	}
-
-	return (void*) hdr->e_entry;
+	
+	return elf_resolve_symbol(elf, symstart);
 }
 
 
-void* elf_load_file(void* image) {
+void* elf_load_file(void* image, size_t size) {
 	Elf32_Ehdr *hdr = (Elf32_Ehdr*) image;
-	
 	if(elf_check_supported(hdr) != 0)
 		return 0;
 		
@@ -416,7 +320,7 @@ void* elf_load_file(void* image) {
 			
 		case ET_REL:
 		case ET_MODULE:
-			return elf_load_rel(hdr);
+			return elf_load_rel(image, size, ELF_ENTRYPOINT);
 	}
 
 	

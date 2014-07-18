@@ -19,6 +19,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 
+#define DEBUG
 #include <aplus.h>
 #include <aplus/task.h>
 #include <aplus/vfs.h>
@@ -31,8 +32,16 @@ void __panic(char* msg, char* source, char* func, int line) {
 	int pid = -1;
 	if(current_task)
 		pid = current_task->pid;
+		
+		
+	char* name;
+	if(current_task->exe)
+		name = current_task->exe->name;
 
-	kprintf("Panic: %s (%s[%d]: %s) from %d\n", msg, source, line, func, pid);
+	kprintf("Panic: %s (%s[%d]: %s) from %d (%s)\n", msg, source, line, func, pid, name);
+	
+	sched_disable();
+	__asm__ __volatile__ ("cli");
 	
 	if(!current_task)
 		for(;;);
@@ -40,5 +49,7 @@ void __panic(char* msg, char* source, char* func, int line) {
 	if(current_task == kernel_task)
 		for(;;);
 
+	__asm__ __volatile__ ("sti");
+	sched_enable();
 	_exit(-1);
 }

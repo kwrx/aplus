@@ -55,6 +55,7 @@ all:
 
 clean:
 	@$(foreach dir, $(DIRS), cd $(SRCDIR)/$(dir) && $(MAKE) clean;)
+	-@$(RM) bin/*
 
 install:
 	@$(foreach dir, $(DIRS), cd $(SRCDIR)/$(dir) && $(MAKE) install;)

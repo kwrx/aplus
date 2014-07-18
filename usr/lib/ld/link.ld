@@ -101,7 +101,6 @@ SECTIONS {
 	.bss : {
 		*(.dynbss)
 		*(.bss .bss.* .gnu.linkonce.b.*)
-		*(COMMON)
 		
 		. = ALIGN(4K);
 	}

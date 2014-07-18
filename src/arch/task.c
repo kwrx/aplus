@@ -31,6 +31,7 @@
 #include <aplus/task.h>
 #include <aplus/spinlock.h>
 
+
 extern uint32_t kernel_initial_stack;
 extern inode_t* fs_root;
 extern void* kernel_directory;
@@ -286,7 +287,7 @@ int task_wait(task_t* child) {
 		wakeup = 1;
 		
 	task_idle();
-	while(child->state != TASK_STATE_KILLED && child->state != TASK_STATE_ZOMBIE)
+	while(child->state != TASK_STATE_KILLED)
 		__asm__ __volatile__ ("pause");
 	
 	if(wakeup)
@@ -310,9 +311,6 @@ void task_clonefd(task_t* child) {
 }
 
 
-task_t* task_fork() {
-	return NULL;
-}
 
 
 EXPORT(task_zombie);

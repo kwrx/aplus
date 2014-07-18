@@ -48,7 +48,7 @@ struct dirent* procfs_fd_readdir(struct inode* ino) {
 			sprintf(pbuf, "%d", i);
 			
 			strcpy(ent->d_name, pbuf);
-			ent->d_ino = fs_nextinode();
+			ent->d_ino = i;
 			
 			ino->position += 1;
 			return ent;
@@ -94,8 +94,9 @@ struct inode* procfs_fd_finddir(struct inode* ino, char* name) {
 				inode_t* f = kmalloc(sizeof(inode_t));
 				memset(f, 0, sizeof(inode_t));
 				
+				f->parent = ino;
 				strcpy(f->name, name);
-				f->inode = fs_nextinode();
+				f->inode = i;
 				f->uid = f->gid = f->length = f->position = 0;
 				f->mask = S_IFLNK;
 				
@@ -120,7 +121,6 @@ struct inode* procfs_fd_finddir(struct inode* ino, char* name) {
 				
 				memset(f->reserved, 0, INODE_RESERVED_SIZE);
 				
-				f->parent = ino;
 				f->link = (inode_t*) fd[i];
 				f->dev = ino->dev;
 				
@@ -139,8 +139,9 @@ inode_t* procfs_fd_create(inode_t* parent, task_t* t) {
 	memset(node, 0, sizeof(inode_t));
 	
 	
+	node->parent = parent;
 	strcpy(node->name, "fd");
-	node->inode = fs_nextinode();
+	node->inode = fs_geninode(node->name);
 	node->uid = node->gid = node->position = 0;
 	node->length = 0;
 	node->mask = S_IFDIR;
@@ -166,7 +167,6 @@ inode_t* procfs_fd_create(inode_t* parent, task_t* t) {
 	
 	memset(node->reserved, 0, INODE_RESERVED_SIZE);
 	
-	node->parent = parent;
 	node->link = 0;
 	node->dev = parent->dev;
 	
