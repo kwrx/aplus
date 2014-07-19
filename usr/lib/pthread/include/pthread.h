@@ -23,6 +23,7 @@
 #ifndef PTHREAD_H
 #define PTHREAD_H
 
+#include <stdint.h>
 #include <sys/types.h>
 #include <unistd.h>
 

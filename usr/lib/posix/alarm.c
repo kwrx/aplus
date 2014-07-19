@@ -1,5 +1,5 @@
 //
-//  nanosleep.c
+//  alarm.c
 //
 //  Author:
 //       Antonio Natale <inferdevil97@gmail.com>
@@ -19,54 +19,36 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <sys/times.h>
-#include <sys/time.h>
+#include <unistd.h>
+#include <signal.h>
 #include <errno.h>
 
-
-int nanosleep(const struct timespec* req, struct timespec* rem) {
-	if(req->tv_sec > 999999999) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	struct timeval* tm = malloc(sizeof(struct timeval));
-	struct timezone* tz = malloc(sizeof(struct timezone));
-
-	if(!tm && !tz) {
-		errno = ENOMEM;
-		return -1;
-	}
-
-	if(gettimeofday(tm, tz) != 0)
-			return -1;
-
-	int t0 = req->tv_sec + tm->tv_sec;
-	int t1 = req->tv_nsec + tm->tv_usec;
-
-#ifdef APLUS
-	__idle();
+#ifdef USE_PTHREAD
+#include <pthread.h>
 #endif
 
-	while(1) {
-		if(gettimeofday(tm, tz) != 0)
-			return -1;
-
-		if(tm->tv_sec > t0 && tm->tv_usec > t1)
-			break;
-
-		if(rem) {
-			rem->tv_sec = t0 - tm->tv_sec;
-			rem->tv_nsec = t1 - tm->tv_usec;
-		}
-	}
-
-#ifdef APLUS
-	__wakeup();
-#endif
-
-	free(tm);
-	free(tz);
+int alarm_thread(int seconds) {
+	sleep(seconds);
+	raise(SIGALRM);
 
 	return 0;
+}
+
+unsigned alarm(unsigned seconds) {
+#ifdef USE_PTHREAD
+	static pthread_t thr = -1;
+
+	if(thr != -1)
+		if(pthread_detach(thr) != 0)
+			return -1;
+
+	if(seconds > 0)
+		if(pthread_create(&thr, NULL, alarm_thread, seconds) != 0)
+			return -1;
+	return 0;
+
+#else
+	errno = ENOSYS;
+	return -1;
+#endif
 }

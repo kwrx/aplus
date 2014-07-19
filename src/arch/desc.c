@@ -33,7 +33,7 @@
 
 
 #define FAULT_MASK		0x3FFFFFE3
-#define PIT_FREQ		CLOCKS_PER_SEC
+#define PIT_FREQ		(CLOCKS_PER_SEC)
 
 
 typedef struct gdt_entry {

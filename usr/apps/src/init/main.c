@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <signal.h>
 
 #include <sys/times.h>
 #include <time.h>
@@ -88,9 +89,9 @@ int main(int argc, char** argv) {
 	load_modules();
 	load_system();
 
-	ec = clock();
+	ec = clock(); 
 
-	printf("System loaded in %gs\n\n", (double)(ec - sc) / (double) CLOCKS_PER_SEC);
+	printf("System loaded in %gs\n\n", (double)(ec - sc) / (double) (CLOCKS_PER_SEC));
 	
 	if(fork() == 0)
 		execlp(getenv("SHELL"), getenv("SHELL"), 0);

@@ -25,6 +25,10 @@
 
 #include "pthread_internal.h"
 
+EXTERN pthread_context_t* __pthread_queue;
+
+
+
 PUBLIC int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr) {
 	if(!cond) {
 		errno = EINVAL;
@@ -33,8 +37,6 @@ PUBLIC int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *att
 
 	cond->waiting = 0;
 	cond->semaphore = 0;
-
-	pthread_spin_init(&cond->semaphore, 0);
 
 	return 0;
 }
@@ -50,12 +52,6 @@ PUBLIC int pthread_cond_destroy(pthread_cond_t *cond) {
 		return 1;
 	}
 
-	if(pthread_spin_trylock(&cond->semaphore) != 0) {
-		errno = EBUSY;
-		return 1;
-	}
-
-	pthread_spin_destroy(&cond->semaphore);
 
 	cond->waiting = 0;
 	cond->semaphore = 0;		
@@ -79,8 +75,35 @@ PUBLIC int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex) {
 		return 1;
 	}
 
-	errno = ENOSYS;
-	return 1;
+	pthread_context_t* ctx = (pthread_context_t*) pthread_self();
+	if(!ctx) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	ctx->cond = cond;
+	ctx->cond->waiting = 1;
+	ctx->cond->semaphore = 1;
+
+	_os_thread_idle();
+	while(ctx->cond->semaphore) {
+#if ARCH==X86
+		__asm__ __volatile__ ("pause");
+#elif ARCH==X86_64
+		__asm__ __volatile__ ("pause");
+#else
+			/* Nothing */
+#endif
+	}
+	__os_thread_wakeup();
+
+	ctx->cond->waiting = 0;
+	ctx->cond->semaphore = 0;
+	ctx->cond = 0;
+
+	pthread_mutex_unlock(mutex);
+
+	return 0;
 }
 
 PUBLIC int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime) {
@@ -88,12 +111,48 @@ PUBLIC int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, 
 	return 1;
 }
 
+
 PUBLIC int pthread_cond_signal(pthread_cond_t *cond) {
-	errno = ENOSYS;
-	return 1;
+	if(!__pthread_queue) {
+		errno = ESRCH;
+		return -1;
+	}
+
+
+	pthread_context_t* tmp = __pthread_queue;
+	while(tmp) {
+		if(tmp->cond == cond) {
+			if(tmp->cond->waiting) {
+				tmp->cond->semaphore = 0;
+				return 0;			
+			}
+		}
+
+		tmp = tmp->next;
+	}
+
+	errno = ESRCH;
+	return -1;
 }
 
 PUBLIC int pthread_cond_broadcast(pthread_cond_t *cond) {
-	errno = ENOSYS;
-	return 1;
+	if(!__pthread_queue) {
+		errno = ESRCH;
+		return -1;
+	}
+
+
+	pthread_context_t* tmp = __pthread_queue;
+	while(tmp) {
+		if(tmp->cond == cond) {
+			if(tmp->cond->waiting) {
+				tmp->cond->semaphore = 0;		
+			}
+		}
+
+		tmp = tmp->next;
+	}
+
+
+	return 0;
 }

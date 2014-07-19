@@ -41,6 +41,7 @@ typedef struct pthread_context {
 	pthread_once_t once;
 	pthread_attr_t attr;
 
+	pthread_cond_t* cond;
 	pthread_key_t keys[PTHREAD_KEYS_MAX];
 
 	struct pthread_context* next;

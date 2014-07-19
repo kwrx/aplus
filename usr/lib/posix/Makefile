@@ -39,7 +39,7 @@ GIT		:= git
 
 
 ARCH	:= X86
-DEFINES	:= -D$(ARCH) -DAPLUS
+DEFINES	:= -D$(ARCH) -DAPLUS -DUSE_PTHREAD
 LIBS	:= -lm -lc -lgcc
 
 CFLAGS	:= $(DEFINES) -w -O2 -I include -std=c99
