@@ -67,19 +67,15 @@ SECTIONS {
 
 
 	.ctors : {
-		KEEP (*crtbegin.o(.ctors))
-		KEEP (*crtbegin?.o(.ctors))
-		KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .ctors))
-		KEEP (*(SORT(.ctors.*)))
-		KEEP (*(.ctors))
+		PROVIDE_HIDDEN (__ctors_start = .);
+		*(.ctors)
+		PROVIDE_HIDDEN (__ctors_end = .);
 	}
 	
 	.dtors : {
-		KEEP (*crtbegin.o(.dtors))
-		KEEP (*crtbegin?.o(.dtors))
-		KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o ) .dtors))
-		KEEP (*(SORT(.dtors.*)))
-		KEEP (*(.dtors))
+		PROVIDE_HIDDEN (__dtors_start = .);
+		*(.dtors)
+		PROVIDE_HIDDEN (__dtors_end = .);	
 	}
 
 

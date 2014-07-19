@@ -31,6 +31,8 @@ void* __dso_handle = 0;
 #include <fcntl.h>
 #include <signal.h>
 #include <string.h>
+#include <stdint.h>
+
 #include "syscalls.c"
 
 
@@ -57,6 +59,33 @@ static void __init_traps() {
 	signal(SIGINT, __default_sighandler__);
 	signal(SIGSEGV, __default_sighandler__);
 	signal(SIGTERM, __default_sighandler__);
+}
+
+
+static void __do_global_ctors() {
+	extern int __ctors_start;
+	extern int __ctors_end;
+
+	void (**fs) () = (void (**) ()) &__ctors_start;
+	void (**fe) () = (void (**) ()) &__ctors_end;
+
+	while(fs < fe) {
+		(*fs) ();
+		fs++;
+	}
+}
+
+static void __do_global_dtors() {
+	extern int __dtors_start;
+	extern int __dtors_end;
+
+	void (*fs) () = (void (*) ()) &__dtors_start;
+	void (*fe) () = (void (*) ()) &__dtors_end;
+
+	while(fs < fe) {
+		(*fs) ();
+		fs++;
+	}
 }
 
 void _start() {
@@ -88,9 +117,9 @@ void _start() {
 
 	environ = env;
 
-	//__do_global_ctors_aux();
+	__do_global_ctors();
 	int retcode = main(argc, argv, env);
-	//__do_global_dtors_aux();
+	__do_global_dtors();
 
 	exit(retcode);
 }

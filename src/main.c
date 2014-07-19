@@ -80,15 +80,14 @@ int main() {
 	environ = env_init;
 
 	if(fork() == 0) {
+		execlp(
+					"init", 
+					"init",
 #ifdef VMODE
-		execlp("init", "init", "-v", 0);
-#else
-		execlp("init", "init", 0);
+					"-v",
 #endif
-	}
-	
-	wait(NULL);
-
-	kprintf("DONE\n");
-	for(;;);
+					0
+			  );
+	} else
+		wait(NULL);
 }
