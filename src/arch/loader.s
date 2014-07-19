@@ -65,7 +65,7 @@ _start:
 	call init_kb
 	call main
 	call reboot
-
+	jmp $
 
 
 reboot:

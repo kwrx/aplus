@@ -18,8 +18,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 PRJDIR 	:= $(PWD)
-SRCDIR 	:= $(PRJDIR)/src
-BINDIR 	:= $(PRJDIR)/bin
+SRCDIR 	:= $(PRJDIR)
 LDDIR	:= /usr/local/cross/i586-elf/lib
 
 TARGET 	:= i586-elf
@@ -38,14 +37,14 @@ GIT	:= git
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -lx86 -lOSMesa16 -lm -lc -lgcc
+LIBS	:= -lm -lc -lgcc
 
 CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -c -O2 -I include -std=c99
 CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -c -O2 -I include
 AFLAGS	:= $(DEFINES) -f elf
 LFLAGS	:= -static -T $(LDDIR)/link.ld
 
-DIRS	:= $(shell ls $(SRCDIR))
+DIRS	:= $(shell ls --hide=Makefile $(SRCDIR))
 
 
 .PHONY: all clean install
@@ -55,7 +54,6 @@ all:
 
 clean:
 	@$(foreach dir, $(DIRS), cd $(SRCDIR)/$(dir) && $(MAKE) clean;)
-	@$(foreach dir, $(DIRS), $(RM) $(BINDIR)/$(dir))
 
 install:
 	@$(foreach dir, $(DIRS), cd $(SRCDIR)/$(dir) && $(MAKE) install;)

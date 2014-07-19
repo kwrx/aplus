@@ -23,7 +23,7 @@
 
 
 int lstat(const char* filename, struct stat* st) {
-	int fd = open(filename, O_RDONLY /*| O_NOFOLLOW*/, 0644);
+	int fd = open(filename, O_RDONLY | O_NOFOLLOW, 0644);
 	if(fd < 0)
 		return -1;
 

@@ -6,7 +6,7 @@
 #
 #  Copyright (c) 2014 WareX
 #
-#  This program is kfree software: you can redistribute it and/or modify
+#  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the kfree Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
@@ -119,10 +119,13 @@ $(OUTPUT).elf : $(OFILES)
 
 
 userdev: $(OUTPUT).elf
+	@echo ""
+	@cd $(ULBDIR) && $(MAKE) && $(MAKE) install
 	@cd usr/modules && $(MAKE) && $(MAKE) install
 	@cd usr/apps && $(MAKE) && $(MAKE) install
 
 initrd: userdev
+	@echo ""
 	@echo " MKIRD\t" $(notdir $(IFILES))
 	@$(CP) $(MODDIR)/* $(IRDDIR)
 	@$(CP) $(APPDIR)/init $(IRDDIR)
@@ -151,6 +154,7 @@ run: iso
 clean:
 	-@$(RM) $(OFILES)
 	-@$(RM) -r iso
+	@cd $(ULBDIR) && $(MAKE) clean
 	@cd usr/modules && $(MAKE) clean
 	@cd usr/apps && $(MAKE) clean
 

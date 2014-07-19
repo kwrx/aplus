@@ -29,16 +29,19 @@ void* __dso_handle = 0;
 
 
 #include <fcntl.h>
+#include <signal.h>
 #include <string.h>
 #include "syscalls.c"
 
 
 extern char** environ;
+extern int __sigtramp(int sig);
 
-static void __signal_handler__(int sig) {
-	perror(strsignal(sig));
-	raise(sig);
+static int __default_sighandler__(int sig) {
+	signal(sig, __default_sighandler__);
+	exit(sig);
 }
+
 
 static void __open_stdio__() {
 	open("/dev/stdin", O_RDWR, 0644);
@@ -46,6 +49,15 @@ static void __open_stdio__() {
 	open("/dev/stderr", O_RDWR, 0644);
 }
 
+
+static void __init_traps() {
+	signal(SIGABRT, __default_sighandler__);
+	signal(SIGFPE, __default_sighandler__);
+	signal(SIGILL, __default_sighandler__);
+	signal(SIGINT, __default_sighandler__);
+	signal(SIGSEGV, __default_sighandler__);
+	signal(SIGTERM, __default_sighandler__);
+}
 
 void _start() {
 	extern int main();
@@ -62,8 +74,9 @@ void _start() {
 
 	__open_stdio__();
 
-	__install_signal_handler(__signal_handler__);
+	__install_signal_handler(__sigtramp);
 	_init_signal();
+	__init_traps();
 
 	int argc;
 	char** argv = __get_argv();

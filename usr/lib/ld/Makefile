@@ -4,9 +4,9 @@ SRC := link.ld
 
 CP := cp
 
-.PHONY: all install
+.PHONY: all install clean
 
-all: install
+all:
 
 install:
 	@$(CP) $(SRC) $(PREFIX)
@@ -23,3 +23,5 @@ install:
 	@$(CP) $(SRC) $(PREFIX)/ldscripts/elf_i386.xdw
 	@$(CP) $(SRC) $(PREFIX)/ldscripts/elf_i386.xs
 	@$(CP) $(SRC) $(PREFIX)/ldscripts/elf_i386.xu
+
+clean:

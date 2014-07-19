@@ -5,8 +5,8 @@
 
 #if defined (APLUS)
 EXTERN int aplus_thread_create(uint32_t entry, void* param, int priority);
-EXTERN void aplus_thread_idle();
-EXTERN void aplus_thread_wakeup();
+EXTERN void __idle();
+EXTERN void __wakeup();
 
 
 /* Hooks */

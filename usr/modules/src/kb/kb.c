@@ -1,5 +1,5 @@
 //
-//  zero.c
+//  kb.c
 //
 //  Author:
 //       Antonio Natale <inferdevil97@gmail.com>
@@ -31,34 +31,76 @@
 #include <aplus.h>
 #include <aplus/vfs.h>
 #include <aplus/task.h>
+#include <aplus/events.h>
+#include <aplus/ioctl.h>
 
-int zero_read(struct inode* ino, uint32_t length, void* buf) {
-	if(!buf)
-		return 0;
+
+
+volatile int last_scancode = 0;
+volatile int scancode = 0;
+
+static void irq_handler(void* unused) {
+	last_scancode = inb(0x60);
+	
+	if(last_scancode & 0x80)
+		event_raise(EV_KB_KEYUP);
+	else
+		event_raise(EV_KB_KEYDOWN);
+	
+	scancode = last_scancode;
+}
+
+
+static int kb_getscan() {
+	__idle();
+	while(!scancode)
+		__asm__ __volatile__ ("pause");
+	
+	int ch = scancode;
+	scancode = 0;	
 		
+	__wakeup();
+	return ch;
+}
+
+
+int kb_ioctl(struct inode* ino, int req, void* buf) {
 	if(!ino)
-		return 0;
+		return -1;
 		
-	memset(buf, 0, length);
-	return length;
+	switch(req) {
+		case IOCTL_KB_GETVKEY:
+			*(uint32_t*) buf = kb_getscan();
+			break;
+			
+		case IOCTL_KB_GETLASTVKEY:
+			*(uint32_t*) buf = last_scancode;
+			break;
+		default:
+			return -1;
+	}
+	
+	return 0;
 }
 
 
 int init() {
-
-	inode_t* dev = aplus_device_create("/dev/zero", S_IFCHR);
+	inode_t* dev = aplus_device_create("/dev/kb", S_IFCHR);
 	if(!dev) {
-		printf("zero: could not create device!\n");
+		printf("kb: could not create device!\n");
 		return -1;
 	}
 
-	dev->read = zero_read;
+	dev->ioctl = kb_ioctl;
+	irq_set(1, irq_handler);
 	return 0;
 }
 
 int dnit() {
-	unlink("/dev/zero");
+	irq_unset(1);
+	unlink("/dev/kb");
 	
 	return 0;
 }
+
 

@@ -82,6 +82,6 @@ clean:
 
 install:
 	@$(CP) $(OUTPUT) $(PREFIX)/lib
-	@$(CP) $(INCLUDE) $(PREFIX)/include
+	@$(CP) $(INCLUDE) $(PREFIX)/include/sys
 	
 	

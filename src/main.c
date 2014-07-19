@@ -23,7 +23,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define DEBUG
 #include <aplus.h>
 #include <aplus/task.h>
 
@@ -31,13 +30,6 @@
 
 extern uint32_t end;
 uint32_t end_kernel = 0;
-
-
-int stampa(char* m) {
-	kprintf(m);
-}
-
-EXPORT(stampa);
 
 
 static char* env_init[] = {
@@ -87,9 +79,16 @@ int main() {
 
 	environ = env_init;
 
+	if(fork() == 0) {
 #ifdef VMODE
-	execlp("init", "init", "-v", 0);
+		execlp("init", "init", "-v", 0);
 #else
-	execlp("init", "init", 0);
+		execlp("init", "init", 0);
 #endif
+	}
+	
+	wait(NULL);
+
+	kprintf("DONE\n");
+	for(;;);
 }

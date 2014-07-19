@@ -55,7 +55,14 @@ void load_modules() {
 		if(strcmp(p, ".km") == 0) {
 			printf("init: loading %-60s", ent->d_name);
 
-			if(execl(ent->d_name, ent->d_name, 0) == 0)
+			if(fork() == 0)
+				if(execl(ent->d_name, ent->d_name, 0) != 0)
+					_exit(-1);
+				
+			int ret = -1;
+			wait(&ret);
+			
+			if(ret == 0)
 				printf("[OK]\n");
 			else
 				printf("[%d]\n", ret);
@@ -84,8 +91,11 @@ int main(int argc, char** argv) {
 	ec = clock();
 
 	printf("System loaded in %gs\n\n", (double)(ec - sc) / (double) CLOCKS_PER_SEC);
-
-	execlp(getenv("SHELL"), getenv("SHELL"), 0);
+	
+	if(fork() == 0)
+		execlp(getenv("SHELL"), getenv("SHELL"), 0);
+	else
+		wait(NULL);
 
 	return 0;
 }

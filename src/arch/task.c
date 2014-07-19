@@ -76,6 +76,21 @@ static void __task_idle() {
 }
 
 
+static void __signal_caller() {
+	uint32_t* params;
+	__asm__ __volatile__("" : "=a"(params));
+	
+	if(!params)
+		_exit(-1);
+		
+	int (*sig) (int) = params[0];
+	if(!sig)
+		_exit(-1);
+		
+	_exit(sig(params[1])); 
+}
+
+
 int task_init() {
 	current_task = task_queue = kernel_task = (task_t*) kmalloc(sizeof(task_t));
 	memset(current_task, 0, sizeof(task_t));
@@ -178,12 +193,14 @@ void sched_disable() {
 int task_dosignal(task_t* t, void* prev_vmm) {
 	if(t->signal_sig != 0) {
 		if(t->signal_handler) {
-			vmm_switch(current_task->vmm);
-			t->signal_handler(current_task->signal_sig);
+			vmm_switch(t->vmm);
+			t->signal_handler(t->signal_sig);
 			vmm_switch(prev_vmm);
-		}
-
-		task_exit2(current_task, current_task->signal_sig);
+			
+			t->signal_sig = 0;
+		} else
+			task_exit2(t, t->signal_sig);	
+		
 		return 0;
 	}
 
@@ -296,10 +313,17 @@ int task_wait(task_t* child) {
 	return child->exitcode;
 }
 
-int task_waitpid(int pid) {
-	return task_wait(task_getbypid(pid));
+task_t* task_child() {
+	task_t* tmp = task_queue;
+	while(tmp) {
+		if(tmp->parent == current_task)
+			return tmp;
+			
+		tmp = tmp->next;
+	}
+	
+	return NULL;
 }
-
 
 
 void task_clonefd(task_t* child) {
@@ -312,12 +336,6 @@ void task_clonefd(task_t* child) {
 
 
 
-
-EXPORT(task_zombie);
-EXPORT(task_idle);
-EXPORT(task_wakeup);
-EXPORT(task_waitpid);
-EXPORT(task_setpriority);
 
 EXPORT(sched_enable);
 EXPORT(sched_disable);

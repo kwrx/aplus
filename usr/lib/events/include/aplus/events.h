@@ -1,5 +1,5 @@
 //
-//  nanosleep.c
+//  events.h
 //
 //  Author:
 //       Antonio Natale <inferdevil97@gmail.com>
@@ -19,41 +19,23 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <sys/times.h>
-#include <sys/time.h>
-#include <errno.h>
+
+#define SIGEVNT									(16)
+#define EV_ERROR								(-1)
+
+/* Keyboard events */
+#define EV_KB_KEYDOWN							0
+#define EV_KB_KEYUP								1
 
 
-int nanosleep(const struct timespec* req, struct timespec* rem) {
-	if(req->tv_sec > 999999999) {
-		errno = EINVAL;
-		return -1;
-	}
+/* Mouse events */
+#define EV_MOUSE_BUTTONDOWN						0
+#define EV_MOUSE_BUTTONUP						1
+#define EV_MOUSE_SCROLL							2
 
-	struct timeval tm;
-	struct timezone* tz;
 
-	if(gettimeofday(&tm, &tz) != 0)
-			return -1;
+int event_add(int type);
+int event_rem(int type);
+int event_gettype();
+int event_raise(int type);
 
-	int t0 = req->tv_sec + tm.tv_sec;
-	int t1 = req->tv_nsec + tm.tv_usec;
-
-#ifdef APLUS
-	__idle();
-#endif
-
-	while(1) {
-		if(gettimeofday(&tm, &tz) != 0)
-			return -1;
-
-		if(tm.tv_sec > t0 && tm.tv_usec > t1)
-			break;
-	}
-
-#ifdef APLUS
-	__wakeup();
-#endif
-
-	return 0;
-}

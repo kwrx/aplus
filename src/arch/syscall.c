@@ -263,10 +263,9 @@ syscall(_execve, 3) {
 
 	sched_enable();
 	int retcode = task_wait(t);
-	
-
 	kfree(pmm);
-	return retcode;
+	
+	_exit(retcode);
 }
 
 
@@ -408,7 +407,7 @@ syscall(_kill, 8) {
 		errno = EACCES;
 		return -1;
 	}
-
+	
 	t->signal_sig = par1;
 	return 0;
 }
@@ -631,7 +630,18 @@ syscall(_wait, 18) {
 	if(!current_task)
 		return -1;
 		
-	task_idle();
+	task_t* child = task_child();
+	if(!child) {
+		errno = ECHILD;
+		return -1;
+	}
+	
+
+	int retcode = task_wait(child);
+	if(par0)
+		*(int*) par0 = retcode;
+	
+	return 0;
 }
 
 syscall(_write, 19) {

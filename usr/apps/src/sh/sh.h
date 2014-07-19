@@ -27,9 +27,9 @@
 #define SH_NAME			"aPlus Shell"
 
 #ifdef DEBUG
-#define SH_VERSION		"1.00-debug(x86-aplus)"
+#define SH_VERSION		"1.00-debug(X86-aplus)"
 #else
-#define SH_VERSION		"1.00-realese(x86-aplus)"
+#define SH_VERSION		"1.00-realese(X86-aplus)"
 #endif
 
 #define SH_LICENSE		"GPLv3+: GNU GPL version 3 o next\n\nThis is free software; you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law."

@@ -13,8 +13,8 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="Build" command="export PATH=$PATH:/usr/local/cross/bin &amp;&amp; make" workingdir="${ProjectDir}" externalConsole="True" pauseExternalConsole="True" />
-        <Command type="Clean" command="export PATH=$PATH:/usr/local/cross/bin &amp;&amp; make clean" workingdir="${ProjectDir}" externalConsole="True" />
+        <Command type="Build" command="export PATH=$PATH:/usr/local/cross/bin &amp;&amp; make -s" workingdir="${ProjectDir}" externalConsole="True" pauseExternalConsole="True" />
+        <Command type="Clean" command="export PATH=$PATH:/usr/local/cross/bin &amp;&amp; make -s clean" workingdir="${ProjectDir}" externalConsole="True" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -436,12 +436,6 @@
     <None Include="usr\modules\bin\fb.km" />
     <None Include="usr\modules\bin\null.km" />
     <None Include="usr\modules\bin\zero.km" />
-    <None Include="usr\modules\src\fb\Makefile" />
-    <None Include="usr\modules\src\fb\fb.c" />
-    <None Include="usr\modules\src\null\Makefile" />
-    <None Include="usr\modules\src\null\null.c" />
-    <None Include="usr\modules\src\zero\Makefile" />
-    <None Include="usr\modules\src\zero\zero.c" />
     <None Include="src\fs\sfs\sfs.h" />
     <None Include="src\fs\sfs\sfs_mount.c" />
     <None Include="src\fs\sfs\sfs_check.c" />
@@ -461,9 +455,6 @@
     <None Include="usr\apps\src\js\Main.cpp" />
     <None Include="usr\apps\src\cat\main.c" />
     <None Include="usr\apps\src\cat\Makefile" />
-    <None Include="usr\modules\src\atapi\Makefile" />
-    <None Include="usr\modules\src\atapi\atapi.c" />
-    <None Include="usr\modules\src\atapi\atapi.h" />
     <None Include="src\fs\iso9660\iso9660_mount.c" />
     <None Include="src\fs\iso9660\iso9660_check.c" />
     <None Include="src\fs\iso9660\iso9660.h" />
@@ -473,13 +464,29 @@
     <None Include="usr\apps\src\ls\main.c" />
     <None Include="usr\apps\src\ls\Makefile" />
     <None Include="src\fs\iso9660\iso9660_read.c" />
+    <None Include="usr\modules\src\atapi\Makefile" />
+    <None Include="usr\modules\src\atapi\atapi.c" />
+    <None Include="usr\modules\src\atapi\atapi.h" />
     <None Include="usr\modules\src\atapi\main.c" />
+    <None Include="usr\modules\src\events\Makefile" />
+    <None Include="usr\modules\src\events\main.c" />
+    <None Include="usr\modules\src\fb\Makefile" />
+    <None Include="usr\modules\src\fb\fb.c" />
     <None Include="usr\modules\src\fb\main.c" />
+    <None Include="usr\modules\src\kb\Makefile" />
+    <None Include="usr\modules\src\kb\kb.c" />
+    <None Include="usr\modules\src\kb\main.c" />
+    <None Include="usr\modules\src\null\Makefile" />
     <None Include="usr\modules\src\null\main.c" />
+    <None Include="usr\modules\src\null\null.c" />
+    <None Include="usr\modules\src\zero\Makefile" />
     <None Include="usr\modules\src\zero\main.c" />
+    <None Include="usr\modules\src\zero\zero.c" />
+    <None Include="usr\modules\src\events\events.c" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\fs\sfs\" />
     <Folder Include="src\fs\iso9660\" />
+    <Folder Include="usr\modules\src\" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@
 #
 #  Copyright (c) 2014 WareX
 #
-#  This program is free software: you can redistribute it and/or modify
+#  This program is kfree software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the kfree Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
@@ -22,28 +22,31 @@ SRCDIR	:= $(PRJDIR)
 LDDIR	:= /usr/local/cross/i586-elf/lib
 
 TARGET 	:= i586-elf
-PREFIX	:= $(PRJDIR)/../../bin
-OUTPUT	:= $(notdir $(PRJDIR))
+PREFIX	:= /usr/local/cross/i586-elf
+INCLUDE := ./include/aplus/events.h
+OUTPUT	:= libevents.a
 
-CC	:= $(TARGET)-gcc
-CXX	:= $(TARGET)-g++
-LD	:= $(TARGET)-ld
-ASM	:= nasm
+CC		:= $(TARGET)-gcc
+CXX		:= $(TARGET)-g++
+LD		:= $(TARGET)-ld
+ASM		:= nasm
+AR		:= $(TARGET)-ar
 
-CP	:= cp
-MV	:= mv
+CP		:= cp
+MV		:= mv
 MKDIR	:= mkdir
-GIT	:= git
+GIT		:= git
 
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -lx86 -lpthread -lm -lposix -lc -lgcc
+LIBS	:= -lm -lc -lgcc
 
 CFLAGS	:= $(DEFINES) -w -O2 -I include -std=c99
 CXXFLAGS:= $(DEFINES) -w -O2 -I include
 AFLAGS	:= $(DEFINES) -f elf
-LFLAGS	:= -T $(LDDIR)/link.ld
+LFLAGS	:= -static -T $(LDDIR)/link.ld
+ARFLAGS	:= -rcs
 
 CFILES 	:= $(shell find $(SRCDIR) -type f -name "*.c")
 CXXFILES:= $(shell find $(SRCDIR) -type f -name "*.cpp")
@@ -58,7 +61,7 @@ OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
 all: $(OUTPUT)
 
 $(OUTPUT): $(OFILES)
-	@$(LD) $(LFLAGS) -o $@ $(OFILES) $(LIBS)
+	@$(AR) $(ARFLAGS) $@ $(OFILES)
 
 .c.o:
 	@echo " CC\t" $(notdir $<)
@@ -78,5 +81,7 @@ clean:
 	@$(RM) $(OUTPUT)
 
 install:
-	@$(CP) $(OUTPUT) $(PREFIX)
+	@$(CP) $(OUTPUT) $(PREFIX)/lib
+	@$(CP) $(INCLUDE) $(PREFIX)/include/aplus
+	
 	

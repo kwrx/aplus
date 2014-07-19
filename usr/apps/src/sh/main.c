@@ -30,12 +30,13 @@
 
 #include <sys/times.h>
 #include <time.h>
-
 #include <pthread.h>
+#include <signal.h>
+
+#include <aplus/events.h>
+#include <aplus/ioctl.h>
 
 #include "sh.h"
-
-
 
 static int do_command(char** argv) {
 	if(argv[0] == NULL || *argv[0] == NULL)
@@ -44,13 +45,19 @@ static int do_command(char** argv) {
 	if(strcmp(argv[0], "cd") == 0)
 		return chdir(argv[1]);
 		
-	return execvp(argv[0], argv);
+	if(strcmp(argv[0], "exit") == 0)
+		exit(0);
+		
+	int retcode = -1;
+	if(fork() == 0)
+		_exit(execvp(argv[0], argv));
+	else
+		wait(&retcode);
+		
+	return retcode;
 }
 
 static int do_input(char* input) {
-	if(strcmp(input, "exit") == 0)
-		exit(0);
-
 	char** argv = malloc(1024);
 	char* ip = strdup(input);
 	char* sp = ip;
@@ -72,6 +79,7 @@ static int do_input(char* input) {
 }
 
 
+
 int main(int argc, char** argv) {
 	if(argc > 1) {
 		if(strcmp(argv[1], "-c") == 0)
@@ -91,6 +99,7 @@ int main(int argc, char** argv) {
 	
 	char* username = getenv("USER");
 	char* currentdir = malloc(1024);
+	
 	
 	for(;;) {
 		getcwd(currentdir, 1024);

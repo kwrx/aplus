@@ -20,14 +20,16 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-extern int cmain(int, char**);
+extern int init();
+extern int dnit();
 
 int main(int argc, char** argv) {
-	int ret = cmain(argc, argv);
+	atexit(dnit);
+	int ret = init();
 	
 	if(ret == 0)
 		if(fork())
-			exit(ret);
+			_exit(ret);			/* without call dnit() */
 		else
 			__zombie();
 	else

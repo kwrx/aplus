@@ -4,7 +4,7 @@
 #
 #  Copyright (c) 2014 WareX
 #
-#  This program is kfree software: you can redistribute it and/or modify
+#  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the kfree Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
@@ -38,7 +38,7 @@ GIT	:= git
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -lx86 -lpthread -lm -lposix -lc -lgcc
+LIBS	:= -levents -lx86 -lpthread -lm -lposix -lc -lgcc
 
 CFLAGS	:= $(DEFINES) -w -O2 -I include -std=c99
 CXXFLAGS:= $(DEFINES) -w -O2 -I include

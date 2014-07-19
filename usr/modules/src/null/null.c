@@ -28,7 +28,7 @@
 #include <aplus.h>
 
 
-int cmain(int argc, char** argv) {	
+int init() {	
 	int fd = open("/dev/null", O_CREAT | O_EXCL, S_IFCHR);
 	
 	if(fd < 0) {
@@ -37,5 +37,11 @@ int cmain(int argc, char** argv) {
 	}
 	
 	close(fd);
+	return 0;
+}
+
+int dnit() {
+	unlink("/dev/null");
+	
 	return 0;
 }

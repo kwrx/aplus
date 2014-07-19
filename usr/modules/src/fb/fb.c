@@ -129,7 +129,7 @@ int fb_ioctl(struct inode* ino, int req, void* buf) {
 }
 
 
-int cmain(int argc, char** argv) {
+int init() {
 	
 	inode_t* dev = aplus_device_create("/dev/fb0", S_IFBLK);
 	if(!dev) {
@@ -138,6 +138,12 @@ int cmain(int argc, char** argv) {
 	}
 
 	dev->ioctl = fb_ioctl;	
+	return 0;
+}
+
+int dnit() {
+	unlink("/dev/fb0");
+	
 	return 0;
 }
 

@@ -1,5 +1,5 @@
 //
-//  zero.c
+//  atapi.c
 //
 //  Author:
 //       Antonio Natale <inferdevil97@gmail.com>
@@ -119,7 +119,7 @@ int atapi_read(struct inode* ino, uint32_t length, void* buf) {
 }
 
 
-int cmain(int argc, char** argv) {
+int init() {
 
 	irq_set(ATA_IRQ_PRIMARY, irq_handler);
 	irq_set(ATA_IRQ_SECONDARY, irq_handler);
@@ -138,6 +138,18 @@ int cmain(int argc, char** argv) {
 	create_cd(2, ATA_BUS_SECONDARY, ATA_DRIVE_MASTER);
 	create_cd(3, ATA_BUS_SECONDARY, ATA_DRIVE_SLAVE);
 
+	return 0;
+}
+
+int dnit() {
+	irq_unset(ATA_IRQ_PRIMARY);
+	irq_unset(ATA_IRQ_SECONDARY);
+	
+	unlink("/dev/cd0");
+	unlink("/dev/cd1");
+	unlink("/dev/cd2");
+	unlink("/dev/cd3");
+	
 	return 0;
 }
 

@@ -6,7 +6,7 @@
 //
 //  Copyright (c) 2014 WareX
 //
-//  This program is kfree software: you can redistribute it and/or modify
+//  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the kfree Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
@@ -397,8 +397,8 @@ int desc_init() {
 
 int irq_set(int n, void* handler) {
 	if(n > 16) {
-		errno = -EINVAL;
-		return 1;
+		errno = EINVAL;
+		return -1;
 	}
 	
 	irqs[n] = handler;
@@ -407,12 +407,21 @@ int irq_set(int n, void* handler) {
 
 int irq_unset(int n) {
 	if(n > 16) {
-		errno = -EINVAL;
-		return 1;
+		errno = EINVAL;
+		return -1;
 	}
 	
 	irqs[n] = 0;
 	return 0;
+}
+
+void* irq_get(int n) {
+	if(n > 16) {
+		errno = EINVAL;
+		return NULL;
+	}
+	
+	return irqs[n];
 }
 
 
@@ -449,5 +458,6 @@ uint32_t pit_getticks() {
 	return pit_ticks;
 }
 
+EXPORT(irq_get);
 EXPORT(irq_set);
 EXPORT(irq_unset);

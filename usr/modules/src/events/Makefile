@@ -18,12 +18,14 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 PRJDIR 	:= $(PWD)
-SRCDIR 	:= $(PRJDIR)/src
-BINDIR 	:= $(PRJDIR)/bin
+SRCDIR	:= $(PRJDIR)
+BINDIR	:= $(PRJDIR)/bin
+INCDIR	:= $(PRJDIR)/../../../../src/include
 LDDIR	:= /usr/local/cross/i586-elf/lib
 
 TARGET 	:= i586-elf
-PREFIX 	:= 
+PREFIX	:= $(PRJDIR)/../../bin
+OUTPUT	:= $(notdir $(PRJDIR)).km
 
 CC	:= $(TARGET)-gcc
 CXX	:= $(TARGET)-g++
@@ -38,29 +40,45 @@ GIT	:= git
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -lx86 -lOSMesa16 -lm -lc -lgcc
+LIBS	:= -levents -lposix -lm -lc -lgcc
 
-CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -c -O2 -I include -std=c99
-CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -c -O2 -I include
+CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -O2 -masm=intel -I include -std=c99
+CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -O2 -masm=intel -I include
 AFLAGS	:= $(DEFINES) -f elf
-LFLAGS	:= -static -T $(LDDIR)/link.ld
+LFLAGS	:= -r -s -T $(LDDIR)/link.ld
 
-DIRS	:= $(shell ls $(SRCDIR))
+CFILES 	:= $(shell find $(SRCDIR) -type f -name "*.c")
+CXXFILES:= $(shell find $(SRCDIR) -type f -name "*.cpp")
+AFILES	:= $(shell find $(SRCDIR) -type f -name "*.s")
+
+SFILES 	:= $(CFILES) $(CXXFILES) $(AFILES)
+OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
 
 
 .PHONY: all clean install
 
-all:
-	@$(foreach dir, $(DIRS), cd $(SRCDIR)/$(dir) && $(MAKE) all;)
+all: $(OUTPUT)
+
+$(OUTPUT): $(OFILES)
+	@$(LD) $(LFLAGS) -o $@ $(OFILES) $(LIBS)
+
+.c.o:
+	@echo " CC\t" $(notdir $<)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+.cpp.o:
+	@echo " CXX\t" $(notdir $<)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+.s.o:
+	@echo " ASM\t" $(notdir $<)
+	@$(ASM) $(AFLAGS) $< -o $@
+
 
 clean:
-	@$(foreach dir, $(DIRS), cd $(SRCDIR)/$(dir) && $(MAKE) clean;)
-	@$(foreach dir, $(DIRS), $(RM) $(BINDIR)/$(dir))
+	@$(RM) *.o
+	@$(RM) $(OUTPUT)
 
 install:
-	@$(foreach dir, $(DIRS), cd $(SRCDIR)/$(dir) && $(MAKE) install;)
+	@$(CP) $(OUTPUT) $(PREFIX)
 	
-
-
-
-
