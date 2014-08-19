@@ -28,6 +28,8 @@ extern task_t* current_task;
 extern task_t* kernel_task;
 
 void __panic(char* msg, char* source, char* func, int line) {
+	video_init();
+	
 
 	int pid = -1;
 	if(current_task)
@@ -46,10 +48,12 @@ void __panic(char* msg, char* source, char* func, int line) {
 	if(!current_task)
 		for(;;);
 		
-	if(current_task == kernel_task)
-		for(;;);
+	if(current_task == kernel_task) {
+		kprintf("\n[KERNEL PANIC]\n");
+		for(;;);	
+	}
 
 	__asm__ __volatile__ ("sti");
 	sched_enable();
-	_exit(-1);
+	task_exit(-1);
 }

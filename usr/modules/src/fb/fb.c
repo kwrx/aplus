@@ -23,7 +23,7 @@
 #include <aplus.h>
 #include <aplus/vfs.h>
 #include <aplus/ioctl.h>
-
+#include <aplus/int86.h>
 
 #include <string.h>
 #include <stdint.h>
@@ -53,11 +53,11 @@
 #define VBE_DISPI_LFB_ENABLED 0x40
 #define VBE_DISPI_NOCLEARMEM 0x80
 
-#define VBE_DEFAULT_LFB 0xE0000000
 #define CHECK_BGA(n) (n < 0xB0C0 || n > 0xB0C5)
 
 
 static int width, height, bpp;
+static uint32_t lfb;
 
 static bga_write(uint16_t index, uint16_t value) {
 	outw(VBE_DISPI_IOPORT_INDEX, index);
@@ -72,6 +72,17 @@ static int video_reset() {
 	ioctl(fd, IOCTL_TTY_RESET, 0);
 	close(fd);
 	
+	return 0;
+}
+
+static uint32_t getlfb() {
+	uint32_t* vmem = (uint32_t*) 0xA0000;
+	vmem[0] = 0x0BADC0DE;
+	
+	for(uint32_t ptr = 0xE0000000; ptr < 0xFF000000; ptr += 0x1000)
+		if(*(uint32_t*) ptr == 0x0BADC0DE)
+			return ptr;
+			
 	return 0;
 }
 
@@ -105,7 +116,7 @@ int fb_ioctl(struct inode* ino, int req, void* buf) {
 			*(int*) buf = bpp;
 			break;
 		case IOCTL_FB_GETLFB:
-			*(int*) buf = VBE_DEFAULT_LFB;
+			*(int*) buf = getlfb();
 			break;
 		case IOCTL_FB_SETVX:
 			bga_write(VBE_DISPI_INDEX_X_OFFSET, *(int*) buf);
@@ -137,7 +148,7 @@ int init() {
 		return -1;
 	}
 
-	dev->ioctl = fb_ioctl;	
+	dev->ioctl = fb_ioctl;
 	return 0;
 }
 

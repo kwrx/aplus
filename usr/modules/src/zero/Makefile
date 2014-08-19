@@ -21,7 +21,7 @@ PRJDIR 	:= $(PWD)
 SRCDIR	:= $(PRJDIR)
 BINDIR	:= $(PRJDIR)/bin
 INCDIR	:= $(PRJDIR)/../../../../src/include
-LDDIR	:= /usr/local/cross/i586-elf/lib
+LDDIR	:= /usr/local/cross/i586-elf/lib/ldscripts
 
 TARGET 	:= i586-elf
 PREFIX	:= $(PRJDIR)/../../bin
@@ -45,7 +45,7 @@ LIBS	:= -lx86 -lm -lc -lgcc
 CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -O2 -masm=intel -I include -std=c99
 CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -O2 -masm=intel -I include
 AFLAGS	:= $(DEFINES) -f elf
-LFLAGS	:= -r -s -T $(LDDIR)/link.ld
+LFLAGS	:= -r -s -T $(LDDIR)/elf_i386.mod
 
 CFILES 	:= $(shell find $(SRCDIR) -type f -name "*.c")
 CXXFILES:= $(shell find $(SRCDIR) -type f -name "*.cpp")
@@ -60,6 +60,7 @@ OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
 all: $(OUTPUT)
 
 $(OUTPUT): $(OFILES)
+	@echo " LD\t" $(notdir $@)
 	@$(LD) $(LFLAGS) -o $@ $(OFILES) $(LIBS)
 
 .c.o:

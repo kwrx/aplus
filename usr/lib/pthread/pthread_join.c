@@ -32,18 +32,8 @@ PUBLIC int pthread_join(pthread_t thread, void **value_ptr) {
 	}
 
 	pthread_context_t* ctx = (pthread_context_t*) thread;
-	
-	__os_thread_idle();
-	while(ctx->once.done == 0) {
-		#if ARCH==X86
-			__asm__ __volatile__ ("pause");
-		#elif ARCH==X86_64
-			__asm__ __volatile__ ("pause");
-		#else
-			/* Nothing */
-		#endif
-	}
-	__os_thread_wakeup();
+	while(ctx->once.done == 0)
+		__os_thread_yield();
 
 	if(value_ptr)
 		*value_ptr = ctx->exitval;

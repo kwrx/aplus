@@ -25,8 +25,6 @@
 extern "C" {
 #endif
 
-void* __dso_handle = 0;
-
 
 #include <fcntl.h>
 #include <signal.h>
@@ -62,7 +60,7 @@ static void __init_traps() {
 }
 
 
-static void __do_global_ctors() {
+/*static void __do_global_ctors_aux() {
 	extern int __ctors_start;
 	extern int __ctors_end;
 
@@ -75,7 +73,7 @@ static void __do_global_ctors() {
 	}
 }
 
-static void __do_global_dtors() {
+static void __do_global_dtors_aux() {
 	extern int __dtors_start;
 	extern int __dtors_end;
 
@@ -86,7 +84,7 @@ static void __do_global_dtors() {
 		(*fs) ();
 		fs++;
 	}
-}
+}*/
 
 void _start() {
 	extern int main();
@@ -117,9 +115,9 @@ void _start() {
 
 	environ = env;
 
-	__do_global_ctors();
+	//__do_global_ctors_aux();
 	int retcode = main(argc, argv, env);
-	__do_global_dtors();
+	//__do_global_dtors_aux();
 
 	exit(retcode);
 }

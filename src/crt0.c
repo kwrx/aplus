@@ -115,20 +115,6 @@ ssize_t readlink(const char *__restrict path, char* buf, size_t bufsize) {
 	sc(13, path, buf, bufsize, 0, 0);
 }
 
-void* sbrk(ptrdiff_t incr) {
-	extern char   end; /* Set by linker.  */
-	static char * heap_end; 
-	char *        prev_heap_end; 
-
-	if (heap_end == 0)
-		heap_end = &end; 
-
-	prev_heap_end = heap_end; 
-	heap_end += incr; 
-
-	return (void *) prev_heap_end;
-}
-
 int stat(const char* file, struct stat* st) {
 	sc(14, file, st, 0, 0, 0);
 }
@@ -229,13 +215,6 @@ int aplus_thread_create(uint32_t entry, void* param, int priority) {
 	sc(32, entry, param, priority, 0, 0);
 }
 
-void __idle() {
-	sc_noret(33, 0, 0, 0, 0, 0);
-}
-
-void __wakeup() {
-	sc_noret(34, 0, 0, 0, 0, 0);
-}
 
 void __zombie() {
 	sc_noret(35, 0, 0, 0, 0, 0);
@@ -259,6 +238,13 @@ int chroot(const char* path) {
 }
 
 
+void* sbrk(ptrdiff_t incr) {
+	sc(39, incr, 0, 0, 0, 0);
+}
+
+int sched_yield() {
+	sc(40, 0, 0, 0, 0, 0);
+}
 
 DIR* opendir(const char* name) {
 	int fd = open(name, O_RDONLY | O_DIRECTORY, 0);
@@ -322,55 +308,4 @@ int scandir(const char *pathname, struct dirent ***namelist, int (*select)(const
 
 
 
-
-
-#if 0 /* Kernel land */
-
-static void __signal_handler__(int sig) {
-	perror(strsignal(sig));
-	raise(sig);
-}
-
-static void __open_stdio__() {
-	open("/dev/stdin", O_RDWR, 0644);
-	open("/dev/stdout", O_RDWR, 0644);
-	open("/dev/stderr", O_RDWR, 0644);
-}
-
-
-void _start() {
-	extern int main();
-	extern void _init_signal();
-	extern void __do_global_ctors_aux();
-	extern void __do_global_dtors_aux();
-	extern int __bss_start;
-	extern int _end;
-
-	int i;
-	for(i = (int)&__bss_start; i < (int)&_end; i++)
-		*(char*) i = 0;
-
-
-	__open_stdio__();
-
-	__install_signal_handler(__signal_handler__);
-	_init_signal();
-
-	int argc;
-	char** argv = __get_argv();
-	char** env = __get_env();
-
-	if(argv)
-		while(argv[argc])
-			argc++;
-
-
-	//__do_global_ctors_aux();
-	int retcode = main(argc, argv, env);
-	//__do_global_dtors_aux();
-
-	_exit(retcode);
-}
-
-#endif
 

@@ -256,7 +256,7 @@ int mm_init() {
 	}
 
 	i = 0xE0000000;
-	while(i < 0xF0000000) {
+	while(i < 0xFF000000) {
 		vmm_map(kernel_directory, i, i);
 		i += 4096;
 	}

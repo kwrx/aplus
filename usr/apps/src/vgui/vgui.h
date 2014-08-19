@@ -8,9 +8,9 @@
 
 #define VIDEOCONFIG_PATH	"/usr/sys/video.conf"
 
-#define VGUI_DEFAULT_WIDTH	800
-#define VGUI_DEFAULT_HEIGHT	600
-#define VGUI_DEFAULT_BPP	16
+#define VGUI_DEFAULT_WIDTH	1024
+#define VGUI_DEFAULT_HEIGHT	768
+#define VGUI_DEFAULT_BPP	32
 
 #ifdef DEBUG
 static inline void error(char* msg) {

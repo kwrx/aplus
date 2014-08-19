@@ -93,6 +93,7 @@ int main(int argc, char** argv) {
 
 	printf("System loaded in %gs\n\n", (double)(ec - sc) / (double) (CLOCKS_PER_SEC));
 	
+	
 	if(fork() == 0)
 		execlp(getenv("SHELL"), getenv("SHELL"), 0);
 	else

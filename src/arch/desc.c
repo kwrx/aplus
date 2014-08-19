@@ -220,13 +220,7 @@ void isr_handler(regs_t* r) {
 		if(current_task->exe)
 			exe_name = current_task->exe->name;
 
-	sprintf(buf, "Exception: (%u) %s (errno: %d; errcode: 0x%x; pid: %d; exe: \"%s\")\n", r->int_no, exception_messages[r->int_no], errno, r->err_code, pid, exe_name);
-	video_puts(buf);
-		
-	if((FAULT_MASK >> r->int_no) & 1) {
-		video_puts("Task crashed!\n");
-		_exit(-r->err_code);
-	}
+	panic(exception_messages[r->int_no]);
 }
 
 void irq_handler(regs_t* r) {

@@ -50,9 +50,7 @@ int pipe_read(struct inode* ino, uint32_t size, void* buf) {
 		
 	if(info->pos_read + size > info->pos_write) {
 		while(info->pos_read + size > info->pos_write)
-			task_idle();
-			
-		task_wakeup();
+			task_yield();
 	}
 		
 	

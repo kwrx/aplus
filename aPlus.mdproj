@@ -473,9 +473,6 @@
     <None Include="usr\modules\src\fb\Makefile" />
     <None Include="usr\modules\src\fb\fb.c" />
     <None Include="usr\modules\src\fb\main.c" />
-    <None Include="usr\modules\src\kb\Makefile" />
-    <None Include="usr\modules\src\kb\kb.c" />
-    <None Include="usr\modules\src\kb\main.c" />
     <None Include="usr\modules\src\null\Makefile" />
     <None Include="usr\modules\src\null\main.c" />
     <None Include="usr\modules\src\null\null.c" />
@@ -483,10 +480,13 @@
     <None Include="usr\modules\src\zero\main.c" />
     <None Include="usr\modules\src\zero\zero.c" />
     <None Include="usr\modules\src\events\events.c" />
+    <None Include="src\fs\ext2\ext2.h" />
+    <None Include="src\fs\ext2\ext2.c" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\fs\sfs\" />
     <Folder Include="src\fs\iso9660\" />
     <Folder Include="usr\modules\src\" />
+    <Folder Include="src\fs\ext2\" />
   </ItemGroup>
 </Project>

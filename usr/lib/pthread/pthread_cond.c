@@ -85,17 +85,9 @@ PUBLIC int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex) {
 	ctx->cond->waiting = 1;
 	ctx->cond->semaphore = 1;
 
-	_os_thread_idle();
-	while(ctx->cond->semaphore) {
-#if ARCH==X86
-		__asm__ __volatile__ ("pause");
-#elif ARCH==X86_64
-		__asm__ __volatile__ ("pause");
-#else
-			/* Nothing */
-#endif
-	}
-	__os_thread_wakeup();
+
+	while(ctx->cond->semaphore)
+		__os_thread_yield();
 
 	ctx->cond->waiting = 0;
 	ctx->cond->semaphore = 0;

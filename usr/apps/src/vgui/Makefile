@@ -27,7 +27,7 @@ OUTPUT	:= $(notdir $(PRJDIR))
 
 CC	:= $(TARGET)-gcc
 CXX	:= $(TARGET)-g++
-LD	:= $(TARGET)-ld
+LD	:= $(TARGET)-gcc
 ASM	:= nasm
 
 CP	:= cp
@@ -38,12 +38,12 @@ GIT	:= git
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -lx86 -lpthread -lm -lposix -lc -lgcc
+LIBS	:= -lkx -lpthread -lm -lposix -lc -lgcc
 
-CFLAGS	:= $(DEFINES) -w -O2 -I include -std=c99
-CXXFLAGS:= $(DEFINES) -w -O2 -I include
+CFLAGS	:= $(DEFINES) -w -I include -std=c99
+CXXFLAGS:= $(DEFINES) -w -I include
 AFLAGS	:= $(DEFINES) -f elf
-LFLAGS	:= -static -T $(LDDIR)/link.ld
+LFLAGS	:= 
 
 CFILES 	:= $(shell find $(SRCDIR) -type f -name "*.c")
 CXXFILES:= $(shell find $(SRCDIR) -type f -name "*.cpp")
@@ -58,6 +58,7 @@ OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
 all: $(OUTPUT)
 
 $(OUTPUT): $(OFILES)
+	@echo " LD\t" $(notdir $@)
 	@$(LD) $(LFLAGS) -o $@ $(OFILES) $(LIBS)
 
 .c.o:

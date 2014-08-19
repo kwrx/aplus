@@ -19,14 +19,19 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+#define DEBUG
 #include <stdint.h>
 #include <stddef.h>
 
 #include <aplus.h>
 #include <aplus/task.h>
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <grub.h>
+#include <time.h>
+#include <sys/times.h>
 
 extern uint32_t end;
 uint32_t end_kernel = 0;
@@ -51,7 +56,6 @@ void sysidle() {
 }
 
 
-
 int main() {
 
 	end_kernel = (uint32_t) &end;
@@ -60,6 +64,7 @@ int main() {
 
 
 	mm_init();
+	serial_init();
 	video_init();
 	desc_init();
 	vfs_init();
@@ -72,9 +77,8 @@ int main() {
 	symlink("/dev/tty0", "/dev/stdin");
 	symlink("/dev/tty0", "/dev/stdout");
 	symlink("/dev/tty0", "/dev/stderr");
+	
 
-
-	task_idle();
 	task_create(NULL, sysidle);
 
 	environ = env_init;
@@ -91,3 +95,7 @@ int main() {
 	} else
 		wait(NULL);
 }
+
+
+
+

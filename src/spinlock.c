@@ -30,8 +30,7 @@ int spinlock_lock(spinlock_t* lock) {
 		
 	if(*lock) {
 		while(*lock)
-			task_idle();
-		task_wakeup();
+			task_yield();
 	}
 			
 			

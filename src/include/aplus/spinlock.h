@@ -22,7 +22,7 @@
 #ifndef _SPINLOCK_H
 #define _SPINLOCK_H
 
-typedef unsigned int spinlock_t;
+typedef volatile unsigned int spinlock_t;
 
 int spinlock_lock(spinlock_t* lock);
 int spinlock_unlock(spinlock_t* lock);

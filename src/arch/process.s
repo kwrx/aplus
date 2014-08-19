@@ -1,5 +1,6 @@
 [BITS 32]
 
+
 global read_eip
 read_eip:
 	pop eax
@@ -11,3 +12,8 @@ write_eip:
 	mov ecx, [esp + 4]
 	jmp ecx
 ret
+
+
+	
+
+	

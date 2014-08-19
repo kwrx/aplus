@@ -892,13 +892,6 @@ syscall(aplus_thread_create, 32) {
 	return t->pid;
 }
 
-syscall(__idle, 33) {
-	task_idle();
-}
-
-syscall(__wakeup, 34) {
-	task_wakeup();
-}
 
 syscall(__zombie, 35) {
 	task_zombie();
@@ -933,6 +926,40 @@ syscall(chroot, 38) {
 	return fs_chroot(ino);
 }
 
+
+syscall(sbrk, 39) {
+	if(!current_task) {
+		errno = EINVAL;
+		return -1;
+	}
+		
+	if(!current_task->image) {
+		errno = EINVAL;
+		return -1;
+	}
+	
+	
+	void* brk = (void*) ((uint32_t)current_task->image + current_task->imagelen);
+	if(par0 == 0)
+		return brk;
+	
+	uint32_t incr = (par0 & ~0xFFF) + 0x1000;
+	uint32_t pmm = kmalloc(incr);
+	
+	for(int i = 0; i < incr; i += 4096)
+		vmm_map(current_task->vmm, i + pmm, i + VIRTUAL_CODE_ADDRESS + current_task->imagelen);
+		
+	current_task->imagelen += incr;
+	return brk;
+}
+
+syscall(sched_yield, 40) {
+	if(!current_task)
+		return -1;
+
+	task_yield();
+	return 0;
+}
 
 uint32_t syscall_handler(regs_t* r) {
 

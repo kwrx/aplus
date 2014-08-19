@@ -72,17 +72,8 @@ PUBLIC int pthread_mutex_lock(pthread_mutex_t *mutex) {
 	}
 
 	if(mutex->owner != pthread_self()) {
-		__os_thread_idle();
-		while(mutex->lock != 0) {
-#if ARCH==X86
-			__asm__ __volatile__ ("pause");
-#elif ARCH==X86_64
-			__asm__ __volatile__ ("pause");
-#else
-			/* Nothing */
-#endif
-		}
-		__os_thread_wakeup();
+		while(mutex->lock != 0)
+			__os_thread_yield();
 		
 		mutex->owner = pthread_self();
 		mutex->recursion = 0;

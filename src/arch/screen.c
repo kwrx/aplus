@@ -101,18 +101,17 @@
 uint32_t videopos = 0;
 uint32_t videoattr = 0x07;
 
-static uint8_t video_width = 80;
-static uint8_t video_height = 25;
+uint8_t video_width = 80;
+uint8_t video_height = 25;
 
 
 int video_putc(char ch) {
 
 	__lock
 
-#ifdef DEBUG
-#ifdef BOCHS_DEBUG	
-	outb(0xE9, ch);
-#endif
+
+#ifdef SERIAL_OUTPUT
+	serial_send(0, ch);
 #endif
 
 	switch(ch) {
@@ -200,7 +199,6 @@ int video_init() {
 	
 	int86(0x10, &regs);
 
-	
 	
 	outb(SEQ_ADDR, SEQ_I_RESET);
 	outb(SEQ_DATA, 0x01);

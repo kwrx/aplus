@@ -115,19 +115,6 @@ ssize_t readlink(const char *__restrict path, char* buf, size_t bufsize) {
 	sc(13, path, buf, bufsize, 0, 0);
 }
 
-void* sbrk(ptrdiff_t incr) {
-	extern char   end; /* Set by linker.  */
-	static char * heap_end; 
-	char *        prev_heap_end; 
-
-	if (heap_end == 0)
-		heap_end = &end; 
-
-	prev_heap_end = heap_end; 
-	heap_end += incr; 
-
-	return (void *) prev_heap_end;
-}
 
 int stat(const char* file, struct stat* st) {
 	sc(14, file, st, 0, 0, 0);
@@ -229,13 +216,6 @@ int aplus_thread_create(uint32_t entry, void* param, int priority) {
 	sc(32, entry, param, priority, 0, 0);
 }
 
-void __idle() {
-	sc_noret(33, 0, 0, 0, 0, 0);
-}
-
-void __wakeup() {
-	sc_noret(34, 0, 0, 0, 0, 0);
-}
 
 void __zombie() {
 	sc_noret(35, 0, 0, 0, 0, 0);
@@ -259,6 +239,14 @@ int chroot(const char* path) {
 	sc(38, path, 0, 0, 0, 0);
 }
 
+void* sbrk(ptrdiff_t incr) {
+	sc(39, incr, 0, 0, 0, 0);
+}
+
+
+int sched_yield() {
+	sc(40, 0, 0, 0, 0, 0);
+}
 
 
 

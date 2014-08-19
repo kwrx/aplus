@@ -43,6 +43,7 @@ volatile task_t* task_queue = 0;
 volatile task_t* kernel_task = 0;
 
 static uint8_t sched_enabled = 0;
+static uint8_t sched_yielding = 0;
 static uint32_t time_to_sched = 0;
 
 
@@ -75,20 +76,6 @@ static void __task_idle() {
 	for(;;);
 }
 
-
-static void __signal_caller() {
-	uint32_t* params;
-	__asm__ __volatile__("" : "=a"(params));
-	
-	if(!params)
-		_exit(-1);
-		
-	int (*sig) (int) = params[0];
-	if(!sig)
-		_exit(-1);
-		
-	_exit(sig(params[1])); 
-}
 
 
 int task_init() {
@@ -161,9 +148,9 @@ void task_zombie() {
 
 void task_idle() {
 	if(!current_task)
-		__asm__ __volatile__ ("pause");
-	else
-		current_task->state = TASK_STATE_IDLE;
+		return;
+	
+	current_task->state = TASK_STATE_IDLE;
 }
 
 void task_wakeup() {
@@ -216,8 +203,12 @@ uint32_t schedule(uint32_t stack) {
 		return stack;
 		
 	time_to_sched += 1;
-	current_task->clock += 1;
-		
+
+	if(!sched_yielding)
+		current_task->clock += 1;
+	else
+		sched_yielding = 0;
+
 	if(current_task->state != TASK_STATE_RUNNING)
 		time_to_sched = current_task->priority;
 		
@@ -225,7 +216,6 @@ uint32_t schedule(uint32_t stack) {
 		return stack;
 		
 	time_to_sched = 0;
-
 	
 	current_task->stack = stack;
 	void* prev_vmm = current_task->vmm;
@@ -251,13 +241,14 @@ uint32_t schedule(uint32_t stack) {
 }
 
 
+
 task_t* task_create(void* vmm, uint32_t eip) {
 	return task_create_with_data(vmm, eip, 0);
 }
 
 
 int task_exit2(task_t* t, int status) {
-	if(!t || t == kernel_task) {
+	if(!t) {
 		errno = -EINVAL;
 		return -1;
 	}
@@ -294,6 +285,15 @@ task_t* task_getbypid(int pid) {
 	return 0;
 }
 
+void task_yield() {	
+	if(!current_task)
+		return;
+
+	time_to_sched = current_task->priority;
+	sched_yielding = 1;
+	__asm__ __volatile__ ("int 0x20");
+}
+
 
 int task_wait(task_t* child) {
 	if(!child)
@@ -305,7 +305,7 @@ int task_wait(task_t* child) {
 		
 	task_idle();
 	while(child->state != TASK_STATE_KILLED)
-		__asm__ __volatile__ ("pause");
+		task_yield();
 	
 	if(wakeup)
 		task_wakeup();
@@ -333,6 +333,7 @@ void task_clonefd(task_t* child) {
 	for(int i = 0; i < TASK_MAX_FD; i++)
 		child->fd[i] = current_task->fd[i];
 }
+
 
 
 

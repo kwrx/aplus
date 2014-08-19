@@ -19,8 +19,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+#define DEBUG
 #include <stdint.h>
+#include <stdio.h>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -79,9 +80,9 @@ uint8_t __default_vkscan[512] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-uint8_t* vkscan = __default_vkscan;
+static uint8_t* vkscan = __default_vkscan;
 static uint8_t shift, ctrl, alt, caps_lock;
-
+static inode_t* kbd;
 
 
 static uint8_t echo_enabled = 1;
@@ -93,7 +94,16 @@ extern task_t* kernel_task;
 extern task_t* current_task;
 
 
+static void kbd_putc(char ch) {
+	fs_write(kbd, 1, &ch);	
+}
 
+static void kbd_handler(void* unused) {
+	while(inb(0x64) & 2);
+	
+	char scan = inb(0x60);
+	kbd_putc(scan);
+}
 
 
 static char kbtochar(uint8_t scan) {
@@ -130,13 +140,8 @@ static char kbtochar(uint8_t scan) {
 
 
 uint8_t tty_getc() {
-	int fd = open("/dev/kb", O_RDONLY, 0644);
-	if(fd < 0)
-		return 0;
-		
-	int ch;
-	ioctl(fd, IOCTL_KB_GETVKEY, &ch);	
-	close(fd);
+	char ch;
+	fs_read(kbd, 1, &ch);
 	
 	return kbtochar(ch);
 }
@@ -188,14 +193,13 @@ int tty_read(struct inode* ino, uint32_t length, void* buf) {
 	if(!ino)
 		return 0;
 	
-	
 	int i = 0;
 	while(1) {
 		char ch = tty_getc();
 		
 		if(ch == 0)
 			continue;
-		
+			
 		if(ch == '\n')
 			break;
 			
@@ -215,7 +219,9 @@ int tty_read(struct inode* ino, uint32_t length, void* buf) {
 	}
 	
 	video_putc('\n');
-	((uint8_t*) buf) [i] = 0;
+	
+	((uint8_t*) buf) [i++] = '\n';
+	((uint8_t*) buf) [i] = EOF;
 	
 	
 	ino->position = videopos;
@@ -251,6 +257,11 @@ int tty_init() {
 		return -1;
 	}
 	
+	if(!(kbd = pipe_create("/dev/kbd", 4096))) {
+		kprintf("tty: could not create /dev/kdb device\n");
+		return -1;
+	}
+	
 	inode_t* dev = current_task->fd[fd];
 	close(fd);
 	
@@ -260,10 +271,13 @@ int tty_init() {
 	dev->read = tty_read;
 	dev->write = tty_write;
 	dev->trunc = tty_trunc;
+	
 
 	kernel_task->fd[STDIN_FILENO] = dev;
 	kernel_task->fd[STDOUT_FILENO] = dev;
 	kernel_task->fd[STDERR_FILENO] = dev;
+	
+	irq_set(1, kbd_handler);
 	
 	return 0;
 }

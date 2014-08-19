@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
 				exit(show_help());
 			
 			if(strcmp(argv[i], "--version") == 0)
-				exit(show_version());	
+				exit(show_version());
 		}
 		
 		exit(show_help());
@@ -98,22 +98,22 @@ int main(int argc, char** argv) {
 	
 	
 	char* username = getenv("USER");
-	char* currentdir = malloc(1024);
-	
+	char* currentdir = malloc(BUFSIZ);
+	char* input = malloc(BUFSIZ);
 	
 	for(;;) {
 		getcwd(currentdir, 1024);
 		dprintf(1, "%s:%s", username, currentdir);
 		dprintf(1, "$ ");
 		
-		char* input = malloc(1024);
-		memset(input, 0, 1024);
 		
-		if(read(STDIN_FILENO, input, 1024) > 0) {
-			if(do_input(input) != 0)
-				perror(SH_NAME);
-		}
+		memset(input, 0, BUFSIZ);
 		
-		free(input);
+		
+		if(gets(input))
+			if(strlen(input) > 0)
+				if(do_input(input) != 0)
+					perror(SH_NAME);
+		
 	}
 }

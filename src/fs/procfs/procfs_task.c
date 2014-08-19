@@ -75,6 +75,7 @@ inode_t* procfs_task_create(inode_t* parent, task_t* t) {
 	procfs_add_inode(node, procfs_environ_create(node, t));
 	procfs_add_inode(node, procfs_cwd_create(node, t));
 	procfs_add_inode(node, procfs_fd_create(node, t));
+	procfs_add_inode(node, procfs_uptime_create(node, t));
 	
 	return node;
 }

@@ -56,7 +56,7 @@ VM	:= qemu
 ARCH	:= X86
 LIBS	:= -lelfldr -lx86 -lm -lposix -lc -lgcc
 
-DEFINES	:= -D$(ARCH) -DAPLUS -DAPLUS_KERNEL
+DEFINES	:= -D$(ARCH) -DAPLUS -DAPLUS_KERNEL -DSERIAL_OUTPUT
 
 ifeq ($(VMODE), true)
 DEFINES	+= -DVIDEOMODE
@@ -115,7 +115,8 @@ $(OUTPUT).elf : $(OFILES)
 
 .s.o:
 	@echo " ASM\t" $(notdir $<)
-	@$(ASM) $(AFLAGS) $< -o $@	
+	@$(ASM) $(AFLAGS) $< -o $@
+	
 
 
 userdev: $(OUTPUT).elf

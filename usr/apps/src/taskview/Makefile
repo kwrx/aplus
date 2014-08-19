@@ -19,17 +19,15 @@
 
 PRJDIR 	:= $(PWD)
 SRCDIR	:= $(PRJDIR)
-BINDIR	:= $(PRJDIR)/bin
-INCDIR	:= $(PRJDIR)/../../../../src/include
 LDDIR	:= /usr/local/cross/i586-elf/lib
 
 TARGET 	:= i586-elf
 PREFIX	:= $(PRJDIR)/../../bin
-OUTPUT	:= $(notdir $(PRJDIR)).km
+OUTPUT	:= $(notdir $(PRJDIR))
 
 CC	:= $(TARGET)-gcc
 CXX	:= $(TARGET)-g++
-LD	:= $(TARGET)-ld
+LD	:= $(TARGET)-gcc
 ASM	:= nasm
 
 CP	:= cp
@@ -40,12 +38,12 @@ GIT	:= git
 
 ARCH	:= X86
 DEFINES	:= -D$(ARCH) -DAPLUS
-LIBS	:= -levents -lposix -lm -lc -lgcc
+LIBS	:= -lpthread -lm -lposix -lc -lgcc
 
-CFLAGS	:= $(DEFINES) -I $(INCDIR) -w -O2 -masm=intel -I include -std=c99
-CXXFLAGS:= $(DEFINES) -I $(INCDIR) -w -O2 -masm=intel -I include
+CFLAGS	:= $(DEFINES) -w -I include -std=c99
+CXXFLAGS:= $(DEFINES) -w -I include
 AFLAGS	:= $(DEFINES) -f elf
-LFLAGS	:= -r -s -T $(LDDIR)/link.ld
+LFLAGS	:= 
 
 CFILES 	:= $(shell find $(SRCDIR) -type f -name "*.c")
 CXXFILES:= $(shell find $(SRCDIR) -type f -name "*.cpp")
@@ -60,6 +58,7 @@ OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
 all: $(OUTPUT)
 
 $(OUTPUT): $(OFILES)
+	@echo " LD\t" $(notdir $@)
 	@$(LD) $(LFLAGS) -o $@ $(OFILES) $(LIBS)
 
 .c.o:
