@@ -58,12 +58,10 @@ int main() {
 	
 	vfs_map(devfs_mount());
 	
-#if 0
-	if(sys_fork() == 0)
-		sys_execl("/bin/init", "/bin/init", 0);
+/*
+	if(fork() == 0)
+		execl("/bin/init", "/bin/init", 0);
 	else
+*/
 		sysidle();
-#endif
-
-	for(;;);
 }

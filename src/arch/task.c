@@ -93,7 +93,7 @@ task_t* task_fork() {
 
 
 	/* Clone stack */
-	child->context.stack = (uint32_t) kmalloc(TASK_STACKSIZE);
+	child->context.stack = (uint32_t) kmalloc(TASK_STACKSIZE * 2);
 	memcpy((void*) child->context.stack, (void*) current_task->context.stack, TASK_STACKSIZE);
 
 
@@ -118,6 +118,56 @@ task_t* task_fork() {
 	return child;
 }
 
+
+
+task_t* task_create(void* entry, void* arg, void* stack) {
+	if(entry == NULL)
+		return NULL;
+
+	if(stack == NULL)
+		stack = (void*) ((int) kmalloc(TASK_STACKSIZE * 2) + TASK_STACKSIZE);
+
+	memset(stack, 0, TASK_STACKSIZE);
+
+
+	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+	memset(child, 0, sizeof(task_t));
+
+	child->pid = schedule_nextpid();
+	child->cwd = current_task->cwd;
+	child->exe = current_task->exe;
+	child->uid = current_task->uid;
+	child->gid = current_task->gid;
+	
+	child->state = TASK_STATE_ALIVE;
+	child->priority = current_task->priority;
+	child->clock = 0;
+	child->parent = current_task;
+
+	child->signal_handler = current_task->signal_handler;
+	child->signal_sig = current_task->signal_sig;
+
+	child->image.vaddr = current_task->image.vaddr;
+	child->image.length = current_task->image.length;
+	child->image.ptr = current_task->image.ptr;
+		
+	
+	child->context.cr3 = current_task->context.cr3;
+	child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
+	child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+
+	child->context.env->eax = (uint32_t) arg;
+	child->context.env->eip = (uint32_t) entry;
+	child->context.env->ebp = (uint32_t) stack; 
+
+	
+	for(int i = 0; i < TASK_MAX_FD; i++)
+		child->fd[i] = current_task->fd[i];
+
+
+	list_add(task_queue, (listval_t) child);
+	return child;
+}
 
 
 void task_switch(task_t* newtask) {
