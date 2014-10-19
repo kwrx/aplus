@@ -108,9 +108,9 @@ static idt_entry_t idt_e[256];
 static idt_ptr_t idt_p;
 
 
-static uint64_t pit_ticks;
-static uint64_t pit_seconds;
-static uint64_t pit_days;
+static uint32_t pit_ticks;
+static uint32_t pit_seconds;
+static uint32_t pit_days;
 
 uint8_t keyboard_ready = 0;
 
@@ -370,7 +370,7 @@ static uint8_t rtc(uint8_t addr) {
 	return r;
 }
 
-uint64_t pit_gettime() {
+uint32_t pit_gettime() {
 
 	#define BCD2BIN(bcd) 	((((bcd) & 0x0F) + ((bcd) / 16) * 10))
 	#define BCD2BIN2(bcd)	(((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))
@@ -382,14 +382,14 @@ uint64_t pit_gettime() {
 	t.tm_hour = BCD2BIN2(rtc(4)) + 2;
 	t.tm_mday = BCD2BIN(rtc(7));
 	t.tm_mon = BCD2BIN(rtc(8)) - 1;
-	t.tm_year = BCD2BIN(rtc(9)) + 100;
+	t.tm_year = (BCD2BIN(rtc(9)) + 100);
 	t.tm_wday = 0;
 	t.tm_yday = 0;
 	t.tm_isdst = 0;
 	
-	return (uint64_t) mktime(&t);
+	return (uint32_t) mktime(&t);
 }
 
 uint32_t pit_getticks() {
-	return pit_ticks;
+	return ((pit_days * 86400) * 1000) + (pit_seconds * 1000) + pit_ticks;
 }

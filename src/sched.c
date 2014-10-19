@@ -183,9 +183,12 @@ void* schedule_sbrk(ptrdiff_t increment) {
 	if(!current_task)
 		return NULL;
 		
+	if(current_task->image.vaddr == 0)
+		return NULL;
+		
 	if(increment == 0)
 		return (void*) ((uint32_t) current_task->image.vaddr + current_task->image.length);
-		
+
 	current_task->image.length += increment;
 	current_task->image.ptr = (uint32_t) krealloc((void*) current_task->image.ptr, current_task->image.length);
 	current_task->image.vaddr = vmm_map(current_task->context.cr3, mm_paddr((void*) current_task->image.ptr), current_task->image.vaddr, current_task->image.length, VMM_FLAGS_DEFAULT);

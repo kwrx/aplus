@@ -20,6 +20,7 @@ int sys_fstat(int fd, struct stat* st) {
 
 	inode_t* ino = current_task->fd[fd];
 	if(!ino) {
+		kprintf("sys_fstat: %s.", strerror(errno));
 		errno = EBADF;
 		return -1;
 	}

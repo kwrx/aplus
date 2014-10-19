@@ -50,7 +50,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 		if((p = strchr(s, '/'))) {
 			*p++ = 0;
 		
-			cwd = fs_finddir(cwd, s);
+			cwd = (inode_t*) fs_finddir(cwd, s);
 			if(!cwd) {
 				errno = ENOENT;
 				return NULL;
@@ -72,7 +72,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 		return NULL;
 	}
 
-	cwd = fs_finddir(cwd, s);
+	cwd = (inode_t*) fs_finddir(cwd, s);
 	if(!cwd) {
 		errno = ENOENT;
 		return NULL;

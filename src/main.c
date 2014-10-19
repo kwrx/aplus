@@ -29,9 +29,12 @@
 #include <aplus/mm.h>
 
 #include <stddef.h>
+#include <sys/times.h>
+#include <time.h>
 
 
 extern inode_t* vfs_root;
+extern task_t* current_task;
 
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_LOW);
@@ -55,7 +58,12 @@ int main() {
 	
 	vfs_map(devfs_mount());
 	
+#if 0
+	if(sys_fork() == 0)
+		sys_execl("/bin/init", "/bin/init", 0);
+	else
+		sysidle();
+#endif
 
-	
 	for(;;);
 }

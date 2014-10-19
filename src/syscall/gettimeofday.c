@@ -19,7 +19,7 @@ int sys_gettimeofday(struct timeval* tv, struct timezone* tz) {
 	}
 	
 	tv->tv_sec = pit_gettime();
-	tv->tv_usec = (tv->tv_sec * 1000000) + (pit_getticks() * 1000);
+	tv->tv_usec = pit_getticks() * 1000;
 	
 	return 0;
 }
