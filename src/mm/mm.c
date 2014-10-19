@@ -1,0 +1,142 @@
+//
+//  mm.c
+//
+//  Author:
+//       Antonio Natale <inferdevil97@gmail.com>
+//
+//  Copyright (c) 2014 WareX
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#include <sys/types.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
+
+
+#include <aplus/mm.h>
+#include <aplus/list.h>
+
+
+volatile heap_t* current_heap;
+extern uint32_t* current_vmm;
+extern uint32_t* kernel_vmm;
+
+extern list_t* vmm_queue;
+
+
+typedef struct block {
+	uint16_t magic;
+	size_t size;
+} __attribute__((packed)) block_t;
+
+
+void* kmalloc(size_t size) {
+	void* addr = (void*) halloc(current_heap, size);
+	if(!addr)
+		panic("halloc(): failed!");
+
+
+	if(kernel_vmm)
+		vmm_map(kernel_vmm, addr, mm_vaddr(addr), size, VMM_FLAGS_DEFAULT);
+
+	if(!list_empty(vmm_queue)) {
+		list_foreach(value, vmm_queue) {
+			vmm_map(value, addr, mm_vaddr(addr), size, VMM_FLAGS_DEFAULT);
+		}
+	}
+
+	if(current_vmm)
+		addr = (void*) vmm_map(current_vmm, addr, mm_vaddr(addr), size, VMM_FLAGS_DEFAULT);
+	
+
+	block_t* block = (block_t*) addr;
+	block->magic = BLKMAGIC;
+	block->size = size;
+
+	return (void*) ((uint32_t) block + sizeof(block_t));
+}
+
+
+void kfree(void* ptr) {
+	if(!ptr)
+		return;
+		
+	
+	block_t* block = (block_t*) ptr;
+	if(block->magic != BLKMAGIC)
+		return;
+		
+	size_t size = block->size;
+	block->size = 0;
+	block->magic = 0;
+	
+	
+	if(kernel_vmm)
+		vmm_umap(kernel_vmm, mm_align(ptr), size);
+	
+	if(!list_empty(vmm_queue)) {
+		list_foreach(value, vmm_queue) {
+			vmm_umap(value, mm_align(ptr), size);
+		}
+	}
+	
+	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+}
+
+
+void* krealloc(void* ptr, size_t size) {
+	if(ptr == NULL)
+		return kmalloc(size);
+		
+	if(size == 0) {
+		kfree(ptr);
+		return NULL;
+	}	
+
+	block_t* block = (block_t*) ptr;
+	if(block->magic != BLKMAGIC)
+		return NULL;
+		
+	void* newptr = kmalloc(size);
+	if(!newptr)
+		return NULL;
+		
+	if(size > block->size)
+		size = block->size;
+		
+	memcpy(newptr, ptr, size);
+	kfree(ptr);
+	
+	return newptr;
+}
+
+
+
+
+void mm_setheap(heap_t* heap) {
+	current_heap = heap;
+}
+
+volatile heap_t* mm_getheap() {
+	return current_heap;
+}
+
+
+int mm_init() {
+	kheap_init();
+	vmm_init();
+	
+	return 0;
+}
