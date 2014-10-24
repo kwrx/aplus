@@ -24,6 +24,7 @@ int bufio_init() {
 }
 
 
+
 void bufio_free_unused() {
 
 	list_t* tmp;
@@ -49,26 +50,33 @@ bufio_t* bufio_alloc(size_t size) {
 	lock();	
 	buffers_length += size;
 
+
 	bufio_t* buf = (bufio_t*) kmalloc(size);
 	buf->raw = addr;
 	buf->size = size;
+	buf->type = 0;
 	buf->offset = (off_t) 0;
 	buf->task = current_task;
-	
+
+
 	list_add(list_buffers, (listval_t) buf);
 
 	unlock();
-	
 	return buf;
 }
 
 bufio_t* bufio_alloc_raw(void* raw, size_t size) {
+	if(!raw)
+		return 0;
+
 	lock();	
+
 	buffers_length += size;
 
 	bufio_t* buf = (bufio_t*) kmalloc(size);
 	buf->raw = raw;
 	buf->size = size;
+	buf->type = 0;
 	buf->offset = (off_t) 0;
 	buf->task = current_task;
 	

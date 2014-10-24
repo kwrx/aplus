@@ -16,9 +16,9 @@
 
 
 typedef struct eth_header {
-	macaddr_t dest[6];
-	macaddr_t source[6];
+	macaddr_t dest;
+	macaddr_t source;
 	uint16_t type;
-} eth_header_t;
+} __attribute__((packed)) eth_header_t;
 
 #endif

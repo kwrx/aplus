@@ -24,6 +24,6 @@ typedef struct ipv6_header {
 
 	ipv6_t source;
 	ipv6_t dest;
-} ipv6_header_t;
+} __attribute__((packed)) ipv6_header_t;
 
 #endif

@@ -54,6 +54,7 @@ _start:
 	mov [magic], eax
 	
 	mov esp, kernel_stack + STACKSIZE
+
 	
 	cli
 	call enable_fpu

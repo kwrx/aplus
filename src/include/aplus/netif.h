@@ -12,6 +12,7 @@ typedef uint16_t ipv6_t[8];
 typedef uint8_t macaddr_t[6];
 
 
+#define NETIF_RAW			0
 #define NETIF_INET			1
 #define NETIF_INET6			2
 #define NETIF_ARP			3

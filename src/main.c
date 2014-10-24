@@ -60,11 +60,14 @@ int main() {
 	vfs_init();
 	schedule_init();
 	syscall_init();
+	bufio_init();
 	pci_init();
 	netif_init();
 	
 	vfs_map(devfs_mount());
 
+
+	/* TODO: Fix ipv4 */
 
 /*
 	if(fork() == 0)

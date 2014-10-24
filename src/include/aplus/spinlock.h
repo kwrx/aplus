@@ -31,18 +31,18 @@ int spinlock_trylock(spinlock_t* spin);
 void __spinlock_waiton();
 
 
-#define lock();										\
+#define lock()										\
 	static spinlock_t __func__##_lock = 0;			\
-	spinlock_lock(&__func__##_lock);
+	spinlock_lock(&__func__##_lock)
 	
-#define unlock();									\
-	spinlock_unlock(&__func__##_lock);
+#define unlock()									\
+	spinlock_unlock(&__func__##_lock)
 	
 	
 
-#define spinlock_waiton(cond);						\
+#define spinlock_waiton(cond)						\
 	while(cond)										\
-		__spinlock_waiton();
+		__spinlock_waiton()
 
 
 #endif

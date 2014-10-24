@@ -18,9 +18,10 @@ int eth_recv(netif_t* netif, void* buf, size_t length, int type) {
 	}
 	
 	length = ret - sizeof(eth_header_t);
-
+	
 	memcpy(buf, (void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), length);
 	kfree(ethpkt);
+
 
 	return length;
 }
@@ -31,8 +32,8 @@ int eth_send(netif_t* netif, void* buf, size_t length, int type) {
 		return netif->send(netif, buf, length, NETIF_ETH);
 	
 	eth_header_t* ethpkt = kmalloc(length + sizeof(eth_header_t));
-	memset((void*) &ethpkt->dest, 0xFF, sizeof(macaddr_t));
-	memcpy((void*) &ethpkt->source, (void*) netif->macaddr, sizeof(macaddr_t));
+	memset((void*) ethpkt->dest, 0xFF, sizeof(macaddr_t));
+	memcpy((void*) ethpkt->source, (void*) netif->macaddr, sizeof(macaddr_t));
 	memcpy((void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), buf, length);
 
 	switch(type) {
@@ -50,7 +51,7 @@ int eth_send(netif_t* netif, void* buf, size_t length, int type) {
 			break;
 	}
 
-	int ret = netif->send(netif, ethpkt, length, NETIF_ETH);
+	int ret = netif->send(netif, ethpkt, length + sizeof(eth_header_t), NETIF_ETH);
 	kfree(ethpkt);
 	
 	return ret;

@@ -34,7 +34,7 @@ uint16_t ipv4_checksum(ipv4_header_t* pkt) {
 void* ipv4_create_packet(netif_t* netif, void* buf, size_t length, int type, ipv4_t dest, int fragment, int offset) {
 
 	ipv4_header_t* ip = (ipv4_header_t*) kmalloc(length + sizeof(ipv4_header_t));
-	ip->info = (4 << 4) | (sizeof(ipv4_header_t) >> 2);	/* Version: ipv4; length: 20 byte */
+	ip->info = (((sizeof(ipv4_header_t) >> 2) & 0xF) << 4) | 4;	/* length: 20 byte; Version: ipv4; */
 	ip->tos = 0;
 	ip->length = length + sizeof(ipv4_header_t);
 	ip->id = 0;

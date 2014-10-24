@@ -41,6 +41,6 @@ typedef struct ipv4_header {
 	ipv4_t source;
 	ipv4_t dest;
 	
-} ipv4_header_t;
+} __attribute__((packed)) ipv4_header_t;
 
 #endif
