@@ -46,9 +46,33 @@ extern uint32_t* current_vmm;
 extern volatile inode_t* vfs_root;
 extern void task_context_switch(task_env_t** old, task_env_t** new);
 
+#if 0
+static void stack_remap(task_t* t) {
+	uint32_t* ptr = (uint32_t*) t->context.stack;
+	uint32_t esp, ebp;
+
+
+	t->context.stack = TASK_STACKADDR;
+	vmm_map(t->context.cr3, t->context.stack, TASK_STACKADDR, TASK_STACKSIZE, VMM_FLAGS_DEFAULT);
+
+	for(int i = 0; i < TASK_STACKSIZE >> 2; i++)
+		if((ptr[i] >= (uint32_t) ptr) && (ptr[i] <= ((uint32_t) ptr + TASK_STACKSIZE)))
+			ptr[i] = TASK_STACKADDR | ((uint32_t) ptr & 0xFFF);
+
+
+
+	__asm__ __volatile__("mov ebx, esp" : "=b"(esp));
+	__asm__ __volatile__("mov ebx, ebp" : "=b"(ebp));
+
+	__asm__ __volatile__("mov esp, ebx" : : "b"(TASK_STACKADDR | ((uint32_t) esp & 0xFFF)));
+	__asm__ __volatile__("mov ebp, ebx" : : "b"(TASK_STACKADDR | ((uint32_t) ebp & 0xFFF)));
+	
+}
+#endif
 
 task_t* task_fork() {
-	schedule_disable();
+	if(!current_task)
+		return NULL;
 
 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
 	memset(child, 0, sizeof(task_t));
@@ -64,63 +88,55 @@ task_t* task_fork() {
 	child->clock = 0;
 	child->parent = current_task;
 
-	/* Clone file descriptors */
+	child->signal_handler = current_task->signal_handler;
+	child->signal_sig = current_task->signal_sig;
+
+	
 	for(int i = 0; i < TASK_MAX_FD; i++)
 		child->fd[i] = current_task->fd[i];
 
 
-	/* Clone virtual space */
-	child->context.cr3 = (uint32_t) vmm_create();
+	child->context.cr3 = vmm_create();
 	vmm_mapkernel(child->context.cr3);
 
 
-	/* Clone Image */
-	if(child->image.vaddr) {
-		child->image.vaddr = current_task->image.vaddr;
-		child->image.length = current_task->image.length;
+	child->image.vaddr = current_task->image.vaddr;
+	child->image.length = current_task->image.length;
 
-		child->image.ptr = (uint32_t) kmalloc(child->image.length);
-		memcpy((void*) child->image.ptr, (void*) current_task->image.vaddr, child->image.length);
+	
+	if(current_task->image.ptr) {
+		void* addr = (void*) kmalloc(child->image.length);
+		memcpy(addr, (void*) child->image.vaddr, child->image.length);
 
-		/* Remap Image */
-		vmm_map(child->context.cr3, mm_paddr((void*) child->image.ptr), child->image.vaddr, child->image.length, VMM_FLAGS_DEFAULT);
+		vmm_map(child->context.cr3, mm_paddr(addr), child->image.vaddr, child->image.length);
+		child->image.ptr = (uint32_t) mm_paddr(addr);
 	}
 
-
-	/* Clone signals */
-	child->signal_handler = current_task->signal_handler;
-	child->signal_sig = current_task->signal_sig;
-
-
-	/* Clone stack */
-	child->context.stack = (uint32_t) kmalloc(TASK_STACKSIZE * 2);
-	memcpy((void*) child->context.stack, (void*) current_task->context.stack, TASK_STACKSIZE);
-
-
-	/* Remap stack */
-	vmm_map(child->context.cr3, mm_paddr((void*) child->context.stack), current_task->context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT);
-
-
-	/* Setting stack */
-	child->context.env->eip = read_eip();
-	if(current_task == child)
-		return 0;	/* I'm a child, so return 0 */
-
-
-	/* Finalize stack*/
+	
+	
+	child->context.stack = current_task->context.stack;
 	child->context.env = current_task->context.env;
 
+	void* stack = (void*) kmalloc(TASK_STACKSIZE * 2);
+	memcpy(stack, (void*) child->context.stack, TASK_STACKSIZE);
 
-	/* Add schedule queue */
-	list_add(task_queue, (listval_t) child);
+	vmm_map(child->context.cr3, mm_paddr(stack), child->context.stack, TASK_STACKSIZE * 2);
+
 	
-	schedule_enable();
+
+	task_env_t* env = (task_env_t*) stack;
+	env->eip = read_eip();
+	kprintf("eip 0x%x from %d\n", env->eip, sys_getpid());
+	if(current_task == child)
+		return 0;
+
+	list_add(task_queue, (listval_t) child);
 	return child;
 }
 
 
 
-task_t* task_create(void* entry, void* arg, void* stack) {
+task_t* task_clone(void* entry, void* arg, void* stack) {
 	if(entry == NULL)
 		return NULL;
 
@@ -192,7 +208,7 @@ int task_init() {
 	memset(current_task, 0, sizeof(task_t));
 	
 	
-	current_task->context.env = (task_env_t*) kmalloc(sizeof(task_env_t));
+	current_task->context.env = (task_env_t*) 0;
 	current_task->context.cr3 = (uint32_t) kernel_vmm;
 	current_task->context.stack = (uint32_t) &kernel_stack;
 	
@@ -206,7 +222,8 @@ int task_init() {
 	current_task->priority = TASK_PRIORITY_REGULAR;
 	current_task->parent = NULL;
 
-	
+	//stack_remap(current_task);
+
 	list_add(task_queue, (listval_t) current_task);
 	task_switch(current_task);
 

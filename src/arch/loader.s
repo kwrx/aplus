@@ -12,7 +12,7 @@ VMODE equ		(1 << 2)
 FLAGS equ		(MALIGN | MEMINFO | VMODE)
 MAGIC equ		(0x1BADB002)
 CHECKSUM equ	-(MAGIC + FLAGS)
-STACKSIZE equ	0x1000
+STACKSIZE equ	0x4000
 
 
 
@@ -20,6 +20,7 @@ global _start
 global magic
 global mbd
 global kernel_stack
+global multiboot
 
 
 

@@ -130,7 +130,14 @@ void vmm_umap(uint32_t* pd, void* addr, size_t len) {
 
 
 void vmm_mapkernel(uint32_t* dest) {
-	panic("TODO");
+	// Map 8MB to low area (kernel reserved)
+	vmm_map(dest, (void*) 0, (void*) 0, MM_LBASE, VMM_FLAGS_DEFAULT);
+	
+	// Map Linear Frame Buffer
+	vmm_map(dest, (void*) 0xE0000000, (void*) 0xE0000000, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
+	int index = PDENTRY((int) mm_vaddr(NULL));
+	memcpy(&dest[index], &kernel_vmm[index], 512);
 }
 
 

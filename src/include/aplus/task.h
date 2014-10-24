@@ -33,7 +33,7 @@
 
 
 #define TASK_MAX_FD					512
-#define TASK_STACKSIZE				4096
+#define TASK_STACKSIZE				0x4000
 
 #define TASK_STATE_ALIVE			0
 #define TASK_STATE_ZOMBIE			1
@@ -48,6 +48,9 @@
 
 #define UID_SUPERUSER				1000
 #define GID_SUPERUSER				1000
+
+
+#define TASK_STACKADDR				0xF0000000
 
 
 

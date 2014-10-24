@@ -55,9 +55,12 @@ int main() {
 	vfs_init();
 	schedule_init();
 	syscall_init();
+	pci_init();
 	
 	vfs_map(devfs_mount());
-	
+
+
+
 /*
 	if(fork() == 0)
 		execl("/bin/init", "/bin/init", 0);

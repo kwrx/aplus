@@ -6,8 +6,10 @@ Membro dell'archivio incluso a causa del file (simbolo)
                               /opt/prj/aPlus/src/syscall/link.o (__errno)
 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
                               /opt/cross/usr/lib/libc.a(lib_a-errno.o) (_impure_ptr)
+/opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+                              /opt/prj/aPlus/src/net/netif.o (memcmp)
 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
-                              /opt/prj/aPlus/src/mm/mm.o (memcpy)
+                              /opt/prj/aPlus/src/mm/paging.o (memcpy)
 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
                               /opt/prj/aPlus/src/fs/pipe.o (memset)
 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
@@ -60,693 +62,725 @@ Script del linker e mappa della memoria
 .multiboot      0x00100000       0x30
  *(.multiboot)
  .multiboot     0x00100000       0x30 /opt/prj/aPlus/src/arch/loader.o
+                0x00100000                multiboot
  *(.multiboot.*)
                 0x00000000                VBASE = 0x0
                 0x00100030                . = (. + VBASE)
 
-.text           0x00100040     0x83a0
+.text           0x00100040     0x9240
                 0x00100040                text = .
  *(.text)
- .text          0x00100040       0x74 /opt/prj/aPlus/src/syscall/times.o
-                0x00100040                sys_times
- .text          0x001000b4       0x13 /opt/prj/aPlus/src/syscall/sbrk.o
-                0x001000b4                sys_sbrk
- .text          0x001000c7       0x24 /opt/prj/aPlus/src/syscall/link.o
-                0x001000c7                sys_link
- .text          0x001000eb       0x68 /opt/prj/aPlus/src/syscall/close.o
-                0x001000eb                sys_close
- .text          0x00100153      0x145 /opt/prj/aPlus/src/syscall/fstat.o
-                0x00100153                sys_fstat
- .text          0x00100298        0xd /opt/prj/aPlus/src/syscall/yield.o
-                0x00100298                sys_yield
- .text          0x001002a5       0x22 /opt/prj/aPlus/src/syscall/fork.o
-                0x001002a5                sys_fork
- .text          0x001002c7       0x24 /opt/prj/aPlus/src/syscall/unlink.o
-                0x001002c7                sys_unlink
- .text          0x001002eb       0x75 /opt/prj/aPlus/src/syscall/stat.o
-                0x001002eb                sys_stat
- .text          0x00100360       0x3f /opt/prj/aPlus/src/syscall/kill.o
-                0x00100360                sys_kill
- .text          0x0010039f       0x69 /opt/prj/aPlus/src/syscall/clone.o
-                0x0010039f                sys_clone
- .text          0x00100408       0x5b /opt/prj/aPlus/src/syscall/read.o
-                0x00100408                sys_read
- .text          0x00100463       0x5b /opt/prj/aPlus/src/syscall/write.o
-                0x00100463                sys_write
- .text          0x001004be       0x40 /opt/prj/aPlus/src/syscall/gettimeofday.o
-                0x001004be                sys_gettimeofday
- .text          0x001004fe        0xf /opt/prj/aPlus/src/syscall/isatty.o
-                0x001004fe                sys_isatty
- .text          0x0010050d        0xd /opt/prj/aPlus/src/syscall/getpid.o
-                0x0010050d                sys_getpid
- .text          0x0010051a       0xc9 /opt/prj/aPlus/src/syscall/lseek.o
-                0x0010051a                sys_lseek
- .text          0x001005e3       0xb4 /opt/prj/aPlus/src/syscall/chown.o
-                0x001005e3                sys_chown
- .text          0x00100697       0x27 /opt/prj/aPlus/src/syscall/test.o
-                0x00100697                sys_test
- .text          0x001006be       0x13 /opt/prj/aPlus/src/syscall/_exit.o
-                0x001006be                sys_exit
- .text          0x001006d1       0x4b /opt/prj/aPlus/src/syscall/ioctl.o
-                0x001006d1                sys_ioctl
- .text          0x0010071c       0x64 /opt/prj/aPlus/src/syscall/wait.o
-                0x0010071c                sys_wait
- .text          0x00100780       0x5e /opt/prj/aPlus/src/syscall/fcntl.o
-                0x00100780                sys_fcntl
- .text          0x001007de      0x2d1 /opt/prj/aPlus/src/syscall/open.o
-                0x001009fe                sys_open
- .text          0x00100aaf       0x54 /opt/prj/aPlus/src/syscall/readdir.o
-                0x00100aaf                sys_readdir
- .text          0x00100b03       0x18 /opt/prj/aPlus/src/syscall/execve.o
-                0x00100b03                sys_execve
- .text          0x00100b1b       0x87 /opt/prj/aPlus/src/syscall/getgroups.o
-                0x00100b1b                sys_getgroups
- .text          0x00100ba2      0x5bc /opt/prj/aPlus/src/sched.o
-                0x00100ceb                im_superuser
-                0x00100d2a                schedule_enable
-                0x00100d39                schedule_disable
-                0x00100d48                schedule_nextpid
-                0x00100d5b                schedule_init
-                0x00100df3                schedule
-                0x00100e66                schedule_yield
-                0x00100e99                schedule_setpriority
-                0x00100eb7                schedule_wait
-                0x00100eea                schedule_child
-                0x00100f53                schedule_exit2
-                0x00100fa6                schedule_exit
-                0x00100fc2                schedule_getpid
-                0x00100fde                schedule_getbypid
-                0x00101042                schedule_sbrk
- .text          0x0010115e      0x4ca /opt/prj/aPlus/src/fs/vfs.o
-                0x001012d9                vfs_map
-                0x0010130f                vfs_umap
-                0x00101336                vfs_mapped
-                0x001013a1                vfs_mapped_at_index
-                0x00101400                vfs_mapped_count
-                0x00101459                vfs_chroot
-                0x0010147a                vfs_init
- .text          0x00101628      0x323 /opt/prj/aPlus/src/fs/pipe.o
-                0x00101628                pipe_read
-                0x001016ef                pipe_write
-                0x0010179a                pipe_flush
-                0x001017c6                pipe_create
- .text          0x0010194b      0x33b /opt/prj/aPlus/src/fs/fs.o
-                0x0010194b                fs_read
-                0x00101991                fs_write
-                0x001019d7                fs_readdir
-                0x00101a87                fs_finddir
-                0x00101aed                fs_creat
-                0x00101b33                fs_rename
-                0x00101b79                fs_unlink
-                0x00101bb8                fs_chown
-                0x00101c0e                fs_flush
-                0x00101c40                fs_ioctl
- .text          0x00101c86      0x2c2 /opt/prj/aPlus/src/fs/devfs.o
-                0x00101c86                devfs_creat
-                0x00101df7                devfs_mount
- .text          0x00101f48      0x49e /opt/prj/aPlus/src/panic.o
-                0x001023b4                panic
- .text          0x001023e6       0x5f /opt/prj/aPlus/src/spinlock.o
-                0x001023e6                spinlock_lock
-                0x00102407                spinlock_unlock
-                0x00102415                spinlock_trylock
-                0x00102438                __spinlock_waiton
- .text          0x00102445      0x51b /opt/prj/aPlus/src/mm/paging.o
-                0x001025af                vmm_switch
-                0x001025d2                vmm_enable
-                0x001025fc                vmm_disable
-                0x00102616                vmm_map
-                0x00102761                vmm_umap
-                0x001027fd                vmm_mapkernel
-                0x00102811                vmm_create
-                0x00102878                vmm_destroy
-                0x00102894                vmm_init
- .text          0x00102960      0x3f0 /opt/prj/aPlus/src/mm/mm.o
-                0x00102a45                kmalloc
-                0x00102b7e                kfree
-                0x00102c7d                krealloc
-                0x00102d22                mm_setheap
-                0x00102d2f                mm_getheap
-                0x00102d39                mm_init
- .text          0x00102d50       0x68 /opt/prj/aPlus/src/mm/heap.o
-                0x00102d50                halloc
-                0x00102d84                hfree
- .text          0x00102db8      0x325 /opt/prj/aPlus/src/mm/kheap.o
-                0x00102e70                bitmap_alloc
-                0x00102f85                bitmap_free
-                0x00103056                kheap_init
- .text          0x001030dd       0x5b /opt/prj/aPlus/src/main.o
-                0x001030f3                main
- .text          0x00103138      0x573 /opt/prj/aPlus/src/debug.o
-                0x00103173                debug_init
-                0x00103207                debug_putc
-                0x0010325b                debug_puts
-                0x00103446                vasprintf
-                0x0010365b                kprintf
- .text          0x001036ab      0x635 /opt/prj/aPlus/src/bufio.o
-                0x001038e5                bufio_init
-                0x00103926                bufio_free_unused
-                0x001039af                bufio_alloc
-                0x00103a60                bufio_free
-                0x00103ad6                bufio_seek
-                0x00103b62                bufio_tell
-                0x00103b85                bufio_clear
-                0x00103bc8                bufio_read
-                0x00103c54                bufio_write
- .text          0x00103ce0      0xfd8 /opt/prj/aPlus/src/arch/desc.o
-                0x00103cfe                gdt_load
-                0x00103d1b                idt_load
-                0x00103d23                isr_handler
-                0x00103d40                irq_handler
-                0x00103da7                pit_handler
-                0x00103e07                pagefault_handler
-                0x00103e34                desc_init
-                0x00104a2f                irq_set
-                0x00104a61                irq_unset
-                0x00104a94                irq_get
-                0x00104aed                pit_gettime
-                0x00104c94                pit_getticks
- .text          0x00104cb8      0x6cc /opt/prj/aPlus/src/arch/task.o
-                0x00104d62                task_context_switch
-                0x00104d7f                task_fork
-                0x0010503b                task_create
-                0x00105231                task_switch
-                0x00105287                task_init
- .text          0x00105384      0x36a /opt/prj/aPlus/src/arch/syscall.o
-                0x00105569                syscall_init
-                0x00105612                syscall_invoke
-                0x00105664                syscall_handler
- *fill*         0x001056ee        0x2 
- .text          0x001056f0       0x6d /opt/prj/aPlus/src/arch/loader.o
-                0x001056f0                _start
- *fill*         0x0010575d        0x3 
- .text          0x00105760      0x256 /opt/prj/aPlus/src/arch/_desc.o
-                0x00105760                isr0
-                0x00105769                isr1
-                0x00105772                isr2
-                0x0010577b                isr3
-                0x00105784                isr4
-                0x0010578d                isr5
-                0x00105796                isr6
-                0x0010579f                isr7
-                0x001057a8                isr8
-                0x001057af                isr9
-                0x001057b8                isr10
-                0x001057bf                isr11
-                0x001057c6                isr12
-                0x001057cd                isr13
-                0x001057d4                isr15
-                0x001057dd                isr16
-                0x001057e6                isr17
-                0x001057ef                isr18
-                0x001057f8                isr19
-                0x00105801                isr20
-                0x0010580a                isr21
-                0x00105813                isr22
-                0x0010581c                isr23
-                0x00105825                isr24
-                0x0010582e                isr25
-                0x00105837                isr26
-                0x00105840                isr27
-                0x00105849                isr28
-                0x00105852                isr29
-                0x0010585b                isr30
-                0x00105864                isr31
-                0x0010586d                irq0
-                0x00105876                irq1
-                0x0010587f                irq2
-                0x00105888                irq3
-                0x00105891                irq4
-                0x0010589a                irq5
-                0x001058a3                irq6
-                0x001058ac                irq7
-                0x001058b5                irq8
-                0x001058be                irq9
-                0x001058c7                irq10
-                0x001058d0                irq11
-                0x001058d9                irq12
-                0x001058e2                irq13
-                0x001058eb                irq14
-                0x001058f4                irq15
-                0x00105901                isr0x80
-                0x00105939                isr14
-                0x00105963                read_eip
-                0x00105966                isr_stub
-                0x0010598e                irq_stub
- *fill*         0x001059b6        0xa 
- .text          0x001059c0      0x49d /opt/cross/usr/lib/libposix.a(syscalls.o)
-                0x001059c0                _exit
-                0x001059e0                close
-                0x00105a10                execve
-                0x00105a40                fork
-                0x00105a60                fstat
-                0x00105a90                getpid
-                0x00105ab0                isatty
-                0x00105ae0                kill
-                0x00105b10                link
-                0x00105b40                lseek
-                0x00105b70                open
-                0x00105ba0                read
-                0x00105bd0                sbrk
-                0x00105c00                stat
-                0x00105c30                times
-                0x00105c60                unlink
-                0x00105c90                wait
-                0x00105cc0                write
-                0x00105cf0                gettimeofday
-                0x00105d20                fcntl
-                0x00105d50                ioctl
-                0x00105d80                chown
-                0x00105db0                clone
-                0x00105de0                aplus_readdir
-                0x00105e10                aplus_getgroups
-                0x00105e40                aplus_yield
- *fill*         0x00105e5d        0x3 
- .text          0x00105e60        0x6 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
-                0x00105e60                __errno
- .text          0x00105e66        0x0 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- *fill*         0x00105e66        0x2 
- .text          0x00105e68       0x48 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
-                0x00105e68                memcpy
- .text          0x00105eb0       0x88 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
-                0x00105eb0                memset
- *fill*         0x00105f38        0x8 
- .text          0x00105f40      0x826 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
-                0x001062a0                mktime
- *fill*         0x00106766        0xa 
- .text          0x00106770      0x6d7 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
-                0x00106770                __tzcalc_limits
-                0x001069b0                _mktm_r
- *fill*         0x00106e47        0x9 
- .text          0x00106e50       0xfc /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
-                0x00106e50                strchr
- *fill*         0x00106f4c        0x4 
- .text          0x00106f50       0x62 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
-                0x00106f50                strcmp
- *fill*         0x00106fb2        0xe 
- .text          0x00106fc0       0x65 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
-                0x00106fc0                strcpy
- *fill*         0x00107025        0xb 
- .text          0x00107030      0x53c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
-                0x00107030                _strerror_r
-                0x00107540                strerror
- *fill*         0x0010756c        0x4 
- .text          0x00107570       0x79 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
-                0x00107570                strlen
- *fill*         0x001075e9        0x7 
- .text          0x001075f0       0x12 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
-                0x001075f0                __tz_lock
-                0x00107600                __tz_unlock
- .text          0x00107602        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
- *fill*         0x00107602        0xe 
- .text          0x00107610        0x3 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
-                0x00107610                _user_strerror
- *fill*         0x00107613        0xd 
- .text          0x00107620       0x61 /opt/cross/usr/lib/libc.a(lib_a-div.o)
-                0x00107620                div
- *fill*         0x00107681        0xf 
- .text          0x00107690        0x6 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
-                0x00107690                __gettzinfo
+ .text          0x00100040        0x0 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+ .text          0x00100040      0x3d7 /opt/prj/aPlus/src/net/netif.o
+                0x001001bb                netif_find_by_ipv4
+                0x00100233                netif_find_by_ipv6
+                0x001002ab                netif_find_by_macaddr
+                0x00100323                netif_add
+                0x001003eb                netif_remove
+ .text          0x00100417       0x74 /opt/prj/aPlus/src/syscall/times.o
+                0x00100417                sys_times
+ .text          0x0010048b       0x13 /opt/prj/aPlus/src/syscall/sbrk.o
+                0x0010048b                sys_sbrk
+ .text          0x0010049e       0x24 /opt/prj/aPlus/src/syscall/link.o
+                0x0010049e                sys_link
+ .text          0x001004c2       0x68 /opt/prj/aPlus/src/syscall/close.o
+                0x001004c2                sys_close
+ .text          0x0010052a      0x145 /opt/prj/aPlus/src/syscall/fstat.o
+                0x0010052a                sys_fstat
+ .text          0x0010066f        0xd /opt/prj/aPlus/src/syscall/yield.o
+                0x0010066f                sys_yield
+ .text          0x0010067c       0x22 /opt/prj/aPlus/src/syscall/fork.o
+                0x0010067c                sys_fork
+ .text          0x0010069e       0x24 /opt/prj/aPlus/src/syscall/unlink.o
+                0x0010069e                sys_unlink
+ .text          0x001006c2       0x75 /opt/prj/aPlus/src/syscall/stat.o
+                0x001006c2                sys_stat
+ .text          0x00100737       0x3f /opt/prj/aPlus/src/syscall/kill.o
+                0x00100737                sys_kill
+ .text          0x00100776       0x69 /opt/prj/aPlus/src/syscall/clone.o
+                0x00100776                sys_clone
+ .text          0x001007df       0x5b /opt/prj/aPlus/src/syscall/read.o
+                0x001007df                sys_read
+ .text          0x0010083a       0x5b /opt/prj/aPlus/src/syscall/write.o
+                0x0010083a                sys_write
+ .text          0x00100895       0x40 /opt/prj/aPlus/src/syscall/gettimeofday.o
+                0x00100895                sys_gettimeofday
+ .text          0x001008d5        0xf /opt/prj/aPlus/src/syscall/isatty.o
+                0x001008d5                sys_isatty
+ .text          0x001008e4        0xd /opt/prj/aPlus/src/syscall/getpid.o
+                0x001008e4                sys_getpid
+ .text          0x001008f1       0xc9 /opt/prj/aPlus/src/syscall/lseek.o
+                0x001008f1                sys_lseek
+ .text          0x001009ba       0xb4 /opt/prj/aPlus/src/syscall/chown.o
+                0x001009ba                sys_chown
+ .text          0x00100a6e       0x27 /opt/prj/aPlus/src/syscall/test.o
+                0x00100a6e                sys_test
+ .text          0x00100a95       0x13 /opt/prj/aPlus/src/syscall/_exit.o
+                0x00100a95                sys_exit
+ .text          0x00100aa8       0x4b /opt/prj/aPlus/src/syscall/ioctl.o
+                0x00100aa8                sys_ioctl
+ .text          0x00100af3       0x64 /opt/prj/aPlus/src/syscall/wait.o
+                0x00100af3                sys_wait
+ .text          0x00100b57       0x5e /opt/prj/aPlus/src/syscall/fcntl.o
+                0x00100b57                sys_fcntl
+ .text          0x00100bb5      0x2d1 /opt/prj/aPlus/src/syscall/open.o
+                0x00100dd5                sys_open
+ .text          0x00100e86       0x54 /opt/prj/aPlus/src/syscall/readdir.o
+                0x00100e86                sys_readdir
+ .text          0x00100eda       0x18 /opt/prj/aPlus/src/syscall/execve.o
+                0x00100eda                sys_execve
+ .text          0x00100ef2       0x87 /opt/prj/aPlus/src/syscall/getgroups.o
+                0x00100ef2                sys_getgroups
+ .text          0x00100f79      0x5bc /opt/prj/aPlus/src/sched.o
+                0x001010c2                im_superuser
+                0x00101101                schedule_enable
+                0x00101110                schedule_disable
+                0x0010111f                schedule_nextpid
+                0x00101132                schedule_init
+                0x001011ca                schedule
+                0x0010123d                schedule_yield
+                0x00101270                schedule_setpriority
+                0x0010128e                schedule_wait
+                0x001012c1                schedule_child
+                0x0010132a                schedule_exit2
+                0x0010137d                schedule_exit
+                0x00101399                schedule_getpid
+                0x001013b5                schedule_getbypid
+                0x00101419                schedule_sbrk
+ .text          0x00101535      0x4ca /opt/prj/aPlus/src/fs/vfs.o
+                0x001016b0                vfs_map
+                0x001016e6                vfs_umap
+                0x0010170d                vfs_mapped
+                0x00101778                vfs_mapped_at_index
+                0x001017d7                vfs_mapped_count
+                0x00101830                vfs_chroot
+                0x00101851                vfs_init
+ .text          0x001019ff      0x323 /opt/prj/aPlus/src/fs/pipe.o
+                0x001019ff                pipe_read
+                0x00101ac6                pipe_write
+                0x00101b71                pipe_flush
+                0x00101b9d                pipe_create
+ .text          0x00101d22      0x33b /opt/prj/aPlus/src/fs/fs.o
+                0x00101d22                fs_read
+                0x00101d68                fs_write
+                0x00101dae                fs_readdir
+                0x00101e5e                fs_finddir
+                0x00101ec4                fs_creat
+                0x00101f0a                fs_rename
+                0x00101f50                fs_unlink
+                0x00101f8f                fs_chown
+                0x00101fe5                fs_flush
+                0x00102017                fs_ioctl
+ .text          0x0010205d      0x2c2 /opt/prj/aPlus/src/fs/devfs.o
+                0x0010205d                devfs_creat
+                0x001021ce                devfs_mount
+ .text          0x0010231f      0x49e /opt/prj/aPlus/src/panic.o
+                0x0010278b                panic
+ .text          0x001027bd       0x5f /opt/prj/aPlus/src/spinlock.o
+                0x001027bd                spinlock_lock
+                0x001027de                spinlock_unlock
+                0x001027ec                spinlock_trylock
+                0x0010280f                __spinlock_waiton
+ .text          0x0010281c      0x5c4 /opt/prj/aPlus/src/mm/paging.o
+                0x001029a3                vmm_switch
+                0x001029c6                vmm_enable
+                0x001029f0                vmm_disable
+                0x00102a0a                vmm_map
+                0x00102b55                vmm_umap
+                0x00102bf1                vmm_mapkernel
+                0x00102c91                vmm_create
+                0x00102cf8                vmm_destroy
+                0x00102d14                vmm_init
+ .text          0x00102de0      0x3f0 /opt/prj/aPlus/src/mm/mm.o
+                0x00102ec5                kmalloc
+                0x00102ffe                kfree
+                0x001030fd                krealloc
+                0x001031a2                mm_setheap
+                0x001031af                mm_getheap
+                0x001031b9                mm_init
+ .text          0x001031d0       0x68 /opt/prj/aPlus/src/mm/heap.o
+                0x001031d0                halloc
+                0x00103204                hfree
+ .text          0x00103238      0x325 /opt/prj/aPlus/src/mm/kheap.o
+                0x001032f0                bitmap_alloc
+                0x00103405                bitmap_free
+                0x001034d6                kheap_init
+ .text          0x0010355d       0x5b /opt/prj/aPlus/src/main.o
+                0x00103573                main
+ .text          0x001035b8      0x573 /opt/prj/aPlus/src/debug.o
+                0x001035f3                debug_init
+                0x00103687                debug_putc
+                0x001036db                debug_puts
+                0x001038c6                vasprintf
+                0x00103adb                kprintf
+ .text          0x00103b2b      0x635 /opt/prj/aPlus/src/bufio.o
+                0x00103d65                bufio_init
+                0x00103da6                bufio_free_unused
+                0x00103e2f                bufio_alloc
+                0x00103ee0                bufio_free
+                0x00103f56                bufio_seek
+                0x00103fe2                bufio_tell
+                0x00104005                bufio_clear
+                0x00104048                bufio_read
+                0x001040d4                bufio_write
+ .text          0x00104160      0xfd8 /opt/prj/aPlus/src/arch/desc.o
+                0x0010417e                gdt_load
+                0x0010419b                idt_load
+                0x001041a3                isr_handler
+                0x001041c0                irq_handler
+                0x00104227                pit_handler
+                0x00104287                pagefault_handler
+                0x001042b4                desc_init
+                0x00104eaf                irq_set
+                0x00104ee1                irq_unset
+                0x00104f14                irq_get
+                0x00104f6d                pit_gettime
+                0x00105114                pit_getticks
+ .text          0x00105138      0x6dd /opt/prj/aPlus/src/arch/task.o
+                0x001051e2                task_context_switch
+                0x001051ff                task_fork
+                0x001054d5                task_clone
+                0x001056cb                task_switch
+                0x00105721                task_init
+ .text          0x00105815      0x8eb /opt/prj/aPlus/src/arch/pci.o
+                0x00105d2b                pci_find_by_id
+                0x00105da5                pci_find_by_class
+                0x00105e24                pci_init
+ .text          0x00106100      0x36a /opt/prj/aPlus/src/arch/syscall.o
+                0x001062e5                syscall_init
+                0x0010638e                syscall_invoke
+                0x001063e0                syscall_handler
+ *fill*         0x0010646a        0x6 
+ .text          0x00106470       0x6d /opt/prj/aPlus/src/arch/loader.o
+                0x00106470                _start
+ *fill*         0x001064dd        0x3 
+ .text          0x001064e0      0x256 /opt/prj/aPlus/src/arch/_desc.o
+                0x001064e0                isr0
+                0x001064e9                isr1
+                0x001064f2                isr2
+                0x001064fb                isr3
+                0x00106504                isr4
+                0x0010650d                isr5
+                0x00106516                isr6
+                0x0010651f                isr7
+                0x00106528                isr8
+                0x0010652f                isr9
+                0x00106538                isr10
+                0x0010653f                isr11
+                0x00106546                isr12
+                0x0010654d                isr13
+                0x00106554                isr15
+                0x0010655d                isr16
+                0x00106566                isr17
+                0x0010656f                isr18
+                0x00106578                isr19
+                0x00106581                isr20
+                0x0010658a                isr21
+                0x00106593                isr22
+                0x0010659c                isr23
+                0x001065a5                isr24
+                0x001065ae                isr25
+                0x001065b7                isr26
+                0x001065c0                isr27
+                0x001065c9                isr28
+                0x001065d2                isr29
+                0x001065db                isr30
+                0x001065e4                isr31
+                0x001065ed                irq0
+                0x001065f6                irq1
+                0x001065ff                irq2
+                0x00106608                irq3
+                0x00106611                irq4
+                0x0010661a                irq5
+                0x00106623                irq6
+                0x0010662c                irq7
+                0x00106635                irq8
+                0x0010663e                irq9
+                0x00106647                irq10
+                0x00106650                irq11
+                0x00106659                irq12
+                0x00106662                irq13
+                0x0010666b                irq14
+                0x00106674                irq15
+                0x00106681                isr0x80
+                0x001066b9                isr14
+                0x001066e3                read_eip
+                0x001066e6                isr_stub
+                0x0010670e                irq_stub
+ *fill*         0x00106736        0xa 
+ .text          0x00106740      0x49d /opt/cross/usr/lib/libposix.a(syscalls.o)
+                0x00106740                _exit
+                0x00106760                close
+                0x00106790                execve
+                0x001067c0                fork
+                0x001067e0                fstat
+                0x00106810                getpid
+                0x00106830                isatty
+                0x00106860                kill
+                0x00106890                link
+                0x001068c0                lseek
+                0x001068f0                open
+                0x00106920                read
+                0x00106950                sbrk
+                0x00106980                stat
+                0x001069b0                times
+                0x001069e0                unlink
+                0x00106a10                wait
+                0x00106a40                write
+                0x00106a70                gettimeofday
+                0x00106aa0                fcntl
+                0x00106ad0                ioctl
+                0x00106b00                chown
+                0x00106b30                clone
+                0x00106b60                aplus_readdir
+                0x00106b90                aplus_getgroups
+                0x00106bc0                aplus_yield
+ *fill*         0x00106bdd        0x3 
+ .text          0x00106be0        0x6 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+                0x00106be0                __errno
+ .text          0x00106be6        0x0 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .text          0x00106be6       0x52 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+                0x00106be6                memcmp
+ .text          0x00106c38       0x48 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+                0x00106c38                memcpy
+ .text          0x00106c80       0x88 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+                0x00106c80                memset
+ *fill*         0x00106d08        0x8 
+ .text          0x00106d10      0x826 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+                0x00107070                mktime
+ *fill*         0x00107536        0xa 
+ .text          0x00107540      0x6d7 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+                0x00107540                __tzcalc_limits
+                0x00107780                _mktm_r
+ *fill*         0x00107c17        0x9 
+ .text          0x00107c20       0xfc /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+                0x00107c20                strchr
+ *fill*         0x00107d1c        0x4 
+ .text          0x00107d20       0x62 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+                0x00107d20                strcmp
+ *fill*         0x00107d82        0xe 
+ .text          0x00107d90       0x65 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+                0x00107d90                strcpy
+ *fill*         0x00107df5        0xb 
+ .text          0x00107e00      0x53c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+                0x00107e00                _strerror_r
+                0x00108310                strerror
+ *fill*         0x0010833c        0x4 
+ .text          0x00108340       0x79 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+                0x00108340                strlen
+ *fill*         0x001083b9        0x7 
+ .text          0x001083c0       0x12 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+                0x001083c0                __tz_lock
+                0x001083d0                __tz_unlock
+ .text          0x001083d2        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ *fill*         0x001083d2        0xe 
+ .text          0x001083e0        0x3 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+                0x001083e0                _user_strerror
+ *fill*         0x001083e3        0xd 
+ .text          0x001083f0       0x61 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+                0x001083f0                div
+ *fill*         0x00108451        0xf 
+ .text          0x00108460        0x6 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+                0x00108460                __gettzinfo
  *(.rodata*)
- .rodata        0x00107696        0xf /opt/prj/aPlus/src/syscall/link.o
- .rodata        0x001076a5       0x1c /opt/prj/aPlus/src/syscall/close.o
- .rodata        0x001076c1        0xf /opt/prj/aPlus/src/syscall/fstat.o
- .rodata        0x001076d0       0x11 /opt/prj/aPlus/src/syscall/unlink.o
- .rodata        0x001076e1        0xe /opt/prj/aPlus/src/syscall/stat.o
- *fill*         0x001076ef        0x1 
- .rodata        0x001076f0       0x45 /opt/prj/aPlus/src/syscall/chown.o
- *fill*         0x00107735        0x3 
- .rodata        0x00107738       0x27 /opt/prj/aPlus/src/syscall/test.o
- .rodata        0x0010775f       0x11 /opt/prj/aPlus/src/syscall/fcntl.o
- .rodata        0x00107770       0x21 /opt/prj/aPlus/src/syscall/open.o
- .rodata        0x00107791      0x143 /opt/prj/aPlus/src/panic.o
- .rodata        0x001078d4       0x45 /opt/prj/aPlus/src/mm/paging.o
- .rodata        0x00107919       0x12 /opt/prj/aPlus/src/mm/mm.o
- .rodata        0x0010792b       0x18 /opt/prj/aPlus/src/debug.o
- .rodata        0x00107943      0x159 /opt/prj/aPlus/src/arch/desc.o
- .rodata        0x00107a9c        0x8 /opt/prj/aPlus/src/arch/syscall.o
- .rodata        0x00107aa4        0x4 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
-                0x00107aa4                _global_impure_ptr
+ .rodata        0x00108466       0x51 /opt/prj/aPlus/src/net/netif.o
+ .rodata        0x001084b7        0xf /opt/prj/aPlus/src/syscall/link.o
+ .rodata        0x001084c6       0x1c /opt/prj/aPlus/src/syscall/close.o
+ .rodata        0x001084e2        0xf /opt/prj/aPlus/src/syscall/fstat.o
+ .rodata        0x001084f1       0x11 /opt/prj/aPlus/src/syscall/unlink.o
+ .rodata        0x00108502        0xe /opt/prj/aPlus/src/syscall/stat.o
+ .rodata        0x00108510       0x45 /opt/prj/aPlus/src/syscall/chown.o
+ *fill*         0x00108555        0x3 
+ .rodata        0x00108558       0x27 /opt/prj/aPlus/src/syscall/test.o
+ .rodata        0x0010857f       0x11 /opt/prj/aPlus/src/syscall/fcntl.o
+ .rodata        0x00108590       0x21 /opt/prj/aPlus/src/syscall/open.o
+ .rodata        0x001085b1      0x143 /opt/prj/aPlus/src/panic.o
+ .rodata        0x001086f4       0x40 /opt/prj/aPlus/src/mm/paging.o
+ .rodata        0x00108734       0x12 /opt/prj/aPlus/src/mm/mm.o
+ .rodata        0x00108746       0x18 /opt/prj/aPlus/src/debug.o
+ .rodata        0x0010875e      0x159 /opt/prj/aPlus/src/arch/desc.o
+ .rodata        0x001088b7       0x12 /opt/prj/aPlus/src/arch/task.o
+ *fill*         0x001088c9        0x3 
+ .rodata        0x001088cc       0x67 /opt/prj/aPlus/src/arch/pci.o
+ .rodata        0x00108933        0x8 /opt/prj/aPlus/src/arch/syscall.o
+ *fill*         0x0010893b        0x1 
+ .rodata        0x0010893c        0x4 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+                0x0010893c                _global_impure_ptr
  .rodata.str1.1
-                0x00107aa8        0x2 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- *fill*         0x00107aaa       0x16 
- .rodata        0x00107ac0       0x70 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- *fill*         0x00107b30       0x10 
- .rodata        0x00107b40       0x80 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+                0x00108940        0x2 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ *fill*         0x00108942       0x1e 
+ .rodata        0x00108960       0x70 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ *fill*         0x001089d0       0x10 
+ .rodata        0x001089e0       0x80 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
  .rodata.str1.1
-                0x00107bc0      0x4e4 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+                0x00108a60      0x4e4 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
                                 0x4e5 (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x001080a4       0xfc /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+                0x00108f44       0xfc /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
                                  0xfa (dimensione prima del rilassamento)
- .rodata        0x001081a0      0x23c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .rodata        0x00109040      0x23c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
  .rodata.str1.1
-                0x001083dc        0x4 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+                0x0010927c        0x4 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
 
-.iplt           0x001083e0        0x0
- .iplt          0x00000000        0x0 /opt/prj/aPlus/src/syscall/times.o
+.iplt           0x00109280        0x0
+ .iplt          0x00000000        0x0 /opt/prj/aPlus/src/net/netif.o
 
-.rel.dyn        0x001083e0        0x0
- .rel.iplt      0x00000000        0x0 /opt/prj/aPlus/src/syscall/times.o
- .rel.text      0x00000000        0x0 /opt/prj/aPlus/src/syscall/times.o
+.rel.dyn        0x00109280        0x0
+ .rel.iplt      0x00000000        0x0 /opt/prj/aPlus/src/net/netif.o
+ .rel.text      0x00000000        0x0 /opt/prj/aPlus/src/net/netif.o
  .rel.multiboot
-                0x00000000        0x0 /opt/prj/aPlus/src/syscall/times.o
+                0x00000000        0x0 /opt/prj/aPlus/src/net/netif.o
 
-.data           0x001083e0      0x600
+.data           0x00109280      0x600
  *(.data)
- .data          0x001083e0        0x8 /opt/prj/aPlus/src/syscall/times.o
- .data          0x001083e8        0x8 /opt/prj/aPlus/src/syscall/sbrk.o
- .data          0x001083f0        0x8 /opt/prj/aPlus/src/syscall/link.o
- .data          0x001083f8        0x8 /opt/prj/aPlus/src/syscall/close.o
- .data          0x00108400        0x8 /opt/prj/aPlus/src/syscall/fstat.o
- .data          0x00108408        0x8 /opt/prj/aPlus/src/syscall/yield.o
- .data          0x00108410        0x8 /opt/prj/aPlus/src/syscall/fork.o
- .data          0x00108418        0x8 /opt/prj/aPlus/src/syscall/unlink.o
- .data          0x00108420        0x8 /opt/prj/aPlus/src/syscall/stat.o
- .data          0x00108428        0x8 /opt/prj/aPlus/src/syscall/kill.o
- .data          0x00108430        0x8 /opt/prj/aPlus/src/syscall/clone.o
- .data          0x00108438        0x8 /opt/prj/aPlus/src/syscall/read.o
- .data          0x00108440        0x8 /opt/prj/aPlus/src/syscall/write.o
- .data          0x00108448        0x8 /opt/prj/aPlus/src/syscall/gettimeofday.o
- .data          0x00108450        0x8 /opt/prj/aPlus/src/syscall/isatty.o
- .data          0x00108458        0x8 /opt/prj/aPlus/src/syscall/getpid.o
- .data          0x00108460        0x8 /opt/prj/aPlus/src/syscall/lseek.o
- .data          0x00108468        0x8 /opt/prj/aPlus/src/syscall/chown.o
- .data          0x00108470        0x8 /opt/prj/aPlus/src/syscall/test.o
- .data          0x00108478        0x8 /opt/prj/aPlus/src/syscall/_exit.o
- .data          0x00108480        0x8 /opt/prj/aPlus/src/syscall/ioctl.o
- .data          0x00108488        0x8 /opt/prj/aPlus/src/syscall/wait.o
- .data          0x00108490        0x8 /opt/prj/aPlus/src/syscall/fcntl.o
- .data          0x00108498        0x8 /opt/prj/aPlus/src/syscall/open.o
- .data          0x001084a0        0x8 /opt/prj/aPlus/src/syscall/readdir.o
- .data          0x001084a8        0x8 /opt/prj/aPlus/src/syscall/execve.o
- .data          0x001084b0        0xc /opt/prj/aPlus/src/syscall/getgroups.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/sched.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/fs/vfs.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/fs/pipe.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/fs/fs.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/fs/devfs.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/panic.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/spinlock.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/mm/paging.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/mm/mm.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/mm/heap.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/mm/kheap.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/main.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/debug.o
- .data          0x001084bc        0x0 /opt/prj/aPlus/src/bufio.o
- *fill*         0x001084bc        0x4 
- .data          0x001084c0       0x80 /opt/prj/aPlus/src/arch/desc.o
- .data          0x00108540        0x0 /opt/prj/aPlus/src/arch/task.o
- .data          0x00108540        0x0 /opt/prj/aPlus/src/arch/syscall.o
- .data          0x00108540        0x0 /opt/cross/usr/lib/libposix.a(syscalls.o)
- .data          0x00108540        0x0 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- .data          0x00108540      0x444 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
-                0x00108540                _impure_ptr
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
- .data          0x00108984        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .data          0x00108984        0x8 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
-                0x00108984                _tzname
- .data          0x0010898c        0x0 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .data          0x0010898c        0x0 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- *fill*         0x0010898c       0x14 
- .data          0x001089a0       0x40 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+ .data          0x00109280        0x0 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+ .data          0x00109280        0x0 /opt/prj/aPlus/src/net/netif.o
+ .data          0x00109280        0x8 /opt/prj/aPlus/src/syscall/times.o
+ .data          0x00109288        0x8 /opt/prj/aPlus/src/syscall/sbrk.o
+ .data          0x00109290        0x8 /opt/prj/aPlus/src/syscall/link.o
+ .data          0x00109298        0x8 /opt/prj/aPlus/src/syscall/close.o
+ .data          0x001092a0        0x8 /opt/prj/aPlus/src/syscall/fstat.o
+ .data          0x001092a8        0x8 /opt/prj/aPlus/src/syscall/yield.o
+ .data          0x001092b0        0x8 /opt/prj/aPlus/src/syscall/fork.o
+ .data          0x001092b8        0x8 /opt/prj/aPlus/src/syscall/unlink.o
+ .data          0x001092c0        0x8 /opt/prj/aPlus/src/syscall/stat.o
+ .data          0x001092c8        0x8 /opt/prj/aPlus/src/syscall/kill.o
+ .data          0x001092d0        0x8 /opt/prj/aPlus/src/syscall/clone.o
+ .data          0x001092d8        0x8 /opt/prj/aPlus/src/syscall/read.o
+ .data          0x001092e0        0x8 /opt/prj/aPlus/src/syscall/write.o
+ .data          0x001092e8        0x8 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .data          0x001092f0        0x8 /opt/prj/aPlus/src/syscall/isatty.o
+ .data          0x001092f8        0x8 /opt/prj/aPlus/src/syscall/getpid.o
+ .data          0x00109300        0x8 /opt/prj/aPlus/src/syscall/lseek.o
+ .data          0x00109308        0x8 /opt/prj/aPlus/src/syscall/chown.o
+ .data          0x00109310        0x8 /opt/prj/aPlus/src/syscall/test.o
+ .data          0x00109318        0x8 /opt/prj/aPlus/src/syscall/_exit.o
+ .data          0x00109320        0x8 /opt/prj/aPlus/src/syscall/ioctl.o
+ .data          0x00109328        0x8 /opt/prj/aPlus/src/syscall/wait.o
+ .data          0x00109330        0x8 /opt/prj/aPlus/src/syscall/fcntl.o
+ .data          0x00109338        0x8 /opt/prj/aPlus/src/syscall/open.o
+ .data          0x00109340        0x8 /opt/prj/aPlus/src/syscall/readdir.o
+ .data          0x00109348        0x8 /opt/prj/aPlus/src/syscall/execve.o
+ .data          0x00109350        0xc /opt/prj/aPlus/src/syscall/getgroups.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/sched.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/fs/vfs.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/fs/pipe.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/fs/fs.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/fs/devfs.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/panic.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/spinlock.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/mm/paging.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/mm/mm.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/mm/heap.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/mm/kheap.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/main.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/debug.o
+ .data          0x0010935c        0x0 /opt/prj/aPlus/src/bufio.o
+ *fill*         0x0010935c        0x4 
+ .data          0x00109360       0x80 /opt/prj/aPlus/src/arch/desc.o
+ .data          0x001093e0        0x0 /opt/prj/aPlus/src/arch/task.o
+ .data          0x001093e0        0x0 /opt/prj/aPlus/src/arch/pci.o
+ .data          0x001093e0        0x0 /opt/prj/aPlus/src/arch/syscall.o
+ .data          0x001093e0        0x0 /opt/cross/usr/lib/libposix.a(syscalls.o)
+ .data          0x001093e0        0x0 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .data          0x001093e0      0x444 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+                0x001093e0                _impure_ptr
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+ .data          0x00109824        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .data          0x00109824        0x8 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+                0x00109824                _tzname
+ .data          0x0010982c        0x0 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .data          0x0010982c        0x0 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ *fill*         0x0010982c       0x14 
+ .data          0x00109840       0x40 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
 
-.eh_frame       0x001089e0     0x2bb8
- .eh_frame      0x001089e0       0x40 /opt/prj/aPlus/src/syscall/times.o
- .eh_frame      0x00108a20       0x2c /opt/prj/aPlus/src/syscall/sbrk.o
+.eh_frame       0x00109880     0x30d4
+ .eh_frame      0x00109880      0x1a0 /opt/prj/aPlus/src/net/netif.o
+ .eh_frame      0x00109a20       0x2c /opt/prj/aPlus/src/syscall/times.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108a4c       0x2c /opt/prj/aPlus/src/syscall/link.o
+ .eh_frame      0x00109a4c       0x2c /opt/prj/aPlus/src/syscall/sbrk.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108a78       0x2c /opt/prj/aPlus/src/syscall/close.o
+ .eh_frame      0x00109a78       0x2c /opt/prj/aPlus/src/syscall/link.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108aa4       0x2c /opt/prj/aPlus/src/syscall/fstat.o
+ .eh_frame      0x00109aa4       0x2c /opt/prj/aPlus/src/syscall/close.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108ad0       0x2c /opt/prj/aPlus/src/syscall/yield.o
+ .eh_frame      0x00109ad0       0x2c /opt/prj/aPlus/src/syscall/fstat.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108afc       0x2c /opt/prj/aPlus/src/syscall/fork.o
+ .eh_frame      0x00109afc       0x2c /opt/prj/aPlus/src/syscall/yield.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108b28       0x2c /opt/prj/aPlus/src/syscall/unlink.o
+ .eh_frame      0x00109b28       0x2c /opt/prj/aPlus/src/syscall/fork.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108b54       0x2c /opt/prj/aPlus/src/syscall/stat.o
+ .eh_frame      0x00109b54       0x2c /opt/prj/aPlus/src/syscall/unlink.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108b80       0x2c /opt/prj/aPlus/src/syscall/kill.o
+ .eh_frame      0x00109b80       0x2c /opt/prj/aPlus/src/syscall/stat.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108bac       0x2c /opt/prj/aPlus/src/syscall/clone.o
+ .eh_frame      0x00109bac       0x2c /opt/prj/aPlus/src/syscall/kill.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108bd8       0x2c /opt/prj/aPlus/src/syscall/read.o
+ .eh_frame      0x00109bd8       0x2c /opt/prj/aPlus/src/syscall/clone.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108c04       0x2c /opt/prj/aPlus/src/syscall/write.o
+ .eh_frame      0x00109c04       0x2c /opt/prj/aPlus/src/syscall/read.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108c30       0x2c /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .eh_frame      0x00109c30       0x2c /opt/prj/aPlus/src/syscall/write.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108c5c       0x2c /opt/prj/aPlus/src/syscall/isatty.o
+ .eh_frame      0x00109c5c       0x2c /opt/prj/aPlus/src/syscall/gettimeofday.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108c88       0x2c /opt/prj/aPlus/src/syscall/getpid.o
+ .eh_frame      0x00109c88       0x2c /opt/prj/aPlus/src/syscall/isatty.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108cb4       0x2c /opt/prj/aPlus/src/syscall/lseek.o
+ .eh_frame      0x00109cb4       0x2c /opt/prj/aPlus/src/syscall/getpid.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108ce0       0x2c /opt/prj/aPlus/src/syscall/chown.o
+ .eh_frame      0x00109ce0       0x2c /opt/prj/aPlus/src/syscall/lseek.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108d0c       0x2c /opt/prj/aPlus/src/syscall/test.o
+ .eh_frame      0x00109d0c       0x2c /opt/prj/aPlus/src/syscall/chown.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108d38       0x2c /opt/prj/aPlus/src/syscall/_exit.o
+ .eh_frame      0x00109d38       0x2c /opt/prj/aPlus/src/syscall/test.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108d64       0x2c /opt/prj/aPlus/src/syscall/ioctl.o
+ .eh_frame      0x00109d64       0x2c /opt/prj/aPlus/src/syscall/_exit.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108d90       0x2c /opt/prj/aPlus/src/syscall/wait.o
+ .eh_frame      0x00109d90       0x2c /opt/prj/aPlus/src/syscall/ioctl.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108dbc       0x2c /opt/prj/aPlus/src/syscall/fcntl.o
+ .eh_frame      0x00109dbc       0x2c /opt/prj/aPlus/src/syscall/wait.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108de8       0x58 /opt/prj/aPlus/src/syscall/open.o
+ .eh_frame      0x00109de8       0x2c /opt/prj/aPlus/src/syscall/fcntl.o
+                                 0x40 (dimensione prima del rilassamento)
+ .eh_frame      0x00109e14       0x58 /opt/prj/aPlus/src/syscall/open.o
                                  0x6c (dimensione prima del rilassamento)
- .eh_frame      0x00108e40       0x2c /opt/prj/aPlus/src/syscall/readdir.o
+ .eh_frame      0x00109e6c       0x2c /opt/prj/aPlus/src/syscall/readdir.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108e6c       0x2c /opt/prj/aPlus/src/syscall/execve.o
+ .eh_frame      0x00109e98       0x2c /opt/prj/aPlus/src/syscall/execve.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108e98       0x2c /opt/prj/aPlus/src/syscall/getgroups.o
+ .eh_frame      0x00109ec4       0x2c /opt/prj/aPlus/src/syscall/getgroups.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00108ec4      0x3b8 /opt/prj/aPlus/src/sched.o
+ .eh_frame      0x00109ef0      0x3b8 /opt/prj/aPlus/src/sched.o
                                 0x3cc (dimensione prima del rilassamento)
- .eh_frame      0x0010927c      0x1e4 /opt/prj/aPlus/src/fs/vfs.o
+ .eh_frame      0x0010a2a8      0x1e4 /opt/prj/aPlus/src/fs/vfs.o
                                 0x1f8 (dimensione prima del rilassamento)
- .eh_frame      0x00109460       0xb0 /opt/prj/aPlus/src/fs/pipe.o
+ .eh_frame      0x0010a48c       0xb0 /opt/prj/aPlus/src/fs/pipe.o
                                  0xc4 (dimensione prima del rilassamento)
- .eh_frame      0x00109510      0x1c4 /opt/prj/aPlus/src/fs/fs.o
+ .eh_frame      0x0010a53c      0x1c4 /opt/prj/aPlus/src/fs/fs.o
                                 0x1d8 (dimensione prima del rilassamento)
- .eh_frame      0x001096d4       0x58 /opt/prj/aPlus/src/fs/devfs.o
+ .eh_frame      0x0010a700       0x58 /opt/prj/aPlus/src/fs/devfs.o
                                  0x6c (dimensione prima del rilassamento)
- .eh_frame      0x0010972c      0x414 /opt/prj/aPlus/src/panic.o
+ .eh_frame      0x0010a758      0x414 /opt/prj/aPlus/src/panic.o
                                 0x428 (dimensione prima del rilassamento)
- .eh_frame      0x00109b40       0xb0 /opt/prj/aPlus/src/spinlock.o
+ .eh_frame      0x0010ab6c       0xb0 /opt/prj/aPlus/src/spinlock.o
                                  0xc4 (dimensione prima del rilassamento)
- .eh_frame      0x00109bf0      0x318 /opt/prj/aPlus/src/mm/paging.o
-                                0x32c (dimensione prima del rilassamento)
- .eh_frame      0x00109f08      0x210 /opt/prj/aPlus/src/mm/mm.o
+ .eh_frame      0x0010ac1c      0x344 /opt/prj/aPlus/src/mm/paging.o
+                                0x358 (dimensione prima del rilassamento)
+ .eh_frame      0x0010af60      0x210 /opt/prj/aPlus/src/mm/mm.o
                                 0x224 (dimensione prima del rilassamento)
- .eh_frame      0x0010a118       0x58 /opt/prj/aPlus/src/mm/heap.o
+ .eh_frame      0x0010b170       0x58 /opt/prj/aPlus/src/mm/heap.o
                                  0x6c (dimensione prima del rilassamento)
- .eh_frame      0x0010a170       0xe4 /opt/prj/aPlus/src/mm/kheap.o
+ .eh_frame      0x0010b1c8       0xe4 /opt/prj/aPlus/src/mm/kheap.o
                                  0xf8 (dimensione prima del rilassamento)
- .eh_frame      0x0010a254       0x4c /opt/prj/aPlus/src/main.o
+ .eh_frame      0x0010b2ac       0x4c /opt/prj/aPlus/src/main.o
                                  0x60 (dimensione prima del rilassamento)
- .eh_frame      0x0010a2a0      0x198 /opt/prj/aPlus/src/debug.o
+ .eh_frame      0x0010b2f8      0x198 /opt/prj/aPlus/src/debug.o
                                 0x1ac (dimensione prima del rilassamento)
- .eh_frame      0x0010a438      0x2ac /opt/prj/aPlus/src/bufio.o
+ .eh_frame      0x0010b490      0x2ac /opt/prj/aPlus/src/bufio.o
                                 0x2c0 (dimensione prima del rilassamento)
- .eh_frame      0x0010a6e4      0x21c /opt/prj/aPlus/src/arch/desc.o
+ .eh_frame      0x0010b73c      0x21c /opt/prj/aPlus/src/arch/desc.o
                                 0x230 (dimensione prima del rilassamento)
- .eh_frame      0x0010a900      0x154 /opt/prj/aPlus/src/arch/task.o
+ .eh_frame      0x0010b958      0x154 /opt/prj/aPlus/src/arch/task.o
                                 0x168 (dimensione prima del rilassamento)
- .eh_frame      0x0010aa54      0x198 /opt/prj/aPlus/src/arch/syscall.o
+ .eh_frame      0x0010baac      0x364 /opt/prj/aPlus/src/arch/pci.o
+                                0x378 (dimensione prima del rilassamento)
+ .eh_frame      0x0010be10      0x198 /opt/prj/aPlus/src/arch/syscall.o
                                 0x1ac (dimensione prima del rilassamento)
- .eh_frame      0x0010abec      0x680 /opt/cross/usr/lib/libposix.a(syscalls.o)
+ .eh_frame      0x0010bfa8      0x680 /opt/cross/usr/lib/libposix.a(syscalls.o)
                                 0x694 (dimensione prima del rilassamento)
- .eh_frame      0x0010b26c       0x10 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .eh_frame      0x0010c628       0x10 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x0010b27c       0xbc /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .eh_frame      0x0010c638       0xbc /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
                                  0xd0 (dimensione prima del rilassamento)
- .eh_frame      0x0010b338      0x104 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .eh_frame      0x0010c6f4      0x104 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
                                 0x118 (dimensione prima del rilassamento)
- .eh_frame      0x0010b43c       0x30 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .eh_frame      0x0010c7f8       0x30 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
                                  0x44 (dimensione prima del rilassamento)
- .eh_frame      0x0010b46c       0x44 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .eh_frame      0x0010c828       0x44 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
                                  0x58 (dimensione prima del rilassamento)
- .eh_frame      0x0010b4b0       0x48 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .eh_frame      0x0010c86c       0x48 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x0010b4f8       0x20 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .eh_frame      0x0010c8b4       0x20 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
                                  0x34 (dimensione prima del rilassamento)
- .eh_frame      0x0010b518       0x10 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .eh_frame      0x0010c8d4       0x10 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x0010b528       0x60 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .eh_frame      0x0010c8e4       0x60 /opt/cross/usr/lib/libc.a(lib_a-div.o)
                                  0x74 (dimensione prima del rilassamento)
- .eh_frame      0x0010b588       0x10 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+ .eh_frame      0x0010c944       0x10 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
                                  0x24 (dimensione prima del rilassamento)
 
-.igot.plt       0x0010b598        0x0
- .igot.plt      0x00000000        0x0 /opt/prj/aPlus/src/syscall/times.o
+.igot.plt       0x0010c954        0x0
+ .igot.plt      0x00000000        0x0 /opt/prj/aPlus/src/net/netif.o
 
-.attribute      0x0010b600     0x1b00
-                0x0010b600                attribute_start = .
+.attribute      0x0010ca00     0x1b00
+                0x0010ca00                attribute_start = .
  *(.attribute)
- .attribute     0x0010b600      0x100 /opt/prj/aPlus/src/syscall/times.o
-                0x0010b600                attribute_syscall_140
- .attribute     0x0010b700      0x100 /opt/prj/aPlus/src/syscall/sbrk.o
-                0x0010b700                attribute_syscall_120
- .attribute     0x0010b800      0x100 /opt/prj/aPlus/src/syscall/link.o
-                0x0010b800                attribute_syscall_80
- .attribute     0x0010b900      0x100 /opt/prj/aPlus/src/syscall/close.o
-                0x0010b900                attribute_syscall_10
- .attribute     0x0010ba00      0x100 /opt/prj/aPlus/src/syscall/fstat.o
-                0x0010ba00                attribute_syscall_40
- .attribute     0x0010bb00      0x100 /opt/prj/aPlus/src/syscall/yield.o
-                0x0010bb00                attribute_syscall_820
- .attribute     0x0010bc00      0x100 /opt/prj/aPlus/src/syscall/fork.o
-                0x0010bc00                attribute_syscall_30
- .attribute     0x0010bd00      0x100 /opt/prj/aPlus/src/syscall/unlink.o
-                0x0010bd00                attribute_syscall_150
- .attribute     0x0010be00      0x100 /opt/prj/aPlus/src/syscall/stat.o
-                0x0010be00                attribute_syscall_130
- .attribute     0x0010bf00      0x100 /opt/prj/aPlus/src/syscall/kill.o
-                0x0010bf00                attribute_syscall_70
- .attribute     0x0010c000      0x100 /opt/prj/aPlus/src/syscall/clone.o
-                0x0010c000                attribute_syscall_220
- .attribute     0x0010c100      0x100 /opt/prj/aPlus/src/syscall/read.o
-                0x0010c100                attribute_syscall_110
- .attribute     0x0010c200      0x100 /opt/prj/aPlus/src/syscall/write.o
-                0x0010c200                attribute_syscall_170
- .attribute     0x0010c300      0x100 /opt/prj/aPlus/src/syscall/gettimeofday.o
-                0x0010c300                attribute_syscall_180
- .attribute     0x0010c400      0x100 /opt/prj/aPlus/src/syscall/isatty.o
-                0x0010c400                attribute_syscall_60
- .attribute     0x0010c500      0x100 /opt/prj/aPlus/src/syscall/getpid.o
-                0x0010c500                attribute_syscall_50
- .attribute     0x0010c600      0x100 /opt/prj/aPlus/src/syscall/lseek.o
-                0x0010c600                attribute_syscall_90
- .attribute     0x0010c700      0x100 /opt/prj/aPlus/src/syscall/chown.o
-                0x0010c700                attribute_syscall_210
- .attribute     0x0010c800      0x100 /opt/prj/aPlus/src/syscall/test.o
-                0x0010c800                attribute_syscall_10000
- .attribute     0x0010c900      0x100 /opt/prj/aPlus/src/syscall/_exit.o
-                0x0010c900                attribute_syscall_00
- .attribute     0x0010ca00      0x100 /opt/prj/aPlus/src/syscall/ioctl.o
-                0x0010ca00                attribute_syscall_200
- .attribute     0x0010cb00      0x100 /opt/prj/aPlus/src/syscall/wait.o
-                0x0010cb00                attribute_syscall_160
- .attribute     0x0010cc00      0x100 /opt/prj/aPlus/src/syscall/fcntl.o
-                0x0010cc00                attribute_syscall_190
- .attribute     0x0010cd00      0x100 /opt/prj/aPlus/src/syscall/open.o
-                0x0010cd00                attribute_syscall_100
- .attribute     0x0010ce00      0x100 /opt/prj/aPlus/src/syscall/readdir.o
-                0x0010ce00                attribute_syscall_800
- .attribute     0x0010cf00      0x100 /opt/prj/aPlus/src/syscall/execve.o
-                0x0010cf00                attribute_syscall_20
- .attribute     0x0010d000      0x100 /opt/prj/aPlus/src/syscall/getgroups.o
-                0x0010d000                attribute_syscall_810
-                0x0010d100                attribute_end = .
+ .attribute     0x0010ca00      0x100 /opt/prj/aPlus/src/syscall/times.o
+                0x0010ca00                attribute_syscall_140
+ .attribute     0x0010cb00      0x100 /opt/prj/aPlus/src/syscall/sbrk.o
+                0x0010cb00                attribute_syscall_120
+ .attribute     0x0010cc00      0x100 /opt/prj/aPlus/src/syscall/link.o
+                0x0010cc00                attribute_syscall_80
+ .attribute     0x0010cd00      0x100 /opt/prj/aPlus/src/syscall/close.o
+                0x0010cd00                attribute_syscall_10
+ .attribute     0x0010ce00      0x100 /opt/prj/aPlus/src/syscall/fstat.o
+                0x0010ce00                attribute_syscall_40
+ .attribute     0x0010cf00      0x100 /opt/prj/aPlus/src/syscall/yield.o
+                0x0010cf00                attribute_syscall_820
+ .attribute     0x0010d000      0x100 /opt/prj/aPlus/src/syscall/fork.o
+                0x0010d000                attribute_syscall_30
+ .attribute     0x0010d100      0x100 /opt/prj/aPlus/src/syscall/unlink.o
+                0x0010d100                attribute_syscall_150
+ .attribute     0x0010d200      0x100 /opt/prj/aPlus/src/syscall/stat.o
+                0x0010d200                attribute_syscall_130
+ .attribute     0x0010d300      0x100 /opt/prj/aPlus/src/syscall/kill.o
+                0x0010d300                attribute_syscall_70
+ .attribute     0x0010d400      0x100 /opt/prj/aPlus/src/syscall/clone.o
+                0x0010d400                attribute_syscall_220
+ .attribute     0x0010d500      0x100 /opt/prj/aPlus/src/syscall/read.o
+                0x0010d500                attribute_syscall_110
+ .attribute     0x0010d600      0x100 /opt/prj/aPlus/src/syscall/write.o
+                0x0010d600                attribute_syscall_170
+ .attribute     0x0010d700      0x100 /opt/prj/aPlus/src/syscall/gettimeofday.o
+                0x0010d700                attribute_syscall_180
+ .attribute     0x0010d800      0x100 /opt/prj/aPlus/src/syscall/isatty.o
+                0x0010d800                attribute_syscall_60
+ .attribute     0x0010d900      0x100 /opt/prj/aPlus/src/syscall/getpid.o
+                0x0010d900                attribute_syscall_50
+ .attribute     0x0010da00      0x100 /opt/prj/aPlus/src/syscall/lseek.o
+                0x0010da00                attribute_syscall_90
+ .attribute     0x0010db00      0x100 /opt/prj/aPlus/src/syscall/chown.o
+                0x0010db00                attribute_syscall_210
+ .attribute     0x0010dc00      0x100 /opt/prj/aPlus/src/syscall/test.o
+                0x0010dc00                attribute_syscall_10000
+ .attribute     0x0010dd00      0x100 /opt/prj/aPlus/src/syscall/_exit.o
+                0x0010dd00                attribute_syscall_00
+ .attribute     0x0010de00      0x100 /opt/prj/aPlus/src/syscall/ioctl.o
+                0x0010de00                attribute_syscall_200
+ .attribute     0x0010df00      0x100 /opt/prj/aPlus/src/syscall/wait.o
+                0x0010df00                attribute_syscall_160
+ .attribute     0x0010e000      0x100 /opt/prj/aPlus/src/syscall/fcntl.o
+                0x0010e000                attribute_syscall_190
+ .attribute     0x0010e100      0x100 /opt/prj/aPlus/src/syscall/open.o
+                0x0010e100                attribute_syscall_100
+ .attribute     0x0010e200      0x100 /opt/prj/aPlus/src/syscall/readdir.o
+                0x0010e200                attribute_syscall_800
+ .attribute     0x0010e300      0x100 /opt/prj/aPlus/src/syscall/execve.o
+                0x0010e300                attribute_syscall_20
+ .attribute     0x0010e400      0x100 /opt/prj/aPlus/src/syscall/getgroups.o
+                0x0010e400                attribute_syscall_810
+                0x0010e500                attribute_end = .
 
-.bss            0x0010e000     0x2010
-                0x0010e000                bss = .
+.bss            0x0010f000     0x5010
+                0x0010f000                bss = .
  *(COMMON)
- COMMON         0x0010e000        0xc /opt/prj/aPlus/src/sched.o
-                0x0010e000                kernel_task
-                0x0010e004                task_queue
-                0x0010e008                current_task
- COMMON         0x0010e00c        0x4 /opt/prj/aPlus/src/fs/vfs.o
-                0x0010e00c                vfs_root
- COMMON         0x0010e010        0x4 /opt/prj/aPlus/src/fs/devfs.o
-                0x0010e010                devfs
- COMMON         0x0010e014        0xc /opt/prj/aPlus/src/mm/paging.o
-                0x0010e014                vmm_queue
-                0x0010e018                kernel_vmm
-                0x0010e01c                current_vmm
- COMMON         0x0010e020        0x4 /opt/prj/aPlus/src/mm/mm.o
-                0x0010e020                current_heap
+ COMMON         0x0010f000        0xc /opt/prj/aPlus/src/sched.o
+                0x0010f000                kernel_task
+                0x0010f004                task_queue
+                0x0010f008                current_task
+ COMMON         0x0010f00c        0x4 /opt/prj/aPlus/src/fs/vfs.o
+                0x0010f00c                vfs_root
+ COMMON         0x0010f010        0x4 /opt/prj/aPlus/src/fs/devfs.o
+                0x0010f010                devfs
+ COMMON         0x0010f014        0xc /opt/prj/aPlus/src/mm/paging.o
+                0x0010f014                vmm_queue
+                0x0010f018                kernel_vmm
+                0x0010f01c                current_vmm
+ COMMON         0x0010f020        0x4 /opt/prj/aPlus/src/mm/mm.o
+                0x0010f020                current_heap
  *(.bss)
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/times.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/sbrk.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/link.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/close.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/fstat.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/yield.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/fork.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/unlink.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/stat.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/kill.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/clone.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/read.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/write.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/gettimeofday.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/isatty.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/getpid.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/lseek.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/chown.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/test.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/_exit.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/ioctl.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/wait.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/fcntl.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/open.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/readdir.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/execve.o
- .bss           0x0010e024        0x0 /opt/prj/aPlus/src/syscall/getgroups.o
- .bss           0x0010e024        0x8 /opt/prj/aPlus/src/sched.o
- .bss           0x0010e02c        0x8 /opt/prj/aPlus/src/fs/vfs.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/fs/pipe.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/fs/fs.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/fs/devfs.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/panic.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/spinlock.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/mm/paging.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/mm/mm.o
- .bss           0x0010e034        0x0 /opt/prj/aPlus/src/mm/heap.o
- .bss           0x0010e034       0x14 /opt/prj/aPlus/src/mm/kheap.o
- .bss           0x0010e048        0x0 /opt/prj/aPlus/src/main.o
- *fill*         0x0010e048       0x18 
- .bss           0x0010e060      0x420 /opt/prj/aPlus/src/debug.o
- .bss           0x0010e480       0x18 /opt/prj/aPlus/src/bufio.o
- *fill*         0x0010e498        0x8 
- .bss           0x0010e4a0      0x8e4 /opt/prj/aPlus/src/arch/desc.o
-                0x0010e4a0                keyboard_ready
- .bss           0x0010ed84        0x0 /opt/prj/aPlus/src/arch/task.o
- .bss           0x0010ed84        0x4 /opt/prj/aPlus/src/arch/syscall.o
- *fill*         0x0010ed88      0x278 
- .bss           0x0010f000     0x1008 /opt/prj/aPlus/src/arch/loader.o
-                0x0010f000                kernel_stack
-                0x00110000                magic
-                0x00110004                mbd
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libposix.a(syscalls.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
- .bss           0x00110008        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .bss           0x00110008        0x8 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
-                0x00110008                _timezone
-                0x0011000c                _daylight
- .bss           0x00110010        0x0 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .bss           0x00110010        0x0 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- .bss           0x00110010        0x0 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
-                0x00110010                end = .
+ .bss           0x0010f024        0x0 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+ .bss           0x0010f024        0x4 /opt/prj/aPlus/src/net/netif.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/times.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/sbrk.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/link.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/close.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/fstat.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/yield.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/fork.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/unlink.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/stat.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/kill.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/clone.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/read.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/write.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/isatty.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/getpid.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/lseek.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/chown.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/test.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/_exit.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/ioctl.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/wait.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/fcntl.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/open.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/readdir.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/execve.o
+ .bss           0x0010f028        0x0 /opt/prj/aPlus/src/syscall/getgroups.o
+ .bss           0x0010f028        0x8 /opt/prj/aPlus/src/sched.o
+ .bss           0x0010f030        0x8 /opt/prj/aPlus/src/fs/vfs.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/fs/pipe.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/fs/fs.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/fs/devfs.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/panic.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/spinlock.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/mm/paging.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/mm/mm.o
+ .bss           0x0010f038        0x0 /opt/prj/aPlus/src/mm/heap.o
+ .bss           0x0010f038       0x14 /opt/prj/aPlus/src/mm/kheap.o
+ .bss           0x0010f04c        0x0 /opt/prj/aPlus/src/main.o
+ *fill*         0x0010f04c       0x14 
+ .bss           0x0010f060      0x420 /opt/prj/aPlus/src/debug.o
+ .bss           0x0010f480       0x18 /opt/prj/aPlus/src/bufio.o
+ *fill*         0x0010f498        0x8 
+ .bss           0x0010f4a0      0x8e4 /opt/prj/aPlus/src/arch/desc.o
+                0x0010f4a0                keyboard_ready
+ .bss           0x0010fd84        0x0 /opt/prj/aPlus/src/arch/task.o
+ .bss           0x0010fd84        0x4 /opt/prj/aPlus/src/arch/pci.o
+                0x0010fd84                pci_devices
+ .bss           0x0010fd88        0x4 /opt/prj/aPlus/src/arch/syscall.o
+ *fill*         0x0010fd8c      0x274 
+ .bss           0x00110000     0x4008 /opt/prj/aPlus/src/arch/loader.o
+                0x00110000                kernel_stack
+                0x00114000                magic
+                0x00114004                mbd
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libposix.a(syscalls.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+ .bss           0x00114008        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .bss           0x00114008        0x8 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+                0x00114008                _timezone
+                0x0011400c                _daylight
+ .bss           0x00114010        0x0 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .bss           0x00114010        0x0 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .bss           0x00114010        0x0 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+                0x00114010                end = .
 LOAD /opt/cross/usr/lib/libposix.a
 LOAD /opt/cross/usr/lib/libc.a
 LOAD /opt/cross/usr/lib/libm.a
 LOAD /opt/cross/usr/lib/libgcc.a
+LOAD /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+LOAD /opt/prj/aPlus/src/net/netif.o
 LOAD /opt/prj/aPlus/src/syscall/times.o
 LOAD /opt/prj/aPlus/src/syscall/sbrk.o
 LOAD /opt/prj/aPlus/src/syscall/link.o
@@ -790,6 +824,7 @@ LOAD /opt/prj/aPlus/src/debug.o
 LOAD /opt/prj/aPlus/src/bufio.o
 LOAD /opt/prj/aPlus/src/arch/desc.o
 LOAD /opt/prj/aPlus/src/arch/task.o
+LOAD /opt/prj/aPlus/src/arch/pci.o
 LOAD /opt/prj/aPlus/src/arch/syscall.o
 LOAD /opt/prj/aPlus/src/arch/loader.o
 LOAD /opt/prj/aPlus/src/arch/_desc.o
@@ -800,487 +835,459 @@ LOAD /opt/cross/usr/lib/libm.a
 LOAD /opt/cross/usr/lib/libgcc.a
 OUTPUT(aplus elf32-i386)
 
-.debug_frame    0x00000000     0x295c
- .debug_frame   0x00000000       0x40 /opt/prj/aPlus/src/syscall/times.o
- .debug_frame   0x00000040       0x40 /opt/prj/aPlus/src/syscall/sbrk.o
- .debug_frame   0x00000080       0x40 /opt/prj/aPlus/src/syscall/link.o
- .debug_frame   0x000000c0       0x40 /opt/prj/aPlus/src/syscall/close.o
- .debug_frame   0x00000100       0x40 /opt/prj/aPlus/src/syscall/fstat.o
- .debug_frame   0x00000140       0x40 /opt/prj/aPlus/src/syscall/yield.o
- .debug_frame   0x00000180       0x40 /opt/prj/aPlus/src/syscall/fork.o
- .debug_frame   0x000001c0       0x40 /opt/prj/aPlus/src/syscall/unlink.o
- .debug_frame   0x00000200       0x40 /opt/prj/aPlus/src/syscall/stat.o
- .debug_frame   0x00000240       0x40 /opt/prj/aPlus/src/syscall/kill.o
- .debug_frame   0x00000280       0x40 /opt/prj/aPlus/src/syscall/clone.o
- .debug_frame   0x000002c0       0x40 /opt/prj/aPlus/src/syscall/read.o
- .debug_frame   0x00000300       0x40 /opt/prj/aPlus/src/syscall/write.o
- .debug_frame   0x00000340       0x40 /opt/prj/aPlus/src/syscall/gettimeofday.o
- .debug_frame   0x00000380       0x40 /opt/prj/aPlus/src/syscall/isatty.o
- .debug_frame   0x000003c0       0x40 /opt/prj/aPlus/src/syscall/getpid.o
- .debug_frame   0x00000400       0x40 /opt/prj/aPlus/src/syscall/lseek.o
- .debug_frame   0x00000440       0x40 /opt/prj/aPlus/src/syscall/chown.o
- .debug_frame   0x00000480       0x40 /opt/prj/aPlus/src/syscall/test.o
- .debug_frame   0x000004c0       0x40 /opt/prj/aPlus/src/syscall/_exit.o
- .debug_frame   0x00000500       0x40 /opt/prj/aPlus/src/syscall/ioctl.o
- .debug_frame   0x00000540       0x40 /opt/prj/aPlus/src/syscall/wait.o
- .debug_frame   0x00000580       0x40 /opt/prj/aPlus/src/syscall/fcntl.o
- .debug_frame   0x000005c0       0x6c /opt/prj/aPlus/src/syscall/open.o
- .debug_frame   0x0000062c       0x40 /opt/prj/aPlus/src/syscall/readdir.o
- .debug_frame   0x0000066c       0x40 /opt/prj/aPlus/src/syscall/execve.o
- .debug_frame   0x000006ac       0x40 /opt/prj/aPlus/src/syscall/getgroups.o
- .debug_frame   0x000006ec      0x3cc /opt/prj/aPlus/src/sched.o
- .debug_frame   0x00000ab8      0x1f8 /opt/prj/aPlus/src/fs/vfs.o
- .debug_frame   0x00000cb0       0xc4 /opt/prj/aPlus/src/fs/pipe.o
- .debug_frame   0x00000d74      0x1d8 /opt/prj/aPlus/src/fs/fs.o
- .debug_frame   0x00000f4c       0x6c /opt/prj/aPlus/src/fs/devfs.o
- .debug_frame   0x00000fb8      0x428 /opt/prj/aPlus/src/panic.o
- .debug_frame   0x000013e0       0xc4 /opt/prj/aPlus/src/spinlock.o
- .debug_frame   0x000014a4      0x32c /opt/prj/aPlus/src/mm/paging.o
- .debug_frame   0x000017d0      0x224 /opt/prj/aPlus/src/mm/mm.o
- .debug_frame   0x000019f4       0x6c /opt/prj/aPlus/src/mm/heap.o
- .debug_frame   0x00001a60       0xf8 /opt/prj/aPlus/src/mm/kheap.o
- .debug_frame   0x00001b58       0x60 /opt/prj/aPlus/src/main.o
- .debug_frame   0x00001bb8      0x1ac /opt/prj/aPlus/src/debug.o
- .debug_frame   0x00001d64      0x2c0 /opt/prj/aPlus/src/bufio.o
- .debug_frame   0x00002024      0x230 /opt/prj/aPlus/src/arch/desc.o
- .debug_frame   0x00002254      0x168 /opt/prj/aPlus/src/arch/task.o
- .debug_frame   0x000023bc      0x1ac /opt/prj/aPlus/src/arch/syscall.o
- .debug_frame   0x00002568       0x24 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- .debug_frame   0x0000258c       0xd0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .debug_frame   0x0000265c      0x118 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .debug_frame   0x00002774       0x44 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .debug_frame   0x000027b8       0x58 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .debug_frame   0x00002810       0x5c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .debug_frame   0x0000286c       0x34 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .debug_frame   0x000028a0       0x24 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .debug_frame   0x000028c4       0x74 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- .debug_frame   0x00002938       0x24 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+.debug_info     0x00000000    0x124aa
+ .debug_info    0x00000000       0x6e /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+ .debug_info    0x0000006e      0x600 /opt/prj/aPlus/src/net/netif.o
+ .debug_info    0x0000066e      0x733 /opt/prj/aPlus/src/syscall/times.o
+ .debug_info    0x00000da1      0x177 /opt/prj/aPlus/src/syscall/sbrk.o
+ .debug_info    0x00000f18      0x180 /opt/prj/aPlus/src/syscall/link.o
+ .debug_info    0x00001098      0x6b5 /opt/prj/aPlus/src/syscall/close.o
+ .debug_info    0x0000174d      0x7bf /opt/prj/aPlus/src/syscall/fstat.o
+ .debug_info    0x00001f0c      0x15a /opt/prj/aPlus/src/syscall/yield.o
+ .debug_info    0x00002066      0x6a1 /opt/prj/aPlus/src/syscall/fork.o
+ .debug_info    0x00002707      0x177 /opt/prj/aPlus/src/syscall/unlink.o
+ .debug_info    0x0000287e      0x33e /opt/prj/aPlus/src/syscall/stat.o
+ .debug_info    0x00002bbc      0x6bd /opt/prj/aPlus/src/syscall/kill.o
+ .debug_info    0x00003279      0x6f8 /opt/prj/aPlus/src/syscall/clone.o
+ .debug_info    0x00003971      0x6e0 /opt/prj/aPlus/src/syscall/read.o
+ .debug_info    0x00004051      0x6e0 /opt/prj/aPlus/src/syscall/write.o
+ .debug_info    0x00004731      0x1f6 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .debug_info    0x00004927      0x15e /opt/prj/aPlus/src/syscall/isatty.o
+ .debug_info    0x00004a85      0x169 /opt/prj/aPlus/src/syscall/getpid.o
+ .debug_info    0x00004bee      0x6c8 /opt/prj/aPlus/src/syscall/lseek.o
+ .debug_info    0x000052b6      0x745 /opt/prj/aPlus/src/syscall/chown.o
+ .debug_info    0x000059fb      0x178 /opt/prj/aPlus/src/syscall/test.o
+ .debug_info    0x00005b73      0x168 /opt/prj/aPlus/src/syscall/_exit.o
+ .debug_info    0x00005cdb      0x6d5 /opt/prj/aPlus/src/syscall/ioctl.o
+ .debug_info    0x000063b0      0x6df /opt/prj/aPlus/src/syscall/wait.o
+ .debug_info    0x00006a8f      0x6d5 /opt/prj/aPlus/src/syscall/fcntl.o
+ .debug_info    0x00007164      0x7aa /opt/prj/aPlus/src/syscall/open.o
+ .debug_info    0x0000790e      0x6c7 /opt/prj/aPlus/src/syscall/readdir.o
+ .debug_info    0x00007fd5      0x187 /opt/prj/aPlus/src/syscall/execve.o
+ .debug_info    0x0000815c      0x1b6 /opt/prj/aPlus/src/syscall/getgroups.o
+ .debug_info    0x00008312      0xa5b /opt/prj/aPlus/src/sched.o
+ .debug_info    0x00008d6d      0x774 /opt/prj/aPlus/src/fs/vfs.o
+ .debug_info    0x000094e1      0x853 /opt/prj/aPlus/src/fs/pipe.o
+ .debug_info    0x00009d34      0x6a4 /opt/prj/aPlus/src/fs/fs.o
+ .debug_info    0x0000a3d8      0x6a7 /opt/prj/aPlus/src/fs/devfs.o
+ .debug_info    0x0000aa7f      0xac7 /opt/prj/aPlus/src/panic.o
+ .debug_info    0x0000b546      0x11b /opt/prj/aPlus/src/spinlock.o
+ .debug_info    0x0000b661      0x65c /opt/prj/aPlus/src/mm/paging.o
+ .debug_info    0x0000bcbd      0x5ab /opt/prj/aPlus/src/mm/mm.o
+ .debug_info    0x0000c268      0x1a6 /opt/prj/aPlus/src/mm/heap.o
+ .debug_info    0x0000c40e      0x65e /opt/prj/aPlus/src/mm/kheap.o
+ .debug_info    0x0000ca6c      0x15e /opt/prj/aPlus/src/main.o
+ .debug_info    0x0000cbca      0x3bb /opt/prj/aPlus/src/debug.o
+ .debug_info    0x0000cf85      0xa97 /opt/prj/aPlus/src/bufio.o
+ .debug_info    0x0000da1c      0x911 /opt/prj/aPlus/src/arch/desc.o
+ .debug_info    0x0000e32d      0x962 /opt/prj/aPlus/src/arch/task.o
+ .debug_info    0x0000ec8f      0x651 /opt/prj/aPlus/src/arch/pci.o
+ .debug_info    0x0000f2e0      0x553 /opt/prj/aPlus/src/arch/syscall.o
+ .debug_info    0x0000f833      0x889 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .debug_info    0x000100bc      0x894 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .debug_info    0x00010950       0xa1 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+ .debug_info    0x000109f1       0xa1 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+ .debug_info    0x00010a92       0xa1 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+ .debug_info    0x00010b33      0x462 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .debug_info    0x00010f95      0x439 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .debug_info    0x000113ce       0xa1 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+ .debug_info    0x0001146f       0xdd /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .debug_info    0x0001154c      0x10f /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .debug_info    0x0001165b      0x980 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .debug_info    0x00011fdb       0xa1 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+ .debug_info    0x0001207c       0xa8 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .debug_info    0x00012124       0xbb /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ .debug_info    0x000121df       0x84 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .debug_info    0x00012263       0xe7 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .debug_info    0x0001234a      0x160 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
 
-.debug_info     0x00000000    0x116f7
- .debug_info    0x00000000      0x733 /opt/prj/aPlus/src/syscall/times.o
- .debug_info    0x00000733      0x177 /opt/prj/aPlus/src/syscall/sbrk.o
- .debug_info    0x000008aa      0x180 /opt/prj/aPlus/src/syscall/link.o
- .debug_info    0x00000a2a      0x6b5 /opt/prj/aPlus/src/syscall/close.o
- .debug_info    0x000010df      0x7bf /opt/prj/aPlus/src/syscall/fstat.o
- .debug_info    0x0000189e      0x15a /opt/prj/aPlus/src/syscall/yield.o
- .debug_info    0x000019f8      0x6a1 /opt/prj/aPlus/src/syscall/fork.o
- .debug_info    0x00002099      0x177 /opt/prj/aPlus/src/syscall/unlink.o
- .debug_info    0x00002210      0x33e /opt/prj/aPlus/src/syscall/stat.o
- .debug_info    0x0000254e      0x6bd /opt/prj/aPlus/src/syscall/kill.o
- .debug_info    0x00002c0b      0x6f8 /opt/prj/aPlus/src/syscall/clone.o
- .debug_info    0x00003303      0x6e0 /opt/prj/aPlus/src/syscall/read.o
- .debug_info    0x000039e3      0x6e0 /opt/prj/aPlus/src/syscall/write.o
- .debug_info    0x000040c3      0x1f6 /opt/prj/aPlus/src/syscall/gettimeofday.o
- .debug_info    0x000042b9      0x15e /opt/prj/aPlus/src/syscall/isatty.o
- .debug_info    0x00004417      0x169 /opt/prj/aPlus/src/syscall/getpid.o
- .debug_info    0x00004580      0x6c8 /opt/prj/aPlus/src/syscall/lseek.o
- .debug_info    0x00004c48      0x745 /opt/prj/aPlus/src/syscall/chown.o
- .debug_info    0x0000538d      0x178 /opt/prj/aPlus/src/syscall/test.o
- .debug_info    0x00005505      0x168 /opt/prj/aPlus/src/syscall/_exit.o
- .debug_info    0x0000566d      0x6d5 /opt/prj/aPlus/src/syscall/ioctl.o
- .debug_info    0x00005d42      0x6df /opt/prj/aPlus/src/syscall/wait.o
- .debug_info    0x00006421      0x6d5 /opt/prj/aPlus/src/syscall/fcntl.o
- .debug_info    0x00006af6      0x7aa /opt/prj/aPlus/src/syscall/open.o
- .debug_info    0x000072a0      0x6c7 /opt/prj/aPlus/src/syscall/readdir.o
- .debug_info    0x00007967      0x187 /opt/prj/aPlus/src/syscall/execve.o
- .debug_info    0x00007aee      0x1b6 /opt/prj/aPlus/src/syscall/getgroups.o
- .debug_info    0x00007ca4      0xa5b /opt/prj/aPlus/src/sched.o
- .debug_info    0x000086ff      0x774 /opt/prj/aPlus/src/fs/vfs.o
- .debug_info    0x00008e73      0x853 /opt/prj/aPlus/src/fs/pipe.o
- .debug_info    0x000096c6      0x6a4 /opt/prj/aPlus/src/fs/fs.o
- .debug_info    0x00009d6a      0x6a7 /opt/prj/aPlus/src/fs/devfs.o
- .debug_info    0x0000a411      0xac7 /opt/prj/aPlus/src/panic.o
- .debug_info    0x0000aed8      0x11b /opt/prj/aPlus/src/spinlock.o
- .debug_info    0x0000aff3      0x633 /opt/prj/aPlus/src/mm/paging.o
- .debug_info    0x0000b626      0x5ab /opt/prj/aPlus/src/mm/mm.o
- .debug_info    0x0000bbd1      0x1a6 /opt/prj/aPlus/src/mm/heap.o
- .debug_info    0x0000bd77      0x65e /opt/prj/aPlus/src/mm/kheap.o
- .debug_info    0x0000c3d5      0x15e /opt/prj/aPlus/src/main.o
- .debug_info    0x0000c533      0x3bb /opt/prj/aPlus/src/debug.o
- .debug_info    0x0000c8ee      0xa97 /opt/prj/aPlus/src/bufio.o
- .debug_info    0x0000d385      0x911 /opt/prj/aPlus/src/arch/desc.o
- .debug_info    0x0000dc96      0x938 /opt/prj/aPlus/src/arch/task.o
- .debug_info    0x0000e5ce      0x553 /opt/prj/aPlus/src/arch/syscall.o
- .debug_info    0x0000eb21      0x889 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- .debug_info    0x0000f3aa      0x894 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- .debug_info    0x0000fc3e       0xa1 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
- .debug_info    0x0000fcdf       0xa1 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
- .debug_info    0x0000fd80      0x462 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .debug_info    0x000101e2      0x439 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .debug_info    0x0001061b       0xa1 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
- .debug_info    0x000106bc       0xdd /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .debug_info    0x00010799      0x10f /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .debug_info    0x000108a8      0x980 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .debug_info    0x00011228       0xa1 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
- .debug_info    0x000112c9       0xa8 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .debug_info    0x00011371       0xbb /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
- .debug_info    0x0001142c       0x84 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .debug_info    0x000114b0       0xe7 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- .debug_info    0x00011597      0x160 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+.debug_abbrev   0x00000000     0x4b16
+ .debug_abbrev  0x00000000       0x24 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+ .debug_abbrev  0x00000024      0x153 /opt/prj/aPlus/src/net/netif.o
+ .debug_abbrev  0x00000177      0x186 /opt/prj/aPlus/src/syscall/times.o
+ .debug_abbrev  0x000002fd       0xed /opt/prj/aPlus/src/syscall/sbrk.o
+ .debug_abbrev  0x000003ea       0xf6 /opt/prj/aPlus/src/syscall/link.o
+ .debug_abbrev  0x000004e0      0x164 /opt/prj/aPlus/src/syscall/close.o
+ .debug_abbrev  0x00000644      0x173 /opt/prj/aPlus/src/syscall/fstat.o
+ .debug_abbrev  0x000007b7       0xda /opt/prj/aPlus/src/syscall/yield.o
+ .debug_abbrev  0x00000891      0x14a /opt/prj/aPlus/src/syscall/fork.o
+ .debug_abbrev  0x000009db       0xfd /opt/prj/aPlus/src/syscall/unlink.o
+ .debug_abbrev  0x00000ad8      0x137 /opt/prj/aPlus/src/syscall/stat.o
+ .debug_abbrev  0x00000c0f      0x16a /opt/prj/aPlus/src/syscall/kill.o
+ .debug_abbrev  0x00000d79      0x16a /opt/prj/aPlus/src/syscall/clone.o
+ .debug_abbrev  0x00000ee3      0x179 /opt/prj/aPlus/src/syscall/read.o
+ .debug_abbrev  0x0000105c      0x179 /opt/prj/aPlus/src/syscall/write.o
+ .debug_abbrev  0x000011d5      0x116 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .debug_abbrev  0x000012eb       0xd7 /opt/prj/aPlus/src/syscall/isatty.o
+ .debug_abbrev  0x000013c2       0xdc /opt/prj/aPlus/src/syscall/getpid.o
+ .debug_abbrev  0x0000149e      0x154 /opt/prj/aPlus/src/syscall/lseek.o
+ .debug_abbrev  0x000015f2      0x191 /opt/prj/aPlus/src/syscall/chown.o
+ .debug_abbrev  0x00001783       0xed /opt/prj/aPlus/src/syscall/test.o
+ .debug_abbrev  0x00001870       0xeb /opt/prj/aPlus/src/syscall/_exit.o
+ .debug_abbrev  0x0000195b      0x16a /opt/prj/aPlus/src/syscall/ioctl.o
+ .debug_abbrev  0x00001ac5      0x16e /opt/prj/aPlus/src/syscall/wait.o
+ .debug_abbrev  0x00001c33      0x179 /opt/prj/aPlus/src/syscall/fcntl.o
+ .debug_abbrev  0x00001dac      0x1ab /opt/prj/aPlus/src/syscall/open.o
+ .debug_abbrev  0x00001f57      0x179 /opt/prj/aPlus/src/syscall/readdir.o
+ .debug_abbrev  0x000020d0       0xe0 /opt/prj/aPlus/src/syscall/execve.o
+ .debug_abbrev  0x000021b0       0xef /opt/prj/aPlus/src/syscall/getgroups.o
+ .debug_abbrev  0x0000229f      0x272 /opt/prj/aPlus/src/sched.o
+ .debug_abbrev  0x00002511      0x1bf /opt/prj/aPlus/src/fs/vfs.o
+ .debug_abbrev  0x000026d0      0x1a5 /opt/prj/aPlus/src/fs/pipe.o
+ .debug_abbrev  0x00002875      0x17e /opt/prj/aPlus/src/fs/fs.o
+ .debug_abbrev  0x000029f3      0x191 /opt/prj/aPlus/src/fs/devfs.o
+ .debug_abbrev  0x00002b84      0x1e9 /opt/prj/aPlus/src/panic.o
+ .debug_abbrev  0x00002d6d       0xd0 /opt/prj/aPlus/src/spinlock.o
+ .debug_abbrev  0x00002e3d      0x1df /opt/prj/aPlus/src/mm/paging.o
+ .debug_abbrev  0x0000301c      0x1bc /opt/prj/aPlus/src/mm/mm.o
+ .debug_abbrev  0x000031d8       0xc1 /opt/prj/aPlus/src/mm/heap.o
+ .debug_abbrev  0x00003299      0x179 /opt/prj/aPlus/src/mm/kheap.o
+ .debug_abbrev  0x00003412       0x92 /opt/prj/aPlus/src/main.o
+ .debug_abbrev  0x000034a4      0x12f /opt/prj/aPlus/src/debug.o
+ .debug_abbrev  0x000035d3      0x214 /opt/prj/aPlus/src/bufio.o
+ .debug_abbrev  0x000037e7      0x221 /opt/prj/aPlus/src/arch/desc.o
+ .debug_abbrev  0x00003a08      0x216 /opt/prj/aPlus/src/arch/task.o
+ .debug_abbrev  0x00003c1e      0x19e /opt/prj/aPlus/src/arch/pci.o
+ .debug_abbrev  0x00003dbc      0x161 /opt/prj/aPlus/src/arch/syscall.o
+ .debug_abbrev  0x00003f1d      0x18f /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .debug_abbrev  0x000040ac      0x180 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .debug_abbrev  0x0000422c       0x14 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+ .debug_abbrev  0x00004240       0x14 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+ .debug_abbrev  0x00004254       0x14 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+ .debug_abbrev  0x00004268      0x1c6 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .debug_abbrev  0x0000442e      0x15c /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .debug_abbrev  0x0000458a       0x14 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+ .debug_abbrev  0x0000459e       0x74 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .debug_abbrev  0x00004612       0x92 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .debug_abbrev  0x000046a4      0x20c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .debug_abbrev  0x000048b0       0x14 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+ .debug_abbrev  0x000048c4       0x51 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .debug_abbrev  0x00004915       0x52 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ .debug_abbrev  0x00004967       0x5e /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .debug_abbrev  0x000049c5       0xa9 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .debug_abbrev  0x00004a6e       0xa8 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
 
-.debug_abbrev   0x00000000     0x47ed
- .debug_abbrev  0x00000000      0x186 /opt/prj/aPlus/src/syscall/times.o
- .debug_abbrev  0x00000186       0xed /opt/prj/aPlus/src/syscall/sbrk.o
- .debug_abbrev  0x00000273       0xf6 /opt/prj/aPlus/src/syscall/link.o
- .debug_abbrev  0x00000369      0x164 /opt/prj/aPlus/src/syscall/close.o
- .debug_abbrev  0x000004cd      0x173 /opt/prj/aPlus/src/syscall/fstat.o
- .debug_abbrev  0x00000640       0xda /opt/prj/aPlus/src/syscall/yield.o
- .debug_abbrev  0x0000071a      0x14a /opt/prj/aPlus/src/syscall/fork.o
- .debug_abbrev  0x00000864       0xfd /opt/prj/aPlus/src/syscall/unlink.o
- .debug_abbrev  0x00000961      0x137 /opt/prj/aPlus/src/syscall/stat.o
- .debug_abbrev  0x00000a98      0x16a /opt/prj/aPlus/src/syscall/kill.o
- .debug_abbrev  0x00000c02      0x16a /opt/prj/aPlus/src/syscall/clone.o
- .debug_abbrev  0x00000d6c      0x179 /opt/prj/aPlus/src/syscall/read.o
- .debug_abbrev  0x00000ee5      0x179 /opt/prj/aPlus/src/syscall/write.o
- .debug_abbrev  0x0000105e      0x116 /opt/prj/aPlus/src/syscall/gettimeofday.o
- .debug_abbrev  0x00001174       0xd7 /opt/prj/aPlus/src/syscall/isatty.o
- .debug_abbrev  0x0000124b       0xdc /opt/prj/aPlus/src/syscall/getpid.o
- .debug_abbrev  0x00001327      0x154 /opt/prj/aPlus/src/syscall/lseek.o
- .debug_abbrev  0x0000147b      0x191 /opt/prj/aPlus/src/syscall/chown.o
- .debug_abbrev  0x0000160c       0xed /opt/prj/aPlus/src/syscall/test.o
- .debug_abbrev  0x000016f9       0xeb /opt/prj/aPlus/src/syscall/_exit.o
- .debug_abbrev  0x000017e4      0x16a /opt/prj/aPlus/src/syscall/ioctl.o
- .debug_abbrev  0x0000194e      0x16e /opt/prj/aPlus/src/syscall/wait.o
- .debug_abbrev  0x00001abc      0x179 /opt/prj/aPlus/src/syscall/fcntl.o
- .debug_abbrev  0x00001c35      0x1ab /opt/prj/aPlus/src/syscall/open.o
- .debug_abbrev  0x00001de0      0x179 /opt/prj/aPlus/src/syscall/readdir.o
- .debug_abbrev  0x00001f59       0xe0 /opt/prj/aPlus/src/syscall/execve.o
- .debug_abbrev  0x00002039       0xef /opt/prj/aPlus/src/syscall/getgroups.o
- .debug_abbrev  0x00002128      0x272 /opt/prj/aPlus/src/sched.o
- .debug_abbrev  0x0000239a      0x1bf /opt/prj/aPlus/src/fs/vfs.o
- .debug_abbrev  0x00002559      0x1a5 /opt/prj/aPlus/src/fs/pipe.o
- .debug_abbrev  0x000026fe      0x17e /opt/prj/aPlus/src/fs/fs.o
- .debug_abbrev  0x0000287c      0x191 /opt/prj/aPlus/src/fs/devfs.o
- .debug_abbrev  0x00002a0d      0x1e9 /opt/prj/aPlus/src/panic.o
- .debug_abbrev  0x00002bf6       0xd0 /opt/prj/aPlus/src/spinlock.o
- .debug_abbrev  0x00002cc6      0x1df /opt/prj/aPlus/src/mm/paging.o
- .debug_abbrev  0x00002ea5      0x1bc /opt/prj/aPlus/src/mm/mm.o
- .debug_abbrev  0x00003061       0xc1 /opt/prj/aPlus/src/mm/heap.o
- .debug_abbrev  0x00003122      0x179 /opt/prj/aPlus/src/mm/kheap.o
- .debug_abbrev  0x0000329b       0x92 /opt/prj/aPlus/src/main.o
- .debug_abbrev  0x0000332d      0x12f /opt/prj/aPlus/src/debug.o
- .debug_abbrev  0x0000345c      0x214 /opt/prj/aPlus/src/bufio.o
- .debug_abbrev  0x00003670      0x221 /opt/prj/aPlus/src/arch/desc.o
- .debug_abbrev  0x00003891      0x216 /opt/prj/aPlus/src/arch/task.o
- .debug_abbrev  0x00003aa7      0x161 /opt/prj/aPlus/src/arch/syscall.o
- .debug_abbrev  0x00003c08      0x18f /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- .debug_abbrev  0x00003d97      0x180 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- .debug_abbrev  0x00003f17       0x14 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
- .debug_abbrev  0x00003f2b       0x14 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
- .debug_abbrev  0x00003f3f      0x1c6 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .debug_abbrev  0x00004105      0x15c /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .debug_abbrev  0x00004261       0x14 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
- .debug_abbrev  0x00004275       0x74 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .debug_abbrev  0x000042e9       0x92 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .debug_abbrev  0x0000437b      0x20c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .debug_abbrev  0x00004587       0x14 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
- .debug_abbrev  0x0000459b       0x51 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .debug_abbrev  0x000045ec       0x52 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
- .debug_abbrev  0x0000463e       0x5e /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .debug_abbrev  0x0000469c       0xa9 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- .debug_abbrev  0x00004745       0xa8 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+.debug_aranges  0x00000000      0x7e8
+ .debug_aranges
+                0x00000000       0x18 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+ .debug_aranges
+                0x00000018       0x20 /opt/prj/aPlus/src/net/netif.o
+ .debug_aranges
+                0x00000038       0x20 /opt/prj/aPlus/src/syscall/times.o
+ .debug_aranges
+                0x00000058       0x20 /opt/prj/aPlus/src/syscall/sbrk.o
+ .debug_aranges
+                0x00000078       0x20 /opt/prj/aPlus/src/syscall/link.o
+ .debug_aranges
+                0x00000098       0x20 /opt/prj/aPlus/src/syscall/close.o
+ .debug_aranges
+                0x000000b8       0x20 /opt/prj/aPlus/src/syscall/fstat.o
+ .debug_aranges
+                0x000000d8       0x20 /opt/prj/aPlus/src/syscall/yield.o
+ .debug_aranges
+                0x000000f8       0x20 /opt/prj/aPlus/src/syscall/fork.o
+ .debug_aranges
+                0x00000118       0x20 /opt/prj/aPlus/src/syscall/unlink.o
+ .debug_aranges
+                0x00000138       0x20 /opt/prj/aPlus/src/syscall/stat.o
+ .debug_aranges
+                0x00000158       0x20 /opt/prj/aPlus/src/syscall/kill.o
+ .debug_aranges
+                0x00000178       0x20 /opt/prj/aPlus/src/syscall/clone.o
+ .debug_aranges
+                0x00000198       0x20 /opt/prj/aPlus/src/syscall/read.o
+ .debug_aranges
+                0x000001b8       0x20 /opt/prj/aPlus/src/syscall/write.o
+ .debug_aranges
+                0x000001d8       0x20 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .debug_aranges
+                0x000001f8       0x20 /opt/prj/aPlus/src/syscall/isatty.o
+ .debug_aranges
+                0x00000218       0x20 /opt/prj/aPlus/src/syscall/getpid.o
+ .debug_aranges
+                0x00000238       0x20 /opt/prj/aPlus/src/syscall/lseek.o
+ .debug_aranges
+                0x00000258       0x20 /opt/prj/aPlus/src/syscall/chown.o
+ .debug_aranges
+                0x00000278       0x20 /opt/prj/aPlus/src/syscall/test.o
+ .debug_aranges
+                0x00000298       0x20 /opt/prj/aPlus/src/syscall/_exit.o
+ .debug_aranges
+                0x000002b8       0x20 /opt/prj/aPlus/src/syscall/ioctl.o
+ .debug_aranges
+                0x000002d8       0x20 /opt/prj/aPlus/src/syscall/wait.o
+ .debug_aranges
+                0x000002f8       0x20 /opt/prj/aPlus/src/syscall/fcntl.o
+ .debug_aranges
+                0x00000318       0x20 /opt/prj/aPlus/src/syscall/open.o
+ .debug_aranges
+                0x00000338       0x20 /opt/prj/aPlus/src/syscall/readdir.o
+ .debug_aranges
+                0x00000358       0x20 /opt/prj/aPlus/src/syscall/execve.o
+ .debug_aranges
+                0x00000378       0x20 /opt/prj/aPlus/src/syscall/getgroups.o
+ .debug_aranges
+                0x00000398       0x20 /opt/prj/aPlus/src/sched.o
+ .debug_aranges
+                0x000003b8       0x20 /opt/prj/aPlus/src/fs/vfs.o
+ .debug_aranges
+                0x000003d8       0x20 /opt/prj/aPlus/src/fs/pipe.o
+ .debug_aranges
+                0x000003f8       0x20 /opt/prj/aPlus/src/fs/fs.o
+ .debug_aranges
+                0x00000418       0x20 /opt/prj/aPlus/src/fs/devfs.o
+ .debug_aranges
+                0x00000438       0x20 /opt/prj/aPlus/src/panic.o
+ .debug_aranges
+                0x00000458       0x20 /opt/prj/aPlus/src/spinlock.o
+ .debug_aranges
+                0x00000478       0x20 /opt/prj/aPlus/src/mm/paging.o
+ .debug_aranges
+                0x00000498       0x20 /opt/prj/aPlus/src/mm/mm.o
+ .debug_aranges
+                0x000004b8       0x20 /opt/prj/aPlus/src/mm/heap.o
+ .debug_aranges
+                0x000004d8       0x20 /opt/prj/aPlus/src/mm/kheap.o
+ .debug_aranges
+                0x000004f8       0x20 /opt/prj/aPlus/src/main.o
+ .debug_aranges
+                0x00000518       0x20 /opt/prj/aPlus/src/debug.o
+ .debug_aranges
+                0x00000538       0x20 /opt/prj/aPlus/src/bufio.o
+ .debug_aranges
+                0x00000558       0x20 /opt/prj/aPlus/src/arch/desc.o
+ .debug_aranges
+                0x00000578       0x20 /opt/prj/aPlus/src/arch/task.o
+ .debug_aranges
+                0x00000598       0x20 /opt/prj/aPlus/src/arch/pci.o
+ .debug_aranges
+                0x000005b8       0x20 /opt/prj/aPlus/src/arch/syscall.o
+ .debug_aranges
+                0x000005d8       0x20 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .debug_aranges
+                0x000005f8       0x18 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .debug_aranges
+                0x00000610       0x20 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+ .debug_aranges
+                0x00000630       0x20 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+ .debug_aranges
+                0x00000650       0x20 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+ .debug_aranges
+                0x00000670       0x20 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .debug_aranges
+                0x00000690       0x20 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .debug_aranges
+                0x000006b0       0x20 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+ .debug_aranges
+                0x000006d0       0x20 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .debug_aranges
+                0x000006f0       0x20 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .debug_aranges
+                0x00000710       0x20 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .debug_aranges
+                0x00000730       0x20 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+ .debug_aranges
+                0x00000750       0x20 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .debug_aranges
+                0x00000770       0x18 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ .debug_aranges
+                0x00000788       0x20 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .debug_aranges
+                0x000007a8       0x20 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .debug_aranges
+                0x000007c8       0x20 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
 
-.debug_aranges  0x00000000      0x770
- .debug_aranges
-                0x00000000       0x20 /opt/prj/aPlus/src/syscall/times.o
- .debug_aranges
-                0x00000020       0x20 /opt/prj/aPlus/src/syscall/sbrk.o
- .debug_aranges
-                0x00000040       0x20 /opt/prj/aPlus/src/syscall/link.o
- .debug_aranges
-                0x00000060       0x20 /opt/prj/aPlus/src/syscall/close.o
- .debug_aranges
-                0x00000080       0x20 /opt/prj/aPlus/src/syscall/fstat.o
- .debug_aranges
-                0x000000a0       0x20 /opt/prj/aPlus/src/syscall/yield.o
- .debug_aranges
-                0x000000c0       0x20 /opt/prj/aPlus/src/syscall/fork.o
- .debug_aranges
-                0x000000e0       0x20 /opt/prj/aPlus/src/syscall/unlink.o
- .debug_aranges
-                0x00000100       0x20 /opt/prj/aPlus/src/syscall/stat.o
- .debug_aranges
-                0x00000120       0x20 /opt/prj/aPlus/src/syscall/kill.o
- .debug_aranges
-                0x00000140       0x20 /opt/prj/aPlus/src/syscall/clone.o
- .debug_aranges
-                0x00000160       0x20 /opt/prj/aPlus/src/syscall/read.o
- .debug_aranges
-                0x00000180       0x20 /opt/prj/aPlus/src/syscall/write.o
- .debug_aranges
-                0x000001a0       0x20 /opt/prj/aPlus/src/syscall/gettimeofday.o
- .debug_aranges
-                0x000001c0       0x20 /opt/prj/aPlus/src/syscall/isatty.o
- .debug_aranges
-                0x000001e0       0x20 /opt/prj/aPlus/src/syscall/getpid.o
- .debug_aranges
-                0x00000200       0x20 /opt/prj/aPlus/src/syscall/lseek.o
- .debug_aranges
-                0x00000220       0x20 /opt/prj/aPlus/src/syscall/chown.o
- .debug_aranges
-                0x00000240       0x20 /opt/prj/aPlus/src/syscall/test.o
- .debug_aranges
-                0x00000260       0x20 /opt/prj/aPlus/src/syscall/_exit.o
- .debug_aranges
-                0x00000280       0x20 /opt/prj/aPlus/src/syscall/ioctl.o
- .debug_aranges
-                0x000002a0       0x20 /opt/prj/aPlus/src/syscall/wait.o
- .debug_aranges
-                0x000002c0       0x20 /opt/prj/aPlus/src/syscall/fcntl.o
- .debug_aranges
-                0x000002e0       0x20 /opt/prj/aPlus/src/syscall/open.o
- .debug_aranges
-                0x00000300       0x20 /opt/prj/aPlus/src/syscall/readdir.o
- .debug_aranges
-                0x00000320       0x20 /opt/prj/aPlus/src/syscall/execve.o
- .debug_aranges
-                0x00000340       0x20 /opt/prj/aPlus/src/syscall/getgroups.o
- .debug_aranges
-                0x00000360       0x20 /opt/prj/aPlus/src/sched.o
- .debug_aranges
-                0x00000380       0x20 /opt/prj/aPlus/src/fs/vfs.o
- .debug_aranges
-                0x000003a0       0x20 /opt/prj/aPlus/src/fs/pipe.o
- .debug_aranges
-                0x000003c0       0x20 /opt/prj/aPlus/src/fs/fs.o
- .debug_aranges
-                0x000003e0       0x20 /opt/prj/aPlus/src/fs/devfs.o
- .debug_aranges
-                0x00000400       0x20 /opt/prj/aPlus/src/panic.o
- .debug_aranges
-                0x00000420       0x20 /opt/prj/aPlus/src/spinlock.o
- .debug_aranges
-                0x00000440       0x20 /opt/prj/aPlus/src/mm/paging.o
- .debug_aranges
-                0x00000460       0x20 /opt/prj/aPlus/src/mm/mm.o
- .debug_aranges
-                0x00000480       0x20 /opt/prj/aPlus/src/mm/heap.o
- .debug_aranges
-                0x000004a0       0x20 /opt/prj/aPlus/src/mm/kheap.o
- .debug_aranges
-                0x000004c0       0x20 /opt/prj/aPlus/src/main.o
- .debug_aranges
-                0x000004e0       0x20 /opt/prj/aPlus/src/debug.o
- .debug_aranges
-                0x00000500       0x20 /opt/prj/aPlus/src/bufio.o
- .debug_aranges
-                0x00000520       0x20 /opt/prj/aPlus/src/arch/desc.o
- .debug_aranges
-                0x00000540       0x20 /opt/prj/aPlus/src/arch/task.o
- .debug_aranges
-                0x00000560       0x20 /opt/prj/aPlus/src/arch/syscall.o
- .debug_aranges
-                0x00000580       0x20 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- .debug_aranges
-                0x000005a0       0x18 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- .debug_aranges
-                0x000005b8       0x20 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
- .debug_aranges
-                0x000005d8       0x20 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
- .debug_aranges
-                0x000005f8       0x20 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .debug_aranges
-                0x00000618       0x20 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .debug_aranges
-                0x00000638       0x20 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
- .debug_aranges
-                0x00000658       0x20 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .debug_aranges
-                0x00000678       0x20 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .debug_aranges
-                0x00000698       0x20 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .debug_aranges
-                0x000006b8       0x20 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
- .debug_aranges
-                0x000006d8       0x20 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .debug_aranges
-                0x000006f8       0x18 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
- .debug_aranges
-                0x00000710       0x20 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .debug_aranges
-                0x00000730       0x20 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- .debug_aranges
-                0x00000750       0x20 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+.debug_line     0x00000000     0xa1cb
+ .debug_line    0x00000000       0x28 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+ .debug_line    0x00000028      0x4a6 /opt/prj/aPlus/src/net/netif.o
+ .debug_line    0x000004ce      0x1d5 /opt/prj/aPlus/src/syscall/times.o
+ .debug_line    0x000006a3      0x152 /opt/prj/aPlus/src/syscall/sbrk.o
+ .debug_line    0x000007f5      0x126 /opt/prj/aPlus/src/syscall/link.o
+ .debug_line    0x0000091b      0x1b6 /opt/prj/aPlus/src/syscall/close.o
+ .debug_line    0x00000ad1      0x234 /opt/prj/aPlus/src/syscall/fstat.o
+ .debug_line    0x00000d05      0x117 /opt/prj/aPlus/src/syscall/yield.o
+ .debug_line    0x00000e1c      0x195 /opt/prj/aPlus/src/syscall/fork.o
+ .debug_line    0x00000fb1      0x128 /opt/prj/aPlus/src/syscall/unlink.o
+ .debug_line    0x000010d9      0x199 /opt/prj/aPlus/src/syscall/stat.o
+ .debug_line    0x00001272      0x1a5 /opt/prj/aPlus/src/syscall/kill.o
+ .debug_line    0x00001417      0x1c6 /opt/prj/aPlus/src/syscall/clone.o
+ .debug_line    0x000015dd      0x1e9 /opt/prj/aPlus/src/syscall/read.o
+ .debug_line    0x000017c6      0x1ea /opt/prj/aPlus/src/syscall/write.o
+ .debug_line    0x000019b0      0x189 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .debug_line    0x00001b39      0x118 /opt/prj/aPlus/src/syscall/isatty.o
+ .debug_line    0x00001c51      0x14d /opt/prj/aPlus/src/syscall/getpid.o
+ .debug_line    0x00001d9e      0x1f6 /opt/prj/aPlus/src/syscall/lseek.o
+ .debug_line    0x00001f94      0x1c6 /opt/prj/aPlus/src/syscall/chown.o
+ .debug_line    0x0000215a      0x11e /opt/prj/aPlus/src/syscall/test.o
+ .debug_line    0x00002278      0x117 /opt/prj/aPlus/src/syscall/_exit.o
+ .debug_line    0x0000238f      0x19e /opt/prj/aPlus/src/syscall/ioctl.o
+ .debug_line    0x0000252d      0x1cd /opt/prj/aPlus/src/syscall/wait.o
+ .debug_line    0x000026fa      0x1be /opt/prj/aPlus/src/syscall/fcntl.o
+ .debug_line    0x000028b8      0x3d1 /opt/prj/aPlus/src/syscall/open.o
+ .debug_line    0x00002c89      0x1b0 /opt/prj/aPlus/src/syscall/readdir.o
+ .debug_line    0x00002e39      0x120 /opt/prj/aPlus/src/syscall/execve.o
+ .debug_line    0x00002f59      0x1e2 /opt/prj/aPlus/src/syscall/getgroups.o
+ .debug_line    0x0000313b      0x6df /opt/prj/aPlus/src/sched.o
+ .debug_line    0x0000381a      0x58c /opt/prj/aPlus/src/fs/vfs.o
+ .debug_line    0x00003da6      0x34f /opt/prj/aPlus/src/fs/pipe.o
+ .debug_line    0x000040f5      0x2e0 /opt/prj/aPlus/src/fs/fs.o
+ .debug_line    0x000043d5      0x329 /opt/prj/aPlus/src/fs/devfs.o
+ .debug_line    0x000046fe      0x56d /opt/prj/aPlus/src/panic.o
+ .debug_line    0x00004c6b      0x124 /opt/prj/aPlus/src/spinlock.o
+ .debug_line    0x00004d8f      0x5c7 /opt/prj/aPlus/src/mm/paging.o
+ .debug_line    0x00005356      0x496 /opt/prj/aPlus/src/mm/mm.o
+ .debug_line    0x000057ec      0x179 /opt/prj/aPlus/src/mm/heap.o
+ .debug_line    0x00005965      0x375 /opt/prj/aPlus/src/mm/kheap.o
+ .debug_line    0x00005cda       0xfb /opt/prj/aPlus/src/main.o
+ .debug_line    0x00005dd5      0x5b8 /opt/prj/aPlus/src/debug.o
+ .debug_line    0x0000638d      0x6c8 /opt/prj/aPlus/src/bufio.o
+ .debug_line    0x00006a55      0x5a0 /opt/prj/aPlus/src/arch/desc.o
+ .debug_line    0x00006ff5      0x5ca /opt/prj/aPlus/src/arch/task.o
+ .debug_line    0x000075bf      0x600 /opt/prj/aPlus/src/arch/pci.o
+ .debug_line    0x00007bbf      0x459 /opt/prj/aPlus/src/arch/syscall.o
+ .debug_line    0x00008018      0x107 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .debug_line    0x0000811f       0xed /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .debug_line    0x0000820c       0x98 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+ .debug_line    0x000082a4       0x93 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+ .debug_line    0x00008337       0xac /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+ .debug_line    0x000083e3      0x800 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .debug_line    0x00008be3      0x83c /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .debug_line    0x0000941f       0xd7 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+ .debug_line    0x000094f6      0x137 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .debug_line    0x0000962d       0xf9 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .debug_line    0x00009726      0x683 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .debug_line    0x00009da9       0xa3 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+ .debug_line    0x00009e4c       0x71 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .debug_line    0x00009ebd       0x5c /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ .debug_line    0x00009f19       0x75 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .debug_line    0x00009f8e      0x158 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .debug_line    0x0000a0e6       0xe5 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
 
-.debug_line     0x00000000     0x9607
- .debug_line    0x00000000      0x1d5 /opt/prj/aPlus/src/syscall/times.o
- .debug_line    0x000001d5      0x152 /opt/prj/aPlus/src/syscall/sbrk.o
- .debug_line    0x00000327      0x126 /opt/prj/aPlus/src/syscall/link.o
- .debug_line    0x0000044d      0x1b6 /opt/prj/aPlus/src/syscall/close.o
- .debug_line    0x00000603      0x234 /opt/prj/aPlus/src/syscall/fstat.o
- .debug_line    0x00000837      0x117 /opt/prj/aPlus/src/syscall/yield.o
- .debug_line    0x0000094e      0x195 /opt/prj/aPlus/src/syscall/fork.o
- .debug_line    0x00000ae3      0x128 /opt/prj/aPlus/src/syscall/unlink.o
- .debug_line    0x00000c0b      0x199 /opt/prj/aPlus/src/syscall/stat.o
- .debug_line    0x00000da4      0x1a5 /opt/prj/aPlus/src/syscall/kill.o
- .debug_line    0x00000f49      0x1c6 /opt/prj/aPlus/src/syscall/clone.o
- .debug_line    0x0000110f      0x1e9 /opt/prj/aPlus/src/syscall/read.o
- .debug_line    0x000012f8      0x1ea /opt/prj/aPlus/src/syscall/write.o
- .debug_line    0x000014e2      0x189 /opt/prj/aPlus/src/syscall/gettimeofday.o
- .debug_line    0x0000166b      0x118 /opt/prj/aPlus/src/syscall/isatty.o
- .debug_line    0x00001783      0x14d /opt/prj/aPlus/src/syscall/getpid.o
- .debug_line    0x000018d0      0x1f6 /opt/prj/aPlus/src/syscall/lseek.o
- .debug_line    0x00001ac6      0x1c6 /opt/prj/aPlus/src/syscall/chown.o
- .debug_line    0x00001c8c      0x11e /opt/prj/aPlus/src/syscall/test.o
- .debug_line    0x00001daa      0x117 /opt/prj/aPlus/src/syscall/_exit.o
- .debug_line    0x00001ec1      0x19e /opt/prj/aPlus/src/syscall/ioctl.o
- .debug_line    0x0000205f      0x1cd /opt/prj/aPlus/src/syscall/wait.o
- .debug_line    0x0000222c      0x1be /opt/prj/aPlus/src/syscall/fcntl.o
- .debug_line    0x000023ea      0x3d1 /opt/prj/aPlus/src/syscall/open.o
- .debug_line    0x000027bb      0x1b0 /opt/prj/aPlus/src/syscall/readdir.o
- .debug_line    0x0000296b      0x120 /opt/prj/aPlus/src/syscall/execve.o
- .debug_line    0x00002a8b      0x1e2 /opt/prj/aPlus/src/syscall/getgroups.o
- .debug_line    0x00002c6d      0x6df /opt/prj/aPlus/src/sched.o
- .debug_line    0x0000334c      0x58c /opt/prj/aPlus/src/fs/vfs.o
- .debug_line    0x000038d8      0x34f /opt/prj/aPlus/src/fs/pipe.o
- .debug_line    0x00003c27      0x2e0 /opt/prj/aPlus/src/fs/fs.o
- .debug_line    0x00003f07      0x329 /opt/prj/aPlus/src/fs/devfs.o
- .debug_line    0x00004230      0x56d /opt/prj/aPlus/src/panic.o
- .debug_line    0x0000479d      0x124 /opt/prj/aPlus/src/spinlock.o
- .debug_line    0x000048c1      0x587 /opt/prj/aPlus/src/mm/paging.o
- .debug_line    0x00004e48      0x496 /opt/prj/aPlus/src/mm/mm.o
- .debug_line    0x000052de      0x179 /opt/prj/aPlus/src/mm/heap.o
- .debug_line    0x00005457      0x375 /opt/prj/aPlus/src/mm/kheap.o
- .debug_line    0x000057cc       0xfb /opt/prj/aPlus/src/main.o
- .debug_line    0x000058c7      0x5b8 /opt/prj/aPlus/src/debug.o
- .debug_line    0x00005e7f      0x6c8 /opt/prj/aPlus/src/bufio.o
- .debug_line    0x00006547      0x5a0 /opt/prj/aPlus/src/arch/desc.o
- .debug_line    0x00006ae7      0x5ac /opt/prj/aPlus/src/arch/task.o
- .debug_line    0x00007093      0x459 /opt/prj/aPlus/src/arch/syscall.o
- .debug_line    0x000074ec      0x107 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- .debug_line    0x000075f3       0xed /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- .debug_line    0x000076e0       0x93 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
- .debug_line    0x00007773       0xac /opt/cross/usr/lib/libc.a(lib_a-memset.o)
- .debug_line    0x0000781f      0x800 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .debug_line    0x0000801f      0x83c /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .debug_line    0x0000885b       0xd7 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
- .debug_line    0x00008932      0x137 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .debug_line    0x00008a69       0xf9 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .debug_line    0x00008b62      0x683 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .debug_line    0x000091e5       0xa3 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
- .debug_line    0x00009288       0x71 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .debug_line    0x000092f9       0x5c /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
- .debug_line    0x00009355       0x75 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .debug_line    0x000093ca      0x158 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- .debug_line    0x00009522       0xe5 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
-
-.debug_str      0x00000000     0x23cd
- .debug_str     0x00000000      0x260 /opt/prj/aPlus/src/syscall/times.o
+.debug_str      0x00000000     0x263b
+ .debug_str     0x00000000       0xc7 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
+                                0x100 (dimensione prima del rilassamento)
+ .debug_str     0x000000c7      0x195 /opt/prj/aPlus/src/net/netif.o
+                                0x304 (dimensione prima del rilassamento)
+ .debug_str     0x0000025c      0x1b7 /opt/prj/aPlus/src/syscall/times.o
                                 0x37d (dimensione prima del rilassamento)
- .debug_str     0x00000260       0x6e /opt/prj/aPlus/src/syscall/sbrk.o
+ .debug_str     0x00000413       0x6e /opt/prj/aPlus/src/syscall/sbrk.o
                                 0x1bb (dimensione prima del rilassamento)
- .debug_str     0x000002ce       0x5b /opt/prj/aPlus/src/syscall/link.o
+ .debug_str     0x00000481       0x53 /opt/prj/aPlus/src/syscall/link.o
                                 0x1ad (dimensione prima del rilassamento)
- .debug_str     0x00000329       0x4c /opt/prj/aPlus/src/syscall/close.o
+ .debug_str     0x000004d4       0x4c /opt/prj/aPlus/src/syscall/close.o
                                 0x32f (dimensione prima del rilassamento)
- .debug_str     0x00000375       0xe1 /opt/prj/aPlus/src/syscall/fstat.o
+ .debug_str     0x00000520       0xe1 /opt/prj/aPlus/src/syscall/fstat.o
                                 0x3c9 (dimensione prima del rilassamento)
- .debug_str     0x00000456       0x5d /opt/prj/aPlus/src/syscall/yield.o
+ .debug_str     0x00000601       0x5d /opt/prj/aPlus/src/syscall/yield.o
                                 0x1aa (dimensione prima del rilassamento)
- .debug_str     0x000004b3       0x54 /opt/prj/aPlus/src/syscall/fork.o
+ .debug_str     0x0000065e       0x54 /opt/prj/aPlus/src/syscall/fork.o
                                 0x328 (dimensione prima del rilassamento)
- .debug_str     0x00000507       0x59 /opt/prj/aPlus/src/syscall/unlink.o
+ .debug_str     0x000006b2       0x59 /opt/prj/aPlus/src/syscall/unlink.o
                                 0x1ae (dimensione prima del rilassamento)
- .debug_str     0x00000560       0x55 /opt/prj/aPlus/src/syscall/stat.o
+ .debug_str     0x0000070b       0x55 /opt/prj/aPlus/src/syscall/stat.o
                                 0x2aa (dimensione prima del rilassamento)
- .debug_str     0x000005b5       0x63 /opt/prj/aPlus/src/syscall/kill.o
+ .debug_str     0x00000760       0x63 /opt/prj/aPlus/src/syscall/kill.o
                                 0x331 (dimensione prima del rilassamento)
- .debug_str     0x00000618       0x66 /opt/prj/aPlus/src/syscall/clone.o
-                                0x34d (dimensione prima del rilassamento)
- .debug_str     0x0000067e       0x5b /opt/prj/aPlus/src/syscall/read.o
+ .debug_str     0x000007c3       0x65 /opt/prj/aPlus/src/syscall/clone.o
+                                0x34c (dimensione prima del rilassamento)
+ .debug_str     0x00000828       0x54 /opt/prj/aPlus/src/syscall/read.o
                                 0x336 (dimensione prima del rilassamento)
- .debug_str     0x000006d9       0x57 /opt/prj/aPlus/src/syscall/write.o
+ .debug_str     0x0000087c       0x57 /opt/prj/aPlus/src/syscall/write.o
                                 0x339 (dimensione prima del rilassamento)
- .debug_str     0x00000730       0xa5 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .debug_str     0x000008d3       0xa5 /opt/prj/aPlus/src/syscall/gettimeofday.o
                                 0x20f (dimensione prima del rilassamento)
- .debug_str     0x000007d5       0x4e /opt/prj/aPlus/src/syscall/isatty.o
+ .debug_str     0x00000978       0x4e /opt/prj/aPlus/src/syscall/isatty.o
                                 0x19b (dimensione prima del rilassamento)
- .debug_str     0x00000823       0x5e /opt/prj/aPlus/src/syscall/getpid.o
+ .debug_str     0x000009c6       0x5e /opt/prj/aPlus/src/syscall/getpid.o
                                 0x1b1 (dimensione prima del rilassamento)
- .debug_str     0x00000881       0x4c /opt/prj/aPlus/src/syscall/lseek.o
+ .debug_str     0x00000a24       0x4c /opt/prj/aPlus/src/syscall/lseek.o
                                 0x327 (dimensione prima del rilassamento)
- .debug_str     0x000008cd       0x70 /opt/prj/aPlus/src/syscall/chown.o
+ .debug_str     0x00000a70       0x70 /opt/prj/aPlus/src/syscall/chown.o
                                 0x365 (dimensione prima del rilassamento)
- .debug_str     0x0000093d       0x50 /opt/prj/aPlus/src/syscall/test.o
+ .debug_str     0x00000ae0       0x50 /opt/prj/aPlus/src/syscall/test.o
                                 0x1a5 (dimensione prima del rilassamento)
- .debug_str     0x0000098d       0x60 /opt/prj/aPlus/src/syscall/_exit.o
+ .debug_str     0x00000b30       0x60 /opt/prj/aPlus/src/syscall/_exit.o
                                 0x1ad (dimensione prima del rilassamento)
- .debug_str     0x000009ed       0x4c /opt/prj/aPlus/src/syscall/ioctl.o
+ .debug_str     0x00000b90       0x4c /opt/prj/aPlus/src/syscall/ioctl.o
                                 0x332 (dimensione prima del rilassamento)
- .debug_str     0x00000a39       0x5a /opt/prj/aPlus/src/syscall/wait.o
+ .debug_str     0x00000bdc       0x5a /opt/prj/aPlus/src/syscall/wait.o
                                 0x351 (dimensione prima del rilassamento)
- .debug_str     0x00000a93       0x56 /opt/prj/aPlus/src/syscall/fcntl.o
+ .debug_str     0x00000c36       0x56 /opt/prj/aPlus/src/syscall/fcntl.o
                                 0x339 (dimensione prima del rilassamento)
- .debug_str     0x00000ae9       0x55 /opt/prj/aPlus/src/syscall/open.o
+ .debug_str     0x00000c8c       0x55 /opt/prj/aPlus/src/syscall/open.o
                                 0x35b (dimensione prima del rilassamento)
- .debug_str     0x00000b3e       0x52 /opt/prj/aPlus/src/syscall/readdir.o
+ .debug_str     0x00000ce1       0x52 /opt/prj/aPlus/src/syscall/readdir.o
                                 0x338 (dimensione prima del rilassamento)
- .debug_str     0x00000b90       0x5b /opt/prj/aPlus/src/syscall/execve.o
+ .debug_str     0x00000d33       0x5b /opt/prj/aPlus/src/syscall/execve.o
                                 0x1b1 (dimensione prima del rilassamento)
- .debug_str     0x00000beb       0x5f /opt/prj/aPlus/src/syscall/getgroups.o
+ .debug_str     0x00000d8e       0x5f /opt/prj/aPlus/src/syscall/getgroups.o
                                 0x1c6 (dimensione prima del rilassamento)
- .debug_str     0x00000c4a      0x14c /opt/prj/aPlus/src/sched.o
+ .debug_str     0x00000ded       0xf5 /opt/prj/aPlus/src/sched.o
                                 0x48b (dimensione prima del rilassamento)
- .debug_str     0x00000d96       0x90 /opt/prj/aPlus/src/fs/vfs.o
+ .debug_str     0x00000ee2       0x87 /opt/prj/aPlus/src/fs/vfs.o
                                 0x307 (dimensione prima del rilassamento)
- .debug_str     0x00000e26       0xda /opt/prj/aPlus/src/fs/pipe.o
+ .debug_str     0x00000f69       0xda /opt/prj/aPlus/src/fs/pipe.o
                                 0x37d (dimensione prima del rilassamento)
- .debug_str     0x00000f00       0x50 /opt/prj/aPlus/src/fs/fs.o
+ .debug_str     0x00001043       0x50 /opt/prj/aPlus/src/fs/fs.o
                                 0x2ab (dimensione prima del rilassamento)
- .debug_str     0x00000f50       0x3c /opt/prj/aPlus/src/fs/devfs.o
+ .debug_str     0x00001093       0x3c /opt/prj/aPlus/src/fs/devfs.o
                                 0x2e5 (dimensione prima del rilassamento)
- .debug_str     0x00000f8c       0xf3 /opt/prj/aPlus/src/panic.o
+ .debug_str     0x000010cf       0xf3 /opt/prj/aPlus/src/panic.o
                                 0x3fd (dimensione prima del rilassamento)
- .debug_str     0x0000107f       0x64 /opt/prj/aPlus/src/spinlock.o
+ .debug_str     0x000011c2       0x64 /opt/prj/aPlus/src/spinlock.o
                                 0x155 (dimensione prima del rilassamento)
- .debug_str     0x000010e3       0xf5 /opt/prj/aPlus/src/mm/paging.o
-                                0x2b9 (dimensione prima del rilassamento)
- .debug_str     0x000011d8       0x80 /opt/prj/aPlus/src/mm/mm.o
+ .debug_str     0x00001226       0xfe /opt/prj/aPlus/src/mm/paging.o
+                                0x2c8 (dimensione prima del rilassamento)
+ .debug_str     0x00001324       0x6c /opt/prj/aPlus/src/mm/mm.o
                                 0x296 (dimensione prima del rilassamento)
- .debug_str     0x00001258       0x1d /opt/prj/aPlus/src/mm/heap.o
+ .debug_str     0x00001390       0x1d /opt/prj/aPlus/src/mm/heap.o
                                 0x149 (dimensione prima del rilassamento)
- .debug_str     0x00001275      0x336 /opt/prj/aPlus/src/mm/kheap.o
+ .debug_str     0x000013ad      0x336 /opt/prj/aPlus/src/mm/kheap.o
                                 0x489 (dimensione prima del rilassamento)
- .debug_str     0x000015ab       0x49 /opt/prj/aPlus/src/main.o
-                                0x18c (dimensione prima del rilassamento)
- .debug_str     0x000015f4       0xb5 /opt/prj/aPlus/src/debug.o
+ .debug_str     0x000016e3       0x52 /opt/prj/aPlus/src/main.o
+                                0x18f (dimensione prima del rilassamento)
+ .debug_str     0x00001735       0xab /opt/prj/aPlus/src/debug.o
                                 0x1e6 (dimensione prima del rilassamento)
- .debug_str     0x000016a9       0x81 /opt/prj/aPlus/src/bufio.o
+ .debug_str     0x000017e0       0x81 /opt/prj/aPlus/src/bufio.o
                                 0x3fa (dimensione prima del rilassamento)
- .debug_str     0x0000172a      0x2a5 /opt/prj/aPlus/src/arch/desc.o
+ .debug_str     0x00001861      0x2a5 /opt/prj/aPlus/src/arch/desc.o
                                 0x45d (dimensione prima del rilassamento)
- .debug_str     0x000019cf       0x2c /opt/prj/aPlus/src/arch/task.o
-                                0x40c (dimensione prima del rilassamento)
- .debug_str     0x000019fb       0x6d /opt/prj/aPlus/src/arch/syscall.o
+ .debug_str     0x00001b06       0x2c /opt/prj/aPlus/src/arch/task.o
+                                0x402 (dimensione prima del rilassamento)
+ .debug_str     0x00001b32      0x137 /opt/prj/aPlus/src/arch/pci.o
+                                0x2df (dimensione prima del rilassamento)
+ .debug_str     0x00001c69       0x6d /opt/prj/aPlus/src/arch/syscall.o
                                 0x26c (dimensione prima del rilassamento)
- .debug_str     0x00001a68      0x40a /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .debug_str     0x00001cd6      0x40a /opt/cross/usr/lib/libc.a(lib_a-errno.o)
                                 0x506 (dimensione prima del rilassamento)
- .debug_str     0x00001e72       0x89 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .debug_str     0x000020e0       0x89 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
                                 0x51e (dimensione prima del rilassamento)
- .debug_str     0x00001efb      0x182 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .debug_str     0x00002169      0x182 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
                                 0x2c3 (dimensione prima del rilassamento)
- .debug_str     0x0000207d       0x9f /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .debug_str     0x000022eb       0x9f /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
                                 0x2aa (dimensione prima del rilassamento)
- .debug_str     0x0000211c       0x73 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .debug_str     0x0000238a       0x73 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
                                 0x146 (dimensione prima del rilassamento)
- .debug_str     0x0000218f       0x61 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .debug_str     0x000023fd       0x61 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
                                 0x168 (dimensione prima del rilassamento)
- .debug_str     0x000021f0       0x6c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .debug_str     0x0000245e       0x6c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
                                 0x544 (dimensione prima del rilassamento)
- .debug_str     0x0000225c       0x47 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .debug_str     0x000024ca       0x47 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
                                 0x162 (dimensione prima del rilassamento)
- .debug_str     0x000022a3       0x48 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ .debug_str     0x00002511       0x48 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
                                 0x157 (dimensione prima del rilassamento)
- .debug_str     0x000022eb       0x3a /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .debug_str     0x00002559       0x3a /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
                                  0xda (dimensione prima del rilassamento)
- .debug_str     0x00002325       0x6f /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .debug_str     0x00002593       0x6f /opt/cross/usr/lib/libc.a(lib_a-div.o)
                                 0x14d (dimensione prima del rilassamento)
- .debug_str     0x00002394       0x39 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+ .debug_str     0x00002602       0x39 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
                                 0x1be (dimensione prima del rilassamento)
 
 .comment        0x00000000       0x11
- .comment       0x00000000       0x11 /opt/prj/aPlus/src/syscall/times.o
+ .comment       0x00000000       0x11 /opt/prj/aPlus/src/net/rtl8139/rtl8139.o
                                  0x12 (dimensione prima del rilassamento)
+ .comment       0x00000000       0x12 /opt/prj/aPlus/src/net/netif.o
+ .comment       0x00000000       0x12 /opt/prj/aPlus/src/syscall/times.o
  .comment       0x00000000       0x12 /opt/prj/aPlus/src/syscall/sbrk.o
  .comment       0x00000000       0x12 /opt/prj/aPlus/src/syscall/link.o
  .comment       0x00000000       0x12 /opt/prj/aPlus/src/syscall/close.o
@@ -1323,6 +1330,7 @@ OUTPUT(aplus elf32-i386)
  .comment       0x00000000       0x12 /opt/prj/aPlus/src/bufio.o
  .comment       0x00000000       0x12 /opt/prj/aPlus/src/arch/desc.o
  .comment       0x00000000       0x12 /opt/prj/aPlus/src/arch/task.o
+ .comment       0x00000000       0x12 /opt/prj/aPlus/src/arch/pci.o
  .comment       0x00000000       0x12 /opt/prj/aPlus/src/arch/syscall.o
  .comment       0x00000000       0x12 /opt/cross/usr/lib/libposix.a(syscalls.o)
  .comment       0x00000000       0x12 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
@@ -1337,6 +1345,64 @@ OUTPUT(aplus elf32-i386)
  .comment       0x00000000       0x12 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
  .comment       0x00000000       0x12 /opt/cross/usr/lib/libc.a(lib_a-div.o)
  .comment       0x00000000       0x12 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+
+.debug_frame    0x00000000     0x2ea0
+ .debug_frame   0x00000000      0x1a0 /opt/prj/aPlus/src/net/netif.o
+ .debug_frame   0x000001a0       0x40 /opt/prj/aPlus/src/syscall/times.o
+ .debug_frame   0x000001e0       0x40 /opt/prj/aPlus/src/syscall/sbrk.o
+ .debug_frame   0x00000220       0x40 /opt/prj/aPlus/src/syscall/link.o
+ .debug_frame   0x00000260       0x40 /opt/prj/aPlus/src/syscall/close.o
+ .debug_frame   0x000002a0       0x40 /opt/prj/aPlus/src/syscall/fstat.o
+ .debug_frame   0x000002e0       0x40 /opt/prj/aPlus/src/syscall/yield.o
+ .debug_frame   0x00000320       0x40 /opt/prj/aPlus/src/syscall/fork.o
+ .debug_frame   0x00000360       0x40 /opt/prj/aPlus/src/syscall/unlink.o
+ .debug_frame   0x000003a0       0x40 /opt/prj/aPlus/src/syscall/stat.o
+ .debug_frame   0x000003e0       0x40 /opt/prj/aPlus/src/syscall/kill.o
+ .debug_frame   0x00000420       0x40 /opt/prj/aPlus/src/syscall/clone.o
+ .debug_frame   0x00000460       0x40 /opt/prj/aPlus/src/syscall/read.o
+ .debug_frame   0x000004a0       0x40 /opt/prj/aPlus/src/syscall/write.o
+ .debug_frame   0x000004e0       0x40 /opt/prj/aPlus/src/syscall/gettimeofday.o
+ .debug_frame   0x00000520       0x40 /opt/prj/aPlus/src/syscall/isatty.o
+ .debug_frame   0x00000560       0x40 /opt/prj/aPlus/src/syscall/getpid.o
+ .debug_frame   0x000005a0       0x40 /opt/prj/aPlus/src/syscall/lseek.o
+ .debug_frame   0x000005e0       0x40 /opt/prj/aPlus/src/syscall/chown.o
+ .debug_frame   0x00000620       0x40 /opt/prj/aPlus/src/syscall/test.o
+ .debug_frame   0x00000660       0x40 /opt/prj/aPlus/src/syscall/_exit.o
+ .debug_frame   0x000006a0       0x40 /opt/prj/aPlus/src/syscall/ioctl.o
+ .debug_frame   0x000006e0       0x40 /opt/prj/aPlus/src/syscall/wait.o
+ .debug_frame   0x00000720       0x40 /opt/prj/aPlus/src/syscall/fcntl.o
+ .debug_frame   0x00000760       0x6c /opt/prj/aPlus/src/syscall/open.o
+ .debug_frame   0x000007cc       0x40 /opt/prj/aPlus/src/syscall/readdir.o
+ .debug_frame   0x0000080c       0x40 /opt/prj/aPlus/src/syscall/execve.o
+ .debug_frame   0x0000084c       0x40 /opt/prj/aPlus/src/syscall/getgroups.o
+ .debug_frame   0x0000088c      0x3cc /opt/prj/aPlus/src/sched.o
+ .debug_frame   0x00000c58      0x1f8 /opt/prj/aPlus/src/fs/vfs.o
+ .debug_frame   0x00000e50       0xc4 /opt/prj/aPlus/src/fs/pipe.o
+ .debug_frame   0x00000f14      0x1d8 /opt/prj/aPlus/src/fs/fs.o
+ .debug_frame   0x000010ec       0x6c /opt/prj/aPlus/src/fs/devfs.o
+ .debug_frame   0x00001158      0x428 /opt/prj/aPlus/src/panic.o
+ .debug_frame   0x00001580       0xc4 /opt/prj/aPlus/src/spinlock.o
+ .debug_frame   0x00001644      0x358 /opt/prj/aPlus/src/mm/paging.o
+ .debug_frame   0x0000199c      0x224 /opt/prj/aPlus/src/mm/mm.o
+ .debug_frame   0x00001bc0       0x6c /opt/prj/aPlus/src/mm/heap.o
+ .debug_frame   0x00001c2c       0xf8 /opt/prj/aPlus/src/mm/kheap.o
+ .debug_frame   0x00001d24       0x60 /opt/prj/aPlus/src/main.o
+ .debug_frame   0x00001d84      0x1ac /opt/prj/aPlus/src/debug.o
+ .debug_frame   0x00001f30      0x2c0 /opt/prj/aPlus/src/bufio.o
+ .debug_frame   0x000021f0      0x230 /opt/prj/aPlus/src/arch/desc.o
+ .debug_frame   0x00002420      0x168 /opt/prj/aPlus/src/arch/task.o
+ .debug_frame   0x00002588      0x378 /opt/prj/aPlus/src/arch/pci.o
+ .debug_frame   0x00002900      0x1ac /opt/prj/aPlus/src/arch/syscall.o
+ .debug_frame   0x00002aac       0x24 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .debug_frame   0x00002ad0       0xd0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .debug_frame   0x00002ba0      0x118 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .debug_frame   0x00002cb8       0x44 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .debug_frame   0x00002cfc       0x58 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .debug_frame   0x00002d54       0x5c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .debug_frame   0x00002db0       0x34 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .debug_frame   0x00002de4       0x24 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .debug_frame   0x00002e08       0x74 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .debug_frame   0x00002e7c       0x24 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
 
 .debug_loc      0x00000000     0x1195
  .debug_loc     0x00000000      0x5a5 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
