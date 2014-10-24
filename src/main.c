@@ -32,6 +32,11 @@
 #include <sys/times.h>
 #include <time.h>
 
+#include <aplus/netif.h>
+#include <aplus/net/eth.h>
+#include <aplus/net/ipv4.h>
+#include <aplus/net/ipv6.h>
+
 
 extern inode_t* vfs_root;
 extern task_t* current_task;
@@ -56,9 +61,9 @@ int main() {
 	schedule_init();
 	syscall_init();
 	pci_init();
+	netif_init();
 	
 	vfs_map(devfs_mount());
-
 
 
 /*

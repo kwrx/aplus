@@ -62,6 +62,23 @@ bufio_t* bufio_alloc(size_t size) {
 	return buf;
 }
 
+bufio_t* bufio_alloc_raw(void* raw, size_t size) {
+	lock();	
+	buffers_length += size;
+
+	bufio_t* buf = (bufio_t*) kmalloc(size);
+	buf->raw = raw;
+	buf->size = size;
+	buf->offset = (off_t) 0;
+	buf->task = current_task;
+	
+	list_add(list_buffers, (listval_t) buf);
+
+	unlock();
+	
+	return buf;
+}
+
 void bufio_free(bufio_t* buf) {
 	lock();
 	buffers_length -= buf->size;
@@ -138,4 +155,18 @@ int bufio_write(bufio_t* buf, void* ptr, size_t len) {
 	spinlock_unlock(&buf->lock);
 	
 	return (int) len;
+}
+
+list_t* bufio_find_by_type(uint32_t type) {
+	list_t* tmp;
+	list_init(tmp);
+	
+	list_foreach(value, list_buffers) {
+		bufio_t* buf = (bufio_t*) value;
+
+		if(buf->type == type)
+			list_add(tmp, (listval_t) buf);
+	}
+	
+	return tmp;
 }

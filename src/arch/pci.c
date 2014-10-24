@@ -26,10 +26,10 @@ static int pci_get_address(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offse
 static uint32_t pci_config_read(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset) {
 	outl(PCI_CONFIG_ADDRESS, pci_get_address(bus, dev, func, offset));
 	
-	if(offset % 2 == 0)
+	if(offset % 4 == 0)
 		return inl(PCI_CONFIG_DATA);
 
-	return (inl(PCI_CONFIG_DATA) >> ((offset % 2) * 8)) & 0xFFFF;
+	return (inl(PCI_CONFIG_DATA) >> ((offset % 4) * 8));
 }
 
 
@@ -42,23 +42,23 @@ static uint32_t pci_get_vendor_id(pci_device_t* device) {
 }
 
 static uint32_t pci_get_intr_pin(pci_device_t* device) {
-	return pci_config_read(device->bus, device->dev, device->func, 0x3D) & 0xFFFF;
+	return pci_config_read(device->bus, device->dev, device->func, 0x3D) & 0xFF;
 }
 
 static uint32_t pci_get_intr_line(pci_device_t* device) {
-	return pci_config_read(device->bus, device->dev, device->func, 0x3C) & 0xFFFF;
+	return pci_config_read(device->bus, device->dev, device->func, 0x3C) & 0xFF;
 }
 
 static uint32_t pci_get_revision(pci_device_t* device) {
-	return pci_config_read(device->bus, device->dev, device->func, 0x08) & 0xFFFF;
+	return pci_config_read(device->bus, device->dev, device->func, 0x08) & 0xFF;
 }
 
 static uint32_t pci_get_class(pci_device_t* device) {
-	return ((pci_config_read(device->bus, device->dev, device->func, 0x08) & 0xFFFF) >> 8);
+	return pci_config_read(device->bus, device->dev, device->func, 0x0B) & 0xFF;
 }
 
 static uint32_t pci_get_header_type(pci_device_t* device) {
-	return ((pci_config_read(device->bus, device->dev, device->func, 0x0E) & 0xFFFF) & 127);
+	return pci_config_read(device->bus, device->dev, device->func, 0x0E) & 0x7F;
 }
 
 
@@ -70,7 +70,7 @@ static uint32_t pci_get_bar(pci_device_t* device, uint8_t bar) {
 	if(header == 0x02 || (header == 0x01 && bar < 2))
 		return 0;
 
-	uint8_t reg = 0x10 + 0x04 * bar;
+	uint8_t reg = 0x10 + (0x04 * bar);
 	return pci_config_read(device->bus, device->dev, device->func, reg);
 }
 
@@ -117,7 +117,7 @@ static void pci_load_device(pci_device_t* device, uint8_t bus, uint8_t dev, uint
 }
 
 
-pci_device_t* pci_find_by_id(pci_device_t* device, uint32_t vendorID, uint32_t deviceID) {
+pci_device_t* pci_find_by_id(uint32_t vendorID, uint32_t deviceID) {
 	for(int i = 0; i < PCI_MAX_DEVICES; i++) {
 		if(pci_devices[i].vendorID != vendorID && pci_devices[i].deviceID != deviceID)
 			continue;

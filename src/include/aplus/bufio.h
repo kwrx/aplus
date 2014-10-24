@@ -33,6 +33,7 @@ typedef struct bufio {
 	void* raw;
 	size_t size;
 	off_t offset;
+	uint32_t type;
 	spinlock_t lock;
 	task_t* task;
 } bufio_t;
