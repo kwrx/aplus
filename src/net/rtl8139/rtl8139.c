@@ -239,6 +239,34 @@ int rtl8139_init() {
 	card->netif->ipv6[6] = 0xfef9;
 	card->netif->ipv6[7] = 0x9b71;
 
+	card->netif->dns.primary.ipv4[0] = 8;
+	card->netif->dns.primary.ipv4[1] = 8;
+	card->netif->dns.primary.ipv4[2] = 8;
+	card->netif->dns.primary.ipv4[3] = 8;
+
+	card->netif->dns.secondary.ipv4[0] = 8;
+	card->netif->dns.secondary.ipv4[1] = 8;
+	card->netif->dns.secondary.ipv4[2] = 4;
+	card->netif->dns.secondary.ipv4[3] = 4;
+	
+
+	card->netif->dns.primary.ipv6[0] = 0x2001;
+	card->netif->dns.primary.ipv6[1] = 0x4860;
+	card->netif->dns.primary.ipv6[2] = 0x4860;
+	card->netif->dns.primary.ipv6[3] = 0x0000;
+	card->netif->dns.primary.ipv6[4] = 0x0000;
+	card->netif->dns.primary.ipv6[5] = 0x0000;
+	card->netif->dns.primary.ipv6[6] = 0x0000;
+	card->netif->dns.primary.ipv6[7] = 0x8888;
+	card->netif->dns.secondary.ipv6[0] = 0x2001;
+	card->netif->dns.secondary.ipv6[1] = 0x4860;
+	card->netif->dns.secondary.ipv6[2] = 0x4860;
+	card->netif->dns.secondary.ipv6[3] = 0x4860;
+	card->netif->dns.secondary.ipv6[4] = 0x0000;
+	card->netif->dns.secondary.ipv6[5] = 0x0000;
+	card->netif->dns.secondary.ipv6[6] = 0x0000;
+	card->netif->dns.secondary.ipv6[7] = 0x8844;
+
 
 	card->netif->mtu = 1500;
 	card->netif->send = rtl8139_send;

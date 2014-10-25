@@ -37,6 +37,18 @@ typedef struct netif {
 	macaddr_t macaddr;
 
 	struct {
+		struct {
+			ipv4_t ipv4;
+			ipv6_t ipv6;
+		} primary;
+
+		struct {
+			ipv4_t ipv4;
+			ipv6_t ipv6;
+		} secondary;
+	} dns;
+
+	struct {
 		uint64_t rx_packets;
 		uint64_t rx_bytes;
 		uint64_t rx_errors;

@@ -89,7 +89,7 @@ int loopback_init() {
 	netif->netmask[1] = 255;
 	netif->netmask[2] = 255;
 	netif->netmask[3] = 255;
-	
+
 
 	netif->mtu = LOOPBACK_MTU;
 	netif->send = loopback_send;

@@ -120,7 +120,7 @@ int netif_add(netif_t* netdev) {
 	}
 
 
-	kprintf("%s:\tipv4 %d.%d.%d.%d, netmask: %d.%d.%d.%d\n",
+	kprintf("\n%s:\tipv4 %d.%d.%d.%d, netmask: %d.%d.%d.%d\n",
 			netdev->name,
 			netdev->ipv4[0],
 			netdev->ipv4[1],
@@ -151,6 +151,36 @@ int netif_add(netif_t* netdev) {
 			netdev->macaddr[4],
 			netdev->macaddr[5],
 			netdev->mtu
+	);
+
+	kprintf("\tdns\t%d.%d.%d.%d\n\t\t%d.%d.%d.%d\n",
+			netdev->dns.primary.ipv4[0],
+			netdev->dns.primary.ipv4[1],
+			netdev->dns.primary.ipv4[2],
+			netdev->dns.primary.ipv4[3],
+			netdev->dns.secondary.ipv4[0],
+			netdev->dns.secondary.ipv4[1],
+			netdev->dns.secondary.ipv4[2],
+			netdev->dns.secondary.ipv4[3]
+	);
+
+	kprintf("\tdns\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
+			netdev->dns.primary.ipv6[0],
+			netdev->dns.primary.ipv6[1],
+			netdev->dns.primary.ipv6[2],
+			netdev->dns.primary.ipv6[3],
+			netdev->dns.primary.ipv6[4],
+			netdev->dns.primary.ipv6[5],
+			netdev->dns.primary.ipv6[6],
+			netdev->dns.primary.ipv6[7],
+			netdev->dns.secondary.ipv6[0],
+			netdev->dns.secondary.ipv6[1],
+			netdev->dns.secondary.ipv6[2],
+			netdev->dns.secondary.ipv6[3],
+			netdev->dns.secondary.ipv6[4],
+			netdev->dns.secondary.ipv6[5],
+			netdev->dns.secondary.ipv6[6],
+			netdev->dns.secondary.ipv6[7]
 	);
 
 	return list_add(lst_netif, (listval_t) netdev);
