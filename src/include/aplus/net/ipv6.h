@@ -10,7 +10,6 @@
 #define IPV6_PROTO_RAW					0
 #define IPV6_PROTO_ICMP					1
 #define IPV6_PROTO_TCP					6
-#define IPV6_PROTO_TELNET				14
 #define IPV6_PROTO_UDP					17
 
 typedef struct ipv6_header {

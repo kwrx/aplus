@@ -22,7 +22,6 @@
 #define IPV4_PROTO_RAW					0
 #define IPV4_PROTO_ICMP					1
 #define IPV4_PROTO_TCP					6
-#define IPV4_PROTO_TELNET				14
 #define IPV4_PROTO_UDP					17
 
 #define IPV4_MAX_LENGTH					65536

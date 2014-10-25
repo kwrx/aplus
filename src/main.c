@@ -66,9 +66,7 @@ int main() {
 	
 	vfs_map(devfs_mount());
 
-
-	/* TODO: Fix ipv4 */
-
+	
 /*
 	if(fork() == 0)
 		execl("/bin/init", "/bin/init", 0);

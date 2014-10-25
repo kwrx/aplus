@@ -12,25 +12,42 @@
 
 
 int ipv6_recv(netif_t* netif, void* buf, size_t length, int type) {
-	ipv6_header_t* ip = (ipv6_header_t*) kmalloc(length + sizeof(ipv6_header_t));
+	ipv6_header_t* ip = (ipv6_header_t*) buf;
 	
-	int ret = 0;
-	if((ret = eth_recv(netif, ip, length + sizeof(ipv6_header_t), NETIF_INET6)) == 0) {
-		kfree(ip);
+	if(IPV6_CHECK_VERSION(ip) == 0)
 		return 0;
+
+
+	#define __params	\
+		netif, (void*) ((uint32_t) ip + sizeof(ipv6_header_t)), length - sizeof(ipv6_header_t)
+
+	switch(ip->protocol) {
+		case IPV6_PROTO_UDP:
+			//if(udp_recv(__params) == 0)
+			//	return 0;
+			return length;
+		
+		case IPV6_PROTO_TCP:
+			//if(tcp_recv(__params) == 0)		/* Support for TCP ?? -> pfff.. ù.ù */
+			//	return 0;
+			return length;
+
+		case IPV6_PROTO_ICMP:
+			//if(icmp_recv(__params) == 0)
+			//	return 0;
+			return length;
 	}
 
-	if(IPV6_CHECK_VERSION(ip) == 0) {
-		kfree(ip);
-		return 0;
-	}
+	/* IPV6_PROTO_RAW */
+	netif_packets_add (
+		netif_packets_create (
+							NETIF_INET6, 
+							length, 
+							sizeof(ipv6_header_t), 
+							buf
+		)
+	);
 
-	if(length > ip->length)
-		length = ip->length;
-
-	memcpy(buf, (void*) ((uint32_t) ip + sizeof(ipv6_header_t)), length);
-	kfree(ip);
-	
 	return length;
 }
 
@@ -52,9 +69,6 @@ int ipv6_send(netif_t* netif, void* buf, size_t length, int type, ipv6_t dest) {
 		case NETIF_ICMP:
 			ip->protocol = IPV6_PROTO_ICMP;
 			break;
-		case NETIF_TELNET:
-			ip->protocol = IPV6_PROTO_TELNET;
-			break;
 		default:
 			ip->protocol = IPV6_PROTO_RAW;
 			break;
@@ -67,5 +81,8 @@ int ipv6_send(netif_t* netif, void* buf, size_t length, int type, ipv6_t dest) {
 	int ret = eth_send(netif, (void*) ip, length + sizeof(ipv6_header_t), NETIF_INET6);
 	kfree(ip);
 
-	return ret;
+	if(ret)
+		return length;
+	
+	return 0;
 }

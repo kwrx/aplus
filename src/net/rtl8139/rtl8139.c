@@ -34,7 +34,21 @@ typedef struct card {
 list_t* lst_packets = NULL;
 card_t* card = NULL;
 
+
+int rtl8139_ifup(netif_t* netif) {
+	netif->flags |= NETIF_FLAGS_ENABLE;
+	return 0;
+}
+
+int rtl8139_ifdown(netif_t* netif) {
+	netif->flags &= ~NETIF_FLAGS_ENABLE;
+	return 0;
+}
+
 int rtl8139_send(netif_t* netif, void* buf, size_t len, int type) {
+	if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
+		return 0;
+
 	card_t* card = netif->data;
 	if(card->magic != RTL8139_MAGIC)
 		return 0;
@@ -64,56 +78,11 @@ int rtl8139_send(netif_t* netif, void* buf, size_t len, int type) {
 	return len;
 }
 
-int rtl8139_recv(netif_t* netif, void* buf, size_t len, int type) {
-	card_t* card = netif->data;
-	if(card->magic != RTL8139_MAGIC)
-		return 0;
-
-	list_t* lst_packets = (list_t*) bufio_find_by_type(card->magic);
-	if(list_empty(lst_packets)) {
-		list_destroy(lst_packets);
-		return 0;
-	}
-
-	bufio_t* pkt = (bufio_t*) NULL;
-	register int fnd = 0;
-
-	list_foreach(value, lst_packets) {
-		bufio_t* pp = (bufio_t*) pp;
-
-		switch(type) {
-			case NETIF_ETH:
-				if(pp->size < sizeof(eth_header_t))
-					continue;
-				pkt = pp;
-				fnd = 1;
-				break;
-			default:
-				pkt = pp;
-				fnd = 1;
-				break;
-		}
-		
-		if(fnd)
-			break;
-	}
-
-	list_destroy(lst_packets);
-
-	if(pkt == NULL)
-		return 0;
-
-	int ret = bufio_read(pkt, buf, len);
-
-	if(ret == 0 || ret >= pkt->size)
-		bufio_free(pkt);
-
-	return ret;
-}
-
-
 
 static void recvdata(card_t* card) {
+	if((card->netif->flags & NETIF_FLAGS_ENABLE) == 0)
+		return;
+
 	while(1) {
 		uint8_t cmd = int_in8(card, REG_COMMAND);
 	
@@ -142,11 +111,13 @@ static void recvdata(card_t* card) {
 		kprintf("rtl8139: receveid %d bytes\n", length);
 #endif
 
-		bufio_t* pkt = (bufio_t*) bufio_alloc_raw(data, length);
-		pkt->type = card->magic;
+		if(eth_recv(card->netif, data, length) > 0) {
+			card->netif->state.rx_packets += 1;
+			card->netif->state.rx_bytes += length;
+		} else
+			card->netif->state.rx_errors += 1;
+		
 
-		card->netif->state.rx_packets += 1;
-		card->netif->state.rx_bytes += length;
 		card->rxBufferOffset += length + 4;
 		card->rxBufferOffset = (card->rxBufferOffset + 3) & ~3;
 		card->rxBufferOffset %= RX_BUFFER_SIZE;
@@ -258,11 +229,21 @@ int rtl8139_init() {
 	card->netif->netmask[1] = 255;
 	card->netif->netmask[2] = 255;
 	card->netif->netmask[3] = 0;
-	
+
+	card->netif->ipv6[0] = 0xfe80;
+	card->netif->ipv6[1] = 0x0000;
+	card->netif->ipv6[2] = 0x0000;
+	card->netif->ipv6[3] = 0x0000;
+	card->netif->ipv6[4] = 0x021d;
+	card->netif->ipv6[5] = 0x72ff;
+	card->netif->ipv6[6] = 0xfef9;
+	card->netif->ipv6[7] = 0x9b71;
+
 
 	card->netif->mtu = 1500;
 	card->netif->send = rtl8139_send;
-	card->netif->recv = rtl8139_recv;
+	card->netif->ifup = rtl8139_ifup;
+	card->netif->ifdown = rtl8139_ifdown;
 	card->netif->data = (void*) card;
 
 	netif_add(card->netif);

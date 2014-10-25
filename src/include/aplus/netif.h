@@ -23,6 +23,10 @@ typedef uint8_t macaddr_t[6];
 #define NETIF_TELNET		8
 
 
+#define NETIF_FLAGS_ENABLE			1
+
+
+
 typedef struct netif {
 	char name[32];
 	void* data;
@@ -45,11 +49,23 @@ typedef struct netif {
 	} state;
 
 	int (*send) (struct netif*, void*, size_t, int);
-	int (*recv) (struct netif*, void*, size_t, int);
+	int (*ifup)	(struct netif*);
+	int (*ifdown) (struct netif*);
 
 	uint32_t mtu;
+	uint32_t flags;
 
 	pci_device_t* device;
 } netif_t;
+
+
+typedef struct netif_packet {
+	uint64_t id;
+	int protocol;
+	int length;
+
+	void* header;
+	void* data;
+} netif_packet_t;
 
 #endif
