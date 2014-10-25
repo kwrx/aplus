@@ -25,23 +25,31 @@
 
 
 void spinlock_lock(spinlock_t* spin) {
-	spinlock_waiton(*spin);	
-	*spin = 1;
+	if((*spin & SPINLOCK_FLAGS_FASTLOCK) == 0)
+		spinlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
+	else
+		fastlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
+
+	*spin |= SPINLOCK_FLAGS_LOCKED;
 }
 
 
 void spinlock_unlock(spinlock_t* spin) {
-	*spin = 0;
+	*spin &= ~SPINLOCK_FLAGS_LOCKED;
 }
 
 int spinlock_trylock(spinlock_t* spin) {
-	if(*spin)
+	if(*spin & SPINLOCK_FLAGS_LOCKED)
 		return -1;
 		
-	*spin = 1;
+	*spin |= SPINLOCK_FLAGS_LOCKED;
 	return 0;
 }
 
 void __spinlock_waiton() {
 	schedule_yield();
+}
+
+void __fastlock_waiton() {
+	__asm__ __volatile__("pause");
 }

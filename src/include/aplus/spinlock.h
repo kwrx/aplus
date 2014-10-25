@@ -23,12 +23,16 @@
 #ifndef _SPINLOCK_H
 #define _SPINLOCK_H
 
+#define SPINLOCK_FLAGS_LOCKED						1
+#define SPINLOCK_FLAGS_FASTLOCK						2
+
 typedef volatile int spinlock_t;
 
 void spinlock_lock(spinlock_t* spin);
 void spinlock_unlock(spinlock_t* spin);
 int spinlock_trylock(spinlock_t* spin); 
 void __spinlock_waiton();
+void __fastlock_waiton();
 
 
 #define lock()										\
@@ -43,6 +47,14 @@ void __spinlock_waiton();
 #define spinlock_waiton(cond)						\
 	while(cond)										\
 		__spinlock_waiton()
+
+#define fastlock_waiton(cond)						\
+	while(cond)										\
+		__fastlock_waiton()
+
+
+#define spinlock_init(spin, flags)					\
+	*(spin) = flags
 
 
 #endif

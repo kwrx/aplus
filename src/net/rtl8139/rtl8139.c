@@ -58,7 +58,7 @@ int rtl8139_send(netif_t* netif, void* buf, size_t len, int type) {
 		return 0;
 	}
 
-	spinlock_waiton(card->txBufferUsed);
+	fastlock_waiton(card->txBufferUsed);
 
 	memcpy(card->txBuffer, buf, len);
 	if(len < 60) {
