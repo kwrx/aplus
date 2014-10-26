@@ -1,6 +1,8 @@
 #ifndef _RTL8139_H
 #define _RTL8139_H
 
+#include <aplus/netif.h>
+
 #define REG_ID0									0x00
 #define REG_ID4									0x04
 
@@ -48,6 +50,5 @@
 #define int_in16(card, port) 					inw(card->device->iobase + port)
 
 #define RTL8139_MAGIC							0x8139FFFF
-#define RTL8139_DEBUG
 
 #endif

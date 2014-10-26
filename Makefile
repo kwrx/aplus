@@ -42,7 +42,7 @@ aplus : $(OFILES)
 
 iso: aplus
 	grub-mkrescue $(TOP)/bin -o $(TOP)/aplus.iso
-	qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139
+	qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net user -monitor stdio
 
 
 clean:

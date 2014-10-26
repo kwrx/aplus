@@ -26,6 +26,9 @@ typedef uint8_t macaddr_t[6];
 #define NETIF_FLAGS_ENABLE			1
 
 
+#define ARP_DEBUG
+#define RTL8139_DEBUG
+
 
 typedef struct netif {
 	char name[32];
@@ -78,6 +81,8 @@ typedef struct netif_packet {
 
 	void* header;
 	void* data;
+
+	netif_t* netif;
 } netif_packet_t;
 
 #endif

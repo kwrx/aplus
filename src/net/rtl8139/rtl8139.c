@@ -49,7 +49,7 @@ int rtl8139_send(netif_t* netif, void* buf, size_t len, int type) {
 	if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
 		return 0;
 
-	card_t* card = netif->data;
+	card_t* card = (card_t*) netif->data;
 	if(card->magic != RTL8139_MAGIC)
 		return 0;
 
@@ -158,6 +158,7 @@ int rtl8139_init() {
 	}
 	
 	card = kmalloc(sizeof(card_t));
+	card->magic = RTL8139_MAGIC;
 	card->device = device;
 
 	int_out8(card, REG_CONFIG1, 0);
@@ -261,7 +262,7 @@ int rtl8139_init() {
 	card->netif->dns.secondary.ipv6[0] = 0x2001;
 	card->netif->dns.secondary.ipv6[1] = 0x4860;
 	card->netif->dns.secondary.ipv6[2] = 0x4860;
-	card->netif->dns.secondary.ipv6[3] = 0x4860;
+	card->netif->dns.secondary.ipv6[3] = 0x0000;
 	card->netif->dns.secondary.ipv6[4] = 0x0000;
 	card->netif->dns.secondary.ipv6[5] = 0x0000;
 	card->netif->dns.secondary.ipv6[6] = 0x0000;

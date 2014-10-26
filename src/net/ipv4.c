@@ -101,6 +101,7 @@ int ipv4_recv(netif_t* netif, void* buf, size_t length) {
 	/* IPV4_PROTO_RAW */
 	netif_packets_add (
 		netif_packets_create (
+							netif,
 							NETIF_INET, 
 							length, 
 							IPV4_HEADER_LENGTH(ip), 

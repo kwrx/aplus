@@ -157,16 +157,16 @@ int pci_init() {
 				pci_load_device(&pci_devices[i], bus, dev, func);
 
 #if 1
-				kprintf("pci: %d:%d.%d: [%x:%x] 0x%x (rev %x class %x iobase %x type %x int %d pin %d)\n",
+				kprintf("pci: %d:%d.%d: [%x:%x] (rev %x class %x iobase %x mmio %x type %x int %d pin %d)\n",
 							pci_devices[i].bus,
 							pci_devices[i].dev,
 							pci_devices[i].func,
 							pci_devices[i].vendorID,
 							pci_devices[i].deviceID,
-							pci_devices[i].pci_class,
 							pci_devices[i].revision,
 							pci_devices[i].pci_class,
 							pci_devices[i].iobase,
+							pci_devices[i].membase,
 							pci_devices[i].header,
 							pci_devices[i].intr_line,
 							pci_devices[i].intr_pin);

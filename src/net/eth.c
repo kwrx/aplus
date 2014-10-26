@@ -26,8 +26,8 @@ int eth_recv(netif_t* netif, void* buf, size_t length) {
 			return length;
 
 		case ETH_TYPE_ARP:
-			//if(arp_recv(__params) == 0)
-			//	return 0;
+			if(arp_recv(__params) == 0)
+				return 0;
 			return length;
 	}
 
@@ -35,6 +35,7 @@ int eth_recv(netif_t* netif, void* buf, size_t length) {
 	/* ETH_TYPE_RAW */
 	netif_packets_add (
 		netif_packets_create (
+							netif,
 							NETIF_ETH, 
 							length, 
 							sizeof(eth_header_t), 

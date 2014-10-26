@@ -12,6 +12,8 @@
 #define ETH_TYPE_IPV4			0x0800
 #define ETH_TYPE_ARP			0x0806
 #define ETH_TYPE_IPV6			0x86DD
+#define ETH_TYPE_WAKEONLAN		0x0842
+#define ETH_TYPE_RARP			0x8035
 #define ETH_TYPE_RAW			0xFFFF
 
 

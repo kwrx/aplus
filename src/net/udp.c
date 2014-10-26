@@ -13,6 +13,7 @@ int udp_recv(netif_t* netif, void* buf, size_t length) {
 	
 	netif_packets_add (
 		netif_packets_create (
+							netif,
 							NETIF_UDP, 
 							length, 
 							sizeof(udp_header_t), 

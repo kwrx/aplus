@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <aplus/net/arp.h>
+
 
 static list_t* lst_netif = NULL;
 static list_t* lst_packets = NULL;
@@ -79,6 +81,8 @@ int netif_ifup() {
 
 		if(netif->ifup)
 			netif->ifup(netif);
+
+		arp_send(netif);
 	}
 
 	return -1;
@@ -120,7 +124,7 @@ int netif_add(netif_t* netdev) {
 	}
 
 
-	kprintf("\n%s:\tipv4 %d.%d.%d.%d, netmask: %d.%d.%d.%d\n",
+	kprintf("\n%s:\tipv4\t%d.%d.%d.%d\n\tnetmask\t%d.%d.%d.%d\n",
 			netdev->name,
 			netdev->ipv4[0],
 			netdev->ipv4[1],
@@ -132,7 +136,7 @@ int netif_add(netif_t* netdev) {
 			netdev->netmask[3]
 	);
 
-	kprintf("\tipv6 %04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
+	kprintf("\tipv6\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
 			netdev->ipv6[0],
 			netdev->ipv6[1],
 			netdev->ipv6[2],
@@ -143,7 +147,7 @@ int netif_add(netif_t* netdev) {
 			netdev->ipv6[7]
 	);
 
-	kprintf("\tmacaddr %02x:%02x:%02x:%02x:%02x:%02x, mtu %d\n",
+	kprintf("\tmacaddr\t%02x:%02x:%02x:%02x:%02x:%02x\n\tmtu\t%d bytes\n",
 			netdev->macaddr[0],
 			netdev->macaddr[1],
 			netdev->macaddr[2],
@@ -164,7 +168,7 @@ int netif_add(netif_t* netdev) {
 			netdev->dns.secondary.ipv4[3]
 	);
 
-	kprintf("\tdns\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
+	kprintf("\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
 			netdev->dns.primary.ipv6[0],
 			netdev->dns.primary.ipv6[1],
 			netdev->dns.primary.ipv6[2],
@@ -251,8 +255,9 @@ list_t* netif_packets_find_by_protocol(int protocol) {
 	return tmp;
 }
 
-netif_packet_t* netif_packets_create(int protocol, int tot_length, int head_length, void* data) {
+netif_packet_t* netif_packets_create(netif_t* netif, int protocol, int tot_length, int head_length, void* data) {
 	netif_packet_t* pkt = (netif_packet_t*) kmalloc(sizeof(netif_packet_t) + tot_length);
+	pkt->netif = netif;
 	pkt->protocol = protocol;
 	pkt->length = tot_length - head_length;
 	
