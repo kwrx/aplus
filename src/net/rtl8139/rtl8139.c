@@ -31,8 +31,10 @@ typedef struct card {
 	int magic;
 } card_t;
 
-list_t* lst_packets = NULL;
-card_t* card = NULL;
+
+static card_t* card = NULL;
+static uint8_t rtl8139_rxbuffer[RX_BUFFER_SIZE + 16] = { };
+static uint8_t rtl8139_txbuffer[TX_BUFFER_SIZE + 16] = { }; 
 
 
 int rtl8139_ifup(netif_t* netif) {
@@ -92,6 +94,8 @@ static void recvdata(card_t* card) {
 		uint16_t* rxBuffer = (uint16_t*) ((uint32_t) card->rxBuffer + card->rxBufferOffset);
 		uint16_t head = *rxBuffer++;
 
+		kprintf("head: %x\n", head);
+
 		if((head & 1) == 0)
 			break;
 
@@ -99,6 +103,7 @@ static void recvdata(card_t* card) {
 		length -= 4;
 
 		card->rxBufferOffset += 4;
+
 
 		void* data = kmalloc(length);
 		if((card->rxBufferOffset + length) >= RX_BUFFER_SIZE) {
@@ -111,7 +116,11 @@ static void recvdata(card_t* card) {
 		kprintf("rtl8139: receveid %d bytes\n", length);
 #endif
 
+#ifdef USERNET
+		if(udp_recv(card->netif, data, length) > 0) {
+#else
 		if(eth_recv(card->netif, data, length) > 0) {
+#endif
 			card->netif->state.rx_packets += 1;
 			card->netif->state.rx_bytes += length;
 		} else
@@ -140,6 +149,9 @@ static void rtl8139_handler(void* unused) {
 	}
 
 	if(isr & ISR_RECEIVE_OK) {
+#ifdef RTL8139_DEBUG
+		kprintf("rtl8139: Received data\n");
+#endif
 		recvdata(card);
 		nsr |= ISR_RECEIVE_OK;
 	}
@@ -200,13 +212,13 @@ int rtl8139_init() {
 	int_out32(card, REG_RECEIVE_CONFIGURATION, RCR_MXDMA_UNLIMITED | RCR_ACCEPT_BROADCAST | RCR_ACCEPT_PHYS_MATCH);
 	int_out32(card, REG_TRANSMIT_CONFIGURATION, TCR_IFG_STANDARD | TCR_MXDMA_2048);
 
-	card->rxBuffer = (char*) kmalloc(RX_BUFFER_SIZE + 16);
+	card->rxBuffer = (char*) rtl8139_rxbuffer;
 	memset(card->rxBuffer, 0, RX_BUFFER_SIZE + 16);
 
 	card->rxBufferOffset = 0;
 	int_out32(card, REG_RECEIVE_BUFFER, (uint32_t) card->rxBuffer);
 
-	card->txBuffer = (char*) kmalloc(TX_BUFFER_SIZE + 16);
+	card->txBuffer = (char*) rtl8139_txbuffer;
 	memset(card->txBuffer, 0, TX_BUFFER_SIZE + 16);
 
 	card->curBuffer = 0;

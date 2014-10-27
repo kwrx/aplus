@@ -85,7 +85,7 @@ int arp_send(netif_t* netif) {
 	arp->operation = ARP_OPERATION_REQUEST;
 	
 	memcpy(arp->sha, netif->macaddr, sizeof(macaddr_t));
-	memset(arp->tha, 0xFF, sizeof(macaddr_t));
+	memset(arp->tha, 0, sizeof(macaddr_t));
 	memset(arp->spa, 0, sizeof(ipv4_t));
 	memset(arp->tpa, 0, sizeof(ipv4_t));
 

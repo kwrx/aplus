@@ -49,12 +49,8 @@ static void sysidle() {
 }
 
 
-
 int main() {
-#ifdef DEBUG
-	debug_init();
-#endif
-
+	serial_init();
 	mm_init();
 	desc_init();
 	vfs_init();
@@ -73,3 +69,4 @@ int main() {
 */
 		sysidle();
 }
+

@@ -18,7 +18,7 @@ CP		:= cp
 MV		:= mv
 
 
-DEFINES	:= -DDEBUG -DKERNEL
+DEFINES	:= -DDEBUG -DKERNEL -DUSERNET
 LIBS	:= -lpthread -lposix -lc -lm -lgcc
 WARN	:= -Wno-implicit-function-declaration -Wall
 

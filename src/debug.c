@@ -2,25 +2,9 @@
 #include <aplus.h>
 #include <aplus/spinlock.h>
 
-#define DEBUG_PORT		0x3F8
-
-void debug_init() {
-	outb(DEBUG_PORT + 1, 0x00);
-	outb(DEBUG_PORT + 3, 0x80);
-	outb(DEBUG_PORT + 0, 0x03);
-	outb(DEBUG_PORT + 1, 0x00);
-	outb(DEBUG_PORT + 3, 0x03);
-	outb(DEBUG_PORT + 2, 0xC7);
-	outb(DEBUG_PORT + 4, 0x0B);
-}
 
 void debug_putc(char ch) {
-	lock();
-	
-	while((inb(DEBUG_PORT + 5) & 0x20) == 0);
-	outb(DEBUG_PORT, ch);
-	
-	unlock();
+	serial_send(0, ch);
 }
 
 void debug_puts(char* str) {

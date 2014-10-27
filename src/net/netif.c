@@ -14,6 +14,25 @@ static list_t* lst_netif = NULL;
 static list_t* lst_packets = NULL;
 
 
+
+uint32_t netif_htonl(uint32_t h) {
+	return ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
+			((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
+}
+
+uint16_t netif_htons(uint16_t h) {
+	return ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
+}
+
+uint32_t netif_ntohl(uint32_t h) {
+	return ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
+			((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
+}
+
+uint32_t netif_ntohs(uint32_t h) {
+	return ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
+}
+
 netif_t* netif_find_by_ipv4(ipv4_t* ipv4) {
 	if(lst_netif == NULL)
 		return NULL;
@@ -107,6 +126,7 @@ int netif_add(netif_t* netdev) {
 		list_init(lst_netif);
 	}
 
+
 	if(netif_find_by_ipv4(&netdev->ipv4) != NULL) {
 		kprintf("netif: conflitto di ipv4\n");
 		return -1;
@@ -122,6 +142,7 @@ int netif_add(netif_t* netdev) {
 		kprintf("netif: conflitto di macaddr\n");
 		return -1;
 	}
+
 
 
 	kprintf("\n%s:\tipv4\t%d.%d.%d.%d\n\tnetmask\t%d.%d.%d.%d\n",
