@@ -29,6 +29,7 @@
 #include <aplus/spinlock.h>
 #include <aplus/mm.h>
 
+
 typedef uint32_t listval_t;
 
 typedef struct list_body {
@@ -192,6 +193,7 @@ static inline listval_t list_head(list_t* list) {
 #define list_destroy(list)									\
 	list_clear(list);										\
 	kfree(list)
+
 
 
 #endif

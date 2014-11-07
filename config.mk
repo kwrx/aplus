@@ -26,3 +26,6 @@ CFLAGS	:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib -std
 CXXFLAGS:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib
 AFLAGS	:= $(DEFINES) -f elf
 LFLAGS	:= -T $(TOP)/src/link.ld -Map aplus.map -L $(LIBS)
+
+
+CROSSLIB:= /opt/cross/usr/src

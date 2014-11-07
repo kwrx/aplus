@@ -108,8 +108,6 @@
 	// Informazioni passate con il loader
 	extern BootInfo* mbd;
 	extern unsigned int magic;
-	extern unsigned int initial_stack_ptr;
-	extern unsigned int bitmap_ptr;
 
 	
 #endif	

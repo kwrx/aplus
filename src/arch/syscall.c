@@ -9,17 +9,18 @@
 static void** syscall_handlers = NULL;
 
 int syscall_init() {
-	syscall_handlers = (void**) kmalloc(sizeof(void*) * 1024);
-	memset(syscall_handlers, 0, sizeof(void*) * 1024);
-	
-
 	list_t* syslist = attribute("syscall");
+
+	syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist->size);
+	memset(syscall_handlers, 0, sizeof(void*) * syslist->size);
+
 	list_foreach(value, syslist) {
 		syscall_t* sys = (syscall_t*) value;
 
 		syscall_handlers[sys->number] = sys->handler;
 	}
-	
+
+	kprintf("syscall: loaded %d handlers\n", syslist->size);
 	list_destroy(syslist);
 	return 0;
 }
@@ -50,10 +51,5 @@ int syscall_invoke(void* handler, int p0, int p1, int p2, int p3, int p4) {
 
 
 int syscall_handler(regs_t* r) {
-	if(r->eax > 1024) {
-		errno = ENOSYS;
-		return -1;
-	}
-
 	return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
 }

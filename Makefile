@@ -50,6 +50,7 @@ clean:
 	
 git: clean
 	-@git add --all .
+	-@git add --all $(CROSS_LIBDIR)/.
 	-@git commit -m "$(COMMIT)"
 	-@git push origin master
 	

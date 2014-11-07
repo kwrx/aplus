@@ -55,9 +55,9 @@ int main() {
 	serial_init();
 	mm_init();
 	desc_init();
+	syscall_init();
 	vfs_init();
 	schedule_init();
-	syscall_init();
 	//bufio_init();
 	//pci_init();
 	//netif_init();

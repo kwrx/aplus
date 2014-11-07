@@ -85,4 +85,10 @@ typedef struct netif_packet {
 	netif_t* netif;
 } netif_packet_t;
 
+
+
+typedef struct netif_socket {
+	
+} netif_socket_t;
+
 #endif
