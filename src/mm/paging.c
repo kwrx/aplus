@@ -40,8 +40,8 @@
 #define PTSIZE		(1024)
 #define PTENTRY(x)	((uint32_t) x << 10 >> 10 >> 12)
 
-extern heap_t* current_heap;
-extern uint32_t stack;
+extern volatile heap_t* current_heap;
+extern uint32_t memsize;
 
 uint32_t* current_vmm;
 uint32_t* kernel_vmm;
@@ -70,7 +70,6 @@ void vmm_disable() {
 
 
 void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {	
-	
 	if(!pd)
 		return paddr;
 		
@@ -132,12 +131,12 @@ void vmm_umap(uint32_t* pd, void* addr, size_t len) {
 void vmm_mapkernel(uint32_t* dest) {
 	// Map 8MB to low area (kernel reserved)
 	vmm_map(dest, (void*) 0, (void*) 0, MM_LBASE, VMM_FLAGS_DEFAULT);
-	
+
+	// Map all high-memory (kernel reserved)
+	vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT);
+
 	// Map Linear Frame Buffer
 	vmm_map(dest, (void*) 0xE0000000, (void*) 0xE0000000, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-
-	int index = PDENTRY((int) mm_vaddr(NULL));
-	memcpy(&dest[index], &kernel_vmm[index], 512);
 }
 
 
@@ -147,35 +146,27 @@ uint32_t* vmm_create() {
 	if(!addr)
 		return NULL;
 		
-	if(vmm_queue)	
-		list_add(vmm_queue, (listval_t) addr);
-		
 
 	memset(addr, 0, PDSIZE * sizeof(uint32_t));
 	return addr;
 }
 
 void vmm_destroy(uint32_t* vmm) {
-	list_remove(vmm_queue, (listval_t) vmm);
+	memset(vmm, 0, PDSIZE * sizeof(uint32_t));
 }
 
 int vmm_init() {
 
-	kernel_vmm = vmm_create();
+	kernel_vmm = halloc(current_heap, PDSIZE * sizeof(uint32_t));
 	if(!kernel_vmm)
 		panic("Could not initialize VMM");
 	
+
+	memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
 	
-	// Map 8MB to low area (kernel reserved)
-	vmm_map(kernel_vmm, (void*) 0, (void*) 0, MM_LBASE, VMM_FLAGS_DEFAULT);
-	
-	// Map Linear Frame Buffer
-	vmm_map(kernel_vmm, (void*) 0xE0000000, (void*) 0xE0000000, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);	
-	
-	
+	vmm_mapkernel(kernel_vmm);
 	vmm_switch(kernel_vmm);
 	vmm_enable();
-	
 
 	list_init(vmm_queue);
 	return 0;

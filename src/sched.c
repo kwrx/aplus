@@ -82,6 +82,7 @@ static task_t* schedule_next() {
 			newtask = (task_t*) list_head(task_queue);
 		
 	} while(newtask->state != TASK_STATE_ALIVE);
+
 	
 	return newtask;
 }
@@ -92,6 +93,7 @@ void schedule() {
 		
 	if(list_empty(task_queue))
 		return;
+
 		
 	current_task->clock += 1;
 	

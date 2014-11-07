@@ -41,9 +41,11 @@
 extern inode_t* vfs_root;
 extern task_t* current_task;
 
+
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_LOW);
-	
+
+
 	for(;;)
 		__asm__ ("pause");
 }
@@ -56,17 +58,18 @@ int main() {
 	vfs_init();
 	schedule_init();
 	syscall_init();
-	bufio_init();
-	pci_init();
-	netif_init();
+	//bufio_init();
+	//pci_init();
+	//netif_init();
 	
 	vfs_map(devfs_mount());
 
+	
 /*
 	if(fork() == 0)
 		execl("/bin/init", "/bin/init", 0);
 	else
 */
-		sysidle();
+	sysidle();
 }
 

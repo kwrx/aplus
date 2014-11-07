@@ -46,6 +46,7 @@
 
 
 static heap_t kheap;
+extern uint32_t memsize;
 
 
 static int bitmap_first(heap_t* heap, size_t size) {
@@ -129,7 +130,7 @@ int kheap_init() {
 	extern uint32_t end;
 
 	kheap.bitmap = &end;
-	kheap.size = ((mbd->mem_upper + mbd->mem_lower) * 1024) / BLKSIZE;
+	kheap.size = memsize / BLKSIZE;
 	kheap.alloc = bitmap_alloc;
 	kheap.free = bitmap_free;
 	
@@ -137,7 +138,7 @@ int kheap_init() {
 	
 	mm_setheap(&kheap);
 	
-	// Alloc first 4MB (reserved kernel area)
+	// Alloc first 4MB (reserved physical kernel area)
 	halloc(&kheap, (size_t) 0x400000);
 	
 

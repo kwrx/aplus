@@ -28,8 +28,13 @@
 #include <aplus/mm.h>
 #include <aplus/list.h>
 
+#include <grub.h>
 
+
+
+uint32_t memsize;
 volatile heap_t* current_heap;
+
 extern uint32_t* current_vmm;
 extern uint32_t* kernel_vmm;
 
@@ -48,18 +53,7 @@ void* kmalloc(size_t size) {
 		panic("halloc(): failed!");
 
 
-	if(kernel_vmm)
-		vmm_map(kernel_vmm, addr, mm_vaddr(addr), size, VMM_FLAGS_DEFAULT);
-
-	if(!list_empty(vmm_queue)) {
-		list_foreach(value, vmm_queue) {
-			vmm_map(value, addr, mm_vaddr(addr), size, VMM_FLAGS_DEFAULT);
-		}
-	}
-
-	if(current_vmm)
-		addr = (void*) vmm_map(current_vmm, addr, mm_vaddr(addr), size, VMM_FLAGS_DEFAULT);
-	
+	addr = mm_vaddr(addr);
 
 	block_t* block = (block_t*) addr;
 	block->magic = BLKMAGIC;
@@ -82,15 +76,6 @@ void kfree(void* ptr) {
 	block->size = 0;
 	block->magic = 0;
 	
-	
-	if(kernel_vmm)
-		vmm_umap(kernel_vmm, mm_align(ptr), size);
-	
-	if(!list_empty(vmm_queue)) {
-		list_foreach(value, vmm_queue) {
-			vmm_umap(value, mm_align(ptr), size);
-		}
-	}
 	
 	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
 }
@@ -135,8 +120,11 @@ volatile heap_t* mm_getheap() {
 
 
 int mm_init() {
+
+	memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
+
 	kheap_init();
 	vmm_init();
-	
+
 	return 0;
 }

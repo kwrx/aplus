@@ -18,7 +18,7 @@ int sys_stat(const char* filename, struct stat* st) {
 		kprintf("sys_stat: %s.", strerror(errno));		
 		return -1;
 	}
-	int ret = fstat(fd, st);
+	int ret = sys_fstat(fd, st);
 	sys_close(fd);
 
 	return ret;
