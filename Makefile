@@ -49,9 +49,16 @@ clean:
 	-@$(RM) $(OFILES)
 	
 git: clean
+	-@mkdir usr
+	-@mkdir usr/src
+	-@mkdir usr/lib
+	-@mkdir usr/include
+	-@cp -r $(CROSSLIB)/src ./usr/src
+	-@cp -r $(CROSSLIB)/include ./usr/src
+	-@cp -r $(CROSSLIB)/lib ./usr/lib
 	-@git add --all .
-	-@git add --all $(CROSSLIB)/.
 	-@git commit -m "$(COMMIT)"
 	-@git push origin master
+	-@$(RM) -r usr
 	
 	

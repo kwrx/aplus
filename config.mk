@@ -28,4 +28,4 @@ AFLAGS	:= $(DEFINES) -f elf
 LFLAGS	:= -T $(TOP)/src/link.ld -Map aplus.map -L $(LIBS)
 
 
-CROSSLIB:= /opt/cross/usr/src
+CROSSLIB:= /opt/cross/usr
