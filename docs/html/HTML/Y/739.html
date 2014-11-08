@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>value_ptr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L189'>value_ptr</a>         189 usr/src/libpthread/include/pthread.h void pthread_exit(void *value_ptr);
+<a href='../S/43.html#L190'>value_ptr</a>         190 usr/src/libpthread/include/pthread.h int pthread_join(pthread_t thread, void **value_ptr);
+<a href='../S/55.html#L8'>value_ptr</a>           8 usr/src/libpthread/src/pthread_exit.c PUBLIC void pthread_exit(void* value_ptr) {
+<a href='../S/55.html#L13'>value_ptr</a>          13 usr/src/libpthread/src/pthread_exit.c 		ctx-&gt;exitval = value_ptr;
+<a href='../S/73.html#L8'>value_ptr</a>           8 usr/src/libpthread/src/pthread_join.c PUBLIC int pthread_join(pthread_t thread, void **value_ptr) {
+<a href='../S/73.html#L18'>value_ptr</a>          18 usr/src/libpthread/src/pthread_join.c 	if(value_ptr)
+<a href='../S/73.html#L19'>value_ptr</a>          19 usr/src/libpthread/src/pthread_join.c 		*value_ptr = ctx-&gt;exitval;
+</pre>
+</body>
+</html>

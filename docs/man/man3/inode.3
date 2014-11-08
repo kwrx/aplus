@@ -1,0 +1,205 @@
+.TH "inode" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inode \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <fs\&.h>\fP
+.SS "Campi"
+
+.in +1c
+.ti -1c
+.RI "char \fBname\fP [255]"
+.br
+.ti -1c
+.RI "dev_t \fBdev\fP"
+.br
+.ti -1c
+.RI "ino_t \fBino\fP"
+.br
+.ti -1c
+.RI "mode_t \fBmode\fP"
+.br
+.ti -1c
+.RI "nlink_t \fBnlink\fP"
+.br
+.ti -1c
+.RI "uid_t \fBuid\fP"
+.br
+.ti -1c
+.RI "gid_t \fBgid\fP"
+.br
+.ti -1c
+.RI "dev_t \fBrdev\fP"
+.br
+.ti -1c
+.RI "off_t \fBsize\fP"
+.br
+.ti -1c
+.RI "off_t \fBposition\fP"
+.br
+.ti -1c
+.RI "time_t \fBatime\fP"
+.br
+.ti -1c
+.RI "time_t \fBmtime\fP"
+.br
+.ti -1c
+.RI "time_t \fBctime\fP"
+.br
+.ti -1c
+.RI "void * \fBuserdata\fP"
+.br
+.ti -1c
+.RI "int(* \fBread\fP )(struct \fBinode\fP *\fBinode\fP, char *ptr, int len)"
+.br
+.ti -1c
+.RI "int(* \fBwrite\fP )(struct \fBinode\fP *\fBinode\fP, char *ptr, int len)"
+.br
+.ti -1c
+.RI "struct \fBdirent\fP *(* \fBreaddir\fP )(struct \fBinode\fP *\fBinode\fP, int index)"
+.br
+.ti -1c
+.RI "struct \fBinode\fP *(* \fBfinddir\fP )(struct \fBinode\fP *\fBinode\fP, char *\fBname\fP)"
+.br
+.ti -1c
+.RI "struct \fBinode\fP *(* \fBcreat\fP )(struct \fBinode\fP *\fBinode\fP, char *\fBname\fP, mode_t \fBmode\fP)"
+.br
+.ti -1c
+.RI "int(* \fBrename\fP )(struct \fBinode\fP *\fBinode\fP, char *oldname, char *newname)"
+.br
+.ti -1c
+.RI "int(* \fBunlink\fP )(struct \fBinode\fP *\fBinode\fP, char *\fBname\fP)"
+.br
+.ti -1c
+.RI "int(* \fBchown\fP )(struct \fBinode\fP *\fBinode\fP, uid_t owner, gid_t group)"
+.br
+.ti -1c
+.RI "void(* \fBflush\fP )(struct \fBinode\fP *\fBinode\fP)"
+.br
+.ti -1c
+.RI "int(* \fBioctl\fP )(struct \fBinode\fP *\fBinode\fP, int req, void *buf)"
+.br
+.ti -1c
+.RI "struct \fBinode\fP * \fBparent\fP"
+.br
+.ti -1c
+.RI "struct \fBinode\fP * \fBlink\fP"
+.br
+.in -1c
+.SH "Descrizione dettagliata"
+.PP 
+Definizione alla linea 36 del file fs\&.h\&.
+.SH "Documentazione dei campi"
+.PP 
+.SS "time_t inode::atime"
+
+.PP
+Definizione alla linea 49 del file fs\&.h\&.
+.SS "int(* inode::chown)(struct \fBinode\fP *\fBinode\fP, uid_t owner, gid_t group)"
+
+.PP
+Definizione alla linea 64 del file fs\&.h\&.
+.SS "struct \fBinode\fP*(* inode::creat)(struct \fBinode\fP *\fBinode\fP, char *\fBname\fP, mode_t \fBmode\fP)"
+
+.PP
+Definizione alla linea 60 del file fs\&.h\&.
+.SS "time_t inode::ctime"
+
+.PP
+Definizione alla linea 51 del file fs\&.h\&.
+.SS "dev_t inode::dev"
+
+.PP
+Definizione alla linea 39 del file fs\&.h\&.
+.SS "struct \fBinode\fP*(* inode::finddir)(struct \fBinode\fP *\fBinode\fP, char *\fBname\fP)"
+
+.PP
+Definizione alla linea 59 del file fs\&.h\&.
+.SS "void(* inode::flush)(struct \fBinode\fP *\fBinode\fP)"
+
+.PP
+Definizione alla linea 65 del file fs\&.h\&.
+.SS "gid_t inode::gid"
+
+.PP
+Definizione alla linea 44 del file fs\&.h\&.
+.SS "ino_t inode::ino"
+
+.PP
+Definizione alla linea 40 del file fs\&.h\&.
+.SS "int(* inode::ioctl)(struct \fBinode\fP *\fBinode\fP, int req, void *buf)"
+
+.PP
+Definizione alla linea 67 del file fs\&.h\&.
+.SS "struct \fBinode\fP* inode::link"
+
+.PP
+Definizione alla linea 71 del file fs\&.h\&.
+.SS "mode_t inode::mode"
+
+.PP
+Definizione alla linea 41 del file fs\&.h\&.
+.SS "time_t inode::mtime"
+
+.PP
+Definizione alla linea 50 del file fs\&.h\&.
+.SS "char inode::name[255]"
+
+.PP
+Definizione alla linea 37 del file fs\&.h\&.
+.SS "nlink_t inode::nlink"
+
+.PP
+Definizione alla linea 42 del file fs\&.h\&.
+.SS "struct \fBinode\fP* inode::parent"
+
+.PP
+Definizione alla linea 70 del file fs\&.h\&.
+.SS "off_t inode::position"
+
+.PP
+Definizione alla linea 47 del file fs\&.h\&.
+.SS "dev_t inode::rdev"
+
+.PP
+Definizione alla linea 45 del file fs\&.h\&.
+.SS "int(* inode::read)(struct \fBinode\fP *\fBinode\fP, char *ptr, int len)"
+
+.PP
+Definizione alla linea 55 del file fs\&.h\&.
+.SS "struct \fBdirent\fP*(* inode::readdir)(struct \fBinode\fP *\fBinode\fP, int index)"
+
+.PP
+Definizione alla linea 58 del file fs\&.h\&.
+.SS "int(* inode::rename)(struct \fBinode\fP *\fBinode\fP, char *oldname, char *newname)"
+
+.PP
+Definizione alla linea 62 del file fs\&.h\&.
+.SS "off_t inode::size"
+
+.PP
+Definizione alla linea 46 del file fs\&.h\&.
+.SS "uid_t inode::uid"
+
+.PP
+Definizione alla linea 43 del file fs\&.h\&.
+.SS "int(* inode::unlink)(struct \fBinode\fP *\fBinode\fP, char *\fBname\fP)"
+
+.PP
+Definizione alla linea 63 del file fs\&.h\&.
+.SS "void* inode::userdata"
+
+.PP
+Definizione alla linea 53 del file fs\&.h\&.
+.SS "int(* inode::write)(struct \fBinode\fP *\fBinode\fP, char *ptr, int len)"
+
+.PP
+Definizione alla linea 56 del file fs\&.h\&.
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

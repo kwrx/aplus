@@ -1,0 +1,202 @@
+.TH "src/net/loopback/loopback.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/loopback/loopback.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <aplus/bufio\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/attribute\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBLOOPBACK_MAGIC\fP   0x127001FF"
+.br
+.ti -1c
+.RI "#define \fBLOOPBACK_MTU\fP   65563"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBloopback_ifup\fP (\fBnetif_t\fP *\fBnetif\fP)"
+.br
+.ti -1c
+.RI "int \fBloopback_ifdown\fP (\fBnetif_t\fP *\fBnetif\fP)"
+.br
+.ti -1c
+.RI "int \fBloopback_recv\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t len)"
+.br
+.ti -1c
+.RI "int \fBloopback_send\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t len, int \fBtype\fP)"
+.br
+.ti -1c
+.RI "int \fBloopback_init\fP ()"
+.br
+.ti -1c
+.RI "\fBATTRIBUTE\fP ('netif', loopback_init)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define LOOPBACK_MAGIC   0x127001FF"
+
+.PP
+Definizione alla linea 15 del file loopback\&.c\&.
+.SS "#define LOOPBACK_MTU   65563"
+
+.PP
+Definizione alla linea 16 del file loopback\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "ATTRIBUTE ('netif', \fBloopback_init\fP)"
+
+.SS "int loopback_ifdown (\fBnetif_t\fP *netif)"
+
+.PP
+Definizione alla linea 24 del file loopback\&.c\&.
+.PP
+Referenzia netif::flags, e NETIF_FLAGS_ENABLE\&.
+.PP
+.nf
+24                                     {
+25     netif->flags &= ~NETIF_FLAGS_ENABLE;
+26     return 0;
+27 }
+.fi
+.SS "int loopback_ifup (\fBnetif_t\fP *netif)"
+
+.PP
+Definizione alla linea 19 del file loopback\&.c\&.
+.PP
+Referenzia netif::flags, e NETIF_FLAGS_ENABLE\&.
+.PP
+.nf
+19                                   {
+20     netif->flags |= NETIF_FLAGS_ENABLE;
+21     return 0;
+22 }
+.fi
+.SS "int loopback_init ()"
+
+.PP
+Definizione alla linea 65 del file loopback\&.c\&.
+.PP
+Referenzia netif::data, netif::ifdown, netif::ifup, netif::ipv4, netif::ipv6, kmalloc(), loopback_ifdown(), loopback_ifup(), LOOPBACK_MTU, loopback_send(), netif::macaddr, netif::mtu, netif::name, netif_add(), netif::netmask, e netif::send\&.
+.PP
+.nf
+65                     {
+66 
+67     netif_t* netif = (netif_t*) kmalloc(sizeof(netif_t));
+68     memset(netif, 0, sizeof(netif_t));
+69 
+70 
+71     strcpy(netif->name, "lo");
+72     memset(netif->macaddr, 0xFF, sizeof(macaddr_t));
+73 
+74     netif->ipv4[0] = 127;
+75     netif->ipv4[1] = 0;
+76     netif->ipv4[2] = 0;
+77     netif->ipv4[3] = 1;
+78 
+79     netif->ipv6[0] = 0;
+80     netif->ipv6[1] = 0;
+81     netif->ipv6[2] = 0;
+82     netif->ipv6[3] = 0;
+83     netif->ipv6[4] = 0;
+84     netif->ipv6[5] = 0;
+85     netif->ipv6[6] = 0;
+86     netif->ipv6[7] = 1;
+87 
+88     netif->netmask[0] = 255;
+89     netif->netmask[1] = 255;
+90     netif->netmask[2] = 255;
+91     netif->netmask[3] = 255;
+92 
+93 
+94     netif->mtu = LOOPBACK_MTU;
+95     netif->send = loopback_send;
+96     netif->ifup = loopback_ifup;
+97     netif->ifdown = loopback_ifdown;
+98     netif->data = NULL;
+99 
+100     netif_add(netif);
+101     return 0;
+102 }
+.fi
+.SS "int loopback_recv (\fBnetif_t\fP *netif, void *buf, size_tlen)"
+
+.PP
+Definizione alla linea 31 del file loopback\&.c\&.
+.PP
+Referenzia eth_recv(), netif::flags, NETIF_FLAGS_ENABLE, netif::rx_bytes, netif::rx_errors, netif::rx_packets, e netif::state\&.
+.PP
+.nf
+31                                                          {
+32     if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
+33         return 0;
+34 
+35     if(eth_recv(netif, buf, len) > 0) {
+36         netif->state\&.rx_packets += 1;
+37         netif->state\&.rx_bytes += len;
+38 
+39         return len;
+40     }
+41         
+42     netif->state\&.rx_errors += 1;
+43     return 0;
+44 }
+.fi
+.SS "int loopback_send (\fBnetif_t\fP *netif, void *buf, size_tlen, inttype)"
+
+.PP
+Definizione alla linea 46 del file loopback\&.c\&.
+.PP
+Referenzia netif::flags, LOOPBACK_MTU, loopback_recv(), NETIF_FLAGS_ENABLE, netif::state, netif::tx_bytes, netif::tx_errors, e netif::tx_packets\&.
+.PP
+.nf
+46                                                                    {
+47     if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
+48         return 0;
+49 
+50     if(len > LOOPBACK_MTU) {
+51         netif->state\&.tx_errors += 1;
+52         return 0;
+53     }
+54 
+55 
+56     netif->state\&.tx_packets += 1;
+57     netif->state\&.tx_bytes += len;
+58 
+59 
+60     loopback_recv(netif, buf, len); 
+61     return len;
+62 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

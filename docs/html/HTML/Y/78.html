@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>__pthread_keys</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/70.html#L7'>__pthread_keys</a>      7 usr/src/libpthread/src/pthread_key.c PRIVATE __pthread_key_t __pthread_keys[PTHREAD_KEYS_MAX] = { };
+<a href='../S/70.html#L17'>__pthread_keys</a>     17 usr/src/libpthread/src/pthread_key.c 		if(__pthread_keys[i].used == 0) {
+<a href='../S/70.html#L18'>__pthread_keys</a>     18 usr/src/libpthread/src/pthread_key.c 			__pthread_keys[i].used = 1;
+<a href='../S/70.html#L19'>__pthread_keys</a>     19 usr/src/libpthread/src/pthread_key.c 			__pthread_keys[i].dtor = destructor;
+<a href='../S/70.html#L20'>__pthread_keys</a>     20 usr/src/libpthread/src/pthread_key.c 			__pthread_keys[i].value = NULL;
+<a href='../S/70.html#L38'>__pthread_keys</a>     38 usr/src/libpthread/src/pthread_key.c 	if(__pthread_keys[key].dtor)
+<a href='../S/70.html#L39'>__pthread_keys</a>     39 usr/src/libpthread/src/pthread_key.c 		__pthread_keys[key].dtor(__pthread_keys[key].value);
+<a href='../S/70.html#L41'>__pthread_keys</a>     41 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].used = 0;
+<a href='../S/70.html#L42'>__pthread_keys</a>     42 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].dtor = 0;
+<a href='../S/70.html#L43'>__pthread_keys</a>     43 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].value = NULL;
+<a href='../S/70.html#L55'>__pthread_keys</a>     55 usr/src/libpthread/src/pthread_key.c 	if(__pthread_keys[key].used == 0) {
+<a href='../S/70.html#L60'>__pthread_keys</a>     60 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].value = (void*) value;
+<a href='../S/70.html#L71'>__pthread_keys</a>     71 usr/src/libpthread/src/pthread_key.c 	if(__pthread_keys[key].used == 0) {
+<a href='../S/70.html#L76'>__pthread_keys</a>     76 usr/src/libpthread/src/pthread_key.c 	return __pthread_keys[key].value;
+</pre>
+</body>
+</html>

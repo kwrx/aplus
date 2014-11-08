@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structnetif__socket" kind="struct" prot="public">
+    <compoundname>netif_socket</compoundname>
+    <includes refid="netif_8h" local="no">netif.h</includes>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="60">
+        <label>netif_socket</label>
+        <link refid="structnetif__socket"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="90" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="90" bodyend="92"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

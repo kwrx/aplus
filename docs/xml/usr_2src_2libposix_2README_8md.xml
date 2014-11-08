@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="usr_2src_2libposix_2README_8md" kind="file">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>C<sp/>Posix<sp/>library</highlight></codeline>
+<codeline><highlight class="normal">The<sp/>C<sp/>POSIX<sp/>library<sp/>is<sp/>a<sp/>specification<sp/>of<sp/>a<sp/>C<sp/>standard<sp/>library<sp/>for<sp/>POSIX<sp/>systems.<sp/>It<sp/>was<sp/>developed<sp/>at<sp/>the<sp/>same<sp/>time<sp/>as<sp/>the<sp/>ANSI<sp/>C<sp/>standard.<sp/>Some<sp/>effort<sp/>was<sp/>made<sp/>to<sp/>make<sp/>POSIX<sp/>compatible<sp/>with<sp/>standard<sp/>C;<sp/>POSIX<sp/>includes<sp/>additional<sp/>functions<sp/>to<sp/>those<sp/>introduced<sp/>in<sp/>standard<sp/>C.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Required<sp/>function</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Read<sp/>directory<sp/>entries</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Get<sp/>groups;</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Schedule<sp/>Yield.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/>struct<sp/>dirent*<sp/>__os_readdir(DIR*<sp/>d);</highlight></codeline>
+<codeline><highlight class="normal"><sp/>int<sp/>__os_getgroups(int<sp/>length,<sp/>gid_t*<sp/>list);</highlight></codeline>
+<codeline><highlight class="normal"><sp/>void<sp/>__os_yield(void);</highlight></codeline>
+<codeline><highlight class="normal"><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/>See<sp/>&quot;/config.h&quot;.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/README.md"/>
+  </compounddef>
+</doxygen>

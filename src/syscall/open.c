@@ -62,6 +62,12 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 				else
 					break;
 
+
+			if(!(S_ISDIR(cwd->mode))) {
+				errno = ENOTDIR;
+				return NULL;
+			}
+
 			s = p;
 		} else
 			break;
@@ -72,36 +78,49 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 		return NULL;
 	}
 
-	cwd = (inode_t*) fs_finddir(cwd, s);
-	if(!cwd) {
+	inode_t* ent = (inode_t*) fs_finddir(cwd, s);
+
+	if(flags & O_EXCL) {
+		if(ent) {
+			errno = EEXIST;
+			return NULL;
+		}
+	}
+
+
+	if(flags & O_CREAT)
+		if(!ent)
+			ent = (inode_t*) fs_creat(cwd, s, mode);
+		
+
+	if(!ent) {
 		errno = ENOENT;
 		return NULL;
 	}
 
-
 	if(!(flags & O_NOFOLLOW)) {
-		while(S_ISLNK(cwd->mode)) {
-			if(cwd == cwd->link) {
+		while(S_ISLNK(ent->mode)) {
+			if(ent == ent->link) {
 				errno = ELOOP;
 				return NULL;
 			}			
 
-			if(cwd->link)
-				cwd = cwd->link;
+			if(ent->link)
+				ent = ent->link;
 			else
 				break;
 		}
 	}
 
 	if(flags & O_DIRECTORY) {
-		if(!(S_ISDIR(cwd->mode))) {
+		if(!(S_ISDIR(ent->mode))) {
 			errno = ENOTDIR;
 			return NULL;
 		}
 	}
 
 
-	return cwd;
+	return ent;
 }
 
 int sys_open(char* filename, int flags, mode_t mode) {

@@ -1,0 +1,123 @@
+<html>
+<head>
+<title>src/arch/loader.s</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/165.html'>arch</a>/loader.s</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<pre>
+<a name='L1'>   1 [BITS 32]
+<a name='L2'>   2 
+<a name='L3'>   3 extern main
+<a name='L4'>   4 extern text
+<a name='L5'>   5 extern bss
+<a name='L6'>   6 extern end
+<a name='L7'>   7 
+<a name='L8'>   8 
+<a name='L9'>   9 MALIGN equ              (1 &lt;&lt; 0)
+<a name='L10'>  10 MEMINFO equ             (1 &lt;&lt; 1)
+<a name='L11'>  11 VMODE equ               (1 &lt;&lt; 2)
+<a name='L12'>  12 FLAGS equ               (MALIGN | MEMINFO | VMODE)
+<a name='L13'>  13 MAGIC equ               (0x1BADB002)
+<a name='L14'>  14 CHECKSUM equ    -(MAGIC + FLAGS)
+<a name='L15'>  15 STACKSIZE equ   0x4000
+<a name='L16'>  16 
+<a name='L17'>  17 
+<a name='L18'>  18 
+<a name='L19'>  19 global _start
+<a name='L20'>  20 global magic
+<a name='L21'>  21 global mbd
+<a name='L22'>  22 global kernel_stack
+<a name='L23'>  23 global multiboot
+<a name='L24'>  24 
+<a name='L25'>  25 
+<a name='L26'>  26 
+<a name='L27'>  27 section .bss
+<a name='L28'>  28 align 0x1000
+<a name='L29'>  29 kernel_stack: resb STACKSIZE
+<a name='L30'>  30 magic: resd 1
+<a name='L31'>  31 mbd: resd 1
+<a name='L32'>  32         
+<a name='L33'>  33 section .multiboot
+<a name='L34'>  34 multiboot:
+<a name='L35'>  35 align 4
+<a name='L36'>  36         dd MAGIC
+<a name='L37'>  37         dd FLAGS
+<a name='L38'>  38         dd CHECKSUM
+<a name='L39'>  39         dd multiboot
+<a name='L40'>  40         dd text
+<a name='L41'>  41         dd bss
+<a name='L42'>  42         dd end
+<a name='L43'>  43         dd _start
+<a name='L44'>  44         dd 0
+<a name='L45'>  45         dd 0
+<a name='L46'>  46         dd 0
+<a name='L47'>  47         dd 32
+<a name='L48'>  48                 
+<a name='L49'>  49                 
+<a name='L50'>  50         
+<a name='L51'>  51 section .text
+<a name='L52'>  52 _start:
+<a name='L53'>  53         mov [mbd], ebx
+<a name='L54'>  54         mov [magic], eax
+<a name='L55'>  55         
+<a name='L56'>  56         mov esp, kernel_stack + STACKSIZE
+<a name='L57'>  57 
+<a name='L58'>  58         
+<a name='L59'>  59         cli
+<a name='L60'>  60         call enable_fpu
+<a name='L61'>  61         call enable_sse
+<a name='L62'>  62         call enable_kb
+<a name='L63'>  63         call main
+<a name='L64'>  64         call reboot
+<a name='L65'>  65         jmp $
+<a name='L66'>  66         
+<a name='L67'>  67         
+<a name='L68'>  68 reboot:
+<a name='L69'>  69         cli
+<a name='L70'>  70         mov cx, 0x02
+<a name='L71'>  71         mov dx, 0x64
+<a name='L72'>  72 .L1:
+<a name='L73'>  73         and cx, 0x02
+<a name='L74'>  74         jz .L2
+<a name='L75'>  75         
+<a name='L76'>  76         in al, dx
+<a name='L77'>  77         mov cx, ax
+<a name='L78'>  78         jmp .L1
+<a name='L79'>  79 .L2:    
+<a name='L80'>  80         mov al, 0xFE
+<a name='L81'>  81         out dx, al
+<a name='L82'>  82         jmp $
+<a name='L83'>  83 ret
+<a name='L84'>  84 
+<a name='L85'>  85 
+<a name='L86'>  86 enable_fpu:
+<a name='L87'>  87         finit
+<a name='L88'>  88         xor eax, eax
+<a name='L89'>  89 ret
+<a name='L90'>  90 
+<a name='L91'>  91 enable_sse:     
+<a name='L92'>  92         mov eax, cr0
+<a name='L93'>  93         and ax, 0xFFFB
+<a name='L94'>  94         or ax, 2
+<a name='L95'>  95         mov cr0, eax
+<a name='L96'>  96         mov eax, cr4
+<a name='L97'>  97         or ax, 3 &lt;&lt; 9
+<a name='L98'>  98         mov cr4, eax
+<a name='L99'>  99         xor eax, eax
+<a name='L100'> 100 ret
+<a name='L101'> 101 
+<a name='L102'> 102 enable_kb:
+<a name='L103'> 103         in al, 0x60
+<a name='L104'> 104         xor eax, eax
+<a name='L105'> 105 ret
+<a name='L106'> 106         
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

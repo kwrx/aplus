@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>usr/src/libposix/include/sys/dirent.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/182.html'>include</a>/<a href='../files/183.html'>sys</a>/dirent.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/81.html' title='Multiple included from 29 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <i><font color='green'>//</font></i>
+<a name='L3'>   3 <i><font color='green'>//  dirent.h</font></i>
+<a name='L4'>   4 <i><font color='green'>//</font></i>
+<a name='L5'>   5 <i><font color='green'>//  Author:</font></i>
+<a name='L6'>   6 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L7'>   7 <i><font color='green'>//</font></i>
+<a name='L8'>   8 <i><font color='green'>//  Copyright (c) 2014 Antonio Natale</font></i>
+<a name='L9'>   9 <i><font color='green'>//</font></i>
+<a name='L10'>  10 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L11'>  11 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L12'>  12 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L13'>  13 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L14'>  14 <i><font color='green'>//</font></i>
+<a name='L15'>  15 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L16'>  16 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L17'>  17 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L18'>  18 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L19'>  19 <i><font color='green'>//</font></i>
+<a name='L20'>  20 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L21'>  21 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L22'>  22 
+<a name='L23'>  23 <font color='darkred'>#ifndef</font> <a href='../S/10.html#L24' title='Defined at 24 in usr/src/libposix/include/sys/dirent.h.'>_SYS_DIRENT_H</a>
+<a name='L24'>  24 <font color='darkred'>#define</font> <a href='../S/10.html#L23' title='Refered from 23 in usr/src/libposix/include/sys/dirent.h.'>_SYS_DIRENT_H</a>
+<a name='L25'>  25 
+<a name='L26'>  26 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L28'>  28 
+<a name='L29'>  29 <b>typedef</b> <b>struct</b> __DIR <font color='red'>{</font>
+<a name='L30'>  30         <b>int</b> <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>;
+<a name='L31'>  31         <b>int</b> <a href='../Y/480.html' title='Multiple used in 14 places.'>position</a>;
+<a name='L32'>  32 <font color='red'>}</font> <a href='../R/22.html' title='Multiple refered from 15 places.'>DIR</a>;
+<a name='L33'>  33 
+<a name='L34'>  34 
+<a name='L35'>  35 <b>struct</b> <a href='../R/231.html' title='Multiple refered from 13 places.'>dirent</a> <font color='red'>{</font>
+<a name='L36'>  36         <b>int</b> <a href='../Y/188.html' title='Multiple used in 3 places.'>d_ino</a>;
+<a name='L37'>  37         <b>char</b> <a href='../Y/189.html' title='Multiple used in 4 places.'>d_name</a>[];
+<a name='L38'>  38 <font color='red'>}</font>;
+<a name='L39'>  39 
+<a name='L40'>  40 
+<a name='L41'>  41 <font color='darkred'>#ifndef</font> <a href='../S/10.html#L42' title='Defined at 42 in usr/src/libposix/include/sys/dirent.h.'>O_DIRECTORY</a>
+<a name='L42'>  42 <font color='darkred'>#define</font> <a href='../R/79.html' title='Multiple refered from 3 places.'>O_DIRECTORY</a>             00200000
+<a name='L43'>  43 <font color='darkred'>#endif</font>
+<a name='L44'>  44 
+<a name='L45'>  45 <font color='darkred'>#ifndef</font> <a href='../S/10.html#L46' title='Defined at 46 in usr/src/libposix/include/sys/dirent.h.'>O_NOFOLLOW</a>
+<a name='L46'>  46 <font color='darkred'>#define</font> <a href='../R/80.html' title='Multiple refered from 3 places.'>O_NOFOLLOW</a>              00400000
+<a name='L47'>  47 <font color='darkred'>#endif</font>
+<a name='L48'>  48 
+<a name='L49'>  49 
+<a name='L50'>  50 <font color='darkred'>#ifdef</font> <a href='../Y/67.html' title='Multiple used in 5 places.'>__cplusplus</a>
+<a name='L51'>  51 <b>extern</b> "C" <font color='red'>{</font>
+<a name='L52'>  52 <font color='darkred'>#endif</font>
+<a name='L53'>  53 
+<a name='L54'>  54 <b>int</b> <a href='../S/33.html#L12' title='Defined at 12 in usr/src/libposix/src/alphasort.c.'>alphasort</a>(<b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a> **<a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>, <b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a> **<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>);
+<a name='L55'>  55 <b>int</b> <a href='../S/21.html#L11' title='Defined at 11 in usr/src/libposix/src/closedir.c.'>closedir</a>(<a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>);
+<a name='L56'>  56 <a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../S/42.html#L13' title='Defined at 13 in usr/src/libposix/src/opendir.c.'>opendir</a>(<b>const</b> <b>char</b>* <a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>);
+<a name='L57'>  57 <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>* <a href='../S/35.html#L15' title='Defined at 15 in usr/src/libposix/src/readdir.c.'>readdir</a>(<a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>);
+<a name='L58'>  58 <b>void</b> <a href='../S/27.html#L11' title='Defined at 11 in usr/src/libposix/src/rewinddir.c.'>rewinddir</a>(<a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>);
+<a name='L59'>  59 <b>int</b> <a href='../S/18.html#L11' title='Defined at 11 in usr/src/libposix/src/scandir.c.'>scandir</a>(<b>const</b> <b>char</b> *<a href='../Y/462.html' title='Multiple used in 4 places.'>pathname</a>, <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a> ***<a href='../Y/401.html' title='Multiple used in 4 places.'>namelist</a>, <b>int</b> (*<a href='../Y/555.html' title='Multiple used in 4 places.'>select</a>)(<b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a> *), <b>int</b> (*<a href='../Y/163.html' title='Multiple used in 3 places.'>compar</a>)(<b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a> **, <b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a> **));
+<a name='L60'>  60 <b>void</b> <a href='../S/25.html#L13' title='Defined at 13 in usr/src/libposix/src/seekdir.c.'>seekdir</a>(<a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>, <a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a> <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>);
+<a name='L61'>  61 <a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a> <a href='../S/41.html#L11' title='Defined at 11 in usr/src/libposix/src/telldir.c.'>telldir</a>(<a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>);
+<a name='L62'>  62 
+<a name='L63'>  63 
+<a name='L64'>  64 <font color='darkred'>#ifdef</font> <a href='../Y/67.html' title='Multiple used in 5 places.'>__cplusplus</a>
+<a name='L65'>  65 <font color='red'>}</font>
+<a name='L66'>  66 <font color='darkred'>#endif</font>
+<a name='L67'>  67 
+<a name='L68'>  68 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

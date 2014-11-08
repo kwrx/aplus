@@ -1,0 +1,55 @@
+.TH "src/syscall/fork.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/fork.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_fork\fP ()"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_fork\fP, 3)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_fork ()"
+
+.PP
+Definizione alla linea 9 del file fork\&.c\&.
+.PP
+Referenzia task::pid, e task_fork()\&.
+.PP
+.nf
+9                {
+10     task_t* child = (task_t*) task_fork();
+11     
+12     if(child)
+13         return child->pid;
+14     else
+15         return 0;
+16 }
+.fi
+.SS "SYSCALL (\fBsys_fork\fP, 3)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

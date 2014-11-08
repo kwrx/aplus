@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>usr/src/libposix/src/execv.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/execv.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L17'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L17' title='Defined at 17.'>_DEFUN</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <i><font color='green'>/* execv.c */</font></i>
+<a name='L3'>   3 
+<a name='L4'>   4 <i><font color='green'>/* This and the other exec*.c files in this directory require </font></i>
+<a name='L5'>   5 <i><font color='green'>   the target to provide the _execve syscall.  */</font></i>
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;_ansi.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 <i><font color='green'>/* Only deal with a pointer to environ, to work around subtle bugs with shared</font></i>
+<a name='L11'>  11 <i><font color='green'>   libraries and/or small data systems where the user declares his own</font></i>
+<a name='L12'>  12 <i><font color='green'>   'environ'.  */</font></i>
+<a name='L13'>  13 <b>static</b> <b>char</b> ***<a href='../Y/454.html' title='Multiple used in 6 places.'>p_environ</a> = &amp;<a href='../Y/237.html' title='Multiple used in 8 places.'>environ</a>;
+<a name='L14'>  14 <b>extern</b> <b>int</b> <a href='../S/23.html#L8' title='Defined at 8 in usr/src/libposix/src/_execve.c.'>_execve</a>(<b>const</b> <b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <b>char</b>* <b>const</b> <a href='../Y/105.html' title='Multiple used in 25 places.'>args</a>[], <b>char</b>* <b>const</b> <a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>[]);
+<a name='L15'>  15 
+<a name='L16'>  16 <b>int</b>
+<a name='L17'>  17 <a href='../R/157.html' title='Multiple refered from 3 places.'>_DEFUN</a> (<a href='../Y/251.html' title='Multiple used in 4 places.'>execv</a>, (<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>), 
+<a name='L18'>  18         <b>const</b> <b>char</b> *<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a> <a href='../Y/58.html' title='Multiple used in 13 places.'>_AND</a>
+<a name='L19'>  19         <b>char</b> * <b>const</b> <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>[])
+<a name='L20'>  20 <font color='red'>{</font>
+<a name='L21'>  21   <b>return</b> <a href='../S/23.html#L8' title='Defined at 8 in usr/src/libposix/src/_execve.c.'>_execve</a> (<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>, (<b>char</b> * <a href='../Y/59.html' title='Multiple used in 26 places.'>_CONST</a> *) <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>, *<a href='../Y/454.html' title='Multiple used in 6 places.'>p_environ</a>);
+<a name='L22'>  22 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L17'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

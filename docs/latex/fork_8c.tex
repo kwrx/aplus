@@ -1,0 +1,53 @@
+\hypertarget{fork_8c}{\section{Riferimenti per il file src/syscall/fork.c}
+\label{fork_8c}\index{src/syscall/fork.\+c@{src/syscall/fork.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{fork_8c_a01fbd4b45143dd51bf6f338d8ee325da}{sys\+\_\+fork} ()
+\item 
+\hyperlink{fork_8c_a75b0dcad79dadff9db48eee8500bab91}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{fork_8c_a01fbd4b45143dd51bf6f338d8ee325da}{sys\+\_\+fork}, 3)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{fork_8c_a01fbd4b45143dd51bf6f338d8ee325da}{\index{fork.\+c@{fork.\+c}!sys\+\_\+fork@{sys\+\_\+fork}}
+\index{sys\+\_\+fork@{sys\+\_\+fork}!fork.\+c@{fork.\+c}}
+\subsubsection[{sys\+\_\+fork}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+fork (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{fork_8c_a01fbd4b45143dd51bf6f338d8ee325da}
+
+
+Definizione alla linea 9 del file fork.\+c.
+
+
+
+Referenzia task\+::pid, e task\+\_\+fork().
+
+
+\begin{DoxyCode}
+9                \{
+10     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{task_8c_aa547121ba0907a969075a9d7530a98fb}{task\_fork}();
+11     
+12     \textcolor{keywordflow}{if}(child)
+13         \textcolor{keywordflow}{return} child->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
+14     \textcolor{keywordflow}{else}
+15         \textcolor{keywordflow}{return} 0;
+16 \}
+\end{DoxyCode}
+\hypertarget{fork_8c_a75b0dcad79dadff9db48eee8500bab91}{\index{fork.\+c@{fork.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!fork.\+c@{fork.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+fork}}]{, }
+\item[{3}]{}
+\end{DoxyParamCaption}
+)}}\label{fork_8c_a75b0dcad79dadff9db48eee8500bab91}

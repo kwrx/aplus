@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="__execve_8c" kind="file">
+    <compoundname>_execve.c</compoundname>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <incdepgraph>
+      <node id="2011">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2010">
+        <label>unistd.h</label>
+      </node>
+      <node id="2009">
+        <label>usr/src/libposix/src/_execve.c</label>
+        <link refid="_execve.c"/>
+        <childnode refid="2010" relation="include">
+        </childnode>
+        <childnode refid="2011" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="__execve_8c_1a69afa95020be08ad581031bc33921680" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int execve</definition>
+        <argsstring>(const char *filename, char *const args[], char *const env[])</argsstring>
+        <name>execve</name>
+        <param>
+          <type>const char *</type>
+          <declname>filename</declname>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>args</declname>
+          <array>[]</array>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>env</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/_execve.c" line="6" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="__execve_8c_1accd0d84615f4b84367796ea088af9d72" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int _execve</definition>
+        <argsstring>(const char *filename, char *const args[], char *const env[])</argsstring>
+        <name>_execve</name>
+        <param>
+          <type>const char *</type>
+          <declname>filename</declname>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>args</declname>
+          <array>[]</array>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>env</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/_execve.c" line="8" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/_execve.c" bodystart="8" bodyend="10"/>
+        <references refid="__execve_8c_1a69afa95020be08ad581031bc33921680">execve</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>syscalls.c<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="__execve_8c_1a69afa95020be08ad581031bc33921680" kindref="member">execve</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filename,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>args[],<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>env[]);</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="execv_8c_1accd0d84615f4b84367796ea088af9d72" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="__execve_8c_1accd0d84615f4b84367796ea088af9d72" kindref="member">_execve</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filename,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>args[],<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>env[])<sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="__execve_8c_1a69afa95020be08ad581031bc33921680" kindref="member">execve</ref>(filename,<sp/>args,<sp/>env);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/_execve.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>mode</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/147.html#L24'>mode</a>               24 src/fs/devfs.c struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
+<a href='../S/147.html#L33'>mode</a>               33 src/fs/devfs.c 	ino-&gt;mode = mode;
+<a href='../S/147.html#L67'>mode</a>               67 src/fs/devfs.c 	devfs-&gt;mode = S_IFDIR;
+<a href='../S/146.html#L62'>mode</a>               62 src/fs/fs.c    struct inode* fs_creat (struct inode* inode, char* name, mode_t mode) {
+<a href='../S/146.html#L64'>mode</a>               64 src/fs/fs.c    		return inode-&gt;creat(inode, name, mode);
+<a href='../S/145.html#L80'>mode</a>               80 src/fs/pipe.c  		inodes[i].mode = S_IFIFO;
+<a href='../S/144.html#L91'>mode</a>               91 src/fs/vfs.c   	vfs_root-&gt;mode = S_IFDIR;
+<a href='../S/97.html#L41'>mode</a>               41 src/include/aplus/fs.h 	mode_t mode;
+<a href='../S/97.html#L60'>mode</a>               60 src/include/aplus/fs.h 	struct inode* (*creat) (struct inode* inode, char* name, mode_t mode);
+<a href='../S/120.html#L28'>mode</a>               28 src/syscall/fstat.c 	st-&gt;st_mode = ino-&gt;mode;
+<a href='../S/139.html#L19'>mode</a>               19 src/syscall/open.c static inode_t* ino_open(char* filename, int flags, mode_t mode) {
+<a href='../S/139.html#L59'>mode</a>               59 src/syscall/open.c 			while(S_ISLNK(cwd-&gt;mode))
+<a href='../S/139.html#L83'>mode</a>               83 src/syscall/open.c 		while(S_ISLNK(cwd-&gt;mode)) {
+<a href='../S/139.html#L97'>mode</a>               97 src/syscall/open.c 		if(!(S_ISDIR(cwd-&gt;mode))) {
+<a href='../S/139.html#L107'>mode</a>              107 src/syscall/open.c int sys_open(char* filename, int flags, mode_t mode) {
+<a href='../S/139.html#L111'>mode</a>              111 src/syscall/open.c 	inode_t* ino = ino_open(filename, flags, mode);
+</pre>
+</body>
+</html>

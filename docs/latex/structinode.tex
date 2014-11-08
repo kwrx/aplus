@@ -1,0 +1,259 @@
+\hypertarget{structinode}{\section{Riferimenti per la struct inode}
+\label{structinode}\index{inode@{inode}}
+}
+
+
+{\ttfamily \#include $<$fs.\+h$>$}
+
+\subsection*{Campi}
+\begin{DoxyCompactItemize}
+\item 
+char \hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name} \mbox{[}255\mbox{]}
+\item 
+dev\+\_\+t \hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev}
+\item 
+ino\+\_\+t \hyperlink{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{ino}
+\item 
+mode\+\_\+t \hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode}
+\item 
+nlink\+\_\+t \hyperlink{structinode_a1daedc820c86b5af32f0a137419f7a8f}{nlink}
+\item 
+uid\+\_\+t \hyperlink{structinode_a0eac94e96ded19029e871d5cce815bcb}{uid}
+\item 
+gid\+\_\+t \hyperlink{structinode_a8434fb9dd05057d00b37ed713713835d}{gid}
+\item 
+dev\+\_\+t \hyperlink{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{rdev}
+\item 
+off\+\_\+t \hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size}
+\item 
+off\+\_\+t \hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position}
+\item 
+time\+\_\+t \hyperlink{structinode_a7e52661a115f6def97778566f2be0d80}{atime}
+\item 
+time\+\_\+t \hyperlink{structinode_a19f0d407fa2962c942e406d3e00c1da4}{mtime}
+\item 
+time\+\_\+t \hyperlink{structinode_a27334a9d3c25fbac1c134ed5b9cbc566}{ctime}
+\item 
+void $\ast$ \hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata}
+\item 
+int($\ast$ \hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, char $\ast$ptr, int len)
+\item 
+int($\ast$ \hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, char $\ast$ptr, int len)
+\item 
+struct \hyperlink{structdirent}{dirent} $\ast$($\ast$ \hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, int index)
+\item 
+struct \hyperlink{structinode}{inode} $\ast$($\ast$ \hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, char $\ast$\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name})
+\item 
+struct \hyperlink{structinode}{inode} $\ast$($\ast$ \hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, char $\ast$\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name}, mode\+\_\+t \hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode})
+\item 
+int($\ast$ \hyperlink{structinode_a5a309a9c4ada7e4d062162b06125a929}{rename} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, char $\ast$oldname, char $\ast$newname)
+\item 
+int($\ast$ \hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, char $\ast$\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name})
+\item 
+int($\ast$ \hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, uid\+\_\+t owner, gid\+\_\+t group)
+\item 
+void($\ast$ \hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode})
+\item 
+int($\ast$ \hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl} )(struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, int req, void $\ast$buf)
+\item 
+struct \hyperlink{structinode}{inode} $\ast$ \hyperlink{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}{parent}
+\item 
+struct \hyperlink{structinode}{inode} $\ast$ \hyperlink{structinode_a3533c53c5391601c66b3ae0f389c0843}{link}
+\end{DoxyCompactItemize}
+
+
+\subsection{Descrizione dettagliata}
+
+
+Definizione alla linea 36 del file fs.\+h.
+
+
+
+\subsection{Documentazione dei campi}
+\hypertarget{structinode_a7e52661a115f6def97778566f2be0d80}{\index{inode@{inode}!atime@{atime}}
+\index{atime@{atime}!inode@{inode}}
+\subsubsection[{atime}]{\setlength{\rightskip}{0pt plus 5cm}time\+\_\+t inode\+::atime}}\label{structinode_a7e52661a115f6def97778566f2be0d80}
+
+
+Definizione alla linea 49 del file fs.\+h.
+
+\hypertarget{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{\index{inode@{inode}!chown@{chown}}
+\index{chown@{chown}!inode@{inode}}
+\subsubsection[{chown}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ inode\+::chown)(struct {\bf inode} $\ast${\bf inode}, uid\+\_\+t owner, gid\+\_\+t group)}}\label{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}
+
+
+Definizione alla linea 64 del file fs.\+h.
+
+\hypertarget{structinode_ad622a049b34780786d9ba4311b06b3b4}{\index{inode@{inode}!creat@{creat}}
+\index{creat@{creat}!inode@{inode}}
+\subsubsection[{creat}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf inode}$\ast$($\ast$ inode\+::creat)(struct {\bf inode} $\ast${\bf inode}, char $\ast${\bf name}, mode\+\_\+t {\bf mode})}}\label{structinode_ad622a049b34780786d9ba4311b06b3b4}
+
+
+Definizione alla linea 60 del file fs.\+h.
+
+\hypertarget{structinode_a27334a9d3c25fbac1c134ed5b9cbc566}{\index{inode@{inode}!ctime@{ctime}}
+\index{ctime@{ctime}!inode@{inode}}
+\subsubsection[{ctime}]{\setlength{\rightskip}{0pt plus 5cm}time\+\_\+t inode\+::ctime}}\label{structinode_a27334a9d3c25fbac1c134ed5b9cbc566}
+
+
+Definizione alla linea 51 del file fs.\+h.
+
+\hypertarget{structinode_a127a2eb030df332fa64a81188731ad6b}{\index{inode@{inode}!dev@{dev}}
+\index{dev@{dev}!inode@{inode}}
+\subsubsection[{dev}]{\setlength{\rightskip}{0pt plus 5cm}dev\+\_\+t inode\+::dev}}\label{structinode_a127a2eb030df332fa64a81188731ad6b}
+
+
+Definizione alla linea 39 del file fs.\+h.
+
+\hypertarget{structinode_ab6c5e2d912fdbd506086e53185cd370d}{\index{inode@{inode}!finddir@{finddir}}
+\index{finddir@{finddir}!inode@{inode}}
+\subsubsection[{finddir}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf inode}$\ast$($\ast$ inode\+::finddir)(struct {\bf inode} $\ast${\bf inode}, char $\ast${\bf name})}}\label{structinode_ab6c5e2d912fdbd506086e53185cd370d}
+
+
+Definizione alla linea 59 del file fs.\+h.
+
+\hypertarget{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{\index{inode@{inode}!flush@{flush}}
+\index{flush@{flush}!inode@{inode}}
+\subsubsection[{flush}]{\setlength{\rightskip}{0pt plus 5cm}void($\ast$ inode\+::flush)(struct {\bf inode} $\ast${\bf inode})}}\label{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}
+
+
+Definizione alla linea 65 del file fs.\+h.
+
+\hypertarget{structinode_a8434fb9dd05057d00b37ed713713835d}{\index{inode@{inode}!gid@{gid}}
+\index{gid@{gid}!inode@{inode}}
+\subsubsection[{gid}]{\setlength{\rightskip}{0pt plus 5cm}gid\+\_\+t inode\+::gid}}\label{structinode_a8434fb9dd05057d00b37ed713713835d}
+
+
+Definizione alla linea 44 del file fs.\+h.
+
+\hypertarget{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{\index{inode@{inode}!ino@{ino}}
+\index{ino@{ino}!inode@{inode}}
+\subsubsection[{ino}]{\setlength{\rightskip}{0pt plus 5cm}ino\+\_\+t inode\+::ino}}\label{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}
+
+
+Definizione alla linea 40 del file fs.\+h.
+
+\hypertarget{structinode_a636843da203574bc338b016758bf8c7e}{\index{inode@{inode}!ioctl@{ioctl}}
+\index{ioctl@{ioctl}!inode@{inode}}
+\subsubsection[{ioctl}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ inode\+::ioctl)(struct {\bf inode} $\ast${\bf inode}, int req, void $\ast$buf)}}\label{structinode_a636843da203574bc338b016758bf8c7e}
+
+
+Definizione alla linea 67 del file fs.\+h.
+
+\hypertarget{structinode_a3533c53c5391601c66b3ae0f389c0843}{\index{inode@{inode}!link@{link}}
+\index{link@{link}!inode@{inode}}
+\subsubsection[{link}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf inode}$\ast$ inode\+::link}}\label{structinode_a3533c53c5391601c66b3ae0f389c0843}
+
+
+Definizione alla linea 71 del file fs.\+h.
+
+\hypertarget{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{\index{inode@{inode}!mode@{mode}}
+\index{mode@{mode}!inode@{inode}}
+\subsubsection[{mode}]{\setlength{\rightskip}{0pt plus 5cm}mode\+\_\+t inode\+::mode}}\label{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}
+
+
+Definizione alla linea 41 del file fs.\+h.
+
+\hypertarget{structinode_a19f0d407fa2962c942e406d3e00c1da4}{\index{inode@{inode}!mtime@{mtime}}
+\index{mtime@{mtime}!inode@{inode}}
+\subsubsection[{mtime}]{\setlength{\rightskip}{0pt plus 5cm}time\+\_\+t inode\+::mtime}}\label{structinode_a19f0d407fa2962c942e406d3e00c1da4}
+
+
+Definizione alla linea 50 del file fs.\+h.
+
+\hypertarget{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{\index{inode@{inode}!name@{name}}
+\index{name@{name}!inode@{inode}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}char inode\+::name\mbox{[}255\mbox{]}}}\label{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}
+
+
+Definizione alla linea 37 del file fs.\+h.
+
+\hypertarget{structinode_a1daedc820c86b5af32f0a137419f7a8f}{\index{inode@{inode}!nlink@{nlink}}
+\index{nlink@{nlink}!inode@{inode}}
+\subsubsection[{nlink}]{\setlength{\rightskip}{0pt plus 5cm}nlink\+\_\+t inode\+::nlink}}\label{structinode_a1daedc820c86b5af32f0a137419f7a8f}
+
+
+Definizione alla linea 42 del file fs.\+h.
+
+\hypertarget{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}{\index{inode@{inode}!parent@{parent}}
+\index{parent@{parent}!inode@{inode}}
+\subsubsection[{parent}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf inode}$\ast$ inode\+::parent}}\label{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}
+
+
+Definizione alla linea 70 del file fs.\+h.
+
+\hypertarget{structinode_a5756f61233e40d01652094d29b5daf6c}{\index{inode@{inode}!position@{position}}
+\index{position@{position}!inode@{inode}}
+\subsubsection[{position}]{\setlength{\rightskip}{0pt plus 5cm}off\+\_\+t inode\+::position}}\label{structinode_a5756f61233e40d01652094d29b5daf6c}
+
+
+Definizione alla linea 47 del file fs.\+h.
+
+\hypertarget{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{\index{inode@{inode}!rdev@{rdev}}
+\index{rdev@{rdev}!inode@{inode}}
+\subsubsection[{rdev}]{\setlength{\rightskip}{0pt plus 5cm}dev\+\_\+t inode\+::rdev}}\label{structinode_a3e7613383954ff7b5faf7c2188e1f61b}
+
+
+Definizione alla linea 45 del file fs.\+h.
+
+\hypertarget{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{\index{inode@{inode}!read@{read}}
+\index{read@{read}!inode@{inode}}
+\subsubsection[{read}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ inode\+::read)(struct {\bf inode} $\ast${\bf inode}, char $\ast$ptr, int len)}}\label{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}
+
+
+Definizione alla linea 55 del file fs.\+h.
+
+\hypertarget{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{\index{inode@{inode}!readdir@{readdir}}
+\index{readdir@{readdir}!inode@{inode}}
+\subsubsection[{readdir}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf dirent}$\ast$($\ast$ inode\+::readdir)(struct {\bf inode} $\ast${\bf inode}, int index)}}\label{structinode_a0a54c11571f19f23322f3e6ad3ecb113}
+
+
+Definizione alla linea 58 del file fs.\+h.
+
+\hypertarget{structinode_a5a309a9c4ada7e4d062162b06125a929}{\index{inode@{inode}!rename@{rename}}
+\index{rename@{rename}!inode@{inode}}
+\subsubsection[{rename}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ inode\+::rename)(struct {\bf inode} $\ast${\bf inode}, char $\ast$oldname, char $\ast$newname)}}\label{structinode_a5a309a9c4ada7e4d062162b06125a929}
+
+
+Definizione alla linea 62 del file fs.\+h.
+
+\hypertarget{structinode_a53722b1b60b7136ce0204b66527bb400}{\index{inode@{inode}!size@{size}}
+\index{size@{size}!inode@{inode}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}off\+\_\+t inode\+::size}}\label{structinode_a53722b1b60b7136ce0204b66527bb400}
+
+
+Definizione alla linea 46 del file fs.\+h.
+
+\hypertarget{structinode_a0eac94e96ded19029e871d5cce815bcb}{\index{inode@{inode}!uid@{uid}}
+\index{uid@{uid}!inode@{inode}}
+\subsubsection[{uid}]{\setlength{\rightskip}{0pt plus 5cm}uid\+\_\+t inode\+::uid}}\label{structinode_a0eac94e96ded19029e871d5cce815bcb}
+
+
+Definizione alla linea 43 del file fs.\+h.
+
+\hypertarget{structinode_adf65bac80736631b8000d3d34e953aaa}{\index{inode@{inode}!unlink@{unlink}}
+\index{unlink@{unlink}!inode@{inode}}
+\subsubsection[{unlink}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ inode\+::unlink)(struct {\bf inode} $\ast${\bf inode}, char $\ast${\bf name})}}\label{structinode_adf65bac80736631b8000d3d34e953aaa}
+
+
+Definizione alla linea 63 del file fs.\+h.
+
+\hypertarget{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{\index{inode@{inode}!userdata@{userdata}}
+\index{userdata@{userdata}!inode@{inode}}
+\subsubsection[{userdata}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ inode\+::userdata}}\label{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}
+
+
+Definizione alla linea 53 del file fs.\+h.
+
+\hypertarget{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{\index{inode@{inode}!write@{write}}
+\index{write@{write}!inode@{inode}}
+\subsubsection[{write}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ inode\+::write)(struct {\bf inode} $\ast${\bf inode}, char $\ast$ptr, int len)}}\label{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}
+
+
+Definizione alla linea 56 del file fs.\+h.
+
+
+
+La documentazione per questa struct è stata generata a partire dal seguente file\+:\begin{DoxyCompactItemize}
+\item 
+src/include/aplus/\hyperlink{fs_8h}{fs.\+h}\end{DoxyCompactItemize}

@@ -1,0 +1,128 @@
+\hypertarget{usr_2src_2libpthread_2test_2main_8c}{\section{Riferimenti per il file usr/src/libpthread/test/main.c}
+\label{usr_2src_2libpthread_2test_2main_8c}\index{usr/src/libpthread/test/main.\+c@{usr/src/libpthread/test/main.\+c}}
+}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+static void $\ast$ \hyperlink{usr_2src_2libpthread_2test_2main_8c_abc9e9db807928dccd01360c262a265ae}{\+\_\+\+\_\+test\+\_\+pthread\+\_\+1} (void $\ast$p)
+\item 
+int \hyperlink{usr_2src_2libpthread_2test_2main_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{usr_2src_2libpthread_2test_2main_8c_abc9e9db807928dccd01360c262a265ae}{\index{usr/src/libpthread/test/main.\+c@{usr/src/libpthread/test/main.\+c}!\+\_\+\+\_\+test\+\_\+pthread\+\_\+1@{\+\_\+\+\_\+test\+\_\+pthread\+\_\+1}}
+\index{\+\_\+\+\_\+test\+\_\+pthread\+\_\+1@{\+\_\+\+\_\+test\+\_\+pthread\+\_\+1}!usr/src/libpthread/test/main.\+c@{usr/src/libpthread/test/main.\+c}}
+\subsubsection[{\+\_\+\+\_\+test\+\_\+pthread\+\_\+1}]{\setlength{\rightskip}{0pt plus 5cm}static void$\ast$ \+\_\+\+\_\+test\+\_\+pthread\+\_\+1 (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{p}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{usr_2src_2libpthread_2test_2main_8c_abc9e9db807928dccd01360c262a265ae}
+
+
+Definizione alla linea 7 del file main.\+c.
+
+
+\begin{DoxyCode}
+7                                         \{
+8     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) 200;
+9 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libpthread_2test_2main_8c_a3c04138a5bfe5d72780bb7e82a18e627}{\index{usr/src/libpthread/test/main.\+c@{usr/src/libpthread/test/main.\+c}!main@{main}}
+\index{main@{main}!usr/src/libpthread/test/main.\+c@{usr/src/libpthread/test/main.\+c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$$\ast$}]{argv}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libpthread_2test_2main_8c_a3c04138a5bfe5d72780bb7e82a18e627}
+
+
+Definizione alla linea 12 del file main.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+test\+\_\+pthread\+\_\+1(), pthread\+\_\+barrier\+\_\+destroy(), pthread\+\_\+barrier\+\_\+init(), P\+T\+H\+R\+E\+A\+D\+\_\+\+B\+A\+R\+R\+I\+E\+R\+\_\+\+S\+E\+R\+I\+A\+L\+\_\+\+T\+H\+R\+E\+A\+D, pthread\+\_\+barrier\+\_\+wait(), pthread\+\_\+cond\+\_\+destroy(), pthread\+\_\+cond\+\_\+init(), pthread\+\_\+create(), pthread\+\_\+getspecific(), pthread\+\_\+join(), pthread\+\_\+key\+\_\+create(), pthread\+\_\+key\+\_\+delete(), pthread\+\_\+mutex\+\_\+destroy(), pthread\+\_\+mutex\+\_\+init(), pthread\+\_\+mutex\+\_\+trylock(), pthread\+\_\+mutex\+\_\+unlock(), pthread\+\_\+rwlock\+\_\+destroy(), pthread\+\_\+rwlock\+\_\+init(), pthread\+\_\+rwlock\+\_\+tryrdlock(), pthread\+\_\+rwlock\+\_\+trywrlock(), pthread\+\_\+rwlock\+\_\+unlock(), pthread\+\_\+setspecific(), pthread\+\_\+spin\+\_\+destroy(), pthread\+\_\+spin\+\_\+init(), pthread\+\_\+spin\+\_\+trylock(), e pthread\+\_\+spin\+\_\+unlock().
+
+
+\begin{DoxyCode}
+12                                 \{
+13 
+14     printf(\textcolor{stringliteral}{"Test #1 - Create and join thread\(\backslash\)n"});
+15 
+16     \hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\_t} ptx\_1;
+17     \textcolor{keywordtype}{void}* retval\_1;
+18 
+19     assert(\hyperlink{pthread_8h_a6933a96c86c4fbebef09c9cbc0625e81}{pthread\_create}(&ptx\_1, NULL, \hyperlink{usr_2src_2libpthread_2test_2main_8c_abc9e9db807928dccd01360c262a265ae}{\_\_test\_pthread\_1}, NULL) == 0);
+20     assert(\hyperlink{pthread_8h_aa79c99cc7b194918a2def257246f11c6}{pthread\_join}(ptx\_1, &retval\_1) == 0);
+21     assert((\textcolor{keywordtype}{int}) retval\_1 == 200 && \textcolor{stringliteral}{"bad returned value"});
+22 
+23     
+24 
+25     printf(\textcolor{stringliteral}{"Test #2 - Create and lock/unlock mutex\(\backslash\)n"});
+26     \hyperlink{structpthread__mutex}{pthread\_mutex\_t} mtx\_2;
+27     
+28     assert(\hyperlink{pthread_8h_a7454d249ed94ad5d5e57ba1529d7a7f2}{pthread\_mutex\_init}(&mtx\_2, NULL) == 0);
+29     assert(\hyperlink{pthread_8h_a27da386211db1a7e9a3b2a0db4d22144}{pthread\_mutex\_trylock}(&mtx\_2) == 0);
+30     assert(\hyperlink{pthread_8h_a96184290ffb60e04c53a52869cf960a2}{pthread\_mutex\_unlock}(&mtx\_2) == 0);
+31     assert(\hyperlink{pthread_8h_a3cf620ff3a40af11d79cf28901dc55e2}{pthread\_mutex\_destroy}(&mtx\_2) == 0);
+32         
+33 
+34 
+35     printf(\textcolor{stringliteral}{"Test #3 - Create and lock/unlock spinlock\(\backslash\)n"});
+36     \hyperlink{structpthread__spinlock}{pthread\_spinlock\_t} spl\_3;
+37     
+38     assert(\hyperlink{pthread_8h_aa35638e0561b356d978095ebb3ca6401}{pthread\_spin\_init}(&spl\_3, 0) == 0);
+39     assert(\hyperlink{pthread_8h_acc1bbcf93cbba8a8f5a8dec2d2db9318}{pthread\_spin\_trylock}(&spl\_3) == 0);
+40     assert(\hyperlink{pthread_8h_a3aff65ef8d5fb28a7be0403661724eee}{pthread\_spin\_unlock}(&spl\_3) == 0);
+41     assert(\hyperlink{pthread_8h_a87f8f1b6530c064af125525668de7573}{pthread\_spin\_destroy}(&spl\_3) == 0);
+42 
+43 
+44 
+45     printf(\textcolor{stringliteral}{"Test #4 - Create and lock/unlock condition\(\backslash\)n"});
+46     \hyperlink{structpthread__cond}{pthread\_cond\_t} cond\_4;
+47     \hyperlink{structpthread__mutex}{pthread\_mutex\_t} mtx\_4;
+48 
+49     assert(\hyperlink{pthread_8h_a7454d249ed94ad5d5e57ba1529d7a7f2}{pthread\_mutex\_init}(&mtx\_4, NULL) == 0);
+50     assert(\hyperlink{pthread_8h_ad5b6c558bcd5260289981207b9ca9687}{pthread\_cond\_init}(&cond\_4, NULL) == 0);
+51     assert(\hyperlink{pthread_8h_aa1587e01856a579b78effd0a1a284a47}{pthread\_cond\_destroy}(&cond\_4) == 0);
+52 
+53 
+54 
+55     printf(\textcolor{stringliteral}{"Test #5 - Create and lock/unlock Read-Write lock\(\backslash\)n"});
+56     \hyperlink{structpthread__rwlock}{pthread\_rwlock\_t} rw\_5;
+57     
+58     assert(\hyperlink{pthread_8h_a5ee98536e18644a68d1e5fa377ba827b}{pthread\_rwlock\_init}(&rw\_5, NULL) == 0);
+59     assert(\hyperlink{pthread_8h_a22beda5fdbe327286232d6fa3072d0be}{pthread\_rwlock\_tryrdlock}(&rw\_5) == 0);
+60     assert(\hyperlink{pthread_8h_a294df74b6a0613e5b0b18850ee24f2a6}{pthread\_rwlock\_unlock}(&rw\_5) == 0);
+61     assert(\hyperlink{pthread_8h_af876ea2a1537ebb147ca1ac773d341ea}{pthread\_rwlock\_trywrlock}(&rw\_5) == 0);
+62     assert(\hyperlink{pthread_8h_a294df74b6a0613e5b0b18850ee24f2a6}{pthread\_rwlock\_unlock}(&rw\_5) == 0);
+63     assert(\hyperlink{pthread_8h_a1166bfb9159f43886513740ffcf52100}{pthread\_rwlock\_destroy}(&rw\_5) == 0);
+64 
+65     printf(\textcolor{stringliteral}{"Test #6 - Create and wait barrier\(\backslash\)n"});
+66     \hyperlink{structpthread__barrier}{pthread\_barrier\_t} bar\_6;
+67     
+68     assert(\hyperlink{pthread_8h_a8ccfa0d7e4ed11ad58990e4bc88d6563}{pthread\_barrier\_init}(&bar\_6, NULL, 1) == 0);
+69     assert(\hyperlink{pthread_8h_a85f92053b4d12aa94927b364b5b757d9}{pthread\_barrier\_wait}(&bar\_6) == 
+      \hyperlink{pthread_8h_a822c63bc662ad86cfb2dcec50edbb42b}{PTHREAD\_BARRIER\_SERIAL\_THREAD});
+70     assert(\hyperlink{pthread_8h_ae8ef9b4e2d7feaa1a28159991e7433ac}{pthread\_barrier\_destroy}(&bar\_6) == 0);
+71 
+72 
+73 
+74     printf(\textcolor{stringliteral}{"Test #7 - Store and read from TLS\(\backslash\)n"});
+75     \hyperlink{pthread_8h_a965dffa696273f72e4b513905c63a3ad}{pthread\_key\_t} key\_7;
+76 
+77     assert(\hyperlink{pthread_8h_af4b7ced8ecff505380fe8216244a3764}{pthread\_key\_create}(&key\_7, NULL) == 0);
+78     assert(\hyperlink{pthread_8h_a2187333dd46ce08d9d2e044f79fad705}{pthread\_setspecific}(key\_7, (\textcolor{keyword}{const} \textcolor{keywordtype}{void}*) 200) == 0);
+79     assert((\textcolor{keywordtype}{int}) \hyperlink{pthread_8h_a31469375891078185bda93f0e4411a2c}{pthread\_getspecific}(key\_7) == 200 && \textcolor{stringliteral}{"bad returned value"});
+80     assert(\hyperlink{pthread_8h_aee96306dc79294927ee840bb4de2244b}{pthread\_key\_delete}(key\_7) == 0);
+81 
+82 
+83 
+84     printf(\textcolor{stringliteral}{"\(\backslash\)nTest OK\(\backslash\)n"});
+85     \textcolor{keywordflow}{return} 0;
+86 \}
+\end{DoxyCode}

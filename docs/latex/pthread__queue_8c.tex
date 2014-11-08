@@ -1,0 +1,80 @@
+\hypertarget{pthread__queue_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+queue.c}
+\label{pthread__queue_8c}\index{usr/src/libpthread/src/pthread\+\_\+queue.\+c@{usr/src/libpthread/src/pthread\+\_\+queue.\+c}}
+}
+{\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} void \hyperlink{pthread__queue_8c_a524e53db3985af45990760ed9068c0a9}{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue} ()
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_a5e151c615eda34903514212f05a5ccf8}{P\+R\+I\+V\+A\+T\+E} \hyperlink{pthread__internal_8h_acef1d04f94658c4052cd87213538f7e4}{pthread\+\_\+context\+\_\+t} \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\+\_\+\+\_\+current\+\_\+thread}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} \hyperlink{pthread__internal_8h_acef1d04f94658c4052cd87213538f7e4}{pthread\+\_\+context\+\_\+t} $\ast$ \hyperlink{pthread__queue_8c_af5e1770b9b68ff239d3c16cb3587ce64}{\+\_\+\+\_\+pthread\+\_\+queue} = \&\hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\+\_\+\+\_\+current\+\_\+thread}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{pthread__queue_8c_a0b13cae1b0e7848f7d9689241f8f93a8}{\+\_\+\+\_\+pthread\+\_\+counts} = 1
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__queue_8c_a524e53db3985af45990760ed9068c0a9}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue}}
+\index{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
+\subsubsection[{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} void \+\_\+\+\_\+pthread\+\_\+init\+\_\+queue (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{pthread__queue_8c_a524e53db3985af45990760ed9068c0a9}
+
+
+Definizione alla linea 12 del file pthread\+\_\+queue.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\+\_\+context\+::attr, pthread\+\_\+context\+::cond, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+once\+::started, e pthread\+\_\+context\+::tid.
+
+
+\begin{DoxyCode}
+12                                    \{
+13     \textcolor{keywordflow}{if}(\hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a5b7aa396dbf3c140b1a54f09568c8253}{tid})
+14         \textcolor{keywordflow}{return};
+15 
+16     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a5b7aa396dbf3c140b1a54f09568c8253}{tid} = \hyperlink{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\_\_os\_gettid}();
+17     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a688eabe4cd81d34bed6c73abd442f54a}{entry} = NULL;
+18     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_afb0244aa84b0403cc0df2cd6ebdb94b4}{param} = NULL;
+19     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_ab2848ec5b075681f217e57545f986c1b}{exitval} = NULL;
+20     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a33f7f059b1d0cda2a8675d13600b6dd2}{once}.\hyperlink{structpthread__once_acffdc3852414e4eeece3c8e7cf80ffc1}{done} = 0;
+21     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a33f7f059b1d0cda2a8675d13600b6dd2}{once}.\hyperlink{structpthread__once_a2bebfebb49a5c75d10119824d5bba93c}{started} = -1;
+22     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_ace03687a8a5dc35db9e23fdc96bf0667}{cond} = NULL;
+23     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a876fe0d5cfa5b9886c90e5936b98f992}{next} = NULL;
+24 
+25     memset(&\hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a63e797747884670222fc0ea6fdf801fd}{attr}, 0, \textcolor{keyword}{sizeof}(\hyperlink{structpthread__attr}{pthread\_attr\_t}));
+26 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+current\+\_\+thread@{\+\_\+\+\_\+current\+\_\+thread}}
+\index{\+\_\+\+\_\+current\+\_\+thread@{\+\_\+\+\_\+current\+\_\+thread}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
+\subsubsection[{\+\_\+\+\_\+current\+\_\+thread}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+R\+I\+V\+A\+T\+E} {\bf pthread\+\_\+context\+\_\+t} \+\_\+\+\_\+current\+\_\+thread}}\label{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}
+
+
+Definizione alla linea 6 del file pthread\+\_\+queue.\+c.
+
+\hypertarget{pthread__queue_8c_a0b13cae1b0e7848f7d9689241f8f93a8}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}}
+\index{\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
+\subsubsection[{\+\_\+\+\_\+pthread\+\_\+counts}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} {\bf uint32\+\_\+t} \+\_\+\+\_\+pthread\+\_\+counts = 1}}\label{pthread__queue_8c_a0b13cae1b0e7848f7d9689241f8f93a8}
+
+
+Definizione alla linea 9 del file pthread\+\_\+queue.\+c.
+
+\hypertarget{pthread__queue_8c_af5e1770b9b68ff239d3c16cb3587ce64}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}}
+\index{\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
+\subsubsection[{\+\_\+\+\_\+pthread\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} {\bf pthread\+\_\+context\+\_\+t}$\ast$ \+\_\+\+\_\+pthread\+\_\+queue = \&{\bf \+\_\+\+\_\+current\+\_\+thread}}}\label{pthread__queue_8c_af5e1770b9b68ff239d3c16cb3587ce64}
+
+
+Definizione alla linea 8 del file pthread\+\_\+queue.\+c.
+

@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus:  File sorgente src/include/grub.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('grub_8h_source.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">grub.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="grub_8h.html">Vai alla documentazione di questo file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//  grub.h</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">//  Author:</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//  Copyright (c) 2014 WareX</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">//  This program is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">//  it under the terms of the GNU General Public License as published by</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">//  the Free Software Foundation, either version 3 of the License, or</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//  (at your option) any later version.</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//  This program is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//  but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//  GNU General Public License for more details.</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//  You should have received a copy of the GNU General Public License</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifndef _GRUB_H</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define _GRUB_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html">   26</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structvesaInfo__t.html">vesaInfo_t</a> {</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#a48deedd69aeb2ce0d1c27e77f9da23c5">   27</a></span>&#160;        <span class="keywordtype">char</span> <a class="code" href="structvesaInfo__t.html#a48deedd69aeb2ce0d1c27e77f9da23c5">signature</a>[4];</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#a6c1001f337933e02a68640cfc7abdfb6">   28</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaInfo__t.html#a6c1001f337933e02a68640cfc7abdfb6">version</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#aee5b0eb81a986dc3adadc287dd6809c4">   29</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structvesaInfo__t.html#aee5b0eb81a986dc3adadc287dd6809c4">oem_string_ptr</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#a1f4453c48c6629e27fd2e97948deb62b">   30</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structvesaInfo__t.html#a1f4453c48c6629e27fd2e97948deb62b">capabilities</a>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#af4342c2c5c65c802e4a042d324572b9d">   31</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structvesaInfo__t.html#af4342c2c5c65c802e4a042d324572b9d">video_mode_ptr</a>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#ab94cc102e07cdfbf3cb53690bf205321">   32</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaInfo__t.html#ab94cc102e07cdfbf3cb53690bf205321">total_memory</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#af0e5f50889726f62d961141ee8fa06f3">   33</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structvesaInfo__t.html#af0e5f50889726f62d961141ee8fa06f3">oem_software_rev</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#a35b0e91dc1f97ab1f05b8c9a6fe8988f">   34</a></span>&#160;        <span class="keywordtype">char</span> *<a class="code" href="structvesaInfo__t.html#a35b0e91dc1f97ab1f05b8c9a6fe8988f">oem_vendor_name</a>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#a532306633838e6bc58a9e91f69835302">   35</a></span>&#160;        <span class="keywordtype">char</span> *<a class="code" href="structvesaInfo__t.html#a532306633838e6bc58a9e91f69835302">oem_product_name</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="structvesaInfo__t.html#a4df6ee9c56e2171999b8346550e2273f">   36</a></span>&#160;        <span class="keywordtype">char</span> *<a class="code" href="structvesaInfo__t.html#a4df6ee9c56e2171999b8346550e2273f">oem_product_rev</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    } <a class="code" href="grub_8h.html#a949fefd565685608cdc3489425f32a93">vesaInfo</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html">   39</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structvesaModeInfo__t.html">vesaModeInfo_t</a> {</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a339145bcfb50fc81609813734415d4db">   40</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaModeInfo__t.html#a339145bcfb50fc81609813734415d4db">attributes</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a386d2bc2570ec21a98664958429247ed">   41</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#ac056f64b4375a72439ae6e84aae88e7f">winA</a>,<a class="code" href="structvesaModeInfo__t.html#a386d2bc2570ec21a98664958429247ed">winB</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a59708e15ac9929ad9218b4ef25f4e861">   42</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaModeInfo__t.html#a59708e15ac9929ad9218b4ef25f4e861">granularity</a>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a215d7dc86f8c13909156dbff6518d0c8">   43</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaModeInfo__t.html#a215d7dc86f8c13909156dbff6518d0c8">winsize</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a3f8f6fe3c4ee7fdbca2cf15883db343f">   44</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaModeInfo__t.html#af83d59348e11c50399f088cea83fb0a9">segmentA</a>, <a class="code" href="structvesaModeInfo__t.html#a3f8f6fe3c4ee7fdbca2cf15883db343f">segmentB</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a3c3c1fa91bfb8ec58a80ff0b9c1deaae">   45</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structvesaModeInfo__t.html#a3c3c1fa91bfb8ec58a80ff0b9c1deaae">realFctPtr</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#aed2e5dc0be6bd66efb67ab3de2191bfe">   46</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaModeInfo__t.html#aed2e5dc0be6bd66efb67ab3de2191bfe">pitch</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a54003f0083b0581fc14babfec48a1d7d">   48</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> <a class="code" href="structvesaModeInfo__t.html#a5ed5fe4414e2a46fa3670733486905ae">Xres</a>, <a class="code" href="structvesaModeInfo__t.html#a54003f0083b0581fc14babfec48a1d7d">Yres</a>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a1c395c3097057ffd0f3d12ea9df6133d">   49</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#a154546a781d9a7d5da7cc0b77a7b998c">Wchar</a>, <a class="code" href="structvesaModeInfo__t.html#a1c395c3097057ffd0f3d12ea9df6133d">Ychar</a>, <a class="code" href="structvesaModeInfo__t.html#a9d1ab189d261e008a41daa04d5ee9693">planes</a>, <a class="code" href="structvesaModeInfo__t.html#acbf51c6b217de951bd6b40ae60b2343d">bpp</a>, <a class="code" href="structvesaModeInfo__t.html#a543f6b11b8caed004dc0f4dd8fed13c8">banks</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a3f6f4827e2c4d40d89a6e8ec6e15c8f4">   50</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#a3f6f4827e2c4d40d89a6e8ec6e15c8f4">memory_model</a>, <a class="code" href="structvesaModeInfo__t.html#a6f7476f0df157c2fc8969131512a9bc1">bank_size</a>, <a class="code" href="structvesaModeInfo__t.html#a072aebfd294ef7c940917ad1f5d53176">image_pages</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a0f912afd0a853ea123ad3a157fc579c9">   51</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#a0f912afd0a853ea123ad3a157fc579c9">reserved0</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a96ecd4368bbcf68b97c9496939069c55">   53</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#a653392718e3a3c21aad77d0236ec8929">red_mask</a>, <a class="code" href="structvesaModeInfo__t.html#a96ecd4368bbcf68b97c9496939069c55">red_position</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#ac5e0330302132e9423fa856f26a34286">   54</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#a00414463a3873e70cc7418f109b35f06">green_mask</a>, <a class="code" href="structvesaModeInfo__t.html#ac5e0330302132e9423fa856f26a34286">green_position</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a20289f01bea4e5cbb2533e3c97f8d308">   55</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#aff78588c9039e0f8985d08bc2c5dd5ae">blue_mask</a>, <a class="code" href="structvesaModeInfo__t.html#a20289f01bea4e5cbb2533e3c97f8d308">blue_position</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a2af8762aa842598e8a6a33872a83b5ab">   56</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#a8b424620d78b885292f29849acfe962c">rsv_mask</a>, <a class="code" href="structvesaModeInfo__t.html#a2af8762aa842598e8a6a33872a83b5ab">rsv_position</a>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#afb95209f1e3ffa74635cb68495ecec26">   57</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="structvesaModeInfo__t.html#afb95209f1e3ffa74635cb68495ecec26">directcolor_attributes</a>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a0233746f9f5f4ecab8622c3a08dc6f5c">   59</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structvesaModeInfo__t.html#a0233746f9f5f4ecab8622c3a08dc6f5c">physbase</a>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#aacef0071c533de26e708289e474a0542">   60</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structvesaModeInfo__t.html#aacef0071c533de26e708289e474a0542">reserved1</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="structvesaModeInfo__t.html#a5ffbef6f6a9ac0ae6975827208b77ec5">   61</a></span>&#160;        <span class="keywordtype">short</span> <a class="code" href="structvesaModeInfo__t.html#a5ffbef6f6a9ac0ae6975827208b77ec5">reserved2</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    } <a class="code" href="grub_8h.html#afa73cc1cb823e7947162fcc569b64e5a">__attribute__</a> ((packed)) vesaModeInfo;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="structBootInfo__t.html">   64</a></span>&#160;    typedef struct <a class="code" href="structBootInfo__t.html">BootInfo_t</a> {</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a255b75459b2ed645abe749075f3ca25d">   65</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a255b75459b2ed645abe749075f3ca25d">flags</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a4b144c9db5fe2c5a9d72522068d65138">   66</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a4b144c9db5fe2c5a9d72522068d65138">mem_lower</a>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#ab20281f521d626a49714e06b62291be9">   67</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#ab20281f521d626a49714e06b62291be9">mem_upper</a>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a11fa989df3074f1a90fcb646aa434b97">   68</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a11fa989df3074f1a90fcb646aa434b97">boot_device</a>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a23d97e399056fd818fdd31ceb1a07f42">   69</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a23d97e399056fd818fdd31ceb1a07f42">cmdline</a>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a178ef95a8fbd89ec018899b9ba241d92">   70</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a178ef95a8fbd89ec018899b9ba241d92">mods_count</a>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">   71</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>** <a class="code" href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">mods_addr</a>;</div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a6a38dc50fe6f5719f544488a265b8cf1">   72</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a6a38dc50fe6f5719f544488a265b8cf1">num</a>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a761344d9a2bf10e1551dca7bd77f90cf">   73</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a761344d9a2bf10e1551dca7bd77f90cf">size</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#ac0a248c150ec1bceaafc488988174a1d">   74</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#ac0a248c150ec1bceaafc488988174a1d">addr</a>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#ab2c8b3b8778032a87c0c2fe73245e9e8">   75</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#ab2c8b3b8778032a87c0c2fe73245e9e8">shndx</a>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#ac44eb8289f5f6fbbca78dc24e5052be7">   76</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#ac44eb8289f5f6fbbca78dc24e5052be7">mmap_length</a>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a904e8344d4c4ef9a650305409b933b17">   77</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a904e8344d4c4ef9a650305409b933b17">mmap_addr</a>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#adc0745eb234059fc6eb37d8a6c18e4b4">   78</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#adc0745eb234059fc6eb37d8a6c18e4b4">drives_length</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#aa355db96d835f264c29a00f15ba126bf">   79</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#aa355db96d835f264c29a00f15ba126bf">drives_addr</a>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a43ae8547b0cea379829329a622d9bc4c">   80</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a43ae8547b0cea379829329a622d9bc4c">config_table</a>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a49973d2d24c8f4159b125f2fe0a42e3d">   81</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a49973d2d24c8f4159b125f2fe0a42e3d">boot_loader_name</a>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a1ce55d9a9d425ccbc6c447a8d73ffdba">   82</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a1ce55d9a9d425ccbc6c447a8d73ffdba">apm_table</a>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a8a09488fd20d514ccd02e07e5ca45d6d">   83</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a8a09488fd20d514ccd02e07e5ca45d6d">vbe_control_info</a>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#ad583d2ecbdc34a87c6ab29a2fded69b6">   84</a></span>&#160;        vesaModeInfo* <a class="code" href="structBootInfo__t.html#ad583d2ecbdc34a87c6ab29a2fded69b6">vbe_mode_info</a>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a55a278b70ee059fd245f08f3293440d9">   85</a></span>&#160;        <a class="code" href="structvesaInfo__t.html">vesaInfo</a>* <a class="code" href="structBootInfo__t.html#a55a278b70ee059fd245f08f3293440d9">vbe_mode</a>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a878cf7a1a61c7b7d21b704feee0fcc60">   86</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a878cf7a1a61c7b7d21b704feee0fcc60">vbe_interface_seg</a>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a2359d311e9a6d45dcebb8e6fae1a1f63">   87</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a2359d311e9a6d45dcebb8e6fae1a1f63">vbe_interface_off</a>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structBootInfo__t.html#a47ae9ab2b4242be9be167ea095956097">   88</a></span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="structBootInfo__t.html#a47ae9ab2b4242be9be167ea095956097">vbe_interface_len</a>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    } <a class="code" href="grub_8h.html#aaf761d57d118a95f28fd464fd6eaf593">BootInfo</a>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    </div>
+<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="grub_8h.html#a3efad85ab30d96e506aba9003c0ee4dd">   95</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_MEM 0x001</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="grub_8h.html#a9f338ee148fe6f4c672e8e53e608d985">   96</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_DEVICE 0x002</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="grub_8h.html#af58e2129db03f11e8f3d1be24c67f273">   97</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_CMDLINE 0x004</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="grub_8h.html#a05c950e0dfa2339451b7256de3b6634b">   98</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_MODS 0x008</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="grub_8h.html#a8ab64e4da5caf65cf7ae2991b984a3cf">   99</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_AOUT 0x010</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="grub_8h.html#ae67a3767b0bcf8b3a57a1f9d84a0d12c">  100</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_ELF 0x020</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="grub_8h.html#a2ed735dcce6c8367f6e3ee5f56e16a42">  101</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_MMAP 0x040</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="grub_8h.html#ab3d220808412fa0f715b0a1844f1843f">  102</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_CONFIG 0x080</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="grub_8h.html#ab80180da32c134cf24f3dd64e3e14176">  103</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_LOADER 0x100</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="grub_8h.html#a3fb3ddd4db5c7fb88fd513c66577735a">  104</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_APM 0x200</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="grub_8h.html#a852a5720b636e1bdc5799f72dd04b8d8">  105</a></span>&#160;<span class="preprocessor">    #define MULTIBOOT_FLAG_VBE 0x400</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">// Informazioni passate con il loader</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">extern</span> <a class="code" href="structBootInfo__t.html">BootInfo</a>* <a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keyword">extern</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code" href="grub_8h.html#a7154179fe070a40c828f7c03f454d4d6">magic</a>;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    </div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#endif  </span></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a6f7476f0df157c2fc8969131512a9bc1"><div class="ttname"><a href="structvesaModeInfo__t.html#a6f7476f0df157c2fc8969131512a9bc1">vesaModeInfo_t::bank_size</a></div><div class="ttdeci">unsigned char bank_size</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00050">grub.h:50</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a3c3c1fa91bfb8ec58a80ff0b9c1deaae"><div class="ttname"><a href="structvesaModeInfo__t.html#a3c3c1fa91bfb8ec58a80ff0b9c1deaae">vesaModeInfo_t::realFctPtr</a></div><div class="ttdeci">unsigned int realFctPtr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00045">grub.h:45</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_ab20281f521d626a49714e06b62291be9"><div class="ttname"><a href="structBootInfo__t.html#ab20281f521d626a49714e06b62291be9">BootInfo_t::mem_upper</a></div><div class="ttdeci">unsigned int mem_upper</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00067">grub.h:67</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a47ae9ab2b4242be9be167ea095956097"><div class="ttname"><a href="structBootInfo__t.html#a47ae9ab2b4242be9be167ea095956097">BootInfo_t::vbe_interface_len</a></div><div class="ttdeci">unsigned int vbe_interface_len</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00088">grub.h:88</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a3f6f4827e2c4d40d89a6e8ec6e15c8f4"><div class="ttname"><a href="structvesaModeInfo__t.html#a3f6f4827e2c4d40d89a6e8ec6e15c8f4">vesaModeInfo_t::memory_model</a></div><div class="ttdeci">unsigned char memory_model</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00050">grub.h:50</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html"><div class="ttname"><a href="structvesaInfo__t.html">vesaInfo_t</a></div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00026">grub.h:26</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_ab2c8b3b8778032a87c0c2fe73245e9e8"><div class="ttname"><a href="structBootInfo__t.html#ab2c8b3b8778032a87c0c2fe73245e9e8">BootInfo_t::shndx</a></div><div class="ttdeci">unsigned int shndx</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00075">grub.h:75</a></div></div>
+<div class="ttc" id="grub_8h_html_aaf761d57d118a95f28fd464fd6eaf593"><div class="ttname"><a href="grub_8h.html#aaf761d57d118a95f28fd464fd6eaf593">BootInfo</a></div><div class="ttdeci">struct BootInfo_t BootInfo</div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a543f6b11b8caed004dc0f4dd8fed13c8"><div class="ttname"><a href="structvesaModeInfo__t.html#a543f6b11b8caed004dc0f4dd8fed13c8">vesaModeInfo_t::banks</a></div><div class="ttdeci">unsigned char banks</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00049">grub.h:49</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_a4df6ee9c56e2171999b8346550e2273f"><div class="ttname"><a href="structvesaInfo__t.html#a4df6ee9c56e2171999b8346550e2273f">vesaInfo_t::oem_product_rev</a></div><div class="ttdeci">char * oem_product_rev</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00036">grub.h:36</a></div></div>
+<div class="ttc" id="grub_8h_html_a7154179fe070a40c828f7c03f454d4d6"><div class="ttname"><a href="grub_8h.html#a7154179fe070a40c828f7c03f454d4d6">magic</a></div><div class="ttdeci">unsigned int magic</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00042">mm.c:42</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_afb95209f1e3ffa74635cb68495ecec26"><div class="ttname"><a href="structvesaModeInfo__t.html#afb95209f1e3ffa74635cb68495ecec26">vesaModeInfo_t::directcolor_attributes</a></div><div class="ttdeci">unsigned char directcolor_attributes</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00057">grub.h:57</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a23d97e399056fd818fdd31ceb1a07f42"><div class="ttname"><a href="structBootInfo__t.html#a23d97e399056fd818fdd31ceb1a07f42">BootInfo_t::cmdline</a></div><div class="ttdeci">unsigned int cmdline</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00069">grub.h:69</a></div></div>
+<div class="ttc" id="grub_8h_html_abac514a5a8c938a1de6fb08f542f5962"><div class="ttname"><a href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a></div><div class="ttdeci">BootInfo * mbd</div></div>
+<div class="ttc" id="structBootInfo__t_html_a49973d2d24c8f4159b125f2fe0a42e3d"><div class="ttname"><a href="structBootInfo__t.html#a49973d2d24c8f4159b125f2fe0a42e3d">BootInfo_t::boot_loader_name</a></div><div class="ttdeci">unsigned int boot_loader_name</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00081">grub.h:81</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a1ce55d9a9d425ccbc6c447a8d73ffdba"><div class="ttname"><a href="structBootInfo__t.html#a1ce55d9a9d425ccbc6c447a8d73ffdba">BootInfo_t::apm_table</a></div><div class="ttdeci">unsigned int apm_table</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00082">grub.h:82</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a215d7dc86f8c13909156dbff6518d0c8"><div class="ttname"><a href="structvesaModeInfo__t.html#a215d7dc86f8c13909156dbff6518d0c8">vesaModeInfo_t::winsize</a></div><div class="ttdeci">unsigned short winsize</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00043">grub.h:43</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a386d2bc2570ec21a98664958429247ed"><div class="ttname"><a href="structvesaModeInfo__t.html#a386d2bc2570ec21a98664958429247ed">vesaModeInfo_t::winB</a></div><div class="ttdeci">unsigned char winB</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00041">grub.h:41</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_aff78588c9039e0f8985d08bc2c5dd5ae"><div class="ttname"><a href="structvesaModeInfo__t.html#aff78588c9039e0f8985d08bc2c5dd5ae">vesaModeInfo_t::blue_mask</a></div><div class="ttdeci">unsigned char blue_mask</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00055">grub.h:55</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a0233746f9f5f4ecab8622c3a08dc6f5c"><div class="ttname"><a href="structvesaModeInfo__t.html#a0233746f9f5f4ecab8622c3a08dc6f5c">vesaModeInfo_t::physbase</a></div><div class="ttdeci">unsigned int physbase</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00059">grub.h:59</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_aed2e5dc0be6bd66efb67ab3de2191bfe"><div class="ttname"><a href="structvesaModeInfo__t.html#aed2e5dc0be6bd66efb67ab3de2191bfe">vesaModeInfo_t::pitch</a></div><div class="ttdeci">unsigned short pitch</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00046">grub.h:46</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a154546a781d9a7d5da7cc0b77a7b998c"><div class="ttname"><a href="structvesaModeInfo__t.html#a154546a781d9a7d5da7cc0b77a7b998c">vesaModeInfo_t::Wchar</a></div><div class="ttdeci">unsigned char Wchar</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00049">grub.h:49</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_ac056f64b4375a72439ae6e84aae88e7f"><div class="ttname"><a href="structvesaModeInfo__t.html#ac056f64b4375a72439ae6e84aae88e7f">vesaModeInfo_t::winA</a></div><div class="ttdeci">unsigned char winA</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00041">grub.h:41</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_aa355db96d835f264c29a00f15ba126bf"><div class="ttname"><a href="structBootInfo__t.html#aa355db96d835f264c29a00f15ba126bf">BootInfo_t::drives_addr</a></div><div class="ttdeci">unsigned int drives_addr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00079">grub.h:79</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a072aebfd294ef7c940917ad1f5d53176"><div class="ttname"><a href="structvesaModeInfo__t.html#a072aebfd294ef7c940917ad1f5d53176">vesaModeInfo_t::image_pages</a></div><div class="ttdeci">unsigned char image_pages</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00050">grub.h:50</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a339145bcfb50fc81609813734415d4db"><div class="ttname"><a href="structvesaModeInfo__t.html#a339145bcfb50fc81609813734415d4db">vesaModeInfo_t::attributes</a></div><div class="ttdeci">unsigned short attributes</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00040">grub.h:40</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_a532306633838e6bc58a9e91f69835302"><div class="ttname"><a href="structvesaInfo__t.html#a532306633838e6bc58a9e91f69835302">vesaInfo_t::oem_product_name</a></div><div class="ttdeci">char * oem_product_name</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00035">grub.h:35</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a878cf7a1a61c7b7d21b704feee0fcc60"><div class="ttname"><a href="structBootInfo__t.html#a878cf7a1a61c7b7d21b704feee0fcc60">BootInfo_t::vbe_interface_seg</a></div><div class="ttdeci">unsigned int vbe_interface_seg</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00086">grub.h:86</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a5ed5fe4414e2a46fa3670733486905ae"><div class="ttname"><a href="structvesaModeInfo__t.html#a5ed5fe4414e2a46fa3670733486905ae">vesaModeInfo_t::Xres</a></div><div class="ttdeci">unsigned short Xres</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00048">grub.h:48</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a2af8762aa842598e8a6a33872a83b5ab"><div class="ttname"><a href="structvesaModeInfo__t.html#a2af8762aa842598e8a6a33872a83b5ab">vesaModeInfo_t::rsv_position</a></div><div class="ttdeci">unsigned char rsv_position</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00056">grub.h:56</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_a35b0e91dc1f97ab1f05b8c9a6fe8988f"><div class="ttname"><a href="structvesaInfo__t.html#a35b0e91dc1f97ab1f05b8c9a6fe8988f">vesaInfo_t::oem_vendor_name</a></div><div class="ttdeci">char * oem_vendor_name</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00034">grub.h:34</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_af83d59348e11c50399f088cea83fb0a9"><div class="ttname"><a href="structvesaModeInfo__t.html#af83d59348e11c50399f088cea83fb0a9">vesaModeInfo_t::segmentA</a></div><div class="ttdeci">unsigned short segmentA</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00044">grub.h:44</a></div></div>
+<div class="ttc" id="grub_8h_html_a949fefd565685608cdc3489425f32a93"><div class="ttname"><a href="grub_8h.html#a949fefd565685608cdc3489425f32a93">vesaInfo</a></div><div class="ttdeci">struct vesaInfo_t vesaInfo</div></div>
+<div class="ttc" id="structvesaInfo__t_html_a1f4453c48c6629e27fd2e97948deb62b"><div class="ttname"><a href="structvesaInfo__t.html#a1f4453c48c6629e27fd2e97948deb62b">vesaInfo_t::capabilities</a></div><div class="ttdeci">unsigned int capabilities</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00030">grub.h:30</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a761344d9a2bf10e1551dca7bd77f90cf"><div class="ttname"><a href="structBootInfo__t.html#a761344d9a2bf10e1551dca7bd77f90cf">BootInfo_t::size</a></div><div class="ttdeci">unsigned int size</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00073">grub.h:73</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a4b144c9db5fe2c5a9d72522068d65138"><div class="ttname"><a href="structBootInfo__t.html#a4b144c9db5fe2c5a9d72522068d65138">BootInfo_t::mem_lower</a></div><div class="ttdeci">unsigned int mem_lower</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00066">grub.h:66</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_aacef0071c533de26e708289e474a0542"><div class="ttname"><a href="structvesaModeInfo__t.html#aacef0071c533de26e708289e474a0542">vesaModeInfo_t::reserved1</a></div><div class="ttdeci">unsigned int reserved1</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00060">grub.h:60</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a54003f0083b0581fc14babfec48a1d7d"><div class="ttname"><a href="structvesaModeInfo__t.html#a54003f0083b0581fc14babfec48a1d7d">vesaModeInfo_t::Yres</a></div><div class="ttdeci">unsigned short Yres</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00048">grub.h:48</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a8b424620d78b885292f29849acfe962c"><div class="ttname"><a href="structvesaModeInfo__t.html#a8b424620d78b885292f29849acfe962c">vesaModeInfo_t::rsv_mask</a></div><div class="ttdeci">unsigned char rsv_mask</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00056">grub.h:56</a></div></div>
+<div class="ttc" id="structBootInfo__t_html"><div class="ttname"><a href="structBootInfo__t.html">BootInfo_t</a></div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00064">grub.h:64</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_ac5e0330302132e9423fa856f26a34286"><div class="ttname"><a href="structvesaModeInfo__t.html#ac5e0330302132e9423fa856f26a34286">vesaModeInfo_t::green_position</a></div><div class="ttdeci">unsigned char green_position</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00054">grub.h:54</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a1be510e25cd3a21bfd0d4d3b303e0543"><div class="ttname"><a href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">BootInfo_t::mods_addr</a></div><div class="ttdeci">unsigned int ** mods_addr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00071">grub.h:71</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a0f912afd0a853ea123ad3a157fc579c9"><div class="ttname"><a href="structvesaModeInfo__t.html#a0f912afd0a853ea123ad3a157fc579c9">vesaModeInfo_t::reserved0</a></div><div class="ttdeci">unsigned char reserved0</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00051">grub.h:51</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_af0e5f50889726f62d961141ee8fa06f3"><div class="ttname"><a href="structvesaInfo__t.html#af0e5f50889726f62d961141ee8fa06f3">vesaInfo_t::oem_software_rev</a></div><div class="ttdeci">unsigned int oem_software_rev</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00033">grub.h:33</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a20289f01bea4e5cbb2533e3c97f8d308"><div class="ttname"><a href="structvesaModeInfo__t.html#a20289f01bea4e5cbb2533e3c97f8d308">vesaModeInfo_t::blue_position</a></div><div class="ttdeci">unsigned char blue_position</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00055">grub.h:55</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a1c395c3097057ffd0f3d12ea9df6133d"><div class="ttname"><a href="structvesaModeInfo__t.html#a1c395c3097057ffd0f3d12ea9df6133d">vesaModeInfo_t::Ychar</a></div><div class="ttdeci">unsigned char Ychar</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00049">grub.h:49</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a8a09488fd20d514ccd02e07e5ca45d6d"><div class="ttname"><a href="structBootInfo__t.html#a8a09488fd20d514ccd02e07e5ca45d6d">BootInfo_t::vbe_control_info</a></div><div class="ttdeci">unsigned int vbe_control_info</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00083">grub.h:83</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a96ecd4368bbcf68b97c9496939069c55"><div class="ttname"><a href="structvesaModeInfo__t.html#a96ecd4368bbcf68b97c9496939069c55">vesaModeInfo_t::red_position</a></div><div class="ttdeci">unsigned char red_position</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00053">grub.h:53</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a43ae8547b0cea379829329a622d9bc4c"><div class="ttname"><a href="structBootInfo__t.html#a43ae8547b0cea379829329a622d9bc4c">BootInfo_t::config_table</a></div><div class="ttdeci">unsigned int config_table</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00080">grub.h:80</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a653392718e3a3c21aad77d0236ec8929"><div class="ttname"><a href="structvesaModeInfo__t.html#a653392718e3a3c21aad77d0236ec8929">vesaModeInfo_t::red_mask</a></div><div class="ttdeci">unsigned char red_mask</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00053">grub.h:53</a></div></div>
+<div class="ttc" id="grub_8h_html_afa73cc1cb823e7947162fcc569b64e5a"><div class="ttname"><a href="grub_8h.html#afa73cc1cb823e7947162fcc569b64e5a">__attribute__</a></div><div class="ttdeci">struct vesaModeInfo_t __attribute__((packed)) vesaModeInfo</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a59708e15ac9929ad9218b4ef25f4e861"><div class="ttname"><a href="structvesaModeInfo__t.html#a59708e15ac9929ad9218b4ef25f4e861">vesaModeInfo_t::granularity</a></div><div class="ttdeci">unsigned short granularity</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00042">grub.h:42</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a255b75459b2ed645abe749075f3ca25d"><div class="ttname"><a href="structBootInfo__t.html#a255b75459b2ed645abe749075f3ca25d">BootInfo_t::flags</a></div><div class="ttdeci">unsigned int flags</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00065">grub.h:65</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a11fa989df3074f1a90fcb646aa434b97"><div class="ttname"><a href="structBootInfo__t.html#a11fa989df3074f1a90fcb646aa434b97">BootInfo_t::boot_device</a></div><div class="ttdeci">unsigned int boot_device</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00068">grub.h:68</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a178ef95a8fbd89ec018899b9ba241d92"><div class="ttname"><a href="structBootInfo__t.html#a178ef95a8fbd89ec018899b9ba241d92">BootInfo_t::mods_count</a></div><div class="ttdeci">unsigned int mods_count</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00070">grub.h:70</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a3f8f6fe3c4ee7fdbca2cf15883db343f"><div class="ttname"><a href="structvesaModeInfo__t.html#a3f8f6fe3c4ee7fdbca2cf15883db343f">vesaModeInfo_t::segmentB</a></div><div class="ttdeci">unsigned short segmentB</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00044">grub.h:44</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a904e8344d4c4ef9a650305409b933b17"><div class="ttname"><a href="structBootInfo__t.html#a904e8344d4c4ef9a650305409b933b17">BootInfo_t::mmap_addr</a></div><div class="ttdeci">unsigned int mmap_addr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00077">grub.h:77</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a55a278b70ee059fd245f08f3293440d9"><div class="ttname"><a href="structBootInfo__t.html#a55a278b70ee059fd245f08f3293440d9">BootInfo_t::vbe_mode</a></div><div class="ttdeci">vesaInfo * vbe_mode</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00085">grub.h:85</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a6a38dc50fe6f5719f544488a265b8cf1"><div class="ttname"><a href="structBootInfo__t.html#a6a38dc50fe6f5719f544488a265b8cf1">BootInfo_t::num</a></div><div class="ttdeci">unsigned int num</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00072">grub.h:72</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_a2359d311e9a6d45dcebb8e6fae1a1f63"><div class="ttname"><a href="structBootInfo__t.html#a2359d311e9a6d45dcebb8e6fae1a1f63">BootInfo_t::vbe_interface_off</a></div><div class="ttdeci">unsigned int vbe_interface_off</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00087">grub.h:87</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_ac44eb8289f5f6fbbca78dc24e5052be7"><div class="ttname"><a href="structBootInfo__t.html#ac44eb8289f5f6fbbca78dc24e5052be7">BootInfo_t::mmap_length</a></div><div class="ttdeci">unsigned int mmap_length</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00076">grub.h:76</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_adc0745eb234059fc6eb37d8a6c18e4b4"><div class="ttname"><a href="structBootInfo__t.html#adc0745eb234059fc6eb37d8a6c18e4b4">BootInfo_t::drives_length</a></div><div class="ttdeci">unsigned int drives_length</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00078">grub.h:78</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_acbf51c6b217de951bd6b40ae60b2343d"><div class="ttname"><a href="structvesaModeInfo__t.html#acbf51c6b217de951bd6b40ae60b2343d">vesaModeInfo_t::bpp</a></div><div class="ttdeci">unsigned char bpp</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00049">grub.h:49</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_ab94cc102e07cdfbf3cb53690bf205321"><div class="ttname"><a href="structvesaInfo__t.html#ab94cc102e07cdfbf3cb53690bf205321">vesaInfo_t::total_memory</a></div><div class="ttdeci">unsigned short total_memory</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00032">grub.h:32</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_ac0a248c150ec1bceaafc488988174a1d"><div class="ttname"><a href="structBootInfo__t.html#ac0a248c150ec1bceaafc488988174a1d">BootInfo_t::addr</a></div><div class="ttdeci">unsigned int addr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00074">grub.h:74</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a5ffbef6f6a9ac0ae6975827208b77ec5"><div class="ttname"><a href="structvesaModeInfo__t.html#a5ffbef6f6a9ac0ae6975827208b77ec5">vesaModeInfo_t::reserved2</a></div><div class="ttdeci">short reserved2</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00061">grub.h:61</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html"><div class="ttname"><a href="structvesaModeInfo__t.html">vesaModeInfo_t</a></div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00039">grub.h:39</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a00414463a3873e70cc7418f109b35f06"><div class="ttname"><a href="structvesaModeInfo__t.html#a00414463a3873e70cc7418f109b35f06">vesaModeInfo_t::green_mask</a></div><div class="ttdeci">unsigned char green_mask</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00054">grub.h:54</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_aee5b0eb81a986dc3adadc287dd6809c4"><div class="ttname"><a href="structvesaInfo__t.html#aee5b0eb81a986dc3adadc287dd6809c4">vesaInfo_t::oem_string_ptr</a></div><div class="ttdeci">unsigned int oem_string_ptr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00029">grub.h:29</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_a48deedd69aeb2ce0d1c27e77f9da23c5"><div class="ttname"><a href="structvesaInfo__t.html#a48deedd69aeb2ce0d1c27e77f9da23c5">vesaInfo_t::signature</a></div><div class="ttdeci">char signature[4]</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00027">grub.h:27</a></div></div>
+<div class="ttc" id="structvesaModeInfo__t_html_a9d1ab189d261e008a41daa04d5ee9693"><div class="ttname"><a href="structvesaModeInfo__t.html#a9d1ab189d261e008a41daa04d5ee9693">vesaModeInfo_t::planes</a></div><div class="ttdeci">unsigned char planes</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00049">grub.h:49</a></div></div>
+<div class="ttc" id="structBootInfo__t_html_ad583d2ecbdc34a87c6ab29a2fded69b6"><div class="ttname"><a href="structBootInfo__t.html#ad583d2ecbdc34a87c6ab29a2fded69b6">BootInfo_t::vbe_mode_info</a></div><div class="ttdeci">vesaModeInfo * vbe_mode_info</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00084">grub.h:84</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_af4342c2c5c65c802e4a042d324572b9d"><div class="ttname"><a href="structvesaInfo__t.html#af4342c2c5c65c802e4a042d324572b9d">vesaInfo_t::video_mode_ptr</a></div><div class="ttdeci">unsigned int video_mode_ptr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00031">grub.h:31</a></div></div>
+<div class="ttc" id="structvesaInfo__t_html_a6c1001f337933e02a68640cfc7abdfb6"><div class="ttname"><a href="structvesaInfo__t.html#a6c1001f337933e02a68640cfc7abdfb6">vesaInfo_t::version</a></div><div class="ttdeci">unsigned short version</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00028">grub.h:28</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="grub_8h.html">grub.h</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:03 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

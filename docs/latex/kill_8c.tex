@@ -1,0 +1,56 @@
+\hypertarget{kill_8c}{\section{Riferimenti per il file src/syscall/kill.c}
+\label{kill_8c}\index{src/syscall/kill.\+c@{src/syscall/kill.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{kill_8c_a67e972ab20c5a148b4c3874eb4ccccc3}{sys\+\_\+kill} (pid\+\_\+t pid, int signal)
+\item 
+\hyperlink{kill_8c_af36650f7b47e85ac1873a0ba3644e1a6}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{kill_8c_a67e972ab20c5a148b4c3874eb4ccccc3}{sys\+\_\+kill}, 7)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{kill_8c_a67e972ab20c5a148b4c3874eb4ccccc3}{\index{kill.\+c@{kill.\+c}!sys\+\_\+kill@{sys\+\_\+kill}}
+\index{sys\+\_\+kill@{sys\+\_\+kill}!kill.\+c@{kill.\+c}}
+\subsubsection[{sys\+\_\+kill}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+kill (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{int}]{signal}
+\end{DoxyParamCaption}
+)}}\label{kill_8c_a67e972ab20c5a148b4c3874eb4ccccc3}
+
+
+Definizione alla linea 10 del file kill.\+c.
+
+
+
+Referenzia errno, schedule\+\_\+getbypid(), e task\+::signal\+\_\+sig.
+
+
+\begin{DoxyCode}
+10                                     \{
+11     \hyperlink{structtask}{task\_t}* \hyperlink{structtask}{task} = (\hyperlink{structtask}{task\_t}*) \hyperlink{src_2sched_8c_afcc9c5ea77b2a3aaafc7bdf896d9d633}{schedule\_getbypid}(pid);
+12     \textcolor{keywordflow}{if}(!task) \{
+13         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ESRCH;
+14         \textcolor{keywordflow}{return} -1;
+15     \}
+16     
+17     task->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig} = signal;
+18     \textcolor{keywordflow}{return} 0;
+19 \}
+\end{DoxyCode}
+\hypertarget{kill_8c_af36650f7b47e85ac1873a0ba3644e1a6}{\index{kill.\+c@{kill.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!kill.\+c@{kill.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+kill}}]{, }
+\item[{7}]{}
+\end{DoxyParamCaption}
+)}}\label{kill_8c_af36650f7b47e85ac1873a0ba3644e1a6}

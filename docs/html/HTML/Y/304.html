@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>idt_e</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L107'>idt_e</a>             107 src/arch/desc.c static idt_entry_t idt_e[256];
+<a href='../S/158.html#L227'>idt_e</a>             227 src/arch/desc.c 	idt_p.base = (uint32_t) idt_e;
+<a href='../S/158.html#L229'>idt_e</a>             229 src/arch/desc.c 	memset(idt_e, 0, sizeof(idt_entry_t) * 256);
+<a href='../S/158.html#L233'>idt_e</a>             233 src/arch/desc.c 		idt_e[i].base_l = b &amp; 0xFFFF;				\
+<a href='../S/158.html#L234'>idt_e</a>             234 src/arch/desc.c 		idt_e[i].base_h = (b &gt;&gt; 16) &amp; 0xFFFF;		\
+<a href='../S/158.html#L235'>idt_e</a>             235 src/arch/desc.c 		idt_e[i].sel = s;							\
+<a href='../S/158.html#L236'>idt_e</a>             236 src/arch/desc.c 		idt_e[i].null = 0;							\
+<a href='../S/158.html#L237'>idt_e</a>             237 src/arch/desc.c 		idt_e[i].flags = f
+</pre>
+</body>
+</html>

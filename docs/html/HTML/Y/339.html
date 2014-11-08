@@ -1,0 +1,98 @@
+<html>
+<head>
+<title>ipv6</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/89.html#L37'>ipv6</a>               37 src/include/aplus/netif.h 	ipv6_t ipv6;
+<a href='../S/89.html#L45'>ipv6</a>               45 src/include/aplus/netif.h 			ipv6_t ipv6;
+<a href='../S/89.html#L50'>ipv6</a>               50 src/include/aplus/netif.h 			ipv6_t ipv6;
+<a href='../S/106.html#L79'>ipv6</a>               79 src/net/ipv6.c 	memcpy(ip-&gt;source, netif-&gt;ipv6, sizeof(ipv6_t));
+<a href='../S/111.html#L79'>ipv6</a>               79 src/net/loopback/loopback.c 	netif-&gt;ipv6[0] = 0;
+<a href='../S/111.html#L80'>ipv6</a>               80 src/net/loopback/loopback.c 	netif-&gt;ipv6[1] = 0;
+<a href='../S/111.html#L81'>ipv6</a>               81 src/net/loopback/loopback.c 	netif-&gt;ipv6[2] = 0;
+<a href='../S/111.html#L82'>ipv6</a>               82 src/net/loopback/loopback.c 	netif-&gt;ipv6[3] = 0;
+<a href='../S/111.html#L83'>ipv6</a>               83 src/net/loopback/loopback.c 	netif-&gt;ipv6[4] = 0;
+<a href='../S/111.html#L84'>ipv6</a>               84 src/net/loopback/loopback.c 	netif-&gt;ipv6[5] = 0;
+<a href='../S/111.html#L85'>ipv6</a>               85 src/net/loopback/loopback.c 	netif-&gt;ipv6[6] = 0;
+<a href='../S/111.html#L86'>ipv6</a>               86 src/net/loopback/loopback.c 	netif-&gt;ipv6[7] = 1;
+<a href='../S/107.html#L50'>ipv6</a>               50 src/net/netif.c netif_t* netif_find_by_ipv6(ipv6_t* ipv6) {
+<a href='../S/107.html#L57'>ipv6</a>               57 src/net/netif.c 		if(memcmp(netif-&gt;ipv6, ipv6, sizeof(ipv6_t)) == 0)
+<a href='../S/107.html#L135'>ipv6</a>              135 src/net/netif.c 	if(netif_find_by_ipv6(&amp;netdev-&gt;ipv6) != NULL) {
+<a href='../S/107.html#L161'>ipv6</a>              161 src/net/netif.c 			netdev-&gt;ipv6[0],
+<a href='../S/107.html#L162'>ipv6</a>              162 src/net/netif.c 			netdev-&gt;ipv6[1],
+<a href='../S/107.html#L163'>ipv6</a>              163 src/net/netif.c 			netdev-&gt;ipv6[2],
+<a href='../S/107.html#L164'>ipv6</a>              164 src/net/netif.c 			netdev-&gt;ipv6[3],
+<a href='../S/107.html#L165'>ipv6</a>              165 src/net/netif.c 			netdev-&gt;ipv6[4],
+<a href='../S/107.html#L166'>ipv6</a>              166 src/net/netif.c 			netdev-&gt;ipv6[5],
+<a href='../S/107.html#L167'>ipv6</a>              167 src/net/netif.c 			netdev-&gt;ipv6[6],
+<a href='../S/107.html#L168'>ipv6</a>              168 src/net/netif.c 			netdev-&gt;ipv6[7]
+<a href='../S/107.html#L193'>ipv6</a>              193 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[0],
+<a href='../S/107.html#L194'>ipv6</a>              194 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[1],
+<a href='../S/107.html#L195'>ipv6</a>              195 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[2],
+<a href='../S/107.html#L196'>ipv6</a>              196 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[3],
+<a href='../S/107.html#L197'>ipv6</a>              197 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[4],
+<a href='../S/107.html#L198'>ipv6</a>              198 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[5],
+<a href='../S/107.html#L199'>ipv6</a>              199 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[6],
+<a href='../S/107.html#L200'>ipv6</a>              200 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[7],
+<a href='../S/107.html#L201'>ipv6</a>              201 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[0],
+<a href='../S/107.html#L202'>ipv6</a>              202 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[1],
+<a href='../S/107.html#L203'>ipv6</a>              203 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[2],
+<a href='../S/107.html#L204'>ipv6</a>              204 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[3],
+<a href='../S/107.html#L205'>ipv6</a>              205 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[4],
+<a href='../S/107.html#L206'>ipv6</a>              206 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[5],
+<a href='../S/107.html#L207'>ipv6</a>              207 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[6],
+<a href='../S/107.html#L208'>ipv6</a>              208 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[7]
+<a href='../S/104.html#L256'>ipv6</a>              256 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[0] = 0xfe80;
+<a href='../S/104.html#L257'>ipv6</a>              257 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[1] = 0x0000;
+<a href='../S/104.html#L258'>ipv6</a>              258 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[2] = 0x0000;
+<a href='../S/104.html#L259'>ipv6</a>              259 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[3] = 0x0000;
+<a href='../S/104.html#L260'>ipv6</a>              260 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[4] = 0x021d;
+<a href='../S/104.html#L261'>ipv6</a>              261 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[5] = 0x72ff;
+<a href='../S/104.html#L262'>ipv6</a>              262 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[6] = 0xfef9;
+<a href='../S/104.html#L263'>ipv6</a>              263 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[7] = 0x9b71;
+<a href='../S/104.html#L276'>ipv6</a>              276 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[0] = 0x2001;
+<a href='../S/104.html#L277'>ipv6</a>              277 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[1] = 0x4860;
+<a href='../S/104.html#L278'>ipv6</a>              278 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[2] = 0x4860;
+<a href='../S/104.html#L279'>ipv6</a>              279 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[3] = 0x0000;
+<a href='../S/104.html#L280'>ipv6</a>              280 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[4] = 0x0000;
+<a href='../S/104.html#L281'>ipv6</a>              281 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[5] = 0x0000;
+<a href='../S/104.html#L282'>ipv6</a>              282 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[6] = 0x0000;
+<a href='../S/104.html#L283'>ipv6</a>              283 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[7] = 0x8888;
+<a href='../S/104.html#L284'>ipv6</a>              284 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[0] = 0x2001;
+<a href='../S/104.html#L285'>ipv6</a>              285 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[1] = 0x4860;
+<a href='../S/104.html#L286'>ipv6</a>              286 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[2] = 0x4860;
+<a href='../S/104.html#L287'>ipv6</a>              287 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[3] = 0x0000;
+<a href='../S/104.html#L288'>ipv6</a>              288 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[4] = 0x0000;
+<a href='../S/104.html#L289'>ipv6</a>              289 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[5] = 0x0000;
+<a href='../S/104.html#L290'>ipv6</a>              290 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[6] = 0x0000;
+<a href='../S/104.html#L291'>ipv6</a>              291 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[7] = 0x8844;
+<a href='../S/110.html#L162'>ipv6</a>              162 src/net/slirp/slirp.c 	netif-&gt;ipv6[0] = 0xfe80;
+<a href='../S/110.html#L163'>ipv6</a>              163 src/net/slirp/slirp.c 	netif-&gt;ipv6[1] = 0x0000;
+<a href='../S/110.html#L164'>ipv6</a>              164 src/net/slirp/slirp.c 	netif-&gt;ipv6[2] = 0x0000;
+<a href='../S/110.html#L165'>ipv6</a>              165 src/net/slirp/slirp.c 	netif-&gt;ipv6[3] = 0x0000;
+<a href='../S/110.html#L166'>ipv6</a>              166 src/net/slirp/slirp.c 	netif-&gt;ipv6[4] = 0x0000;
+<a href='../S/110.html#L167'>ipv6</a>              167 src/net/slirp/slirp.c 	netif-&gt;ipv6[5] = 0x10ff;
+<a href='../S/110.html#L168'>ipv6</a>              168 src/net/slirp/slirp.c 	netif-&gt;ipv6[6] = 0xcef9;
+<a href='../S/110.html#L169'>ipv6</a>              169 src/net/slirp/slirp.c 	netif-&gt;ipv6[7] = 0x9b70;
+<a href='../S/110.html#L182'>ipv6</a>              182 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[0] = 0x2001;
+<a href='../S/110.html#L183'>ipv6</a>              183 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[1] = 0x4860;
+<a href='../S/110.html#L184'>ipv6</a>              184 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[2] = 0x4860;
+<a href='../S/110.html#L185'>ipv6</a>              185 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[3] = 0x0000;
+<a href='../S/110.html#L186'>ipv6</a>              186 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[4] = 0x0000;
+<a href='../S/110.html#L187'>ipv6</a>              187 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[5] = 0x0000;
+<a href='../S/110.html#L188'>ipv6</a>              188 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[6] = 0x0000;
+<a href='../S/110.html#L189'>ipv6</a>              189 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[7] = 0x8888;
+<a href='../S/110.html#L190'>ipv6</a>              190 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[0] = 0x2001;
+<a href='../S/110.html#L191'>ipv6</a>              191 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[1] = 0x4860;
+<a href='../S/110.html#L192'>ipv6</a>              192 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[2] = 0x4860;
+<a href='../S/110.html#L193'>ipv6</a>              193 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[3] = 0x0000;
+<a href='../S/110.html#L194'>ipv6</a>              194 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[4] = 0x0000;
+<a href='../S/110.html#L195'>ipv6</a>              195 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[5] = 0x0000;
+<a href='../S/110.html#L196'>ipv6</a>              196 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[6] = 0x0000;
+<a href='../S/110.html#L197'>ipv6</a>              197 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[7] = 0x8844;
+</pre>
+</body>
+</html>

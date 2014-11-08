@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>fd</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L72'>fd</a>                 72 src/arch/task.c 		child-&gt;fd[i] = current_task-&gt;fd[i];
+<a href='../S/159.html#L157'>fd</a>                157 src/arch/task.c 		child-&gt;fd[i] = current_task-&gt;fd[i];
+<a href='../S/90.html#L87'>fd</a>                 87 src/include/aplus/task.h 	inode_t* fd[TASK_MAX_FD];
+<a href='../S/133.html#L22'>fd</a>                 22 src/syscall/chown.c 	int fd = sys_open(filename, O_RDONLY, 0644);
+<a href='../S/133.html#L23'>fd</a>                 23 src/syscall/chown.c 	if(fd &lt; 0) {
+<a href='../S/133.html#L28'>fd</a>                 28 src/syscall/chown.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/119.html#L16'>fd</a>                 16 src/syscall/close.c int sys_close(int fd) {
+<a href='../S/119.html#L20'>fd</a>                 20 src/syscall/close.c 	if(current_task-&gt;fd[fd] == 0) {
+<a href='../S/119.html#L21'>fd</a>                 21 src/syscall/close.c 		kprintf("sys_close: fd %d not exist.", fd);
+<a href='../S/119.html#L27'>fd</a>                 27 src/syscall/close.c 	current_task-&gt;fd[fd] = 0;
+<a href='../S/141.html#L14'>fd</a>                 14 src/syscall/execve.c 	int fd = sys_open(filename, O_RDONLY, 0644);
+<a href='../S/141.html#L15'>fd</a>                 15 src/syscall/execve.c 	if(fd &lt; 0) {
+<a href='../S/141.html#L20'>fd</a>                 20 src/syscall/execve.c 	sys_lseek(fd, 0, SEEK_END);
+<a href='../S/141.html#L21'>fd</a>                 21 src/syscall/execve.c 	size_t size = sys_lseek(fd, 0, SEEK_CUR);
+<a href='../S/141.html#L22'>fd</a>                 22 src/syscall/execve.c 	sys_lseek(fd, 0, SEEK_SET);
+<a href='../S/141.html#L26'>fd</a>                 26 src/syscall/execve.c 		sys_close(fd);
+<a href='../S/141.html#L32'>fd</a>                 32 src/syscall/execve.c 	if(sys_read(fd, image, size) &lt; size) {
+<a href='../S/141.html#L33'>fd</a>                 33 src/syscall/execve.c 		sys_close(fd);
+<a href='../S/141.html#L45'>fd</a>                 45 src/syscall/execve.c 		current_task-&gt;exe = current_task-&gt;fd[fd];
+<a href='../S/141.html#L49'>fd</a>                 49 src/syscall/execve.c 		sys_close(fd);
+<a href='../S/141.html#L55'>fd</a>                 55 src/syscall/execve.c 	sys_close(fd);
+<a href='../S/138.html#L19'>fd</a>                 19 src/syscall/fcntl.c int sys_fcntl(int fd, int request, void* buf) {
+<a href='../S/138.html#L24'>fd</a>                 24 src/syscall/fcntl.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/120.html#L15'>fd</a>                 15 src/syscall/fstat.c int sys_fstat(int fd, struct stat* st) {
+<a href='../S/120.html#L21'>fd</a>                 21 src/syscall/fstat.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/136.html#L15'>fd</a>                 15 src/syscall/ioctl.c int sys_ioctl(int fd, int req, void* buf) {
+<a href='../S/136.html#L17'>fd</a>                 17 src/syscall/ioctl.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/130.html#L5'>fd</a>                  5 src/syscall/isatty.c int sys_isatty(int fd) {
+<a href='../S/130.html#L6'>fd</a>                  6 src/syscall/isatty.c 	return (fd &lt; 3);
+<a href='../S/132.html#L18'>fd</a>                 18 src/syscall/lseek.c int sys_lseek(int fd, int pos, int dir) {
+<a href='../S/132.html#L19'>fd</a>                 19 src/syscall/lseek.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/139.html#L116'>fd</a>                116 src/syscall/open.c 	inode_t** fd = NULL;
+<a href='../S/139.html#L118'>fd</a>                118 src/syscall/open.c 		if(current_task-&gt;fd[i] == 0) {
+<a href='../S/139.html#L119'>fd</a>                119 src/syscall/open.c 			fd = &amp;current_task-&gt;fd[i];
+<a href='../S/139.html#L124'>fd</a>                124 src/syscall/open.c 	if(fd == NULL) {
+<a href='../S/139.html#L129'>fd</a>                129 src/syscall/open.c 	*fd = ino;
+<a href='../S/127.html#L19'>fd</a>                 19 src/syscall/read.c int sys_read(int fd, void* ptr, size_t size) {
+<a href='../S/127.html#L24'>fd</a>                 24 src/syscall/read.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/140.html#L9'>fd</a>                  9 src/syscall/readdir.c struct dirent* sys_readdir(int fd, int position) {
+<a href='../S/140.html#L14'>fd</a>                 14 src/syscall/readdir.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/124.html#L16'>fd</a>                 16 src/syscall/stat.c 	int fd = sys_open(filename, O_RDONLY, 0644);
+<a href='../S/124.html#L17'>fd</a>                 17 src/syscall/stat.c 	if(fd &lt; 0) {
+<a href='../S/124.html#L21'>fd</a>                 21 src/syscall/stat.c 	int ret = sys_fstat(fd, st);
+<a href='../S/124.html#L22'>fd</a>                 22 src/syscall/stat.c 	sys_close(fd);
+<a href='../S/128.html#L19'>fd</a>                 19 src/syscall/write.c int sys_write(int fd, void* ptr, size_t size) {
+<a href='../S/128.html#L24'>fd</a>                 24 src/syscall/write.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/10.html#L30'>fd</a>                 30 usr/src/libposix/include/sys/dirent.h 	int fd;
+<a href='../S/21.html#L17'>fd</a>                 17 usr/src/libposix/src/closedir.c 	close(d-&gt;fd);
+<a href='../S/21.html#L19'>fd</a>                 19 usr/src/libposix/src/closedir.c 	d-&gt;fd = -1;
+<a href='../S/20.html#L11'>fd</a>                 11 usr/src/libposix/src/config.h #define __os_readdir(d)						aplus_readdir(d-&gt;fd, d-&gt;position)
+<a href='../S/34.html#L6'>fd</a>                  6 usr/src/libposix/src/lstat.c 	int fd = open(filename, O_RDONLY | O_NOFOLLOW, 0644);
+<a href='../S/34.html#L7'>fd</a>                  7 usr/src/libposix/src/lstat.c 	if(fd &lt; 0)
+<a href='../S/34.html#L10'>fd</a>                 10 usr/src/libposix/src/lstat.c 	int ret = fstat(fd, st);
+<a href='../S/34.html#L11'>fd</a>                 11 usr/src/libposix/src/lstat.c 	close(fd);
+<a href='../S/42.html#L14'>fd</a>                 14 usr/src/libposix/src/opendir.c 	int fd = open(path, O_RDONLY | O_DIRECTORY, 0644);
+<a href='../S/42.html#L15'>fd</a>                 15 usr/src/libposix/src/opendir.c 	if(fd &lt; 0) {
+<a href='../S/42.html#L21'>fd</a>                 21 usr/src/libposix/src/opendir.c 	d-&gt;fd = fd;
+</pre>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/platform/win32/hooks.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/<a href='../files/188.html'>platform</a>/<a href='../files/190.html'>win32</a>/hooks.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../D/269.html' title='Multiple defined in 2 places.'>_PTHREAD_HOOKS_T</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../R/166.html' title='Multiple refered from 2 places.'>_PTHREAD_HOOKS_T</a>
+<a name='L3'>   3 
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;windows.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 
+<a name='L8'>   8 <i><font color='green'>/* Hooks */</font></i>
+<a name='L9'>   9 <font color='darkred'>#define</font> <a href='../S/64.html#L81' title='Refered from 81 in usr/src/libpthread/src/pthread_create.c.'>__os_thread_create</a>(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>, <a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>, <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>)                     ((<b>int</b>) CreateThread(0, 0, <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>, <a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>, 0))                                     
+<a name='L10'>  10 <font color='darkred'>#define</font> <a href='../S/56.html#L24' title='Refered from 24 in usr/src/libpthread/src/pthread_detach.c.'>__os_thread_kill</a>(<a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>)                          TerminateThread(<a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>)
+<a name='L11'>  11 <font color='darkred'>#define</font> <a href='../R/183.html' title='Multiple refered from 2 places.'>__os_gettid</a>()                                           GetCurrentThreadId()
+<a name='L12'>  12 
+<a name='L13'>  13 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

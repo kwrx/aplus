@@ -49,6 +49,9 @@ static heap_t kheap;
 extern uint32_t memsize;
 
 
+static uint8_t __bitmap[131072];
+
+
 static int bitmap_first(heap_t* heap, size_t size) {
 	if(size == 0)
 		return -1;
@@ -129,7 +132,7 @@ void bitmap_free(heap_t* heap, void* addr, size_t size) {
 int kheap_init() {
 	extern uint32_t end;
 
-	kheap.bitmap = &end;
+	kheap.bitmap = __bitmap;
 	kheap.size = memsize / BLKSIZE;
 	kheap.alloc = bitmap_alloc;
 	kheap.free = bitmap_free;

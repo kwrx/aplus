@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>pid</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L56'>pid</a>                56 src/arch/task.c 	child-&gt;pid = schedule_nextpid();
+<a href='../S/159.html#L128'>pid</a>               128 src/arch/task.c 	child-&gt;pid = schedule_nextpid();
+<a href='../S/159.html#L192'>pid</a>               192 src/arch/task.c 	current_task-&gt;pid = schedule_nextpid();
+<a href='../S/90.html#L73'>pid</a>                73 src/include/aplus/task.h 	pid_t pid;
+<a href='../S/148.html#L62'>pid</a>                62 src/panic.c    		kprintf(" # %d: ", task-&gt;pid);
+<a href='../S/143.html#L167'>pid</a>               167 src/sched.c    	return current_task-&gt;pid;
+<a href='../S/143.html#L170'>pid</a>               170 src/sched.c    task_t* schedule_getbypid(pid_t pid) {
+<a href='../S/143.html#L171'>pid</a>               171 src/sched.c    	if(current_task-&gt;pid == pid)
+<a href='../S/143.html#L177'>pid</a>               177 src/sched.c    		if(t-&gt;pid == pid)
+<a href='../S/126.html#L24'>pid</a>                24 src/syscall/clone.c 	return child-&gt;pid;
+<a href='../S/122.html#L13'>pid</a>                13 src/syscall/fork.c 		return child-&gt;pid;
+<a href='../S/125.html#L10'>pid</a>                10 src/syscall/kill.c int sys_kill(pid_t pid, int signal) {
+<a href='../S/125.html#L11'>pid</a>                11 src/syscall/kill.c 	task_t* task = (task_t*) schedule_getbypid(pid);
+<a href='../S/137.html#L29'>pid</a>                29 src/syscall/wait.c 	return child-&gt;pid;
+<a href='../S/26.html#L14'>pid</a>                14 usr/src/libposix/src/sched.c int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param) {
+<a href='../S/26.html#L20'>pid</a>                20 usr/src/libposix/src/sched.c 	if(pid &lt; 0) {
+<a href='../S/26.html#L29'>pid</a>                29 usr/src/libposix/src/sched.c int sched_getscheduler(pid_t pid) {
+<a href='../S/26.html#L35'>pid</a>                35 usr/src/libposix/src/sched.c int sched_setparam(pid_t pid, const struct sched_param *param) {
+<a href='../S/26.html#L41'>pid</a>                41 usr/src/libposix/src/sched.c 	if(pid &lt; 0) {
+<a href='../S/26.html#L50'>pid</a>                50 usr/src/libposix/src/sched.c int sched_getparam(pid_t pid, struct sched_param *param) {
+<a href='../S/26.html#L51'>pid</a>                51 usr/src/libposix/src/sched.c 	if(pid &lt; 0) {
+<a href='../S/26.html#L70'>pid</a>                70 usr/src/libposix/src/sched.c int sched_rr_get_interval(pid_t pid, struct timespec* tp) {
+<a href='../S/26.html#L71'>pid</a>                71 usr/src/libposix/src/sched.c 	if(pid &lt; 0) {
+<a href='../S/26.html#L88'>pid</a>                88 usr/src/libposix/src/sched.c int sched_setaffinity(pid_t pid, size_t cpusetsize, const cpu_set_t *mask) {
+<a href='../S/26.html#L93'>pid</a>                93 usr/src/libposix/src/sched.c int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask) {
+<a href='../S/51.html#L8'>pid</a>                 8 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_setparam(pid_t pid, const struct sched_param *param);
+<a href='../S/51.html#L9'>pid</a>                 9 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_getparam(pid_t pid, const struct sched_param *param);
+</pre>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<html>
+<head>
+<title>i</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L232'>i</a>                 232 src/arch/desc.c 	#define idt_set(i, b, s, f)						\
+<a href='../S/158.html#L233'>i</a>                 233 src/arch/desc.c 		idt_e[i].base_l = b &amp; 0xFFFF;				\
+<a href='../S/158.html#L234'>i</a>                 234 src/arch/desc.c 		idt_e[i].base_h = (b &gt;&gt; 16) &amp; 0xFFFF;		\
+<a href='../S/158.html#L235'>i</a>                 235 src/arch/desc.c 		idt_e[i].sel = s;							\
+<a href='../S/158.html#L236'>i</a>                 236 src/arch/desc.c 		idt_e[i].null = 0;							\
+<a href='../S/158.html#L237'>i</a>                 237 src/arch/desc.c 		idt_e[i].flags = f
+<a href='../S/160.html#L79'>i</a>                  79 src/arch/pci.c 	uint8_t i = 0;
+<a href='../S/160.html#L81'>i</a>                  81 src/arch/pci.c 	while(i &lt; bars) {
+<a href='../S/160.html#L82'>i</a>                  82 src/arch/pci.c 		uint32_t bar = pci_get_bar(device, i++);
+<a href='../S/160.html#L92'>i</a>                  92 src/arch/pci.c 	uint8_t i = 0;
+<a href='../S/160.html#L94'>i</a>                  94 src/arch/pci.c 	while(i &lt; bars) {
+<a href='../S/160.html#L95'>i</a>                  95 src/arch/pci.c 		uint32_t bar = pci_get_bar(device, i++);
+<a href='../S/160.html#L121'>i</a>                 121 src/arch/pci.c 	for(int i = 0; i &lt; PCI_MAX_DEVICES; i++) {
+<a href='../S/160.html#L122'>i</a>                 122 src/arch/pci.c 		if(pci_devices[i].vendorID != vendorID &amp;&amp; pci_devices[i].deviceID != deviceID)
+<a href='../S/160.html#L125'>i</a>                 125 src/arch/pci.c 		return &amp;pci_devices[i];
+<a href='../S/160.html#L133'>i</a>                 133 src/arch/pci.c 	for(int i = 0; i &lt; PCI_MAX_DEVICES &amp;&amp; j &lt; length; i++) {
+<a href='../S/160.html#L134'>i</a>                 134 src/arch/pci.c 		if(pci_devices[i].pci_class != class)
+<a href='../S/160.html#L137'>i</a>                 137 src/arch/pci.c 		rdevs[j++] = &amp;pci_devices[i];
+<a href='../S/160.html#L148'>i</a>                 148 src/arch/pci.c 	int i = 0;
+<a href='../S/160.html#L157'>i</a>                 157 src/arch/pci.c 				pci_load_device(&amp;pci_devices[i], bus, dev, func);
+<a href='../S/160.html#L161'>i</a>                 161 src/arch/pci.c 							pci_devices[i].bus,
+<a href='../S/160.html#L162'>i</a>                 162 src/arch/pci.c 							pci_devices[i].dev,
+<a href='../S/160.html#L163'>i</a>                 163 src/arch/pci.c 							pci_devices[i].func,
+<a href='../S/160.html#L164'>i</a>                 164 src/arch/pci.c 							pci_devices[i].vendorID,
+<a href='../S/160.html#L165'>i</a>                 165 src/arch/pci.c 							pci_devices[i].deviceID,
+<a href='../S/160.html#L166'>i</a>                 166 src/arch/pci.c 							pci_devices[i].revision,
+<a href='../S/160.html#L167'>i</a>                 167 src/arch/pci.c 							pci_devices[i].pci_class,
+<a href='../S/160.html#L168'>i</a>                 168 src/arch/pci.c 							pci_devices[i].iobase,
+<a href='../S/160.html#L169'>i</a>                 169 src/arch/pci.c 							pci_devices[i].membase,
+<a href='../S/160.html#L170'>i</a>                 170 src/arch/pci.c 							pci_devices[i].header,
+<a href='../S/160.html#L171'>i</a>                 171 src/arch/pci.c 							pci_devices[i].intr_line,
+<a href='../S/160.html#L172'>i</a>                 172 src/arch/pci.c 							pci_devices[i].intr_pin);
+<a href='../S/160.html#L175'>i</a>                 175 src/arch/pci.c 				i++;
+<a href='../S/160.html#L181'>i</a>                 181 src/arch/pci.c 	kprintf("pci: loaded %d devices\n", i);
+<a href='../S/161.html#L23'>i</a>                  23 src/arch/serial.c 	for(int i = 0; i &lt; sizeof(serial); i++) {
+<a href='../S/161.html#L24'>i</a>                  24 src/arch/serial.c 		outb(serial[i] + 1, 0x00);
+<a href='../S/161.html#L25'>i</a>                  25 src/arch/serial.c 		outb(serial[i] + 3, 0x80);
+<a href='../S/161.html#L26'>i</a>                  26 src/arch/serial.c 		outb(serial[i] + 0, 0x03);
+<a href='../S/161.html#L27'>i</a>                  27 src/arch/serial.c 		outb(serial[i] + 1, 0x00);
+<a href='../S/161.html#L28'>i</a>                  28 src/arch/serial.c 		outb(serial[i] + 3, 0x03);
+<a href='../S/161.html#L29'>i</a>                  29 src/arch/serial.c 		outb(serial[i] + 2, 0xC7);
+<a href='../S/161.html#L30'>i</a>                  30 src/arch/serial.c 		outb(serial[i] + 4, 0x0B);
+<a href='../S/159.html#L71'>i</a>                  71 src/arch/task.c 	for(int i = 0; i &lt; TASK_MAX_FD; i++)
+<a href='../S/159.html#L72'>i</a>                  72 src/arch/task.c 		child-&gt;fd[i] = current_task-&gt;fd[i];
+<a href='../S/159.html#L156'>i</a>                 156 src/arch/task.c 	for(int i = 0; i &lt; TASK_MAX_FD; i++)
+<a href='../S/159.html#L157'>i</a>                 157 src/arch/task.c 		child-&gt;fd[i] = current_task-&gt;fd[i];
+<a href='../S/155.html#L21'>i</a>                  21 src/debug.c    	unsigned int i = 9;
+<a href='../S/155.html#L22'>i</a>                  22 src/debug.c    	while (value &gt; i &amp;&amp; i &lt; UINT32_MAX) {
+<a href='../S/155.html#L24'>i</a>                  24 src/debug.c    		i *= 10;
+<a href='../S/155.html#L25'>i</a>                  25 src/debug.c    		i += 9;
+<a href='../S/155.html#L35'>i</a>                  35 src/debug.c    	i = n_width;
+<a href='../S/155.html#L36'>i</a>                  36 src/debug.c    	while (i &gt; 0) {
+<a href='../S/155.html#L39'>i</a>                  39 src/debug.c    		buf[*ptr + i - 1] = r + '0';
+<a href='../S/155.html#L40'>i</a>                  40 src/debug.c    		i--;
+<a href='../S/155.html#L48'>i</a>                  48 src/debug.c    	int i = width;
+<a href='../S/155.html#L50'>i</a>                  50 src/debug.c    	if (i == 0) i = 8;
+<a href='../S/155.html#L60'>i</a>                  60 src/debug.c    	while (i &gt; (int)n_width) {
+<a href='../S/155.html#L63'>i</a>                  63 src/debug.c    		i--;
+<a href='../S/155.html#L66'>i</a>                  66 src/debug.c    	i = (int)n_width;
+<a href='../S/155.html#L67'>i</a>                  67 src/debug.c    	while (i-- &gt; 0) {
+<a href='../S/155.html#L68'>i</a>                  68 src/debug.c    		buf[*ptr] = "0123456789abcdef"[(value&gt;&gt;(i*4))&amp;0xF];
+<a href='../S/155.html#L75'>i</a>                  75 src/debug.c    	int i = 0;
+<a href='../S/155.html#L79'>i</a>                  79 src/debug.c    	for ( ; i &lt; len &amp;&amp; fmt[i]; ++i) {
+<a href='../S/155.html#L80'>i</a>                  80 src/debug.c    		if (fmt[i] != '%') {
+<a href='../S/155.html#L81'>i</a>                  81 src/debug.c    			buf[ptr++] = fmt[i];
+<a href='../S/155.html#L84'>i</a>                  84 src/debug.c    		++i;
+<a href='../S/155.html#L86'>i</a>                  86 src/debug.c    		while (fmt[i] &gt;= '0' &amp;&amp; fmt[i] &lt;= '9') {
+<a href='../S/155.html#L88'>i</a>                  88 src/debug.c    			arg_width += fmt[i] - '0';
+<a href='../S/155.html#L89'>i</a>                  89 src/debug.c    			++i;
+<a href='../S/155.html#L92'>i</a>                  92 src/debug.c    		switch (fmt[i]) {
+<a href='../S/155.html#L115'>i</a>                 115 src/debug.c    				buf[ptr++] = fmt[i];
+<a href='../S/115.html#L126'>i</a>                 126 src/exec.c     	for(int i = 0; i &lt; sn; i++) {
+<a href='../S/145.html#L71'>i</a>                  71 src/fs/pipe.c  	for(int i = 0; i &lt; 2; i++) {
+<a href='../S/145.html#L72'>i</a>                  72 src/fs/pipe.c  		memset((void*) &amp;inodes[i], 0, sizeof(inode_t));
+<a href='../S/145.html#L75'>i</a>                  75 src/fs/pipe.c  		inodes[i].read = pipe_read;
+<a href='../S/145.html#L76'>i</a>                  76 src/fs/pipe.c  		inodes[i].write = pipe_write;
+<a href='../S/145.html#L77'>i</a>                  77 src/fs/pipe.c  		inodes[i].flush = pipe_flush;
+<a href='../S/145.html#L78'>i</a>                  78 src/fs/pipe.c  		inodes[i].uid = current_task-&gt;uid;
+<a href='../S/145.html#L79'>i</a>                  79 src/fs/pipe.c  		inodes[i].gid = current_task-&gt;gid;
+<a href='../S/145.html#L80'>i</a>                  80 src/fs/pipe.c  		inodes[i].mode = S_IFIFO;
+<a href='../S/145.html#L81'>i</a>                  81 src/fs/pipe.c  		inodes[i].userdata = (void*) pipe;
+<a href='../S/145.html#L82'>i</a>                  82 src/fs/pipe.c  		inodes[i].size = (size_t) BUFSIZ;
+<a href='../S/102.html#L119'>i</a>                 119 src/include/aplus.h 		for(int i = 0; i &lt; len; i++)								\
+<a href='../S/102.html#L120'>i</a>                 120 src/include/aplus.h 			out##n(p, v[i]);										\
+<a href='../S/102.html#L130'>i</a>                 130 src/include/aplus.h 		for(int i = 0; i &lt; len; i++)								\
+<a href='../S/102.html#L131'>i</a>                 131 src/include/aplus.h 			v[i] = in##n(p);										\
+<a href='../S/96.html#L122'>i</a>                 122 src/include/aplus/list.h 	for(list_body_t* i = src-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L123'>i</a>                 123 src/include/aplus/list.h 		list_add(dest, i-&gt;value);
+<a href='../S/96.html#L130'>i</a>                 130 src/include/aplus/list.h 	for(list_body_t* i = list-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L131'>i</a>                 131 src/include/aplus/list.h 		if(i-&gt;value == val)
+<a href='../S/96.html#L132'>i</a>                 132 src/include/aplus/list.h 			if(i-&gt;next)
+<a href='../S/96.html#L133'>i</a>                 133 src/include/aplus/list.h 				return i-&gt;next-&gt;value;
+<a href='../S/96.html#L140'>i</a>                 140 src/include/aplus/list.h 	for(list_body_t* i = list-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L141'>i</a>                 141 src/include/aplus/list.h 		if(i-&gt;next)
+<a href='../S/96.html#L142'>i</a>                 142 src/include/aplus/list.h 			if(i-&gt;next-&gt;value == val)
+<a href='../S/96.html#L143'>i</a>                 143 src/include/aplus/list.h 				return i-&gt;value;
+<a href='../S/153.html#L56'>i</a>                  56 src/mm/kheap.c 	for(int i = 0; i &lt; heap-&gt;size; i++) {	
+<a href='../S/153.html#L58'>i</a>                  58 src/mm/kheap.c 			if(BITMAP_TST(heap-&gt;bitmap, (i + j)))
+<a href='../S/153.html#L63'>i</a>                  63 src/mm/kheap.c 				return i;
+<a href='../S/153.html#L94'>i</a>                  94 src/mm/kheap.c 	for(int i = 0; i &lt; size; i++)
+<a href='../S/153.html#L95'>i</a>                  95 src/mm/kheap.c 		BITMAP_SET(heap-&gt;bitmap, (index + i));
+<a href='../S/153.html#L120'>i</a>                 120 src/mm/kheap.c 	for(int i = 0; i &lt; size; i++)
+<a href='../S/153.html#L121'>i</a>                 121 src/mm/kheap.c 		BITMAP_CLR(heap-&gt;bitmap, (index + i));
+<a href='../S/150.html#L83'>i</a>                  83 src/mm/paging.c 	for(int i = 0; i &lt; pages; i++) {
+<a href='../S/150.html#L118'>i</a>                 118 src/mm/paging.c 	for(uint32_t i = 0, frame = (uint32_t) addr; i &lt; pages; i++, frame += PGSIZE) {
+<a href='../S/112.html#L92'>i</a>                  92 src/net/eth.c  	for(int i = 0; i &lt; length; i += delta)
+<a href='../S/112.html#L93'>i</a>                  93 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + i), delta, type);
+<a href='../S/113.html#L129'>i</a>                 129 src/net/ipv4.c 	int i = 0;
+<a href='../S/113.html#L135'>i</a>                 135 src/net/ipv4.c 	for(i = 0; i &lt; max; i++) {
+<a href='../S/113.html#L136'>i</a>                 136 src/net/ipv4.c 		void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), IPV4_MAX_LENGTH, type, dest, 0, i);
+<a href='../S/113.html#L142'>i</a>                 142 src/net/ipv4.c 	void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), length - ((i - 1) * IPV4_MAX_LENGTH), type, dest, -1, i);
+<a href='../S/104.html#L185'>i</a>                 185 src/net/rtl8139/rtl8139.c 	for(int i = 0; i &lt; 6; i++)
+<a href='../S/104.html#L186'>i</a>                 186 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[i] = int_in8(card, i);
+<a href='../S/104.html#L230'>i</a>                 230 src/net/rtl8139/rtl8139.c 	for(int i = 0; i &lt; 4; i++)
+<a href='../S/104.html#L231'>i</a>                 231 src/net/rtl8139/rtl8139.c 		int_out32(card, REG_TRANSMIT_ADDR0 + (4 * i), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * i));
+<a href='../S/110.html#L97'>i</a>                  97 src/net/slirp/slirp.c 	for(int i = 0; i &lt; length; i++) {
+<a href='../S/110.html#L98'>i</a>                  98 src/net/slirp/slirp.c 		switch(b[i]) {
+<a href='../S/110.html#L110'>i</a>                 110 src/net/slirp/slirp.c 				serial_send(slirpcard-&gt;ioport, b[i]);
+<a href='../S/142.html#L32'>i</a>                  32 src/syscall/getgroups.c 	int i = 0;
+<a href='../S/142.html#L33'>i</a>                  33 src/syscall/getgroups.c 	for(i = 0; i &lt; sizeof(__groups); i++) {
+<a href='../S/142.html#L34'>i</a>                  34 src/syscall/getgroups.c 		if(i &gt;= length)
+<a href='../S/142.html#L37'>i</a>                  37 src/syscall/getgroups.c 		list[i] = __groups[i];
+<a href='../S/142.html#L40'>i</a>                  40 src/syscall/getgroups.c 	return i;
+<a href='../S/139.html#L117'>i</a>                 117 src/syscall/open.c 	for(int i = 0; i &lt; TASK_MAX_FD; i++) {
+<a href='../S/139.html#L118'>i</a>                 118 src/syscall/open.c 		if(current_task-&gt;fd[i] == 0) {
+<a href='../S/139.html#L119'>i</a>                 119 src/syscall/open.c 			fd = &amp;current_task-&gt;fd[i];
+<a href='../S/84.html#L64'>i</a>                  64 usr/src/libcrt0/src/crt0.c 	int i;
+<a href='../S/84.html#L65'>i</a>                  65 usr/src/libcrt0/src/crt0.c 	for(i = (int) &amp;__bss_start; i &lt; (int) &amp;_end; i++)
+<a href='../S/84.html#L66'>i</a>                  66 usr/src/libcrt0/src/crt0.c 		*(char*) i = 0;
+<a href='../S/79.html#L20'>i</a>                  20 usr/src/libcrt0/test/main.c 	int i;
+<a href='../S/79.html#L21'>i</a>                  21 usr/src/libcrt0/test/main.c 	for(i = 0; i &lt; argc; i++)
+<a href='../S/79.html#L22'>i</a>                  22 usr/src/libcrt0/test/main.c 		printf("argv[%d] =&gt; \"%s\"\n", i, argv[i]);
+<a href='../S/19.html#L37'>i</a>                  37 usr/src/libposix/src/execl.c   int i;
+<a href='../S/19.html#L43'>i</a>                  43 usr/src/libposix/src/execl.c   i = 1;
+<a href='../S/19.html#L45'>i</a>                  45 usr/src/libposix/src/execl.c       argv[i] = va_arg (args, _CONST char *);
+<a href='../S/19.html#L46'>i</a>                  46 usr/src/libposix/src/execl.c   while (argv[i++] != NULL);
+<a href='../S/39.html#L33'>i</a>                  33 usr/src/libposix/src/execle.c   int i;
+<a href='../S/39.html#L40'>i</a>                  40 usr/src/libposix/src/execle.c   i = 1;
+<a href='../S/39.html#L42'>i</a>                  42 usr/src/libposix/src/execle.c     argv[i] = va_arg (args, _CONST char *);
+<a href='../S/39.html#L43'>i</a>                  43 usr/src/libposix/src/execle.c   while (argv[i++] != NULL);
+<a href='../S/30.html#L33'>i</a>                  33 usr/src/libposix/src/execlp.c   int i;
+<a href='../S/30.html#L39'>i</a>                  39 usr/src/libposix/src/execlp.c   i = 1;
+<a href='../S/30.html#L41'>i</a>                  41 usr/src/libposix/src/execlp.c       argv[i] = va_arg (args, _CONST char *);
+<a href='../S/30.html#L42'>i</a>                  42 usr/src/libposix/src/execlp.c   while (argv[i++] != NULL);
+<a href='../S/70.html#L15'>i</a>                  15 usr/src/libpthread/src/pthread_key.c 	int i;
+<a href='../S/70.html#L16'>i</a>                  16 usr/src/libpthread/src/pthread_key.c 	for(i = 0; i &lt; PTHREAD_KEYS_MAX; i++) {
+<a href='../S/70.html#L17'>i</a>                  17 usr/src/libpthread/src/pthread_key.c 		if(__pthread_keys[i].used == 0) {
+<a href='../S/70.html#L18'>i</a>                  18 usr/src/libpthread/src/pthread_key.c 			__pthread_keys[i].used = 1;
+<a href='../S/70.html#L19'>i</a>                  19 usr/src/libpthread/src/pthread_key.c 			__pthread_keys[i].dtor = destructor;
+<a href='../S/70.html#L20'>i</a>                  20 usr/src/libpthread/src/pthread_key.c 			__pthread_keys[i].value = NULL;
+<a href='../S/70.html#L22'>i</a>                  22 usr/src/libpthread/src/pthread_key.c 			*key = i;
+</pre>
+</body>
+</html>

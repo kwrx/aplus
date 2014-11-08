@@ -1,0 +1,132 @@
+<html>
+<head>
+<title>src/include/grub.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/grub.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/31.html' title='Multiple included from 5 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  grub.h</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#ifndef</font> <a href='../S/101.html#L23' title='Defined at 23 in src/include/grub.h.'>_GRUB_H</a>
+<a name='L23'>  23 <font color='darkred'>#define</font> <a href='../S/101.html#L22' title='Refered from 22 in src/include/grub.h.'>_GRUB_H</a>
+<a name='L24'>  24 
+<a name='L25'>  25 
+<a name='L26'>  26         <b>typedef</b> <b>struct</b> vesaInfo_t <font color='red'>{</font>
+<a name='L27'>  27                 <b>char</b> signature[4];
+<a name='L28'>  28                 <b>unsigned</b> <b>short</b> <a href='../Y/749.html' title='Multiple used in 4 places.'>version</a>;
+<a name='L29'>  29                 <b>unsigned</b> <b>int</b> oem_string_ptr;
+<a name='L30'>  30                 <b>unsigned</b> <b>int</b> capabilities;
+<a name='L31'>  31                 <b>unsigned</b> <b>int</b> video_mode_ptr;
+<a name='L32'>  32                 <b>unsigned</b> <b>short</b> total_memory;
+<a name='L33'>  33                 <b>unsigned</b> <b>int</b> oem_software_rev;
+<a name='L34'>  34                 <b>char</b> *oem_vendor_name;
+<a name='L35'>  35                 <b>char</b> *oem_product_name;
+<a name='L36'>  36                 <b>char</b> *oem_product_rev;
+<a name='L37'>  37         <font color='red'>}</font> <a href='../S/101.html#L85' title='Refered from 85 in src/include/grub.h.'>vesaInfo</a>;
+<a name='L38'>  38 
+<a name='L39'>  39         <b>typedef</b> <b>struct</b> vesaModeInfo_t <font color='red'>{</font>
+<a name='L40'>  40                 <b>unsigned</b> <b>short</b> attributes;
+<a name='L41'>  41                 <b>unsigned</b> <b>char</b> winA,winB;
+<a name='L42'>  42                 <b>unsigned</b> <b>short</b> <a href='../Y/288.html' title='Multiple used in 4 places.'>granularity</a>;
+<a name='L43'>  43                 <b>unsigned</b> <b>short</b> winsize;
+<a name='L44'>  44                 <b>unsigned</b> <b>short</b> segmentA, segmentB;
+<a name='L45'>  45                 <b>unsigned</b> <b>int</b> realFctPtr;
+<a name='L46'>  46                 <b>unsigned</b> <b>short</b> pitch;
+<a name='L47'>  47 
+<a name='L48'>  48                 <b>unsigned</b> <b>short</b> Xres, Yres;
+<a name='L49'>  49                 <b>unsigned</b> <b>char</b> Wchar, Ychar, planes, bpp, banks;
+<a name='L50'>  50                 <b>unsigned</b> <b>char</b> memory_model, bank_size, image_pages;
+<a name='L51'>  51                 <b>unsigned</b> <b>char</b> reserved0;
+<a name='L52'>  52 
+<a name='L53'>  53                 <b>unsigned</b> <b>char</b> red_mask, red_position;
+<a name='L54'>  54                 <b>unsigned</b> <b>char</b> green_mask, green_position;
+<a name='L55'>  55                 <b>unsigned</b> <b>char</b> blue_mask, blue_position;
+<a name='L56'>  56                 <b>unsigned</b> <b>char</b> rsv_mask, rsv_position;
+<a name='L57'>  57                 <b>unsigned</b> <b>char</b> directcolor_attributes;
+<a name='L58'>  58 
+<a name='L59'>  59                 <b>unsigned</b> <b>int</b> physbase;
+<a name='L60'>  60                 <b>unsigned</b> <b>int</b> reserved1;
+<a name='L61'>  61                 <b>short</b> reserved2;
+<a name='L62'>  62         <font color='red'>}</font> <b>__attribute__</b> ((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../S/101.html#L84' title='Refered from 84 in src/include/grub.h.'>vesaModeInfo</a>;
+<a name='L63'>  63 
+<a name='L64'>  64         <b>typedef</b> <b>struct</b> BootInfo_t <font color='red'>{</font>
+<a name='L65'>  65                 <b>unsigned</b> <b>int</b> <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>;
+<a name='L66'>  66                 <b>unsigned</b> <b>int</b> <a href='../Y/377.html' title='Multiple used in 2 places.'>mem_lower</a>;
+<a name='L67'>  67                 <b>unsigned</b> <b>int</b> <a href='../Y/378.html' title='Multiple used in 2 places.'>mem_upper</a>;
+<a name='L68'>  68                 <b>unsigned</b> <b>int</b> boot_device;
+<a name='L69'>  69                 <b>unsigned</b> <b>int</b> cmdline;
+<a name='L70'>  70                 <b>unsigned</b> <b>int</b> mods_count;
+<a name='L71'>  71                 <b>unsigned</b> <b>int</b>** mods_addr;
+<a name='L72'>  72                 <b>unsigned</b> <b>int</b> num;
+<a name='L73'>  73                 <b>unsigned</b> <b>int</b> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L74'>  74                 <b>unsigned</b> <b>int</b> <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>;
+<a name='L75'>  75                 <b>unsigned</b> <b>int</b> shndx;
+<a name='L76'>  76                 <b>unsigned</b> <b>int</b> mmap_length;
+<a name='L77'>  77                 <b>unsigned</b> <b>int</b> mmap_addr;
+<a name='L78'>  78                 <b>unsigned</b> <b>int</b> drives_length;
+<a name='L79'>  79                 <b>unsigned</b> <b>int</b> drives_addr;
+<a name='L80'>  80                 <b>unsigned</b> <b>int</b> config_table;
+<a name='L81'>  81                 <b>unsigned</b> <b>int</b> boot_loader_name;
+<a name='L82'>  82                 <b>unsigned</b> <b>int</b> apm_table;
+<a name='L83'>  83                 <b>unsigned</b> <b>int</b> vbe_control_info;
+<a name='L84'>  84                 <a href='../S/101.html#L62' title='Defined at 62 in src/include/grub.h.'>vesaModeInfo</a>* vbe_mode_info;
+<a name='L85'>  85                 <a href='../S/101.html#L37' title='Defined at 37 in src/include/grub.h.'>vesaInfo</a>* vbe_mode;
+<a name='L86'>  86                 <b>unsigned</b> <b>int</b> vbe_interface_seg;
+<a name='L87'>  87                 <b>unsigned</b> <b>int</b> vbe_interface_off;
+<a name='L88'>  88                 <b>unsigned</b> <b>int</b> vbe_interface_len;
+<a name='L89'>  89         <font color='red'>}</font> <a href='../S/101.html#L109' title='Refered from 109 in src/include/grub.h.'>BootInfo</a>;
+<a name='L90'>  90 
+<a name='L91'>  91 
+<a name='L92'>  92         
+<a name='L93'>  93         
+<a name='L94'>  94         
+<a name='L95'>  95 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_MEM 0x001
+<a name='L96'>  96 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_DEVICE 0x002
+<a name='L97'>  97 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_CMDLINE 0x004
+<a name='L98'>  98 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_MODS 0x008
+<a name='L99'>  99 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_AOUT 0x010
+<a name='L100'> 100 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_ELF 0x020
+<a name='L101'> 101 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_MMAP 0x040
+<a name='L102'> 102 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_CONFIG 0x080
+<a name='L103'> 103 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_LOADER 0x100
+<a name='L104'> 104 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_APM 0x200
+<a name='L105'> 105 <font color='darkred'>        #define</font> MULTIBOOT_FLAG_VBE 0x400
+<a name='L106'> 106 
+<a name='L107'> 107 
+<a name='L108'> 108         <i><font color='green'>// Informazioni passate con il loader</font></i>
+<a name='L109'> 109         <b>extern</b> <a href='../S/101.html#L89' title='Defined at 89 in src/include/grub.h.'>BootInfo</a>* <a href='../Y/376.html' title='Multiple used in 2 places.'>mbd</a>;
+<a name='L110'> 110         <b>extern</b> <b>unsigned</b> <b>int</b> <a href='../Y/371.html' title='Multiple used in 12 places.'>magic</a>;
+<a name='L111'> 111 
+<a name='L112'> 112         
+<a name='L113'> 113 <font color='darkred'>#endif</font>  
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

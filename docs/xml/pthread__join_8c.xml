@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="pthread__join_8c" kind="file">
+    <compoundname>pthread_join.c</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">sched.h</includes>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+    <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
+    <incdepgraph>
+      <node id="2352">
+        <label>usr/src/libpthread/src/pthread_join.c</label>
+        <link refid="pthread_join.c"/>
+        <childnode refid="2353" relation="include">
+        </childnode>
+        <childnode refid="2354" relation="include">
+        </childnode>
+        <childnode refid="2355" relation="include">
+        </childnode>
+        <childnode refid="2359" relation="include">
+        </childnode>
+      </node>
+      <node id="2353">
+        <label>stdint.h</label>
+      </node>
+      <node id="2360">
+        <label>errno.h</label>
+      </node>
+      <node id="2359">
+        <label>pthread_internal.h</label>
+        <link refid="pthread__internal_8h"/>
+        <childnode refid="2360" relation="include">
+        </childnode>
+        <childnode refid="2353" relation="include">
+        </childnode>
+        <childnode refid="2355" relation="include">
+        </childnode>
+      </node>
+      <node id="2355">
+        <label>pthread.h</label>
+        <link refid="pthread_8h"/>
+        <childnode refid="2353" relation="include">
+        </childnode>
+        <childnode refid="2356" relation="include">
+        </childnode>
+        <childnode refid="2357" relation="include">
+        </childnode>
+        <childnode refid="2354" relation="include">
+        </childnode>
+        <childnode refid="2358" relation="include">
+        </childnode>
+      </node>
+      <node id="2356">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2358">
+        <label>unistd.h</label>
+      </node>
+      <node id="2357">
+        <label>sys/time.h</label>
+      </node>
+      <node id="2354">
+        <label>sched.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pthread__join_8c_1a3a07eea4fe20b2d6457494decbae0232" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_join</definition>
+        <argsstring>(pthread_t thread, void **value_ptr)</argsstring>
+        <name>pthread_join</name>
+        <param>
+          <type><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref></type>
+          <declname>thread</declname>
+        </param>
+        <param>
+          <type>void **</type>
+          <declname>value_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_join.c" line="8" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_join.c" bodystart="8" bodyend="22"/>
+        <references refid="structpthread__once_1acffdc3852414e4eeece3c8e7cf80ffc1" compoundref="pthread_8h" startline="68">pthread_once::done</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" compoundref="pthread__internal_8h" startline="41">pthread_context::exitval</references>
+        <references refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" compoundref="pthread__internal_8h" startline="43">pthread_context::once</references>
+        <references refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09">sched_yield</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sched.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="pthread_8h" kindref="compound">pthread.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pthread__internal_8h" kindref="compound">pthread_internal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="pthread__join_8c_1a3a07eea4fe20b2d6457494decbae0232" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__join_8c_1a3a07eea4fe20b2d6457494decbae0232" kindref="member">pthread_join</ref>(<ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/>thread,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>**value_ptr)<sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!thread)<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*<sp/>ctx<sp/>=<sp/>(<ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*)<sp/>thread;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(ctx-&gt;<ref refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" kindref="member">once</ref>.<ref refid="structpthread__once_1acffdc3852414e4eeece3c8e7cf80ffc1" kindref="member">done</ref><sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09" kindref="member">sched_yield</ref>();</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(value_ptr)</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*value_ptr<sp/>=<sp/>ctx-&gt;<ref refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" kindref="member">exitval</ref>;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_join.c"/>
+  </compounddef>
+</doxygen>

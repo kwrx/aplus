@@ -1,0 +1,234 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="kill_8c" kind="file">
+    <compoundname>kill.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">fcntl.h</includes>
+    <includes local="no">errno.h</includes>
+    <incdepgraph>
+      <node id="1574">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1563">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1566">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1561" relation="include">
+        </childnode>
+        <childnode refid="1567" relation="include">
+        </childnode>
+        <childnode refid="1562" relation="include">
+        </childnode>
+        <childnode refid="1564" relation="include">
+        </childnode>
+        <childnode refid="1569" relation="include">
+        </childnode>
+      </node>
+      <node id="1573">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1562" relation="include">
+        </childnode>
+        <childnode refid="1568" relation="include">
+        </childnode>
+        <childnode refid="1569" relation="include">
+        </childnode>
+        <childnode refid="1574" relation="include">
+        </childnode>
+        <childnode refid="1575" relation="include">
+        </childnode>
+      </node>
+      <node id="1562">
+        <label>stdint.h</label>
+      </node>
+      <node id="1565">
+        <label>aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="1561" relation="include">
+        </childnode>
+        <childnode refid="1566" relation="include">
+        </childnode>
+        <childnode refid="1562" relation="include">
+        </childnode>
+      </node>
+      <node id="1578">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1572">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1562" relation="include">
+        </childnode>
+        <childnode refid="1561" relation="include">
+        </childnode>
+        <childnode refid="1573" relation="include">
+        </childnode>
+        <childnode refid="1577" relation="include">
+        </childnode>
+        <childnode refid="1569" relation="include">
+        </childnode>
+        <childnode refid="1578" relation="include">
+        </childnode>
+      </node>
+      <node id="1580">
+        <label>errno.h</label>
+      </node>
+      <node id="1579">
+        <label>fcntl.h</label>
+      </node>
+      <node id="1568">
+        <label>stddef.h</label>
+      </node>
+      <node id="1567">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1568" relation="include">
+        </childnode>
+        <childnode refid="1562" relation="include">
+        </childnode>
+        <childnode refid="1569" relation="include">
+        </childnode>
+        <childnode refid="1570" relation="include">
+        </childnode>
+        <childnode refid="1571" relation="include">
+        </childnode>
+      </node>
+      <node id="1561">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1562" relation="include">
+        </childnode>
+        <childnode refid="1563" relation="include">
+        </childnode>
+        <childnode refid="1564" relation="include">
+        </childnode>
+      </node>
+      <node id="1569">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1564">
+        <label>string.h</label>
+      </node>
+      <node id="1576">
+        <label>unistd.h</label>
+      </node>
+      <node id="1577">
+        <label>signal.h</label>
+      </node>
+      <node id="1571">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1562" relation="include">
+        </childnode>
+        <childnode refid="1572" relation="include">
+        </childnode>
+      </node>
+      <node id="1575">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1576" relation="include">
+        </childnode>
+        <childnode refid="1569" relation="include">
+        </childnode>
+      </node>
+      <node id="1570">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="1560">
+        <label>src/syscall/kill.c</label>
+        <link refid="kill.c"/>
+        <childnode refid="1561" relation="include">
+        </childnode>
+        <childnode refid="1565" relation="include">
+        </childnode>
+        <childnode refid="1572" relation="include">
+        </childnode>
+        <childnode refid="1576" relation="include">
+        </childnode>
+        <childnode refid="1579" relation="include">
+        </childnode>
+        <childnode refid="1580" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="kill_8c_1a67e972ab20c5a148b4c3874eb4ccccc3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sys_kill</definition>
+        <argsstring>(pid_t pid, int signal)</argsstring>
+        <name>sys_kill</name>
+        <param>
+          <type>pid_t</type>
+          <declname>pid</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>signal</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/kill.c" line="10" column="1" bodyfile="/opt/prj/aPlus/src/syscall/kill.c" bodystart="10" bodyend="19"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" compoundref="src_2sched_8c" startline="173" endline="185">schedule_getbypid</references>
+        <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="96">task::signal_sig</references>
+      </memberdef>
+      <memberdef kind="function" id="kill_8c_1af36650f7b47e85ac1873a0ba3644e1a6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SYSCALL</definition>
+        <argsstring>(sys_kill, 7)</argsstring>
+        <name>SYSCALL</name>
+        <param>
+          <type><ref refid="kill_8c_1a67e972ab20c5a148b4c3874eb4ccccc3" kindref="member">sys_kill</ref></type>
+        </param>
+        <param>
+          <type>7</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/kill.c" line="21" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="syscall_8h" kindref="compound">aplus/syscall.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="kill_8c_1a67e972ab20c5a148b4c3874eb4ccccc3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="kill_8c_1a67e972ab20c5a148b4c3874eb4ccccc3" kindref="member">sys_kill</ref>(pid_t<sp/>pid,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>signal)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structtask" kindref="compound">task</ref><sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" kindref="member">schedule_getbypid</ref>(pid);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!task)<sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ESRCH;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>task-&gt;<ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref><sp/>=<sp/>signal;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><ref refid="kill_8c_1af36650f7b47e85ac1873a0ba3644e1a6" kindref="member">SYSCALL</ref>(<ref refid="kill_8c_1a67e972ab20c5a148b4c3874eb4ccccc3" kindref="member">sys_kill</ref>,<sp/>7);</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/syscall/kill.c"/>
+  </compounddef>
+</doxygen>

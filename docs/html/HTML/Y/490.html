@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>ptr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L83'>ptr</a>                83 src/arch/task.c 	if(current_task-&gt;image.ptr) {
+<a href='../S/159.html#L88'>ptr</a>                88 src/arch/task.c 		child-&gt;image.ptr = (uint32_t) mm_paddr(addr);
+<a href='../S/159.html#L144'>ptr</a>               144 src/arch/task.c 	child-&gt;image.ptr = current_task-&gt;image.ptr;
+<a href='../S/156.html#L141'>ptr</a>               141 src/bufio.c    int bufio_read(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L145'>ptr</a>               145 src/bufio.c    	memcpy(ptr, (void*) ((off_t) buf-&gt;raw + buf-&gt;offset), len);
+<a href='../S/156.html#L154'>ptr</a>               154 src/bufio.c    int bufio_write(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L159'>ptr</a>               159 src/bufio.c    	memcpy((void*) ((off_t) buf-&gt;raw + buf-&gt;offset), ptr, len);
+<a href='../S/155.html#L19'>ptr</a>                19 src/debug.c    static void print_dec(unsigned int value, unsigned int width, char * buf, int * ptr ) {
+<a href='../S/155.html#L30'>ptr</a>                30 src/debug.c    		buf[*ptr] = '0';
+<a href='../S/155.html#L31'>ptr</a>                31 src/debug.c    		*ptr += 1;
+<a href='../S/155.html#L39'>ptr</a>                39 src/debug.c    		buf[*ptr + i - 1] = r + '0';
+<a href='../S/155.html#L43'>ptr</a>                43 src/debug.c    	*ptr += n_width;
+<a href='../S/155.html#L47'>ptr</a>                47 src/debug.c    static void print_hex(unsigned int value, unsigned int width, char * buf, int * ptr) {
+<a href='../S/155.html#L61'>ptr</a>                61 src/debug.c    		buf[*ptr] = '0';
+<a href='../S/155.html#L62'>ptr</a>                62 src/debug.c    		*ptr += 1;
+<a href='../S/155.html#L68'>ptr</a>                68 src/debug.c    		buf[*ptr] = "0123456789abcdef"[(value&gt;&gt;(i*4))&amp;0xF];
+<a href='../S/155.html#L69'>ptr</a>                69 src/debug.c    		*ptr += + 1;
+<a href='../S/155.html#L77'>ptr</a>                77 src/debug.c    	int ptr = 0;
+<a href='../S/155.html#L81'>ptr</a>                81 src/debug.c    			buf[ptr++] = fmt[i];
+<a href='../S/155.html#L99'>ptr</a>                99 src/debug.c    					buf[ptr++] = *s++;
+<a href='../S/155.html#L103'>ptr</a>               103 src/debug.c    				buf[ptr++] = (char)va_arg(args, int);
+<a href='../S/155.html#L106'>ptr</a>               106 src/debug.c    				print_hex((unsigned long)va_arg(args, unsigned long), arg_width, buf, &amp;ptr);
+<a href='../S/155.html#L109'>ptr</a>               109 src/debug.c    				print_dec((unsigned long)va_arg(args, unsigned long), arg_width, buf, &amp;ptr);
+<a href='../S/155.html#L112'>ptr</a>               112 src/debug.c    				buf[ptr++] = '%';
+<a href='../S/155.html#L115'>ptr</a>               115 src/debug.c    				buf[ptr++] = fmt[i];
+<a href='../S/155.html#L120'>ptr</a>               120 src/debug.c    	buf[ptr] = '\0';
+<a href='../S/155.html#L121'>ptr</a>               121 src/debug.c    	return ptr;
+<a href='../S/146.html#L16'>ptr</a>                16 src/fs/fs.c    int fs_read (struct inode* inode, char* ptr, int len) {
+<a href='../S/146.html#L18'>ptr</a>                18 src/fs/fs.c    		return inode-&gt;read(inode, ptr, len);
+<a href='../S/146.html#L24'>ptr</a>                24 src/fs/fs.c    int fs_write (struct inode* inode, char* ptr, int len) {
+<a href='../S/146.html#L26'>ptr</a>                26 src/fs/fs.c    		return inode-&gt;write(inode, ptr, len);
+<a href='../S/145.html#L27'>ptr</a>                27 src/fs/pipe.c  int pipe_read(inode_t* inode, char* ptr, int len) {
+<a href='../S/145.html#L35'>ptr</a>                35 src/fs/pipe.c  	while((tolen = bufio_read(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/145.html#L42'>ptr</a>                42 src/fs/pipe.c  int pipe_write(inode_t* inode, char* ptr, int len) {
+<a href='../S/145.html#L47'>ptr</a>                47 src/fs/pipe.c  	while((tolen = bufio_write(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/97.html#L55'>ptr</a>                55 src/include/aplus/fs.h 	int (*read) (struct inode* inode, char* ptr, int len);
+<a href='../S/97.html#L56'>ptr</a>                56 src/include/aplus/fs.h 	int (*write) (struct inode* inode, char* ptr, int len);
+<a href='../S/90.html#L91'>ptr</a>                91 src/include/aplus/task.h 		uint32_t ptr;
+<a href='../S/151.html#L66'>ptr</a>                66 src/mm/mm.c    void kfree(void* ptr) {
+<a href='../S/151.html#L67'>ptr</a>                67 src/mm/mm.c    	if(!ptr)
+<a href='../S/151.html#L71'>ptr</a>                71 src/mm/mm.c    	block_t* block = (block_t*) ptr;
+<a href='../S/151.html#L80'>ptr</a>                80 src/mm/mm.c    	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+<a href='../S/151.html#L84'>ptr</a>                84 src/mm/mm.c    void* krealloc(void* ptr, size_t size) {
+<a href='../S/151.html#L85'>ptr</a>                85 src/mm/mm.c    	if(ptr == NULL)
+<a href='../S/151.html#L89'>ptr</a>                89 src/mm/mm.c    		kfree(ptr);
+<a href='../S/151.html#L93'>ptr</a>                93 src/mm/mm.c    	block_t* block = (block_t*) ptr;
+<a href='../S/151.html#L104'>ptr</a>               104 src/mm/mm.c    	memcpy(newptr, ptr, size);
+<a href='../S/151.html#L105'>ptr</a>               105 src/mm/mm.c    	kfree(ptr);
+<a href='../S/143.html#L155'>ptr</a>               155 src/sched.c    	kfree((void*) task-&gt;image.ptr);
+<a href='../S/143.html#L195'>ptr</a>               195 src/sched.c    	current_task-&gt;image.ptr = (uint32_t) krealloc((void*) current_task-&gt;image.ptr, current_task-&gt;image.length);
+<a href='../S/143.html#L196'>ptr</a>               196 src/sched.c    	current_task-&gt;image.vaddr = vmm_map(current_task-&gt;context.cr3, mm_paddr((void*) current_task-&gt;image.ptr), current_task-&gt;image.vaddr, current_task-&gt;image.length, VMM_FLAGS_DEFAULT);
+<a href='../S/127.html#L19'>ptr</a>                19 src/syscall/read.c int sys_read(int fd, void* ptr, size_t size) {
+<a href='../S/127.html#L31'>ptr</a>                31 src/syscall/read.c 	return fs_read(ino, ptr, size);
+<a href='../S/128.html#L19'>ptr</a>                19 src/syscall/write.c int sys_write(int fd, void* ptr, size_t size) {
+<a href='../S/128.html#L31'>ptr</a>                31 src/syscall/write.c 	return fs_write(ino, ptr, size);
+</pre>
+</body>
+</html>

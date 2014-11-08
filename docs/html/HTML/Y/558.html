@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>serial</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/161.html#L7'>serial</a>              7 src/arch/serial.c static uint16_t serial[] = {
+<a href='../S/161.html#L12'>serial</a>             12 src/arch/serial.c 	fastlock_waiton(((inb(serial[port] + 5) &amp; 32) == 0));
+<a href='../S/161.html#L13'>serial</a>             13 src/arch/serial.c 	outb(serial[port], value);
+<a href='../S/161.html#L17'>serial</a>             17 src/arch/serial.c 	fastlock_waiton((inb(serial[port] + 5) &amp; 1) == 0);
+<a href='../S/161.html#L19'>serial</a>             19 src/arch/serial.c 	return inb(serial[port]);
+<a href='../S/161.html#L23'>serial</a>             23 src/arch/serial.c 	for(int i = 0; i &lt; sizeof(serial); i++) {
+<a href='../S/161.html#L24'>serial</a>             24 src/arch/serial.c 		outb(serial[i] + 1, 0x00);
+<a href='../S/161.html#L25'>serial</a>             25 src/arch/serial.c 		outb(serial[i] + 3, 0x80);
+<a href='../S/161.html#L26'>serial</a>             26 src/arch/serial.c 		outb(serial[i] + 0, 0x03);
+<a href='../S/161.html#L27'>serial</a>             27 src/arch/serial.c 		outb(serial[i] + 1, 0x00);
+<a href='../S/161.html#L28'>serial</a>             28 src/arch/serial.c 		outb(serial[i] + 3, 0x03);
+<a href='../S/161.html#L29'>serial</a>             29 src/arch/serial.c 		outb(serial[i] + 2, 0xC7);
+<a href='../S/161.html#L30'>serial</a>             30 src/arch/serial.c 		outb(serial[i] + 4, 0x0B);
+</pre>
+</body>
+</html>

@@ -1,0 +1,78 @@
+\hypertarget{gid_8c}{\section{Riferimenti per il file usr/src/libposix/src/gid.c}
+\label{gid_8c}\index{usr/src/libposix/src/gid.\+c@{usr/src/libposix/src/gid.\+c}}
+}
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+gid\+\_\+t \hyperlink{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}{getgid} (void)
+\item 
+gid\+\_\+t \hyperlink{gid_8c_a3e7c694d68b4e62c1f275612d30b6d9d}{getegid} (void)
+\item 
+int \hyperlink{gid_8c_a5dec302aecbe8f2f9be1528cd5ffeba7}{getgroups} (int len, gid\+\_\+t $\ast$\hyperlink{structlist}{list})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{gid_8c_a3e7c694d68b4e62c1f275612d30b6d9d}{\index{gid.\+c@{gid.\+c}!getegid@{getegid}}
+\index{getegid@{getegid}!gid.\+c@{gid.\+c}}
+\subsubsection[{getegid}]{\setlength{\rightskip}{0pt plus 5cm}gid\+\_\+t getegid (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{gid_8c_a3e7c694d68b4e62c1f275612d30b6d9d}
+
+
+Definizione alla linea 14 del file gid.\+c.
+
+
+
+Referenzia getgid().
+
+
+\begin{DoxyCode}
+14                     \{
+15     \textcolor{keywordflow}{return} \hyperlink{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}{getgid}();
+16 \}
+\end{DoxyCode}
+\hypertarget{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}{\index{gid.\+c@{gid.\+c}!getgid@{getgid}}
+\index{getgid@{getgid}!gid.\+c@{gid.\+c}}
+\subsubsection[{getgid}]{\setlength{\rightskip}{0pt plus 5cm}gid\+\_\+t getgid (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}
+
+
+Definizione alla linea 6 del file gid.\+c.
+
+
+\begin{DoxyCode}
+6                    \{
+7     \textcolor{keyword}{struct }stat st;
+8     \textcolor{keywordflow}{if}(fstat(STDIN\_FILENO, &st) != 0)
+9         \textcolor{keywordflow}{return} -1;
+10 
+11     \textcolor{keywordflow}{return} st.st\_gid;
+12 \}
+\end{DoxyCode}
+\hypertarget{gid_8c_a5dec302aecbe8f2f9be1528cd5ffeba7}{\index{gid.\+c@{gid.\+c}!getgroups@{getgroups}}
+\index{getgroups@{getgroups}!gid.\+c@{gid.\+c}}
+\subsubsection[{getgroups}]{\setlength{\rightskip}{0pt plus 5cm}int getgroups (
+\begin{DoxyParamCaption}
+\item[{int}]{len, }
+\item[{gid\+\_\+t $\ast$}]{list}
+\end{DoxyParamCaption}
+)}}\label{gid_8c_a5dec302aecbe8f2f9be1528cd5ffeba7}
+
+
+Definizione alla linea 18 del file gid.\+c.
+
+
+\begin{DoxyCode}
+18                                     \{
+19     \textcolor{keywordflow}{return} \_\_os\_getgroups(len, \hyperlink{structlist}{list});
+20 \}
+\end{DoxyCode}

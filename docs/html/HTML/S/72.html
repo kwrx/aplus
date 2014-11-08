@@ -1,0 +1,161 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/pthread_rwlock.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/pthread_rwlock.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L10'>[^]</a><a href='#L117'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L10' title='Defined at 10.'>pthread_rwlock_init</a>
+<li><a href='#L34' title='Defined at 34.'>pthread_rwlock_destroy</a>
+<li><a href='#L63' title='Defined at 63.'>pthread_rwlock_tryrdlock</a>
+<li><a href='#L72' title='Defined at 72.'>pthread_rwlock_trywrlock</a>
+<li><a href='#L81' title='Defined at 81.'>pthread_rwlock_rdlock</a>
+<li><a href='#L90' title='Defined at 90.'>pthread_rwlock_timedrdlock</a>
+<li><a href='#L99' title='Defined at 99.'>pthread_rwlock_wrlock</a>
+<li><a href='#L108' title='Defined at 108.'>pthread_rwlock_timedwrlock</a>
+<li><a href='#L117' title='Defined at 117.'>pthread_rwlock_unlock</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;sched.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;time.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='43.html'>pthread.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#include</font> "<a href='50.html'>pthread_internal.h</a>"
+<a name='L8'>   8 
+<a name='L9'>   9 
+<a name='L10'>  10 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../R/424.html' title='Multiple refered from 2 places.'>pthread_rwlock_init</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>, <b>const</b> <a href='../S/43.html#L129' title='Defined at 129 in usr/src/libpthread/include/pthread.h.'>pthread_rwlockattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L11'>  11         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L12'>  12                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L13'>  13                 <b>return</b> 1;
+<a name='L14'>  14         <font color='red'>}</font>
+<a name='L15'>  15 
+<a name='L16'>  16         <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a> = <a href='../S/69.html#L10' title='Defined at 10 in usr/src/libpthread/src/pthread_self.c.'>pthread_self</a>();
+<a name='L17'>  17         <b>if</b>(!<a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>) <font color='red'>{</font>
+<a name='L18'>  18                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/11.html' title='Multiple used in 4 places.'>EFAULT</a>;
+<a name='L19'>  19                 <b>return</b> 1;
+<a name='L20'>  20         <font color='red'>}</font>
+<a name='L21'>  21 
+<a name='L22'>  22         <a href='../S/59.html#L26' title='Defined at 26 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_init</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/500.html' title='Multiple used in 7 places.'>rdmutex</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>);
+<a name='L23'>  23         <a href='../S/59.html#L26' title='Defined at 26 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_init</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/771.html' title='Multiple used in 7 places.'>wrmutex</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>);
+<a name='L24'>  24 
+<a name='L25'>  25         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/571.html' title='Multiple used in 3 places.'>shared_waiters</a> = (<a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a>) 0;
+<a name='L26'>  26         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/246.html' title='Multiple used in 3 places.'>exclusive_waiters</a> = (<a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a>) 0;
+<a name='L27'>  27         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/421.html' title='Multiple used in 3 places.'>num_shared_waiters</a> = 0;
+<a name='L28'>  28         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/420.html' title='Multiple used in 3 places.'>num_exclusive_waiters</a> = 0;
+<a name='L29'>  29         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a> = <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>;
+<a name='L30'>  30 
+<a name='L31'>  31         <b>return</b> 0;
+<a name='L32'>  32 <font color='red'>}</font>
+<a name='L33'>  33 
+<a name='L34'>  34 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../R/423.html' title='Multiple refered from 2 places.'>pthread_rwlock_destroy</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>) <font color='red'>{</font>
+<a name='L35'>  35         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L36'>  36                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L37'>  37                 <b>return</b> 1;
+<a name='L38'>  38         <font color='red'>}</font>
+<a name='L39'>  39 
+<a name='L40'>  40         <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a> = <a href='../S/69.html#L10' title='Defined at 10 in usr/src/libpthread/src/pthread_self.c.'>pthread_self</a>();
+<a name='L41'>  41         <b>if</b>(!<a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>) <font color='red'>{</font>
+<a name='L42'>  42                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/11.html' title='Multiple used in 4 places.'>EFAULT</a>;
+<a name='L43'>  43                 <b>return</b> 1;
+<a name='L44'>  44         <font color='red'>}</font>
+<a name='L45'>  45 
+<a name='L46'>  46         <b>if</b>(<a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a> != <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a>) <font color='red'>{</font>
+<a name='L47'>  47                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/23.html' title='Multiple used in 2 places.'>EPERM</a>;
+<a name='L48'>  48                 <b>return</b> 1;
+<a name='L49'>  49         <font color='red'>}</font>
+<a name='L50'>  50 
+<a name='L51'>  51         <a href='../S/59.html#L46' title='Defined at 46 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_destroy</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/500.html' title='Multiple used in 7 places.'>rdmutex</a>);
+<a name='L52'>  52         <a href='../S/59.html#L46' title='Defined at 46 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_destroy</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/771.html' title='Multiple used in 7 places.'>wrmutex</a>);
+<a name='L53'>  53 
+<a name='L54'>  54         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/571.html' title='Multiple used in 3 places.'>shared_waiters</a> = (<a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a>) 0;
+<a name='L55'>  55         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/246.html' title='Multiple used in 3 places.'>exclusive_waiters</a> = (<a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a>) 0;
+<a name='L56'>  56         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/421.html' title='Multiple used in 3 places.'>num_shared_waiters</a> = 0;
+<a name='L57'>  57         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/420.html' title='Multiple used in 3 places.'>num_exclusive_waiters</a> = 0;
+<a name='L58'>  58         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a> = 0;
+<a name='L59'>  59         
+<a name='L60'>  60         <b>return</b> 0;
+<a name='L61'>  61 <font color='red'>}</font>
+<a name='L62'>  62 
+<a name='L63'>  63 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../R/429.html' title='Multiple refered from 2 places.'>pthread_rwlock_tryrdlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>) <font color='red'>{</font>
+<a name='L64'>  64         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L65'>  65                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L66'>  66                 <b>return</b> 1;
+<a name='L67'>  67         <font color='red'>}</font>
+<a name='L68'>  68 
+<a name='L69'>  69         <b>return</b> <a href='../S/59.html#L107' title='Defined at 107 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_trylock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/500.html' title='Multiple used in 7 places.'>rdmutex</a>);
+<a name='L70'>  70 <font color='red'>}</font>
+<a name='L71'>  71 
+<a name='L72'>  72 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../R/430.html' title='Multiple refered from 2 places.'>pthread_rwlock_trywrlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>) <font color='red'>{</font>
+<a name='L73'>  73         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L74'>  74                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L75'>  75                 <b>return</b> 1;
+<a name='L76'>  76         <font color='red'>}</font>
+<a name='L77'>  77 
+<a name='L78'>  78         <b>return</b> <a href='../S/59.html#L107' title='Defined at 107 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_trylock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/771.html' title='Multiple used in 7 places.'>wrmutex</a>);
+<a name='L79'>  79 <font color='red'>}</font>
+<a name='L80'>  80 
+<a name='L81'>  81 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L292' title='Refered from 292 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_rdlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>) <font color='red'>{</font>
+<a name='L82'>  82         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L83'>  83                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L84'>  84                 <b>return</b> 1;
+<a name='L85'>  85         <font color='red'>}</font>
+<a name='L86'>  86 
+<a name='L87'>  87         <b>return</b> <a href='../S/59.html#L67' title='Defined at 67 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_lock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/500.html' title='Multiple used in 7 places.'>rdmutex</a>);
+<a name='L88'>  88 <font color='red'>}</font>
+<a name='L89'>  89 
+<a name='L90'>  90 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L293' title='Refered from 293 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_timedrdlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>, <b>const</b> <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a> *<a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>) <font color='red'>{</font>
+<a name='L91'>  91         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L92'>  92                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L93'>  93                 <b>return</b> 1;
+<a name='L94'>  94         <font color='red'>}</font>
+<a name='L95'>  95 
+<a name='L96'>  96         <b>return</b> <a href='../S/59.html#L92' title='Defined at 92 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_timedlock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/500.html' title='Multiple used in 7 places.'>rdmutex</a>, <a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>);
+<a name='L97'>  97 <font color='red'>}</font>
+<a name='L98'>  98 
+<a name='L99'>  99 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L294' title='Refered from 294 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_wrlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>) <font color='red'>{</font>
+<a name='L100'> 100         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L101'> 101                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L102'> 102                 <b>return</b> 1;
+<a name='L103'> 103         <font color='red'>}</font>
+<a name='L104'> 104 
+<a name='L105'> 105         <b>return</b> <a href='../S/59.html#L67' title='Defined at 67 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_lock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/771.html' title='Multiple used in 7 places.'>wrmutex</a>);
+<a name='L106'> 106 <font color='red'>}</font>
+<a name='L107'> 107 
+<a name='L108'> 108 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L295' title='Refered from 295 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_timedwrlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>, <b>const</b> <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a> *<a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>) <font color='red'>{</font>
+<a name='L109'> 109         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L110'> 110                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L111'> 111                 <b>return</b> 1;
+<a name='L112'> 112         <font color='red'>}</font>
+<a name='L113'> 113 
+<a name='L114'> 114         <b>return</b> <a href='../S/59.html#L92' title='Defined at 92 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_timedlock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/771.html' title='Multiple used in 7 places.'>wrmutex</a>, <a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>);
+<a name='L115'> 115 <font color='red'>}</font>
+<a name='L116'> 116 
+<a name='L117'> 117 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../R/431.html' title='Multiple refered from 3 places.'>pthread_rwlock_unlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../Y/364.html' title='Multiple used in 14 places.'>lock</a>) <font color='red'>{</font>
+<a name='L118'> 118         <b>if</b>(<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L119'> 119                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L120'> 120                 <b>return</b> 1;
+<a name='L121'> 121         <font color='red'>}</font>
+<a name='L122'> 122 
+<a name='L123'> 123         <b>if</b>(<a href='../S/59.html#L133' title='Defined at 133 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_unlock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/500.html' title='Multiple used in 7 places.'>rdmutex</a>) != 0)
+<a name='L124'> 124                 <b>return</b> 1;
+<a name='L125'> 125 
+<a name='L126'> 126         <b>if</b>(<a href='../S/59.html#L133' title='Defined at 133 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_unlock</a>(&amp;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>-&gt;<a href='../Y/771.html' title='Multiple used in 7 places.'>wrmutex</a>) != 0)
+<a name='L127'> 127                 <b>return</b> 1;
+<a name='L128'> 128 
+<a name='L129'> 129         <b>return</b> 0;
+<a name='L130'> 130 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L10'>[^]</a><a href='#L117'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

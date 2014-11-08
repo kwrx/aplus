@@ -1,0 +1,84 @@
+.TH "card" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+card \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Campi"
+
+.in +1c
+.ti -1c
+.RI "\fBpci_device_t\fP * \fBdevice\fP"
+.br
+.ti -1c
+.RI "\fBnetif_t\fP * \fBnetif\fP"
+.br
+.ti -1c
+.RI "char \fBmacaddr\fP [6]"
+.br
+.ti -1c
+.RI "char * \fBrxBuffer\fP"
+.br
+.ti -1c
+.RI "int \fBrxBufferOffset\fP"
+.br
+.ti -1c
+.RI "char * \fBtxBuffer\fP"
+.br
+.ti -1c
+.RI "char \fBtxBufferUsed\fP:1"
+.br
+.ti -1c
+.RI "char \fBcurBuffer\fP"
+.br
+.ti -1c
+.RI "int \fBmagic\fP"
+.br
+.in -1c
+.SH "Descrizione dettagliata"
+.PP 
+Definizione alla linea 18 del file rtl8139\&.c\&.
+.SH "Documentazione dei campi"
+.PP 
+.SS "char card::curBuffer"
+
+.PP
+Definizione alla linea 29 del file rtl8139\&.c\&.
+.SS "\fBpci_device_t\fP* card::device"
+
+.PP
+Definizione alla linea 19 del file rtl8139\&.c\&.
+.SS "char card::macaddr[6]"
+
+.PP
+Definizione alla linea 22 del file rtl8139\&.c\&.
+.SS "int card::magic"
+
+.PP
+Definizione alla linea 31 del file rtl8139\&.c\&.
+.SS "\fBnetif_t\fP* card::netif"
+
+.PP
+Definizione alla linea 20 del file rtl8139\&.c\&.
+.SS "char* card::rxBuffer"
+
+.PP
+Definizione alla linea 24 del file rtl8139\&.c\&.
+.SS "int card::rxBufferOffset"
+
+.PP
+Definizione alla linea 25 del file rtl8139\&.c\&.
+.SS "char* card::txBuffer"
+
+.PP
+Definizione alla linea 27 del file rtl8139\&.c\&.
+.SS "char card::txBufferUsed"
+
+.PP
+Definizione alla linea 28 del file rtl8139\&.c\&.
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

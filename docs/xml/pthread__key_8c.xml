@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="pthread__key_8c" kind="file">
+    <compoundname>pthread_key.c</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+    <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
+    <incdepgraph>
+      <node id="2363">
+        <label>stdint.h</label>
+      </node>
+      <node id="2370">
+        <label>errno.h</label>
+      </node>
+      <node id="2369">
+        <label>pthread_internal.h</label>
+        <link refid="pthread__internal_8h"/>
+        <childnode refid="2370" relation="include">
+        </childnode>
+        <childnode refid="2363" relation="include">
+        </childnode>
+        <childnode refid="2364" relation="include">
+        </childnode>
+      </node>
+      <node id="2364">
+        <label>pthread.h</label>
+        <link refid="pthread_8h"/>
+        <childnode refid="2363" relation="include">
+        </childnode>
+        <childnode refid="2365" relation="include">
+        </childnode>
+        <childnode refid="2366" relation="include">
+        </childnode>
+        <childnode refid="2367" relation="include">
+        </childnode>
+        <childnode refid="2368" relation="include">
+        </childnode>
+      </node>
+      <node id="2365">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2368">
+        <label>unistd.h</label>
+      </node>
+      <node id="2366">
+        <label>sys/time.h</label>
+      </node>
+      <node id="2367">
+        <label>sched.h</label>
+      </node>
+      <node id="2362">
+        <label>usr/src/libpthread/src/pthread_key.c</label>
+        <link refid="pthread_key.c"/>
+        <childnode refid="2363" relation="include">
+        </childnode>
+        <childnode refid="2364" relation="include">
+        </childnode>
+        <childnode refid="2369" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref> <ref refid="pthread__internal_8h_1af2e45523b401a6101f50c6f7be0d66a8" kindref="member">__pthread_key_t</ref></type>
+        <definition>PRIVATE __pthread_key_t __pthread_keys[PTHREAD_KEYS_MAX]</definition>
+        <argsstring>[PTHREAD_KEYS_MAX]</argsstring>
+        <name>__pthread_keys</name>
+        <initializer>= { }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" line="7" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pthread__key_8c_1ab931277f4deb7cb12e24a862b2af7333" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_key_create</definition>
+        <argsstring>(pthread_key_t *key, void(*destructor)(void *))</argsstring>
+        <name>pthread_key_create</name>
+        <param>
+          <type><ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref> *</type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type>void(*)(void *)</type>
+          <declname>destructor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" bodystart="9" bodyend="29"/>
+        <references refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" compoundref="pthread__key_8c" startline="7">__pthread_keys</references>
+        <references refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" compoundref="pthread__internal_8h" startline="33">__pthread_key::dtor</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" compoundref="pthread__internal_8h" startline="25">PTHREAD_KEYS_MAX</references>
+        <references refid="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" compoundref="pthread__internal_8h" startline="32">__pthread_key::used</references>
+        <references refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" compoundref="pthread__internal_8h" startline="34">__pthread_key::value</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__key_8c_1ab28319aea4b1565728829629b0467fa6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_key_delete</definition>
+        <argsstring>(pthread_key_t key)</argsstring>
+        <name>pthread_key_delete</name>
+        <param>
+          <type><ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" line="32" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" bodystart="32" bodyend="46"/>
+        <references refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" compoundref="pthread__key_8c" startline="7">__pthread_keys</references>
+        <references refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" compoundref="pthread__internal_8h" startline="33">__pthread_key::dtor</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" compoundref="pthread__internal_8h" startline="25">PTHREAD_KEYS_MAX</references>
+        <references refid="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" compoundref="pthread__internal_8h" startline="32">__pthread_key::used</references>
+        <references refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" compoundref="pthread__internal_8h" startline="34">__pthread_key::value</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__key_8c_1ad73e5af1b85b9f874408816bfc2b223c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_setspecific</definition>
+        <argsstring>(pthread_key_t key, const void *value)</argsstring>
+        <name>pthread_setspecific</name>
+        <param>
+          <type><ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref></type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type>const void *</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" line="49" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" bodystart="49" bodyend="62"/>
+        <references refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" compoundref="pthread__key_8c" startline="7">__pthread_keys</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" compoundref="pthread__internal_8h" startline="25">PTHREAD_KEYS_MAX</references>
+        <references refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" compoundref="pthread__internal_8h" startline="34">__pthread_key::value</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__key_8c_1aef660e97ead1e5c0be8c3ad125797b6a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> void *</type>
+        <definition>PUBLIC void* pthread_getspecific</definition>
+        <argsstring>(pthread_key_t key)</argsstring>
+        <name>pthread_getspecific</name>
+        <param>
+          <type><ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref></type>
+          <declname>key</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" line="65" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c" bodystart="65" bodyend="77"/>
+        <references refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" compoundref="pthread__key_8c" startline="7">__pthread_keys</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" compoundref="pthread__internal_8h" startline="25">PTHREAD_KEYS_MAX</references>
+        <references refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" compoundref="pthread__internal_8h" startline="34">__pthread_key::value</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="pthread_8h" kindref="compound">pthread.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pthread__internal_8h" kindref="compound">pthread_internal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref><sp/><ref refid="struct____pthread__key" kindref="compound">__pthread_key_t</ref><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[<ref refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" kindref="member">PTHREAD_KEYS_MAX</ref>]<sp/>=<sp/>{<sp/>};</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="pthread__key_8c_1ab931277f4deb7cb12e24a862b2af7333" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__key_8c_1ab931277f4deb7cb12e24a862b2af7333" kindref="member">pthread_key_create</ref>(<ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref><sp/>*key,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*destructor)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*))<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!key)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" kindref="member">PTHREAD_KEYS_MAX</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[i].used<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[i].<ref refid="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" kindref="member">used</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[i].<ref refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" kindref="member">dtor</ref><sp/>=<sp/>destructor;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[i].<ref refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" kindref="member">value</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*key<sp/>=<sp/>i;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EAGAIN;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="pthread__key_8c_1ab28319aea4b1565728829629b0467fa6" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__key_8c_1ab28319aea4b1565728829629b0467fa6" kindref="member">pthread_key_delete</ref>(<ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref><sp/>key)<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(key<sp/>&gt;<sp/><ref refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" kindref="member">PTHREAD_KEYS_MAX</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].dtor)</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" kindref="member">dtor</ref>(<ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" kindref="member">used</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" kindref="member">dtor</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" kindref="member">value</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="pthread__key_8c_1ad73e5af1b85b9f874408816bfc2b223c" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__key_8c_1ad73e5af1b85b9f874408816bfc2b223c" kindref="member">pthread_setspecific</ref>(<ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref><sp/>key,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(key<sp/>&gt;<sp/><ref refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" kindref="member">PTHREAD_KEYS_MAX</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].used<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" kindref="member">value</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>value;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="pthread__key_8c_1aef660e97ead1e5c0be8c3ad125797b6a" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<ref refid="pthread__key_8c_1aef660e97ead1e5c0be8c3ad125797b6a" kindref="member">pthread_getspecific</ref>(<ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref><sp/>key)<sp/>{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(key<sp/>&gt;<sp/><ref refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" kindref="member">PTHREAD_KEYS_MAX</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].used<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c"/>
+  </compounddef>
+</doxygen>

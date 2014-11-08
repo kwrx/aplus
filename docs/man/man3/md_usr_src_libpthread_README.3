@@ -1,0 +1,51 @@
+.TH "md_usr_src_libpthread_README" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_usr_src_libpthread_README \- Posix Thread library 
+POSIX Threads, usually referred to as Pthreads, is a POSIX standard for threads\&. The standard, POSIX\&.1c, Threads extensions (IEEE Std 1003\&.1c-1995), defines an API for creating and manipulating threads\&.
+.PP
+.SS "Required function"
+.PP
+.IP "\(bu" 2
+Create a Thread;
+.IP "\(bu" 2
+Terminate a Thread;
+.IP "\(bu" 2
+Get Thread ID\&.
+.PP
+.PP
+``` tid_t \fB__os_thread_create(void* entrypoint, void* params, int priority)\fP; int \fB__os_thread_kill(int killid, int exitcode)\fP; tid_t \fB__os_gettid()\fP;
+.PP
+See '/platform/win32/hooks\&.h' as example\&. ```
+.PP
+.SS "Current status"
+.PP
+.IP "\(bu" 2
+[X] Thread functions
+.IP "\(bu" 2
+[X] Thread attribute functions
+.IP "\(bu" 2
+[X] Scheduling functions
+.IP "\(bu" 2
+[X] Thread specific data functions
+.IP "\(bu" 2
+[X] Mutex attribute functions
+.IP "\(bu" 2
+[X] Mutex functions
+.IP "\(bu" 2
+[X] Condition variable attribute functions
+.IP "\(bu" 2
+[X] Condition variable functions
+.IP "\(bu" 2
+[X] Barrier attribute functions
+.IP "\(bu" 2
+[X] Barrier functions
+.IP "\(bu" 2
+[X] Read-write lock attribute functions
+.IP "\(bu" 2
+[X] Read-write lock functions
+.IP "\(bu" 2
+[X] Spinlock functions 
+.PP
+

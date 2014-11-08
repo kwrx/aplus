@@ -1,0 +1,45 @@
+\hypertarget{__exit_8c}{\section{Riferimenti per il file src/syscall/\+\_\+exit.c}
+\label{__exit_8c}\index{src/syscall/\+\_\+exit.\+c@{src/syscall/\+\_\+exit.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}{sys\+\_\+exit} (int status)
+\item 
+\hyperlink{__exit_8c_ac6f9574edcf881d9f332eb02f79f40e6}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}{sys\+\_\+exit}, 0)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}{\index{\+\_\+exit.\+c@{\+\_\+exit.\+c}!sys\+\_\+exit@{sys\+\_\+exit}}
+\index{sys\+\_\+exit@{sys\+\_\+exit}!\+\_\+exit.\+c@{\+\_\+exit.\+c}}
+\subsubsection[{sys\+\_\+exit}]{\setlength{\rightskip}{0pt plus 5cm}void sys\+\_\+exit (
+\begin{DoxyParamCaption}
+\item[{int}]{status}
+\end{DoxyParamCaption}
+)}}\label{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}
+
+
+Definizione alla linea 6 del file \+\_\+exit.\+c.
+
+
+
+Referenzia schedule\+\_\+exit().
+
+
+\begin{DoxyCode}
+6                           \{
+7     \hyperlink{src_2sched_8c_a38866ec6f9b163355973a41f15248ab1}{schedule\_exit}(status);
+8 \}
+\end{DoxyCode}
+\hypertarget{__exit_8c_ac6f9574edcf881d9f332eb02f79f40e6}{\index{\+\_\+exit.\+c@{\+\_\+exit.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!\+\_\+exit.\+c@{\+\_\+exit.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+exit}}]{, }
+\item[{0}]{}
+\end{DoxyParamCaption}
+)}}\label{__exit_8c_ac6f9574edcf881d9f332eb02f79f40e6}

@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>owner</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/146.html#L86'>owner</a>              86 src/fs/fs.c    int fs_chown (struct inode* inode, uid_t owner, gid_t group) {
+<a href='../S/146.html#L88'>owner</a>              88 src/fs/fs.c    		return inode-&gt;chown(inode, owner, group);
+<a href='../S/97.html#L64'>owner</a>              64 src/include/aplus/fs.h 	int (*chown) (struct inode* inode, uid_t owner, gid_t group);
+<a href='../S/133.html#L13'>owner</a>              13 src/syscall/chown.c int sys_chown(char* filename, uid_t owner, gid_t group) {
+<a href='../S/133.html#L29'>owner</a>              29 src/syscall/chown.c 	return fs_chown(ino, owner, group);
+<a href='../S/43.html#L91'>owner</a>              91 usr/src/libpthread/include/pthread.h 	pthread_t owner;
+<a href='../S/43.html#L139'>owner</a>             139 usr/src/libpthread/include/pthread.h 	pthread_t owner;
+<a href='../S/71.html#L55'>owner</a>              55 usr/src/libpthread/src/pthread_cond.c 	if(mutex-&gt;owner != pthread_self()) {
+<a href='../S/59.html#L35'>owner</a>              35 usr/src/libpthread/src/pthread_mutex.c 	mutex-&gt;owner = 0;
+<a href='../S/59.html#L60'>owner</a>              60 usr/src/libpthread/src/pthread_mutex.c 	mutex-&gt;owner = 0;
+<a href='../S/59.html#L73'>owner</a>              73 usr/src/libpthread/src/pthread_mutex.c 	if(mutex-&gt;owner != pthread_self()) {
+<a href='../S/59.html#L77'>owner</a>              77 usr/src/libpthread/src/pthread_mutex.c 		mutex-&gt;owner = pthread_self();
+<a href='../S/59.html#L113'>owner</a>             113 usr/src/libpthread/src/pthread_mutex.c 	if(mutex-&gt;owner != pthread_self()) {
+<a href='../S/59.html#L119'>owner</a>             119 usr/src/libpthread/src/pthread_mutex.c 		mutex-&gt;owner = pthread_self();
+<a href='../S/59.html#L139'>owner</a>             139 usr/src/libpthread/src/pthread_mutex.c 	if(mutex-&gt;owner == pthread_self()) {
+<a href='../S/59.html#L145'>owner</a>             145 usr/src/libpthread/src/pthread_mutex.c 		mutex-&gt;owner = 0;
+<a href='../S/72.html#L29'>owner</a>              29 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;owner = thread;
+<a href='../S/72.html#L46'>owner</a>              46 usr/src/libpthread/src/pthread_rwlock.c 	if(thread != lock-&gt;owner) {
+<a href='../S/72.html#L58'>owner</a>              58 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;owner = 0;
+</pre>
+</body>
+</html>

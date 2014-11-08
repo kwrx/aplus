@@ -1,0 +1,50 @@
+.TH "usr/src/libposix/src/usleep.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/usleep.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBnanosleep\fP (struct timespec *ts, struct timespec *tr)"
+.br
+.ti -1c
+.RI "int \fBusleep\fP (useconds_t useconds)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int nanosleep (struct timespec *ts, struct timespec *tr)"
+
+.SS "int usleep (useconds_tuseconds)"
+
+.PP
+Definizione alla linea 7 del file usleep\&.c\&.
+.PP
+Referenzia errno, e nanosleep()\&.
+.PP
+.nf
+7                                 {
+8     struct timespec ts;
+9 
+10     ts\&.tv_sec = (long int)useconds / 1000000;
+11     ts\&.tv_nsec = ((long int)useconds % 1000000);
+12     if (!nanosleep(&ts,&ts)) return 0;
+13     if (errno == EINTR) return ts\&.tv_sec;
+14     return -1;
+15 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

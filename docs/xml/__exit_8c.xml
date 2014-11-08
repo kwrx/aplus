@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="__exit_8c" kind="file">
+    <compoundname>_exit.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <incdepgraph>
+      <node id="1290">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1279">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1282">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1277" relation="include">
+        </childnode>
+        <childnode refid="1283" relation="include">
+        </childnode>
+        <childnode refid="1278" relation="include">
+        </childnode>
+        <childnode refid="1280" relation="include">
+        </childnode>
+        <childnode refid="1285" relation="include">
+        </childnode>
+      </node>
+      <node id="1289">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1278" relation="include">
+        </childnode>
+        <childnode refid="1284" relation="include">
+        </childnode>
+        <childnode refid="1285" relation="include">
+        </childnode>
+        <childnode refid="1290" relation="include">
+        </childnode>
+        <childnode refid="1291" relation="include">
+        </childnode>
+      </node>
+      <node id="1278">
+        <label>stdint.h</label>
+      </node>
+      <node id="1281">
+        <label>aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="1277" relation="include">
+        </childnode>
+        <childnode refid="1282" relation="include">
+        </childnode>
+        <childnode refid="1278" relation="include">
+        </childnode>
+      </node>
+      <node id="1294">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1288">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1278" relation="include">
+        </childnode>
+        <childnode refid="1277" relation="include">
+        </childnode>
+        <childnode refid="1289" relation="include">
+        </childnode>
+        <childnode refid="1293" relation="include">
+        </childnode>
+        <childnode refid="1285" relation="include">
+        </childnode>
+        <childnode refid="1294" relation="include">
+        </childnode>
+      </node>
+      <node id="1284">
+        <label>stddef.h</label>
+      </node>
+      <node id="1283">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1284" relation="include">
+        </childnode>
+        <childnode refid="1278" relation="include">
+        </childnode>
+        <childnode refid="1285" relation="include">
+        </childnode>
+        <childnode refid="1286" relation="include">
+        </childnode>
+        <childnode refid="1287" relation="include">
+        </childnode>
+      </node>
+      <node id="1277">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1278" relation="include">
+        </childnode>
+        <childnode refid="1279" relation="include">
+        </childnode>
+        <childnode refid="1280" relation="include">
+        </childnode>
+      </node>
+      <node id="1285">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1280">
+        <label>string.h</label>
+      </node>
+      <node id="1276">
+        <label>src/syscall/_exit.c</label>
+        <link refid="_exit.c"/>
+        <childnode refid="1277" relation="include">
+        </childnode>
+        <childnode refid="1281" relation="include">
+        </childnode>
+        <childnode refid="1288" relation="include">
+        </childnode>
+      </node>
+      <node id="1292">
+        <label>unistd.h</label>
+      </node>
+      <node id="1293">
+        <label>signal.h</label>
+      </node>
+      <node id="1287">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1278" relation="include">
+        </childnode>
+        <childnode refid="1288" relation="include">
+        </childnode>
+      </node>
+      <node id="1291">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1292" relation="include">
+        </childnode>
+        <childnode refid="1285" relation="include">
+        </childnode>
+      </node>
+      <node id="1286">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="__exit_8c_1a1c0b6529c2b4ef268480a55f1314a400" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void sys_exit</definition>
+        <argsstring>(int status)</argsstring>
+        <name>sys_exit</name>
+        <param>
+          <type>int</type>
+          <declname>status</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/_exit.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/syscall/_exit.c" bodystart="6" bodyend="8"/>
+        <references refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" compoundref="src_2sched_8c" startline="162" endline="164">schedule_exit</references>
+      </memberdef>
+      <memberdef kind="function" id="__exit_8c_1ac6f9574edcf881d9f332eb02f79f40e6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SYSCALL</definition>
+        <argsstring>(sys_exit, 0)</argsstring>
+        <name>SYSCALL</name>
+        <param>
+          <type><ref refid="__exit_8c_1a1c0b6529c2b4ef268480a55f1314a400" kindref="member">sys_exit</ref></type>
+        </param>
+        <param>
+          <type>0</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/_exit.c" line="11" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="syscall_8h" kindref="compound">aplus/syscall.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="__exit_8c_1a1c0b6529c2b4ef268480a55f1314a400" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="__exit_8c_1a1c0b6529c2b4ef268480a55f1314a400" kindref="member">sys_exit</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>status)<sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" kindref="member">schedule_exit</ref>(status);</highlight></codeline>
+<codeline lineno="8"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><ref refid="__exit_8c_1ac6f9574edcf881d9f332eb02f79f40e6" kindref="member">SYSCALL</ref>(<ref refid="__exit_8c_1a1c0b6529c2b4ef268480a55f1314a400" kindref="member">sys_exit</ref>,<sp/>0);</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/syscall/_exit.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_de1174607f3963ac728b77de3c75e290" kind="dir">
+    <compoundname>src/net</compoundname>
+    <innerdir refid="dir_3978b9aae9976dbbb1cab146b0c18c36">src/net/loopback</innerdir>
+    <innerdir refid="dir_3b00e76e95dba8fb13b4447d70390fb1">src/net/rtl8139</innerdir>
+    <innerdir refid="dir_0caf30b0063b53481c30c5521011cf7e">src/net/slirp</innerdir>
+    <innerfile refid="arp_8c">arp.c</innerfile>
+    <innerfile refid="eth_8c">eth.c</innerfile>
+    <innerfile refid="ipv4_8c">ipv4.c</innerfile>
+    <innerfile refid="ipv6_8c">ipv6.c</innerfile>
+    <innerfile refid="netif_8c">netif.c</innerfile>
+    <innerfile refid="udp_8c">udp.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/net/"/>
+  </compounddef>
+</doxygen>

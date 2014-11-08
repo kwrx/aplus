@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>usr/src/libpthread/test/main.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/191.html'>test</a>/main.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L7'>[^]</a><a href='#L12'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L7' title='Defined at 7.'>__test_pthread_1</a>
+<li><a href='#L12' title='Defined at 12.'>main</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;assert.h&gt;
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='43.html'>pthread.h</a>&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 
+<a name='L7'>   7 <b>static</b> <b>void</b>* <a href='../S/47.html#L19' title='Refered from 19 in usr/src/libpthread/test/main.c.'>__test_pthread_1</a> (<b>void</b>* <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>) <font color='red'>{</font>
+<a name='L8'>   8         <b>return</b> (<b>void</b>*) 200;
+<a name='L9'>   9 <font color='red'>}</font>
+<a name='L10'>  10 
+<a name='L11'>  11 
+<a name='L12'>  12 <b>int</b> <a href='../R/310.html' title='Multiple refered from 2 places.'>main</a>(<b>int</b> <a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a>, <b>char</b>** <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>) <font color='red'>{</font>
+<a name='L13'>  13 
+<a name='L14'>  14         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test #1 - Create and join thread\n");
+<a name='L15'>  15 
+<a name='L16'>  16         <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/493.html' title='Multiple used in 3 places.'>ptx_1</a>;
+<a name='L17'>  17         <b>void</b>* <a href='../Y/524.html' title='Multiple used in 3 places.'>retval_1</a>;
+<a name='L18'>  18 
+<a name='L19'>  19         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/64.html#L37' title='Defined at 37 in usr/src/libpthread/src/pthread_create.c.'>pthread_create</a>(&amp;<a href='../Y/493.html' title='Multiple used in 3 places.'>ptx_1</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>, <a href='../S/47.html#L7' title='Defined at 7 in usr/src/libpthread/test/main.c.'>__test_pthread_1</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) == 0);
+<a name='L20'>  20         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/73.html#L8' title='Defined at 8 in usr/src/libpthread/src/pthread_join.c.'>pthread_join</a>(<a href='../Y/493.html' title='Multiple used in 3 places.'>ptx_1</a>, &amp;<a href='../Y/524.html' title='Multiple used in 3 places.'>retval_1</a>) == 0);
+<a name='L21'>  21         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>((<b>int</b>) <a href='../Y/524.html' title='Multiple used in 3 places.'>retval_1</a> == 200 &amp;&amp; "bad returned value");
+<a name='L22'>  22 
+<a name='L23'>  23         
+<a name='L24'>  24 
+<a name='L25'>  25         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test #2 - Create and lock/unlock mutex\n");
+<a name='L26'>  26         <a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> <a href='../Y/395.html' title='Multiple used in 5 places.'>mtx_2</a>;
+<a name='L27'>  27         
+<a name='L28'>  28         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/59.html#L26' title='Defined at 26 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_init</a>(&amp;<a href='../Y/395.html' title='Multiple used in 5 places.'>mtx_2</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) == 0);
+<a name='L29'>  29         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/59.html#L107' title='Defined at 107 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_trylock</a>(&amp;<a href='../Y/395.html' title='Multiple used in 5 places.'>mtx_2</a>) == 0);
+<a name='L30'>  30         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/59.html#L133' title='Defined at 133 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_unlock</a>(&amp;<a href='../Y/395.html' title='Multiple used in 5 places.'>mtx_2</a>) == 0);
+<a name='L31'>  31         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/59.html#L46' title='Defined at 46 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_destroy</a>(&amp;<a href='../Y/395.html' title='Multiple used in 5 places.'>mtx_2</a>) == 0);
+<a name='L32'>  32                 
+<a name='L33'>  33 
+<a name='L34'>  34 
+<a name='L35'>  35         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test #3 - Create and lock/unlock spinlock\n");
+<a name='L36'>  36         <a href='../S/43.html#L152' title='Defined at 152 in usr/src/libpthread/include/pthread.h.'>pthread_spinlock_t</a> <a href='../Y/585.html' title='Multiple used in 5 places.'>spl_3</a>;
+<a name='L37'>  37         
+<a name='L38'>  38         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/53.html#L7' title='Defined at 7 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_init</a>(&amp;<a href='../Y/585.html' title='Multiple used in 5 places.'>spl_3</a>, 0) == 0);
+<a name='L39'>  39         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/53.html#L45' title='Defined at 45 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_trylock</a>(&amp;<a href='../Y/585.html' title='Multiple used in 5 places.'>spl_3</a>) == 0);
+<a name='L40'>  40         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/53.html#L59' title='Defined at 59 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_unlock</a>(&amp;<a href='../Y/585.html' title='Multiple used in 5 places.'>spl_3</a>) == 0);
+<a name='L41'>  41         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/53.html#L19' title='Defined at 19 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_destroy</a>(&amp;<a href='../Y/585.html' title='Multiple used in 5 places.'>spl_3</a>) == 0);
+<a name='L42'>  42 
+<a name='L43'>  43 
+<a name='L44'>  44 
+<a name='L45'>  45         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test #4 - Create and lock/unlock condition\n");
+<a name='L46'>  46         <a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a> <a href='../Y/165.html' title='Multiple used in 3 places.'>cond_4</a>;
+<a name='L47'>  47         <a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> <a href='../Y/396.html' title='Multiple used in 2 places.'>mtx_4</a>;
+<a name='L48'>  48 
+<a name='L49'>  49         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/59.html#L26' title='Defined at 26 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_init</a>(&amp;<a href='../Y/396.html' title='Multiple used in 2 places.'>mtx_4</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) == 0);
+<a name='L50'>  50         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/71.html#L13' title='Defined at 13 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_init</a>(&amp;<a href='../Y/165.html' title='Multiple used in 3 places.'>cond_4</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) == 0);
+<a name='L51'>  51         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/71.html#L25' title='Defined at 25 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_destroy</a>(&amp;<a href='../Y/165.html' title='Multiple used in 3 places.'>cond_4</a>) == 0);
+<a name='L52'>  52 
+<a name='L53'>  53 
+<a name='L54'>  54 
+<a name='L55'>  55         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test #5 - Create and lock/unlock Read-Write lock\n");
+<a name='L56'>  56         <a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> <a href='../Y/533.html' title='Multiple used in 7 places.'>rw_5</a>;
+<a name='L57'>  57         
+<a name='L58'>  58         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/72.html#L10' title='Defined at 10 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_init</a>(&amp;<a href='../Y/533.html' title='Multiple used in 7 places.'>rw_5</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) == 0);
+<a name='L59'>  59         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/72.html#L63' title='Defined at 63 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_tryrdlock</a>(&amp;<a href='../Y/533.html' title='Multiple used in 7 places.'>rw_5</a>) == 0);
+<a name='L60'>  60         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/72.html#L117' title='Defined at 117 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_unlock</a>(&amp;<a href='../Y/533.html' title='Multiple used in 7 places.'>rw_5</a>) == 0);
+<a name='L61'>  61         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/72.html#L72' title='Defined at 72 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_trywrlock</a>(&amp;<a href='../Y/533.html' title='Multiple used in 7 places.'>rw_5</a>) == 0);
+<a name='L62'>  62         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/72.html#L117' title='Defined at 117 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_unlock</a>(&amp;<a href='../Y/533.html' title='Multiple used in 7 places.'>rw_5</a>) == 0);
+<a name='L63'>  63         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/72.html#L34' title='Defined at 34 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_destroy</a>(&amp;<a href='../Y/533.html' title='Multiple used in 7 places.'>rw_5</a>) == 0);
+<a name='L64'>  64 
+<a name='L65'>  65         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test #6 - Create and wait barrier\n");
+<a name='L66'>  66         <a href='../S/43.html#L124' title='Defined at 124 in usr/src/libpthread/include/pthread.h.'>pthread_barrier_t</a> <a href='../Y/124.html' title='Multiple used in 4 places.'>bar_6</a>;
+<a name='L67'>  67         
+<a name='L68'>  68         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/57.html#L9' title='Defined at 9 in usr/src/libpthread/src/pthread_barrier.c.'>pthread_barrier_init</a>(&amp;<a href='../Y/124.html' title='Multiple used in 4 places.'>bar_6</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>, 1) == 0);
+<a name='L69'>  69         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/57.html#L42' title='Defined at 42 in usr/src/libpthread/src/pthread_barrier.c.'>pthread_barrier_wait</a>(&amp;<a href='../Y/124.html' title='Multiple used in 4 places.'>bar_6</a>) == <a href='../S/43.html#L114' title='Defined at 114 in usr/src/libpthread/include/pthread.h.'>PTHREAD_BARRIER_SERIAL_THREAD</a>);
+<a name='L70'>  70         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/57.html#L28' title='Defined at 28 in usr/src/libpthread/src/pthread_barrier.c.'>pthread_barrier_destroy</a>(&amp;<a href='../Y/124.html' title='Multiple used in 4 places.'>bar_6</a>) == 0);
+<a name='L71'>  71 
+<a name='L72'>  72 
+<a name='L73'>  73 
+<a name='L74'>  74         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test #7 - Store and read from TLS\n");
+<a name='L75'>  75         <a href='../S/43.html#L38' title='Defined at 38 in usr/src/libpthread/include/pthread.h.'>pthread_key_t</a> <a href='../Y/349.html' title='Multiple used in 5 places.'>key_7</a>;
+<a name='L76'>  76 
+<a name='L77'>  77         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/70.html#L9' title='Defined at 9 in usr/src/libpthread/src/pthread_key.c.'>pthread_key_create</a>(&amp;<a href='../Y/349.html' title='Multiple used in 5 places.'>key_7</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) == 0);
+<a name='L78'>  78         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/70.html#L49' title='Defined at 49 in usr/src/libpthread/src/pthread_key.c.'>pthread_setspecific</a>(<a href='../Y/349.html' title='Multiple used in 5 places.'>key_7</a>, (<b>const</b> <b>void</b>*) 200) == 0);
+<a name='L79'>  79         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>((<b>int</b>) <a href='../S/70.html#L65' title='Defined at 65 in usr/src/libpthread/src/pthread_key.c.'>pthread_getspecific</a>(<a href='../Y/349.html' title='Multiple used in 5 places.'>key_7</a>) == 200 &amp;&amp; "bad returned value");
+<a name='L80'>  80         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/70.html#L32' title='Defined at 32 in usr/src/libpthread/src/pthread_key.c.'>pthread_key_delete</a>(<a href='../Y/349.html' title='Multiple used in 5 places.'>key_7</a>) == 0);
+<a name='L81'>  81 
+<a name='L82'>  82 
+<a name='L83'>  83 
+<a name='L84'>  84         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("\nTest OK\n");
+<a name='L85'>  85         <b>return</b> 0;
+<a name='L86'>  86 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L7'>[^]</a><a href='#L12'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

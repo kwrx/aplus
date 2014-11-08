@@ -1,0 +1,181 @@
+<html>
+<head>
+<title>src/include/aplus.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/aplus.h</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L39'>[^]</a><a href='#L136'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/15.html' title='Multiple included from 57 places.'>INCLUDED FROM</a></h2>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L39' title='Defined at 39.'>read_reg</a>
+<li><a href='#L72' title='Defined at 72.'>write_reg</a>
+<li><a href='#L101' title='Defined at 101.'>outx</a>
+<li><a href='#L113' title='Defined at 113.'>inx</a>
+<li><a href='#L123' title='Defined at 123.'>outsx</a>
+<li><a href='#L136' title='Defined at 136.'>insx</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <i><font color='green'>//</font></i>
+<a name='L3'>   3 <i><font color='green'>//  aplus.h</font></i>
+<a name='L4'>   4 <i><font color='green'>//</font></i>
+<a name='L5'>   5 <i><font color='green'>//  Author:</font></i>
+<a name='L6'>   6 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L7'>   7 <i><font color='green'>//</font></i>
+<a name='L8'>   8 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L9'>   9 <i><font color='green'>//</font></i>
+<a name='L10'>  10 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L11'>  11 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L12'>  12 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L13'>  13 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L14'>  14 <i><font color='green'>//</font></i>
+<a name='L15'>  15 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L16'>  16 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L17'>  17 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L18'>  18 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L19'>  19 <i><font color='green'>//</font></i>
+<a name='L20'>  20 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L21'>  21 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L22'>  22 
+<a name='L23'>  23 <font color='darkred'>#ifndef</font> <a href='../S/102.html#L24' title='Defined at 24 in src/include/aplus.h.'>_APLUS_H</a>
+<a name='L24'>  24 <font color='darkred'>#define</font> <a href='../S/102.html#L23' title='Refered from 23 in src/include/aplus.h.'>_APLUS_H</a>
+<a name='L25'>  25 
+<a name='L26'>  26 
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L28'>  28 <font color='darkred'>#include</font> &lt;stdarg.h&gt;
+<a name='L29'>  29 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L30'>  30 
+<a name='L31'>  31 
+<a name='L32'>  32 <font color='darkred'>#define</font> read_reg(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>)                                                                                             \
+<a name='L33'>  33         <b>static</b> <b>inline</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/502.html' title='Multiple used in 2 places.'>read_</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>() <font color='red'>{</font>                                                     \
+<a name='L34'>  34                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>;                                                                                   \
+<a name='L35'>  35                 <b>__asm__</b> <b>__volatile__</b> ("mov %0, " #<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a> : "=r"(<a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>));               \
+<a name='L36'>  36                 <b>return</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>;                                                                                             \
+<a name='L37'>  37         <font color='red'>}</font>
+<a name='L38'>  38         
+<a name='L39'>  39         read_reg(<a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>)
+<a name='L40'>  40         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/227.html' title='Multiple used in 6 places.'>ebx</a>)
+<a name='L41'>  41         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/228.html' title='Multiple used in 6 places.'>ecx</a>)
+<a name='L42'>  42         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/230.html' title='Multiple used in 6 places.'>edx</a>)
+<a name='L43'>  43         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/241.html' title='Multiple used in 6 places.'>esi</a>)
+<a name='L44'>  44         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/229.html' title='Multiple used in 6 places.'>edi</a>)
+<a name='L45'>  45         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/226.html' title='Multiple used in 6 places.'>ebp</a>)
+<a name='L46'>  46         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/242.html' title='Multiple used in 4 places.'>esp</a>)
+<a name='L47'>  47         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/171.html' title='Multiple used in 3 places.'>cr0</a>)
+<a name='L48'>  48         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/172.html' title='Multiple used in 2 places.'>cr1</a>)
+<a name='L49'>  49         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/173.html' title='Multiple used in 3 places.'>cr2</a>)
+<a name='L50'>  50         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>)
+<a name='L51'>  51         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/175.html' title='Multiple used in 3 places.'>cr4</a>)
+<a name='L52'>  52         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/177.html' title='Multiple used in 4 places.'>cs</a>)
+<a name='L53'>  53         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/207.html' title='Multiple used in 4 places.'>ds</a>)
+<a name='L54'>  54         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/240.html' title='Multiple used in 4 places.'>es</a>)
+<a name='L55'>  55         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>)
+<a name='L56'>  56         <a href='../Y/507.html' title='Multiple used in 17 places.'>read_reg</a>(<a href='../Y/292.html' title='Multiple used in 4 places.'>gs</a>)
+<a name='L57'>  57         
+<a name='L58'>  58         
+<a name='L59'>  59 <b>static</b> <b>inline</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> read_eflags() <font color='red'>{</font>
+<a name='L60'>  60         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>;
+<a name='L61'>  61         <b>__asm__</b> <b>__volatile__</b>("pushfd; pop eax" : "=a"(<a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>));
+<a name='L62'>  62         <b>return</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>;
+<a name='L63'>  63 <font color='red'>}</font>
+<a name='L64'>  64         
+<a name='L65'>  65         
+<a name='L66'>  66 <font color='darkred'>#define</font> write_reg(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>)                                                                                    \
+<a name='L67'>  67         <b>static</b> <b>inline</b> <b>void</b> write_##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>) <font color='red'>{</font>                            \
+<a name='L68'>  68                 <b>__asm__</b> <b>__volatile__</b> ("mov " #<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a> ", %0" : : "r"(<a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>));   \
+<a name='L69'>  69         <font color='red'>}</font>
+<a name='L70'>  70 
+<a name='L71'>  71 
+<a name='L72'>  72         write_reg(<a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>)
+<a name='L73'>  73         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/227.html' title='Multiple used in 6 places.'>ebx</a>)
+<a name='L74'>  74         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/228.html' title='Multiple used in 6 places.'>ecx</a>)
+<a name='L75'>  75         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/230.html' title='Multiple used in 6 places.'>edx</a>)
+<a name='L76'>  76         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/241.html' title='Multiple used in 6 places.'>esi</a>)
+<a name='L77'>  77         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/229.html' title='Multiple used in 6 places.'>edi</a>)
+<a name='L78'>  78         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/226.html' title='Multiple used in 6 places.'>ebp</a>)
+<a name='L79'>  79         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/242.html' title='Multiple used in 4 places.'>esp</a>)
+<a name='L80'>  80         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/171.html' title='Multiple used in 3 places.'>cr0</a>)
+<a name='L81'>  81         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/172.html' title='Multiple used in 2 places.'>cr1</a>)
+<a name='L82'>  82         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/173.html' title='Multiple used in 3 places.'>cr2</a>)
+<a name='L83'>  83         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>)
+<a name='L84'>  84         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/175.html' title='Multiple used in 3 places.'>cr4</a>)
+<a name='L85'>  85         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/177.html' title='Multiple used in 4 places.'>cs</a>)
+<a name='L86'>  86         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/207.html' title='Multiple used in 4 places.'>ds</a>)
+<a name='L87'>  87         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/240.html' title='Multiple used in 4 places.'>es</a>)
+<a name='L88'>  88         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>)
+<a name='L89'>  89         <a href='../Y/770.html' title='Multiple used in 17 places.'>write_reg</a>(<a href='../Y/292.html' title='Multiple used in 4 places.'>gs</a>)
+<a name='L90'>  90         
+<a name='L91'>  91         
+<a name='L92'>  92 <b>static</b> <b>inline</b> <b>void</b> write_eflags(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>) <font color='red'>{</font>
+<a name='L93'>  93         <b>__asm__</b> <b>__volatile__</b>("push eax; popfd" : : "a"(<a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>));
+<a name='L94'>  94 <font color='red'>}</font>       
+<a name='L95'>  95 
+<a name='L96'>  96 <font color='darkred'>#define</font> outx(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a>)                                                                                         \
+<a name='L97'>  97         <b>static</b> <b>inline</b> <b>void</b> <a href='../Y/439.html' title='Multiple used in 2 places.'>out</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>(<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>, <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a> <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>) <font color='red'>{</font>                                    \
+<a name='L98'>  98                 <b>__asm__</b> <b>__volatile__</b> ("out dx, " #<a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a> : : "a"(<a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>), "d"(<a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>));      \
+<a name='L99'>  99         <font color='red'>}</font>
+<a name='L100'> 100         
+<a name='L101'> 101         outx(<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>, <a href='../Y/91.html' title='Multiple used in 4 places.'>al</a>)
+<a name='L102'> 102         <a href='../Y/445.html' title='Multiple used in 2 places.'>outx</a>(<a href='../Y/756.html' title='Multiple used in 4 places.'>w</a>, <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>, <a href='../Y/119.html' title='Multiple used in 4 places.'>ax</a>)
+<a name='L103'> 103         <a href='../Y/445.html' title='Multiple used in 2 places.'>outx</a>(<a href='../Y/354.html' title='Multiple used in 7 places.'>l</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>, <a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>)
+<a name='L104'> 104         
+<a name='L105'> 105         
+<a name='L106'> 106 <font color='darkred'>#define</font> <a href='../Y/333.html' title='Multiple used in 3 places.'>inx</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a>)                                                                                          \
+<a name='L107'> 107         <b>static</b> <b>inline</b> <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a> <a href='../Y/311.html' title='Multiple used in 2 places.'>in</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>(<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>) <font color='red'>{</font>                                                             \
+<a name='L108'> 108                 <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                                                                                            \
+<a name='L109'> 109                 <b>__asm__</b> <b>__volatile__</b> ("in " #<a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a> ", dx" : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>) : "d"(<a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>));\
+<a name='L110'> 110                 <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                                                                                       \
+<a name='L111'> 111         <font color='red'>}</font>
+<a name='L112'> 112         
+<a name='L113'> 113         inx(<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>, <a href='../Y/91.html' title='Multiple used in 4 places.'>al</a>)
+<a name='L114'> 114         <a href='../Y/333.html' title='Multiple used in 3 places.'>inx</a>(<a href='../Y/756.html' title='Multiple used in 4 places.'>w</a>, <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>, <a href='../Y/119.html' title='Multiple used in 4 places.'>ax</a>)
+<a name='L115'> 115         <a href='../Y/333.html' title='Multiple used in 3 places.'>inx</a>(<a href='../Y/354.html' title='Multiple used in 7 places.'>l</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>, <a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>)
+<a name='L116'> 116         
+<a name='L117'> 117 <font color='darkred'>#define</font> <a href='../Y/443.html' title='Multiple used in 3 places.'>outsx</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a>)                                                                                        \
+<a name='L118'> 118         <b>static</b> <b>inline</b> <b>void</b> outs##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>(<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>, <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>* <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>) <font color='red'>{</font>    \
+<a name='L119'> 119                 <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)                                                            \
+<a name='L120'> 120                         <a href='../Y/439.html' title='Multiple used in 2 places.'>out</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>(<a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>, <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>]);                                                                                \
+<a name='L121'> 121         <font color='red'>}</font>
+<a name='L122'> 122         
+<a name='L123'> 123         outsx(<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>, <a href='../Y/91.html' title='Multiple used in 4 places.'>al</a>)
+<a name='L124'> 124         <a href='../Y/443.html' title='Multiple used in 3 places.'>outsx</a>(<a href='../Y/756.html' title='Multiple used in 4 places.'>w</a>, <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>, <a href='../Y/119.html' title='Multiple used in 4 places.'>ax</a>)
+<a name='L125'> 125         <a href='../Y/443.html' title='Multiple used in 3 places.'>outsx</a>(<a href='../Y/354.html' title='Multiple used in 7 places.'>l</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>, <a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>)
+<a name='L126'> 126         
+<a name='L127'> 127         
+<a name='L128'> 128 <font color='darkred'>#define</font> <a href='../Y/326.html' title='Multiple used in 3 places.'>insx</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a>)                                                                                         \
+<a name='L129'> 129         <b>static</b> <b>inline</b> <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>* ins##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>(<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>, <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>* <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>) <font color='red'>{</font>               \
+<a name='L130'> 130                 <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)                                                            \
+<a name='L131'> 131                         <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] = <a href='../Y/311.html' title='Multiple used in 2 places.'>in</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>(<a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>);                                                                                \
+<a name='L132'> 132                                                                                                                                         \
+<a name='L133'> 133                 <b>return</b> <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>;                                                                                                       \
+<a name='L134'> 134         <font color='red'>}</font>
+<a name='L135'> 135         
+<a name='L136'> 136         insx(<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>, <a href='../Y/91.html' title='Multiple used in 4 places.'>al</a>)
+<a name='L137'> 137         <a href='../Y/326.html' title='Multiple used in 3 places.'>insx</a>(<a href='../Y/756.html' title='Multiple used in 4 places.'>w</a>, <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>, <a href='../Y/119.html' title='Multiple used in 4 places.'>ax</a>)
+<a name='L138'> 138         <a href='../Y/326.html' title='Multiple used in 3 places.'>insx</a>(<a href='../Y/354.html' title='Multiple used in 7 places.'>l</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>, <a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>)
+<a name='L139'> 139         
+<a name='L140'> 140         
+<a name='L141'> 141 <b>typedef</b> <b>struct</b> regs <font color='red'>{</font>
+<a name='L142'> 142         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/292.html' title='Multiple used in 4 places.'>gs</a>, <a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>, <a href='../Y/240.html' title='Multiple used in 4 places.'>es</a>, <a href='../Y/207.html' title='Multiple used in 4 places.'>ds</a>, <a href='../Y/229.html' title='Multiple used in 6 places.'>edi</a>, <a href='../Y/241.html' title='Multiple used in 6 places.'>esi</a>, <a href='../Y/226.html' title='Multiple used in 6 places.'>ebp</a>, <a href='../Y/242.html' title='Multiple used in 4 places.'>esp</a>, <a href='../Y/227.html' title='Multiple used in 6 places.'>ebx</a>, <a href='../Y/230.html' title='Multiple used in 6 places.'>edx</a>, <a href='../Y/228.html' title='Multiple used in 6 places.'>ecx</a>, <a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>, <a href='../Y/328.html' title='Multiple used in 5 places.'>int_no</a>, err_code, <a href='../Y/232.html' title='Multiple used in 4 places.'>eip</a>, <a href='../Y/177.html' title='Multiple used in 4 places.'>cs</a>, <a href='../Y/231.html' title='Multiple used in 3 places.'>eflags</a>, useresp;
+<a name='L143'> 143 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../Y/514.html' title='Multiple used in 8 places.'>regs_t</a>;
+<a name='L144'> 144 
+<a name='L145'> 145 
+<a name='L146'> 146 <font color='darkred'>#ifndef</font> <a href='../Y/4.html' title='Multiple used in 3 places.'>DEBUG</a>
+<a name='L147'> 147 <font color='darkred'>#define</font> <a href='../R/285.html' title='Multiple refered from 47 places.'>kprintf</a>(<a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>, <a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>...);
+<a name='L148'> 148 <font color='darkred'>#endif</font>
+<a name='L149'> 149 
+<a name='L150'> 150 
+<a name='L151'> 151 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L39'>[^]</a><a href='#L136'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

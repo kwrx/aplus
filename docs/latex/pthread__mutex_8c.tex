@@ -1,0 +1,291 @@
+\hypertarget{pthread__mutex_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+mutex.c}
+\label{pthread__mutex_8c}\index{usr/src/libpthread/src/pthread\+\_\+mutex.\+c@{usr/src/libpthread/src/pthread\+\_\+mutex.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_a5e151c615eda34903514212f05a5ccf8}{P\+R\+I\+V\+A\+T\+E} int \hyperlink{pthread__mutex_8c_a09a80d595723a7cb36229098892878f0}{\+\_\+\+\_\+locked\+\_\+mtx} (\hyperlink{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{pthread\+\_\+mutex\+\_\+t} $\ast$mutex)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__mutex_8c_a8033a9fb4c16036471e20a33cb7361bd}{pthread\+\_\+mutex\+\_\+init} (\hyperlink{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{pthread\+\_\+mutex\+\_\+t} $\ast$mutex, const \hyperlink{pthread_8h_a32aba25ecddcfa6adc6391f85ef08d1a}{pthread\+\_\+mutexattr\+\_\+t} $\ast$attr)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__mutex_8c_a1de946179f5a8b0d08dd8a14c19775fe}{pthread\+\_\+mutex\+\_\+destroy} (\hyperlink{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{pthread\+\_\+mutex\+\_\+t} $\ast$mutex)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__mutex_8c_a9d5a00f9e6e279cce1e875a48cb9188d}{pthread\+\_\+mutex\+\_\+lock} (\hyperlink{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{pthread\+\_\+mutex\+\_\+t} $\ast$mutex)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__mutex_8c_a2e14cfabd118a24af57bea058285e7b1}{pthread\+\_\+mutex\+\_\+timedlock} (\hyperlink{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{pthread\+\_\+mutex\+\_\+t} $\ast$mutex, const struct timespec $\ast$abstime)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__mutex_8c_a53c032e9b0fe998bcded3c3c381b4418}{pthread\+\_\+mutex\+\_\+trylock} (\hyperlink{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{pthread\+\_\+mutex\+\_\+t} $\ast$mutex)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__mutex_8c_a98a732043af58199cdf7f663dbf4d805}{pthread\+\_\+mutex\+\_\+unlock} (\hyperlink{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{pthread\+\_\+mutex\+\_\+t} $\ast$mutex)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__mutex_8c_a09a80d595723a7cb36229098892878f0}{\index{pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}!\+\_\+\+\_\+locked\+\_\+mtx@{\+\_\+\+\_\+locked\+\_\+mtx}}
+\index{\+\_\+\+\_\+locked\+\_\+mtx@{\+\_\+\+\_\+locked\+\_\+mtx}!pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}}
+\subsubsection[{\+\_\+\+\_\+locked\+\_\+mtx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+R\+I\+V\+A\+T\+E} int \+\_\+\+\_\+locked\+\_\+mtx (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+mutex\+\_\+t} $\ast$}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{pthread__mutex_8c_a09a80d595723a7cb36229098892878f0}
+
+
+Definizione alla linea 9 del file pthread\+\_\+mutex.\+c.
+
+
+
+Referenzia pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+\_\+unlock(), e pthread\+\_\+mutex\+::time.
+
+
+\begin{DoxyCode}
+9                                                  \{
+10     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} > 0) \{
+11         \textcolor{keywordflow}{if}(time(NULL) < mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time})
+12             \textcolor{keywordflow}{return} 1;
+13         \textcolor{keywordflow}{else} \{
+14             \hyperlink{pthread__mutex_8c_a98a732043af58199cdf7f663dbf4d805}{pthread\_mutex\_unlock}(mutex);
+15             mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} = 0;
+16         \}
+17     \}
+18 
+19 
+20     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} == 1)
+21         \textcolor{keywordflow}{return} 1;
+22 
+23     \textcolor{keywordflow}{return} 0;
+24 \}
+\end{DoxyCode}
+\hypertarget{pthread__mutex_8c_a1de946179f5a8b0d08dd8a14c19775fe}{\index{pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}!pthread\+\_\+mutex\+\_\+destroy@{pthread\+\_\+mutex\+\_\+destroy}}
+\index{pthread\+\_\+mutex\+\_\+destroy@{pthread\+\_\+mutex\+\_\+destroy}!pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}}
+\subsubsection[{pthread\+\_\+mutex\+\_\+destroy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+mutex\+\_\+destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+mutex\+\_\+t} $\ast$}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{pthread__mutex_8c_a1de946179f5a8b0d08dd8a14c19775fe}
+
+
+Definizione alla linea 46 del file pthread\+\_\+mutex.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, pthread\+\_\+mutex\+::recursion, e pthread\+\_\+mutex\+::time.
+
+
+\begin{DoxyCode}
+46                                                          \{
+47     \textcolor{keywordflow}{if}(!mutex) \{
+48         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+49         \textcolor{keywordflow}{return} 1;
+50     \}
+51 
+52     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} == 1) \{
+53         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBUSY;
+54         \textcolor{keywordflow}{return} 1;
+55     \}
+56 
+57     mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 0;
+58     mutex->\hyperlink{structpthread__mutex_ad0a6948ac1d12f9ec3f11fea2ac07ff9}{recursion} = 0;
+59     mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} = 0;
+60     mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} = 0;
+61     mutex->\hyperlink{structpthread__mutex_a3fdfabe67e940844d49b5f98809907f3}{event} = 0;
+62     mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} = 0;
+63 
+64     \textcolor{keywordflow}{return} 0;
+65 \}
+\end{DoxyCode}
+\hypertarget{pthread__mutex_8c_a8033a9fb4c16036471e20a33cb7361bd}{\index{pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}!pthread\+\_\+mutex\+\_\+init@{pthread\+\_\+mutex\+\_\+init}}
+\index{pthread\+\_\+mutex\+\_\+init@{pthread\+\_\+mutex\+\_\+init}!pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}}
+\subsubsection[{pthread\+\_\+mutex\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+mutex\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+mutex\+\_\+t} $\ast$}]{mutex, }
+\item[{const {\bf pthread\+\_\+mutexattr\+\_\+t} $\ast$}]{attr}
+\end{DoxyParamCaption}
+)}}\label{pthread__mutex_8c_a8033a9fb4c16036471e20a33cb7361bd}
+
+
+Definizione alla linea 26 del file pthread\+\_\+mutex.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutexattr\+::kind, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T, pthread\+\_\+mutex\+::recursion, e pthread\+\_\+mutex\+::time.
+
+
+\begin{DoxyCode}
+26                                                                                        \{
+27     \textcolor{keywordflow}{if}(!mutex) \{
+28         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+29         \textcolor{keywordflow}{return} 1;
+30     \}
+31 
+32     mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 0;
+33     mutex->\hyperlink{structpthread__mutex_ad0a6948ac1d12f9ec3f11fea2ac07ff9}{recursion} = 0;
+34     mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} = \hyperlink{pthread_8h_a2a9b96c0491ae490c17d0b400bc427b0}{PTHREAD\_MUTEX\_DEFAULT};
+35     mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} = 0;
+36     mutex->\hyperlink{structpthread__mutex_a3fdfabe67e940844d49b5f98809907f3}{event} = 0;
+37     mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} = 0;
+38 
+39     \textcolor{keywordflow}{if}(attr)
+40         mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} = attr->\hyperlink{structpthread__mutexattr_a8f33b94daf83faf08982414db0b16a0c}{kind};
+41 
+42     \textcolor{keywordflow}{return} 0;
+43 \}
+\end{DoxyCode}
+\hypertarget{pthread__mutex_8c_a9d5a00f9e6e279cce1e875a48cb9188d}{\index{pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}!pthread\+\_\+mutex\+\_\+lock@{pthread\+\_\+mutex\+\_\+lock}}
+\index{pthread\+\_\+mutex\+\_\+lock@{pthread\+\_\+mutex\+\_\+lock}!pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}}
+\subsubsection[{pthread\+\_\+mutex\+\_\+lock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+mutex\+\_\+lock (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+mutex\+\_\+t} $\ast$}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{pthread__mutex_8c_a9d5a00f9e6e279cce1e875a48cb9188d}
+
+
+Definizione alla linea 67 del file pthread\+\_\+mutex.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), pthread\+\_\+mutex\+::recursion, e sched\+\_\+yield().
+
+
+\begin{DoxyCode}
+67                                                       \{
+68     \textcolor{keywordflow}{if}(!mutex) \{
+69         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+70         \textcolor{keywordflow}{return} 1;
+71     \}
+72 
+73     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} != \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}()) \{
+74         \textcolor{keywordflow}{while}(\hyperlink{pthread__mutex_8c_a09a80d595723a7cb36229098892878f0}{\_\_locked\_mtx}(mutex))
+75             \hyperlink{nanosleep_8c_a357cd4b34c13011749dfffb42b489f09}{sched\_yield}();
+76         
+77         mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} = \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}();
+78         mutex->\hyperlink{structpthread__mutex_ad0a6948ac1d12f9ec3f11fea2ac07ff9}{recursion} = 0;
+79         mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 1;
+80     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_aaf502496651f95b06be861af7902cb23}{PTHREAD\_MUTEX\_ERRORCHECK}) \{
+81         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EDEADLK;
+82         \textcolor{keywordflow}{return} 1;
+83     \}
+84 
+85     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_a715e9644a7183d98cb2c9dd41cb89645}{PTHREAD\_MUTEX\_RECURSIVE})
+86         mutex->\hyperlink{structpthread__mutex_ad0a6948ac1d12f9ec3f11fea2ac07ff9}{recursion} += 1;
+87 
+88     \textcolor{keywordflow}{return} 0;
+89 \}
+\end{DoxyCode}
+\hypertarget{pthread__mutex_8c_a2e14cfabd118a24af57bea058285e7b1}{\index{pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}!pthread\+\_\+mutex\+\_\+timedlock@{pthread\+\_\+mutex\+\_\+timedlock}}
+\index{pthread\+\_\+mutex\+\_\+timedlock@{pthread\+\_\+mutex\+\_\+timedlock}!pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}}
+\subsubsection[{pthread\+\_\+mutex\+\_\+timedlock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+mutex\+\_\+timedlock (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+mutex\+\_\+t} $\ast$}]{mutex, }
+\item[{const struct timespec $\ast$}]{abstime}
+\end{DoxyParamCaption}
+)}}\label{pthread__mutex_8c_a2e14cfabd118a24af57bea058285e7b1}
+
+
+Definizione alla linea 92 del file pthread\+\_\+mutex.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+mutex\+\_\+lock(), e pthread\+\_\+mutex\+::time.
+
+
+\begin{DoxyCode}
+92                                                                                            \{
+93     \textcolor{keywordflow}{if}(abstime == NULL) \{
+94         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+95         \textcolor{keywordflow}{return} 1;
+96     \}
+97 
+98     \textcolor{keywordflow}{if}(\hyperlink{pthread__mutex_8c_a9d5a00f9e6e279cce1e875a48cb9188d}{pthread\_mutex\_lock}(mutex) == 0)
+99         mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} = time(NULL) + abstime->tv\_sec;
+100     \textcolor{keywordflow}{else}
+101         \textcolor{keywordflow}{return} 1;
+102 
+103     \textcolor{keywordflow}{return} 0;
+104 \}
+\end{DoxyCode}
+\hypertarget{pthread__mutex_8c_a53c032e9b0fe998bcded3c3c381b4418}{\index{pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}!pthread\+\_\+mutex\+\_\+trylock@{pthread\+\_\+mutex\+\_\+trylock}}
+\index{pthread\+\_\+mutex\+\_\+trylock@{pthread\+\_\+mutex\+\_\+trylock}!pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}}
+\subsubsection[{pthread\+\_\+mutex\+\_\+trylock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+mutex\+\_\+trylock (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+mutex\+\_\+t} $\ast$}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{pthread__mutex_8c_a53c032e9b0fe998bcded3c3c381b4418}
+
+
+Definizione alla linea 107 del file pthread\+\_\+mutex.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), e pthread\+\_\+mutex\+::recursion.
+
+
+\begin{DoxyCode}
+107                                                          \{
+108     \textcolor{keywordflow}{if}(!mutex) \{
+109         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+110         \textcolor{keywordflow}{return} 1;
+111     \}
+112 
+113     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} != \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}()) \{
+114         \textcolor{keywordflow}{if}(\hyperlink{pthread__mutex_8c_a09a80d595723a7cb36229098892878f0}{\_\_locked\_mtx}(mutex)) \{
+115             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBUSY;
+116             \textcolor{keywordflow}{return} 1;
+117         \}
+118 
+119         mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} = \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}();
+120         mutex->\hyperlink{structpthread__mutex_ad0a6948ac1d12f9ec3f11fea2ac07ff9}{recursion} = 0;
+121         mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 1;
+122     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_aaf502496651f95b06be861af7902cb23}{PTHREAD\_MUTEX\_ERRORCHECK}) \{
+123         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EDEADLK;
+124         \textcolor{keywordflow}{return} 1;
+125     \}
+126 
+127     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_a715e9644a7183d98cb2c9dd41cb89645}{PTHREAD\_MUTEX\_RECURSIVE})
+128         mutex->\hyperlink{structpthread__mutex_ad0a6948ac1d12f9ec3f11fea2ac07ff9}{recursion} += 1;
+129 
+130     \textcolor{keywordflow}{return} 0;
+131 \}
+\end{DoxyCode}
+\hypertarget{pthread__mutex_8c_a98a732043af58199cdf7f663dbf4d805}{\index{pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}!pthread\+\_\+mutex\+\_\+unlock@{pthread\+\_\+mutex\+\_\+unlock}}
+\index{pthread\+\_\+mutex\+\_\+unlock@{pthread\+\_\+mutex\+\_\+unlock}!pthread\+\_\+mutex.\+c@{pthread\+\_\+mutex.\+c}}
+\subsubsection[{pthread\+\_\+mutex\+\_\+unlock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+mutex\+\_\+unlock (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+mutex\+\_\+t} $\ast$}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{pthread__mutex_8c_a98a732043af58199cdf7f663dbf4d805}
+
+
+Definizione alla linea 133 del file pthread\+\_\+mutex.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), e pthread\+\_\+mutex\+::recursion.
+
+
+\begin{DoxyCode}
+133                                                         \{
+134     \textcolor{keywordflow}{if}(!mutex) \{
+135         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+136         \textcolor{keywordflow}{return} 1;
+137     \}
+138 
+139     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} == \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}()) \{
+140         \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_a715e9644a7183d98cb2c9dd41cb89645}{PTHREAD\_MUTEX\_RECURSIVE}) \{
+141             \textcolor{keywordflow}{if}(--(mutex->\hyperlink{structpthread__mutex_ad0a6948ac1d12f9ec3f11fea2ac07ff9}{recursion}))
+142                 \textcolor{keywordflow}{return} 0;
+143         \}
+144 
+145         mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} = 0;
+146         mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 0;
+147     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_aaf502496651f95b06be861af7902cb23}{PTHREAD\_MUTEX\_ERRORCHECK}) \{
+148         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EPERM;
+149         \textcolor{keywordflow}{return} 1;
+150     \}
+151 
+152     \textcolor{keywordflow}{return} 0;
+153 \}
+\end{DoxyCode}

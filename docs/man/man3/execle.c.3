@@ -1,0 +1,66 @@
+.TH "usr/src/libposix/src/execle.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/execle.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <_ansi\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <varargs\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fB_execve\fP (const char *filename, char *const args[], char *const env[])"
+.br
+.ti -1c
+.RI "int \fB_DEFUN\fP (execle,(path, arg0, va_alist), _CONST char *path _AND _CONST char *arg0 _AND va_dcl)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int _DEFUN (execle, (path, arg0, va_alist), _CONST char *path _AND _CONST char *arg0 _ANDva_dcl)"
+
+.PP
+Definizione alla linea 25 del file execle\&.c\&.
+.PP
+Referenzia _execve()\&.
+.PP
+.nf
+32 {
+33   int i;
+34   va_list args;
+35   _CONST char * _CONST *envp;
+36   _CONST char *argv[256];
+37 
+38   va_start (args, arg0);
+39   argv[0] = arg0;
+40   i = 1;
+41   do
+42     argv[i] = va_arg (args, _CONST char *);
+43   while (argv[i++] != NULL);
+44   envp = va_arg (args, _CONST char * _CONST *);
+45   va_end (args);
+46 
+47   return _execve (path, (char * _CONST *) argv, (char * _CONST *) envp);
+48 }
+.fi
+.SS "int _execve (const char *filename, char *constargs[], char *constenv[])"
+
+.PP
+Definizione alla linea 8 del file _execve\&.c\&.
+.PP
+.nf
+8                                                                          {
+9     return execve(filename, args, env);
+10 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

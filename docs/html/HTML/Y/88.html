@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>abstime</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L234'>abstime</a>           234 usr/src/libpthread/include/pthread.h int pthread_mutex_timedlock(pthread_mutex_t *mutex, const struct timespec *abstime);
+<a href='../S/43.html#L254'>abstime</a>           254 usr/src/libpthread/include/pthread.h int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime);
+<a href='../S/43.html#L293'>abstime</a>           293 usr/src/libpthread/include/pthread.h int pthread_rwlock_timedrdlock(pthread_rwlock_t *lock, const struct timespec *abstime);
+<a href='../S/43.html#L295'>abstime</a>           295 usr/src/libpthread/include/pthread.h int pthread_rwlock_timedwrlock(pthread_rwlock_t *lock, const struct timespec *abstime);
+<a href='../S/71.html#L44'>abstime</a>            44 usr/src/libpthread/src/pthread_cond.c PUBLIC int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex, const struct timespec *abstime) {
+<a href='../S/71.html#L71'>abstime</a>            71 usr/src/libpthread/src/pthread_cond.c 	if(abstime)
+<a href='../S/71.html#L72'>abstime</a>            72 usr/src/libpthread/src/pthread_cond.c 		t0 = time(NULL) + abstime-&gt;tv_sec;
+<a href='../S/59.html#L92'>abstime</a>            92 usr/src/libpthread/src/pthread_mutex.c PUBLIC int pthread_mutex_timedlock(pthread_mutex_t *mutex, const struct timespec *abstime) {
+<a href='../S/59.html#L93'>abstime</a>            93 usr/src/libpthread/src/pthread_mutex.c 	if(abstime == NULL) {
+<a href='../S/59.html#L99'>abstime</a>            99 usr/src/libpthread/src/pthread_mutex.c 		mutex-&gt;time = time(NULL) + abstime-&gt;tv_sec;
+<a href='../S/72.html#L90'>abstime</a>            90 usr/src/libpthread/src/pthread_rwlock.c PUBLIC int pthread_rwlock_timedrdlock(pthread_rwlock_t *lock, const struct timespec *abstime) {
+<a href='../S/72.html#L96'>abstime</a>            96 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_timedlock(&amp;lock-&gt;rdmutex, abstime);
+<a href='../S/72.html#L108'>abstime</a>           108 usr/src/libpthread/src/pthread_rwlock.c PUBLIC int pthread_rwlock_timedwrlock(pthread_rwlock_t *lock, const struct timespec *abstime) {
+<a href='../S/72.html#L114'>abstime</a>           114 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_timedlock(&amp;lock-&gt;wrmutex, abstime);
+</pre>
+</body>
+</html>

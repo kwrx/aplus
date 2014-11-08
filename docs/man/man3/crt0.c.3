@@ -1,0 +1,134 @@
+.TH "usr/src/libcrt0/src/crt0.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libcrt0/src/crt0.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'syscalls\&.c'\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <signal\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBmain\fP (int, char **, char **)"
+.br
+.ti -1c
+.RI "int \fB__sigtramp\fP (int sig)"
+.br
+.ti -1c
+.RI "static int \fB__default_sighandler__\fP (int sig)"
+.br
+.ti -1c
+.RI "static void \fB__init_traps\fP ()"
+.br
+.ti -1c
+.RI "\fB__attribute__\fP ((noreturn))"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "char ** \fBenviron\fP"
+.br
+.ti -1c
+.RI "int \fB__bss_start\fP"
+.br
+.ti -1c
+.RI "int \fB_end\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "__attribute__ ((noreturn))"
+
+.PP
+Definizione alla linea 61 del file crt0\&.c\&.
+.PP
+Referenzia __bss_start, __init_traps(), __sigtramp(), _end, environ, e main()\&.
+.PP
+.nf
+62               {
+63     
+64     int i;
+65     for(i = (int) &__bss_start; i < (int) &_end; i++)
+66         *(char*) i = 0;
+67 
+68 
+69     environ = (char**) aplus_envp();
+70     char** argv = (char**) aplus_argv();
+71 
+72     int argc = 0;
+73     while(argv[argc])
+74         argc += 1;
+75 
+76 
+77     open("/dev/stdin", 0, 0644);
+78     open("/dev/stdout", 0, 0644);
+79     open("/dev/stderr", 0, 0644);
+80 
+81 
+82     aplus_install_sighandler(__sigtramp);
+83     _init_signal();
+84     __init_traps();
+85 
+86 #if 0
+87     atexit(__do_global_dtors);
+88     __do_global_ctors();
+89 #endif
+90 
+91     exit(main(argc, argv, environ));
+92 }
+.fi
+.SS "static int __default_sighandler__ (intsig)\fC [static]\fP"
+
+.PP
+Definizione alla linea 17 del file crt0\&.c\&.
+.PP
+.nf
+17                                            {
+18     signal(sig, __default_sighandler__);
+19     exit(sig);
+20 }
+.fi
+.SS "static void __init_traps ()\fC [static]\fP"
+
+.PP
+Definizione alla linea 51 del file crt0\&.c\&.
+.PP
+Referenzia __default_sighandler__()\&.
+.PP
+.nf
+51                            {
+52     signal(SIGABRT, __default_sighandler__);
+53     signal(SIGFPE, __default_sighandler__);
+54     signal(SIGILL, __default_sighandler__);
+55     signal(SIGINT, __default_sighandler__);
+56     signal(SIGSEGV, __default_sighandler__);
+57     signal(SIGTERM, __default_sighandler__);
+58 }
+.fi
+.SS "int __sigtramp (intsig)"
+
+.SS "int main (int, char **, char **)"
+
+.SH "Documentazione delle variabili"
+.PP 
+.SS "int __bss_start"
+
+.SS "int _end"
+
+.SS "char** environ"
+
+.PP
+Definizione alla linea 3 del file environ\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

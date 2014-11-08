@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="slirp_8h">
+    <title>slirp.h File Reference</title>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687">SLIRP_PACKET_END</link> 0xC0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579">SLIRP_PACKET_ESC</link> 0xDB</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="slirp_8h_1ab3edcb78e24f3e17d99d94ac4494ca17">SLIRP_PACKET_ESC_END</link> 0xDC</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="slirp_8h_1aadc4cd7d052d18d94b1b10e139628dc1">SLIRP_PACKET_ESC_ESC</link> 0xDD</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="slirp_8h_1a1a2dfb64959285fee075cc1f612289cb">SLIRP_BUFSIZ</link> 1006</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="slirp_8h_1a96377139dd32f24736da76a132dafcf1">SLIRP_MTU</link> 65536</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="slirp_8h_1aa2c40ffa219abb80aa6d683964c43e25">SLIRP_MAGIC</link> 0x100200FF</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/net/slirp/slirp.h</para>
+    </simplesect>
+</section>

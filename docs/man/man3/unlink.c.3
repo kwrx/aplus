@@ -1,0 +1,60 @@
+.TH "src/syscall/unlink.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/unlink.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_unlink\fP (const char *pathname)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_unlink\fP, 15)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_unlink (const char *pathname)"
+
+.PP
+Definizione alla linea 13 del file unlink\&.c\&.
+.PP
+Referenzia errno, e kprintf\&.
+.PP
+.nf
+13                                      {
+14     /* TODO */
+15     kprintf("sys_unlink: TODO");
+16 
+17     errno = ENOSYS;
+18     return -1;
+19 }
+.fi
+.SS "SYSCALL (\fBsys_unlink\fP, 15)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

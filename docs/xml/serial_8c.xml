@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="serial_8c" kind="file">
+    <compoundname>serial.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes local="no">stdint.h</includes>
+    <incdepgraph>
+      <node id="48">
+        <label>stdarg.h</label>
+      </node>
+      <node id="47">
+        <label>stdint.h</label>
+      </node>
+      <node id="46">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="48" relation="include">
+        </childnode>
+        <childnode refid="49" relation="include">
+        </childnode>
+      </node>
+      <node id="49">
+        <label>string.h</label>
+      </node>
+      <node id="50">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="45">
+        <label>src/arch/serial.c</label>
+        <link refid="serial.c"/>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="50" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" prot="public" static="yes" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t serial[]</definition>
+        <argsstring>[]</argsstring>
+        <name>serial</name>
+        <initializer>= {
+	0x3F8, 0x2F8, 0x3E8, 0x2E8
+}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/serial.c" line="7" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="serial_8c_1a554c0b79338d298c39a06027b790edb5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void serial_send</definition>
+        <argsstring>(uint8_t port, uint8_t value)</argsstring>
+        <name>serial_send</name>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>port</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/serial.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="11" bodyend="14"/>
+        <references refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" compoundref="spinlock_8h" startline="51">fastlock_waiton</references>
+        <references refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" compoundref="serial_8c" startline="7">serial</references>
+      </memberdef>
+      <memberdef kind="function" id="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t serial_recv</definition>
+        <argsstring>(uint8_t port)</argsstring>
+        <name>serial_recv</name>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>port</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/serial.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="16" bodyend="20"/>
+        <references refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" compoundref="spinlock_8h" startline="51">fastlock_waiton</references>
+        <references refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" compoundref="serial_8c" startline="7">serial</references>
+      </memberdef>
+      <memberdef kind="function" id="serial_8c_1a459999cfa35c788b64284953a93c4b57" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int serial_init</definition>
+        <argsstring>()</argsstring>
+        <name>serial_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/serial.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="22" bodyend="34"/>
+        <references refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" compoundref="serial_8c" startline="7">serial</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[]<sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/>0x3F8,<sp/>0x2F8,<sp/>0x3E8,<sp/>0x2E8</highlight></codeline>
+<codeline lineno="9"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>port,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" kindref="member">fastlock_waiton</ref>(((inb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[port]<sp/>+<sp/>5)<sp/>&amp;<sp/>32)<sp/>==<sp/>0));</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[port],<sp/>value);</highlight></codeline>
+<codeline lineno="14"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" kindref="member">serial_recv</ref>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>port)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" kindref="member">fastlock_waiton</ref>((inb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[port]<sp/>+<sp/>5)<sp/>&amp;<sp/>1)<sp/>==<sp/>0);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>inb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[port]);</highlight></codeline>
+<codeline lineno="20"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="serial_8c_1a459999cfa35c788b64284953a93c4b57" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="serial_8c_1a459999cfa35c788b64284953a93c4b57" kindref="member">serial_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>);<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[i]<sp/>+<sp/>1,<sp/>0x00);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[i]<sp/>+<sp/>3,<sp/>0x80);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[i]<sp/>+<sp/>0,<sp/>0x03);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[i]<sp/>+<sp/>1,<sp/>0x00);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[i]<sp/>+<sp/>3,<sp/>0x03);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[i]<sp/>+<sp/>2,<sp/>0xC7);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(<ref refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" kindref="member">serial</ref>[i]<sp/>+<sp/>4,<sp/>0x0B);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/arch/serial.c"/>
+  </compounddef>
+</doxygen>

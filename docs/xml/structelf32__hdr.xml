@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structelf32__hdr" kind="struct" prot="public">
+    <compoundname>elf32_hdr</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t elf32_hdr::e_ident[EI_NIDENT]</definition>
+        <argsstring>[EI_NIDENT]</argsstring>
+        <name>e_ident</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="57" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1a01aab87d9a8f658d41a1162158c07878" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_type</definition>
+        <argsstring></argsstring>
+        <name>e_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="58" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1ac683164e0380f6babe3f46a3a1ffdfe9" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_machine</definition>
+        <argsstring></argsstring>
+        <name>e_machine</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="59" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1a4324ae029dfd1967979b984a2f3e14e4" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_hdr::e_version</definition>
+        <argsstring></argsstring>
+        <name>e_version</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="60" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1aebf266c7454956ac9aca091c837f6c14" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref></type>
+        <definition>Elf32_Addr elf32_hdr::e_entry</definition>
+        <argsstring></argsstring>
+        <name>e_entry</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="61" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1a88337612d820200d75185c304124ad24" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref></type>
+        <definition>Elf32_Off elf32_hdr::e_phoff</definition>
+        <argsstring></argsstring>
+        <name>e_phoff</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="62" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref></type>
+        <definition>Elf32_Off elf32_hdr::e_shoff</definition>
+        <argsstring></argsstring>
+        <name>e_shoff</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="63" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1a8695845266a8825d6cc9c04205c783f5" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_hdr::e_flags</definition>
+        <argsstring></argsstring>
+        <name>e_flags</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="64" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1a3d3364b74b882c7383f11a17ddda34b2" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_ehsize</definition>
+        <argsstring></argsstring>
+        <name>e_ehsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="65" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1a7c8f7ea4bb2789905be6dc875c1e502d" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_phentsize</definition>
+        <argsstring></argsstring>
+        <name>e_phentsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="66" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1ae97c82a1bab1e0bf6de2d4ad0f6eef79" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_phnum</definition>
+        <argsstring></argsstring>
+        <name>e_phnum</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="67" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1a8ca2eaada4cff245f41faa852a4a248e" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_shentsize</definition>
+        <argsstring></argsstring>
+        <name>e_shentsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="68" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1ab7d153e79bf2dca73049268f1fcd79c6" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_shnum</definition>
+        <argsstring></argsstring>
+        <name>e_shnum</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="69" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__hdr_1afd7ed18333923147918975fdfa4ee99a" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_hdr::e_shstrndx</definition>
+        <argsstring></argsstring>
+        <name>e_shstrndx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="70" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="29">
+        <label>elf32_hdr</label>
+        <link refid="structelf32__hdr"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/exec.c" line="56" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="56" bodyend="71"/>
+    <listofallmembers>
+      <member refid="structelf32__hdr_1a3d3364b74b882c7383f11a17ddda34b2" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_ehsize</name></member>
+      <member refid="structelf32__hdr_1aebf266c7454956ac9aca091c837f6c14" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_entry</name></member>
+      <member refid="structelf32__hdr_1a8695845266a8825d6cc9c04205c783f5" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_flags</name></member>
+      <member refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_ident</name></member>
+      <member refid="structelf32__hdr_1ac683164e0380f6babe3f46a3a1ffdfe9" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_machine</name></member>
+      <member refid="structelf32__hdr_1a7c8f7ea4bb2789905be6dc875c1e502d" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_phentsize</name></member>
+      <member refid="structelf32__hdr_1ae97c82a1bab1e0bf6de2d4ad0f6eef79" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_phnum</name></member>
+      <member refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_phoff</name></member>
+      <member refid="structelf32__hdr_1a8ca2eaada4cff245f41faa852a4a248e" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_shentsize</name></member>
+      <member refid="structelf32__hdr_1ab7d153e79bf2dca73049268f1fcd79c6" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_shnum</name></member>
+      <member refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_shoff</name></member>
+      <member refid="structelf32__hdr_1afd7ed18333923147918975fdfa4ee99a" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_shstrndx</name></member>
+      <member refid="structelf32__hdr_1a01aab87d9a8f658d41a1162158c07878" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_type</name></member>
+      <member refid="structelf32__hdr_1a4324ae029dfd1967979b984a2f3e14e4" prot="public" virt="non-virtual"><scope>elf32_hdr</scope><name>e_version</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

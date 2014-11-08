@@ -1,0 +1,144 @@
+.TH "src/net/ipv6.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/ipv6.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <aplus/net/eth\&.h>\fP
+.br
+\fC#include <aplus/net/ipv6\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fB__params\fP   \fBnetif\fP, (void*) ((\fBuint32_t\fP) ip + sizeof(ipv6_header_t)), \fBlength\fP - sizeof(ipv6_header_t)"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBipv6_recv\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP)"
+.br
+.ti -1c
+.RI "int \fBipv6_send\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP, \fBipv6_t\fP \fBdest\fP)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define __params   \fBnetif\fP, (void*) ((\fBuint32_t\fP) ip + sizeof(ipv6_header_t)), \fBlength\fP - sizeof(ipv6_header_t)"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int ipv6_recv (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype)"
+
+.PP
+Definizione alla linea 14 del file ipv6\&.c\&.
+.PP
+Referenzia IPV6_CHECK_VERSION, IPV6_PROTO_ICMP, IPV6_PROTO_TCP, IPV6_PROTO_UDP, length, NETIF_INET6, netif_packets_add(), e netif_packets_create()\&.
+.PP
+.nf
+14                                                                   {
+15     ipv6_header_t* ip = (ipv6_header_t*) buf;
+16     
+17     if(IPV6_CHECK_VERSION(ip) == 0)
+18         return 0;
+19 
+20 
+21     #define __params    \
+22         netif, (void*) ((uint32_t) ip + sizeof(ipv6_header_t)), length - sizeof(ipv6_header_t)
+23 
+24     switch(ip->protocol) {
+25         case IPV6_PROTO_UDP:
+26             //if(udp_recv(__params) == 0)
+27             //  return 0;
+28             return length;
+29         
+30         case IPV6_PROTO_TCP:
+31             //if(tcp_recv(__params) == 0)       /* Support for TCP ?? -> pfff\&.\&. ù\&.ù */
+32             //  return 0;
+33             return length;
+34 
+35         case IPV6_PROTO_ICMP:
+36             //if(icmp_recv(__params) == 0)
+37             //  return 0;
+38             return length;
+39     }
+40 
+41     /* IPV6_PROTO_RAW */
+42     netif_packets_add (
+43         netif_packets_create (
+44                             netif,
+45                             NETIF_INET6, 
+46                             length, 
+47                             sizeof(ipv6_header_t), 
+48                             buf
+49         )
+50     );
+51 
+52     return length;
+53 }
+.fi
+.SS "int ipv6_send (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype, \fBipv6_t\fPdest)"
+
+.PP
+Definizione alla linea 55 del file ipv6\&.c\&.
+.PP
+Referenzia eth_send(), netif::ipv6, IPV6_PROTO_ICMP, IPV6_PROTO_RAW, IPV6_PROTO_TCP, IPV6_PROTO_UDP, kfree(), kmalloc(), length, NETIF_ICMP, NETIF_INET6, NETIF_TCP, NETIF_UDP, e uint32_t\&.
+.PP
+.nf
+55                                                                                {
+56     ipv6_header_t* ip = (ipv6_header_t*) kmalloc(length + sizeof(ipv6_header_t));
+57     ip->version = 6;
+58     ip->traffic = 0;
+59     ip->flow = 0;
+60     ip->length = length;
+61     ip->ttl = 0xFF;
+62     
+63     switch(type) {
+64         case NETIF_UDP:
+65             ip->protocol = IPV6_PROTO_UDP;
+66             break;
+67         case NETIF_TCP:
+68             ip->protocol = IPV6_PROTO_TCP;
+69             break;
+70         case NETIF_ICMP:
+71             ip->protocol = IPV6_PROTO_ICMP;
+72             break;
+73         default:
+74             ip->protocol = IPV6_PROTO_RAW;
+75             break;
+76     }
+77 
+78     memcpy(ip->dest, dest, sizeof(ipv6_t));
+79     memcpy(ip->source, netif->ipv6, sizeof(ipv6_t));
+80     memcpy((void*) ((uint32_t) ip + sizeof(ipv6_header_t)), buf, length);
+81 
+82     int ret = eth_send(netif, (void*) ip, length + sizeof(ipv6_header_t), NETIF_INET6);
+83     kfree(ip);
+84 
+85     if(ret)
+86         return length;
+87     
+88     return 0;
+89 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,1177 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="desc_8c" kind="file">
+    <compoundname>desc.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="grub_8h" local="no">grub.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes local="no">time.h</includes>
+    <includes local="no">sys/times.h</includes>
+    <incdepgraph>
+      <node id="17">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="9">
+        <label>stdarg.h</label>
+      </node>
+      <node id="25">
+        <label>sys/times.h</label>
+      </node>
+      <node id="6">
+        <label>src/arch/desc.c</label>
+        <link refid="desc.c"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="23" relation="include">
+        </childnode>
+        <childnode refid="24" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+      </node>
+      <node id="14">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="15" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="17" relation="include">
+        </childnode>
+        <childnode refid="18" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>stdint.h</label>
+      </node>
+      <node id="21">
+        <label>setjmp.h</label>
+      </node>
+      <node id="13">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="14" relation="include">
+        </childnode>
+        <childnode refid="20" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+        <childnode refid="21" relation="include">
+        </childnode>
+      </node>
+      <node id="23">
+        <label>errno.h</label>
+      </node>
+      <node id="22">
+        <label>grub.h</label>
+        <link refid="grub_8h"/>
+      </node>
+      <node id="15">
+        <label>stddef.h</label>
+      </node>
+      <node id="7">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="16">
+        <label>sys/types.h</label>
+      </node>
+      <node id="10">
+        <label>string.h</label>
+      </node>
+      <node id="19">
+        <label>unistd.h</label>
+      </node>
+      <node id="20">
+        <label>signal.h</label>
+      </node>
+      <node id="12">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="13" relation="include">
+        </childnode>
+      </node>
+      <node id="24">
+        <label>time.h</label>
+      </node>
+      <node id="18">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="19" relation="include">
+        </childnode>
+        <childnode refid="16" relation="include">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+    </incdepgraph>
+    <innerclass refid="structgdt__entry" prot="public">gdt_entry</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="desc_8c_1aeef7411226f7c2a6d1328386a2b3832d" prot="public" static="no">
+        <name>FAULT_MASK</name>
+        <initializer>0x3FFFFFE3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="37" column="9" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" prot="public" static="no">
+        <name>PIT_FREQ</name>
+        <initializer>(CLOCKS_PER_SEC)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="38" column="9" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2" prot="public" static="no">
+        <name>gdt_set</name>
+        <param><defname>n</defname></param>
+        <param><defname>b</defname></param>
+        <param><defname>l</defname></param>
+        <param><defname>a</defname></param>
+        <param><defname>g</defname></param>
+        <initializer><ref refid="desc_8c_1a243b9f88d2a68b2d2daff1dd77773e08" kindref="member">gdt_e</ref>[n].<ref refid="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec" kindref="member">base_l</ref> = (b &amp; 0xFFFF);				\
+		gdt_e[n].base_m = (b &gt;&gt; 16) &amp; 0xFF;			\
+		gdt_e[n].base_h = (b &gt;&gt; 24) &amp; 0xFF;			\
+		gdt_e[n].limit_l = (l &amp; 0xFFFF);			\
+		gdt_e[n].granularity = (l &gt;&gt; 16) &amp; 0x0F;	\
+		gdt_e[n].granularity |= g &amp; 0xF0;			\
+		gdt_e[n].access = a</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="200" column="10"/>
+      </memberdef>
+      <memberdef kind="define" id="desc_8c_1a57d9d99abdf93e1b7d838f47efc6af1c" prot="public" static="no">
+        <name>idt_set</name>
+        <param><defname>i</defname></param>
+        <param><defname>b</defname></param>
+        <param><defname>s</defname></param>
+        <param><defname>f</defname></param>
+        <initializer><ref refid="desc_8c_1a248e57c601e50474a60c9d42c6ac8fb3" kindref="member">idt_e</ref>[i].<ref refid="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec" kindref="member">base_l</ref> = b &amp; 0xFFFF;				\
+		idt_e[i].base_h = (b &gt;&gt; 16) &amp; 0xFFFF;		\
+		idt_e[i].sel = s;							\
+		idt_e[i].null = 0;							\
+		idt_e[i].flags = f</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="232" column="10"/>
+      </memberdef>
+      <memberdef kind="define" id="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" prot="public" static="no">
+        <name>_i</name>
+        <param><defname>n</defname></param>
+        <initializer>extern void isr##n();						\
+		<ref refid="desc_8c_1a57d9d99abdf93e1b7d838f47efc6af1c" kindref="member">idt_set</ref>(n, (<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)isr##n, 0x08, 0x8E)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="240" column="10"/>
+      </memberdef>
+      <memberdef kind="define" id="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" prot="public" static="no">
+        <name>_i</name>
+        <param><defname>n</defname></param>
+        <initializer>extern void irq##n();							\
+		<ref refid="desc_8c_1a57d9d99abdf93e1b7d838f47efc6af1c" kindref="member">idt_set</ref>(n + 32, (<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)irq##n, 0x08, 0x8E)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="286" column="10"/>
+      </memberdef>
+      <memberdef kind="define" id="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a" prot="public" static="no">
+        <name>BCD2BIN</name>
+        <param><defname>bcd</defname></param>
+        <initializer>((((bcd) &amp; 0x0F) + ((bcd) / 16) * 10))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="375" column="10"/>
+      </memberdef>
+      <memberdef kind="define" id="desc_8c_1a33200b25f91bf4cf6a4ec73ef292b207" prot="public" static="no">
+        <name>BCD2BIN2</name>
+        <param><defname>bcd</defname></param>
+        <initializer>(((((bcd) &amp; 0x0F) + ((bcd &amp; 0x70) / 16) * 10)) | (bcd &amp; 0x80))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="376" column="10"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="desc_8c_1aea6d44db9dbbcd64642fcb7904f41d9a" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t limit_l</definition>
+        <argsstring></argsstring>
+        <name>limit_l</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="2" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="2" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t base_l</definition>
+        <argsstring></argsstring>
+        <name>base_l</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="2" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="2" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1a98fb2af33fad804398328d56ccf01ec2" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t base_m</definition>
+        <argsstring></argsstring>
+        <name>base_m</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="3" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1a8b0d6200bc639dd37ff68847a0adde5f" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t access</definition>
+        <argsstring></argsstring>
+        <name>access</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="3" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1acfea365f69e71368a2db03333d4afd6f" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t granularity</definition>
+        <argsstring></argsstring>
+        <name>granularity</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="3" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1a8fef9c987f038778feaf85edfcc9c060" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t base_h</definition>
+        <argsstring></argsstring>
+        <name>base_h</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="3" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1a8e2066f75678ef3cb314db1e33fe5e4d" prot="public" static="yes" mutable="no">
+        <type>void *</type>
+        <definition>void* irqs[16]</definition>
+        <argsstring>[16]</argsstring>
+        <name>irqs</name>
+        <initializer>= { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="102" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1a243b9f88d2a68b2d2daff1dd77773e08" prot="public" static="yes" mutable="no">
+        <type>gdt_entry_t</type>
+        <definition>gdt_entry_t gdt_e[5]</definition>
+        <argsstring>[5]</argsstring>
+        <name>gdt_e</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="104" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1af67a6154264e775ccf3c976fefe43618" prot="public" static="yes" mutable="no">
+        <type>gdt_ptr_t</type>
+        <definition>gdt_ptr_t gdt_p</definition>
+        <argsstring></argsstring>
+        <name>gdt_p</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="105" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1a248e57c601e50474a60c9d42c6ac8fb3" prot="public" static="yes" mutable="no">
+        <type>idt_entry_t</type>
+        <definition>idt_entry_t idt_e[256]</definition>
+        <argsstring>[256]</argsstring>
+        <name>idt_e</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="107" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1acd81c3f56ebae00c0f2af978d2b48d42" prot="public" static="yes" mutable="no">
+        <type>idt_ptr_t</type>
+        <definition>idt_ptr_t idt_p</definition>
+        <argsstring></argsstring>
+        <name>idt_p</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="108" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1a41bc65b4bc7d5a5211de47d1f5c2758a" prot="public" static="yes" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pit_ticks</definition>
+        <argsstring></argsstring>
+        <name>pit_ticks</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="111" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1aa40e578d683608caf3c7cd5c43ed9499" prot="public" static="yes" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pit_seconds</definition>
+        <argsstring></argsstring>
+        <name>pit_seconds</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="112" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1adbf6021113d80f4e06464449823d18ca" prot="public" static="yes" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pit_days</definition>
+        <argsstring></argsstring>
+        <name>pit_days</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="113" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="desc_8c_1ab391065c3b916fa1704b6bfb7b099d04" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t keyboard_ready</definition>
+        <argsstring></argsstring>
+        <name>keyboard_ready</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="115" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="desc_8c_1a88d6351e81fa254cec37b8a9a1353401" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structgdt__entry" kindref="compound">gdt_entry</ref></type>
+        <definition>__attribute__</definition>
+        <argsstring>((packed))</argsstring>
+        <name>__attribute__</name>
+        <param>
+          <type>(packed)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="1" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a7d06701ac073c331c83519e3909b7fce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void schedule</definition>
+        <argsstring>()</argsstring>
+        <name>schedule</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="118" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="93" bodyend="107"/>
+        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="104">task::clock</references>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="49" endline="54">list_empty</references>
+        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="103">task::priority</references>
+        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="38">sched_enabled</references>
+        <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="78" endline="91">schedule_next</references>
+        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="165" endline="175">task_switch</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1ab36b30e25787b3f4887160064ba2f43a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void syscall_handler</definition>
+        <argsstring>(regs_t *)</argsstring>
+        <name>syscall_handler</name>
+        <param>
+          <type>regs_t *</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="119" column="1" bodyfile="/opt/prj/aPlus/src/arch/syscall.c" bodystart="53" bodyend="55"/>
+        <references refid="syscall_8c_1afb85e77f03c9acf2f02687360c17dd91" compoundref="syscall_8c" startline="9">syscall_handlers</references>
+        <references refid="syscall_8c_1a271c3526b04dd2fe678f7f0d00cbf759" compoundref="syscall_8c" startline="28" endline="50">syscall_invoke</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>__asm__</definition>
+        <argsstring>(&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [gdt_p]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</argsstring>
+        <name>__asm__</name>
+        <param>
+          <type>&quot;.section .text \n\ .global gdt_load \n\ gdt_load: \n\ lgdt  \n\ \n\ mov</type>
+          <declname>ax</declname>
+          <array>[gdt_p]</array>
+        </param>
+        <param>
+          <type>0x10\n\mov</type>
+          <declname>ds</declname>
+        </param>
+        <param>
+          <type>ax\n\mov</type>
+          <declname>es</declname>
+        </param>
+        <param>
+          <type>ax\n\mov</type>
+          <declname>fs</declname>
+        </param>
+        <param>
+          <type>ax\n\mov</type>
+          <declname>gs</declname>
+        </param>
+        <param>
+          <type>ax\n\mov</type>
+          <declname>ss</declname>
+        </param>
+        <param>
+          <type>ax\n\jmp 0x08:.done\n\\n\.done:\n\ret\n\\n\\n\\n\\n\.global idt_load\n\idt_load:\n\lidt\n\ret\n\\n\\n&quot;</type>
+          <array>[idt_p]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="122" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a5ec693d5682a18cbeb87ae5c5ea25c03" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void isr_handler</definition>
+        <argsstring>(regs_t *r)</argsstring>
+        <name>isr_handler</name>
+        <param>
+          <type>regs_t *</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="151" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="151" bodyend="153"/>
+        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="84" endline="95">panic</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a16eb17da95d62143431a37e9381af3ee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void irq_handler</definition>
+        <argsstring>(regs_t *r)</argsstring>
+        <name>irq_handler</name>
+        <param>
+          <type>regs_t *</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="155" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="155" bodyend="164"/>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a28c9747160a8526a5272ea44e68f45b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void pit_handler</definition>
+        <argsstring>(regs_t *r)</argsstring>
+        <name>pit_handler</name>
+        <param>
+          <type>regs_t *</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="166" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="166" bodyend="180"/>
+        <references refid="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" compoundref="desc_8c" startline="38">PIT_FREQ</references>
+        <references refid="desc_8c_1a7d06701ac073c331c83519e3909b7fce" compoundref="src_2sched_8c" startline="93" endline="107">schedule</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a4f2dd94350b058e8e8ba473a2822cf7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void pagefault_handler</definition>
+        <argsstring>(regs_t *r)</argsstring>
+        <name>pagefault_handler</name>
+        <param>
+          <type>regs_t *</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="183" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="183" bodyend="189"/>
+        <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="84" endline="95">panic</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a6a369f578313199f231869f97e16802d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int desc_init</definition>
+        <argsstring>()</argsstring>
+        <name>desc_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="195" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="195" bodyend="330"/>
+        <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
+        <references refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296">_i</references>
+        <references refid="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</references>
+        <references refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" compoundref="desc_8c" startline="334" endline="342">irq_set</references>
+        <references refid="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" compoundref="desc_8c" startline="38">PIT_FREQ</references>
+        <references refid="desc_8c_1a28c9747160a8526a5272ea44e68f45b6" compoundref="desc_8c" startline="166" endline="180">pit_handler</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int irq_set</definition>
+        <argsstring>(int n, void *handler)</argsstring>
+        <name>irq_set</name>
+        <param>
+          <type>int</type>
+          <declname>n</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>handler</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="334" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="334" bodyend="342"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a4992b098d3d233475016a0288e6cc918" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int irq_unset</definition>
+        <argsstring>(int n)</argsstring>
+        <name>irq_unset</name>
+        <param>
+          <type>int</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="344" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="344" bodyend="352"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1ae5e75d23e9ca091bdf2f1c5007481202" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void* irq_get</definition>
+        <argsstring>(int n)</argsstring>
+        <name>irq_get</name>
+        <param>
+          <type>int</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="354" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="354" bodyend="361"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a1d44575d1f90766872fc87b63171102b" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>static uint8_t rtc</definition>
+        <argsstring>(uint8_t addr)</argsstring>
+        <name>rtc</name>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>addr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="365" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="365" bodyend="371"/>
+        <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1a0c9b7a41bf04c15de2b484df54fcb62b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pit_gettime</definition>
+        <argsstring>()</argsstring>
+        <name>pit_gettime</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="373" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="373" bodyend="391"/>
+        <references refid="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</references>
+        <references refid="desc_8c_1a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</references>
+        <references refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" compoundref="desc_8c" startline="365" endline="371">rtc</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      <memberdef kind="function" id="desc_8c_1affef3cc40072321b8d54e4c00aa4de85" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pit_getticks</definition>
+        <argsstring>()</argsstring>
+        <name>pit_getticks</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/desc.c" line="393" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="393" bodyend="395"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2" refid="desc_8c_1aea6d44db9dbbcd64642fcb7904f41d9a" refkind="member"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>desc.c</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3" refid="desc_8c_1acfea365f69e71368a2db03333d4afd6f" refkind="member"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Author:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Antonio<sp/>Natale<sp/>&lt;inferdevil97@gmail.com&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>2014<sp/>WareX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software:<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation,<sp/>either<sp/>version<sp/>3<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>along<sp/>with<sp/>this<sp/>program.<sp/><sp/>If<sp/>not,<sp/>see<sp/>&lt;http://www.gnu.org/licenses/&gt;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="grub_8h" kindref="compound">grub.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/times.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="desc_8c_1aeef7411226f7c2a6d1328386a2b3832d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FAULT_MASK<sp/><sp/><sp/><sp/><sp/><sp/>0x3FFFFFE3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PIT_FREQ<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(CLOCKS_PER_SEC)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="structgdt__entry" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structgdt__entry" kindref="compound">gdt_entry</ref><sp/>{</highlight></codeline>
+<codeline lineno="42" refid="structgdt__entry_1aac421dd71cee241d3c91179d679e477c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structgdt__entry_1aac421dd71cee241d3c91179d679e477c" kindref="member">limit_l</ref>,<sp/><ref refid="structgdt__entry_1ae9d195807cdaf9fdfa4d28522b4e6ea6" kindref="member">base_l</ref>;</highlight></codeline>
+<codeline lineno="43" refid="structgdt__entry_1accb2a2ef318b0e4fbe2016eb8097947d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structgdt__entry_1a9866fb96bce8b51042b75995a9f5ed4f" kindref="member">base_m</ref>,<sp/><ref refid="structgdt__entry_1af8f88469b3301c3e777e97b470a97413" kindref="member">access</ref>,<sp/><ref refid="structgdt__entry_1accb2a2ef318b0e4fbe2016eb8097947d" kindref="member">granularity</ref>,<sp/><ref refid="structgdt__entry_1af64e5321b471da1d5ddf85ff9b0a19d3" kindref="member">base_h</ref>;</highlight></codeline>
+<codeline lineno="44" refid="grub_8h_1afa73cc1cb823e7947162fcc569b64e5a" refkind="member"><highlight class="normal">}<sp/><ref refid="desc_8c_1a88d6351e81fa254cec37b8a9a1353401" kindref="member">__attribute__</ref>((packed))<sp/>gdt_entry_t;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal">typedef<sp/>struct<sp/>gdt_ptr<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>limit;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>base;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal">}<sp/><ref refid="desc_8c_1a88d6351e81fa254cec37b8a9a1353401" kindref="member">__attribute__</ref>((packed))<sp/>gdt_ptr_t;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal">typedef<sp/>struct<sp/>idt_entry<sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec" kindref="member">base_l</ref>,<sp/>sel;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>null,<sp/>flags;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="desc_8c_1a8fef9c987f038778feaf85edfcc9c060" kindref="member">base_h</ref>;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal">}<sp/><ref refid="desc_8c_1a88d6351e81fa254cec37b8a9a1353401" kindref="member">__attribute__</ref>((packed))<sp/>idt_entry_t;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal">typedef<sp/>struct<sp/>idt_ptr<sp/>{</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>limit;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>base;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal">}<sp/><ref refid="desc_8c_1a88d6351e81fa254cec37b8a9a1353401" kindref="member">__attribute__</ref>((packed))<sp/>idt_ptr_t;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal">static<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*exception_messages[]<sp/>=<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Division<sp/>By<sp/>Zero&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Debug&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Non<sp/>Maskable<sp/>Interrupt&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Breakpoint&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Into<sp/>Detected<sp/>Overflow&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Out<sp/>of<sp/>Bounds&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Invalid<sp/>Opcode&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;No<sp/>Coprocessor&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Double<sp/>Fault&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Coprocessor<sp/>Segment<sp/>Overrun&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Bad<sp/>TSS&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Segment<sp/>Not<sp/>Present&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Stack<sp/>Fault&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;General<sp/>Protection<sp/>Fault&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Page<sp/>Fault&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Unknown<sp/>Interrupt&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Coprocessor<sp/>Fault&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Alignment<sp/>Check&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Machine<sp/>Check&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;Reserved&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102" refid="desc_8c_1a8e2066f75678ef3cb314db1e33fe5e4d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="desc_8c_1a8e2066f75678ef3cb314db1e33fe5e4d" kindref="member">irqs</ref>[16]<sp/>=<sp/>{<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0,<sp/>0<sp/>};</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104" refid="desc_8c_1a243b9f88d2a68b2d2daff1dd77773e08" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>gdt_entry_t<sp/><ref refid="desc_8c_1a243b9f88d2a68b2d2daff1dd77773e08" kindref="member">gdt_e</ref>[5];</highlight></codeline>
+<codeline lineno="105" refid="desc_8c_1af67a6154264e775ccf3c976fefe43618" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>gdt_ptr_t<sp/><ref refid="desc_8c_1af67a6154264e775ccf3c976fefe43618" kindref="member">gdt_p</ref>;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107" refid="desc_8c_1a248e57c601e50474a60c9d42c6ac8fb3" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>idt_entry_t<sp/><ref refid="desc_8c_1a248e57c601e50474a60c9d42c6ac8fb3" kindref="member">idt_e</ref>[256];</highlight></codeline>
+<codeline lineno="108" refid="desc_8c_1acd81c3f56ebae00c0f2af978d2b48d42" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>idt_ptr_t<sp/><ref refid="desc_8c_1acd81c3f56ebae00c0f2af978d2b48d42" kindref="member">idt_p</ref>;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111" refid="desc_8c_1a41bc65b4bc7d5a5211de47d1f5c2758a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="desc_8c_1a41bc65b4bc7d5a5211de47d1f5c2758a" kindref="member">pit_ticks</ref>;</highlight></codeline>
+<codeline lineno="112" refid="desc_8c_1aa40e578d683608caf3c7cd5c43ed9499" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="desc_8c_1aa40e578d683608caf3c7cd5c43ed9499" kindref="member">pit_seconds</ref>;</highlight></codeline>
+<codeline lineno="113" refid="desc_8c_1adbf6021113d80f4e06464449823d18ca" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="desc_8c_1adbf6021113d80f4e06464449823d18ca" kindref="member">pit_days</ref>;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115" refid="desc_8c_1ab391065c3b916fa1704b6bfb7b099d04" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="desc_8c_1ab391065c3b916fa1704b6bfb7b099d04" kindref="member">keyboard_ready</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a7d06701ac073c331c83519e3909b7fce" kindref="member">schedule</ref>();</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1ab36b30e25787b3f4887160064ba2f43a" kindref="member">syscall_handler</ref>(regs_t*);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>(</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;.section<sp/>.text<sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="124"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>.global<sp/>gdt_load<sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="125"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>gdt_load:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="126"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>lgdt<sp/>[gdt_p]<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="127"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="128"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>mov<sp/>ax,<sp/>0x10<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="129"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>mov<sp/>ds,<sp/>ax<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="130"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>mov<sp/>es,<sp/>ax<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="131"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>mov<sp/>fs,<sp/>ax<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="132"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>mov<sp/>gs,<sp/>ax<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="133"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>mov<sp/>ss,<sp/>ax<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="134"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>jmp<sp/>0x08:.done<sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="135"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="136"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>.done:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="137"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>ret<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="138"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="139"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="140"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="141"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="142"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>.global<sp/>idt_load<sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="143"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>idt_load:<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="144"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>lidt<sp/>[idt_p]<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="145"><highlight class="stringliteral"><sp/><sp/><sp/><sp/>ret<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="146"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n\</highlight></codeline>
+<codeline lineno="147"><highlight class="stringliteral"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\n&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal">);</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151" refid="desc_8c_1a5ec693d5682a18cbeb87ae5c5ea25c03" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a5ec693d5682a18cbeb87ae5c5ea25c03" kindref="member">isr_handler</ref>(regs_t*<sp/>r)<sp/>{</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(exception_messages[r-&gt;int_no]);</highlight></codeline>
+<codeline lineno="153"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155" refid="desc_8c_1a16eb17da95d62143431a37e9381af3ee" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a16eb17da95d62143431a37e9381af3ee" kindref="member">irq_handler</ref>(regs_t*<sp/>r)<sp/>{</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(irqs[r-&gt;int_no<sp/>-<sp/>32])</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((void<sp/>(*)(regs_t*))<sp/>irqs[r-&gt;int_no<sp/>-<sp/>32])<sp/>(r);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(r-&gt;int_no<sp/>&gt;=<sp/>40)</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>outb(0xA0,<sp/>0x20);</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x20,<sp/>0x20);</highlight></codeline>
+<codeline lineno="164"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166" refid="desc_8c_1a28c9747160a8526a5272ea44e68f45b6" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a28c9747160a8526a5272ea44e68f45b6" kindref="member">pit_handler</ref>(regs_t*<sp/>r)<sp/>{</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>pit_ticks<sp/>+=<sp/>(1000<sp/>/<sp/><ref refid="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" kindref="member">PIT_FREQ</ref>);</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(pit_ticks<sp/>&gt;=<sp/>1000)<sp/>{</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pit_ticks<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pit_seconds<sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(pit_seconds<sp/>&gt;=<sp/>86400)<sp/>{</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pit_seconds<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pit_days<sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7d06701ac073c331c83519e3909b7fce" kindref="member">schedule</ref>();</highlight></codeline>
+<codeline lineno="180"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"></highlight></codeline>
+<codeline lineno="183" refid="desc_8c_1a4f2dd94350b058e8e8ba473a2822cf7a" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a4f2dd94350b058e8e8ba473a2822cf7a" kindref="member">pagefault_handler</ref>(regs_t*<sp/>r)<sp/>{</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>faultaddr;</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>__volatile__(</highlight><highlight class="stringliteral">&quot;mov<sp/>eax,<sp/>cr2&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;=a&quot;</highlight><highlight class="normal">(faultaddr));</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Page<sp/>fault<sp/>at<sp/>address:<sp/>0x%x\n&quot;</highlight><highlight class="normal">,<sp/>faultaddr);</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;Page<sp/>Fault&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="189"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal"></highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195" refid="desc_8c_1a6a369f578313199f231869f97e16802d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a6a369f578313199f231869f97e16802d" kindref="member">desc_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>(</highlight><highlight class="stringliteral">&quot;cli&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>gdt_set(n,<sp/>b,<sp/>l,<sp/>a,<sp/>g)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="201"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gdt_e[n].base_l<sp/>=<sp/>(b<sp/>&amp;<sp/>0xFFFF);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="202"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gdt_e[n].base_m<sp/>=<sp/>(b<sp/>&gt;&gt;<sp/>16)<sp/>&amp;<sp/>0xFF;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="203"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gdt_e[n].base_h<sp/>=<sp/>(b<sp/>&gt;&gt;<sp/>24)<sp/>&amp;<sp/>0xFF;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="204"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gdt_e[n].limit_l<sp/>=<sp/>(l<sp/>&amp;<sp/>0xFFFF);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="205"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gdt_e[n].granularity<sp/>=<sp/>(l<sp/>&gt;&gt;<sp/>16)<sp/>&amp;<sp/>0x0F;<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="206"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gdt_e[n].granularity<sp/>|=<sp/>g<sp/>&amp;<sp/>0xF0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="207"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gdt_e[n].access<sp/>=<sp/>a</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(&amp;gdt_e,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(gdt_entry_t)<sp/>*<sp/>5);</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/>gdt_p.limit<sp/>=<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(gdt_entry_t)<sp/>*<sp/>5<sp/>-<sp/>1;</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>gdt_p.base<sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>gdt_e;</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2" kindref="member">gdt_set</ref>(0,<sp/>0,<sp/>0,<sp/>0,<sp/>0);</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2" kindref="member">gdt_set</ref>(1,<sp/>0,<sp/>0xFFFFFFFF,<sp/>0x9A,<sp/>0xCF);</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2" kindref="member">gdt_set</ref>(2,<sp/>0,<sp/>0xFFFFFFFF,<sp/>0x92,<sp/>0xCF);</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2" kindref="member">gdt_set</ref>(3,<sp/>0,<sp/>0xFFFFFFFF,<sp/>0xFA,<sp/>0xCF);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2" kindref="member">gdt_set</ref>(4,<sp/>0,<sp/>0xFFFFFFFF,<sp/>0XF2,<sp/>0xCF);</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/>gdt_load();</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/>idt_p.limit<sp/>=<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(idt_entry_t)<sp/>*<sp/>256<sp/>-<sp/>1;</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/>idt_p.base<sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>idt_e;</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(idt_e,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(idt_entry_t)<sp/>*<sp/>256);</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>idt_set(i,<sp/>b,<sp/>s,<sp/>f)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="233"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idt_e[i].base_l<sp/>=<sp/>b<sp/>&amp;<sp/>0xFFFF;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="234"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idt_e[i].base_h<sp/>=<sp/>(b<sp/>&gt;&gt;<sp/>16)<sp/>&amp;<sp/>0xFFFF;<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="235"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idt_e[i].sel<sp/>=<sp/>s;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="236"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idt_e[i].null<sp/>=<sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="237"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idt_e[i].flags<sp/>=<sp/>f</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="240"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>_i(n)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="241"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>extern<sp/>void<sp/>isr##n();<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="242"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idt_set(n,<sp/>(uint32_t)isr##n,<sp/>0x08,<sp/>0x8E)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(0);</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(1);</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(2);</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(3);</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(4);</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(5);</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(6);</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(7);</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(8);</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(9);</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(10);</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(11);</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(12);</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(13);</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(14);</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(15);</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(16);</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(17);</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(18);</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(19);</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(20);</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(21);</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(22);</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(23);</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(24);</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(25);</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(26);</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(27);</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(28);</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(29);</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(30);</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(31);</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(0x80);</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"></highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/>idt_load();</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"></highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="282"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#ifdef<sp/>_i</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="283"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#undef<sp/>_i</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="284"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="286"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>_i(n)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="287"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>extern<sp/>void<sp/>irq##n();<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="288"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idt_set(n<sp/>+<sp/>32,<sp/>(uint32_t)irq##n,<sp/>0x08,<sp/>0x8E)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x20,<sp/>0x11);</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0xA0,<sp/>0x11);</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x21,<sp/>0x20);</highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0xA1,<sp/>0x28);</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x21,<sp/>0x04);</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0xA1,<sp/>0x02);</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x21,<sp/>0x01);</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0xA1,<sp/>0x01);</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x21,<sp/>0x00);</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0xA1,<sp/>0x00);</highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(0);</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(1);</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(2);</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(3);</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(4);</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(5);</highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(6);</highlight></codeline>
+<codeline lineno="309"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(7);</highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(8);</highlight></codeline>
+<codeline lineno="311"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(9);</highlight></codeline>
+<codeline lineno="312"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(10);</highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(11);</highlight></codeline>
+<codeline lineno="314"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(12);</highlight></codeline>
+<codeline lineno="315"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(13);</highlight></codeline>
+<codeline lineno="316"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(14);</highlight></codeline>
+<codeline lineno="317"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" kindref="member">_i</ref>(15);</highlight></codeline>
+<codeline lineno="318"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>freq<sp/>=<sp/>1193180<sp/>/<sp/><ref refid="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" kindref="member">PIT_FREQ</ref>;</highlight></codeline>
+<codeline lineno="321"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x43,<sp/>0x36);</highlight></codeline>
+<codeline lineno="322"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x40,<sp/>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>)<sp/>(freq<sp/>&amp;<sp/>0xFF));</highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x40,<sp/>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>)<sp/>((freq<sp/>&gt;&gt;<sp/>8)<sp/>&amp;<sp/>0xFF));</highlight></codeline>
+<codeline lineno="324"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="325"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" kindref="member">irq_set</ref>(0,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/><ref refid="desc_8c_1a28c9747160a8526a5272ea44e68f45b6" kindref="member">pit_handler</ref>);</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>(</highlight><highlight class="stringliteral">&quot;sti&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="328"><highlight class="normal"></highlight></codeline>
+<codeline lineno="329"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="330"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="331"><highlight class="normal"></highlight></codeline>
+<codeline lineno="332"><highlight class="normal"></highlight></codeline>
+<codeline lineno="333"><highlight class="normal"></highlight></codeline>
+<codeline lineno="334" refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" kindref="member">irq_set</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>handler)<sp/>{</highlight></codeline>
+<codeline lineno="335"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(n<sp/>&gt;<sp/>16)<sp/>{</highlight></codeline>
+<codeline lineno="336"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="337"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="338"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="339"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="340"><highlight class="normal"><sp/><sp/><sp/><sp/>irqs[n]<sp/>=<sp/>handler;</highlight></codeline>
+<codeline lineno="341"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="342"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="343"><highlight class="normal"></highlight></codeline>
+<codeline lineno="344" refid="desc_8c_1a4992b098d3d233475016a0288e6cc918" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a4992b098d3d233475016a0288e6cc918" kindref="member">irq_unset</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n)<sp/>{</highlight></codeline>
+<codeline lineno="345"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(n<sp/>&gt;<sp/>16)<sp/>{</highlight></codeline>
+<codeline lineno="346"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="347"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="348"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="349"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="350"><highlight class="normal"><sp/><sp/><sp/><sp/>irqs[n]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="352"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="353"><highlight class="normal"></highlight></codeline>
+<codeline lineno="354" refid="desc_8c_1ae5e75d23e9ca091bdf2f1c5007481202" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="desc_8c_1ae5e75d23e9ca091bdf2f1c5007481202" kindref="member">irq_get</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n)<sp/>{</highlight></codeline>
+<codeline lineno="355"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(n<sp/>&gt;<sp/>16)<sp/>{</highlight></codeline>
+<codeline lineno="356"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="357"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="358"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="359"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="360"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>irqs[n];</highlight></codeline>
+<codeline lineno="361"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="362"><highlight class="normal"></highlight></codeline>
+<codeline lineno="363"><highlight class="normal"></highlight></codeline>
+<codeline lineno="364"><highlight class="normal"></highlight></codeline>
+<codeline lineno="365" refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" kindref="member">rtc</ref>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>addr)<sp/>{</highlight></codeline>
+<codeline lineno="366"><highlight class="normal"><sp/><sp/><sp/><sp/>outb(0x70,<sp/>addr);</highlight></codeline>
+<codeline lineno="367"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="368"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>r<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="369"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref>(</highlight><highlight class="stringliteral">&quot;inb<sp/>0x71&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;=a&quot;</highlight><highlight class="normal">(r));</highlight></codeline>
+<codeline lineno="370"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>r;</highlight></codeline>
+<codeline lineno="371"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="372"><highlight class="normal"></highlight></codeline>
+<codeline lineno="373" refid="desc_8c_1a0c9b7a41bf04c15de2b484df54fcb62b" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="desc_8c_1a0c9b7a41bf04c15de2b484df54fcb62b" kindref="member">pit_gettime</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="374"><highlight class="normal"></highlight></codeline>
+<codeline lineno="375"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>BCD2BIN(bcd)<sp/><sp/><sp/><sp/>((((bcd)<sp/>&amp;<sp/>0x0F)<sp/>+<sp/>((bcd)<sp/>/<sp/>16)<sp/>*<sp/>10))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="376"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>BCD2BIN2(bcd)<sp/><sp/><sp/>(((((bcd)<sp/>&amp;<sp/>0x0F)<sp/>+<sp/>((bcd<sp/>&amp;<sp/>0x70)<sp/>/<sp/>16)<sp/>*<sp/>10))<sp/>|<sp/>(bcd<sp/>&amp;<sp/>0x80))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="377"><highlight class="normal"></highlight></codeline>
+<codeline lineno="378"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="379"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">tm<sp/>t;</highlight></codeline>
+<codeline lineno="380"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_sec<sp/>=<sp/><ref refid="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a" kindref="member">BCD2BIN</ref>(<ref refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" kindref="member">rtc</ref>(0));</highlight></codeline>
+<codeline lineno="381"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_min<sp/>=<sp/><ref refid="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a" kindref="member">BCD2BIN</ref>(<ref refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" kindref="member">rtc</ref>(2));</highlight></codeline>
+<codeline lineno="382"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_hour<sp/>=<sp/><ref refid="desc_8c_1a33200b25f91bf4cf6a4ec73ef292b207" kindref="member">BCD2BIN2</ref>(<ref refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" kindref="member">rtc</ref>(4))<sp/>+<sp/>2;</highlight></codeline>
+<codeline lineno="383"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_mday<sp/>=<sp/><ref refid="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a" kindref="member">BCD2BIN</ref>(<ref refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" kindref="member">rtc</ref>(7));</highlight></codeline>
+<codeline lineno="384"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_mon<sp/>=<sp/><ref refid="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a" kindref="member">BCD2BIN</ref>(<ref refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" kindref="member">rtc</ref>(8))<sp/>-<sp/>1;</highlight></codeline>
+<codeline lineno="385"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_year<sp/>=<sp/>(<ref refid="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a" kindref="member">BCD2BIN</ref>(<ref refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" kindref="member">rtc</ref>(9))<sp/>+<sp/>100);</highlight></codeline>
+<codeline lineno="386"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_wday<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="387"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_yday<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="388"><highlight class="normal"><sp/><sp/><sp/><sp/>t.tm_isdst<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="389"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="390"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>mktime(&amp;t);</highlight></codeline>
+<codeline lineno="391"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="392"><highlight class="normal"></highlight></codeline>
+<codeline lineno="393" refid="desc_8c_1affef3cc40072321b8d54e4c00aa4de85" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="desc_8c_1affef3cc40072321b8d54e4c00aa4de85" kindref="member">pit_getticks</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="394"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>((pit_days<sp/>*<sp/>86400)<sp/>*<sp/>1000)<sp/>+<sp/>(pit_seconds<sp/>*<sp/>1000)<sp/>+<sp/>pit_ticks;</highlight></codeline>
+<codeline lineno="395"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/arch/desc.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,109 @@
+\hypertarget{execve_8c}{\section{Riferimenti per il file src/syscall/execve.c}
+\label{execve_8c}\index{src/syscall/execve.\+c@{src/syscall/execve.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{execve_8c_af44a7e309f4bd49757f52b4178676ea7}{sys\+\_\+execve} (char $\ast$filename, char $\ast$$\ast$argv, char $\ast$$\ast$\hyperlink{environ_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ})
+\item 
+\hyperlink{execve_8c_ad7d0c3131e92bac14e1e9ac6b73f6ec8}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{execve_8c_af44a7e309f4bd49757f52b4178676ea7}{sys\+\_\+execve}, 2)
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{execve_8c_af44a7e309f4bd49757f52b4178676ea7}{\index{execve.\+c@{execve.\+c}!sys\+\_\+execve@{sys\+\_\+execve}}
+\index{sys\+\_\+execve@{sys\+\_\+execve}!execve.\+c@{execve.\+c}}
+\subsubsection[{sys\+\_\+execve}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+execve (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{filename, }
+\item[{char $\ast$$\ast$}]{argv, }
+\item[{char $\ast$$\ast$}]{environ}
+\end{DoxyParamCaption}
+)}}\label{execve_8c_af44a7e309f4bd49757f52b4178676ea7}
+
+
+Definizione alla linea 12 del file execve.\+c.
+
+
+
+Referenzia task\+::argv, elf32\+\_\+load(), environ, task\+::envp, errno, task\+::exe, task\+::fd, kfree(), kmalloc(), size, sys\+\_\+close(), sys\+\_\+lseek(), sys\+\_\+open(), e sys\+\_\+read().
+
+
+\begin{DoxyCode}
+12                                                             \{
+13     
+14     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(filename, O\_RDONLY, 0644);
+15     \textcolor{keywordflow}{if}(fd < 0) \{
+16         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOENT;
+17         \textcolor{keywordflow}{return} -1;
+18     \}
+19 
+20     \hyperlink{lseek_8c_a73c739226f6bf069953b03bdc19e15d6}{sys\_lseek}(fd, 0, SEEK\_END);
+21     \textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = \hyperlink{lseek_8c_a73c739226f6bf069953b03bdc19e15d6}{sys\_lseek}(fd, 0, SEEK\_CUR);
+22     \hyperlink{lseek_8c_a73c739226f6bf069953b03bdc19e15d6}{sys\_lseek}(fd, 0, SEEK\_SET);
+23 
+24     \textcolor{keywordtype}{void}* image = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(size);
+25     \textcolor{keywordflow}{if}(!image) \{
+26         \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
+27 
+28         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOMEM;
+29         \textcolor{keywordflow}{return} -1;
+30     \}
+31 
+32     \textcolor{keywordflow}{if}(\hyperlink{read_8c_a508cbee9c162869815810e15a3d0e1b0}{sys\_read}(fd, image, size) < size) \{
+33         \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
+34         \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(image);
+35         
+36         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EIO;
+37         \textcolor{keywordflow}{return} -1;
+38     \}
+39 
+40     
+41 
+42     void (*entry) () = (\textcolor{keywordtype}{void} (*) ()) \hyperlink{exec_8c_a7473eb0ac8edeee7e0a7502c5ed08dc8}{elf32\_load}(image);
+43     \textcolor{keywordflow}{if}(entry) \{
+44 
+45         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe} = \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+46         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a91e7540d20695c7439f7d0755a7a0545}{argv} = argv;
+47         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a09fbc78d666a0b49e2e2064121d28364}{envp} = \hyperlink{crt0_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ};
+48 
+49         \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
+50 
+51 
+52         entry(); \textcolor{comment}{/* never return */}
+53     \}
+54 
+55     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
+56     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(image);
+57     \textcolor{keywordflow}{return} -1;
+58 \}
+\end{DoxyCode}
+\hypertarget{execve_8c_ad7d0c3131e92bac14e1e9ac6b73f6ec8}{\index{execve.\+c@{execve.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!execve.\+c@{execve.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+execve}}]{, }
+\item[{2}]{}
+\end{DoxyParamCaption}
+)}}\label{execve_8c_ad7d0c3131e92bac14e1e9ac6b73f6ec8}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{execve.\+c@{execve.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!execve.\+c@{execve.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Definizione alla linea 33 del file sched.\+c.
+

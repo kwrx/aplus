@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>pthread_attr_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L165'>pthread_attr_t</a>    165 usr/src/libpthread/include/pthread.h int pthread_attr_init(pthread_attr_t *attr);
+<a href='../S/43.html#L166'>pthread_attr_t</a>    166 usr/src/libpthread/include/pthread.h int pthread_attr_destroy(pthread_attr_t *attr);
+<a href='../S/43.html#L167'>pthread_attr_t</a>    167 usr/src/libpthread/include/pthread.h int pthread_attr_getdetachstate(const pthread_attr_t *attr, int *detachstate);
+<a href='../S/43.html#L168'>pthread_attr_t</a>    168 usr/src/libpthread/include/pthread.h int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate);
+<a href='../S/43.html#L169'>pthread_attr_t</a>    169 usr/src/libpthread/include/pthread.h int pthread_attr_getstackaddr(const pthread_attr_t *attr, void **stackaddr);
+<a href='../S/43.html#L170'>pthread_attr_t</a>    170 usr/src/libpthread/include/pthread.h int pthread_attr_setstackaddr(pthread_attr_t *attr, void *stackaddr);
+<a href='../S/43.html#L171'>pthread_attr_t</a>    171 usr/src/libpthread/include/pthread.h int pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize);
+<a href='../S/43.html#L172'>pthread_attr_t</a>    172 usr/src/libpthread/include/pthread.h int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);
+<a href='../S/43.html#L173'>pthread_attr_t</a>    173 usr/src/libpthread/include/pthread.h int pthread_attr_getschedparam(const pthread_attr_t *attr, struct sched_param *param);
+<a href='../S/43.html#L174'>pthread_attr_t</a>    174 usr/src/libpthread/include/pthread.h int pthread_attr_setschedparam(pthread_attr_t *attr, const struct sched_param *param);
+<a href='../S/43.html#L175'>pthread_attr_t</a>    175 usr/src/libpthread/include/pthread.h int pthread_attr_getschedpolicy(pthread_attr_t *attr, int *policy);
+<a href='../S/43.html#L176'>pthread_attr_t</a>    176 usr/src/libpthread/include/pthread.h int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy);
+<a href='../S/43.html#L177'>pthread_attr_t</a>    177 usr/src/libpthread/include/pthread.h int pthread_attr_getinheritsched(pthread_attr_t *attr, int *inheritsched);
+<a href='../S/43.html#L178'>pthread_attr_t</a>    178 usr/src/libpthread/include/pthread.h int pthread_attr_setinheritsched(pthread_attr_t *attr, int inheritsched);
+<a href='../S/43.html#L179'>pthread_attr_t</a>    179 usr/src/libpthread/include/pthread.h int pthread_attr_getscope(const pthread_attr_t *attr, int *contentionscope);
+<a href='../S/43.html#L180'>pthread_attr_t</a>    180 usr/src/libpthread/include/pthread.h int pthread_attr_setscope(pthread_attr_t *attr, int contentionscope);
+<a href='../S/43.html#L186'>pthread_attr_t</a>    186 usr/src/libpthread/include/pthread.h int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start)(void *), void *arg);
+<a href='../S/65.html#L12'>pthread_attr_t</a>     12 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_init(pthread_attr_t* attr) {
+<a href='../S/65.html#L28'>pthread_attr_t</a>     28 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_destroy(pthread_attr_t* attr) {
+<a href='../S/65.html#L34'>pthread_attr_t</a>     34 usr/src/libpthread/src/pthread_attr.c 	memset(attr, 0, sizeof(pthread_attr_t));
+<a href='../S/65.html#L38'>pthread_attr_t</a>     38 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getdetachstate(const pthread_attr_t* attr, int* detachstate) {
+<a href='../S/65.html#L48'>pthread_attr_t</a>     48 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate) {
+<a href='../S/65.html#L58'>pthread_attr_t</a>     58 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getstackaddr(const pthread_attr_t *attr, void **stackaddr) {
+<a href='../S/65.html#L68'>pthread_attr_t</a>     68 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setstackaddr(pthread_attr_t *attr, void *stackaddr) {
+<a href='../S/65.html#L79'>pthread_attr_t</a>     79 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize) {
+<a href='../S/65.html#L89'>pthread_attr_t</a>     89 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize) {
+<a href='../S/65.html#L100'>pthread_attr_t</a>    100 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getschedparam(const pthread_attr_t *attr, struct sched_param *param) {
+<a href='../S/65.html#L112'>pthread_attr_t</a>    112 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setschedparam(pthread_attr_t *attr, const struct sched_param *param) {
+<a href='../S/65.html#L123'>pthread_attr_t</a>    123 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getschedpolicy(pthread_attr_t *attr, int *policy) {
+<a href='../S/65.html#L128'>pthread_attr_t</a>    128 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy) {
+<a href='../S/65.html#L133'>pthread_attr_t</a>    133 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getinheritsched(pthread_attr_t *attr, int *inheritsched) {
+<a href='../S/65.html#L143'>pthread_attr_t</a>    143 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setinheritsched(pthread_attr_t *attr, int inheritsched) {
+<a href='../S/65.html#L153'>pthread_attr_t</a>    153 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getscope(const pthread_attr_t *attr, int *contentionscope) {
+<a href='../S/65.html#L163'>pthread_attr_t</a>    163 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setscope(pthread_attr_t *attr, int contentionscope) {
+<a href='../S/64.html#L37'>pthread_attr_t</a>     37 usr/src/libpthread/src/pthread_create.c PUBLIC int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void *(*start)(void*), void* arg) {
+<a href='../S/64.html#L61'>pthread_attr_t</a>     61 usr/src/libpthread/src/pthread_create.c 		memcpy(&amp;ctx-&gt;attr, attr, sizeof(pthread_attr_t));
+<a href='../S/50.html#L44'>pthread_attr_t</a>     44 usr/src/libpthread/src/pthread_internal.h 	pthread_attr_t attr;
+<a href='../S/61.html#L25'>pthread_attr_t</a>     25 usr/src/libpthread/src/pthread_queue.c 	memset(&amp;__current_thread.attr, 0, sizeof(pthread_attr_t));
+</pre>
+</body>
+</html>

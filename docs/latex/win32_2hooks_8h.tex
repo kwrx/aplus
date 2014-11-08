@@ -1,0 +1,52 @@
+\hypertarget{win32_2hooks_8h}{\section{Riferimenti per il file usr/src/libpthread/src/platform/win32/hooks.h}
+\label{win32_2hooks_8h}\index{usr/src/libpthread/src/platform/win32/hooks.\+h@{usr/src/libpthread/src/platform/win32/hooks.\+h}}
+}
+{\ttfamily \#include $<$windows.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{win32_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}(e, a, p)~((int) Create\+Thread(0, 0, e, a, 0))
+\item 
+\#define \hyperlink{win32_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}(t, s)~Terminate\+Thread(t, s)
+\item 
+\#define \hyperlink{win32_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\+\_\+\+\_\+os\+\_\+gettid}()~Get\+Current\+Thread\+Id()
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{win32_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\index{win32/hooks.\+h@{win32/hooks.\+h}!\+\_\+\+\_\+os\+\_\+gettid@{\+\_\+\+\_\+os\+\_\+gettid}}
+\index{\+\_\+\+\_\+os\+\_\+gettid@{\+\_\+\+\_\+os\+\_\+gettid}!win32/hooks.\+h@{win32/hooks.\+h}}
+\subsubsection[{\+\_\+\+\_\+os\+\_\+gettid}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+os\+\_\+gettid(
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)~Get\+Current\+Thread\+Id()}}\label{win32_2hooks_8h_a20babf330fa9904ff336e8b41720991d}
+
+
+Definizione alla linea 11 del file hooks.\+h.
+
+\hypertarget{win32_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}{\index{win32/hooks.\+h@{win32/hooks.\+h}!\+\_\+\+\_\+os\+\_\+thread\+\_\+create@{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}}
+\index{\+\_\+\+\_\+os\+\_\+thread\+\_\+create@{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}!win32/hooks.\+h@{win32/hooks.\+h}}
+\subsubsection[{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+os\+\_\+thread\+\_\+create(
+\begin{DoxyParamCaption}
+\item[{}]{e, }
+\item[{}]{a, }
+\item[{}]{p}
+\end{DoxyParamCaption}
+)~((int) Create\+Thread(0, 0, e, a, 0))}}\label{win32_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}
+
+
+Definizione alla linea 9 del file hooks.\+h.
+
+\hypertarget{win32_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}{\index{win32/hooks.\+h@{win32/hooks.\+h}!\+\_\+\+\_\+os\+\_\+thread\+\_\+kill@{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}}
+\index{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill@{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}!win32/hooks.\+h@{win32/hooks.\+h}}
+\subsubsection[{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+os\+\_\+thread\+\_\+kill(
+\begin{DoxyParamCaption}
+\item[{}]{t, }
+\item[{}]{s}
+\end{DoxyParamCaption}
+)~Terminate\+Thread(t, s)}}\label{win32_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}
+
+
+Definizione alla linea 10 del file hooks.\+h.
+

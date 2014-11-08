@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="spinlock_8h">
+    <title>spinlock.h File Reference</title>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="spinlock_8h_1aad28f3f1b6783cd56871b611ca2bcd97">SPINLOCK_FLAGS_LOCKED</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="spinlock_8h_1acf8c39cdbeaaab5ea8c011c77d5bca8b">SPINLOCK_FLAGS_FASTLOCK</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link> static <link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link> __func__##_lock = 0;			\
+	<link linkend="spinlock_8c_1ab01e311f21f78fc3c2bd0bdf74ef85c4">spinlock_lock</link>(&amp;__func__##_lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8">unlock</link> <link linkend="spinlock_8c_1a4ca6e661fa1b704d39d834ac7341b360">spinlock_unlock</link>(&amp;__func__##_lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3">spinlock_waiton</link> while(cond)										\
+		<link linkend="spinlock_8c_1aa40e1417e8410d92c2ffc313e57560e8">__spinlock_waiton</link>()</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89">fastlock_waiton</link> while(cond)										\
+		<link linkend="spinlock_8c_1a2bf717efcda7e5189e3192e09e49c249">__fastlock_waiton</link>()</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="spinlock_8h_1acd6ac4ef62853a9d5afdaf765d219ff6">spinlock_init</link> *(spin) = flags</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef volatile int  <link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4">spinlock_lock</link> (
+<link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link> * spin)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360">spinlock_unlock</link> (
+<link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link> * spin)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="spinlock_8h_1aef8280bb43eb7eecb8a7903f70af1906">spinlock_trylock</link> (
+<link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link> * spin)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8h_1aa40e1417e8410d92c2ffc313e57560e8">__spinlock_waiton</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8h_1a2bf717efcda7e5189e3192e09e49c249">__fastlock_waiton</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/spinlock.h</para>
+    </simplesect>
+</section>

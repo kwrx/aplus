@@ -1,0 +1,373 @@
+.TH "usr/src/libpthread/src/pthread_attr.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_attr.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSTACK_DEFAULT_SIZE\fP   \fBPTHREAD_STACK_MIN\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_init\fP (\fBpthread_attr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_destroy\fP (\fBpthread_attr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_getdetachstate\fP (const \fBpthread_attr_t\fP *attr, int *detachstate)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_setdetachstate\fP (\fBpthread_attr_t\fP *attr, int detachstate)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_getstackaddr\fP (const \fBpthread_attr_t\fP *attr, void **stackaddr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_setstackaddr\fP (\fBpthread_attr_t\fP *attr, void *stackaddr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_getstacksize\fP (const \fBpthread_attr_t\fP *attr, size_t *stacksize)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_setstacksize\fP (\fBpthread_attr_t\fP *attr, size_t stacksize)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_getschedparam\fP (const \fBpthread_attr_t\fP *attr, struct sched_param *param)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_setschedparam\fP (\fBpthread_attr_t\fP *attr, const struct sched_param *param)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_getschedpolicy\fP (\fBpthread_attr_t\fP *attr, int *policy)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_setschedpolicy\fP (\fBpthread_attr_t\fP *attr, int policy)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_getinheritsched\fP (\fBpthread_attr_t\fP *attr, int *inheritsched)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_setinheritsched\fP (\fBpthread_attr_t\fP *attr, int inheritsched)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_getscope\fP (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_attr_setscope\fP (\fBpthread_attr_t\fP *attr, int contentionscope)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define STACK_DEFAULT_SIZE   \fBPTHREAD_STACK_MIN\fP"
+
+.PP
+Definizione alla linea 10 del file pthread_attr\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_attr_destroy (\fBpthread_attr_t\fP *attr)"
+
+.PP
+Definizione alla linea 28 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+28                                                       {
+29     if(!attr) {
+30         errno = EINVAL;
+31         return 1;
+32     }
+33 
+34     memset(attr, 0, sizeof(pthread_attr_t));
+35     return 0;
+36 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_getdetachstate (const \fBpthread_attr_t\fP *attr, int *detachstate)"
+
+.PP
+Definizione alla linea 38 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::detachstate, e errno\&.
+.PP
+.nf
+38                                                                                      {
+39     if(!attr) {
+40         errno = EINVAL;
+41         return 1;
+42     }
+43 
+44     *detachstate = attr->detachstate;
+45     return 0;
+46 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_getinheritsched (\fBpthread_attr_t\fP *attr, int *inheritsched)"
+
+.PP
+Definizione alla linea 133 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::inheritsched\&.
+.PP
+.nf
+133                                                                                  {
+134     if(!attr) {
+135         errno = EINVAL;
+136         return 1;
+137     }
+138 
+139     *inheritsched = attr->inheritsched;
+140     return 0;
+141 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_getschedparam (const \fBpthread_attr_t\fP *attr, struct sched_param *param)"
+
+.PP
+Definizione alla linea 100 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::param\&.
+.PP
+.nf
+100                                                                                              {
+101     if(!attr) {
+102         errno = EINVAL;
+103         return 1;
+104     }
+105 
+106     memcpy(param, &attr->param, sizeof(struct sched_param));
+107     return 0; 
+108 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_getschedpolicy (\fBpthread_attr_t\fP *attr, int *policy)"
+
+.PP
+Definizione alla linea 123 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+123                                                                           {
+124     errno = ENOSYS;
+125     return 1;
+126 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_getscope (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
+
+.PP
+Definizione alla linea 153 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::contentionscope, e errno\&.
+.PP
+.nf
+153                                                                                    {
+154     if(!attr) {
+155         errno = EINVAL;
+156         return 1;
+157     }
+158 
+159     *contentionscope = attr->contentionscope;
+160     return 0;
+161 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_getstackaddr (const \fBpthread_attr_t\fP *attr, void **stackaddr)"
+
+.PP
+Definizione alla linea 58 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stackaddr\&.
+.PP
+.nf
+58                                                                                    {
+59     if(!attr) {
+60         errno = EINVAL;
+61         return 1;
+62     }
+63 
+64     *stackaddr = attr->stackaddr;
+65     return 0;
+66 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_getstacksize (const \fBpthread_attr_t\fP *attr, size_t *stacksize)"
+
+.PP
+Definizione alla linea 79 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stacksize\&.
+.PP
+.nf
+79                                                                                     {
+80     if(!attr) {
+81         errno = EINVAL;
+82         return 1;
+83     }
+84 
+85     *stacksize = attr->stacksize;
+86     return 0;
+87 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_init (\fBpthread_attr_t\fP *attr)"
+
+.PP
+Definizione alla linea 12 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthread_attr::inheritsched, pthread_attr::param, PTHREAD_STACK_MIN, pthread_attr::stackaddr, e pthread_attr::stacksize\&.
+.PP
+.nf
+12                                                    {
+13     if(!attr) {
+14         errno = EINVAL;
+15         return 1;
+16     }
+17 
+18     attr->stackaddr = 0;
+19     attr->stacksize = PTHREAD_STACK_MIN;
+20     attr->detachstate = 0;
+21     attr->param\&.sched_priority = 0;
+22     attr->inheritsched = 0;
+23     attr->contentionscope = 0;
+24     
+25     return 0;
+26 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_setdetachstate (\fBpthread_attr_t\fP *attr, intdetachstate)"
+
+.PP
+Definizione alla linea 48 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::detachstate, e errno\&.
+.PP
+.nf
+48                                                                               {
+49     if(!attr) {
+50         errno = EINVAL;
+51         return 1;
+52     }
+53 
+54     attr->detachstate = detachstate;
+55     return 0;
+56 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_setinheritsched (\fBpthread_attr_t\fP *attr, intinheritsched)"
+
+.PP
+Definizione alla linea 143 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::inheritsched\&.
+.PP
+.nf
+143                                                                                 {
+144     if(!attr) {
+145         errno = EINVAL;
+146         return 1;
+147     }
+148 
+149     attr->inheritsched = inheritsched;
+150     return 0;
+151 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_setschedparam (\fBpthread_attr_t\fP *attr, const struct sched_param *param)"
+
+.PP
+Definizione alla linea 112 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::param\&.
+.PP
+.nf
+112                                                                                              {
+113     if(!attr) {
+114         errno = EINVAL;
+115         return 1;
+116     }
+117 
+118     memcpy(&attr->param, param, sizeof(struct sched_param));
+119     return 0; 
+120 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_setschedpolicy (\fBpthread_attr_t\fP *attr, intpolicy)"
+
+.PP
+Definizione alla linea 128 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+128                                                                          {
+129     errno = ENOSYS;
+130     return 1;
+131 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_setscope (\fBpthread_attr_t\fP *attr, intcontentionscope)"
+
+.PP
+Definizione alla linea 163 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::contentionscope, e errno\&.
+.PP
+.nf
+163                                                                             {
+164     if(!attr) {
+165         errno = EINVAL;
+166         return 1;
+167     }
+168 
+169     attr->contentionscope = contentionscope;
+170     return 0;
+171 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_setstackaddr (\fBpthread_attr_t\fP *attr, void *stackaddr)"
+
+.PP
+Definizione alla linea 68 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stackaddr\&.
+.PP
+.nf
+68                                                                             {
+69     if(!attr) {
+70         errno = EINVAL;
+71         return 1;
+72     }
+73 
+74     attr->stackaddr = stackaddr;
+75     return 0;
+76 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_attr_setstacksize (\fBpthread_attr_t\fP *attr, size_tstacksize)"
+
+.PP
+Definizione alla linea 89 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stacksize\&.
+.PP
+.nf
+89                                                                              {
+90     if(!attr) {
+91         errno = EINVAL;
+92         return 1;
+93     }
+94 
+95     attr->stacksize = stacksize;
+96     return 0;
+97 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

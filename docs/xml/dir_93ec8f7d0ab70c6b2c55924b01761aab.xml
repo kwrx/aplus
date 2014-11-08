@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_93ec8f7d0ab70c6b2c55924b01761aab" kind="dir">
+    <compoundname>usr/src/libpthread/src</compoundname>
+    <innerdir refid="dir_b1e06f0bc942d3adbe0dbc49f07d28bb">usr/src/libpthread/src/platform</innerdir>
+    <innerfile refid="pthread__attr_8c">pthread_attr.c</innerfile>
+    <innerfile refid="pthread__barrier_8c">pthread_barrier.c</innerfile>
+    <innerfile refid="pthread__barrierattr_8c">pthread_barrierattr.c</innerfile>
+    <innerfile refid="pthread__cancel_8c">pthread_cancel.c</innerfile>
+    <innerfile refid="pthread__cond_8c">pthread_cond.c</innerfile>
+    <innerfile refid="pthread__condattr_8c">pthread_condattr.c</innerfile>
+    <innerfile refid="pthread__create_8c">pthread_create.c</innerfile>
+    <innerfile refid="pthread__detach_8c">pthread_detach.c</innerfile>
+    <innerfile refid="pthread__equal_8c">pthread_equal.c</innerfile>
+    <innerfile refid="pthread__exit_8c">pthread_exit.c</innerfile>
+    <innerfile refid="pthread__internal_8h">pthread_internal.h</innerfile>
+    <innerfile refid="pthread__join_8c">pthread_join.c</innerfile>
+    <innerfile refid="pthread__key_8c">pthread_key.c</innerfile>
+    <innerfile refid="pthread__mutex_8c">pthread_mutex.c</innerfile>
+    <innerfile refid="pthread__mutexattr_8c">pthread_mutexattr.c</innerfile>
+    <innerfile refid="pthread__once_8c">pthread_once.c</innerfile>
+    <innerfile refid="pthread__queue_8c">pthread_queue.c</innerfile>
+    <innerfile refid="pthread__rwlock_8c">pthread_rwlock.c</innerfile>
+    <innerfile refid="pthread__rwlockattr_8c">pthread_rwlockattr.c</innerfile>
+    <innerfile refid="pthread__sched_8c">pthread_sched.c</innerfile>
+    <innerfile refid="pthread__self_8c">pthread_self.c</innerfile>
+    <innerfile refid="pthread__spin_8c">pthread_spin.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/"/>
+  </compounddef>
+</doxygen>

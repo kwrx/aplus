@@ -1,0 +1,799 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="pci_8c" kind="file">
+    <compoundname>pci.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="pci_8h" local="no">aplus/pci.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">errno.h</includes>
+    <incdepgraph>
+      <node id="38">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="30">
+        <label>stdarg.h</label>
+      </node>
+      <node id="35">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
+      </node>
+      <node id="29">
+        <label>stdint.h</label>
+      </node>
+      <node id="42">
+        <label>setjmp.h</label>
+      </node>
+      <node id="34">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="35" relation="include">
+        </childnode>
+        <childnode refid="41" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="42" relation="include">
+        </childnode>
+      </node>
+      <node id="43">
+        <label>errno.h</label>
+      </node>
+      <node id="27">
+        <label>src/arch/pci.c</label>
+        <link refid="pci.c"/>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="32" relation="include">
+        </childnode>
+        <childnode refid="33" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+      </node>
+      <node id="32">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="28" relation="include">
+        </childnode>
+        <childnode refid="29" relation="include">
+        </childnode>
+      </node>
+      <node id="36">
+        <label>stddef.h</label>
+      </node>
+      <node id="28">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="30" relation="include">
+        </childnode>
+        <childnode refid="31" relation="include">
+        </childnode>
+      </node>
+      <node id="37">
+        <label>sys/types.h</label>
+      </node>
+      <node id="31">
+        <label>string.h</label>
+      </node>
+      <node id="40">
+        <label>unistd.h</label>
+      </node>
+      <node id="41">
+        <label>signal.h</label>
+      </node>
+      <node id="33">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="29" relation="include">
+        </childnode>
+        <childnode refid="34" relation="include">
+        </childnode>
+      </node>
+      <node id="39">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="40" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="pci_8c_1aaa58db8af2d00af66c78624104e1016b" prot="public" static="no">
+        <name>PCI_CONFIG_ADDRESS</name>
+        <initializer>0x0CF8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="11" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pci_8c_1ad1fedcf5fe37518ccc1ddfcb880d1b01" prot="public" static="no">
+        <name>PCI_CONFIG_DATA</name>
+        <initializer>0x0CFC</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="12" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" prot="public" static="no">
+        <name>PCI_MAX_DEVICES</name>
+        <initializer>65536</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="13" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pci_8c_1acbd6d3799929b7d4f20ba7ca9c7a273b" prot="public" static="no">
+        <name>PCI_MAX_BUS</name>
+        <initializer>255</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="14" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pci_8c_1ab4541880e38c018ddbf49bb81e3b01f2" prot="public" static="no">
+        <name>PCI_MAX_DEV</name>
+        <initializer>32</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="15" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pci_8c_1a2bce7569c5c260ac10180736ab9b682e" prot="public" static="no">
+        <name>PCI_MAX_FUNC</name>
+        <initializer>8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="16" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="pci_8c_1ab5a39d7e293f00b1c80deef6c287520d" prot="public" static="no" mutable="no">
+        <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+        <definition>pci_device_t* pci_devices</definition>
+        <argsstring></argsstring>
+        <name>pci_devices</name>
+        <initializer>= NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pci_8c_1a1f15494ac7091ae892b6fc408c999699" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>static int pci_get_address</definition>
+        <argsstring>(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset)</argsstring>
+        <name>pci_get_address</name>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>bus</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>func</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>offset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="22" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_config_read</definition>
+        <argsstring>(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset)</argsstring>
+        <name>pci_config_read</name>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>bus</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>func</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>offset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="26" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="26" bodyend="33"/>
+        <references refid="pci_8c_1aaa58db8af2d00af66c78624104e1016b" compoundref="pci_8c" startline="11">PCI_CONFIG_ADDRESS</references>
+        <references refid="pci_8c_1ad1fedcf5fe37518ccc1ddfcb880d1b01" compoundref="pci_8c" startline="12">PCI_CONFIG_DATA</references>
+        <references refid="pci_8c_1a1f15494ac7091ae892b6fc408c999699" compoundref="pci_8c" startline="22" endline="24">pci_get_address</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a02860d0ea7db7586ef23e70dbc430f4e" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_device_id</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_device_id</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="36" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="36" bodyend="38"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a8943deffb283d480c4721e9504363db9" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_vendor_id</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_vendor_id</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="40" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="40" bodyend="42"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a35471c72465a2387209cd9f8c61cbabf" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_intr_pin</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_intr_pin</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="44" bodyend="46"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a5748eddc8acf29743a4645494086bfe8" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_intr_line</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_intr_line</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="48" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="48" bodyend="50"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1aaaed0e6f955935cd6436ddaf221c74dd" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_revision</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_revision</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="52" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="52" bodyend="54"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a0bf83fd9b109cd41e61258f3e53208d1" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_class</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_class</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="56" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="56" bodyend="58"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_header_type</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_header_type</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="60" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="60" bodyend="62"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_bar</definition>
+        <argsstring>(pci_device_t *device, uint8_t bar)</argsstring>
+        <name>pci_get_bar</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>bar</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="65" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="65" bodyend="75"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+        <references refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" compoundref="pci_8c" startline="60" endline="62">pci_get_header_type</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a68ef7c33e8d461fff6df3e147d8dfd7a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_iobase</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_iobase</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="77" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="77" bodyend="88"/>
+        <references refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" compoundref="pci_8c" startline="65" endline="75">pci_get_bar</references>
+        <references refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" compoundref="pci_8c" startline="60" endline="62">pci_get_header_type</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1aa6863ddfaf14fac909640bfa31bbbc4a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t pci_get_membase</definition>
+        <argsstring>(pci_device_t *device)</argsstring>
+        <name>pci_get_membase</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="90" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="90" bodyend="101"/>
+        <references refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" compoundref="pci_8c" startline="65" endline="75">pci_get_bar</references>
+        <references refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" compoundref="pci_8c" startline="60" endline="62">pci_get_header_type</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1af7ca9409f4548bab8e35404085f62a6b" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void pci_load_device</definition>
+        <argsstring>(pci_device_t *device, uint8_t bus, uint8_t dev, uint8_t func)</argsstring>
+        <name>pci_load_device</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+          <declname>device</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>bus</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+          <declname>func</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="103" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="103" bodyend="117"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structpci__device_1a86ce8ddd306b0395037ec7eee789a929" compoundref="pci_8h" startline="25">pci_device::deviceID</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="structpci__device_1ad68a4bddbd8fa989a866dccdd5035842" compoundref="pci_8h" startline="36">pci_device::header</references>
+        <references refid="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" compoundref="pci_8h" startline="38">pci_device::intr_line</references>
+        <references refid="structpci__device_1a3645d371b3c45455414e4f8414e9eed8" compoundref="pci_8h" startline="37">pci_device::intr_pin</references>
+        <references refid="structpci__device_1a5b15ddf1741aaae55aa9933f53876d11" compoundref="pci_8h" startline="33">pci_device::iobase</references>
+        <references refid="structpci__device_1a795ff4e1dc77af09805c41d96766b64b" compoundref="pci_8h" startline="34">pci_device::membase</references>
+        <references refid="structpci__device_1ae1867eca43c8f867951963a1753649ea" compoundref="pci_8h" startline="32">pci_device::pci_class</references>
+        <references refid="pci_8c_1a0bf83fd9b109cd41e61258f3e53208d1" compoundref="pci_8c" startline="56" endline="58">pci_get_class</references>
+        <references refid="pci_8c_1a02860d0ea7db7586ef23e70dbc430f4e" compoundref="pci_8c" startline="36" endline="38">pci_get_device_id</references>
+        <references refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" compoundref="pci_8c" startline="60" endline="62">pci_get_header_type</references>
+        <references refid="pci_8c_1a5748eddc8acf29743a4645494086bfe8" compoundref="pci_8c" startline="48" endline="50">pci_get_intr_line</references>
+        <references refid="pci_8c_1a35471c72465a2387209cd9f8c61cbabf" compoundref="pci_8c" startline="44" endline="46">pci_get_intr_pin</references>
+        <references refid="pci_8c_1a68ef7c33e8d461fff6df3e147d8dfd7a" compoundref="pci_8c" startline="77" endline="88">pci_get_iobase</references>
+        <references refid="pci_8c_1aa6863ddfaf14fac909640bfa31bbbc4a" compoundref="pci_8c" startline="90" endline="101">pci_get_membase</references>
+        <references refid="pci_8c_1aaaed0e6f955935cd6436ddaf221c74dd" compoundref="pci_8c" startline="52" endline="54">pci_get_revision</references>
+        <references refid="pci_8c_1a8943deffb283d480c4721e9504363db9" compoundref="pci_8c" startline="40" endline="42">pci_get_vendor_id</references>
+        <references refid="structpci__device_1ad6450a83a220d2015cb94a9698580668" compoundref="pci_8h" startline="30">pci_device::revision</references>
+        <references refid="structpci__device_1ac9682451216985995a3601f14239dc26" compoundref="pci_8h" startline="24">pci_device::vendorID</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1abca1ff85a7e4d518a83cc17348aa39cb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+        <definition>pci_device_t* pci_find_by_id</definition>
+        <argsstring>(uint32_t vendorID, uint32_t deviceID)</argsstring>
+        <name>pci_find_by_id</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>vendorID</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>deviceID</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="120" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="120" bodyend="129"/>
+        <references refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" compoundref="pci_8c" startline="13">PCI_MAX_DEVICES</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a127a79107e9fe2fee41f36dd3d88afca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int pci_find_by_class</definition>
+        <argsstring>(pci_device_t **rdevs, uint32_t class, uint32_t length)</argsstring>
+        <name>pci_find_by_class</name>
+        <param>
+          <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> **</type>
+          <declname>rdevs</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>class</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="131" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="131" bodyend="141"/>
+        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" compoundref="pci_8c" startline="13">PCI_MAX_DEVICES</references>
+      </memberdef>
+      <memberdef kind="function" id="pci_8c_1a5c450b9e2534226b162a16de0ef6b434" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int pci_init</definition>
+        <argsstring>()</argsstring>
+        <name>pci_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/arch/pci.c" line="144" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="144" bodyend="184"/>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
+        <references refid="pci_8c_1af7ca9409f4548bab8e35404085f62a6b" compoundref="pci_8c" startline="103" endline="117">pci_load_device</references>
+        <references refid="pci_8c_1acbd6d3799929b7d4f20ba7ca9c7a273b" compoundref="pci_8c" startline="14">PCI_MAX_BUS</references>
+        <references refid="pci_8c_1ab4541880e38c018ddbf49bb81e3b01f2" compoundref="pci_8c" startline="15">PCI_MAX_DEV</references>
+        <references refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" compoundref="pci_8c" startline="13">PCI_MAX_DEVICES</references>
+        <references refid="pci_8c_1a2bce7569c5c260ac10180736ab9b682e" compoundref="pci_8c" startline="16">PCI_MAX_FUNC</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="pci_8h" kindref="compound">aplus/pci.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="pci_8c_1aaa58db8af2d00af66c78624104e1016b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PCI_CONFIG_ADDRESS<sp/><sp/><sp/><sp/><sp/><sp/>0x0CF8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="pci_8c_1ad1fedcf5fe37518ccc1ddfcb880d1b01" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PCI_CONFIG_DATA<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x0CFC</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PCI_MAX_DEVICES<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>65536</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="pci_8c_1acbd6d3799929b7d4f20ba7ca9c7a273b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PCI_MAX_BUS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>255</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="pci_8c_1ab4541880e38c018ddbf49bb81e3b01f2" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PCI_MAX_DEV<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>32</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="pci_8c_1a2bce7569c5c260ac10180736ab9b682e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PCI_MAX_FUNC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="pci_8c_1ab5a39d7e293f00b1c80deef6c287520d" refkind="member"><highlight class="normal"><ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/><ref refid="pci_8c_1ab5a39d7e293f00b1c80deef6c287520d" kindref="member">pci_devices</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="pci_8c_1a1f15494ac7091ae892b6fc408c999699" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1a1f15494ac7091ae892b6fc408c999699" kindref="member">pci_get_address</ref>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>bus,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>dev,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>func,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0x80000000<sp/>|<sp/>(bus<sp/>&lt;&lt;<sp/>16)<sp/>|<sp/>(dev<sp/>&lt;&lt;<sp/>11)<sp/>|<sp/>(func<sp/>&lt;&lt;<sp/>8)<sp/>|<sp/>(offset<sp/>&amp;<sp/>0xFC);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>bus,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>dev,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>func,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>outl(<ref refid="pci_8c_1aaa58db8af2d00af66c78624104e1016b" kindref="member">PCI_CONFIG_ADDRESS</ref>,<sp/><ref refid="pci_8c_1a1f15494ac7091ae892b6fc408c999699" kindref="member">pci_get_address</ref>(bus,<sp/>dev,<sp/>func,<sp/>offset));</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(offset<sp/>%<sp/>4<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>inl(<ref refid="pci_8c_1ad1fedcf5fe37518ccc1ddfcb880d1b01" kindref="member">PCI_CONFIG_DATA</ref>);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(inl(<ref refid="pci_8c_1ad1fedcf5fe37518ccc1ddfcb880d1b01" kindref="member">PCI_CONFIG_DATA</ref>)<sp/>&gt;&gt;<sp/>((offset<sp/>%<sp/>4)<sp/>*<sp/>8));</highlight></codeline>
+<codeline lineno="33"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="pci_8c_1a02860d0ea7db7586ef23e70dbc430f4e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1a02860d0ea7db7586ef23e70dbc430f4e" kindref="member">pci_get_device_id</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>2)<sp/>&amp;<sp/>0xFFFF;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40" refid="pci_8c_1a8943deffb283d480c4721e9504363db9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1a8943deffb283d480c4721e9504363db9" kindref="member">pci_get_vendor_id</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>0)<sp/>&amp;<sp/>0xFFFF;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="pci_8c_1a35471c72465a2387209cd9f8c61cbabf" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1a35471c72465a2387209cd9f8c61cbabf" kindref="member">pci_get_intr_pin</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>0x3D)<sp/>&amp;<sp/>0xFF;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="pci_8c_1a5748eddc8acf29743a4645494086bfe8" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1a5748eddc8acf29743a4645494086bfe8" kindref="member">pci_get_intr_line</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>0x3C)<sp/>&amp;<sp/>0xFF;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="pci_8c_1aaaed0e6f955935cd6436ddaf221c74dd" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1aaaed0e6f955935cd6436ddaf221c74dd" kindref="member">pci_get_revision</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>0x08)<sp/>&amp;<sp/>0xFF;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="pci_8c_1a0bf83fd9b109cd41e61258f3e53208d1" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1a0bf83fd9b109cd41e61258f3e53208d1" kindref="member">pci_get_class</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>0x0B)<sp/>&amp;<sp/>0xFF;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" kindref="member">pci_get_header_type</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>0x0E)<sp/>&amp;<sp/>0x7F;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" kindref="member">pci_get_bar</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>bar)<sp/>{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(bar<sp/>&gt;=<sp/>6)</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>header<sp/>=<sp/><ref refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" kindref="member">pci_get_header_type</ref>(device);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(header<sp/>==<sp/>0x02<sp/>||<sp/>(header<sp/>==<sp/>0x01<sp/>&amp;&amp;<sp/>bar<sp/>&lt;<sp/>2))</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>reg<sp/>=<sp/>0x10<sp/>+<sp/>(0x04<sp/>*<sp/>bar);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,<sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,<sp/>reg);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="pci_8c_1a68ef7c33e8d461fff6df3e147d8dfd7a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1a68ef7c33e8d461fff6df3e147d8dfd7a" kindref="member">pci_get_iobase</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>bars<sp/>=<sp/>6<sp/>-<sp/><ref refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" kindref="member">pci_get_header_type</ref>(device)<sp/>*<sp/>4;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>i<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(i<sp/>&lt;<sp/>bars)<sp/>{</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>bar<sp/>=<sp/><ref refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" kindref="member">pci_get_bar</ref>(device,<sp/>i++);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(bar<sp/>&amp;<sp/>0x01)</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>bar<sp/>&amp;<sp/>0xFFFFFFFC;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90" refid="pci_8c_1aa6863ddfaf14fac909640bfa31bbbc4a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pci_8c_1aa6863ddfaf14fac909640bfa31bbbc4a" kindref="member">pci_get_membase</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device)<sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>bars<sp/>=<sp/>6<sp/>-<sp/><ref refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" kindref="member">pci_get_header_type</ref>(device)<sp/>*<sp/>4;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>i<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(i<sp/>&lt;<sp/>bars)<sp/>{</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>bar<sp/>=<sp/><ref refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" kindref="member">pci_get_bar</ref>(device,<sp/>i++);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((bar<sp/>&amp;<sp/>0x01)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>bar<sp/>&amp;<sp/>0xFFFFFFF0;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103" refid="pci_8c_1af7ca9409f4548bab8e35404085f62a6b" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1af7ca9409f4548bab8e35404085f62a6b" kindref="member">pci_load_device</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>bus,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>dev,<sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>func)<sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref><sp/>=<sp/>bus;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref><sp/>=<sp/>dev;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref><sp/>=<sp/>func;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1ac9682451216985995a3601f14239dc26" kindref="member">vendorID</ref><sp/>=<sp/><ref refid="pci_8c_1a8943deffb283d480c4721e9504363db9" kindref="member">pci_get_vendor_id</ref>(device);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1a86ce8ddd306b0395037ec7eee789a929" kindref="member">deviceID</ref><sp/>=<sp/><ref refid="pci_8c_1a02860d0ea7db7586ef23e70dbc430f4e" kindref="member">pci_get_device_id</ref>(device);</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1ad6450a83a220d2015cb94a9698580668" kindref="member">revision</ref><sp/>=<sp/><ref refid="pci_8c_1aaaed0e6f955935cd6436ddaf221c74dd" kindref="member">pci_get_revision</ref>(device);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1ae1867eca43c8f867951963a1753649ea" kindref="member">pci_class</ref><sp/>=<sp/><ref refid="pci_8c_1a0bf83fd9b109cd41e61258f3e53208d1" kindref="member">pci_get_class</ref>(device);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1a5b15ddf1741aaae55aa9933f53876d11" kindref="member">iobase</ref><sp/>=<sp/><ref refid="pci_8c_1a68ef7c33e8d461fff6df3e147d8dfd7a" kindref="member">pci_get_iobase</ref>(device);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1a795ff4e1dc77af09805c41d96766b64b" kindref="member">membase</ref><sp/>=<sp/><ref refid="pci_8c_1aa6863ddfaf14fac909640bfa31bbbc4a" kindref="member">pci_get_membase</ref>(device);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1ad68a4bddbd8fa989a866dccdd5035842" kindref="member">header</ref><sp/>=<sp/><ref refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" kindref="member">pci_get_header_type</ref>(device);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1a3645d371b3c45455414e4f8414e9eed8" kindref="member">intr_pin</ref><sp/>=<sp/><ref refid="pci_8c_1a35471c72465a2387209cd9f8c61cbabf" kindref="member">pci_get_intr_pin</ref>(device);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>device-&gt;<ref refid="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" kindref="member">intr_line</ref><sp/>=<sp/><ref refid="pci_8c_1a5748eddc8acf29743a4645494086bfe8" kindref="member">pci_get_intr_line</ref>(device);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight></codeline>
+<codeline lineno="120" refid="pci_8c_1abca1ff85a7e4d518a83cc17348aa39cb" refkind="member"><highlight class="normal"><ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/><ref refid="pci_8c_1abca1ff85a7e4d518a83cc17348aa39cb" kindref="member">pci_find_by_id</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>vendorID,<sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>deviceID)<sp/>{</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" kindref="member">PCI_MAX_DEVICES</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(pci_devices[i].vendorID<sp/>!=<sp/>vendorID<sp/>&amp;&amp;<sp/>pci_devices[i].deviceID<sp/>!=<sp/>deviceID)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>&amp;pci_devices[i];</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131" refid="pci_8c_1a127a79107e9fe2fee41f36dd3d88afca" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1a127a79107e9fe2fee41f36dd3d88afca" kindref="member">pci_find_by_class</ref>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>**<sp/>rdevs,<sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">,<sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j<sp/>=<sp/>0;<sp/><sp/></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" kindref="member">PCI_MAX_DEVICES</ref><sp/>&amp;&amp;<sp/>j<sp/>&lt;<sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(pci_devices[i].pci_class<sp/>!=<sp/></highlight><highlight class="keyword">class</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rdevs[j++]<sp/>=<sp/>&amp;pci_devices[i];</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>j;</highlight></codeline>
+<codeline lineno="141"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144" refid="pci_8c_1a5c450b9e2534226b162a16de0ef6b434" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pci_8c_1a5c450b9e2534226b162a16de0ef6b434" kindref="member">pci_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>pci_devices<sp/>=<sp/>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(<ref refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" kindref="member">PCI_MAX_DEVICES</ref><sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>));</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(pci_devices,<sp/>0xFF,<sp/><ref refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" kindref="member">PCI_MAX_DEVICES</ref><sp/>*<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>));</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bus<sp/>=<sp/>0;<sp/>bus<sp/>&lt;<sp/><ref refid="pci_8c_1acbd6d3799929b7d4f20ba7ca9c7a273b" kindref="member">PCI_MAX_BUS</ref>;<sp/>bus++)<sp/>{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dev<sp/>=<sp/>0;<sp/>dev<sp/>&lt;<sp/><ref refid="pci_8c_1ab4541880e38c018ddbf49bb81e3b01f2" kindref="member">PCI_MAX_DEV</ref>;<sp/>dev++)<sp/>{</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>func<sp/>=<sp/>0;<sp/>func<sp/>&lt;<sp/><ref refid="pci_8c_1a2bce7569c5c260ac10180736ab9b682e" kindref="member">PCI_MAX_FUNC</ref>;<sp/>func++)<sp/>{</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>vendor<sp/>=<sp/><ref refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" kindref="member">pci_config_read</ref>(bus,<sp/>dev,<sp/>func,<sp/>0)<sp/>&amp;<sp/>0xFFFF;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(vendor<sp/>==<sp/>0xFFFF<sp/>||<sp/>vendor<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pci_8c_1af7ca9409f4548bab8e35404085f62a6b" kindref="member">pci_load_device</ref>(&amp;pci_devices[i],<sp/>bus,<sp/>dev,<sp/>func);</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;pci:<sp/>%d:%d.%d:<sp/>[%x:%x]<sp/>(rev<sp/>%x<sp/>class<sp/>%x<sp/>iobase<sp/>%x<sp/>mmio<sp/>%x<sp/>type<sp/>%x<sp/>int<sp/>%d<sp/>pin<sp/>%d)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].bus,</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].dev,</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].func,</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].vendorID,</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].deviceID,</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].revision,</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].pci_class,</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].iobase,</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].membase,</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].header,</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].intr_line,</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pci_devices[i].intr_pin);</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i++;</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;pci:<sp/>loaded<sp/>%d<sp/>devices\n&quot;</highlight><highlight class="normal">,<sp/>i);</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"></highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="184"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/arch/pci.c"/>
+  </compounddef>
+</doxygen>

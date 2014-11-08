@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="bufio_8c">
+    <title>bufio.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/bufio.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;stdio.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="bufio_8c_1a5e9324428544e1da920f5be30824d350">list_buffers</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static uint64_t <link linkend="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1">buffers_length</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="bufio_8c_1a8553eb3703bbc2ac89010ccfaefe760f">bufio_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="bufio_8c_1a078ef38ac6ed6b044ebaf4f06dafdf46">bufio_free_unused</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * <link linkend="bufio_8c_1a788d5286cd4a5a1d4aed02c319aaf030">bufio_alloc</link> (
+size_t size)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * <link linkend="bufio_8c_1a1258244c4b6ffe2885086facaa7a72b0">bufio_alloc_raw</link> (
+void * raw, size_t size)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="bufio_8c_1a2a92ff5d9427e2d5d88b4c95247b0f64">bufio_free</link> (
+<link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * buf)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8">bufio_seek</link> (
+<link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * buf, off_t offset, int dir)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3">bufio_tell</link> (
+<link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * buf)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="bufio_8c_1ac3fb155871895c9d49c8bcb2290e1afa">bufio_clear</link> (
+<link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * buf)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="bufio_8c_1a75016850df49d95e52a5508d22ff79e8">bufio_read</link> (
+<link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * buf, void * ptr, size_t len)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="bufio_8c_1a8db791aa56b168544d7666a723af32de">bufio_write</link> (
+<link linkend="bufio_8h_1aed33c7684664724ce2d39fe264246e35">bufio_t</link> * buf, void * ptr, size_t len)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="bufio_8c_1ab4a60d54cf7a99daf16f558781a99334">bufio_find_by_type</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> type)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/bufio.c</para>
+    </simplesect>
+</section>

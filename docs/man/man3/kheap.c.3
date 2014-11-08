@@ -1,0 +1,227 @@
+.TH "src/mm/kheap.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/mm/kheap.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+\fC#include <grub\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBBITMAP_SET\fP(bmp, bit)   bmp[bit / 32] |= (1 << (bit % 32))"
+.br
+.ti -1c
+.RI "#define \fBBITMAP_CLR\fP(bmp, bit)   bmp[bit / 32] &= ~(1 << (bit % 32))"
+.br
+.ti -1c
+.RI "#define \fBBITMAP_TST\fP(bmp, bit)   (bmp[bit / 32] & (1 << (bit % 32)))"
+.br
+.ti -1c
+.RI "#define \fBGETBIT\fP(addr)   ((\fBuint32_t\fP) addr / \fBBLKSIZE\fP)"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "static int \fBbitmap_first\fP (\fBheap_t\fP *\fBheap\fP, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "void * \fBbitmap_alloc\fP (\fBheap_t\fP *\fBheap\fP, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "void \fBbitmap_free\fP (\fBheap_t\fP *\fBheap\fP, void *addr, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "int \fBkheap_init\fP ()"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "static \fBheap_t\fP \fBkheap\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBmemsize\fP"
+.br
+.ti -1c
+.RI "static \fBuint8_t\fP \fB__bitmap\fP [131072]"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define BITMAP_CLR(bmp, bit)   bmp[bit / 32] &= ~(1 << (bit % 32))"
+
+.PP
+Definizione alla linea 35 del file kheap\&.c\&.
+.SS "#define BITMAP_SET(bmp, bit)   bmp[bit / 32] |= (1 << (bit % 32))"
+
+.PP
+Definizione alla linea 32 del file kheap\&.c\&.
+.SS "#define BITMAP_TST(bmp, bit)   (bmp[bit / 32] & (1 << (bit % 32)))"
+
+.PP
+Definizione alla linea 38 del file kheap\&.c\&.
+.SS "#define GETBIT(addr)   ((\fBuint32_t\fP) addr / \fBBLKSIZE\fP)"
+
+.PP
+Definizione alla linea 42 del file kheap\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "void* bitmap_alloc (\fBheap_t\fP *heap, size_tsize)"
+
+.PP
+Definizione alla linea 75 del file kheap\&.c\&.
+.PP
+Referenzia heap::bitmap, bitmap_first(), BITMAP_SET, BLKSIZE, size, heap::size, e heap::used\&.
+.PP
+.nf
+75                                               {
+76     if(!heap)
+77         return 0;
+78         
+79     if(!heap->bitmap)
+80         return 0;
+81         
+82     if(heap->used >= heap->size)
+83         return 0;
+84         
+85     
+86     if(size % BLKSIZE) {
+87         size /= BLKSIZE;
+88         size += 1;
+89     }else {
+90         size /= BLKSIZE;
+91     }   
+92         
+93     int index = bitmap_first(heap, size);
+94     if(index == -1)
+95         return 0;
+96                 
+97     for(int i = 0; i < size; i++)
+98         BITMAP_SET(heap->bitmap, (index + i));
+99     
+100     
+101     heap->used += size;
+102     
+103     return (void*) (index * BLKSIZE);
+104 }
+.fi
+.SS "static int bitmap_first (\fBheap_t\fP *heap, size_tsize)\fC [static]\fP"
+
+.PP
+Definizione alla linea 55 del file kheap\&.c\&.
+.PP
+Referenzia heap::bitmap, BITMAP_TST, size, e heap::size\&.
+.PP
+.nf
+55                                                    {
+56     if(size == 0)
+57         return -1;
+58         
+59     for(int i = 0; i < heap->size; i++) {   
+60         for(int j = 0, f = 0; j < size; j++) {
+61             if(BITMAP_TST(heap->bitmap, (i + j)))
+62                 continue;
+63             
+64             f++;    
+65             if(f == size)
+66                 return i;
+67         }
+68     }
+69     
+70     return -1;
+71 }
+.fi
+.SS "void bitmap_free (\fBheap_t\fP *heap, void *addr, size_tsize)"
+
+.PP
+Definizione alla linea 106 del file kheap\&.c\&.
+.PP
+Referenzia heap::bitmap, BITMAP_CLR, BLKSIZE, GETBIT, size, e heap::used\&.
+.PP
+.nf
+106                                                         {
+107     if(!heap)
+108         return;
+109         
+110     if(!heap->bitmap)
+111         return;
+112         
+113         
+114     if(size % BLKSIZE) {
+115         size /= BLKSIZE;
+116         size += 1;
+117     }else {
+118         size /= BLKSIZE;
+119     }   
+120         
+121     
+122     int index = GETBIT(addr);
+123     for(int i = 0; i < size; i++)
+124         BITMAP_CLR(heap->bitmap, (index + i));
+125         
+126         
+127     heap->used -= size;
+128 }
+.fi
+.SS "int kheap_init ()"
+
+.PP
+Definizione alla linea 132 del file kheap\&.c\&.
+.PP
+Referenzia __bitmap, heap::alloc, heap::bitmap, bitmap_alloc(), bitmap_free(), BLKSIZE, heap::free, halloc(), memsize, mm_setheap(), heap::size, e uint32_t\&.
+.PP
+.nf
+132                  {
+133     extern uint32_t end;
+134 
+135     kheap\&.bitmap = __bitmap;
+136     kheap\&.size = memsize / BLKSIZE;
+137     kheap\&.alloc = bitmap_alloc;
+138     kheap\&.free = bitmap_free;
+139     
+140     memset(kheap\&.bitmap, 0, kheap\&.size);
+141     
+142     mm_setheap(&kheap);
+143     
+144     // Alloc first 4MB (reserved physical kernel area)
+145     halloc(&kheap, (size_t) 0x400000);
+146     
+147 
+148     return 0;
+149 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBuint8_t\fP __bitmap[131072]\fC [static]\fP"
+
+.PP
+Definizione alla linea 52 del file kheap\&.c\&.
+.SS "\fBheap_t\fP kheap\fC [static]\fP"
+
+.PP
+Definizione alla linea 48 del file kheap\&.c\&.
+.SS "\fBuint32_t\fP memsize"
+
+.PP
+Definizione alla linea 35 del file mm\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>status</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/143.html#L146'>status</a>            146 src/sched.c    void schedule_exit2(task_t* task, int status) {
+<a href='../S/143.html#L153'>status</a>            153 src/sched.c    	task-&gt;exitcode = status;
+<a href='../S/143.html#L159'>status</a>            159 src/sched.c    void schedule_exit(int status) {
+<a href='../S/143.html#L160'>status</a>            160 src/sched.c    	schedule_exit2(current_task, status);
+<a href='../S/135.html#L6'>status</a>              6 src/syscall/_exit.c void sys_exit(int status) {
+<a href='../S/135.html#L7'>status</a>              7 src/syscall/_exit.c 	schedule_exit(status);
+<a href='../S/137.html#L12'>status</a>             12 src/syscall/wait.c int sys_wait(int* status) {
+<a href='../S/137.html#L26'>status</a>             26 src/syscall/wait.c 	if(status)
+<a href='../S/137.html#L27'>status</a>             27 src/syscall/wait.c 		*status = exitcode;
+</pre>
+</body>
+</html>

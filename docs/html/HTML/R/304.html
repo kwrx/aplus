@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>lock</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/156.html#L50'>lock</a>               50 src/bufio.c    	lock();	
+<a href='../S/156.html#L72'>lock</a>               72 src/bufio.c    	lock();	
+<a href='../S/156.html#L91'>lock</a>               91 src/bufio.c    	lock();
+<a href='../S/156.html#L136'>lock</a>              136 src/bufio.c    	spinlock_lock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L138'>lock</a>              138 src/bufio.c    	spinlock_unlock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L142'>lock</a>              142 src/bufio.c    	spinlock_lock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L149'>lock</a>              149 src/bufio.c    	spinlock_unlock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L156'>lock</a>              156 src/bufio.c    	spinlock_lock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L163'>lock</a>              163 src/bufio.c    	spinlock_unlock(&amp;buf-&gt;lock);
+<a href='../S/155.html#L11'>lock</a>               11 src/debug.c    	lock();
+<a href='../S/98.html#L37'>lock</a>               37 src/include/aplus/bufio.h 	spinlock_t lock;
+<a href='../S/96.html#L44'>lock</a>               44 src/include/aplus/list.h 	spinlock_t lock;
+<a href='../S/96.html#L61'>lock</a>               61 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock);
+<a href='../S/96.html#L69'>lock</a>               69 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock);
+<a href='../S/96.html#L74'>lock</a>               74 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock);
+<a href='../S/96.html#L95'>lock</a>               95 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock);
+<a href='../S/96.html#L100'>lock</a>              100 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock);
+<a href='../S/96.html#L114'>lock</a>              114 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock);
+<a href='../S/96.html#L120'>lock</a>              120 src/include/aplus/list.h 	spinlock_lock(&amp;src-&gt;lock);
+<a href='../S/96.html#L126'>lock</a>              126 src/include/aplus/list.h 	spinlock_unlock(&amp;src-&gt;lock);
+<a href='../S/96.html#L170'>lock</a>              170 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock)
+<a href='../S/96.html#L173'>lock</a>              173 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock)
+<a href='../S/96.html#L191'>lock</a>              191 src/include/aplus/list.h 	list-&gt;lock = 0
+<a href='../S/43.html#L88'>lock</a>               88 usr/src/libpthread/include/pthread.h 	int lock;
+<a href='../S/43.html#L288'>lock</a>              288 usr/src/libpthread/include/pthread.h int pthread_rwlock_init(pthread_rwlock_t *lock, const pthread_rwlockattr_t *attr);
+<a href='../S/43.html#L289'>lock</a>              289 usr/src/libpthread/include/pthread.h int pthread_rwlock_destroy(pthread_rwlock_t *lock);
+<a href='../S/43.html#L290'>lock</a>              290 usr/src/libpthread/include/pthread.h int pthread_rwlock_tryrdlock(pthread_rwlock_t *lock);
+<a href='../S/43.html#L291'>lock</a>              291 usr/src/libpthread/include/pthread.h int pthread_rwlock_trywrlock(pthread_rwlock_t *lock);
+<a href='../S/43.html#L292'>lock</a>              292 usr/src/libpthread/include/pthread.h int pthread_rwlock_rdlock(pthread_rwlock_t *lock);
+<a href='../S/43.html#L293'>lock</a>              293 usr/src/libpthread/include/pthread.h int pthread_rwlock_timedrdlock(pthread_rwlock_t *lock, const struct timespec *abstime);
+<a href='../S/43.html#L294'>lock</a>              294 usr/src/libpthread/include/pthread.h int pthread_rwlock_wrlock(pthread_rwlock_t *lock);
+<a href='../S/43.html#L295'>lock</a>              295 usr/src/libpthread/include/pthread.h int pthread_rwlock_timedwrlock(pthread_rwlock_t *lock, const struct timespec *abstime);
+<a href='../S/43.html#L296'>lock</a>              296 usr/src/libpthread/include/pthread.h int pthread_rwlock_unlock(pthread_rwlock_t *lock);
+<a href='../S/43.html#L302'>lock</a>              302 usr/src/libpthread/include/pthread.h int pthread_spin_init(pthread_spinlock_t *lock, int pshared);
+<a href='../S/43.html#L303'>lock</a>              303 usr/src/libpthread/include/pthread.h int pthread_spin_destroy(pthread_spinlock_t *lock);
+<a href='../S/43.html#L304'>lock</a>              304 usr/src/libpthread/include/pthread.h int pthread_spin_lock(pthread_spinlock_t *lock);
+<a href='../S/43.html#L305'>lock</a>              305 usr/src/libpthread/include/pthread.h int pthread_spin_trylock(pthread_spinlock_t *lock);
+<a href='../S/43.html#L306'>lock</a>              306 usr/src/libpthread/include/pthread.h int pthread_spin_unlock(pthread_spinlock_t *lock);
+<a href='../S/59.html#L20'>lock</a>               20 usr/src/libpthread/src/pthread_mutex.c 	if(mutex-&gt;lock == 1)
+<a href='../S/59.html#L32'>lock</a>               32 usr/src/libpthread/src/pthread_mutex.c 	mutex-&gt;lock = 0;
+<a href='../S/59.html#L52'>lock</a>               52 usr/src/libpthread/src/pthread_mutex.c 	if(mutex-&gt;lock == 1) {
+<a href='../S/59.html#L57'>lock</a>               57 usr/src/libpthread/src/pthread_mutex.c 	mutex-&gt;lock = 0;
+<a href='../S/59.html#L79'>lock</a>               79 usr/src/libpthread/src/pthread_mutex.c 		mutex-&gt;lock = 1;
+<a href='../S/59.html#L121'>lock</a>              121 usr/src/libpthread/src/pthread_mutex.c 		mutex-&gt;lock = 1;
+<a href='../S/59.html#L146'>lock</a>              146 usr/src/libpthread/src/pthread_mutex.c 		mutex-&gt;lock = 0;
+<a href='../S/72.html#L11'>lock</a>               11 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L22'>lock</a>               22 usr/src/libpthread/src/pthread_rwlock.c 	pthread_mutex_init(&amp;lock-&gt;rdmutex, NULL);
+<a href='../S/72.html#L23'>lock</a>               23 usr/src/libpthread/src/pthread_rwlock.c 	pthread_mutex_init(&amp;lock-&gt;wrmutex, NULL);
+<a href='../S/72.html#L25'>lock</a>               25 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;shared_waiters = (handle_t) 0;
+<a href='../S/72.html#L26'>lock</a>               26 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;exclusive_waiters = (handle_t) 0;
+<a href='../S/72.html#L27'>lock</a>               27 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;num_shared_waiters = 0;
+<a href='../S/72.html#L28'>lock</a>               28 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;num_exclusive_waiters = 0;
+<a href='../S/72.html#L29'>lock</a>               29 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;owner = thread;
+<a href='../S/72.html#L35'>lock</a>               35 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L46'>lock</a>               46 usr/src/libpthread/src/pthread_rwlock.c 	if(thread != lock-&gt;owner) {
+<a href='../S/72.html#L51'>lock</a>               51 usr/src/libpthread/src/pthread_rwlock.c 	pthread_mutex_destroy(&amp;lock-&gt;rdmutex);
+<a href='../S/72.html#L52'>lock</a>               52 usr/src/libpthread/src/pthread_rwlock.c 	pthread_mutex_destroy(&amp;lock-&gt;wrmutex);
+<a href='../S/72.html#L54'>lock</a>               54 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;shared_waiters = (handle_t) 0;
+<a href='../S/72.html#L55'>lock</a>               55 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;exclusive_waiters = (handle_t) 0;
+<a href='../S/72.html#L56'>lock</a>               56 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;num_shared_waiters = 0;
+<a href='../S/72.html#L57'>lock</a>               57 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;num_exclusive_waiters = 0;
+<a href='../S/72.html#L58'>lock</a>               58 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;owner = 0;
+<a href='../S/72.html#L64'>lock</a>               64 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L69'>lock</a>               69 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_trylock(&amp;lock-&gt;rdmutex);
+<a href='../S/72.html#L73'>lock</a>               73 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L78'>lock</a>               78 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_trylock(&amp;lock-&gt;wrmutex);
+<a href='../S/72.html#L82'>lock</a>               82 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L87'>lock</a>               87 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_lock(&amp;lock-&gt;rdmutex);
+<a href='../S/72.html#L91'>lock</a>               91 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L96'>lock</a>               96 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_timedlock(&amp;lock-&gt;rdmutex, abstime);
+<a href='../S/72.html#L100'>lock</a>              100 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L105'>lock</a>              105 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_lock(&amp;lock-&gt;wrmutex);
+<a href='../S/72.html#L109'>lock</a>              109 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L114'>lock</a>              114 usr/src/libpthread/src/pthread_rwlock.c 	return pthread_mutex_timedlock(&amp;lock-&gt;wrmutex, abstime);
+<a href='../S/72.html#L118'>lock</a>              118 usr/src/libpthread/src/pthread_rwlock.c 	if(lock == NULL) {
+<a href='../S/72.html#L123'>lock</a>              123 usr/src/libpthread/src/pthread_rwlock.c 	if(pthread_mutex_unlock(&amp;lock-&gt;rdmutex) != 0)
+<a href='../S/72.html#L126'>lock</a>              126 usr/src/libpthread/src/pthread_rwlock.c 	if(pthread_mutex_unlock(&amp;lock-&gt;wrmutex) != 0)
+<a href='../S/53.html#L8'>lock</a>                8 usr/src/libpthread/src/pthread_spin.c 	if(!lock) {
+<a href='../S/53.html#L13'>lock</a>               13 usr/src/libpthread/src/pthread_spin.c 	lock-&gt;interlock = 0;
+<a href='../S/53.html#L14'>lock</a>               14 usr/src/libpthread/src/pthread_spin.c 	pthread_mutex_init(&amp;lock-&gt;mutex, NULL);
+<a href='../S/53.html#L20'>lock</a>               20 usr/src/libpthread/src/pthread_spin.c 	if(!lock) {
+<a href='../S/53.html#L25'>lock</a>               25 usr/src/libpthread/src/pthread_spin.c 	lock-&gt;interlock = 0;
+<a href='../S/53.html#L26'>lock</a>               26 usr/src/libpthread/src/pthread_spin.c 	pthread_mutex_destroy(&amp;lock-&gt;mutex);
+<a href='../S/53.html#L32'>lock</a>               32 usr/src/libpthread/src/pthread_spin.c 	if(!lock) {
+<a href='../S/53.html#L37'>lock</a>               37 usr/src/libpthread/src/pthread_spin.c 	if(pthread_mutex_lock(&amp;lock-&gt;mutex) == 0)
+<a href='../S/53.html#L38'>lock</a>               38 usr/src/libpthread/src/pthread_spin.c 		lock-&gt;interlock = 1;
+<a href='../S/53.html#L46'>lock</a>               46 usr/src/libpthread/src/pthread_spin.c 	if(!lock) {
+<a href='../S/53.html#L51'>lock</a>               51 usr/src/libpthread/src/pthread_spin.c 	if(pthread_mutex_trylock(&amp;lock-&gt;mutex) == 0)
+<a href='../S/53.html#L52'>lock</a>               52 usr/src/libpthread/src/pthread_spin.c 		lock-&gt;interlock = 1;
+<a href='../S/53.html#L60'>lock</a>               60 usr/src/libpthread/src/pthread_spin.c 	if(!lock) {
+<a href='../S/53.html#L65'>lock</a>               65 usr/src/libpthread/src/pthread_spin.c 	if(pthread_mutex_unlock(&amp;lock-&gt;mutex) == 0)
+<a href='../S/53.html#L66'>lock</a>               66 usr/src/libpthread/src/pthread_spin.c 		lock-&gt;interlock = 0;
+</pre>
+</body>
+</html>

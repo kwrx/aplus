@@ -1,0 +1,478 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="kheap_8c" kind="file">
+    <compoundname>kheap.c</compoundname>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="grub_8h" local="no">grub.h</includes>
+    <incdepgraph>
+      <node id="948">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="946">
+        <label>stdarg.h</label>
+      </node>
+      <node id="947">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="940" relation="include">
+        </childnode>
+        <childnode refid="939" relation="include">
+        </childnode>
+        <childnode refid="942" relation="include">
+        </childnode>
+        <childnode refid="948" relation="include">
+        </childnode>
+        <childnode refid="949" relation="include">
+        </childnode>
+      </node>
+      <node id="940">
+        <label>stdint.h</label>
+      </node>
+      <node id="952">
+        <label>setjmp.h</label>
+      </node>
+      <node id="944">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="940" relation="include">
+        </childnode>
+        <childnode refid="945" relation="include">
+        </childnode>
+        <childnode refid="947" relation="include">
+        </childnode>
+        <childnode refid="951" relation="include">
+        </childnode>
+        <childnode refid="942" relation="include">
+        </childnode>
+        <childnode refid="952" relation="include">
+        </childnode>
+      </node>
+      <node id="953">
+        <label>grub.h</label>
+        <link refid="grub_8h"/>
+      </node>
+      <node id="939">
+        <label>stddef.h</label>
+      </node>
+      <node id="945">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="940" relation="include">
+        </childnode>
+        <childnode refid="946" relation="include">
+        </childnode>
+        <childnode refid="941" relation="include">
+        </childnode>
+      </node>
+      <node id="942">
+        <label>sys/types.h</label>
+      </node>
+      <node id="938">
+        <label>src/mm/kheap.c</label>
+        <link refid="kheap.c"/>
+        <childnode refid="939" relation="include">
+        </childnode>
+        <childnode refid="940" relation="include">
+        </childnode>
+        <childnode refid="941" relation="include">
+        </childnode>
+        <childnode refid="942" relation="include">
+        </childnode>
+        <childnode refid="943" relation="include">
+        </childnode>
+        <childnode refid="953" relation="include">
+        </childnode>
+      </node>
+      <node id="941">
+        <label>string.h</label>
+      </node>
+      <node id="950">
+        <label>unistd.h</label>
+      </node>
+      <node id="951">
+        <label>signal.h</label>
+      </node>
+      <node id="943">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="940" relation="include">
+        </childnode>
+        <childnode refid="944" relation="include">
+        </childnode>
+      </node>
+      <node id="949">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="950" relation="include">
+        </childnode>
+        <childnode refid="942" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="kheap_8c_1a74db82a3840a04b119ef68ace44be19a" prot="public" static="no">
+        <name>BITMAP_SET</name>
+        <param><defname>bmp</defname></param>
+        <param><defname>bit</defname></param>
+        <initializer>bmp[bit / 32] |= (1 &lt;&lt; (bit % 32))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="32" column="9" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="kheap_8c_1a117b3288a72c30a6c9be0e2773332705" prot="public" static="no">
+        <name>BITMAP_CLR</name>
+        <param><defname>bmp</defname></param>
+        <param><defname>bit</defname></param>
+        <initializer>bmp[bit / 32] &amp;= ~(1 &lt;&lt; (bit % 32))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="35" column="9" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="kheap_8c_1a47df99630658921f6898646851230983" prot="public" static="no">
+        <name>BITMAP_TST</name>
+        <param><defname>bmp</defname></param>
+        <param><defname>bit</defname></param>
+        <initializer>(bmp[bit / 32] &amp; (1 &lt;&lt; (bit % 32)))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="38" column="9" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="kheap_8c_1a112c287ac25c656c889838c3629d822b" prot="public" static="no">
+        <name>GETBIT</name>
+        <param><defname>addr</defname></param>
+        <initializer>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>) addr / <ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="42" column="9" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="kheap_8c_1ab18276b758b671778bcef772dee38c85" prot="public" static="yes" mutable="no">
+        <type><ref refid="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300" kindref="member">heap_t</ref></type>
+        <definition>heap_t kheap</definition>
+        <argsstring></argsstring>
+        <name>kheap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="48" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="kheap_8c_1a8ffb348d372acd38099f16b08bdaf4b5" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t memsize</definition>
+        <argsstring></argsstring>
+        <name>memsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="49" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" prot="public" static="yes" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t __bitmap[131072]</definition>
+        <argsstring>[131072]</argsstring>
+        <name>__bitmap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="52" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>static int bitmap_first</definition>
+        <argsstring>(heap_t *heap, size_t size)</argsstring>
+        <name>bitmap_first</name>
+        <param>
+          <type><ref refid="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300" kindref="member">heap_t</ref> *</type>
+          <declname>heap</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="55" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="55" bodyend="71"/>
+        <references refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" compoundref="mm_8h" startline="63">heap::bitmap</references>
+        <references refid="kheap_8c_1a47df99630658921f6898646851230983" compoundref="kheap_8c" startline="38">BITMAP_TST</references>
+        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
+        <references refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" compoundref="mm_8h" startline="64">heap::size</references>
+      </memberdef>
+      <memberdef kind="function" id="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void* bitmap_alloc</definition>
+        <argsstring>(heap_t *heap, size_t size)</argsstring>
+        <name>bitmap_alloc</name>
+        <param>
+          <type><ref refid="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300" kindref="member">heap_t</ref> *</type>
+          <declname>heap</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="75" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="75" bodyend="104"/>
+        <references refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" compoundref="mm_8h" startline="63">heap::bitmap</references>
+        <references refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" compoundref="kheap_8c" startline="55" endline="71">bitmap_first</references>
+        <references refid="kheap_8c_1a74db82a3840a04b119ef68ace44be19a" compoundref="kheap_8c" startline="32">BITMAP_SET</references>
+        <references refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" compoundref="mm_8h" startline="57">BLKSIZE</references>
+        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
+        <references refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" compoundref="mm_8h" startline="64">heap::size</references>
+        <references refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" compoundref="mm_8h" startline="65">heap::used</references>
+      </memberdef>
+      <memberdef kind="function" id="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void bitmap_free</definition>
+        <argsstring>(heap_t *heap, void *addr, size_t size)</argsstring>
+        <name>bitmap_free</name>
+        <param>
+          <type><ref refid="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300" kindref="member">heap_t</ref> *</type>
+          <declname>heap</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>addr</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="106" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="106" bodyend="128"/>
+        <references refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" compoundref="mm_8h" startline="63">heap::bitmap</references>
+        <references refid="kheap_8c_1a117b3288a72c30a6c9be0e2773332705" compoundref="kheap_8c" startline="35">BITMAP_CLR</references>
+        <references refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" compoundref="mm_8h" startline="57">BLKSIZE</references>
+        <references refid="kheap_8c_1a112c287ac25c656c889838c3629d822b" compoundref="kheap_8c" startline="42">GETBIT</references>
+        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
+        <references refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" compoundref="mm_8h" startline="65">heap::used</references>
+      </memberdef>
+      <memberdef kind="function" id="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int kheap_init</definition>
+        <argsstring>()</argsstring>
+        <name>kheap_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="132" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="132" bodyend="149"/>
+        <references refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" compoundref="kheap_8c" startline="52">__bitmap</references>
+        <references refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" compoundref="mm_8h" startline="67">heap::alloc</references>
+        <references refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" compoundref="mm_8h" startline="63">heap::bitmap</references>
+        <references refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" compoundref="kheap_8c" startline="75" endline="104">bitmap_alloc</references>
+        <references refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" compoundref="kheap_8c" startline="106" endline="128">bitmap_free</references>
+        <references refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" compoundref="mm_8h" startline="57">BLKSIZE</references>
+        <references refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" compoundref="mm_8h" startline="68">heap::free</references>
+        <references refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" compoundref="heap_8c" startline="28" endline="34">halloc</references>
+        <references refid="kheap_8c_1a8ffb348d372acd38099f16b08bdaf4b5" compoundref="mm_8c" startline="35">memsize</references>
+        <references refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" compoundref="mm_8c" startline="113" endline="115">mm_setheap</references>
+        <references refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" compoundref="mm_8h" startline="64">heap::size</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>kheap.c</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Author:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Antonio<sp/>Natale<sp/>&lt;inferdevil97@gmail.com&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>2014<sp/>WareX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software:<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation,<sp/>either<sp/>version<sp/>3<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>along<sp/>with<sp/>this<sp/>program.<sp/><sp/>If<sp/>not,<sp/>see<sp/>&lt;http://www.gnu.org/licenses/&gt;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="grub_8h" kindref="compound">grub.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="kheap_8c_1a74db82a3840a04b119ef68ace44be19a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BITMAP_SET(bmp,<sp/>bit)<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="33"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>bmp[bit<sp/>/<sp/>32]<sp/>|=<sp/>(1<sp/>&lt;&lt;<sp/>(bit<sp/>%<sp/>32))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="35" refid="kheap_8c_1a117b3288a72c30a6c9be0e2773332705" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BITMAP_CLR(bmp,<sp/>bit)<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="36"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>bmp[bit<sp/>/<sp/>32]<sp/>&amp;=<sp/>~(1<sp/>&lt;&lt;<sp/>(bit<sp/>%<sp/>32))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38" refid="kheap_8c_1a47df99630658921f6898646851230983" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BITMAP_TST(bmp,<sp/>bit)<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="39"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(bmp[bit<sp/>/<sp/>32]<sp/>&amp;<sp/>(1<sp/>&lt;&lt;<sp/>(bit<sp/>%<sp/>32)))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="42" refid="kheap_8c_1a112c287ac25c656c889838c3629d822b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>GETBIT(addr)<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="43"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>((uint32_t)<sp/>addr<sp/>/<sp/>BLKSIZE)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="kheap_8c_1ab18276b758b671778bcef772dee38c85" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structheap" kindref="compound">heap_t</ref><sp/><ref refid="kheap_8c_1ab18276b758b671778bcef772dee38c85" kindref="member">kheap</ref>;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="kheap_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref>;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" kindref="member">__bitmap</ref>[131072];</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" kindref="member">bitmap_first</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>heap-&gt;<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>;<sp/>i++)<sp/>{<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j<sp/>=<sp/>0,<sp/>f<sp/>=<sp/>0;<sp/>j<sp/>&lt;<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;<sp/>j++)<sp/>{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="kheap_8c_1a47df99630658921f6898646851230983" kindref="member">BITMAP_TST</ref>(heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>(i<sp/>+<sp/>j)))</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>f++;<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(f<sp/>==<sp/>size)</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>i;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75" refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" kindref="member">bitmap_alloc</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!heap)</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>)</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(heap-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>&gt;=<sp/>heap-&gt;<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>)</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>%<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>/=<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>/=<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>index<sp/>=<sp/><ref refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" kindref="member">bitmap_first</ref>(heap,<sp/>size);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(index<sp/>==<sp/>-1)</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;<sp/>i++)</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="kheap_8c_1a74db82a3840a04b119ef68ace44be19a" kindref="member">BITMAP_SET</ref>(heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>(index<sp/>+<sp/>i));</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>heap-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>+=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>(index<sp/>*<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106" refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" kindref="member">bitmap_free</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!heap)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>)</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>%<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>/=<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>/=<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>index<sp/>=<sp/><ref refid="kheap_8c_1a112c287ac25c656c889838c3629d822b" kindref="member">GETBIT</ref>(addr);</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;<sp/>i++)</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="kheap_8c_1a117b3288a72c30a6c9be0e2773332705" kindref="member">BITMAP_CLR</ref>(heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>(index<sp/>+<sp/>i));</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>heap-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>-=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="132" refid="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" kindref="member">kheap_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>end;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref><sp/>=<sp/><ref refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" kindref="member">__bitmap</ref>;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref><sp/>=<sp/><ref refid="kheap_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>/<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" kindref="member">alloc</ref><sp/>=<sp/><ref refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" kindref="member">bitmap_alloc</ref>;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" kindref="member">free</ref><sp/>=<sp/><ref refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" kindref="member">bitmap_free</ref>;</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(kheap.<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>0,<sp/>kheap.<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>);</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" kindref="member">mm_setheap</ref>(&amp;kheap);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Alloc<sp/>first<sp/>4MB<sp/>(reserved<sp/>physical<sp/>kernel<sp/>area)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(&amp;kheap,<sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">)<sp/>0x400000);</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/mm/kheap.c"/>
+  </compounddef>
+</doxygen>

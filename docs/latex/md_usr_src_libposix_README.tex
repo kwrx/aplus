@@ -1,0 +1,14 @@
+The C P\+O\+S\+I\+X library is a specification of a C standard library for P\+O\+S\+I\+X systems. It was developed at the same time as the A\+N\+S\+I C standard. Some effort was made to make P\+O\+S\+I\+X compatible with standard C; P\+O\+S\+I\+X includes additional functions to those introduced in standard C.
+
+\paragraph*{Required function}
+
+
+\begin{DoxyItemize}
+\item Read directory entries
+\item Get groups;
+\item Schedule Yield.
+\end{DoxyItemize}
+
+``` struct dirent$\ast$ \+\_\+\+\_\+os\+\_\+readdir(\+D\+I\+R$\ast$ d); int \+\_\+\+\_\+os\+\_\+getgroups(int length, gid\+\_\+t$\ast$ list); void \+\_\+\+\_\+os\+\_\+yield(void);
+
+See \char`\"{}/config.\+h\char`\"{}. ``` 

@@ -1,0 +1,929 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file src/include/grub.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('grub_8h.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Strutture dati</a> &#124;
+<a href="#define-members">Definizioni</a> &#124;
+<a href="#typedef-members">Ridefinizioni di tipo (typedef)</a> &#124;
+<a href="#func-members">Funzioni</a> &#124;
+<a href="#var-members">Variabili</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file grub.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p><a href="grub_8h_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Strutture dati</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvesaInfo__t.html">vesaInfo_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvesaModeInfo__t.html">vesaModeInfo_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBootInfo__t.html">BootInfo_t</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Definizioni</h2></td></tr>
+<tr class="memitem:a3efad85ab30d96e506aba9003c0ee4dd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a3efad85ab30d96e506aba9003c0ee4dd">MULTIBOOT_FLAG_MEM</a>&#160;&#160;&#160;0x001</td></tr>
+<tr class="separator:a3efad85ab30d96e506aba9003c0ee4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f338ee148fe6f4c672e8e53e608d985"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a9f338ee148fe6f4c672e8e53e608d985">MULTIBOOT_FLAG_DEVICE</a>&#160;&#160;&#160;0x002</td></tr>
+<tr class="separator:a9f338ee148fe6f4c672e8e53e608d985"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af58e2129db03f11e8f3d1be24c67f273"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#af58e2129db03f11e8f3d1be24c67f273">MULTIBOOT_FLAG_CMDLINE</a>&#160;&#160;&#160;0x004</td></tr>
+<tr class="separator:af58e2129db03f11e8f3d1be24c67f273"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05c950e0dfa2339451b7256de3b6634b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a05c950e0dfa2339451b7256de3b6634b">MULTIBOOT_FLAG_MODS</a>&#160;&#160;&#160;0x008</td></tr>
+<tr class="separator:a05c950e0dfa2339451b7256de3b6634b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ab64e4da5caf65cf7ae2991b984a3cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a8ab64e4da5caf65cf7ae2991b984a3cf">MULTIBOOT_FLAG_AOUT</a>&#160;&#160;&#160;0x010</td></tr>
+<tr class="separator:a8ab64e4da5caf65cf7ae2991b984a3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae67a3767b0bcf8b3a57a1f9d84a0d12c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ae67a3767b0bcf8b3a57a1f9d84a0d12c">MULTIBOOT_FLAG_ELF</a>&#160;&#160;&#160;0x020</td></tr>
+<tr class="separator:ae67a3767b0bcf8b3a57a1f9d84a0d12c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ed735dcce6c8367f6e3ee5f56e16a42"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a2ed735dcce6c8367f6e3ee5f56e16a42">MULTIBOOT_FLAG_MMAP</a>&#160;&#160;&#160;0x040</td></tr>
+<tr class="separator:a2ed735dcce6c8367f6e3ee5f56e16a42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3d220808412fa0f715b0a1844f1843f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ab3d220808412fa0f715b0a1844f1843f">MULTIBOOT_FLAG_CONFIG</a>&#160;&#160;&#160;0x080</td></tr>
+<tr class="separator:ab3d220808412fa0f715b0a1844f1843f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab80180da32c134cf24f3dd64e3e14176"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ab80180da32c134cf24f3dd64e3e14176">MULTIBOOT_FLAG_LOADER</a>&#160;&#160;&#160;0x100</td></tr>
+<tr class="separator:ab80180da32c134cf24f3dd64e3e14176"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fb3ddd4db5c7fb88fd513c66577735a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a3fb3ddd4db5c7fb88fd513c66577735a">MULTIBOOT_FLAG_APM</a>&#160;&#160;&#160;0x200</td></tr>
+<tr class="separator:a3fb3ddd4db5c7fb88fd513c66577735a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a852a5720b636e1bdc5799f72dd04b8d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a852a5720b636e1bdc5799f72dd04b8d8">MULTIBOOT_FLAG_VBE</a>&#160;&#160;&#160;0x400</td></tr>
+<tr class="separator:a852a5720b636e1bdc5799f72dd04b8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Ridefinizioni di tipo (typedef)</h2></td></tr>
+<tr class="memitem:a949fefd565685608cdc3489425f32a93"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structvesaInfo__t.html">vesaInfo_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a949fefd565685608cdc3489425f32a93">vesaInfo</a></td></tr>
+<tr class="separator:a949fefd565685608cdc3489425f32a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf761d57d118a95f28fd464fd6eaf593"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structBootInfo__t.html">BootInfo_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#aaf761d57d118a95f28fd464fd6eaf593">BootInfo</a></td></tr>
+<tr class="separator:aaf761d57d118a95f28fd464fd6eaf593"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funzioni</h2></td></tr>
+<tr class="memitem:afa73cc1cb823e7947162fcc569b64e5a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structvesaModeInfo__t.html">vesaModeInfo_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#afa73cc1cb823e7947162fcc569b64e5a">__attribute__</a> ((packed)) vesaModeInfo</td></tr>
+<tr class="separator:afa73cc1cb823e7947162fcc569b64e5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variabili</h2></td></tr>
+<tr class="memitem:a448571b444d84b29e9528860d6198688"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a448571b444d84b29e9528860d6198688">attributes</a></td></tr>
+<tr class="separator:a448571b444d84b29e9528860d6198688"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b375a9d989dccc8cf3e3b452552eee8"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a5b375a9d989dccc8cf3e3b452552eee8">winA</a></td></tr>
+<tr class="separator:a5b375a9d989dccc8cf3e3b452552eee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9719a24ee031bd20ea4c0cacb5c77b0"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ae9719a24ee031bd20ea4c0cacb5c77b0">winB</a></td></tr>
+<tr class="separator:ae9719a24ee031bd20ea4c0cacb5c77b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78687e772fb4891075ad895a984b3d50"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a78687e772fb4891075ad895a984b3d50">granularity</a></td></tr>
+<tr class="separator:a78687e772fb4891075ad895a984b3d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75544d53f0c0032654ba8afc5ea4fb34"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a75544d53f0c0032654ba8afc5ea4fb34">winsize</a></td></tr>
+<tr class="separator:a75544d53f0c0032654ba8afc5ea4fb34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1dd41cdbe52db68044288e65284f178"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ac1dd41cdbe52db68044288e65284f178">segmentA</a></td></tr>
+<tr class="separator:ac1dd41cdbe52db68044288e65284f178"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab80bf8c9c3587a6b04b7eb6188557c81"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ab80bf8c9c3587a6b04b7eb6188557c81">segmentB</a></td></tr>
+<tr class="separator:ab80bf8c9c3587a6b04b7eb6188557c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9329c4f8f09e8a7ba8edcb7979b0724d"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a9329c4f8f09e8a7ba8edcb7979b0724d">realFctPtr</a></td></tr>
+<tr class="separator:a9329c4f8f09e8a7ba8edcb7979b0724d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8bd203bb72055179d33b87afbfaafdf"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#aa8bd203bb72055179d33b87afbfaafdf">pitch</a></td></tr>
+<tr class="separator:aa8bd203bb72055179d33b87afbfaafdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92b3661512e0dc29b5e5fe94b249a0a8"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a92b3661512e0dc29b5e5fe94b249a0a8">Xres</a></td></tr>
+<tr class="separator:a92b3661512e0dc29b5e5fe94b249a0a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa642f35e530d0e197056de47b7a24679"><td class="memItemLeft" align="right" valign="top">unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#aa642f35e530d0e197056de47b7a24679">Yres</a></td></tr>
+<tr class="separator:aa642f35e530d0e197056de47b7a24679"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af822f8807abe8e921d0622a13d619e57"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#af822f8807abe8e921d0622a13d619e57">Wchar</a></td></tr>
+<tr class="separator:af822f8807abe8e921d0622a13d619e57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a386cee69730f3541482246638e04a662"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a386cee69730f3541482246638e04a662">Ychar</a></td></tr>
+<tr class="separator:a386cee69730f3541482246638e04a662"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a234b1cba8a11f25edbe4473129954041"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a234b1cba8a11f25edbe4473129954041">planes</a></td></tr>
+<tr class="separator:a234b1cba8a11f25edbe4473129954041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29d3773a35b844e2dbb12bb5d895ab50"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a29d3773a35b844e2dbb12bb5d895ab50">bpp</a></td></tr>
+<tr class="separator:a29d3773a35b844e2dbb12bb5d895ab50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8898775b98504132a77f294f60914ad"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#af8898775b98504132a77f294f60914ad">banks</a></td></tr>
+<tr class="separator:af8898775b98504132a77f294f60914ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab17dac0f2b0af0515bd1dcde0e8eb29d"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ab17dac0f2b0af0515bd1dcde0e8eb29d">memory_model</a></td></tr>
+<tr class="separator:ab17dac0f2b0af0515bd1dcde0e8eb29d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32d05d9fdf87ed2f2fe33d299c279df7"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a32d05d9fdf87ed2f2fe33d299c279df7">bank_size</a></td></tr>
+<tr class="separator:a32d05d9fdf87ed2f2fe33d299c279df7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09782d07df1b4bb29e0aeab2347bd4f7"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a09782d07df1b4bb29e0aeab2347bd4f7">image_pages</a></td></tr>
+<tr class="separator:a09782d07df1b4bb29e0aeab2347bd4f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91deebede3408c2739eaf833278ac98d"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a91deebede3408c2739eaf833278ac98d">reserved0</a></td></tr>
+<tr class="separator:a91deebede3408c2739eaf833278ac98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bbaeb61ae0158164a6478df20df6d2a"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a9bbaeb61ae0158164a6478df20df6d2a">red_mask</a></td></tr>
+<tr class="separator:a9bbaeb61ae0158164a6478df20df6d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0012f5fa55e6e780ad2d34752fc092a"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ac0012f5fa55e6e780ad2d34752fc092a">red_position</a></td></tr>
+<tr class="separator:ac0012f5fa55e6e780ad2d34752fc092a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b05ae4ade4d301d04912921911089f1"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a2b05ae4ade4d301d04912921911089f1">green_mask</a></td></tr>
+<tr class="separator:a2b05ae4ade4d301d04912921911089f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b620a4a97d8a86e7ddbb0bcb758e33b"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a3b620a4a97d8a86e7ddbb0bcb758e33b">green_position</a></td></tr>
+<tr class="separator:a3b620a4a97d8a86e7ddbb0bcb758e33b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bed3c9924cd7dd9ea7213a94e0f516b"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a2bed3c9924cd7dd9ea7213a94e0f516b">blue_mask</a></td></tr>
+<tr class="separator:a2bed3c9924cd7dd9ea7213a94e0f516b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87172d563ac78dbb31b20f32baf3ed85"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a87172d563ac78dbb31b20f32baf3ed85">blue_position</a></td></tr>
+<tr class="separator:a87172d563ac78dbb31b20f32baf3ed85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd702c4796391fd472a86c57720397ff"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#abd702c4796391fd472a86c57720397ff">rsv_mask</a></td></tr>
+<tr class="separator:abd702c4796391fd472a86c57720397ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad837b538d4b0b41c8fb2ff139a2a931b"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ad837b538d4b0b41c8fb2ff139a2a931b">rsv_position</a></td></tr>
+<tr class="separator:ad837b538d4b0b41c8fb2ff139a2a931b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8badd781205f0a5db81752962c9357a6"><td class="memItemLeft" align="right" valign="top">unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a8badd781205f0a5db81752962c9357a6">directcolor_attributes</a></td></tr>
+<tr class="separator:a8badd781205f0a5db81752962c9357a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2000b367a91e9bd30bebc900c40203b8"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a2000b367a91e9bd30bebc900c40203b8">physbase</a></td></tr>
+<tr class="separator:a2000b367a91e9bd30bebc900c40203b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9f4ffc72ce26b93734d48c73f726ad4"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#ae9f4ffc72ce26b93734d48c73f726ad4">reserved1</a></td></tr>
+<tr class="separator:ae9f4ffc72ce26b93734d48c73f726ad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69bce65d59ea99847ac5bccfbf6ce0f9"><td class="memItemLeft" align="right" valign="top">short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a69bce65d59ea99847ac5bccfbf6ce0f9">reserved2</a></td></tr>
+<tr class="separator:a69bce65d59ea99847ac5bccfbf6ce0f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abac514a5a8c938a1de6fb08f542f5962"><td class="memItemLeft" align="right" valign="top"><a class="el" href="grub_8h.html#aaf761d57d118a95f28fd464fd6eaf593">BootInfo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a></td></tr>
+<tr class="separator:abac514a5a8c938a1de6fb08f542f5962"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7154179fe070a40c828f7c03f454d4d6"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#a7154179fe070a40c828f7c03f454d4d6">magic</a></td></tr>
+<tr class="separator:a7154179fe070a40c828f7c03f454d4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle definizioni</h2>
+<a class="anchor" id="a8ab64e4da5caf65cf7ae2991b984a3cf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_AOUT&#160;&#160;&#160;0x010</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00099">99</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3fb3ddd4db5c7fb88fd513c66577735a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_APM&#160;&#160;&#160;0x200</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00104">104</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af58e2129db03f11e8f3d1be24c67f273"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_CMDLINE&#160;&#160;&#160;0x004</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00097">97</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab3d220808412fa0f715b0a1844f1843f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_CONFIG&#160;&#160;&#160;0x080</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00102">102</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9f338ee148fe6f4c672e8e53e608d985"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_DEVICE&#160;&#160;&#160;0x002</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00096">96</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae67a3767b0bcf8b3a57a1f9d84a0d12c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_ELF&#160;&#160;&#160;0x020</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00100">100</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab80180da32c134cf24f3dd64e3e14176"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_LOADER&#160;&#160;&#160;0x100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00103">103</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3efad85ab30d96e506aba9003c0ee4dd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_MEM&#160;&#160;&#160;0x001</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00095">95</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2ed735dcce6c8367f6e3ee5f56e16a42"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_MMAP&#160;&#160;&#160;0x040</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00101">101</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a05c950e0dfa2339451b7256de3b6634b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_MODS&#160;&#160;&#160;0x008</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00098">98</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a852a5720b636e1bdc5799f72dd04b8d8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MULTIBOOT_FLAG_VBE&#160;&#160;&#160;0x400</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00105">105</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle ridefinizioni di tipo (typedef)</h2>
+<a class="anchor" id="aaf761d57d118a95f28fd464fd6eaf593"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structBootInfo__t.html">BootInfo_t</a>  <a class="el" href="grub_8h.html#aaf761d57d118a95f28fd464fd6eaf593">BootInfo</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a949fefd565685608cdc3489425f32a93"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structvesaInfo__t.html">vesaInfo_t</a>  <a class="el" href="grub_8h.html#a949fefd565685608cdc3489425f32a93">vesaInfo</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle funzioni</h2>
+<a class="anchor" id="afa73cc1cb823e7947162fcc569b64e5a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structvesaModeInfo__t.html">vesaModeInfo_t</a> __attribute__ </td>
+          <td>(</td>
+          <td class="paramtype">(packed)&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00044">44</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                       {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a> limit;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> base;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <a class="code" href="desc_8c.html#a88d6351e81fa254cec37b8a9a1353401">__attribute__</a>((packed)) gdt_ptr_t;</div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="desc_8c_html_a88d6351e81fa254cec37b8a9a1353401"><div class="ttname"><a href="desc_8c.html#a88d6351e81fa254cec37b8a9a1353401">__attribute__</a></div><div class="ttdeci">struct gdt_entry __attribute__((packed))</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
+<div class="ttc" id="aplus_8h_html_a5a8b2dc9e45a9ee81a94ef304fb62505"><div class="ttname"><a href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a></div><div class="ttdeci">uint16_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00102">aplus.h:102</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle variabili</h2>
+<a class="anchor" id="a448571b444d84b29e9528860d6198688"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short attributes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00140">140</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a32d05d9fdf87ed2f2fe33d299c279df7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char bank_size</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00150">150</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af8898775b98504132a77f294f60914ad"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char banks</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00149">149</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2bed3c9924cd7dd9ea7213a94e0f516b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char blue_mask</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00155">155</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a87172d563ac78dbb31b20f32baf3ed85"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char blue_position</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00155">155</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a29d3773a35b844e2dbb12bb5d895ab50"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char bpp</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00149">149</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8badd781205f0a5db81752962c9357a6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char directcolor_attributes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00157">157</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a78687e772fb4891075ad895a984b3d50"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short granularity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00142">142</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2b05ae4ade4d301d04912921911089f1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char green_mask</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00154">154</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3b620a4a97d8a86e7ddbb0bcb758e33b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char green_position</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00154">154</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a09782d07df1b4bb29e0aeab2347bd4f7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char image_pages</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00150">150</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7154179fe070a40c828f7c03f454d4d6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int magic</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="mm_8c_source.html#l00042">42</a> del file <a class="el" href="mm_8c_source.html">mm.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abac514a5a8c938a1de6fb08f542f5962"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="grub_8h.html#aaf761d57d118a95f28fd464fd6eaf593">BootInfo</a>* mbd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab17dac0f2b0af0515bd1dcde0e8eb29d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char memory_model</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00150">150</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2000b367a91e9bd30bebc900c40203b8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int physbase</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00159">159</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa8bd203bb72055179d33b87afbfaafdf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short pitch</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00146">146</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a234b1cba8a11f25edbe4473129954041"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char planes</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00149">149</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9329c4f8f09e8a7ba8edcb7979b0724d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int realFctPtr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00145">145</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9bbaeb61ae0158164a6478df20df6d2a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char red_mask</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00153">153</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac0012f5fa55e6e780ad2d34752fc092a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char red_position</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00153">153</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a91deebede3408c2739eaf833278ac98d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char reserved0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00151">151</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae9f4ffc72ce26b93734d48c73f726ad4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int reserved1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00160">160</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a69bce65d59ea99847ac5bccfbf6ce0f9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">short reserved2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00161">161</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abd702c4796391fd472a86c57720397ff"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char rsv_mask</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00156">156</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad837b538d4b0b41c8fb2ff139a2a931b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char rsv_position</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00156">156</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac1dd41cdbe52db68044288e65284f178"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short segmentA</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00144">144</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab80bf8c9c3587a6b04b7eb6188557c81"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short segmentB</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00144">144</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af822f8807abe8e921d0622a13d619e57"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char Wchar</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00149">149</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5b375a9d989dccc8cf3e3b452552eee8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char winA</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00141">141</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae9719a24ee031bd20ea4c0cacb5c77b0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char winB</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00141">141</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a75544d53f0c0032654ba8afc5ea4fb34"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short winsize</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00143">143</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a92b3661512e0dc29b5e5fe94b249a0a8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short Xres</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00148">148</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a386cee69730f3541482246638e04a662"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char Ychar</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00149">149</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa642f35e530d0e197056de47b7a24679"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned short Yres</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="grub_8h_source.html#l00148">148</a> del file <a class="el" href="grub_8h_source.html">grub.h</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="grub_8h.html">grub.h</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

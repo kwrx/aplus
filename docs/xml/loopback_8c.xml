@@ -1,0 +1,489 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="loopback_8c" kind="file">
+    <compoundname>loopback.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includes refid="bufio_8h" local="no">aplus/bufio.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes refid="attribute_8h" local="no">aplus/attribute.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">errno.h</includes>
+    <incdepgraph>
+      <node id="1094">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1084">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1101">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1082" relation="include">
+        </childnode>
+        <childnode refid="1100" relation="include">
+        </childnode>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1085" relation="include">
+        </childnode>
+        <childnode refid="1090" relation="include">
+        </childnode>
+      </node>
+      <node id="1093">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1088" relation="include">
+        </childnode>
+        <childnode refid="1090" relation="include">
+        </childnode>
+        <childnode refid="1094" relation="include">
+        </childnode>
+        <childnode refid="1095" relation="include">
+        </childnode>
+      </node>
+      <node id="1083">
+        <label>stdint.h</label>
+      </node>
+      <node id="1098">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1092">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1082" relation="include">
+        </childnode>
+        <childnode refid="1093" relation="include">
+        </childnode>
+        <childnode refid="1097" relation="include">
+        </childnode>
+        <childnode refid="1090" relation="include">
+        </childnode>
+        <childnode refid="1098" relation="include">
+        </childnode>
+      </node>
+      <node id="1102">
+        <label>errno.h</label>
+      </node>
+      <node id="1081">
+        <label>src/net/loopback/loopback.c</label>
+        <link refid="loopback.c"/>
+        <childnode refid="1082" relation="include">
+        </childnode>
+        <childnode refid="1086" relation="include">
+        </childnode>
+        <childnode refid="1089" relation="include">
+        </childnode>
+        <childnode refid="1099" relation="include">
+        </childnode>
+        <childnode refid="1092" relation="include">
+        </childnode>
+        <childnode refid="1091" relation="include">
+        </childnode>
+        <childnode refid="1100" relation="include">
+        </childnode>
+        <childnode refid="1101" relation="include">
+        </childnode>
+        <childnode refid="1085" relation="include">
+        </childnode>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1102" relation="include">
+        </childnode>
+      </node>
+      <node id="1087">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="1082" relation="include">
+        </childnode>
+        <childnode refid="1083" relation="include">
+        </childnode>
+      </node>
+      <node id="1088">
+        <label>stddef.h</label>
+      </node>
+      <node id="1100">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1088" relation="include">
+        </childnode>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1090" relation="include">
+        </childnode>
+        <childnode refid="1091" relation="include">
+        </childnode>
+        <childnode refid="1099" relation="include">
+        </childnode>
+      </node>
+      <node id="1082">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1084" relation="include">
+        </childnode>
+        <childnode refid="1085" relation="include">
+        </childnode>
+      </node>
+      <node id="1090">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1085">
+        <label>string.h</label>
+      </node>
+      <node id="1096">
+        <label>unistd.h</label>
+      </node>
+      <node id="1097">
+        <label>signal.h</label>
+      </node>
+      <node id="1086">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="1082" relation="include">
+        </childnode>
+        <childnode refid="1087" relation="include">
+        </childnode>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1088" relation="include">
+        </childnode>
+      </node>
+      <node id="1099">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1092" relation="include">
+        </childnode>
+      </node>
+      <node id="1095">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1096" relation="include">
+        </childnode>
+        <childnode refid="1090" relation="include">
+        </childnode>
+      </node>
+      <node id="1091">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="1089">
+        <label>aplus/bufio.h</label>
+        <link refid="bufio_8h"/>
+        <childnode refid="1083" relation="include">
+        </childnode>
+        <childnode refid="1088" relation="include">
+        </childnode>
+        <childnode refid="1090" relation="include">
+        </childnode>
+        <childnode refid="1091" relation="include">
+        </childnode>
+        <childnode refid="1092" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="loopback_8c_1ae1416e18db11d1fd3fa1c16179a90340" prot="public" static="no">
+        <name>LOOPBACK_MAGIC</name>
+        <initializer>0x127001FF</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="15" column="9" bodyfile="/opt/prj/aPlus/src/net/loopback/loopback.c" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="loopback_8c_1af2441285c13d8589c663eadabf9692c3" prot="public" static="no">
+        <name>LOOPBACK_MTU</name>
+        <initializer>65563</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="16" column="9" bodyfile="/opt/prj/aPlus/src/net/loopback/loopback.c" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="loopback_8c_1a43c5c1321b505bd06d640a4a2c96c952" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int loopback_ifup</definition>
+        <argsstring>(netif_t *netif)</argsstring>
+        <name>loopback_ifup</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/net/loopback/loopback.c" bodystart="19" bodyend="22"/>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+      </memberdef>
+      <memberdef kind="function" id="loopback_8c_1a809e6e981d793a1e3f7da278d1907f12" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int loopback_ifdown</definition>
+        <argsstring>(netif_t *netif)</argsstring>
+        <name>loopback_ifdown</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="24" column="1" bodyfile="/opt/prj/aPlus/src/net/loopback/loopback.c" bodystart="24" bodyend="27"/>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+      </memberdef>
+      <memberdef kind="function" id="loopback_8c_1ab344e1536772b476906fc74d19dd227b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int loopback_recv</definition>
+        <argsstring>(netif_t *netif, void *buf, size_t len)</argsstring>
+        <name>loopback_recv</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="31" column="1" bodyfile="/opt/prj/aPlus/src/net/loopback/loopback.c" bodystart="31" bodyend="44"/>
+        <references refid="eth_8c_1af8e21540e459402877e8e7143d17f47c" compoundref="eth_8c" startline="11" endline="46">eth_recv</references>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+        <references refid="structnetif_1a5a078449e22bb6f4d3d0068345d8dabc" compoundref="netif_8h" startline="56">netif::rx_bytes</references>
+        <references refid="structnetif_1adb3c694759403e67d539a5e81a552c92" compoundref="netif_8h" startline="57">netif::rx_errors</references>
+        <references refid="structnetif_1a80040f58867713ff1b5ec982a450221e" compoundref="netif_8h" startline="55">netif::rx_packets</references>
+        <references refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64">netif::state</references>
+      </memberdef>
+      <memberdef kind="function" id="loopback_8c_1a3b46747a2291cdd314ab6a3ff852d62e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int loopback_send</definition>
+        <argsstring>(netif_t *netif, void *buf, size_t len, int type)</argsstring>
+        <name>loopback_send</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>len</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="46" column="1" bodyfile="/opt/prj/aPlus/src/net/loopback/loopback.c" bodystart="46" bodyend="62"/>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="loopback_8c_1af2441285c13d8589c663eadabf9692c3" compoundref="loopback_8c" startline="16">LOOPBACK_MTU</references>
+        <references refid="loopback_8c_1ab344e1536772b476906fc74d19dd227b" compoundref="loopback_8c" startline="31" endline="44">loopback_recv</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+        <references refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64">netif::state</references>
+        <references refid="structnetif_1ac340647ad948b8103aa9a4e3c7b3fd0f" compoundref="netif_8h" startline="61">netif::tx_bytes</references>
+        <references refid="structnetif_1adac4c9e26ac4c17089eaf3a0e060f601" compoundref="netif_8h" startline="62">netif::tx_errors</references>
+        <references refid="structnetif_1aabafd7c28253a190863f673bd5e4320a" compoundref="netif_8h" startline="60">netif::tx_packets</references>
+      </memberdef>
+      <memberdef kind="function" id="loopback_8c_1af6c52d7c04d8e11a5e006195ce72c61d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int loopback_init</definition>
+        <argsstring>()</argsstring>
+        <name>loopback_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="65" column="1" bodyfile="/opt/prj/aPlus/src/net/loopback/loopback.c" bodystart="65" bodyend="102"/>
+        <references refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" compoundref="netif_8h" startline="35">netif::data</references>
+        <references refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" compoundref="netif_8h" startline="68">netif::ifdown</references>
+        <references refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" compoundref="netif_8h" startline="67">netif::ifup</references>
+        <references refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" compoundref="netif_8h" startline="38">netif::ipv4</references>
+        <references refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" compoundref="netif_8h" startline="37">netif::ipv6</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="loopback_8c_1a809e6e981d793a1e3f7da278d1907f12" compoundref="loopback_8c" startline="24" endline="27">loopback_ifdown</references>
+        <references refid="loopback_8c_1a43c5c1321b505bd06d640a4a2c96c952" compoundref="loopback_8c" startline="19" endline="22">loopback_ifup</references>
+        <references refid="loopback_8c_1af2441285c13d8589c663eadabf9692c3" compoundref="loopback_8c" startline="16">LOOPBACK_MTU</references>
+        <references refid="loopback_8c_1a3b46747a2291cdd314ab6a3ff852d62e" compoundref="loopback_8c" startline="46" endline="62">loopback_send</references>
+        <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
+        <references refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" compoundref="netif_8h" startline="70">netif::mtu</references>
+        <references refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" compoundref="netif_8h" startline="34">netif::name</references>
+        <references refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" compoundref="netif_8c" startline="124" endline="212">netif_add</references>
+        <references refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" compoundref="netif_8h" startline="39">netif::netmask</references>
+        <references refid="structnetif_1ac0505ae55088f68c2cefa77dc6871208" compoundref="netif_8h" startline="66">netif::send</references>
+      </memberdef>
+      <memberdef kind="function" id="loopback_8c_1a262ebd0904685b89cfc2dca397f1c693" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>ATTRIBUTE</definition>
+        <argsstring>(&quot;netif&quot;, loopback_init)</argsstring>
+        <name>ATTRIBUTE</name>
+        <param>
+          <type>&quot;netif&quot;</type>
+        </param>
+        <param>
+          <type><ref refid="loopback_8c_1af6c52d7c04d8e11a5e006195ce72c61d" kindref="member">loopback_init</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/loopback/loopback.c" line="104" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="bufio_8h" kindref="compound">aplus/bufio.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="attribute_8h" kindref="compound">aplus/attribute.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="loopback_8c_1ae1416e18db11d1fd3fa1c16179a90340" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOOPBACK_MAGIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x127001FF</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="loopback_8c_1af2441285c13d8589c663eadabf9692c3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>LOOPBACK_MTU<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>65563</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="loopback_8c_1a43c5c1321b505bd06d640a4a2c96c952" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="loopback_8c_1a43c5c1321b505bd06d640a4a2c96c952" kindref="member">loopback_ifup</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>|=<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="loopback_8c_1a809e6e981d793a1e3f7da278d1907f12" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="loopback_8c_1a809e6e981d793a1e3f7da278d1907f12" kindref="member">loopback_ifdown</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;=<sp/>~<ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="loopback_8c_1ab344e1536772b476906fc74d19dd227b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="loopback_8c_1ab344e1536772b476906fc74d19dd227b" kindref="member">loopback_recv</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="eth_8c_1af8e21540e459402877e8e7143d17f47c" kindref="member">eth_recv</ref>(netif,<sp/>buf,<sp/>len)<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1a80040f58867713ff1b5ec982a450221e" kindref="member">rx_packets</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1a5a078449e22bb6f4d3d0068345d8dabc" kindref="member">rx_bytes</ref><sp/>+=<sp/>len;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>len;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1adb3c694759403e67d539a5e81a552c92" kindref="member">rx_errors</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="loopback_8c_1a3b46747a2291cdd314ab6a3ff852d62e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="loopback_8c_1a3b46747a2291cdd314ab6a3ff852d62e" kindref="member">loopback_send</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(len<sp/>&gt;<sp/><ref refid="loopback_8c_1af2441285c13d8589c663eadabf9692c3" kindref="member">LOOPBACK_MTU</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1adac4c9e26ac4c17089eaf3a0e060f601" kindref="member">tx_errors</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1aabafd7c28253a190863f673bd5e4320a" kindref="member">tx_packets</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1ac340647ad948b8103aa9a4e3c7b3fd0f" kindref="member">tx_bytes</ref><sp/>+=<sp/>len;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="loopback_8c_1ab344e1536772b476906fc74d19dd227b" kindref="member">loopback_recv</ref>(netif,<sp/>buf,<sp/>len);<sp/></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>len;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="loopback_8c_1af6c52d7c04d8e11a5e006195ce72c61d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="loopback_8c_1af6c52d7c04d8e11a5e006195ce72c61d" kindref="member">loopback_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structnetif" kindref="compound">netif_t</ref>));</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(netif,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structnetif" kindref="compound">netif_t</ref>));</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>strcpy(netif-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>,<sp/></highlight><highlight class="stringliteral">&quot;lo&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>,<sp/>0xFF,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>));</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[0]<sp/>=<sp/>127;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[1]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[2]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[3]<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[0]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[1]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[2]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[3]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[4]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[5]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[6]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[7]<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[0]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[1]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[2]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[3]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" kindref="member">mtu</ref><sp/>=<sp/><ref refid="loopback_8c_1af2441285c13d8589c663eadabf9692c3" kindref="member">LOOPBACK_MTU</ref>;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1ac0505ae55088f68c2cefa77dc6871208" kindref="member">send</ref><sp/>=<sp/><ref refid="loopback_8c_1a3b46747a2291cdd314ab6a3ff852d62e" kindref="member">loopback_send</ref>;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" kindref="member">ifup</ref><sp/>=<sp/><ref refid="loopback_8c_1a43c5c1321b505bd06d640a4a2c96c952" kindref="member">loopback_ifup</ref>;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" kindref="member">ifdown</ref><sp/>=<sp/><ref refid="loopback_8c_1a809e6e981d793a1e3f7da278d1907f12" kindref="member">loopback_ifdown</ref>;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" kindref="member">data</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" kindref="member">netif_add</ref>(netif);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><ref refid="loopback_8c_1a262ebd0904685b89cfc2dca397f1c693" kindref="member">ATTRIBUTE</ref>(</highlight><highlight class="stringliteral">&quot;netif&quot;</highlight><highlight class="normal">,<sp/><ref refid="loopback_8c_1af6c52d7c04d8e11a5e006195ce72c61d" kindref="member">loopback_init</ref>);</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/net/loopback/loopback.c"/>
+  </compounddef>
+</doxygen>

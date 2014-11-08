@@ -1,0 +1,215 @@
+<html>
+<head>
+<title>src/mm/paging.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/170.html'>mm</a>/paging.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L54'>[^]</a><a href='#L165'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L54' title='Defined at 54.'>vmm_switch</a>
+<li><a href='#L60' title='Defined at 60.'>vmm_enable</a>
+<li><a href='#L65' title='Defined at 65.'>vmm_disable</a>
+<li><a href='#L72' title='Defined at 72.'>vmm_map</a>
+<li><a href='#L109' title='Defined at 109.'>vmm_umap</a>
+<li><a href='#L130' title='Defined at 130.'>vmm_alloc</a>
+<li><a href='#L138' title='Defined at 138.'>vmm_mapkernel</a>
+<li><a href='#L151' title='Defined at 151.'>vmm_create</a>
+<li><a href='#L161' title='Defined at 161.'>vmm_destroy</a>
+<li><a href='#L165' title='Defined at 165.'>vmm_init</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  paging.c</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L23'>  23 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L24'>  24 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L25'>  25 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L26'>  26 
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L28'>  28 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L29'>  29 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L30'>  30 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L31'>  31 
+<a name='L32'>  32 <font color='darkred'>#include</font> &lt;<a href='101.html'>grub.h</a>&gt;
+<a name='L33'>  33 
+<a name='L34'>  34 <font color='darkred'>#define</font> <a href='../R/90.html' title='Multiple refered from 5 places.'>PGSIZE</a>          (<a href='../S/87.html#L57' title='Defined at 57 in src/include/aplus/mm.h.'>BLKSIZE</a>)
+<a name='L35'>  35 <font color='darkred'>#define</font> PGFLAGS         (0x00000000)
+<a name='L36'>  36 
+<a name='L37'>  37 <font color='darkred'>#define</font> <a href='../R/89.html' title='Multiple refered from 5 places.'>PDSIZE</a>          (1024)
+<a name='L38'>  38 <font color='darkred'>#define</font> <a href='../R/88.html' title='Multiple refered from 2 places.'>PDENTRY</a>(<a href='../Y/772.html' title='Multiple used in 6 places.'>x</a>)      ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/772.html' title='Multiple used in 6 places.'>x</a> &gt;&gt; 22)
+<a name='L39'>  39 
+<a name='L40'>  40 <font color='darkred'>#define</font> <a href='../R/106.html' title='Multiple refered from 3 places.'>PTSIZE</a>          (1024)
+<a name='L41'>  41 <font color='darkred'>#define</font> <a href='../R/93.html' title='Multiple refered from 2 places.'>PTENTRY</a>(<a href='../Y/772.html' title='Multiple used in 6 places.'>x</a>)      ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/772.html' title='Multiple used in 6 places.'>x</a> &lt;&lt; 10 &gt;&gt; 10 &gt;&gt; 12)
+<a name='L42'>  42 
+<a name='L43'>  43 <b>extern</b> <b>volatile</b> <a href='../S/87.html#L69' title='Defined at 69 in src/include/aplus/mm.h.'>heap_t</a>* <a href='../Y/183.html' title='Multiple used in 9 places.'>current_heap</a>;
+<a name='L44'>  44 <b>extern</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/384.html' title='Multiple used in 8 places.'>memsize</a>;
+<a name='L45'>  45 
+<a name='L46'>  46 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/185.html' title='Multiple used in 7 places.'>current_vmm</a>;
+<a name='L47'>  47 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a>;
+<a name='L48'>  48 
+<a name='L49'>  49 <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/755.html' title='Multiple used in 3 places.'>vmm_queue</a>;
+<a name='L50'>  50 
+<a name='L51'>  51 
+<a name='L52'>  52 
+<a name='L53'>  53 
+<a name='L54'>  54 <b>void</b> <a href='../R/534.html' title='Multiple refered from 2 places.'>vmm_switch</a>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>) <font color='red'>{</font>
+<a name='L55'>  55         <a href='../Y/185.html' title='Multiple used in 7 places.'>current_vmm</a> = <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>;
+<a name='L56'>  56         
+<a name='L57'>  57         write_cr3((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/87.html#L71' title='Defined at 71 in src/include/aplus/mm.h.'>mm_paddr</a>((<b>void</b>*) <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>));
+<a name='L58'>  58 <font color='red'>}</font>
+<a name='L59'>  59 
+<a name='L60'>  60 <b>void</b> <a href='../S/150.html#L176' title='Refered from 176 in src/mm/paging.c.'>vmm_enable</a>() <font color='red'>{</font>
+<a name='L61'>  61         write_cr4(read_cr4() &amp; ~0x00000010);
+<a name='L62'>  62         <a href='../Y/765.html' title='Multiple used in 2 places.'>write_cr0</a>(<a href='../Y/503.html' title='Multiple used in 2 places.'>read_cr0</a>() | 0x80000000);
+<a name='L63'>  63 <font color='red'>}</font>
+<a name='L64'>  64 
+<a name='L65'>  65 <b>void</b> vmm_disable() <font color='red'>{</font>
+<a name='L66'>  66         <a href='../Y/765.html' title='Multiple used in 2 places.'>write_cr0</a>(<a href='../Y/503.html' title='Multiple used in 2 places.'>read_cr0</a>() &amp; ~0x80000000);
+<a name='L67'>  67 <font color='red'>}</font>
+<a name='L68'>  68 
+<a name='L69'>  69 
+<a name='L70'>  70 
+<a name='L71'>  71 
+<a name='L72'>  72 <b>void</b>* <a href='../R/532.html' title='Multiple refered from 8 places.'>vmm_map</a>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/465.html' title='Multiple used in 6 places.'>pd</a>, <b>void</b>* <a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a>, <b>void</b>* <a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>, <b>int</b> <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>) <font color='red'>{</font>  
+<a name='L73'>  73         <b>if</b>(!<a href='../Y/465.html' title='Multiple used in 6 places.'>pd</a>)
+<a name='L74'>  74                 <b>return</b> <a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a>;
+<a name='L75'>  75                 
+<a name='L76'>  76         <a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a> = <a href='../S/87.html#L85' title='Defined at 85 in src/include/aplus/mm.h.'>mm_align</a>(<a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a>);
+<a name='L77'>  77         <a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a> = <a href='../S/87.html#L85' title='Defined at 85 in src/include/aplus/mm.h.'>mm_align</a>(<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>);
+<a name='L78'>  78                 
+<a name='L79'>  79         <b>int</b> <a href='../Y/458.html' title='Multiple used in 4 places.'>pages</a> = (<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> / <a href='../S/150.html#L34' title='Defined at 34 in src/mm/paging.c.'>PGSIZE</a>) + 1;
+<a name='L80'>  80         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/466.html' title='Multiple used in 3 places.'>pframe</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a>;
+<a name='L81'>  81         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/750.html' title='Multiple used in 4 places.'>vframe</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>;
+<a name='L82'>  82         
+<a name='L83'>  83         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/458.html' title='Multiple used in 4 places.'>pages</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++) <font color='red'>{</font>
+<a name='L84'>  84                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a> = &amp;<a href='../Y/465.html' title='Multiple used in 6 places.'>pd</a>[<a href='../S/150.html#L38' title='Defined at 38 in src/mm/paging.c.'>PDENTRY</a>(<a href='../Y/750.html' title='Multiple used in 4 places.'>vframe</a>)];
+<a name='L85'>  85                 
+<a name='L86'>  86                 <b>if</b>(*<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a> == 0) <font color='red'>{</font>
+<a name='L87'>  87                         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/663.html' title='Multiple used in 7 places.'>table</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>*) <a href='../S/152.html#L28' title='Defined at 28 in src/mm/heap.c.'>halloc</a>(<a href='../Y/183.html' title='Multiple used in 9 places.'>current_heap</a>, <a href='../S/150.html#L40' title='Defined at 40 in src/mm/paging.c.'>PTSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>));
+<a name='L88'>  88                         <b>if</b>(!<a href='../Y/663.html' title='Multiple used in 7 places.'>table</a>)
+<a name='L89'>  89                                 <a href='../S/148.html#L79' title='Defined at 79 in src/panic.c.'>panic</a>("vmm_map(): cannot allocate more table\n");
+<a name='L90'>  90                                 
+<a name='L91'>  91                         <b>if</b>(<a href='../Y/185.html' title='Multiple used in 7 places.'>current_vmm</a>)
+<a name='L92'>  92                                 <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/185.html' title='Multiple used in 7 places.'>current_vmm</a>, <a href='../Y/663.html' title='Multiple used in 7 places.'>table</a>, <a href='../Y/663.html' title='Multiple used in 7 places.'>table</a>, <a href='../S/150.html#L40' title='Defined at 40 in src/mm/paging.c.'>PTSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>), <a href='../S/87.html#L52' title='Defined at 52 in src/include/aplus/mm.h.'>VMM_FLAGS_DEFAULT</a>);
+<a name='L93'>  93                         
+<a name='L94'>  94                         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/663.html' title='Multiple used in 7 places.'>table</a>, 0, <a href='../S/150.html#L40' title='Defined at 40 in src/mm/paging.c.'>PTSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>));
+<a name='L95'>  95                         *<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/663.html' title='Multiple used in 7 places.'>table</a> | <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>;  
+<a name='L96'>  96                 <font color='red'>}</font>
+<a name='L97'>  97                 
+<a name='L98'>  98                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>*) (*<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a> &amp; ~0xFFF);
+<a name='L99'>  99                 <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>[<a href='../S/150.html#L41' title='Defined at 41 in src/mm/paging.c.'>PTENTRY</a>(<a href='../Y/750.html' title='Multiple used in 4 places.'>vframe</a>)] = <a href='../Y/466.html' title='Multiple used in 3 places.'>pframe</a> | <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>;
+<a name='L100'> 100                 
+<a name='L101'> 101                 <a href='../Y/466.html' title='Multiple used in 3 places.'>pframe</a> += <a href='../S/150.html#L34' title='Defined at 34 in src/mm/paging.c.'>PGSIZE</a>;
+<a name='L102'> 102                 <a href='../Y/750.html' title='Multiple used in 4 places.'>vframe</a> += <a href='../S/150.html#L34' title='Defined at 34 in src/mm/paging.c.'>PGSIZE</a>;
+<a name='L103'> 103         <font color='red'>}</font>
+<a name='L104'> 104         
+<a name='L105'> 105         <b>return</b> <a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>;
+<a name='L106'> 106 <font color='red'>}</font>
+<a name='L107'> 107 
+<a name='L108'> 108 
+<a name='L109'> 109 <b>void</b> <a href='../S/159.html#L99' title='Refered from 99 in src/arch/task.c.'>vmm_umap</a>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/465.html' title='Multiple used in 6 places.'>pd</a>, <b>void</b>* <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>) <font color='red'>{</font>
+<a name='L110'> 110         <b>if</b>(!<a href='../Y/465.html' title='Multiple used in 6 places.'>pd</a>)
+<a name='L111'> 111                 <b>return</b>;
+<a name='L112'> 112                 
+<a name='L113'> 113         <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a> = <a href='../S/87.html#L85' title='Defined at 85 in src/include/aplus/mm.h.'>mm_align</a>(<a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>);
+<a name='L114'> 114                 
+<a name='L115'> 115         <b>int</b> <a href='../Y/458.html' title='Multiple used in 4 places.'>pages</a> = (<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> / <a href='../S/150.html#L34' title='Defined at 34 in src/mm/paging.c.'>PGSIZE</a>) + 1;
+<a name='L116'> 116         
+<a name='L117'> 117         
+<a name='L118'> 118         <b>for</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0, <a href='../Y/273.html' title='Multiple used in 3 places.'>frame</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/458.html' title='Multiple used in 4 places.'>pages</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++, <a href='../Y/273.html' title='Multiple used in 3 places.'>frame</a> += <a href='../S/150.html#L34' title='Defined at 34 in src/mm/paging.c.'>PGSIZE</a>) <font color='red'>{</font>
+<a name='L119'> 119                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a> = &amp;<a href='../Y/465.html' title='Multiple used in 6 places.'>pd</a>[<a href='../S/150.html#L38' title='Defined at 38 in src/mm/paging.c.'>PDENTRY</a>(<a href='../Y/273.html' title='Multiple used in 3 places.'>frame</a>)];
+<a name='L120'> 120                 <b>if</b>((*<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a> &amp; 1) != 1)
+<a name='L121'> 121                         <b>continue</b>;
+<a name='L122'> 122                         
+<a name='L123'> 123                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/663.html' title='Multiple used in 7 places.'>table</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>*) (*<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a> &amp; ~0xFFF);
+<a name='L124'> 124                 <a href='../Y/663.html' title='Multiple used in 7 places.'>table</a>[<a href='../S/150.html#L41' title='Defined at 41 in src/mm/paging.c.'>PTENTRY</a>(<a href='../Y/273.html' title='Multiple used in 3 places.'>frame</a>)] = 0;
+<a name='L125'> 125         <font color='red'>}</font>
+<a name='L126'> 126         
+<a name='L127'> 127 <font color='red'>}</font>
+<a name='L128'> 128 
+<a name='L129'> 129 
+<a name='L130'> 130 <b>void</b>* <a href='../S/115.html#L136' title='Refered from 136 in src/exec.c.'>vmm_alloc</a>(<b>void</b>* <a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>, <b>int</b> <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>) <font color='red'>{</font>
+<a name='L131'> 131         <b>void</b>* <a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a> = (<b>void</b>*) <a href='../S/152.html#L28' title='Defined at 28 in src/mm/heap.c.'>halloc</a>(<a href='../Y/183.html' title='Multiple used in 9 places.'>current_heap</a>, <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L132'> 132 
+<a name='L133'> 133         <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/185.html' title='Multiple used in 7 places.'>current_vmm</a>, <a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a>, <a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>, <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>, <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>);
+<a name='L134'> 134 
+<a name='L135'> 135         <b>return</b> <a href='../Y/457.html' title='Multiple used in 11 places.'>paddr</a>;
+<a name='L136'> 136 <font color='red'>}</font>
+<a name='L137'> 137 
+<a name='L138'> 138 <b>void</b> <a href='../R/533.html' title='Multiple refered from 2 places.'>vmm_mapkernel</a>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>) <font color='red'>{</font>
+<a name='L139'> 139         <i><font color='green'>// Map 8MB to low area (kernel reserved)</font></i>
+<a name='L140'> 140         <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, (<b>void</b>*) <a href='../S/87.html#L41' title='Defined at 41 in src/include/aplus/mm.h.'>MM_LBASE</a>, (<b>void</b>*) <a href='../S/87.html#L41' title='Defined at 41 in src/include/aplus/mm.h.'>MM_LBASE</a>, <a href='../S/87.html#L42' title='Defined at 42 in src/include/aplus/mm.h.'>MM_LSIZE</a>, <a href='../S/87.html#L52' title='Defined at 52 in src/include/aplus/mm.h.'>VMM_FLAGS_DEFAULT</a>);
+<a name='L141'> 141 
+<a name='L142'> 142         <i><font color='green'>// Map all high-memory (kernel reserved)</font></i>
+<a name='L143'> 143         <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, (<b>void</b>*) 0, <a href='../S/87.html#L78' title='Defined at 78 in src/include/aplus/mm.h.'>mm_vaddr</a>((<b>void</b>*) 0), <a href='../Y/384.html' title='Multiple used in 8 places.'>memsize</a>, <a href='../S/87.html#L52' title='Defined at 52 in src/include/aplus/mm.h.'>VMM_FLAGS_DEFAULT</a>);
+<a name='L144'> 144 
+<a name='L145'> 145         <i><font color='green'>// Map Linear Frame Buffer</font></i>
+<a name='L146'> 146         <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, (<b>void</b>*) 0xE0000000, (<b>void</b>*) 0xE0000000, 0x10000000, <a href='../S/87.html#L52' title='Defined at 52 in src/include/aplus/mm.h.'>VMM_FLAGS_DEFAULT</a> | <a href='../S/87.html#L51' title='Defined at 51 in src/include/aplus/mm.h.'>VMM_FLAGS_USER</a>);
+<a name='L147'> 147 <font color='red'>}</font>
+<a name='L148'> 148 
+<a name='L149'> 149 
+<a name='L150'> 150 
+<a name='L151'> 151 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../S/159.html#L75' title='Refered from 75 in src/arch/task.c.'>vmm_create</a>() <font color='red'>{</font>
+<a name='L152'> 152         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>*) <a href='../S/87.html#L85' title='Defined at 85 in src/include/aplus/mm.h.'>mm_align</a>((<b>void</b>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../S/150.html#L37' title='Defined at 37 in src/mm/paging.c.'>PDSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>)));
+<a name='L153'> 153         <b>if</b>(!<a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>)
+<a name='L154'> 154                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L155'> 155                 
+<a name='L156'> 156 
+<a name='L157'> 157         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>, 0, <a href='../S/150.html#L37' title='Defined at 37 in src/mm/paging.c.'>PDSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>));
+<a name='L158'> 158         <b>return</b> <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>;
+<a name='L159'> 159 <font color='red'>}</font>
+<a name='L160'> 160 
+<a name='L161'> 161 <b>void</b> vmm_destroy(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/754.html' title='Multiple used in 2 places.'>vmm</a>) <font color='red'>{</font>
+<a name='L162'> 162         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/754.html' title='Multiple used in 2 places.'>vmm</a>, 0, <a href='../S/150.html#L37' title='Defined at 37 in src/mm/paging.c.'>PDSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>));
+<a name='L163'> 163 <font color='red'>}</font>
+<a name='L164'> 164 
+<a name='L165'> 165 <b>int</b> <a href='../S/151.html#L130' title='Refered from 130 in src/mm/mm.c.'>vmm_init</a>() <font color='red'>{</font>
+<a name='L166'> 166 
+<a name='L167'> 167         <a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a> = <a href='../S/152.html#L28' title='Defined at 28 in src/mm/heap.c.'>halloc</a>(<a href='../Y/183.html' title='Multiple used in 9 places.'>current_heap</a>, <a href='../S/150.html#L37' title='Defined at 37 in src/mm/paging.c.'>PDSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>));
+<a name='L168'> 168         <b>if</b>(!<a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a>)
+<a name='L169'> 169                 <a href='../S/148.html#L79' title='Defined at 79 in src/panic.c.'>panic</a>("Could not initialize VMM");
+<a name='L170'> 170         
+<a name='L171'> 171 
+<a name='L172'> 172         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a>, 0, <a href='../S/150.html#L37' title='Defined at 37 in src/mm/paging.c.'>PDSIZE</a> * <b>sizeof</b>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>));
+<a name='L173'> 173         
+<a name='L174'> 174         <a href='../S/150.html#L138' title='Defined at 138 in src/mm/paging.c.'>vmm_mapkernel</a>(<a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a>);
+<a name='L175'> 175         <a href='../S/150.html#L54' title='Defined at 54 in src/mm/paging.c.'>vmm_switch</a>(<a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a>);
+<a name='L176'> 176         <a href='../S/150.html#L60' title='Defined at 60 in src/mm/paging.c.'>vmm_enable</a>();
+<a name='L177'> 177 
+<a name='L178'> 178         <a href='../S/96.html#L187' title='Defined at 187 in src/include/aplus/list.h.'>list_init</a>(<a href='../Y/755.html' title='Multiple used in 3 places.'>vmm_queue</a>);
+<a name='L179'> 179         <b>return</b> 0;
+<a name='L180'> 180 <font color='red'>}</font>
+<a name='L181'> 181 
+<a name='L182'> 182 
+<a name='L183'> 183 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L54'>[^]</a><a href='#L165'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus:  File sorgente src/include/aplus/attribute.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('attribute_8h_source.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">attribute.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="attribute_8h.html">Vai alla documentazione di questo file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _ATTRIBUTE_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define _ATTRIBUTE_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="aplus_8h.html">aplus.h</a>&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="list_8h.html">aplus/list.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;sys/types.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="attribute_8h.html#affb81d409ffa74c8bfb080cb1c3047db">   12</a></span>&#160;<span class="preprocessor">#define __UNION2(x, y, z)   \</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">    x ## y ## z</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="attribute_8h.html#afc6a4ef8385e48238a0037eb5fedf21a">   15</a></span>&#160;<span class="preprocessor">#define __UNION(x, y, z)    \</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">    __UNION2(x, y, z)</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="attribute_8h.html#a672da6e381bbc58f66bf3f332d6fbb97">   18</a></span>&#160;<span class="preprocessor">#define ATTRIBUTE(name, value)                                                                      \</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">    attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section(&quot;.attribute&quot;))) = {  \</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">        name, (uint32_t) &amp;value                                                                     \</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">    }                                                                                               \</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="structattribute.html">   25</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structattribute.html">attribute</a> {</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="structattribute.html#ab0c3a4d25c5c24cd1ea3af2a6631267d">   26</a></span>&#160;    <span class="keywordtype">char</span> <a class="code" href="structattribute.html#ab0c3a4d25c5c24cd1ea3af2a6631267d">name</a>[0x80];</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="structattribute.html#a868a57c7ba49cfa75755e4061662abe3">   27</a></span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> <a class="code" href="structattribute.html#a868a57c7ba49cfa75755e4061662abe3">value</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;} <a class="code" href="attribute_8h.html#a4b7f6d2e9be3c83ead055e037a05f9d0">__attribute__</a>((aligned(0x100))) attribute_t;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="attribute_8h.html#ab96abe3fdf944e75a2316807105c1b6e">   31</a></span>&#160;static inline <a class="code" href="structlist.html">list_t</a>* <a class="code" href="structattribute.html">attribute</a>(const <span class="keywordtype">char</span>* <a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>) {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">extern</span> <span class="keywordtype">int</span> attribute_start;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">extern</span> <span class="keywordtype">int</span> attribute_end;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> attr_s = (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) &amp;attribute_start;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> attr_e = (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) &amp;attribute_end;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="structlist.html">list_t</a>* tmp;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="list_8h.html#aa288c0785df071ed8643763202928c82">list_init</a>(tmp);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">while</span>(attr_s &lt; attr_e) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        attribute_t* attr = (attribute_t*) attr_s;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">if</span>(strcmp(attr-&gt;name, name) == 0)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <a class="code" href="list_8h.html#a945ef9f05b26f6016d2f28ec8836b1f0">list_add</a>(tmp, (<a class="code" href="list_8h.html#a83bc1af7566502e08756b8d8c425972e">listval_t</a>) attr-&gt;value);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        attr_s += <span class="keyword">sizeof</span>(attribute_t);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">return</span> tmp;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="attribute_8h_html_aae08e5b919f01beb6c69d2859e0dfc27"><div class="ttname"><a href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a></div><div class="ttdeci">char name[0x80]</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00082">attribute.h:82</a></div></div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="structattribute_html_a868a57c7ba49cfa75755e4061662abe3"><div class="ttname"><a href="structattribute.html#a868a57c7ba49cfa75755e4061662abe3">attribute::value</a></div><div class="ttdeci">uint32_t value</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00027">attribute.h:27</a></div></div>
+<div class="ttc" id="structattribute_html"><div class="ttname"><a href="structattribute.html">attribute</a></div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00025">attribute.h:25</a></div></div>
+<div class="ttc" id="attribute_8h_html_a4b7f6d2e9be3c83ead055e037a05f9d0"><div class="ttname"><a href="attribute_8h.html#a4b7f6d2e9be3c83ead055e037a05f9d0">__attribute__</a></div><div class="ttdeci">struct attribute __attribute__((aligned(0x100))) attribute_t</div></div>
+<div class="ttc" id="list_8h_html"><div class="ttname"><a href="list_8h.html">list.h</a></div></div>
+<div class="ttc" id="list_8h_html_a945ef9f05b26f6016d2f28ec8836b1f0"><div class="ttname"><a href="list_8h.html#a945ef9f05b26f6016d2f28ec8836b1f0">list_add</a></div><div class="ttdeci">static int list_add(list_t *list, listval_t v)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00056">list.h:56</a></div></div>
+<div class="ttc" id="aplus_8h_html"><div class="ttname"><a href="aplus_8h.html">aplus.h</a></div></div>
+<div class="ttc" id="list_8h_html_a83bc1af7566502e08756b8d8c425972e"><div class="ttname"><a href="list_8h.html#a83bc1af7566502e08756b8d8c425972e">listval_t</a></div><div class="ttdeci">uint32_t listval_t</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00033">list.h:33</a></div></div>
+<div class="ttc" id="structlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00041">list.h:41</a></div></div>
+<div class="ttc" id="list_8h_html_aa288c0785df071ed8643763202928c82"><div class="ttname"><a href="list_8h.html#aa288c0785df071ed8643763202928c82">list_init</a></div><div class="ttdeci">#define list_init(list)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00187">list.h:187</a></div></div>
+<div class="ttc" id="structattribute_html_ab0c3a4d25c5c24cd1ea3af2a6631267d"><div class="ttname"><a href="structattribute.html#ab0c3a4d25c5c24cd1ea3af2a6631267d">attribute::name</a></div><div class="ttdeci">char name[0x80]</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00026">attribute.h:26</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="dir_cfd1fb2b98030f4f81570490591de86f.html">aplus</a></li><li class="navelem"><a class="el" href="attribute_8h.html">attribute.h</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:03 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

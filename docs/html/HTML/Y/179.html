@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>ctx</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/71.html#L60'>ctx</a>                60 usr/src/libpthread/src/pthread_cond.c 	pthread_context_t* ctx = (pthread_context_t*) pthread_self();
+<a href='../S/71.html#L61'>ctx</a>                61 usr/src/libpthread/src/pthread_cond.c 	if(!ctx) {
+<a href='../S/71.html#L66'>ctx</a>                66 usr/src/libpthread/src/pthread_cond.c 	ctx-&gt;cond = cond;
+<a href='../S/71.html#L67'>ctx</a>                67 usr/src/libpthread/src/pthread_cond.c 	ctx-&gt;cond-&gt;waiting = 1;
+<a href='../S/71.html#L68'>ctx</a>                68 usr/src/libpthread/src/pthread_cond.c 	ctx-&gt;cond-&gt;semaphore = 1;
+<a href='../S/71.html#L76'>ctx</a>                76 usr/src/libpthread/src/pthread_cond.c 	while(ctx-&gt;cond-&gt;semaphore == 1 &amp;&amp; (time(NULL) &lt; t0))
+<a href='../S/71.html#L79'>ctx</a>                79 usr/src/libpthread/src/pthread_cond.c 	ctx-&gt;cond-&gt;waiting = 0;
+<a href='../S/71.html#L80'>ctx</a>                80 usr/src/libpthread/src/pthread_cond.c 	ctx-&gt;cond-&gt;semaphore = 0;
+<a href='../S/71.html#L81'>ctx</a>                81 usr/src/libpthread/src/pthread_cond.c 	ctx-&gt;cond = 0;
+<a href='../S/64.html#L19'>ctx</a>                19 usr/src/libpthread/src/pthread_create.c 	pthread_context_t* ctx = 0;
+<a href='../S/64.html#L20'>ctx</a>                20 usr/src/libpthread/src/pthread_create.c 	__asm__ __volatile__ ("" : "=a"(ctx));
+<a href='../S/64.html#L24'>ctx</a>                24 usr/src/libpthread/src/pthread_create.c PRIVATE void __pthread_handler__(pthread_context_t* ctx) {
+<a href='../S/64.html#L27'>ctx</a>                27 usr/src/libpthread/src/pthread_create.c 	if(ctx == NULL)
+<a href='../S/64.html#L30'>ctx</a>                30 usr/src/libpthread/src/pthread_create.c 	if(ctx-&gt;entry == NULL)
+<a href='../S/64.html#L33'>ctx</a>                33 usr/src/libpthread/src/pthread_create.c 	pthread_exit(ctx-&gt;entry(ctx-&gt;param));
+<a href='../S/64.html#L51'>ctx</a>                51 usr/src/libpthread/src/pthread_create.c 	pthread_context_t* ctx = malloc(sizeof(pthread_context_t));
+<a href='../S/64.html#L52'>ctx</a>                52 usr/src/libpthread/src/pthread_create.c 	memset(ctx, 0, sizeof(pthread_context_t));
+<a href='../S/64.html#L54'>ctx</a>                54 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;entry = start;
+<a href='../S/64.html#L55'>ctx</a>                55 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;param = arg;
+<a href='../S/64.html#L56'>ctx</a>                56 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;once.done = 0;
+<a href='../S/64.html#L57'>ctx</a>                57 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;once.started = -1;
+<a href='../S/64.html#L58'>ctx</a>                58 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;next = 0;
+<a href='../S/64.html#L61'>ctx</a>                61 usr/src/libpthread/src/pthread_create.c 		memcpy(&amp;ctx-&gt;attr, attr, sizeof(pthread_attr_t));
+<a href='../S/64.html#L63'>ctx</a>                63 usr/src/libpthread/src/pthread_create.c 	if(ctx-&gt;attr.inheritsched == PTHREAD_INHERIT_SCHED) {
+<a href='../S/64.html#L67'>ctx</a>                67 usr/src/libpthread/src/pthread_create.c 			pthread_attr_setschedparam(&amp;ctx-&gt;attr, &amp;inh-&gt;attr.param);
+<a href='../S/64.html#L73'>ctx</a>                73 usr/src/libpthread/src/pthread_create.c 	*thread = (pthread_t) ctx;
+<a href='../S/64.html#L76'>ctx</a>                76 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;next = __pthread_queue;
+<a href='../S/64.html#L77'>ctx</a>                77 usr/src/libpthread/src/pthread_create.c 	__pthread_queue = ctx;
+<a href='../S/64.html#L81'>ctx</a>                81 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;tid = __os_thread_create(__pthread_handler__, ctx, ctx-&gt;attr.param.sched_priority);
+<a href='../S/56.html#L23'>ctx</a>                23 usr/src/libpthread/src/pthread_detach.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/56.html#L24'>ctx</a>                24 usr/src/libpthread/src/pthread_detach.c 	if(__os_thread_kill(ctx-&gt;tid, SIGKILL) == 0)
+<a href='../S/56.html#L25'>ctx</a>                25 usr/src/libpthread/src/pthread_detach.c 		ctx-&gt;once.done = 1;
+<a href='../S/56.html#L36'>ctx</a>                36 usr/src/libpthread/src/pthread_detach.c 			if(tmp-&gt;next == ctx) {
+<a href='../S/56.html#L37'>ctx</a>                37 usr/src/libpthread/src/pthread_detach.c 				tmp-&gt;next = ctx-&gt;next;
+<a href='../S/56.html#L44'>ctx</a>                44 usr/src/libpthread/src/pthread_detach.c 		if(__pthread_queue == ctx)
+<a href='../S/55.html#L10'>ctx</a>                10 usr/src/libpthread/src/pthread_exit.c 	pthread_context_t* ctx = (pthread_context_t*) ptx;
+<a href='../S/55.html#L13'>ctx</a>                13 usr/src/libpthread/src/pthread_exit.c 		ctx-&gt;exitval = value_ptr;
+<a href='../S/73.html#L14'>ctx</a>                14 usr/src/libpthread/src/pthread_join.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/73.html#L15'>ctx</a>                15 usr/src/libpthread/src/pthread_join.c 	while(ctx-&gt;once.done == 0)
+<a href='../S/73.html#L19'>ctx</a>                19 usr/src/libpthread/src/pthread_join.c 		*value_ptr = ctx-&gt;exitval;
+<a href='../S/51.html#L22'>ctx</a>                22 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/51.html#L23'>ctx</a>                23 usr/src/libpthread/src/pthread_sched.c 	return sched_setparam(ctx-&gt;tid, param);
+<a href='../S/51.html#L37'>ctx</a>                37 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/51.html#L38'>ctx</a>                38 usr/src/libpthread/src/pthread_sched.c 	if((*policy = sched_getparam(ctx-&gt;tid, param)) != -1)
+<a href='../S/51.html#L51'>ctx</a>                51 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/51.html#L52'>ctx</a>                52 usr/src/libpthread/src/pthread_sched.c 	ctx-&gt;attr.param.sched_priority = level;
+<a href='../S/51.html#L64'>ctx</a>                64 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/51.html#L65'>ctx</a>                65 usr/src/libpthread/src/pthread_sched.c 	return ctx-&gt;attr.param.sched_priority;
+</pre>
+</body>
+</html>

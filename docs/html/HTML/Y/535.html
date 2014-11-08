@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>rxBufferOffset</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/104.html#L25'>rxBufferOffset</a>     25 src/net/rtl8139/rtl8139.c 	int rxBufferOffset;
+<a href='../S/104.html#L99'>rxBufferOffset</a>     99 src/net/rtl8139/rtl8139.c 		uint16_t* rxBuffer = (uint16_t*) ((uint32_t) card-&gt;rxBuffer + card-&gt;rxBufferOffset);
+<a href='../S/104.html#L108'>rxBufferOffset</a>    108 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset += 4;
+<a href='../S/104.html#L112'>rxBufferOffset</a>    112 src/net/rtl8139/rtl8139.c 		if((card-&gt;rxBufferOffset + length) &gt;= RX_BUFFER_SIZE) {
+<a href='../S/104.html#L113'>rxBufferOffset</a>    113 src/net/rtl8139/rtl8139.c 			memcpy(data, rxBuffer, RX_BUFFER_SIZE - card-&gt;rxBufferOffset);
+<a href='../S/104.html#L114'>rxBufferOffset</a>    114 src/net/rtl8139/rtl8139.c 			memcpy((void*) ((uint32_t) data + RX_BUFFER_SIZE - card-&gt;rxBufferOffset), card-&gt;rxBuffer, length - (RX_BUFFER_SIZE - card-&gt;rxBufferOffset));
+<a href='../S/104.html#L133'>rxBufferOffset</a>    133 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset += length + 4;
+<a href='../S/104.html#L134'>rxBufferOffset</a>    134 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset = (card-&gt;rxBufferOffset + 3) &amp; ~3;
+<a href='../S/104.html#L135'>rxBufferOffset</a>    135 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset %= RX_BUFFER_SIZE;
+<a href='../S/104.html#L137'>rxBufferOffset</a>    137 src/net/rtl8139/rtl8139.c 		int_out16(card, REG_CUR_READ_ADDR, card-&gt;rxBufferOffset - 0x10);
+<a href='../S/104.html#L213'>rxBufferOffset</a>    213 src/net/rtl8139/rtl8139.c 	card-&gt;rxBufferOffset = 0;
+</pre>
+</body>
+</html>

@@ -1,0 +1,228 @@
+.TH "src/net/ipv4.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/ipv4.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <aplus/net/eth\&.h>\fP
+.br
+\fC#include <aplus/net/ipv4\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fB__params\fP   \fBnetif\fP, (void*) ((\fBuint32_t\fP) ip + \fBIPV4_HEADER_LENGTH\fP(ip)), \fBlength\fP - \fBIPV4_HEADER_LENGTH\fP(ip)"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBuint16_t\fP \fBipv4_checksum\fP (ipv4_header_t *pkt)"
+.br
+.ti -1c
+.RI "void * \fBipv4_create_packet\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP, \fBipv4_t\fP \fBdest\fP, int fragment, int \fBoffset\fP)"
+.br
+.ti -1c
+.RI "int \fBipv4_recv\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP)"
+.br
+.ti -1c
+.RI "int \fBipv4_send\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP, \fBipv4_t\fP \fBdest\fP)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define __params   \fBnetif\fP, (void*) ((\fBuint32_t\fP) ip + \fBIPV4_HEADER_LENGTH\fP(ip)), \fBlength\fP - \fBIPV4_HEADER_LENGTH\fP(ip)"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBuint16_t\fP ipv4_checksum (ipv4_header_t *pkt)"
+
+.PP
+Definizione alla linea 13 del file ipv4\&.c\&.
+.PP
+Referenzia length, uint16_t, e uint8_t\&.
+.PP
+.nf
+13                                            {
+14     int length = sizeof(ipv4_header_t);
+15     int sum = 0;
+16     uint8_t* buf = (uint8_t*) pkt;
+17 
+18     while(length > 1) {
+19         sum += 0xFFFF & *((uint16_t*) buf);
+20         buf += sizeof(uint16_t);
+21         length -= sizeof(uint16_t);
+22     }
+23 
+24     if(length)
+25         sum += (0xFF & *buf) << 8;
+26 
+27     while(sum >> 16)
+28         sum = (sum & 0xFFFF) + (sum >> 16);
+29 
+30     uint16_t cksum = ((uint16_t) sum ^ 0xFFFF);
+31     return (((cksum & 0x00FF) << 8) | ((cksum & 0xFF00) >> 8)) & 0xFFFF;
+32 }
+.fi
+.SS "void* ipv4_create_packet (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype, \fBipv4_t\fPdest, intfragment, intoffset)"
+
+.PP
+Definizione alla linea 34 del file ipv4\&.c\&.
+.PP
+Referenzia netif::ipv4, ipv4_checksum(), IPV4_FLAGS_MF, IPV4_MAX_LENGTH, IPV4_PROTO_ICMP, IPV4_PROTO_RAW, IPV4_PROTO_TCP, IPV4_PROTO_UDP, kmalloc(), NETIF_ICMP, NETIF_TCP, NETIF_UDP, offset, e uint32_t\&.
+.PP
+.nf
+34                                                                                                                     {
+35 
+36     ipv4_header_t* ip = (ipv4_header_t*) kmalloc(length + sizeof(ipv4_header_t));
+37     ip->info = (((sizeof(ipv4_header_t) >> 2) & 0xF) << 4) | 4; /* length: 20 byte; Version: ipv4; */
+38     ip->tos = 0;
+39     ip->length = length + sizeof(ipv4_header_t);
+40     ip->id = 0;
+41     ip->ttl = 0xFF;
+42 
+43     if(fragment == -1)
+44         ip->offset = offset;
+45     else
+46         ip->offset = IPV4_FLAGS_MF | (offset * IPV4_MAX_LENGTH);
+47 
+48     switch(type) {
+49         case NETIF_UDP:
+50             ip->protocol = IPV4_PROTO_UDP;
+51             break;
+52         case NETIF_TCP:
+53             ip->protocol = IPV4_PROTO_TCP;
+54             break;
+55         case NETIF_ICMP:
+56             ip->protocol = IPV4_PROTO_ICMP;
+57             break;
+58         default:
+59             ip->protocol = IPV4_PROTO_RAW;
+60             break;
+61     }
+62 
+63     memcpy(ip->source, netif->ipv4, sizeof(ipv4_t));
+64     memcpy(ip->dest, dest, sizeof(ipv4_t));
+65     memcpy((void*) ((uint32_t) ip + sizeof(ipv4_header_t)), buf, length);
+66 
+67     ip->checksum = ipv4_checksum(ip);
+68     return (void*) ip;
+69 }
+.fi
+.SS "int ipv4_recv (\fBnetif_t\fP *netif, void *buf, size_tlength)"
+
+.PP
+Definizione alla linea 71 del file ipv4\&.c\&.
+.PP
+Referenzia __params, IPV4_CHECK_VERSION, IPV4_FLAGS, IPV4_FLAGS_MF, IPV4_HEADER_LENGTH, IPV4_PROTO_ICMP, IPV4_PROTO_TCP, IPV4_PROTO_UDP, kprintf, length, NETIF_INET, netif_packets_add(), netif_packets_create(), panic(), e udp_recv()\&.
+.PP
+.nf
+71                                                         {
+72     ipv4_header_t* ip = (ipv4_header_t*) buf;
+73 
+74     if(IPV4_CHECK_VERSION(ip) == 0)
+75         return 0;
+76 
+77     if(IPV4_FLAGS(ip) & IPV4_FLAGS_MF)
+78         panic("ipv4: packet fragmentation not supported in recv mode");
+79 
+80 
+81     #define __params    \
+82         netif, (void*) ((uint32_t) ip + IPV4_HEADER_LENGTH(ip)), length - IPV4_HEADER_LENGTH(ip)
+83 
+84     switch(ip->protocol) {
+85         case IPV4_PROTO_UDP:
+86             if(udp_recv(__params) == 0)
+87                 return 0;
+88             return length;
+89         
+90         case IPV4_PROTO_TCP:
+91             //if(tcp_recv(__params) == 0)       /* Support for TCP ?? -> pfff\&.\&. ù\&.ù */
+92             //  return 0;
+93             return length;
+94 
+95         case IPV4_PROTO_ICMP:
+96             //if(icmp_recv(__params) == 0)
+97             //  return 0;
+98             return length;
+99     }
+100 
+101     /* IPV4_PROTO_RAW */
+102     netif_packets_add (
+103         netif_packets_create (
+104                             netif,
+105                             NETIF_INET, 
+106                             length, 
+107                             IPV4_HEADER_LENGTH(ip), 
+108                             buf
+109         )
+110     );
+111 
+112     kprintf("ok\n");
+113     return length;
+114 }
+.fi
+.SS "int ipv4_send (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype, \fBipv4_t\fPdest)"
+
+.PP
+Definizione alla linea 116 del file ipv4\&.c\&.
+.PP
+Referenzia eth_send(), ipv4_create_packet(), IPV4_MAX_LENGTH, kfree(), length, NETIF_INET, e uint32_t\&.
+.PP
+.nf
+116                                                                                {
+117     if(length < IPV4_MAX_LENGTH) {
+118         void* pkt = ipv4_create_packet(netif, buf, length, type, dest, -1, 0);
+119         int ret = eth_send(netif, pkt, length + sizeof(ipv4_header_t), NETIF_INET);
+120         kfree(pkt);
+121 
+122         if(ret)
+123             return length;
+124     
+125         return 0;
+126     }
+127 
+128     int ret = 0;
+129     int i = 0;
+130     int max = length / IPV4_MAX_LENGTH;
+131 
+132     if(length % IPV4_MAX_LENGTH == 0)
+133         max -= 1;
+134 
+135     for(i = 0; i < max; i++) {
+136         void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), IPV4_MAX_LENGTH, type, dest, 0, i);
+137         ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+138         kfree(pkt);
+139     }
+140 
+141 
+142     void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), length - ((i - 1) * IPV4_MAX_LENGTH), type, dest, -1, i);
+143     ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+144     kfree(pkt);
+145 
+146     if(ret)
+147         return length;
+148     
+149     return 0;
+150 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

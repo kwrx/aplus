@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>curBuffer</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/104.html#L29'>curBuffer</a>          29 src/net/rtl8139/rtl8139.c 	char curBuffer; 
+<a href='../S/104.html#L75'>curBuffer</a>          75 src/net/rtl8139/rtl8139.c 	uint8_t curBuffer = card-&gt;curBuffer++;
+<a href='../S/104.html#L76'>curBuffer</a>          76 src/net/rtl8139/rtl8139.c 	card-&gt;curBuffer %= 4;
+<a href='../S/104.html#L79'>curBuffer</a>          79 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * curBuffer));
+<a href='../S/104.html#L80'>curBuffer</a>          80 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), ((256 &lt;&lt; 11) &amp; 0x003F0000) | len);
+<a href='../S/104.html#L214'>curBuffer</a>         214 src/net/rtl8139/rtl8139.c 	card-&gt;curBuffer = 0;
+</pre>
+</body>
+</html>

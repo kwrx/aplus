@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>thread</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L186'>thread</a>            186 usr/src/libpthread/include/pthread.h int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start)(void *), void *arg);
+<a href='../S/43.html#L187'>thread</a>            187 usr/src/libpthread/include/pthread.h int pthread_detach(pthread_t thread);
+<a href='../S/43.html#L190'>thread</a>            190 usr/src/libpthread/include/pthread.h int pthread_join(pthread_t thread, void **value_ptr);
+<a href='../S/43.html#L192'>thread</a>            192 usr/src/libpthread/include/pthread.h int pthread_cancel(pthread_t thread);
+<a href='../S/43.html#L202'>thread</a>            202 usr/src/libpthread/include/pthread.h int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param);
+<a href='../S/43.html#L203'>thread</a>            203 usr/src/libpthread/include/pthread.h int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param);
+<a href='../S/58.html#L7'>thread</a>              7 usr/src/libpthread/src/pthread_cancel.c PUBLIC int pthread_cancel(pthread_t thread) {
+<a href='../S/58.html#L8'>thread</a>              8 usr/src/libpthread/src/pthread_cancel.c 	return pthread_detach(thread);
+<a href='../S/64.html#L37'>thread</a>             37 usr/src/libpthread/src/pthread_create.c PUBLIC int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void *(*start)(void*), void* arg) {
+<a href='../S/64.html#L41'>thread</a>             41 usr/src/libpthread/src/pthread_create.c 	if(!thread) {
+<a href='../S/64.html#L73'>thread</a>             73 usr/src/libpthread/src/pthread_create.c 	*thread = (pthread_t) ctx;
+<a href='../S/56.html#L12'>thread</a>             12 usr/src/libpthread/src/pthread_detach.c PUBLIC int pthread_detach(pthread_t thread) {
+<a href='../S/56.html#L13'>thread</a>             13 usr/src/libpthread/src/pthread_detach.c 	if(!thread) {
+<a href='../S/56.html#L23'>thread</a>             23 usr/src/libpthread/src/pthread_detach.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/73.html#L8'>thread</a>              8 usr/src/libpthread/src/pthread_join.c PUBLIC int pthread_join(pthread_t thread, void **value_ptr) {
+<a href='../S/73.html#L9'>thread</a>              9 usr/src/libpthread/src/pthread_join.c 	if(!thread) {
+<a href='../S/73.html#L14'>thread</a>             14 usr/src/libpthread/src/pthread_join.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/72.html#L16'>thread</a>             16 usr/src/libpthread/src/pthread_rwlock.c 	pthread_t thread = pthread_self();
+<a href='../S/72.html#L17'>thread</a>             17 usr/src/libpthread/src/pthread_rwlock.c 	if(!thread) {
+<a href='../S/72.html#L29'>thread</a>             29 usr/src/libpthread/src/pthread_rwlock.c 	lock-&gt;owner = thread;
+<a href='../S/72.html#L40'>thread</a>             40 usr/src/libpthread/src/pthread_rwlock.c 	pthread_t thread = pthread_self();
+<a href='../S/72.html#L41'>thread</a>             41 usr/src/libpthread/src/pthread_rwlock.c 	if(!thread) {
+<a href='../S/72.html#L46'>thread</a>             46 usr/src/libpthread/src/pthread_rwlock.c 	if(thread != lock-&gt;owner) {
+<a href='../S/51.html#L11'>thread</a>             11 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param) {
+<a href='../S/51.html#L12'>thread</a>             12 usr/src/libpthread/src/pthread_sched.c 	if(!thread) {
+<a href='../S/51.html#L22'>thread</a>             22 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/51.html#L26'>thread</a>             26 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param) {
+<a href='../S/51.html#L27'>thread</a>             27 usr/src/libpthread/src/pthread_sched.c 	if(!thread) {
+<a href='../S/51.html#L37'>thread</a>             37 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/51.html#L45'>thread</a>             45 usr/src/libpthread/src/pthread_sched.c 	pthread_t thread = pthread_self();
+<a href='../S/51.html#L46'>thread</a>             46 usr/src/libpthread/src/pthread_sched.c 	if(!thread) {
+<a href='../S/51.html#L51'>thread</a>             51 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+<a href='../S/51.html#L58'>thread</a>             58 usr/src/libpthread/src/pthread_sched.c 	pthread_t thread = pthread_self();
+<a href='../S/51.html#L59'>thread</a>             59 usr/src/libpthread/src/pthread_sched.c 	if(!thread) {
+<a href='../S/51.html#L64'>thread</a>             64 usr/src/libpthread/src/pthread_sched.c 	pthread_context_t* ctx = (pthread_context_t*) thread;
+</pre>
+</body>
+</html>

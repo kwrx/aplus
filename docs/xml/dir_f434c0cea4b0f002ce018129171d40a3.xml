@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_f434c0cea4b0f002ce018129171d40a3" kind="dir">
+    <compoundname>usr/src/libposix/src</compoundname>
+    <innerfile refid="__execve_8c">_execve.c</innerfile>
+    <innerfile refid="alarm_8c">alarm.c</innerfile>
+    <innerfile refid="alphasort_8c">alphasort.c</innerfile>
+    <innerfile refid="closedir_8c">closedir.c</innerfile>
+    <innerfile refid="config_8h">config.h</innerfile>
+    <innerfile refid="dup2_8c">dup2.c</innerfile>
+    <innerfile refid="environ_8c">environ.c</innerfile>
+    <innerfile refid="errno_8c">errno.c</innerfile>
+    <innerfile refid="execl_8c">execl.c</innerfile>
+    <innerfile refid="execle_8c">execle.c</innerfile>
+    <innerfile refid="execlp_8c">execlp.c</innerfile>
+    <innerfile refid="execv_8c">execv.c</innerfile>
+    <innerfile refid="execvp_8c">execvp.c</innerfile>
+    <innerfile refid="getcwd_8c">getcwd.c</innerfile>
+    <innerfile refid="gid_8c">gid.c</innerfile>
+    <innerfile refid="lstat_8c">lstat.c</innerfile>
+    <innerfile refid="nanosleep_8c">nanosleep.c</innerfile>
+    <innerfile refid="opendir_8c">opendir.c</innerfile>
+    <innerfile refid="usr_2src_2libposix_2src_2readdir_8c">readdir.c</innerfile>
+    <innerfile refid="rewinddir_8c">rewinddir.c</innerfile>
+    <innerfile refid="scandir_8c">scandir.c</innerfile>
+    <innerfile refid="usr_2src_2libposix_2src_2sched_8c">sched.c</innerfile>
+    <innerfile refid="seekdir_8c">seekdir.c</innerfile>
+    <innerfile refid="sleep_8c">sleep.c</innerfile>
+    <innerfile refid="telldir_8c">telldir.c</innerfile>
+    <innerfile refid="uid_8c">uid.c</innerfile>
+    <innerfile refid="usleep_8c">usleep.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/"/>
+  </compounddef>
+</doxygen>

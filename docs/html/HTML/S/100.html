@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>src/include/aplus/pci.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/pci.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/27.html' title='Multiple included from 2 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/100.html#L2' title='Defined at 2 in src/include/aplus/pci.h.'>_PCI_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/100.html#L1' title='Refered from 1 in src/include/aplus/pci.h.'>_PCI_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 
+<a name='L8'>   8 <font color='darkred'>#define</font> PCI_CLASS_OLD                   0x00
+<a name='L9'>   9 <font color='darkred'>#define</font> PCI_CLASS_STORAGE               0x01
+<a name='L10'>  10 <font color='darkred'>#define</font> PCI_CLASS_NETWORK               0x02
+<a name='L11'>  11 <font color='darkred'>#define</font> PCI_CLASS_DISPLAY               0x03
+<a name='L12'>  12 <font color='darkred'>#define</font> PCI_CLASS_MULTIMEDIA    0x04
+<a name='L13'>  13 <font color='darkred'>#define</font> PCI_CLASS_MEMORY                0x05
+<a name='L14'>  14 <font color='darkred'>#define</font> PCI_CLASS_BRIDGE                0x06
+<a name='L15'>  15 <font color='darkred'>#define</font> PCI_CLASS_SIMCOM                0x07
+<a name='L16'>  16 <font color='darkred'>#define</font> PCI_CLASS_SYSPERIPHERAL 0x08
+<a name='L17'>  17 <font color='darkred'>#define</font> PCI_CLASS_INPUT                 0x09
+<a name='L18'>  18 <font color='darkred'>#define</font> PCI_CLASS_DOCK                  0x0A
+<a name='L19'>  19 <font color='darkred'>#define</font> PCI_CLASS_PROCESSOR             0x0B
+<a name='L20'>  20 <font color='darkred'>#define</font> PCI_CLASS_SERIAL                0x0C
+<a name='L21'>  21 <font color='darkred'>#define</font> PCI_CLASS_MISC                  0xFF
+<a name='L22'>  22 
+<a name='L23'>  23 <b>typedef</b> <b>struct</b> pci_device <font color='red'>{</font>
+<a name='L24'>  24         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/748.html' title='Multiple used in 5 places.'>vendorID</a>;
+<a name='L25'>  25         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/199.html' title='Multiple used in 5 places.'>deviceID</a>;
+<a name='L26'>  26 
+<a name='L27'>  27         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>;
+<a name='L28'>  28         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>;
+<a name='L29'>  29         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>;
+<a name='L30'>  30         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/525.html' title='Multiple used in 3 places.'>revision</a>;
+<a name='L31'>  31 
+<a name='L32'>  32         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/463.html' title='Multiple used in 4 places.'>pci_class</a>;
+<a name='L33'>  33         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a>;
+<a name='L34'>  34         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/379.html' title='Multiple used in 3 places.'>membase</a>;
+<a name='L35'>  35         
+<a name='L36'>  36         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/298.html' title='Multiple used in 7 places.'>header</a>;
+<a name='L37'>  37         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/331.html' title='Multiple used in 3 places.'>intr_pin</a>;
+<a name='L38'>  38         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/330.html' title='Multiple used in 6 places.'>intr_line</a>;
+<a name='L39'>  39 <font color='red'>}</font> <a href='../R/331.html' title='Multiple refered from 19 places.'>pci_device_t</a>;
+<a name='L40'>  40 
+<a name='L41'>  41 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

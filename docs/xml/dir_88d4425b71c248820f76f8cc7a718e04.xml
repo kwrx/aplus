@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_88d4425b71c248820f76f8cc7a718e04" kind="dir">
+    <compoundname>usr</compoundname>
+    <innerdir refid="dir_ad28aaba48d2c38b82664458471fa334">usr/src</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/"/>
+  </compounddef>
+</doxygen>

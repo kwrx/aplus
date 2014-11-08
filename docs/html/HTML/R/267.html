@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>inode_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L45'>inode_t</a>            45 src/arch/task.c extern volatile inode_t* vfs_root;
+<a href='../S/159.html#L193'>inode_t</a>           193 src/arch/task.c 	current_task-&gt;cwd = (inode_t*) vfs_root;
+<a href='../S/147.html#L16'>inode_t</a>            16 src/fs/devfs.c extern inode_t* vfs_root;
+<a href='../S/147.html#L20'>inode_t</a>            20 src/fs/devfs.c inode_t* devfs; 
+<a href='../S/147.html#L28'>inode_t</a>            28 src/fs/devfs.c 	inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/147.html#L60'>inode_t</a>            60 src/fs/devfs.c inode_t* devfs_mount() {
+<a href='../S/147.html#L62'>inode_t</a>            62 src/fs/devfs.c 	devfs = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/146.html#L33'>inode_t</a>            33 src/fs/fs.c    	inode_t* map = NULL;
+<a href='../S/146.html#L34'>inode_t</a>            34 src/fs/fs.c    	if((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL) {
+<a href='../S/146.html#L51'>inode_t</a>            51 src/fs/fs.c    	inode_t* map = NULL;
+<a href='../S/146.html#L52'>inode_t</a>            52 src/fs/fs.c    	if((map = (inode_t*) vfs_mapped(inode, name)) != NULL)
+<a href='../S/145.html#L27'>inode_t</a>            27 src/fs/pipe.c  int pipe_read(inode_t* inode, char* ptr, int len) {
+<a href='../S/145.html#L42'>inode_t</a>            42 src/fs/pipe.c  int pipe_write(inode_t* inode, char* ptr, int len) {
+<a href='../S/145.html#L54'>inode_t</a>            54 src/fs/pipe.c  void pipe_flush(inode_t* inode) {
+<a href='../S/145.html#L63'>inode_t</a>            63 src/fs/pipe.c  int pipe_create(inode_t inodes[2]) {
+<a href='../S/145.html#L72'>inode_t</a>            72 src/fs/pipe.c  		memset((void*) &amp;inodes[i], 0, sizeof(inode_t));
+<a href='../S/144.html#L19'>inode_t</a>            19 src/fs/vfs.c   inode_t* vfs_root; 
+<a href='../S/144.html#L22'>inode_t</a>            22 src/fs/vfs.c   void vfs_map(inode_t* inode) {
+<a href='../S/144.html#L27'>inode_t</a>            27 src/fs/vfs.c   void vfs_umap(inode_t* inode) {
+<a href='../S/144.html#L32'>inode_t</a>            32 src/fs/vfs.c   inode_t* vfs_mapped(inode_t* parent, char* name) {
+<a href='../S/144.html#L34'>inode_t</a>            34 src/fs/vfs.c   		inode_t* value = (inode_t*) tmp;
+<a href='../S/144.html#L44'>inode_t</a>            44 src/fs/vfs.c   inode_t* vfs_mapped_at_index(inode_t* parent, int index) {
+<a href='../S/144.html#L46'>inode_t</a>            46 src/fs/vfs.c   		inode_t* value = (inode_t*) tmp;
+<a href='../S/144.html#L58'>inode_t</a>            58 src/fs/vfs.c   int vfs_mapped_count(inode_t* parent) {
+<a href='../S/144.html#L62'>inode_t</a>            62 src/fs/vfs.c   		inode_t* value = (inode_t*) tmp;
+<a href='../S/144.html#L72'>inode_t</a>            72 src/fs/vfs.c   int vfs_chroot(inode_t* root) {
+<a href='../S/144.html#L85'>inode_t</a>            85 src/fs/vfs.c   	vfs_root = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/144.html#L98'>inode_t</a>            98 src/fs/vfs.c   	vfs_root-&gt;parent = (inode_t*) NULL;
+<a href='../S/144.html#L99'>inode_t</a>            99 src/fs/vfs.c   	vfs_root-&gt;link = (inode_t*) NULL;
+<a href='../S/90.html#L85'>inode_t</a>            85 src/include/aplus/task.h 	inode_t* cwd;
+<a href='../S/90.html#L86'>inode_t</a>            86 src/include/aplus/task.h 	inode_t* exe;
+<a href='../S/90.html#L87'>inode_t</a>            87 src/include/aplus/task.h 	inode_t* fd[TASK_MAX_FD];
+<a href='../S/154.html#L41'>inode_t</a>            41 src/main.c     extern inode_t* vfs_root;
+<a href='../S/133.html#L28'>inode_t</a>            28 src/syscall/chown.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/138.html#L16'>inode_t</a>            16 src/syscall/fcntl.c extern inode_t* vfs_root;
+<a href='../S/138.html#L24'>inode_t</a>            24 src/syscall/fcntl.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/120.html#L21'>inode_t</a>            21 src/syscall/fstat.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/136.html#L17'>inode_t</a>            17 src/syscall/ioctl.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/132.html#L19'>inode_t</a>            19 src/syscall/lseek.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/139.html#L16'>inode_t</a>            16 src/syscall/open.c extern inode_t* vfs_root;
+<a href='../S/139.html#L19'>inode_t</a>            19 src/syscall/open.c static inode_t* ino_open(char* filename, int flags, mode_t mode) {
+<a href='../S/139.html#L20'>inode_t</a>            20 src/syscall/open.c 	inode_t* cwd = NULL;
+<a href='../S/139.html#L53'>inode_t</a>            53 src/syscall/open.c 			cwd = (inode_t*) fs_finddir(cwd, s);
+<a href='../S/139.html#L75'>inode_t</a>            75 src/syscall/open.c 	cwd = (inode_t*) fs_finddir(cwd, s);
+<a href='../S/139.html#L111'>inode_t</a>           111 src/syscall/open.c 	inode_t* ino = ino_open(filename, flags, mode);
+<a href='../S/139.html#L116'>inode_t</a>           116 src/syscall/open.c 	inode_t** fd = NULL;
+<a href='../S/127.html#L16'>inode_t</a>            16 src/syscall/read.c extern inode_t* vfs_root;
+<a href='../S/127.html#L24'>inode_t</a>            24 src/syscall/read.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/140.html#L14'>inode_t</a>            14 src/syscall/readdir.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/128.html#L16'>inode_t</a>            16 src/syscall/write.c extern inode_t* vfs_root;
+<a href='../S/128.html#L24'>inode_t</a>            24 src/syscall/write.c 	inode_t* ino = current_task-&gt;fd[fd];
+</pre>
+</body>
+</html>

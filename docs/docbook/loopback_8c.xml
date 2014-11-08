@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="loopback_8c">
+    <title>loopback.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/netif.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/bufio.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="loopback_8c_1ae1416e18db11d1fd3fa1c16179a90340">LOOPBACK_MAGIC</link> 0x127001FF</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="loopback_8c_1af2441285c13d8589c663eadabf9692c3">LOOPBACK_MTU</link> 65563</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="loopback_8c_1a43c5c1321b505bd06d640a4a2c96c952">loopback_ifup</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="loopback_8c_1a809e6e981d793a1e3f7da278d1907f12">loopback_ifdown</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="loopback_8c_1ab344e1536772b476906fc74d19dd227b">loopback_recv</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif, void * buf, size_t len)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="loopback_8c_1a3b46747a2291cdd314ab6a3ff852d62e">loopback_send</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif, void * buf, size_t len, int type)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="loopback_8c_1af6c52d7c04d8e11a5e006195ce72c61d">loopback_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="loopback_8c_1a262ebd0904685b89cfc2dca397f1c693">ATTRIBUTE</link> (
+&quot;netif&quot; , <link linkend="loopback_8c_1af6c52d7c04d8e11a5e006195ce72c61d">loopback_init</link> )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/net/loopback/loopback.c</para>
+    </simplesect>
+</section>

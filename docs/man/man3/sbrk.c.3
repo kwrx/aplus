@@ -1,0 +1,44 @@
+.TH "src/syscall/sbrk.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/sbrk.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "void * \fBsys_sbrk\fP (ptrdiff_t increment)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_sbrk\fP, 12)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "void* sys_sbrk (ptrdiff_tincrement)"
+
+.PP
+Definizione alla linea 6 del file sbrk\&.c\&.
+.PP
+Referenzia schedule_sbrk()\&.
+.PP
+.nf
+6                                     {
+7     return (void*) schedule_sbrk(increment);
+8 }
+.fi
+.SS "SYSCALL (\fBsys_sbrk\fP, 12)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

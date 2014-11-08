@@ -1,0 +1,76 @@
+\hypertarget{execv_8c}{\section{Riferimenti per il file usr/src/libposix/src/execv.c}
+\label{execv_8c}\index{usr/src/libposix/src/execv.\+c@{usr/src/libposix/src/execv.\+c}}
+}
+{\ttfamily \#include $<$\+\_\+ansi.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{execv_8c_accd0d84615f4b84367796ea088af9d72}{\+\_\+execve} (const char $\ast$filename, char $\ast$const args\mbox{[}$\,$\mbox{]}, char $\ast$const env\mbox{[}$\,$\mbox{]})
+\item 
+int \hyperlink{execv_8c_af785e3a983b2ce8aa8cdfb77e3b5b903}{\+\_\+\+D\+E\+F\+U\+N} (execv,(path, argv), const char $\ast$path \+\_\+\+A\+N\+D char $\ast$const argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+static char $\ast$$\ast$$\ast$ \hyperlink{execv_8c_a8facdfc3e966886a03275b03efb78576}{p\+\_\+environ} = \&\hyperlink{environ_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{execv_8c_af785e3a983b2ce8aa8cdfb77e3b5b903}{\index{execv.\+c@{execv.\+c}!\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}}
+\index{\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}!execv.\+c@{execv.\+c}}
+\subsubsection[{\+\_\+\+D\+E\+F\+U\+N}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+\+D\+E\+F\+U\+N (
+\begin{DoxyParamCaption}
+\item[{execv}]{, }
+\item[{(path, argv)}]{, }
+\item[{const char $\ast$path \+\_\+\+A\+N\+D char $\ast$const}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{execv_8c_af785e3a983b2ce8aa8cdfb77e3b5b903}
+
+
+Definizione alla linea 17 del file execv.\+c.
+
+
+
+Referenzia \+\_\+execve(), e p\+\_\+environ.
+
+
+\begin{DoxyCode}
+20 \{
+21   \textcolor{keywordflow}{return} \hyperlink{execv_8c_accd0d84615f4b84367796ea088af9d72}{\_execve} (path, (\textcolor{keywordtype}{char} * \_CONST *) argv, *\hyperlink{execv_8c_a8facdfc3e966886a03275b03efb78576}{p\_environ});
+22 \}
+\end{DoxyCode}
+\hypertarget{execv_8c_accd0d84615f4b84367796ea088af9d72}{\index{execv.\+c@{execv.\+c}!\+\_\+execve@{\+\_\+execve}}
+\index{\+\_\+execve@{\+\_\+execve}!execv.\+c@{execv.\+c}}
+\subsubsection[{\+\_\+execve}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+execve (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{filename, }
+\item[{char $\ast$const}]{args\mbox{[}$\,$\mbox{]}, }
+\item[{char $\ast$const}]{env\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{execv_8c_accd0d84615f4b84367796ea088af9d72}
+
+
+Definizione alla linea 8 del file \+\_\+execve.\+c.
+
+
+
+Referenzia execve().
+
+
+\begin{DoxyCode}
+8                                                                          \{
+9     \textcolor{keywordflow}{return} \hyperlink{__execve_8c_a69afa95020be08ad581031bc33921680}{execve}(filename, args, env);
+10 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{execv_8c_a8facdfc3e966886a03275b03efb78576}{\index{execv.\+c@{execv.\+c}!p\+\_\+environ@{p\+\_\+environ}}
+\index{p\+\_\+environ@{p\+\_\+environ}!execv.\+c@{execv.\+c}}
+\subsubsection[{p\+\_\+environ}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$$\ast$ p\+\_\+environ = \&{\bf environ}\hspace{0.3cm}{\ttfamily [static]}}}\label{execv_8c_a8facdfc3e966886a03275b03efb78576}
+
+
+Definizione alla linea 13 del file execv.\+c.
+

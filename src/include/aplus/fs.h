@@ -72,6 +72,16 @@ typedef struct inode {
 } inode_t;
 
 
+typedef struct fs {
+	char name[255];
+	int (*mount) (struct inode* idev, struct inode* idir, int flags);
+} fs_t;
+
+#define FS(name, mount)														\
+	fs_t fs_##name = {														\
+		#name, mount														\
+	}; ATTRIBUTE("fs", fs_##name)
+
 
 
 

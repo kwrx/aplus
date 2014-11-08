@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>seconds</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/17.html#L11'>seconds</a>            11 usr/src/libposix/src/alarm.c static int alarm_thread(int seconds) {
+<a href='../S/17.html#L12'>seconds</a>            12 usr/src/libposix/src/alarm.c 	sleep(seconds);
+<a href='../S/17.html#L20'>seconds</a>            20 usr/src/libposix/src/alarm.c unsigned alarm(unsigned seconds) {
+<a href='../S/17.html#L28'>seconds</a>            28 usr/src/libposix/src/alarm.c 	if(seconds &gt; 0)
+<a href='../S/17.html#L29'>seconds</a>            29 usr/src/libposix/src/alarm.c 		if(pthread_create(&amp;thr, NULL, alarm_thread, seconds) != 0)
+<a href='../S/31.html#L8'>seconds</a>             8 usr/src/libposix/src/sleep.c unsigned sleep(unsigned seconds) {
+<a href='../S/31.html#L11'>seconds</a>            11 usr/src/libposix/src/sleep.c     ts.tv_sec = seconds;
+</pre>
+</body>
+</html>

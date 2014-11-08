@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="md_usr_src_libposix_README" kind="page">
+    <compoundname>md_usr_src_libposix_README</compoundname>
+    <title>C Posix library</title>
+    <detaileddescription>
+<para>The C POSIX library is a specification of a C standard library for POSIX systems. It was developed at the same time as the ANSI C standard. Some effort was made to make POSIX compatible with standard C; POSIX includes additional functions to those introduced in standard C.</para><para><heading level="4">Required function</heading>
+</para><para><itemizedlist>
+<listitem><para>Read directory entries</para></listitem><listitem><para>Get groups;</para></listitem><listitem><para>Schedule Yield.</para></listitem></itemizedlist>
+</para><para>``` struct dirent* __os_readdir(DIR* d); int __os_getgroups(int length, gid_t* list); void __os_yield(void);</para><para>See &quot;/config.h&quot;. ``` </para>    </detaileddescription>
+  </compounddef>
+</doxygen>

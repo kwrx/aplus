@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__barrierattr_8c">
+    <title>pthread_barrierattr.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;stdlib.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__barrierattr_8c_1a1c6940e4706e98dc44748a938131c955">pthread_barrierattr_init</link> (
+<link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__barrierattr_8c_1afc9f24a6c45d51e41d8be8dd957c7ce5">pthread_barrierattr_destroy</link> (
+<link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__barrierattr_8c_1a07fbaaa5f40836fa71090c90f53a78cb">pthread_barrierattr_getpshared</link> (
+const <link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__barrierattr_8c_1a528deb61389a7c9d3769184eff5116d8">pthread_barrierattr_setpshared</link> (
+<link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_barrierattr.c</para>
+    </simplesect>
+</section>

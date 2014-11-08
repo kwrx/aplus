@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dup2_8c" kind="file">
+    <compoundname>dup2.c</compoundname>
+    <includes local="no">fcntl.h</includes>
+    <incdepgraph>
+      <node id="2049">
+        <label>fcntl.h</label>
+      </node>
+      <node id="2048">
+        <label>usr/src/libposix/src/dup2.c</label>
+        <link refid="dup2.c"/>
+        <childnode refid="2049" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="dup2_8c_1a0bbddf8ae4f3dea6e57532be36c04268" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int dup2</definition>
+        <argsstring>(int oldfd, int newfd)</argsstring>
+        <name>dup2</name>
+        <param>
+          <type>int</type>
+          <declname>oldfd</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>newfd</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/dup2.c" line="3" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/dup2.c" bodystart="3" bodyend="5"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3" refid="dup2_8c_1a0bbddf8ae4f3dea6e57532be36c04268" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="dup2_8c_1a0bbddf8ae4f3dea6e57532be36c04268" kindref="member">dup2</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>oldfd,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>newfd)<sp/>{</highlight></codeline>
+<codeline lineno="4"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fcntl(oldfd,<sp/>F_DUPFD,<sp/>newfd);</highlight></codeline>
+<codeline lineno="5"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/dup2.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,45 @@
+\hypertarget{usr_2src_2libposix_2src_2readdir_8c}{\section{Riferimenti per il file usr/src/libposix/src/readdir.c}
+\label{usr_2src_2libposix_2src_2readdir_8c}\index{usr/src/libposix/src/readdir.\+c@{usr/src/libposix/src/readdir.\+c}}
+}
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structdirent}{dirent} $\ast$ \hyperlink{usr_2src_2libposix_2src_2readdir_8c_aa7687571d2af8efd5153874ae6e678d9}{readdir} (\hyperlink{dirent_8h_a067065071b5bdb96054ed58b5f848bfa}{D\+I\+R} $\ast$\hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{usr_2src_2libposix_2src_2readdir_8c_aa7687571d2af8efd5153874ae6e678d9}{\index{usr/src/libposix/src/readdir.\+c@{usr/src/libposix/src/readdir.\+c}!readdir@{readdir}}
+\index{readdir@{readdir}!usr/src/libposix/src/readdir.\+c@{usr/src/libposix/src/readdir.\+c}}
+\subsubsection[{readdir}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf dirent}$\ast$ readdir (
+\begin{DoxyParamCaption}
+\item[{{\bf D\+I\+R} $\ast$}]{d}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2readdir_8c_aa7687571d2af8efd5153874ae6e678d9}
+
+
+Definizione alla linea 15 del file readdir.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+15                                \{
+16     \textcolor{keywordflow}{if}(d == NULL) \{
+17         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+18         \textcolor{keywordflow}{return} NULL;
+19     \}
+20 
+21     \textcolor{keywordflow}{return} \_\_os\_readdir(d);
+22 \}
+\end{DoxyCode}

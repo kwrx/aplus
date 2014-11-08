@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>pshared</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L82'>pshared</a>            82 usr/src/libpthread/include/pthread.h 	int pshared;
+<a href='../S/43.html#L102'>pshared</a>           102 usr/src/libpthread/include/pthread.h 	int pshared;
+<a href='../S/43.html#L117'>pshared</a>           117 usr/src/libpthread/include/pthread.h 	int pshared;
+<a href='../S/43.html#L128'>pshared</a>           128 usr/src/libpthread/include/pthread.h 	int pshared;
+<a href='../S/43.html#L222'>pshared</a>           222 usr/src/libpthread/include/pthread.h int pthread_mutexattr_getpshared(const pthread_mutexattr_t *attr, int *pshared);
+<a href='../S/43.html#L223'>pshared</a>           223 usr/src/libpthread/include/pthread.h int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared);
+<a href='../S/43.html#L244'>pshared</a>           244 usr/src/libpthread/include/pthread.h int pthread_condattr_getpshared(const pthread_condattr_t *attr, int *pshared);
+<a href='../S/43.html#L245'>pshared</a>           245 usr/src/libpthread/include/pthread.h int pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared);
+<a href='../S/43.html#L264'>pshared</a>           264 usr/src/libpthread/include/pthread.h int pthread_barrierattr_getpshared(const pthread_barrierattr_t *attr, int *pshared);
+<a href='../S/43.html#L265'>pshared</a>           265 usr/src/libpthread/include/pthread.h int pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared);
+<a href='../S/43.html#L281'>pshared</a>           281 usr/src/libpthread/include/pthread.h int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t *attr, int *pshared);
+<a href='../S/43.html#L282'>pshared</a>           282 usr/src/libpthread/include/pthread.h int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int pshared);
+<a href='../S/43.html#L302'>pshared</a>           302 usr/src/libpthread/include/pthread.h int pthread_spin_init(pthread_spinlock_t *lock, int pshared);
+<a href='../S/54.html#L15'>pshared</a>            15 usr/src/libpthread/src/pthread_barrierattr.c 	attr-&gt;pshared = 0;
+<a href='../S/54.html#L26'>pshared</a>            26 usr/src/libpthread/src/pthread_barrierattr.c 	attr-&gt;pshared = 0;
+<a href='../S/54.html#L31'>pshared</a>            31 usr/src/libpthread/src/pthread_barrierattr.c PUBLIC int pthread_barrierattr_getpshared(const pthread_barrierattr_t *attr, int *pshared) {
+<a href='../S/54.html#L37'>pshared</a>            37 usr/src/libpthread/src/pthread_barrierattr.c 	if(pshared == NULL) {
+<a href='../S/54.html#L42'>pshared</a>            42 usr/src/libpthread/src/pthread_barrierattr.c 	*pshared = attr-&gt;pshared;
+<a href='../S/54.html#L47'>pshared</a>            47 usr/src/libpthread/src/pthread_barrierattr.c PUBLIC int pthread_barrierattr_setpshared(pthread_barrierattr_t *attr, int pshared) {
+<a href='../S/54.html#L53'>pshared</a>            53 usr/src/libpthread/src/pthread_barrierattr.c 	attr-&gt;pshared = pshared;
+<a href='../S/66.html#L13'>pshared</a>            13 usr/src/libpthread/src/pthread_condattr.c 	attr-&gt;pshared = 0;
+<a href='../S/66.html#L24'>pshared</a>            24 usr/src/libpthread/src/pthread_condattr.c 	attr-&gt;pshared = 0;
+<a href='../S/66.html#L29'>pshared</a>            29 usr/src/libpthread/src/pthread_condattr.c PUBLIC int pthread_condattr_getpshared(const pthread_condattr_t *attr, int *pshared) {
+<a href='../S/66.html#L36'>pshared</a>            36 usr/src/libpthread/src/pthread_condattr.c 	*pshared = attr-&gt;pshared;
+<a href='../S/66.html#L41'>pshared</a>            41 usr/src/libpthread/src/pthread_condattr.c PUBLIC int pthread_condattr_setpshared(pthread_condattr_t *attr, int pshared) {
+<a href='../S/66.html#L47'>pshared</a>            47 usr/src/libpthread/src/pthread_condattr.c 	attr-&gt;pshared = pshared;
+<a href='../S/68.html#L14'>pshared</a>            14 usr/src/libpthread/src/pthread_mutexattr.c 	attr-&gt;pshared = 0;
+<a href='../S/68.html#L26'>pshared</a>            26 usr/src/libpthread/src/pthread_mutexattr.c 	attr-&gt;pshared = 0;
+<a href='../S/68.html#L32'>pshared</a>            32 usr/src/libpthread/src/pthread_mutexattr.c PUBLIC int pthread_mutexattr_getpshared(const pthread_mutexattr_t *attr, int *pshared) {
+<a href='../S/68.html#L38'>pshared</a>            38 usr/src/libpthread/src/pthread_mutexattr.c 	*pshared = attr-&gt;pshared;
+<a href='../S/68.html#L42'>pshared</a>            42 usr/src/libpthread/src/pthread_mutexattr.c PUBLIC int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared) {
+<a href='../S/68.html#L48'>pshared</a>            48 usr/src/libpthread/src/pthread_mutexattr.c 	attr-&gt;pshared = pshared;
+<a href='../S/60.html#L15'>pshared</a>            15 usr/src/libpthread/src/pthread_rwlockattr.c 	attr-&gt;pshared = 0;
+<a href='../S/60.html#L25'>pshared</a>            25 usr/src/libpthread/src/pthread_rwlockattr.c 	attr-&gt;pshared = 0;
+<a href='../S/60.html#L29'>pshared</a>            29 usr/src/libpthread/src/pthread_rwlockattr.c PUBLIC int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t *attr, int *pshared) {
+<a href='../S/60.html#L35'>pshared</a>            35 usr/src/libpthread/src/pthread_rwlockattr.c 	if(pshared == NULL) {
+<a href='../S/60.html#L40'>pshared</a>            40 usr/src/libpthread/src/pthread_rwlockattr.c 	*pshared = attr-&gt;pshared;
+<a href='../S/60.html#L44'>pshared</a>            44 usr/src/libpthread/src/pthread_rwlockattr.c PUBLIC int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int pshared) {
+<a href='../S/60.html#L50'>pshared</a>            50 usr/src/libpthread/src/pthread_rwlockattr.c 	attr-&gt;pshared = pshared;
+<a href='../S/53.html#L7'>pshared</a>             7 usr/src/libpthread/src/pthread_spin.c PUBLIC int pthread_spin_init(pthread_spinlock_t *lock, int pshared) {
+</pre>
+</body>
+</html>

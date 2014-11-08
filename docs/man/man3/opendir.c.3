@@ -1,0 +1,57 @@
+.TH "usr/src/libposix/src/opendir.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/opendir.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBDIR\fP * \fBopendir\fP (const char *path)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBDIR\fP* opendir (const char *path)"
+
+.PP
+Definizione alla linea 13 del file opendir\&.c\&.
+.PP
+Referenzia d, errno, __DIR::fd, O_DIRECTORY, e __DIR::position\&.
+.PP
+.nf
+13                                {
+14     int fd = open(path, O_RDONLY | O_DIRECTORY, 0644);
+15     if(fd < 0) {
+16         errno = ENOENT;
+17         return NULL;
+18     }
+19 
+20     DIR* d = (DIR*) malloc(sizeof(DIR));
+21     d->fd = fd;
+22     d->position = 0;
+23 
+24     return d;
+25 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

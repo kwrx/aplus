@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__once_8c">
+    <title>pthread_once.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__once_8c_1add46da7376ecc72c5598888928c8342b">pthread_once</link> (
+<link linkend="pthread_8h_1a18773caa8d79a98514e4291b855c3d80">pthread_once_t</link> * once_control, void(*)(void) init_routine)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_once.c</para>
+    </simplesect>
+</section>

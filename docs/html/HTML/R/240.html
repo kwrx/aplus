@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>eth_header_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/112.html#L12'>eth_header_t</a>       12 src/net/eth.c  	eth_header_t* ethpkt = (eth_header_t*) buf;
+<a href='../S/112.html#L15'>eth_header_t</a>       15 src/net/eth.c  		netif, (void*) ((uint32_t) buf + sizeof(eth_header_t)), length - sizeof(eth_header_t)
+<a href='../S/112.html#L41'>eth_header_t</a>       41 src/net/eth.c  							sizeof(eth_header_t), 
+<a href='../S/112.html#L50'>eth_header_t</a>       50 src/net/eth.c  	eth_header_t* ethpkt = kmalloc(length + sizeof(eth_header_t));
+<a href='../S/112.html#L53'>eth_header_t</a>       53 src/net/eth.c  	memcpy((void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), buf, length);
+<a href='../S/112.html#L71'>eth_header_t</a>       71 src/net/eth.c  	length += sizeof(eth_header_t);
+<a href='../S/112.html#L81'>eth_header_t</a>       81 src/net/eth.c  	if(length + sizeof(eth_header_t) &lt; netif-&gt;mtu) {
+<a href='../S/112.html#L88'>eth_header_t</a>       88 src/net/eth.c  	int delta = netif-&gt;mtu - sizeof(eth_header_t);
+</pre>
+</body>
+</html>

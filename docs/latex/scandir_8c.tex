@@ -1,0 +1,75 @@
+\hypertarget{scandir_8c}{\section{Riferimenti per il file usr/src/libposix/src/scandir.c}
+\label{scandir_8c}\index{usr/src/libposix/src/scandir.\+c@{usr/src/libposix/src/scandir.\+c}}
+}
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{scandir_8c_a53d80292d58567db0826c243ab29166b}{scandir} (const char $\ast$pathname, struct \hyperlink{structdirent}{dirent} $\ast$$\ast$$\ast$namelist, int($\ast$select)(const struct \hyperlink{structdirent}{dirent} $\ast$), int($\ast$compar)(const struct \hyperlink{structdirent}{dirent} $\ast$$\ast$, const struct \hyperlink{structdirent}{dirent} $\ast$$\ast$))
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{scandir_8c_a53d80292d58567db0826c243ab29166b}{\index{scandir.\+c@{scandir.\+c}!scandir@{scandir}}
+\index{scandir@{scandir}!scandir.\+c@{scandir.\+c}}
+\subsubsection[{scandir}]{\setlength{\rightskip}{0pt plus 5cm}int scandir (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{pathname, }
+\item[{struct {\bf dirent} $\ast$$\ast$$\ast$}]{namelist, }
+\item[{int($\ast$)(const struct {\bf dirent} $\ast$)}]{select, }
+\item[{int($\ast$)(const struct {\bf dirent} $\ast$$\ast$, const struct {\bf dirent} $\ast$$\ast$)}]{compar}
+\end{DoxyParamCaption}
+)}}\label{scandir_8c_a53d80292d58567db0826c243ab29166b}
+
+
+Definizione alla linea 11 del file scandir.\+c.
+
+
+
+Referenzia d, errno, opendir(), e readdir().
+
+
+\begin{DoxyCode}
+11                                                                                                            
+                                                             \{
+12     \hyperlink{struct____DIR}{DIR}* \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d} = \hyperlink{dirent_8h_afa648ff43ec9eba592716a334f243111}{opendir}(pathname);
+13     \textcolor{keywordflow}{if}(d == NULL) \{
+14         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOENT;
+15         \textcolor{keywordflow}{return} -1;
+16     \}
+17 
+18     \textcolor{keywordflow}{if}(namelist == NULL) \{
+19         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+20         \textcolor{keywordflow}{return} -1;
+21     \}
+22 
+23     \textcolor{keyword}{const} \textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}* ent = NULL;
+24     \textcolor{keyword}{const} \textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}** lst = (\textcolor{keyword}{const} \textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}**) *namelist;
+25 
+26     \textcolor{keywordtype}{int} index = 0;
+27 
+28 
+29     \textcolor{keywordflow}{while}((ent = \hyperlink{dirent_8h_aa7687571d2af8efd5153874ae6e678d9}{readdir}(d))) \{
+30         \textcolor{keywordflow}{if}(select)
+31             \textcolor{keywordflow}{if}(select(ent) != 0)
+32                 \textcolor{keywordflow}{continue};
+33 
+34         
+35         \textcolor{keywordflow}{if}((index > 0) && (compar) && (compar(&lst[index - 1], &ent) > 0)) \{
+36             lst[index] = lst[index - 1];
+37             lst[index - 1] = ent;
+38         \} \textcolor{keywordflow}{else}
+39             lst[index] = ent;
+40 
+41         index += 1;
+42     \}
+43 
+44     \textcolor{keywordflow}{return} index;
+45 \}
+\end{DoxyCode}

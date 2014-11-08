@@ -1,0 +1,75 @@
+.TH "usr/src/libssp/src/chkfail.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libssp/src/chkfail.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSTACK_CHK_GUARD\fP   0xe2dee396"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fB__attribute__\fP ((noreturn))"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "void * \fB__stack_chk_guard\fP = (void*) \fBSTACK_CHK_GUARD\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define STACK_CHK_GUARD   0xe2dee396"
+
+.PP
+Definizione alla linea 10 del file chkfail\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "__attribute__ ((noreturn))"
+
+.PP
+Definizione alla linea 18 del file chkfail\&.c\&.
+.PP
+.nf
+19                             {
+20 
+21 #ifdef __GNU_LIBRARY__
+22     extern char* __progname;
+23 #else
+24     static const char __progname[] = "panic";
+25 #endif
+26 
+27     fprintf(stderr, "%s: stack smashing detected\n", __progname);
+28     abort();
+29 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "void* __stack_chk_guard = (void*) \fBSTACK_CHK_GUARD\fP"
+
+.PP
+Definizione alla linea 15 del file chkfail\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

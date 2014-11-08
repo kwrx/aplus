@@ -1,0 +1,56 @@
+.TH "usr/src/libposix/src/alarm.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/alarm.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <signal\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include 'config\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "unsigned \fBalarm\fP (unsigned seconds)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "unsigned alarm (unsignedseconds)"
+
+.PP
+Definizione alla linea 20 del file alarm\&.c\&.
+.PP
+Referenzia errno, pthread_create(), e pthread_detach()\&.
+.PP
+.nf
+20                                  {
+21 #ifdef USE_PTHREAD
+22     static pthread_t thr = -1;
+23 
+24     if(thr != -1)
+25         if(pthread_detach(thr) != 0)
+26             return -1;
+27 
+28     if(seconds > 0)
+29         if(pthread_create(&thr, NULL, alarm_thread, seconds) != 0)
+30             return -1;
+31     return 0;
+32 
+33 #else
+34     errno = ENOSYS;
+35     return -1;
+36 #endif
+37 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

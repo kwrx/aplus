@@ -1,0 +1,57 @@
+\hypertarget{uid_8c}{\section{Riferimenti per il file usr/src/libposix/src/uid.c}
+\label{uid_8c}\index{usr/src/libposix/src/uid.\+c@{usr/src/libposix/src/uid.\+c}}
+}
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+uid\+\_\+t \hyperlink{uid_8c_a2f517436c22ef73337d3de4920908c6c}{getuid} (void)
+\item 
+uid\+\_\+t \hyperlink{uid_8c_a8b9a6dcf4e1d237f5607256dad93e26a}{geteuid} (void)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{uid_8c_a8b9a6dcf4e1d237f5607256dad93e26a}{\index{uid.\+c@{uid.\+c}!geteuid@{geteuid}}
+\index{geteuid@{geteuid}!uid.\+c@{uid.\+c}}
+\subsubsection[{geteuid}]{\setlength{\rightskip}{0pt plus 5cm}uid\+\_\+t geteuid (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{uid_8c_a8b9a6dcf4e1d237f5607256dad93e26a}
+
+
+Definizione alla linea 13 del file uid.\+c.
+
+
+
+Referenzia getuid().
+
+
+\begin{DoxyCode}
+13                     \{
+14     \textcolor{keywordflow}{return} \hyperlink{uid_8c_a2f517436c22ef73337d3de4920908c6c}{getuid}();
+15 \}
+\end{DoxyCode}
+\hypertarget{uid_8c_a2f517436c22ef73337d3de4920908c6c}{\index{uid.\+c@{uid.\+c}!getuid@{getuid}}
+\index{getuid@{getuid}!uid.\+c@{uid.\+c}}
+\subsubsection[{getuid}]{\setlength{\rightskip}{0pt plus 5cm}uid\+\_\+t getuid (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{uid_8c_a2f517436c22ef73337d3de4920908c6c}
+
+
+Definizione alla linea 5 del file uid.\+c.
+
+
+\begin{DoxyCode}
+5                    \{
+6     \textcolor{keyword}{struct }stat st;
+7     \textcolor{keywordflow}{if}(fstat(STDIN\_FILENO, &st) != 0)
+8         \textcolor{keywordflow}{return} -1;
+9 
+10     \textcolor{keywordflow}{return} st.st\_uid;
+11 \}
+\end{DoxyCode}

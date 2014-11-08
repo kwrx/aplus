@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__rwlock" kind="struct" prot="public">
+    <compoundname>pthread_rwlock</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref></type>
+        <definition>pthread_mutex_t pthread_rwlock::rdmutex</definition>
+        <argsstring></argsstring>
+        <name>rdmutex</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="133" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="133" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref></type>
+        <definition>pthread_mutex_t pthread_rwlock::wrmutex</definition>
+        <argsstring></argsstring>
+        <name>wrmutex</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="134" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__rwlock_1a513e968cb2dea01c044a3304c26b1d07" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref></type>
+        <definition>handle_t pthread_rwlock::shared_waiters</definition>
+        <argsstring></argsstring>
+        <name>shared_waiters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="135" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="135" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__rwlock_1ae49a53d46712b0d4af191e85a622da1d" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref></type>
+        <definition>handle_t pthread_rwlock::exclusive_waiters</definition>
+        <argsstring></argsstring>
+        <name>exclusive_waiters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="136" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__rwlock_1af637581bd0ea0328763d041937160fff" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_rwlock::num_shared_waiters</definition>
+        <argsstring></argsstring>
+        <name>num_shared_waiters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="137" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__rwlock_1a5d8b56e7998376aa9f5908a560daadb7" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_rwlock::num_exclusive_waiters</definition>
+        <argsstring></argsstring>
+        <name>num_exclusive_waiters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="138" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="138" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__rwlock_1a7918a35d8e929df9c7f1fd9f12e9efcf" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref></type>
+        <definition>pthread_t pthread_rwlock::owner</definition>
+        <argsstring></argsstring>
+        <name>owner</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="139" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="139" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="92">
+        <label>pthread_mutex</label>
+        <link refid="structpthread__mutex"/>
+      </node>
+      <node id="91">
+        <label>pthread_rwlock</label>
+        <link refid="structpthread__rwlock"/>
+        <childnode refid="92" relation="usage">
+          <edgelabel>+wrmutex</edgelabel>
+          <edgelabel>+rdmutex</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="132" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="132" bodyend="140"/>
+    <listofallmembers>
+      <member refid="structpthread__rwlock_1ae49a53d46712b0d4af191e85a622da1d" prot="public" virt="non-virtual"><scope>pthread_rwlock</scope><name>exclusive_waiters</name></member>
+      <member refid="structpthread__rwlock_1a5d8b56e7998376aa9f5908a560daadb7" prot="public" virt="non-virtual"><scope>pthread_rwlock</scope><name>num_exclusive_waiters</name></member>
+      <member refid="structpthread__rwlock_1af637581bd0ea0328763d041937160fff" prot="public" virt="non-virtual"><scope>pthread_rwlock</scope><name>num_shared_waiters</name></member>
+      <member refid="structpthread__rwlock_1a7918a35d8e929df9c7f1fd9f12e9efcf" prot="public" virt="non-virtual"><scope>pthread_rwlock</scope><name>owner</name></member>
+      <member refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" prot="public" virt="non-virtual"><scope>pthread_rwlock</scope><name>rdmutex</name></member>
+      <member refid="structpthread__rwlock_1a513e968cb2dea01c044a3304c26b1d07" prot="public" virt="non-virtual"><scope>pthread_rwlock</scope><name>shared_waiters</name></member>
+      <member refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" prot="public" virt="non-virtual"><scope>pthread_rwlock</scope><name>wrmutex</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

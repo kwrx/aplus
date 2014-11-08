@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>p</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/102.html#L97'>p</a>                  97 src/include/aplus.h 	static inline void out##n(uint16_t p, t v) {					\
+<a href='../S/102.html#L98'>p</a>                  98 src/include/aplus.h 		__asm__ __volatile__ ("out dx, " #reg : : "a"(v), "d"(p));	\
+<a href='../S/102.html#L107'>p</a>                 107 src/include/aplus.h 	static inline t in##n(uint16_t p) {								\
+<a href='../S/102.html#L109'>p</a>                 109 src/include/aplus.h 		__asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));\
+<a href='../S/102.html#L118'>p</a>                 118 src/include/aplus.h 	static inline void outs##n(uint16_t p, t* v, uint32_t len) {	\
+<a href='../S/102.html#L120'>p</a>                 120 src/include/aplus.h 			out##n(p, v[i]);										\
+<a href='../S/102.html#L129'>p</a>                 129 src/include/aplus.h 	static inline t* ins##n(uint16_t p, t* v, uint32_t len) {		\
+<a href='../S/102.html#L131'>p</a>                 131 src/include/aplus.h 			v[i] = in##n(p);										\
+<a href='../S/139.html#L47'>p</a>                  47 src/syscall/open.c 	char* p = s;
+<a href='../S/139.html#L50'>p</a>                  50 src/syscall/open.c 		if((p = strchr(s, '/'))) {
+<a href='../S/139.html#L51'>p</a>                  51 src/syscall/open.c 			*p++ = 0;
+<a href='../S/139.html#L65'>p</a>                  65 src/syscall/open.c 			s = p;
+<a href='../S/62.html#L16'>p</a>                  16 usr/src/libpthread/src/platform/posix/hooks.h #define __os_thread_create(e, a, p)			clone((int(*)(void*)) e, NULL, CLONE_VM, a)
+<a href='../S/63.html#L9'>p</a>                   9 usr/src/libpthread/src/platform/win32/hooks.h #define __os_thread_create(e, a, p)			((int) CreateThread(0, 0, e, a, 0))					
+<a href='../S/50.html#L39'>p</a>                  39 usr/src/libpthread/src/pthread_internal.h 	void *(*entry) (void* p);
+<a href='../S/47.html#L7'>p</a>                   7 usr/src/libpthread/test/main.c static void* __test_pthread_1 (void* p) {
+</pre>
+</body>
+</html>

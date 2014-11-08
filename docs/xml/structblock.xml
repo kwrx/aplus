@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structblock" kind="struct" prot="public">
+    <compoundname>block</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structblock_1a0dc8afecb033f59b42e0d8502a7f8ff0" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t block::magic</definition>
+        <argsstring></argsstring>
+        <name>magic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="45" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structblock_1a40c8e08013eb90aa6db19e1cbc7f3186" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t block::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="46" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="13">
+        <label>block</label>
+        <link refid="structblock"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/mm/mm.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="44" bodyend="47"/>
+    <listofallmembers>
+      <member refid="structblock_1a0dc8afecb033f59b42e0d8502a7f8ff0" prot="public" virt="non-virtual"><scope>block</scope><name>magic</name></member>
+      <member refid="structblock_1a40c8e08013eb90aa6db19e1cbc7f3186" prot="public" virt="non-virtual"><scope>block</scope><name>size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

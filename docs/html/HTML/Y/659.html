@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L379'>t</a>                 379 src/arch/desc.c 	static struct tm t;
+<a href='../S/158.html#L380'>t</a>                 380 src/arch/desc.c 	t.tm_sec = BCD2BIN(rtc(0));
+<a href='../S/158.html#L381'>t</a>                 381 src/arch/desc.c 	t.tm_min = BCD2BIN(rtc(2));
+<a href='../S/158.html#L382'>t</a>                 382 src/arch/desc.c 	t.tm_hour = BCD2BIN2(rtc(4)) + 2;
+<a href='../S/158.html#L383'>t</a>                 383 src/arch/desc.c 	t.tm_mday = BCD2BIN(rtc(7));
+<a href='../S/158.html#L384'>t</a>                 384 src/arch/desc.c 	t.tm_mon = BCD2BIN(rtc(8)) - 1;
+<a href='../S/158.html#L385'>t</a>                 385 src/arch/desc.c 	t.tm_year = (BCD2BIN(rtc(9)) + 100);
+<a href='../S/158.html#L386'>t</a>                 386 src/arch/desc.c 	t.tm_wday = 0;
+<a href='../S/158.html#L387'>t</a>                 387 src/arch/desc.c 	t.tm_yday = 0;
+<a href='../S/158.html#L388'>t</a>                 388 src/arch/desc.c 	t.tm_isdst = 0;
+<a href='../S/158.html#L390'>t</a>                 390 src/arch/desc.c 	return (uint32_t) mktime(&amp;t);
+<a href='../S/102.html#L96'>t</a>                  96 src/include/aplus.h #define outx(n, t, reg)												\
+<a href='../S/102.html#L97'>t</a>                  97 src/include/aplus.h 	static inline void out##n(uint16_t p, t v) {					\
+<a href='../S/102.html#L106'>t</a>                 106 src/include/aplus.h #define inx(n, t, reg)												\
+<a href='../S/102.html#L107'>t</a>                 107 src/include/aplus.h 	static inline t in##n(uint16_t p) {								\
+<a href='../S/102.html#L108'>t</a>                 108 src/include/aplus.h 		t r;														\
+<a href='../S/102.html#L117'>t</a>                 117 src/include/aplus.h #define outsx(n, t, reg)											\
+<a href='../S/102.html#L118'>t</a>                 118 src/include/aplus.h 	static inline void outs##n(uint16_t p, t* v, uint32_t len) {	\
+<a href='../S/102.html#L128'>t</a>                 128 src/include/aplus.h #define insx(n, t, reg)												\
+<a href='../S/102.html#L129'>t</a>                 129 src/include/aplus.h 	static inline t* ins##n(uint16_t p, t* v, uint32_t len) {		\
+<a href='../S/150.html#L98'>t</a>                  98 src/mm/paging.c 		uint32_t* t = (uint32_t*) (*e &amp; ~0xFFF);
+<a href='../S/150.html#L99'>t</a>                  99 src/mm/paging.c 		t[PTENTRY(vframe)] = pframe | flags;
+<a href='../S/143.html#L175'>t</a>                 175 src/sched.c    		task_t* t = (task_t*) value;
+<a href='../S/143.html#L177'>t</a>                 177 src/sched.c    		if(t-&gt;pid == pid)
+<a href='../S/143.html#L178'>t</a>                 178 src/sched.c    			return t;
+<a href='../S/62.html#L17'>t</a>                  17 usr/src/libpthread/src/platform/posix/hooks.h #define __os_thread_kill(t, s)				kill(t, s)
+<a href='../S/63.html#L10'>t</a>                  10 usr/src/libpthread/src/platform/win32/hooks.h #define __os_thread_kill(t, s)				TerminateThread(t, s)
+</pre>
+</body>
+</html>

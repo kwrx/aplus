@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>ts</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/31.html#L6'>ts</a>                  6 usr/src/libposix/src/sleep.c extern int nanosleep(struct timespec* ts, struct timespec* tr);
+<a href='../S/31.html#L9'>ts</a>                  9 usr/src/libposix/src/sleep.c     struct timespec ts;
+<a href='../S/31.html#L11'>ts</a>                 11 usr/src/libposix/src/sleep.c     ts.tv_sec = seconds;
+<a href='../S/31.html#L12'>ts</a>                 12 usr/src/libposix/src/sleep.c     ts.tv_nsec = 0;
+<a href='../S/31.html#L13'>ts</a>                 13 usr/src/libposix/src/sleep.c     if (!nanosleep(&amp;ts,&amp;ts)) return 0;
+<a href='../S/31.html#L14'>ts</a>                 14 usr/src/libposix/src/sleep.c     if (errno == EINTR) return ts.tv_sec;
+<a href='../S/37.html#L5'>ts</a>                  5 usr/src/libposix/src/usleep.c extern int nanosleep(struct timespec* ts, struct timespec* tr);
+<a href='../S/37.html#L8'>ts</a>                  8 usr/src/libposix/src/usleep.c     struct timespec ts;
+<a href='../S/37.html#L10'>ts</a>                 10 usr/src/libposix/src/usleep.c     ts.tv_sec = (long int)useconds / 1000000;
+<a href='../S/37.html#L11'>ts</a>                 11 usr/src/libposix/src/usleep.c     ts.tv_nsec = ((long int)useconds % 1000000);
+<a href='../S/37.html#L12'>ts</a>                 12 usr/src/libposix/src/usleep.c     if (!nanosleep(&amp;ts,&amp;ts)) return 0;
+<a href='../S/37.html#L13'>ts</a>                 13 usr/src/libposix/src/usleep.c     if (errno == EINTR) return ts.tv_sec;
+</pre>
+</body>
+</html>

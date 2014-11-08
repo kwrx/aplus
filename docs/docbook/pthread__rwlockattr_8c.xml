@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__rwlockattr_8c">
+    <title>pthread_rwlockattr.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlockattr_8c_1a92e0b4a2c51bc98a312dd8173386173b">pthread_rwlockattr_init</link> (
+<link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlockattr_8c_1a86023a246ada8805f46a78699a0bfedb">pthread_rwlockattr_destroy</link> (
+<link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlockattr_8c_1a1e00480a4c42cfedbe0a03a625bac88c">pthread_rwlockattr_getpshared</link> (
+const <link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlockattr_8c_1a2500f1bbe3350f7e1492422959c67f70">pthread_rwlockattr_setpshared</link> (
+<link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c</para>
+    </simplesect>
+</section>

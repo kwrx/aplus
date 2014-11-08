@@ -1,0 +1,380 @@
+\hypertarget{rtl8139_8h}{\section{Riferimenti per il file src/net/rtl8139/rtl8139.h}
+\label{rtl8139_8h}\index{src/net/rtl8139/rtl8139.\+h@{src/net/rtl8139/rtl8139.\+h}}
+}
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{rtl8139_8h_a1dcdf537152ab9cc49e4a26bd9d2f47d}{R\+E\+G\+\_\+\+I\+D0}~0x00
+\item 
+\#define \hyperlink{rtl8139_8h_ac5dc5d6d71f71dcdf3ff2a7e911c7248}{R\+E\+G\+\_\+\+I\+D4}~0x04
+\item 
+\#define \hyperlink{rtl8139_8h_a15e2164bee77a940134b3c0618e207d3}{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0}~0x10
+\item 
+\#define \hyperlink{rtl8139_8h_a42f10cfb594910b5a1e2bcfad9086271}{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0}~0x20
+\item 
+\#define \hyperlink{rtl8139_8h_a988a4299b417f298b34e9ae012fb3829}{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R}~0x30
+\item 
+\#define \hyperlink{rtl8139_8h_a3b2613e7a11853fee7b0164d592b477a}{R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D}~0x37
+\item 
+\#define \hyperlink{rtl8139_8h_a9690a77264be5910191756632842b04d}{R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R}~0x38
+\item 
+\#define \hyperlink{rtl8139_8h_ab4c18def6442e5a12813bff4707a95f4}{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K}~0x3\+C
+\item 
+\#define \hyperlink{rtl8139_8h_ae643783aefff2e6a891b5fa59bfcd344}{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S}~0x3\+E
+\item 
+\#define \hyperlink{rtl8139_8h_ae71202863cf99afcc3eab3865699dcf9}{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}~0x40
+\item 
+\#define \hyperlink{rtl8139_8h_a66a6f3026d2e079b8fc7056dcd00fe91}{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}~0x44
+\item 
+\#define \hyperlink{rtl8139_8h_a5b93ab1d3172cbf4cbddb358cd790dec}{R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1}~0x52
+\item 
+\#define \hyperlink{rtl8139_8h_ab2a1fddf4be3a5b61bc6136a759d2450}{C\+R\+\_\+\+R\+E\+S\+E\+T}~(1 $<$$<$ 4)
+\item 
+\#define \hyperlink{rtl8139_8h_afbe4a2ad282a15a449afe27c8477d7a4}{C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}~(1 $<$$<$ 3)
+\item 
+\#define \hyperlink{rtl8139_8h_a724cc791aabf32482dca4be45cc5d160}{C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}~(1 $<$$<$ 2)
+\item 
+\#define \hyperlink{rtl8139_8h_a57ac94bdc04f48c7a66ced30aa060624}{C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y}~(1 $<$$<$ 0)
+\item 
+\#define \hyperlink{rtl8139_8h_aae6b5a7b3905eadb0f15a8ffa647b520}{T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D}~(3 $<$$<$ 24)
+\item 
+\#define \hyperlink{rtl8139_8h_a878054e18cfb85ec78fbc6a3f8c60f42}{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256}~(4 $<$$<$ 8)
+\item 
+\#define \hyperlink{rtl8139_8h_a4807a51726d5b1cbee7a7f53661f97ef}{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}~(5 $<$$<$ 8)
+\item 
+\#define \hyperlink{rtl8139_8h_aaa0a851076ddddbd82e92d328cb2644a}{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}~(6 $<$$<$ 8)
+\item 
+\#define \hyperlink{rtl8139_8h_af8057a0fe6148f3c91254f0fa0e615e5}{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+2048}~(7 $<$$<$ 8)
+\item 
+\#define \hyperlink{rtl8139_8h_a4427f16eaabc39f54c76ccf043f0937b}{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}~(5 $<$$<$ 8)
+\item 
+\#define \hyperlink{rtl8139_8h_a1e9de544d0767a77182daf17beb30f86}{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}~(6 $<$$<$ 8)
+\item 
+\#define \hyperlink{rtl8139_8h_a160445e9a8cb8827d32d5cc6417b3fda}{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D}~(7 $<$$<$ 8)
+\item 
+\#define \hyperlink{rtl8139_8h_a14d20c8a78d65ef7542b5c59e695d4fa}{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T}~(1 $<$$<$ 3)
+\item 
+\#define \hyperlink{rtl8139_8h_a92d4aa960780ad69ee5ec28ab2776705}{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+M\+U\+L\+T\+I\+C\+A\+S\+T}~(1 $<$$<$ 2)
+\item 
+\#define \hyperlink{rtl8139_8h_a40752262c4c0d282513c5ad5f1449ffa}{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H}~(1 $<$$<$ 1)
+\item 
+\#define \hyperlink{rtl8139_8h_a6097974b84e7d2fd54f26877ce8980a9}{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W}~(1 $<$$<$ 4)
+\item 
+\#define \hyperlink{rtl8139_8h_afcba7a5ffbbdce80f9b4d8038a2900c4}{I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K}~(1 $<$$<$ 2)
+\item 
+\#define \hyperlink{rtl8139_8h_aacce0c98835613c89c957d571340a176}{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K}~(1 $<$$<$ 0)
+\item 
+\#define \hyperlink{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}~8192
+\item 
+\#define \hyperlink{rtl8139_8h_a9ab33647617098646990fe263600b650}{T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}~4096
+\item 
+\#define \hyperlink{rtl8139_8h_a9d09a7af406abb667672c750d24cda0b}{int\+\_\+out8}(\hyperlink{structcard}{card}, port, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})~outb(\hyperlink{structcard}{card}-\/$>$device-\/$>$iobase + port, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})
+\item 
+\#define \hyperlink{rtl8139_8h_a1bce2233ee943a85ae84648382e64826}{int\+\_\+out16}(\hyperlink{structcard}{card}, port, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})~outw(\hyperlink{structcard}{card}-\/$>$device-\/$>$iobase + port, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})
+\item 
+\#define \hyperlink{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{int\+\_\+out32}(\hyperlink{structcard}{card}, port, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})~outl(\hyperlink{structcard}{card}-\/$>$device-\/$>$iobase + port, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})
+\item 
+\#define \hyperlink{rtl8139_8h_a7d11540c9ed834d78c06a0f58bc2861d}{int\+\_\+in8}(\hyperlink{structcard}{card}, port)~inb(\hyperlink{structcard}{card}-\/$>$device-\/$>$iobase + port)
+\item 
+\#define \hyperlink{rtl8139_8h_ab4126d6287621dc529d43e6fc5cd2f27}{int\+\_\+in16}(\hyperlink{structcard}{card}, port)~inw(\hyperlink{structcard}{card}-\/$>$device-\/$>$iobase + port)
+\item 
+\#define \hyperlink{rtl8139_8h_a3f0fc1302723b502d1f2c6b8eddcbf4f}{R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C}~0x8139\+F\+F\+F\+F
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{rtl8139_8h_a57ac94bdc04f48c7a66ced30aa060624}{\index{rtl8139.\+h@{rtl8139.\+h}!C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y@{C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y}}
+\index{C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y@{C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y~(1 $<$$<$ 0)}}\label{rtl8139_8h_a57ac94bdc04f48c7a66ced30aa060624}
+
+
+Definizione alla linea 23 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_afbe4a2ad282a15a449afe27c8477d7a4}{\index{rtl8139.\+h@{rtl8139.\+h}!C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E@{C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}}
+\index{C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E@{C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E~(1 $<$$<$ 3)}}\label{rtl8139_8h_afbe4a2ad282a15a449afe27c8477d7a4}
+
+
+Definizione alla linea 21 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_ab2a1fddf4be3a5b61bc6136a759d2450}{\index{rtl8139.\+h@{rtl8139.\+h}!C\+R\+\_\+\+R\+E\+S\+E\+T@{C\+R\+\_\+\+R\+E\+S\+E\+T}}
+\index{C\+R\+\_\+\+R\+E\+S\+E\+T@{C\+R\+\_\+\+R\+E\+S\+E\+T}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{C\+R\+\_\+\+R\+E\+S\+E\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+R\+\_\+\+R\+E\+S\+E\+T~(1 $<$$<$ 4)}}\label{rtl8139_8h_ab2a1fddf4be3a5b61bc6136a759d2450}
+
+
+Definizione alla linea 20 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a724cc791aabf32482dca4be45cc5d160}{\index{rtl8139.\+h@{rtl8139.\+h}!C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E@{C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}}
+\index{C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E@{C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E~(1 $<$$<$ 2)}}\label{rtl8139_8h_a724cc791aabf32482dca4be45cc5d160}
+
+
+Definizione alla linea 22 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_ab4126d6287621dc529d43e6fc5cd2f27}{\index{rtl8139.\+h@{rtl8139.\+h}!int\+\_\+in16@{int\+\_\+in16}}
+\index{int\+\_\+in16@{int\+\_\+in16}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{int\+\_\+in16}]{\setlength{\rightskip}{0pt plus 5cm}\#define int\+\_\+in16(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf card}, }
+\item[{}]{port}
+\end{DoxyParamCaption}
+)~inw({\bf card}-\/$>$device-\/$>$iobase + port)}}\label{rtl8139_8h_ab4126d6287621dc529d43e6fc5cd2f27}
+
+
+Definizione alla linea 51 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a7d11540c9ed834d78c06a0f58bc2861d}{\index{rtl8139.\+h@{rtl8139.\+h}!int\+\_\+in8@{int\+\_\+in8}}
+\index{int\+\_\+in8@{int\+\_\+in8}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{int\+\_\+in8}]{\setlength{\rightskip}{0pt plus 5cm}\#define int\+\_\+in8(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf card}, }
+\item[{}]{port}
+\end{DoxyParamCaption}
+)~inb({\bf card}-\/$>$device-\/$>$iobase + port)}}\label{rtl8139_8h_a7d11540c9ed834d78c06a0f58bc2861d}
+
+
+Definizione alla linea 50 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a1bce2233ee943a85ae84648382e64826}{\index{rtl8139.\+h@{rtl8139.\+h}!int\+\_\+out16@{int\+\_\+out16}}
+\index{int\+\_\+out16@{int\+\_\+out16}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{int\+\_\+out16}]{\setlength{\rightskip}{0pt plus 5cm}\#define int\+\_\+out16(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf card}, }
+\item[{}]{port, }
+\item[{}]{{\bf value}}
+\end{DoxyParamCaption}
+)~outw({\bf card}-\/$>$device-\/$>$iobase + port, {\bf value})}}\label{rtl8139_8h_a1bce2233ee943a85ae84648382e64826}
+
+
+Definizione alla linea 47 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{\index{rtl8139.\+h@{rtl8139.\+h}!int\+\_\+out32@{int\+\_\+out32}}
+\index{int\+\_\+out32@{int\+\_\+out32}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{int\+\_\+out32}]{\setlength{\rightskip}{0pt plus 5cm}\#define int\+\_\+out32(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf card}, }
+\item[{}]{port, }
+\item[{}]{{\bf value}}
+\end{DoxyParamCaption}
+)~outl({\bf card}-\/$>$device-\/$>$iobase + port, {\bf value})}}\label{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}
+
+
+Definizione alla linea 48 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a9d09a7af406abb667672c750d24cda0b}{\index{rtl8139.\+h@{rtl8139.\+h}!int\+\_\+out8@{int\+\_\+out8}}
+\index{int\+\_\+out8@{int\+\_\+out8}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{int\+\_\+out8}]{\setlength{\rightskip}{0pt plus 5cm}\#define int\+\_\+out8(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf card}, }
+\item[{}]{port, }
+\item[{}]{{\bf value}}
+\end{DoxyParamCaption}
+)~outb({\bf card}-\/$>$device-\/$>$iobase + port, {\bf value})}}\label{rtl8139_8h_a9d09a7af406abb667672c750d24cda0b}
+
+
+Definizione alla linea 46 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a6097974b84e7d2fd54f26877ce8980a9}{\index{rtl8139.\+h@{rtl8139.\+h}!I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W@{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W}}
+\index{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W@{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W~(1 $<$$<$ 4)}}\label{rtl8139_8h_a6097974b84e7d2fd54f26877ce8980a9}
+
+
+Definizione alla linea 38 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_aacce0c98835613c89c957d571340a176}{\index{rtl8139.\+h@{rtl8139.\+h}!I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K@{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K}}
+\index{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K@{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K~(1 $<$$<$ 0)}}\label{rtl8139_8h_aacce0c98835613c89c957d571340a176}
+
+
+Definizione alla linea 40 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_afcba7a5ffbbdce80f9b4d8038a2900c4}{\index{rtl8139.\+h@{rtl8139.\+h}!I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K@{I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K}}
+\index{I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K@{I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K~(1 $<$$<$ 2)}}\label{rtl8139_8h_afcba7a5ffbbdce80f9b4d8038a2900c4}
+
+
+Definizione alla linea 39 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a14d20c8a78d65ef7542b5c59e695d4fa}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T@{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T}}
+\index{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T@{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T~(1 $<$$<$ 3)}}\label{rtl8139_8h_a14d20c8a78d65ef7542b5c59e695d4fa}
+
+
+Definizione alla linea 34 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a92d4aa960780ad69ee5ec28ab2776705}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+M\+U\+L\+T\+I\+C\+A\+S\+T@{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+M\+U\+L\+T\+I\+C\+A\+S\+T}}
+\index{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+M\+U\+L\+T\+I\+C\+A\+S\+T@{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+M\+U\+L\+T\+I\+C\+A\+S\+T}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+M\+U\+L\+T\+I\+C\+A\+S\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+M\+U\+L\+T\+I\+C\+A\+S\+T~(1 $<$$<$ 2)}}\label{rtl8139_8h_a92d4aa960780ad69ee5ec28ab2776705}
+
+
+Definizione alla linea 35 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a40752262c4c0d282513c5ad5f1449ffa}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H@{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H}}
+\index{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H@{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H~(1 $<$$<$ 1)}}\label{rtl8139_8h_a40752262c4c0d282513c5ad5f1449ffa}
+
+
+Definizione alla linea 36 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a1e9de544d0767a77182daf17beb30f86}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024@{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}}
+\index{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024@{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024~(6 $<$$<$ 8)}}\label{rtl8139_8h_a1e9de544d0767a77182daf17beb30f86}
+
+
+Definizione alla linea 32 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a4427f16eaabc39f54c76ccf043f0937b}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512@{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}}
+\index{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512@{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512~(5 $<$$<$ 8)}}\label{rtl8139_8h_a4427f16eaabc39f54c76ccf043f0937b}
+
+
+Definizione alla linea 31 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a160445e9a8cb8827d32d5cc6417b3fda}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D@{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D}}
+\index{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D@{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D~(7 $<$$<$ 8)}}\label{rtl8139_8h_a160445e9a8cb8827d32d5cc6417b3fda}
+
+
+Definizione alla linea 33 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a3b2613e7a11853fee7b0164d592b477a}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D@{R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D}}
+\index{R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D@{R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D~0x37}}\label{rtl8139_8h_a3b2613e7a11853fee7b0164d592b477a}
+
+
+Definizione alla linea 12 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a5b93ab1d3172cbf4cbddb358cd790dec}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1@{R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1}}
+\index{R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1@{R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1~0x52}}\label{rtl8139_8h_a5b93ab1d3172cbf4cbddb358cd790dec}
+
+
+Definizione alla linea 18 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a9690a77264be5910191756632842b04d}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R@{R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R}}
+\index{R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R@{R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R~0x38}}\label{rtl8139_8h_a9690a77264be5910191756632842b04d}
+
+
+Definizione alla linea 13 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a1dcdf537152ab9cc49e4a26bd9d2f47d}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+I\+D0@{R\+E\+G\+\_\+\+I\+D0}}
+\index{R\+E\+G\+\_\+\+I\+D0@{R\+E\+G\+\_\+\+I\+D0}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+I\+D0}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+I\+D0~0x00}}\label{rtl8139_8h_a1dcdf537152ab9cc49e4a26bd9d2f47d}
+
+
+Definizione alla linea 6 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_ac5dc5d6d71f71dcdf3ff2a7e911c7248}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+I\+D4@{R\+E\+G\+\_\+\+I\+D4}}
+\index{R\+E\+G\+\_\+\+I\+D4@{R\+E\+G\+\_\+\+I\+D4}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+I\+D4}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+I\+D4~0x04}}\label{rtl8139_8h_ac5dc5d6d71f71dcdf3ff2a7e911c7248}
+
+
+Definizione alla linea 7 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_ab4c18def6442e5a12813bff4707a95f4}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K@{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K}}
+\index{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K@{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K~0x3\+C}}\label{rtl8139_8h_ab4c18def6442e5a12813bff4707a95f4}
+
+
+Definizione alla linea 14 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_ae643783aefff2e6a891b5fa59bfcd344}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S@{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S}}
+\index{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S@{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S~0x3\+E}}\label{rtl8139_8h_ae643783aefff2e6a891b5fa59bfcd344}
+
+
+Definizione alla linea 15 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a988a4299b417f298b34e9ae012fb3829}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R@{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R}}
+\index{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R@{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R~0x30}}\label{rtl8139_8h_a988a4299b417f298b34e9ae012fb3829}
+
+
+Definizione alla linea 11 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a66a6f3026d2e079b8fc7056dcd00fe91}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N@{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}}
+\index{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N@{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N~0x44}}\label{rtl8139_8h_a66a6f3026d2e079b8fc7056dcd00fe91}
+
+
+Definizione alla linea 17 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a42f10cfb594910b5a1e2bcfad9086271}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0@{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0}}
+\index{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0@{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0~0x20}}\label{rtl8139_8h_a42f10cfb594910b5a1e2bcfad9086271}
+
+
+Definizione alla linea 10 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_ae71202863cf99afcc3eab3865699dcf9}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N@{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}}
+\index{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N@{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N~0x40}}\label{rtl8139_8h_ae71202863cf99afcc3eab3865699dcf9}
+
+
+Definizione alla linea 16 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a15e2164bee77a940134b3c0618e207d3}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0@{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0}}
+\index{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0@{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0~0x10}}\label{rtl8139_8h_a15e2164bee77a940134b3c0618e207d3}
+
+
+Definizione alla linea 9 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a3f0fc1302723b502d1f2c6b8eddcbf4f}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C@{R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C}}
+\index{R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C@{R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C~0x8139\+F\+F\+F\+F}}\label{rtl8139_8h_a3f0fc1302723b502d1f2c6b8eddcbf4f}
+
+
+Definizione alla linea 53 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{\index{rtl8139.\+h@{rtl8139.\+h}!R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E@{R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}}
+\index{R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E@{R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E~8192}}\label{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}
+
+
+Definizione alla linea 42 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_aae6b5a7b3905eadb0f15a8ffa647b520}{\index{rtl8139.\+h@{rtl8139.\+h}!T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D@{T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D}}
+\index{T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D@{T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D~(3 $<$$<$ 24)}}\label{rtl8139_8h_aae6b5a7b3905eadb0f15a8ffa647b520}
+
+
+Definizione alla linea 25 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_aaa0a851076ddddbd82e92d328cb2644a}{\index{rtl8139.\+h@{rtl8139.\+h}!T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}}
+\index{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+1024~(6 $<$$<$ 8)}}\label{rtl8139_8h_aaa0a851076ddddbd82e92d328cb2644a}
+
+
+Definizione alla linea 28 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_af8057a0fe6148f3c91254f0fa0e615e5}{\index{rtl8139.\+h@{rtl8139.\+h}!T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+2048@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+2048}}
+\index{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+2048@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+2048}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+2048}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+2048~(7 $<$$<$ 8)}}\label{rtl8139_8h_af8057a0fe6148f3c91254f0fa0e615e5}
+
+
+Definizione alla linea 29 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a878054e18cfb85ec78fbc6a3f8c60f42}{\index{rtl8139.\+h@{rtl8139.\+h}!T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256}}
+\index{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256~(4 $<$$<$ 8)}}\label{rtl8139_8h_a878054e18cfb85ec78fbc6a3f8c60f42}
+
+
+Definizione alla linea 26 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a4807a51726d5b1cbee7a7f53661f97ef}{\index{rtl8139.\+h@{rtl8139.\+h}!T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}}
+\index{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512@{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+512~(5 $<$$<$ 8)}}\label{rtl8139_8h_a4807a51726d5b1cbee7a7f53661f97ef}
+
+
+Definizione alla linea 27 del file rtl8139.\+h.
+
+\hypertarget{rtl8139_8h_a9ab33647617098646990fe263600b650}{\index{rtl8139.\+h@{rtl8139.\+h}!T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E@{T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}}
+\index{T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E@{T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}!rtl8139.\+h@{rtl8139.\+h}}
+\subsubsection[{T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E~4096}}\label{rtl8139_8h_a9ab33647617098646990fe263600b650}
+
+
+Definizione alla linea 43 del file rtl8139.\+h.
+

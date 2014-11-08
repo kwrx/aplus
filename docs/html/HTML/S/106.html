@@ -1,0 +1,113 @@
+<html>
+<head>
+<title>src/net/ipv6.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/ipv6.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L14'>[^]</a><a href='#L55'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L14' title='Defined at 14.'>ipv6_recv</a>
+<li><a href='#L55' title='Defined at 55.'>ipv6_send</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;<a href='93.html'>aplus/net/eth.h</a>&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;<a href='92.html'>aplus/net/ipv6.h</a>&gt;
+<a name='L11'>  11 
+<a name='L12'>  12 
+<a name='L13'>  13 
+<a name='L14'>  14 <b>int</b> <a href='../S/112.html#L24' title='Refered from 24 in src/net/eth.c.'>ipv6_recv</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L15'>  15         <a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>* <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> = (<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>*) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L16'>  16         
+<a name='L17'>  17         <b>if</b>(<a href='../S/92.html#L8' title='Defined at 8 in src/include/aplus/net/ipv6.h.'>IPV6_CHECK_VERSION</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>) == 0)
+<a name='L18'>  18                 <b>return</b> 0;
+<a name='L19'>  19 
+<a name='L20'>  20 
+<a name='L21'>  21 <font color='darkred'>        #define</font> <a href='../R/187.html' title='Multiple refered from 4 places.'>__params</a>        \
+<a name='L22'>  22                 <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> + <b>sizeof</b>(<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>)), <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> - <b>sizeof</b>(<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>)
+<a name='L23'>  23 
+<a name='L24'>  24         <b>switch</b>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a>) <font color='red'>{</font>
+<a name='L25'>  25                 <b>case</b> <a href='../S/92.html#L13' title='Defined at 13 in src/include/aplus/net/ipv6.h.'>IPV6_PROTO_UDP</a>:
+<a name='L26'>  26                         <i><font color='green'>//if(udp_recv(__params) == 0)</font></i>
+<a name='L27'>  27                         <i><font color='green'>//      return 0;</font></i>
+<a name='L28'>  28                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L29'>  29                 
+<a name='L30'>  30                 <b>case</b> <a href='../S/92.html#L12' title='Defined at 12 in src/include/aplus/net/ipv6.h.'>IPV6_PROTO_TCP</a>:
+<a name='L31'>  31                         <i><font color='green'>//if(tcp_recv(__params) == 0)           /* Support for TCP ?? -&gt; pfff.. ù.ù */</font></i>
+<a name='L32'>  32                         <i><font color='green'>//      return 0;</font></i>
+<a name='L33'>  33                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L34'>  34 
+<a name='L35'>  35                 <b>case</b> <a href='../S/92.html#L11' title='Defined at 11 in src/include/aplus/net/ipv6.h.'>IPV6_PROTO_ICMP</a>:
+<a name='L36'>  36                         <i><font color='green'>//if(icmp_recv(__params) == 0)</font></i>
+<a name='L37'>  37                         <i><font color='green'>//      return 0;</font></i>
+<a name='L38'>  38                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L39'>  39         <font color='red'>}</font>
+<a name='L40'>  40 
+<a name='L41'>  41         <i><font color='green'>/* IPV6_PROTO_RAW */</font></i>
+<a name='L42'>  42         <a href='../S/107.html#L242' title='Defined at 242 in src/net/netif.c.'>netif_packets_add</a> (
+<a name='L43'>  43                 <a href='../S/107.html#L279' title='Defined at 279 in src/net/netif.c.'>netif_packets_create</a> (
+<a name='L44'>  44                                                         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>,
+<a name='L45'>  45                                                         <a href='../S/89.html#L17' title='Defined at 17 in src/include/aplus/netif.h.'>NETIF_INET6</a>, 
+<a name='L46'>  46                                                         <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, 
+<a name='L47'>  47                                                         <b>sizeof</b>(<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>), 
+<a name='L48'>  48                                                         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>
+<a name='L49'>  49                 )
+<a name='L50'>  50         );
+<a name='L51'>  51 
+<a name='L52'>  52         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L53'>  53 <font color='red'>}</font>
+<a name='L54'>  54 
+<a name='L55'>  55 <b>int</b> ipv6_send(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>, <a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a> <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>) <font color='red'>{</font>
+<a name='L56'>  56         <a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>* <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> = (<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + <b>sizeof</b>(<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>));
+<a name='L57'>  57         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/749.html' title='Multiple used in 4 places.'>version</a> = 6;
+<a name='L58'>  58         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/701.html' title='Multiple used in 2 places.'>traffic</a> = 0;
+<a name='L59'>  59         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/266.html' title='Multiple used in 2 places.'>flow</a> = 0;
+<a name='L60'>  60         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> = <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L61'>  61         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/703.html' title='Multiple used in 5 places.'>ttl</a> = 0xFF;
+<a name='L62'>  62         
+<a name='L63'>  63         <b>switch</b>(<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L64'>  64                 <b>case</b> <a href='../S/89.html#L20' title='Defined at 20 in src/include/aplus/netif.h.'>NETIF_UDP</a>:
+<a name='L65'>  65                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/92.html#L13' title='Defined at 13 in src/include/aplus/net/ipv6.h.'>IPV6_PROTO_UDP</a>;
+<a name='L66'>  66                         <b>break</b>;
+<a name='L67'>  67                 <b>case</b> <a href='../S/89.html#L21' title='Defined at 21 in src/include/aplus/netif.h.'>NETIF_TCP</a>:
+<a name='L68'>  68                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/92.html#L12' title='Defined at 12 in src/include/aplus/net/ipv6.h.'>IPV6_PROTO_TCP</a>;
+<a name='L69'>  69                         <b>break</b>;
+<a name='L70'>  70                 <b>case</b> <a href='../S/89.html#L22' title='Defined at 22 in src/include/aplus/netif.h.'>NETIF_ICMP</a>:
+<a name='L71'>  71                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/92.html#L11' title='Defined at 11 in src/include/aplus/net/ipv6.h.'>IPV6_PROTO_ICMP</a>;
+<a name='L72'>  72                         <b>break</b>;
+<a name='L73'>  73                 <b>default</b>:
+<a name='L74'>  74                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/92.html#L10' title='Defined at 10 in src/include/aplus/net/ipv6.h.'>IPV6_PROTO_RAW</a>;
+<a name='L75'>  75                         <b>break</b>;
+<a name='L76'>  76         <font color='red'>}</font>
+<a name='L77'>  77 
+<a name='L78'>  78         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <b>sizeof</b>(<a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a>));
+<a name='L79'>  79         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/582.html' title='Multiple used in 6 places.'>source</a>, <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>, <b>sizeof</b>(<a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a>));
+<a name='L80'>  80         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>((<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> + <b>sizeof</b>(<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>)), <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L81'>  81 
+<a name='L82'>  82         <b>int</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> = <a href='../S/112.html#L79' title='Defined at 79 in src/net/eth.c.'>eth_send</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + <b>sizeof</b>(<a href='../S/92.html#L26' title='Defined at 26 in src/include/aplus/net/ipv6.h.'>ipv6_header_t</a>), <a href='../S/89.html#L17' title='Defined at 17 in src/include/aplus/netif.h.'>NETIF_INET6</a>);
+<a name='L83'>  83         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>);
+<a name='L84'>  84 
+<a name='L85'>  85         <b>if</b>(<a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>)
+<a name='L86'>  86                 <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L87'>  87         
+<a name='L88'>  88         <b>return</b> 0;
+<a name='L89'>  89 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L14'>[^]</a><a href='#L55'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

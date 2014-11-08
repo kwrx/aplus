@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="syscalls_8c">
+    <title>syscalls.c File Reference</title>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38">SYSCODE</link> &quot;int $0x80&quot;</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscalls_8c_1a24015b2a2ab097b62202f166ddd904ac">syscall0</link> h() {								\
+		int r, e;							\
+		<link linkend="task_8c_1a30c5de54c48d098388d2048073a393a7">__asm__</link> __volatile__ (			\
+			<link linkend="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38">SYSCODE</link>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n)					\
+		);								\
+		<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = e;						\
+		return r;						\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscalls_8c_1a05bd8f431f2ebc917a20387c229f43dd">syscall1</link> h(p1) {								\
+		int r, e;							\
+		<link linkend="task_8c_1a30c5de54c48d098388d2048073a393a7">__asm__</link> __volatile__ (			\
+			<link linkend="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38">SYSCODE</link>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1)			\
+		);								\
+		<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = e;						\
+		return r;						\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscalls_8c_1a1ea836cfb65e3b32b607af3e81e144f1">syscall2</link> h(p1, p2) {							\
+		int r, e;							\
+		<link linkend="task_8c_1a30c5de54c48d098388d2048073a393a7">__asm__</link> __volatile__ (			\
+			<link linkend="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38">SYSCODE</link>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2)	\
+		);								\
+		<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = e;						\
+		return r;						\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscalls_8c_1a6ebd56a469ce4c96b73134cc1e63b69e">syscall3</link> h(p1, p2, p3) {						\
+		int r, e;							\
+		<link linkend="task_8c_1a30c5de54c48d098388d2048073a393a7">__asm__</link> __volatile__ (			\
+			<link linkend="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38">SYSCODE</link>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2),	\
+			  &quot;d&quot;(p3)					\
+		);								\
+		<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = e;						\
+		return r;						\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscalls_8c_1a67af7b4caa02d0e160fe462b03d3320f">syscall4</link> h(p1, p2, p3, p4) {					\
+		int r, e;							\
+		<link linkend="task_8c_1a30c5de54c48d098388d2048073a393a7">__asm__</link> __volatile__ (			\
+			<link linkend="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38">SYSCODE</link>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2),	\
+			  &quot;d&quot;(p3), &quot;S&quot;(p4)			\
+		);								\
+		<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = e;						\
+		return r;						\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscalls_8c_1a68e3cd45619716c1f58001c8cf79f1c3">syscall5</link> h(p1, p2, p3, p4, p5) {				\
+		int r, e;							\
+		<link linkend="task_8c_1a30c5de54c48d098388d2048073a393a7">__asm__</link> __volatile__ (			\
+			<link linkend="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38">SYSCODE</link>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2),	\
+			  &quot;d&quot;(p3), &quot;S&quot;(p4), &quot;D&quot;(p5)	\
+		);								\
+		<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = e;						\
+		return r;						\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c</para>
+    </simplesect>
+</section>

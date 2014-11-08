@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>stacksize</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L59'>stacksize</a>          59 usr/src/libpthread/include/pthread.h 	size_t stacksize;
+<a href='../S/43.html#L171'>stacksize</a>         171 usr/src/libpthread/include/pthread.h int pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize);
+<a href='../S/43.html#L172'>stacksize</a>         172 usr/src/libpthread/include/pthread.h int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);
+<a href='../S/65.html#L19'>stacksize</a>          19 usr/src/libpthread/src/pthread_attr.c 	attr-&gt;stacksize = PTHREAD_STACK_MIN;
+<a href='../S/65.html#L79'>stacksize</a>          79 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize) {
+<a href='../S/65.html#L85'>stacksize</a>          85 usr/src/libpthread/src/pthread_attr.c 	*stacksize = attr-&gt;stacksize;
+<a href='../S/65.html#L89'>stacksize</a>          89 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize) {
+<a href='../S/65.html#L95'>stacksize</a>          95 usr/src/libpthread/src/pthread_attr.c 	attr-&gt;stacksize = stacksize;
+</pre>
+</body>
+</html>

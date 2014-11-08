@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>ethpkt</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/112.html#L12'>ethpkt</a>             12 src/net/eth.c  	eth_header_t* ethpkt = (eth_header_t*) buf;
+<a href='../S/112.html#L17'>ethpkt</a>             17 src/net/eth.c  	switch(ethpkt-&gt;type) {
+<a href='../S/112.html#L50'>ethpkt</a>             50 src/net/eth.c  	eth_header_t* ethpkt = kmalloc(length + sizeof(eth_header_t));
+<a href='../S/112.html#L51'>ethpkt</a>             51 src/net/eth.c  	memset((void*) ethpkt-&gt;dest, 0xFF, sizeof(macaddr_t));
+<a href='../S/112.html#L52'>ethpkt</a>             52 src/net/eth.c  	memcpy((void*) ethpkt-&gt;source, (void*) netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/112.html#L53'>ethpkt</a>             53 src/net/eth.c  	memcpy((void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), buf, length);
+<a href='../S/112.html#L57'>ethpkt</a>             57 src/net/eth.c  			ethpkt-&gt;type = ETH_TYPE_IPV4;
+<a href='../S/112.html#L60'>ethpkt</a>             60 src/net/eth.c  			ethpkt-&gt;type = ETH_TYPE_IPV6;
+<a href='../S/112.html#L63'>ethpkt</a>             63 src/net/eth.c  			ethpkt-&gt;type = ETH_TYPE_ARP;
+<a href='../S/112.html#L66'>ethpkt</a>             66 src/net/eth.c  			ethpkt-&gt;type = ETH_TYPE_RAW;
+<a href='../S/112.html#L73'>ethpkt</a>             73 src/net/eth.c  	int ret = netif-&gt;send(netif, ethpkt, length, NETIF_ETH);
+<a href='../S/112.html#L74'>ethpkt</a>             74 src/net/eth.c  	kfree(ethpkt);
+</pre>
+</body>
+</html>

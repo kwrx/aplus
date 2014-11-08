@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>reg</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L73'>reg</a>                73 src/arch/pci.c 	uint8_t reg = 0x10 + (0x04 * bar);
+<a href='../S/160.html#L74'>reg</a>                74 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, reg);
+<a href='../S/102.html#L96'>reg</a>                96 src/include/aplus.h #define outx(n, t, reg)												\
+<a href='../S/102.html#L98'>reg</a>                98 src/include/aplus.h 		__asm__ __volatile__ ("out dx, " #reg : : "a"(v), "d"(p));	\
+<a href='../S/102.html#L106'>reg</a>               106 src/include/aplus.h #define inx(n, t, reg)												\
+<a href='../S/102.html#L109'>reg</a>               109 src/include/aplus.h 		__asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));\
+<a href='../S/102.html#L117'>reg</a>               117 src/include/aplus.h #define outsx(n, t, reg)											\
+<a href='../S/102.html#L128'>reg</a>               128 src/include/aplus.h #define insx(n, t, reg)												\
+<a href='../S/148.html#L16'>reg</a>                16 src/panic.c    	#define d(reg);								\
+<a href='../S/148.html#L17'>reg</a>                17 src/panic.c    		kprintf(#reg ": 0x%x\t\t", read_##reg());
+</pre>
+</body>
+</html>

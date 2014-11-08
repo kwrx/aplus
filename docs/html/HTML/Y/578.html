@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>size</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/163.html#L14'>size</a>               14 src/arch/syscall.c 	syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist-&gt;size);
+<a href='../S/163.html#L15'>size</a>               15 src/arch/syscall.c 	memset(syscall_handlers, 0, sizeof(void*) * syslist-&gt;size);
+<a href='../S/163.html#L23'>size</a>               23 src/arch/syscall.c 	kprintf("syscall: loaded %d handlers\n", syslist-&gt;size);
+<a href='../S/156.html#L45'>size</a>               45 src/bufio.c    bufio_t* bufio_alloc(size_t size) {
+<a href='../S/156.html#L46'>size</a>               46 src/bufio.c    	void* addr = (void*) kmalloc(size);
+<a href='../S/156.html#L51'>size</a>               51 src/bufio.c    	buffers_length += size;
+<a href='../S/156.html#L54'>size</a>               54 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/156.html#L56'>size</a>               56 src/bufio.c    	buf-&gt;size = size;
+<a href='../S/156.html#L68'>size</a>               68 src/bufio.c    bufio_t* bufio_alloc_raw(void* raw, size_t size) {
+<a href='../S/156.html#L74'>size</a>               74 src/bufio.c    	buffers_length += size;
+<a href='../S/156.html#L76'>size</a>               76 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/156.html#L78'>size</a>               78 src/bufio.c    	buf-&gt;size = size;
+<a href='../S/156.html#L92'>size</a>               92 src/bufio.c    	buffers_length -= buf-&gt;size;
+<a href='../S/156.html#L105'>size</a>              105 src/bufio.c    	if(offset &gt; buf-&gt;size)
+<a href='../S/156.html#L108'>size</a>              108 src/bufio.c    	if(dir == SEEK_CUR &amp;&amp; (offset + buf-&gt;offset) &gt; buf-&gt;size)
+<a href='../S/156.html#L137'>size</a>              137 src/bufio.c    	memset(buf-&gt;raw, 0, buf-&gt;size);
+<a href='../S/156.html#L144'>size</a>              144 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/156.html#L158'>size</a>              158 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/147.html#L38'>size</a>               38 src/fs/devfs.c 	ino-&gt;size = (size_t) 0;
+<a href='../S/147.html#L72'>size</a>               72 src/fs/devfs.c 	devfs-&gt;size = (size_t) 0;
+<a href='../S/145.html#L32'>size</a>               32 src/fs/pipe.c  	bufio_seek(pipe-&gt;stream, pipe-&gt;read_offset % pipe-&gt;stream-&gt;size, SEEK_SET);
+<a href='../S/145.html#L44'>size</a>               44 src/fs/pipe.c  	bufio_seek(pipe-&gt;stream, pipe-&gt;write_offset % pipe-&gt;stream-&gt;size, SEEK_SET);
+<a href='../S/145.html#L82'>size</a>               82 src/fs/pipe.c  		inodes[i].size = (size_t) BUFSIZ;
+<a href='../S/144.html#L96'>size</a>               96 src/fs/vfs.c   	vfs_root-&gt;size = (size_t) 0;
+<a href='../S/98.html#L34'>size</a>               34 src/include/aplus/bufio.h 	size_t size;
+<a href='../S/97.html#L46'>size</a>               46 src/include/aplus/fs.h 	off_t size;
+<a href='../S/96.html#L45'>size</a>               45 src/include/aplus/list.h 	size_t size;
+<a href='../S/96.html#L51'>size</a>               51 src/include/aplus/list.h 		return list-&gt;size == 0;
+<a href='../S/96.html#L67'>size</a>               67 src/include/aplus/list.h 	list-&gt;size += 1;
+<a href='../S/96.html#L112'>size</a>              112 src/include/aplus/list.h 	list-&gt;size = 0;
+<a href='../S/96.html#L190'>size</a>              190 src/include/aplus/list.h 	list-&gt;size = 0;											\
+<a href='../S/87.html#L64'>size</a>               64 src/include/aplus/mm.h 	uint32_t size;
+<a href='../S/101.html#L73'>size</a>               73 src/include/grub.h 		unsigned int size;
+<a href='../S/152.html#L28'>size</a>               28 src/mm/heap.c  void* halloc(heap_t* heap, size_t size) {
+<a href='../S/152.html#L31'>size</a>               31 src/mm/heap.c  			return heap-&gt;alloc(heap, size);
+<a href='../S/152.html#L36'>size</a>               36 src/mm/heap.c  void hfree(heap_t* heap, void* addr, size_t size) {
+<a href='../S/152.html#L39'>size</a>               39 src/mm/heap.c  			heap-&gt;free(heap, addr, size);
+<a href='../S/153.html#L52'>size</a>               52 src/mm/kheap.c static int bitmap_first(heap_t* heap, size_t size) {
+<a href='../S/153.html#L53'>size</a>               53 src/mm/kheap.c 	if(size == 0)
+<a href='../S/153.html#L56'>size</a>               56 src/mm/kheap.c 	for(int i = 0; i &lt; heap-&gt;size; i++) {	
+<a href='../S/153.html#L57'>size</a>               57 src/mm/kheap.c 		for(int j = 0, f = 0; j &lt; size; j++) {
+<a href='../S/153.html#L62'>size</a>               62 src/mm/kheap.c 			if(f == size)
+<a href='../S/153.html#L72'>size</a>               72 src/mm/kheap.c void* bitmap_alloc(heap_t* heap, size_t size) {
+<a href='../S/153.html#L79'>size</a>               79 src/mm/kheap.c 	if(heap-&gt;used &gt;= heap-&gt;size)
+<a href='../S/153.html#L83'>size</a>               83 src/mm/kheap.c 	if(size % BLKSIZE) {
+<a href='../S/153.html#L84'>size</a>               84 src/mm/kheap.c 		size /= BLKSIZE;
+<a href='../S/153.html#L85'>size</a>               85 src/mm/kheap.c 		size += 1;
+<a href='../S/153.html#L87'>size</a>               87 src/mm/kheap.c 		size /= BLKSIZE;
+<a href='../S/153.html#L90'>size</a>               90 src/mm/kheap.c 	int index = bitmap_first(heap, size);
+<a href='../S/153.html#L94'>size</a>               94 src/mm/kheap.c 	for(int i = 0; i &lt; size; i++)
+<a href='../S/153.html#L98'>size</a>               98 src/mm/kheap.c 	heap-&gt;used += size;
+<a href='../S/153.html#L103'>size</a>              103 src/mm/kheap.c void bitmap_free(heap_t* heap, void* addr, size_t size) {
+<a href='../S/153.html#L111'>size</a>              111 src/mm/kheap.c 	if(size % BLKSIZE) {
+<a href='../S/153.html#L112'>size</a>              112 src/mm/kheap.c 		size /= BLKSIZE;
+<a href='../S/153.html#L113'>size</a>              113 src/mm/kheap.c 		size += 1;
+<a href='../S/153.html#L115'>size</a>              115 src/mm/kheap.c 		size /= BLKSIZE;
+<a href='../S/153.html#L120'>size</a>              120 src/mm/kheap.c 	for(int i = 0; i &lt; size; i++)
+<a href='../S/153.html#L124'>size</a>              124 src/mm/kheap.c 	heap-&gt;used -= size;
+<a href='../S/153.html#L133'>size</a>              133 src/mm/kheap.c 	kheap.size = memsize / BLKSIZE;
+<a href='../S/153.html#L137'>size</a>              137 src/mm/kheap.c 	memset(kheap.bitmap, 0, kheap.size);
+<a href='../S/151.html#L46'>size</a>               46 src/mm/mm.c    	size_t size;
+<a href='../S/151.html#L50'>size</a>               50 src/mm/mm.c    void* kmalloc(size_t size) {
+<a href='../S/151.html#L51'>size</a>               51 src/mm/mm.c    	void* addr = (void*) halloc(current_heap, size);
+<a href='../S/151.html#L60'>size</a>               60 src/mm/mm.c    	block-&gt;size = size;
+<a href='../S/151.html#L75'>size</a>               75 src/mm/mm.c    	size_t size = block-&gt;size;
+<a href='../S/151.html#L76'>size</a>               76 src/mm/mm.c    	block-&gt;size = 0;
+<a href='../S/151.html#L80'>size</a>               80 src/mm/mm.c    	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+<a href='../S/151.html#L84'>size</a>               84 src/mm/mm.c    void* krealloc(void* ptr, size_t size) {
+<a href='../S/151.html#L86'>size</a>               86 src/mm/mm.c    		return kmalloc(size);
+<a href='../S/151.html#L88'>size</a>               88 src/mm/mm.c    	if(size == 0) {
+<a href='../S/151.html#L97'>size</a>               97 src/mm/mm.c    	void* newptr = kmalloc(size);
+<a href='../S/151.html#L101'>size</a>              101 src/mm/mm.c    	if(size &gt; block-&gt;size)
+<a href='../S/151.html#L102'>size</a>              102 src/mm/mm.c    		size = block-&gt;size;
+<a href='../S/151.html#L104'>size</a>              104 src/mm/mm.c    	memcpy(newptr, ptr, size);
+<a href='../S/150.html#L130'>size</a>              130 src/mm/paging.c void* vmm_alloc(void* vaddr, size_t size, int flags) {
+<a href='../S/150.html#L131'>size</a>              131 src/mm/paging.c 	void* paddr = (void*) halloc(current_heap, size);
+<a href='../S/150.html#L133'>size</a>              133 src/mm/paging.c 	vmm_map(current_vmm, paddr, vaddr, size, flags);
+<a href='../S/141.html#L21'>size</a>               21 src/syscall/execve.c 	size_t size = sys_lseek(fd, 0, SEEK_CUR);
+<a href='../S/141.html#L24'>size</a>               24 src/syscall/execve.c 	void* image = kmalloc(size);
+<a href='../S/141.html#L32'>size</a>               32 src/syscall/execve.c 	if(sys_read(fd, image, size) &lt; size) {
+<a href='../S/120.html#L37'>size</a>               37 src/syscall/fstat.c 	st-&gt;st_size = ino-&gt;size;
+<a href='../S/132.html#L26'>size</a>               26 src/syscall/lseek.c 	if(pos &gt; ino-&gt;size)
+<a href='../S/132.html#L27'>size</a>               27 src/syscall/lseek.c 		pos = ino-&gt;size;
+<a href='../S/132.html#L34'>size</a>               34 src/syscall/lseek.c 			ino-&gt;position = ino-&gt;size - pos;
+<a href='../S/132.html#L37'>size</a>               37 src/syscall/lseek.c 			ino-&gt;position = (ino-&gt;position + pos &gt; ino-&gt;size ? ino-&gt;size : ino-&gt;position + pos);
+<a href='../S/127.html#L19'>size</a>               19 src/syscall/read.c int sys_read(int fd, void* ptr, size_t size) {
+<a href='../S/127.html#L31'>size</a>               31 src/syscall/read.c 	return fs_read(ino, ptr, size);
+<a href='../S/128.html#L19'>size</a>               19 src/syscall/write.c int sys_write(int fd, void* ptr, size_t size) {
+<a href='../S/128.html#L31'>size</a>               31 src/syscall/write.c 	return fs_write(ino, ptr, size);
+<a href='../S/32.html#L17'>size</a>               17 usr/src/libposix/src/getcwd.c char* getcwd(char* buf, size_t size) {
+<a href='../S/32.html#L33'>size</a>               33 usr/src/libposix/src/getcwd.c 	memset(buf, 0, size);
+</pre>
+</body>
+</html>

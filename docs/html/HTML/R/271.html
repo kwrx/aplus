@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>int_out32</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/104.html#L79'>int_out32</a>          79 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * curBuffer));
+<a href='../S/104.html#L80'>int_out32</a>          80 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), ((256 &lt;&lt; 11) &amp; 0x003F0000) | len);
+<a href='../S/104.html#L228'>int_out32</a>         228 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_RECEIVE_BUFFER, (uint32_t) card-&gt;rxBuffer);
+<a href='../S/104.html#L231'>int_out32</a>         231 src/net/rtl8139/rtl8139.c 		int_out32(card, REG_TRANSMIT_ADDR0 + (4 * i), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * i));
+<a href='../S/104.html#L233'>int_out32</a>         233 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_RECEIVE_CONFIGURATION, RCR_MXDMA_UNLIMITED | RCR_ACCEPT_BROADCAST | RCR_ACCEPT_PHYS_MATCH);
+<a href='../S/104.html#L234'>int_out32</a>         234 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_CONFIGURATION, TCR_IFG_STANDARD | TCR_MXDMA_256);
+</pre>
+</body>
+</html>

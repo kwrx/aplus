@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>flags</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L53'>flags</a>              53 src/arch/desc.c 	uint8_t null, flags;
+<a href='../S/158.html#L237'>flags</a>             237 src/arch/desc.c 		idt_e[i].flags = f
+<a href='../S/89.html#L71'>flags</a>              71 src/include/aplus/netif.h 	uint32_t flags;
+<a href='../S/88.html#L56'>flags</a>              56 src/include/aplus/spinlock.h #define spinlock_init(spin, flags)					\
+<a href='../S/88.html#L57'>flags</a>              57 src/include/aplus/spinlock.h 	*(spin) = flags
+<a href='../S/101.html#L65'>flags</a>              65 src/include/grub.h 		unsigned int flags;
+<a href='../S/150.html#L72'>flags</a>              72 src/mm/paging.c void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {	
+<a href='../S/150.html#L95'>flags</a>              95 src/mm/paging.c 			*e = (uint32_t) table | flags;	
+<a href='../S/150.html#L99'>flags</a>              99 src/mm/paging.c 		t[PTENTRY(vframe)] = pframe | flags;
+<a href='../S/150.html#L130'>flags</a>             130 src/mm/paging.c void* vmm_alloc(void* vaddr, size_t size, int flags) {
+<a href='../S/150.html#L133'>flags</a>             133 src/mm/paging.c 	vmm_map(current_vmm, paddr, vaddr, size, flags);
+<a href='../S/111.html#L20'>flags</a>              20 src/net/loopback/loopback.c 	netif-&gt;flags |= NETIF_FLAGS_ENABLE;
+<a href='../S/111.html#L25'>flags</a>              25 src/net/loopback/loopback.c 	netif-&gt;flags &amp;= ~NETIF_FLAGS_ENABLE;
+<a href='../S/111.html#L32'>flags</a>              32 src/net/loopback/loopback.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/111.html#L47'>flags</a>              47 src/net/loopback/loopback.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/104.html#L45'>flags</a>              45 src/net/rtl8139/rtl8139.c 	netif-&gt;flags |= NETIF_FLAGS_ENABLE;
+<a href='../S/104.html#L50'>flags</a>              50 src/net/rtl8139/rtl8139.c 	netif-&gt;flags &amp;= ~NETIF_FLAGS_ENABLE;
+<a href='../S/104.html#L55'>flags</a>              55 src/net/rtl8139/rtl8139.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/104.html#L90'>flags</a>              90 src/net/rtl8139/rtl8139.c 	if((card-&gt;netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/110.html#L34'>flags</a>              34 src/net/slirp/slirp.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/110.html#L86'>flags</a>              86 src/net/slirp/slirp.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/110.html#L120'>flags</a>             120 src/net/slirp/slirp.c 	netif-&gt;flags |= NETIF_FLAGS_ENABLE;
+<a href='../S/110.html#L125'>flags</a>             125 src/net/slirp/slirp.c 	netif-&gt;flags &amp;= ~NETIF_FLAGS_ENABLE;
+<a href='../S/126.html#L8'>flags</a>               8 src/syscall/clone.c int sys_clone(int (*fn)(void*), void* child_stack, int flags, void* arg) {
+<a href='../S/139.html#L19'>flags</a>              19 src/syscall/open.c static inode_t* ino_open(char* filename, int flags, mode_t mode) {
+<a href='../S/139.html#L82'>flags</a>              82 src/syscall/open.c 	if(!(flags &amp; O_NOFOLLOW)) {
+<a href='../S/139.html#L96'>flags</a>              96 src/syscall/open.c 	if(flags &amp; O_DIRECTORY) {
+<a href='../S/139.html#L107'>flags</a>             107 src/syscall/open.c int sys_open(char* filename, int flags, mode_t mode) {
+<a href='../S/139.html#L111'>flags</a>             111 src/syscall/open.c 	inode_t* ino = ino_open(filename, flags, mode);
+</pre>
+</body>
+</html>

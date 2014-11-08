@@ -1,0 +1,60 @@
+\hypertarget{gettimeofday_8c}{\section{Riferimenti per il file src/syscall/gettimeofday.c}
+\label{gettimeofday_8c}\index{src/syscall/gettimeofday.\+c@{src/syscall/gettimeofday.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$sys/time.\+h$>$}\\*
+{\ttfamily \#include $<$sys/times.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{gettimeofday_8c_a0aa843ff444635c69c76f13b2f6b6ec6}{sys\+\_\+gettimeofday} (struct timeval $\ast$tv, struct timezone $\ast$tz)
+\item 
+\hyperlink{gettimeofday_8c_ad590b1e420aff1c14b09d65c16c08d62}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{gettimeofday_8c_a0aa843ff444635c69c76f13b2f6b6ec6}{sys\+\_\+gettimeofday}, 18)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{gettimeofday_8c_a0aa843ff444635c69c76f13b2f6b6ec6}{\index{gettimeofday.\+c@{gettimeofday.\+c}!sys\+\_\+gettimeofday@{sys\+\_\+gettimeofday}}
+\index{sys\+\_\+gettimeofday@{sys\+\_\+gettimeofday}!gettimeofday.\+c@{gettimeofday.\+c}}
+\subsubsection[{sys\+\_\+gettimeofday}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+gettimeofday (
+\begin{DoxyParamCaption}
+\item[{struct timeval $\ast$}]{tv, }
+\item[{struct timezone $\ast$}]{tz}
+\end{DoxyParamCaption}
+)}}\label{gettimeofday_8c_a0aa843ff444635c69c76f13b2f6b6ec6}
+
+
+Definizione alla linea 15 del file gettimeofday.\+c.
+
+
+
+Referenzia errno, pit\+\_\+getticks(), e pit\+\_\+gettime().
+
+
+\begin{DoxyCode}
+15                                                               \{
+16     \textcolor{keywordflow}{if}(!tv) \{
+17         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+18         \textcolor{keywordflow}{return} -1;
+19     \}
+20     
+21     tv->tv\_sec = \hyperlink{desc_8c_a0c9b7a41bf04c15de2b484df54fcb62b}{pit\_gettime}();
+22     tv->tv\_usec = \hyperlink{desc_8c_affef3cc40072321b8d54e4c00aa4de85}{pit\_getticks}() * 1000;
+23     
+24     \textcolor{keywordflow}{return} 0;
+25 \}
+\end{DoxyCode}
+\hypertarget{gettimeofday_8c_ad590b1e420aff1c14b09d65c16c08d62}{\index{gettimeofday.\+c@{gettimeofday.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!gettimeofday.\+c@{gettimeofday.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+gettimeofday}}]{, }
+\item[{18}]{}
+\end{DoxyParamCaption}
+)}}\label{gettimeofday_8c_ad590b1e420aff1c14b09d65c16c08d62}

@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_d8973e1d382d4046c5526cf7094d954c" kind="dir">
+    <compoundname>usr/src/libcrt0/src</compoundname>
+    <innerfile refid="crt0_8c">crt0.c</innerfile>
+    <innerfile refid="syscalls_8c">syscalls.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libcrt0/src/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structfs" kind="struct" prot="public">
+    <compoundname>fs</compoundname>
+    <includes refid="fs_8h" local="no">fs.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structfs_1a7d1c966e58722afdf537c5d7bc0790c7" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char fs::name[255]</definition>
+        <argsstring>[255]</argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="76" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structfs_1a6ae33214a489b396e834ac7e028d859c" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* fs::mount)(struct inode *idev, struct inode *idir, int flags)</definition>
+        <argsstring>)(struct inode *idev, struct inode *idir, int flags)</argsstring>
+        <name>mount</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="35">
+        <label>fs</label>
+        <link refid="structfs"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="75" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="75" bodyend="78"/>
+    <listofallmembers>
+      <member refid="structfs_1a6ae33214a489b396e834ac7e028d859c" prot="public" virt="non-virtual"><scope>fs</scope><name>mount</name></member>
+      <member refid="structfs_1a7d1c966e58722afdf537c5d7bc0790c7" prot="public" virt="non-virtual"><scope>fs</scope><name>name</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

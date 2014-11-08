@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>usr/src/libposix/src/readdir.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/readdir.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L15'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L15' title='Defined at 15.'>readdir</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L10'>  10 
+<a name='L11'>  11 <font color='darkred'>#include</font> "<a href='20.html'>config.h</a>"
+<a name='L12'>  12 
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>* <a href='../R/452.html' title='Multiple refered from 9 places.'>readdir</a>(<a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../Y/187.html' title='Multiple used in 6 places.'>d</a>) <font color='red'>{</font>
+<a name='L16'>  16         <b>if</b>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L17'>  17                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L18'>  18                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L19'>  19         <font color='red'>}</font>
+<a name='L20'>  20 
+<a name='L21'>  21         <b>return</b> <a href='../S/20.html#L11' title='Defined at 11 in usr/src/libposix/src/config.h.'>__os_readdir</a>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>);
+<a name='L22'>  22 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L15'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

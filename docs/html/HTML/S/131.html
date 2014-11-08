@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>src/syscall/getpid.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/getpid.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L13'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L13' title='Defined at 13.'>sys_getpid</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L11'>  11 
+<a name='L12'>  12 
+<a name='L13'>  13 <a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> sys_getpid() <font color='red'>{</font>
+<a name='L14'>  14         <b>return</b> <a href='../S/143.html#L163' title='Defined at 163 in src/sched.c.'>schedule_getpid</a>();
+<a name='L15'>  15 <font color='red'>}</font>
+<a name='L16'>  16 
+<a name='L17'>  17 
+<a name='L18'>  18 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_getpid, 5);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L13'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

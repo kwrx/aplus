@@ -1,0 +1,319 @@
+.TH "src/net/slirp/slirp.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/slirp/slirp.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <aplus/bufio\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/attribute\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include 'slirp\&.h'\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBslirpcard\fP"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBslirpcard\fP \fBslirpcard_t\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "void \fBslirp_handler\fP (void *unused)"
+.br
+.ti -1c
+.RI "int \fBslirp_send\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP)"
+.br
+.ti -1c
+.RI "int \fBslirp_ifup\fP (\fBnetif_t\fP *\fBnetif\fP)"
+.br
+.ti -1c
+.RI "int \fBslirp_ifdown\fP (\fBnetif_t\fP *\fBnetif\fP)"
+.br
+.ti -1c
+.RI "int \fBslirp_init\fP ()"
+.br
+.ti -1c
+.RI "\fBATTRIBUTE\fP ('netif', slirp_init)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "static \fBslirpcard_t\fP * \fBslirpcard\fP = NULL"
+.br
+.in -1c
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fBslirpcard\fP  \fBslirpcard_t\fP"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "ATTRIBUTE ('netif', \fBslirp_init\fP)"
+
+.SS "void slirp_handler (void *unused)"
+
+.PP
+Definizione alla linea 28 del file slirp\&.c\&.
+.PP
+Referenzia slirpcard::buffer, d, netif::flags, slirpcard::ioport, ipv4_recv(), kfree(), kmalloc(), kprintf, slirpcard::netif, NETIF_FLAGS_ENABLE, slirpcard::offset, netif::rx_bytes, netif::rx_errors, netif::rx_packets, serial_recv(), SLIRP_BUFSIZ, SLIRP_PACKET_END, SLIRP_PACKET_ESC, SLIRP_PACKET_ESC_END, SLIRP_PACKET_ESC_ESC, netif::state, uint8_t, e slirpcard::used\&.
+.PP
+.nf
+28                                  {
+29     if(slirpcard == NULL)
+30         return;
+31 
+32     netif_t* netif = slirpcard->netif;
+33 
+34     if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
+35         return;
+36     
+37     kprintf("slirp: received data\n");
+38 
+39     uint8_t d = serial_recv(slirpcard->ioport);
+40     if(slirpcard->used == 0) {
+41         if(d != SLIRP_PACKET_END)
+42             return;
+43 
+44         if(slirpcard->buffer)
+45             kfree(slirpcard->buffer);
+46 
+47         slirpcard->buffer = (uint8_t*) kmalloc(sizeof(uint8_t) * SLIRP_BUFSIZ);
+48         slirpcard->offset = 0;
+49         slirpcard->used = 1;
+50         return;
+51     }
+52 
+53     if((d == SLIRP_PACKET_END && slirpcard->used) || slirpcard->offset >= SLIRP_BUFSIZ) {
+54         slirpcard->used = 0;
+55             
+56         if(ipv4_recv(netif, slirpcard->buffer, slirpcard->offset) > 0) {
+57             netif->state\&.rx_packets += 1;
+58             netif->state\&.rx_bytes += slirpcard->offset;
+59         } else
+60             netif->state\&.rx_errors += 1;
+61 
+62         slirpcard->offset = 0;
+63     }
+64 
+65     switch(d) {
+66         case SLIRP_PACKET_ESC: {
+67             d = serial_recv(slirpcard->ioport);
+68             switch(d) {
+69                 case SLIRP_PACKET_ESC_END:
+70                     d = SLIRP_PACKET_END;
+71                     break;
+72                 case SLIRP_PACKET_ESC_ESC:
+73                     d = SLIRP_PACKET_ESC;
+74                     break;
+75             }
+76         }
+77 
+78         default:
+79             slirpcard->buffer[slirpcard->offset++] = d;
+80     }
+81     
+82 }
+.fi
+.SS "int slirp_ifdown (\fBnetif_t\fP *netif)"
+
+.PP
+Definizione alla linea 124 del file slirp\&.c\&.
+.PP
+Referenzia netif::flags, e NETIF_FLAGS_ENABLE\&.
+.PP
+.nf
+124                                  {
+125     netif->flags &= ~NETIF_FLAGS_ENABLE;
+126     return 0;
+127 }
+.fi
+.SS "int slirp_ifup (\fBnetif_t\fP *netif)"
+
+.PP
+Definizione alla linea 119 del file slirp\&.c\&.
+.PP
+Referenzia netif::flags, e NETIF_FLAGS_ENABLE\&.
+.PP
+.nf
+119                                {
+120     netif->flags |= NETIF_FLAGS_ENABLE;
+121     return 0;
+122 }
+.fi
+.SS "int slirp_init ()"
+
+.PP
+Definizione alla linea 129 del file slirp\&.c\&.
+.PP
+Referenzia slirpcard::buffer, netif::data, netif::dns, netif::ifdown, netif::ifup, slirpcard::ioport, netif::ipv4, netif::ipv6, irq_set(), kmalloc(), netif::macaddr, slirpcard::magic, netif::mtu, netif::name, slirpcard::netif, netif_add(), netif::netmask, slirpcard::offset, netif::primary, netif::secondary, netif::send, slirp_handler(), slirp_ifdown(), slirp_ifup(), SLIRP_MAGIC, SLIRP_MTU, slirp_send(), e slirpcard::used\&.
+.PP
+.nf
+129                  {
+130     
+131     slirpcard = (slirpcard_t*) kmalloc(sizeof(slirpcard_t));
+132     slirpcard->magic = SLIRP_MAGIC;
+133     slirpcard->buffer = NULL;
+134     slirpcard->offset = 0;
+135     slirpcard->used = 0;
+136     slirpcard->ioport = 1;
+137 
+138     netif_t* netif = (netif_t*) kmalloc(sizeof(netif_t));
+139     memset(netif, 0, sizeof(netif_t));
+140 
+141 
+142     strcpy(netif->name, "slp0");
+143 
+144 
+145     netif->macaddr[0] = 10;
+146     netif->macaddr[1] = 0;
+147     netif->macaddr[2] = 2;
+148     netif->macaddr[3] = 0;
+149     netif->macaddr[4] = 255;
+150     netif->macaddr[5] = 255;
+151 
+152     netif->ipv4[0] = 10;
+153     netif->ipv4[1] = 0;
+154     netif->ipv4[2] = 2;
+155     netif->ipv4[3] = 0;
+156 
+157     netif->netmask[0] = 255;
+158     netif->netmask[1] = 255;
+159     netif->netmask[2] = 255;
+160     netif->netmask[3] = 0;
+161 
+162     netif->ipv6[0] = 0xfe80;
+163     netif->ipv6[1] = 0x0000;
+164     netif->ipv6[2] = 0x0000;
+165     netif->ipv6[3] = 0x0000;
+166     netif->ipv6[4] = 0x0000;
+167     netif->ipv6[5] = 0x10ff;
+168     netif->ipv6[6] = 0xcef9;
+169     netif->ipv6[7] = 0x9b70;
+170 
+171     netif->dns\&.primary\&.ipv4[0] = 8;
+172     netif->dns\&.primary\&.ipv4[1] = 8;
+173     netif->dns\&.primary\&.ipv4[2] = 8;
+174     netif->dns\&.primary\&.ipv4[3] = 8;
+175 
+176     netif->dns\&.secondary\&.ipv4[0] = 8;
+177     netif->dns\&.secondary\&.ipv4[1] = 8;
+178     netif->dns\&.secondary\&.ipv4[2] = 4;
+179     netif->dns\&.secondary\&.ipv4[3] = 4;
+180     
+181 
+182     netif->dns\&.primary\&.ipv6[0] = 0x2001;
+183     netif->dns\&.primary\&.ipv6[1] = 0x4860;
+184     netif->dns\&.primary\&.ipv6[2] = 0x4860;
+185     netif->dns\&.primary\&.ipv6[3] = 0x0000;
+186     netif->dns\&.primary\&.ipv6[4] = 0x0000;
+187     netif->dns\&.primary\&.ipv6[5] = 0x0000;
+188     netif->dns\&.primary\&.ipv6[6] = 0x0000;
+189     netif->dns\&.primary\&.ipv6[7] = 0x8888;
+190     netif->dns\&.secondary\&.ipv6[0] = 0x2001;
+191     netif->dns\&.secondary\&.ipv6[1] = 0x4860;
+192     netif->dns\&.secondary\&.ipv6[2] = 0x4860;
+193     netif->dns\&.secondary\&.ipv6[3] = 0x0000;
+194     netif->dns\&.secondary\&.ipv6[4] = 0x0000;
+195     netif->dns\&.secondary\&.ipv6[5] = 0x0000;
+196     netif->dns\&.secondary\&.ipv6[6] = 0x0000;
+197     netif->dns\&.secondary\&.ipv6[7] = 0x8844;
+198 
+199 
+200     netif->mtu = SLIRP_MTU;
+201     netif->send = slirp_send;
+202     netif->ifup = slirp_ifup;
+203     netif->ifdown = slirp_ifdown;
+204     netif->data = (void*) slirpcard;
+205 
+206     slirpcard->netif = netif;
+207     netif_add(netif);
+208     
+209 
+210     irq_set(4, slirp_handler);
+211     irq_set(3, slirp_handler);
+212     return 0;
+213 }
+.fi
+.SS "int slirp_send (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype)"
+
+.PP
+Definizione alla linea 85 del file slirp\&.c\&.
+.PP
+Referenzia netif::data, netif::flags, slirpcard::ioport, length, slirpcard::magic, NETIF_FLAGS_ENABLE, serial_send(), SLIRP_MAGIC, SLIRP_PACKET_END, SLIRP_PACKET_ESC, SLIRP_PACKET_ESC_END, SLIRP_PACKET_ESC_ESC, e uint8_t\&.
+.PP
+.nf
+85                                                                    {
+86     if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
+87         return 0;
+88 
+89     slirpcard_t* slirpcard = (slirpcard_t*) netif->data;
+90     if(slirpcard->magic != SLIRP_MAGIC)
+91         return 0;
+92 
+93     
+94     serial_send(slirpcard->ioport, SLIRP_PACKET_END);
+95 
+96     uint8_t* b = (uint8_t*) buf;
+97     for(int i = 0; i < length; i++) {
+98         switch(b[i]) {
+99             case SLIRP_PACKET_END:
+100                 serial_send(slirpcard->ioport, SLIRP_PACKET_ESC);
+101                 serial_send(slirpcard->ioport, SLIRP_PACKET_ESC_END);
+102                 break;
+103 
+104             case SLIRP_PACKET_ESC:
+105                 serial_send(slirpcard->ioport, SLIRP_PACKET_ESC);
+106                 serial_send(slirpcard->ioport, SLIRP_PACKET_ESC_ESC);
+107                 break;
+108     
+109             default:
+110                 serial_send(slirpcard->ioport, b[i]);
+111                 break;
+112         }
+113     }
+114 
+115     serial_send(slirpcard->ioport, SLIRP_PACKET_END);
+116     return length;
+117 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBslirpcard_t\fP* \fBslirpcard\fP = NULL\fC [static]\fP"
+
+.PP
+Definizione alla linea 26 del file slirp\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

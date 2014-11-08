@@ -1,0 +1,42 @@
+\hypertarget{seekdir_8c}{\section{Riferimenti per il file usr/src/libposix/src/seekdir.c}
+\label{seekdir_8c}\index{usr/src/libposix/src/seekdir.\+c@{usr/src/libposix/src/seekdir.\+c}}
+}
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{seekdir_8c_a58829cca160034015b3dddc17bb502ab}{seekdir} (\hyperlink{dirent_8h_a067065071b5bdb96054ed58b5f848bfa}{D\+I\+R} $\ast$\hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}, off\+\_\+t \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{seekdir_8c_a58829cca160034015b3dddc17bb502ab}{\index{seekdir.\+c@{seekdir.\+c}!seekdir@{seekdir}}
+\index{seekdir@{seekdir}!seekdir.\+c@{seekdir.\+c}}
+\subsubsection[{seekdir}]{\setlength{\rightskip}{0pt plus 5cm}void seekdir (
+\begin{DoxyParamCaption}
+\item[{{\bf D\+I\+R} $\ast$}]{d, }
+\item[{off\+\_\+t}]{offset}
+\end{DoxyParamCaption}
+)}}\label{seekdir_8c_a58829cca160034015b3dddc17bb502ab}
+
+
+Definizione alla linea 13 del file seekdir.\+c.
+
+
+
+Referenzia offset, e \+\_\+\+\_\+\+D\+I\+R\+::position.
+
+
+\begin{DoxyCode}
+13                                    \{
+14     \textcolor{keywordflow}{if}(d)
+15         d->\hyperlink{struct____DIR_adcec35c0ea0ed4342c5425c494554397}{position} = \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
+16 \}
+\end{DoxyCode}

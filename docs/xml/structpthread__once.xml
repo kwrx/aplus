@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__once" kind="struct" prot="public">
+    <compoundname>pthread_once</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__once_1acffdc3852414e4eeece3c8e7cf80ffc1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>volatile int pthread_once::done</definition>
+        <argsstring></argsstring>
+        <name>done</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="68" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__once_1a2bebfebb49a5c75d10119824d5bba93c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_once::started</definition>
+        <argsstring></argsstring>
+        <name>started</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="69" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="89">
+        <label>pthread_once</label>
+        <link refid="structpthread__once"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="67" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="67" bodyend="70"/>
+    <listofallmembers>
+      <member refid="structpthread__once_1acffdc3852414e4eeece3c8e7cf80ffc1" prot="public" virt="non-virtual"><scope>pthread_once</scope><name>done</name></member>
+      <member refid="structpthread__once_1a2bebfebb49a5c75d10119824d5bba93c" prot="public" virt="non-virtual"><scope>pthread_once</scope><name>started</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>usr/src/libposix/src/alphasort.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/alphasort.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L12'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L12' title='Defined at 12.'>alphasort</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L10'>  10 
+<a name='L11'>  11 
+<a name='L12'>  12 <b>int</b> <a href='../S/10.html#L54' title='Refered from 54 in usr/src/libposix/include/sys/dirent.h.'>alphasort</a>(<b>const</b> <b>struct</b> <a href='../Y/202.html' title='Multiple used in 2 places.'>dirent</a> **<a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>, <b>const</b> <b>struct</b> <a href='../Y/202.html' title='Multiple used in 2 places.'>dirent</a> **<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>) <font color='red'>{</font>
+<a name='L13'>  13         <b>return</b> strcoll((*<a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>)-&gt;<a href='../Y/189.html' title='Multiple used in 4 places.'>d_name</a>, (*<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>)-&gt;<a href='../Y/189.html' title='Multiple used in 4 places.'>d_name</a>);
+<a name='L14'>  14 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L12'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

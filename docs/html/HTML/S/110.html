@@ -1,0 +1,242 @@
+<html>
+<head>
+<title>src/net/slirp/slirp.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/<a href='../files/174.html'>slirp</a>/slirp.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L28'>[^]</a><a href='#L129'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L28' title='Defined at 28.'>slirp_handler</a>
+<li><a href='#L85' title='Defined at 85.'>slirp_send</a>
+<li><a href='#L119' title='Defined at 119.'>slirp_ifup</a>
+<li><a href='#L124' title='Defined at 124.'>slirp_ifdown</a>
+<li><a href='#L129' title='Defined at 129.'>slirp_init</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='98.html'>aplus/bufio.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;<a href='99.html'>aplus/attribute.h</a>&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L12'>  12 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L13'>  13 
+<a name='L14'>  14 <font color='darkred'>#include</font> "<a href='109.html'>slirp.h</a>"
+<a name='L15'>  15 
+<a name='L16'>  16 <b>typedef</b> <b>struct</b> <a href='../R/486.html' title='Multiple refered from 34 places.'>slirpcard</a> <font color='red'>{</font>
+<a name='L17'>  17         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/371.html' title='Multiple used in 12 places.'>magic</a>; 
+<a name='L18'>  18         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>* <a href='../Y/142.html' title='Multiple used in 7 places.'>buffer</a>;
+<a name='L19'>  19         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/726.html' title='Multiple used in 16 places.'>used</a>;
+<a name='L20'>  20         
+<a name='L21'>  21         <b>int</b> <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L22'>  22         <b>int</b> <a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>;
+<a name='L23'>  23         <a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>;
+<a name='L24'>  24 <font color='red'>}</font> <a href='../R/487.html' title='Multiple refered from 3 places.'>slirpcard_t</a>;
+<a name='L25'>  25 
+<a name='L26'>  26 <b>static</b> <a href='../S/110.html#L24' title='Defined at 24 in src/net/slirp/slirp.c.'>slirpcard_t</a>* <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L27'>  27 
+<a name='L28'>  28 <b>void</b> <a href='../R/482.html' title='Multiple refered from 2 places.'>slirp_handler</a>(<b>void</b>* <a href='../Y/723.html' title='Multiple used in 2 places.'>unused</a>) <font color='red'>{</font>
+<a name='L29'>  29         <b>if</b>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>)
+<a name='L30'>  30                 <b>return</b>;
+<a name='L31'>  31 
+<a name='L32'>  32         <a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a> = <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>;
+<a name='L33'>  33 
+<a name='L34'>  34         <b>if</b>((<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>) == 0)
+<a name='L35'>  35                 <b>return</b>;
+<a name='L36'>  36         
+<a name='L37'>  37         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("slirp: received data\n");
+<a name='L38'>  38 
+<a name='L39'>  39         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> = <a href='../S/161.html#L16' title='Defined at 16 in src/arch/serial.c.'>serial_recv</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>);
+<a name='L40'>  40         <b>if</b>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/726.html' title='Multiple used in 16 places.'>used</a> == 0) <font color='red'>{</font>
+<a name='L41'>  41                 <b>if</b>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> != <a href='../S/109.html#L4' title='Defined at 4 in src/net/slirp/slirp.h.'>SLIRP_PACKET_END</a>)
+<a name='L42'>  42                         <b>return</b>;
+<a name='L43'>  43 
+<a name='L44'>  44                 <b>if</b>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/142.html' title='Multiple used in 7 places.'>buffer</a>)
+<a name='L45'>  45                         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/142.html' title='Multiple used in 7 places.'>buffer</a>);
+<a name='L46'>  46 
+<a name='L47'>  47                 <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/142.html' title='Multiple used in 7 places.'>buffer</a> = (<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>) * <a href='../S/109.html#L9' title='Defined at 9 in src/net/slirp/slirp.h.'>SLIRP_BUFSIZ</a>);
+<a name='L48'>  48                 <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = 0;
+<a name='L49'>  49                 <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/726.html' title='Multiple used in 16 places.'>used</a> = 1;
+<a name='L50'>  50                 <b>return</b>;
+<a name='L51'>  51         <font color='red'>}</font>
+<a name='L52'>  52 
+<a name='L53'>  53         <b>if</b>((<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> == <a href='../S/109.html#L4' title='Defined at 4 in src/net/slirp/slirp.h.'>SLIRP_PACKET_END</a> &amp;&amp; <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/726.html' title='Multiple used in 16 places.'>used</a>) || <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> &gt;= <a href='../S/109.html#L9' title='Defined at 9 in src/net/slirp/slirp.h.'>SLIRP_BUFSIZ</a>) <font color='red'>{</font>
+<a name='L54'>  54                 <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/726.html' title='Multiple used in 16 places.'>used</a> = 0;
+<a name='L55'>  55                         
+<a name='L56'>  56                 <b>if</b>(<a href='../S/113.html#L71' title='Defined at 71 in src/net/ipv4.c.'>ipv4_recv</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/142.html' title='Multiple used in 7 places.'>buffer</a>, <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>) &gt; 0) <font color='red'>{</font>
+<a name='L57'>  57                         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/539.html' title='Multiple used in 4 places.'>rx_packets</a> += 1;
+<a name='L58'>  58                         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/536.html' title='Multiple used in 4 places.'>rx_bytes</a> += <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L59'>  59                 <font color='red'>}</font> <b>else</b>
+<a name='L60'>  60                         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/538.html' title='Multiple used in 4 places.'>rx_errors</a> += 1;
+<a name='L61'>  61 
+<a name='L62'>  62                 <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = 0;
+<a name='L63'>  63         <font color='red'>}</font>
+<a name='L64'>  64 
+<a name='L65'>  65         <b>switch</b>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>) <font color='red'>{</font>
+<a name='L66'>  66                 <b>case</b> <a href='../S/109.html#L5' title='Defined at 5 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC</a>: <font color='red'>{</font>
+<a name='L67'>  67                         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> = <a href='../S/161.html#L16' title='Defined at 16 in src/arch/serial.c.'>serial_recv</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>);
+<a name='L68'>  68                         <b>switch</b>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>) <font color='red'>{</font>
+<a name='L69'>  69                                 <b>case</b> <a href='../S/109.html#L6' title='Defined at 6 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC_END</a>:
+<a name='L70'>  70                                         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> = <a href='../S/109.html#L4' title='Defined at 4 in src/net/slirp/slirp.h.'>SLIRP_PACKET_END</a>;
+<a name='L71'>  71                                         <b>break</b>;
+<a name='L72'>  72                                 <b>case</b> <a href='../S/109.html#L7' title='Defined at 7 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC_ESC</a>:
+<a name='L73'>  73                                         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> = <a href='../S/109.html#L5' title='Defined at 5 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC</a>;
+<a name='L74'>  74                                         <b>break</b>;
+<a name='L75'>  75                         <font color='red'>}</font>
+<a name='L76'>  76                 <font color='red'>}</font>
+<a name='L77'>  77 
+<a name='L78'>  78                 <b>default</b>:
+<a name='L79'>  79                         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/142.html' title='Multiple used in 7 places.'>buffer</a>[<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>++] = <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>;
+<a name='L80'>  80         <font color='red'>}</font>
+<a name='L81'>  81         
+<a name='L82'>  82 <font color='red'>}</font>
+<a name='L83'>  83 
+<a name='L84'>  84 
+<a name='L85'>  85 <b>int</b> <a href='../S/110.html#L201' title='Refered from 201 in src/net/slirp/slirp.c.'>slirp_send</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L86'>  86         <b>if</b>((<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>) == 0)
+<a name='L87'>  87                 <b>return</b> 0;
+<a name='L88'>  88 
+<a name='L89'>  89         <a href='../S/110.html#L24' title='Defined at 24 in src/net/slirp/slirp.c.'>slirpcard_t</a>* <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a> = (<a href='../S/110.html#L24' title='Defined at 24 in src/net/slirp/slirp.c.'>slirpcard_t</a>*) <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>;
+<a name='L90'>  90         <b>if</b>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/371.html' title='Multiple used in 12 places.'>magic</a> != <a href='../S/109.html#L12' title='Defined at 12 in src/net/slirp/slirp.h.'>SLIRP_MAGIC</a>)
+<a name='L91'>  91                 <b>return</b> 0;
+<a name='L92'>  92 
+<a name='L93'>  93         
+<a name='L94'>  94         <a href='../S/161.html#L11' title='Defined at 11 in src/arch/serial.c.'>serial_send</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>, <a href='../S/109.html#L4' title='Defined at 4 in src/net/slirp/slirp.h.'>SLIRP_PACKET_END</a>);
+<a name='L95'>  95 
+<a name='L96'>  96         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>* <a href='../Y/120.html' title='Multiple used in 18 places.'>b</a> = (<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>*) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L97'>  97         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++) <font color='red'>{</font>
+<a name='L98'>  98                 <b>switch</b>(<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>]) <font color='red'>{</font>
+<a name='L99'>  99                         <b>case</b> <a href='../S/109.html#L4' title='Defined at 4 in src/net/slirp/slirp.h.'>SLIRP_PACKET_END</a>:
+<a name='L100'> 100                                 <a href='../S/161.html#L11' title='Defined at 11 in src/arch/serial.c.'>serial_send</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>, <a href='../S/109.html#L5' title='Defined at 5 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC</a>);
+<a name='L101'> 101                                 <a href='../S/161.html#L11' title='Defined at 11 in src/arch/serial.c.'>serial_send</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>, <a href='../S/109.html#L6' title='Defined at 6 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC_END</a>);
+<a name='L102'> 102                                 <b>break</b>;
+<a name='L103'> 103 
+<a name='L104'> 104                         <b>case</b> <a href='../S/109.html#L5' title='Defined at 5 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC</a>:
+<a name='L105'> 105                                 <a href='../S/161.html#L11' title='Defined at 11 in src/arch/serial.c.'>serial_send</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>, <a href='../S/109.html#L5' title='Defined at 5 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC</a>);
+<a name='L106'> 106                                 <a href='../S/161.html#L11' title='Defined at 11 in src/arch/serial.c.'>serial_send</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>, <a href='../S/109.html#L7' title='Defined at 7 in src/net/slirp/slirp.h.'>SLIRP_PACKET_ESC_ESC</a>);
+<a name='L107'> 107                                 <b>break</b>;
+<a name='L108'> 108         
+<a name='L109'> 109                         <b>default</b>:
+<a name='L110'> 110                                 <a href='../S/161.html#L11' title='Defined at 11 in src/arch/serial.c.'>serial_send</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>, <a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>]);
+<a name='L111'> 111                                 <b>break</b>;
+<a name='L112'> 112                 <font color='red'>}</font>
+<a name='L113'> 113         <font color='red'>}</font>
+<a name='L114'> 114 
+<a name='L115'> 115         <a href='../S/161.html#L11' title='Defined at 11 in src/arch/serial.c.'>serial_send</a>(<a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a>, <a href='../S/109.html#L4' title='Defined at 4 in src/net/slirp/slirp.h.'>SLIRP_PACKET_END</a>);
+<a name='L116'> 116         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L117'> 117 <font color='red'>}</font>
+<a name='L118'> 118 
+<a name='L119'> 119 <b>int</b> <a href='../S/110.html#L202' title='Refered from 202 in src/net/slirp/slirp.c.'>slirp_ifup</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>) <font color='red'>{</font>
+<a name='L120'> 120         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> |= <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>;
+<a name='L121'> 121         <b>return</b> 0;
+<a name='L122'> 122 <font color='red'>}</font>
+<a name='L123'> 123 
+<a name='L124'> 124 <b>int</b> <a href='../S/110.html#L203' title='Refered from 203 in src/net/slirp/slirp.c.'>slirp_ifdown</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>) <font color='red'>{</font>
+<a name='L125'> 125         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp;= ~<a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>;
+<a name='L126'> 126         <b>return</b> 0;
+<a name='L127'> 127 <font color='red'>}</font>
+<a name='L128'> 128 
+<a name='L129'> 129 <b>int</b> slirp_init() <font color='red'>{</font>
+<a name='L130'> 130         
+<a name='L131'> 131         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a> = (<a href='../S/110.html#L24' title='Defined at 24 in src/net/slirp/slirp.c.'>slirpcard_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/110.html#L24' title='Defined at 24 in src/net/slirp/slirp.c.'>slirpcard_t</a>));
+<a name='L132'> 132         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/371.html' title='Multiple used in 12 places.'>magic</a> = <a href='../S/109.html#L12' title='Defined at 12 in src/net/slirp/slirp.h.'>SLIRP_MAGIC</a>;
+<a name='L133'> 133         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/142.html' title='Multiple used in 7 places.'>buffer</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L134'> 134         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = 0;
+<a name='L135'> 135         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/726.html' title='Multiple used in 16 places.'>used</a> = 0;
+<a name='L136'> 136         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../Y/336.html' title='Multiple used in 11 places.'>ioport</a> = 1;
+<a name='L137'> 137 
+<a name='L138'> 138         <a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a> = (<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>));
+<a name='L139'> 139         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, 0, <b>sizeof</b>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>));
+<a name='L140'> 140 
+<a name='L141'> 141 
+<a name='L142'> 142         <a href='../Y/618.html' title='Multiple used in 10 places.'>strcpy</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>, "slp0");
+<a name='L143'> 143 
+<a name='L144'> 144 
+<a name='L145'> 145         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[0] = 10;
+<a name='L146'> 146         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[1] = 0;
+<a name='L147'> 147         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[2] = 2;
+<a name='L148'> 148         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[3] = 0;
+<a name='L149'> 149         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[4] = 255;
+<a name='L150'> 150         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[5] = 255;
+<a name='L151'> 151 
+<a name='L152'> 152         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0] = 10;
+<a name='L153'> 153         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1] = 0;
+<a name='L154'> 154         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2] = 2;
+<a name='L155'> 155         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3] = 0;
+<a name='L156'> 156 
+<a name='L157'> 157         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[0] = 255;
+<a name='L158'> 158         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[1] = 255;
+<a name='L159'> 159         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[2] = 255;
+<a name='L160'> 160         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[3] = 0;
+<a name='L161'> 161 
+<a name='L162'> 162         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[0] = 0xfe80;
+<a name='L163'> 163         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[1] = 0x0000;
+<a name='L164'> 164         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[2] = 0x0000;
+<a name='L165'> 165         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[3] = 0x0000;
+<a name='L166'> 166         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[4] = 0x0000;
+<a name='L167'> 167         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[5] = 0x10ff;
+<a name='L168'> 168         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[6] = 0xcef9;
+<a name='L169'> 169         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[7] = 0x9b70;
+<a name='L170'> 170 
+<a name='L171'> 171         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0] = 8;
+<a name='L172'> 172         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1] = 8;
+<a name='L173'> 173         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2] = 8;
+<a name='L174'> 174         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3] = 8;
+<a name='L175'> 175 
+<a name='L176'> 176         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0] = 8;
+<a name='L177'> 177         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1] = 8;
+<a name='L178'> 178         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2] = 4;
+<a name='L179'> 179         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3] = 4;
+<a name='L180'> 180         
+<a name='L181'> 181 
+<a name='L182'> 182         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[0] = 0x2001;
+<a name='L183'> 183         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[1] = 0x4860;
+<a name='L184'> 184         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[2] = 0x4860;
+<a name='L185'> 185         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[3] = 0x0000;
+<a name='L186'> 186         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[4] = 0x0000;
+<a name='L187'> 187         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[5] = 0x0000;
+<a name='L188'> 188         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[6] = 0x0000;
+<a name='L189'> 189         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[7] = 0x8888;
+<a name='L190'> 190         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[0] = 0x2001;
+<a name='L191'> 191         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[1] = 0x4860;
+<a name='L192'> 192         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[2] = 0x4860;
+<a name='L193'> 193         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[3] = 0x0000;
+<a name='L194'> 194         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[4] = 0x0000;
+<a name='L195'> 195         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[5] = 0x0000;
+<a name='L196'> 196         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[6] = 0x0000;
+<a name='L197'> 197         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[7] = 0x8844;
+<a name='L198'> 198 
+<a name='L199'> 199 
+<a name='L200'> 200         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/394.html' title='Multiple used in 7 places.'>mtu</a> = <a href='../S/109.html#L10' title='Defined at 10 in src/net/slirp/slirp.h.'>SLIRP_MTU</a>;
+<a name='L201'> 201         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/557.html' title='Multiple used in 5 places.'>send</a> = <a href='../S/110.html#L85' title='Defined at 85 in src/net/slirp/slirp.c.'>slirp_send</a>;
+<a name='L202'> 202         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/308.html' title='Multiple used in 6 places.'>ifup</a> = <a href='../S/110.html#L119' title='Defined at 119 in src/net/slirp/slirp.c.'>slirp_ifup</a>;
+<a name='L203'> 203         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/307.html' title='Multiple used in 6 places.'>ifdown</a> = <a href='../S/110.html#L124' title='Defined at 124 in src/net/slirp/slirp.c.'>slirp_ifdown</a>;
+<a name='L204'> 204         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/190.html' title='Multiple used in 16 places.'>data</a> = (<b>void</b>*) <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>;
+<a name='L205'> 205 
+<a name='L206'> 206         <a href='../S/110.html#L16' title='Defined at 16 in src/net/slirp/slirp.c.'>slirpcard</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a> = <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>;
+<a name='L207'> 207         <a href='../S/107.html#L124' title='Defined at 124 in src/net/netif.c.'>netif_add</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>);
+<a name='L208'> 208         
+<a name='L209'> 209 
+<a name='L210'> 210         <a href='../S/158.html#L334' title='Defined at 334 in src/arch/desc.c.'>irq_set</a>(4, <a href='../S/110.html#L28' title='Defined at 28 in src/net/slirp/slirp.c.'>slirp_handler</a>);
+<a name='L211'> 211         <a href='../S/158.html#L334' title='Defined at 334 in src/arch/desc.c.'>irq_set</a>(3, <a href='../S/110.html#L28' title='Defined at 28 in src/net/slirp/slirp.c.'>slirp_handler</a>);
+<a name='L212'> 212         <b>return</b> 0;
+<a name='L213'> 213 <font color='red'>}</font>
+<a name='L214'> 214 
+<a name='L215'> 215 <a href='../S/99.html#L18' title='Defined at 18 in src/include/aplus/attribute.h.'>ATTRIBUTE</a>("netif", slirp_init);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L28'>[^]</a><a href='#L129'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

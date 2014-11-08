@@ -1,0 +1,385 @@
+.TH "src/include/grub.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/grub.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBvesaInfo_t\fP"
+.br
+.ti -1c
+.RI "struct \fBvesaModeInfo_t\fP"
+.br
+.ti -1c
+.RI "struct \fBBootInfo_t\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_MEM\fP   0x001"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_DEVICE\fP   0x002"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_CMDLINE\fP   0x004"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_MODS\fP   0x008"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_AOUT\fP   0x010"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_ELF\fP   0x020"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_MMAP\fP   0x040"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_CONFIG\fP   0x080"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_LOADER\fP   0x100"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_APM\fP   0x200"
+.br
+.ti -1c
+.RI "#define \fBMULTIBOOT_FLAG_VBE\fP   0x400"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBvesaInfo_t\fP \fBvesaInfo\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBBootInfo_t\fP \fBBootInfo\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "struct \fBvesaModeInfo_t\fP \fB__attribute__\fP ((packed)) vesaModeInfo"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "unsigned short \fBattributes\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBwinA\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBwinB\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBgranularity\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBwinsize\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBsegmentA\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBsegmentB\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBrealFctPtr\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBpitch\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBXres\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBYres\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBWchar\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBYchar\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBplanes\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBbpp\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBbanks\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBmemory_model\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBbank_size\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBimage_pages\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBreserved0\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBred_mask\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBred_position\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBgreen_mask\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBgreen_position\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBblue_mask\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBblue_position\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBrsv_mask\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBrsv_position\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBdirectcolor_attributes\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBphysbase\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBreserved1\fP"
+.br
+.ti -1c
+.RI "short \fBreserved2\fP"
+.br
+.ti -1c
+.RI "\fBBootInfo\fP * \fBmbd\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBmagic\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define MULTIBOOT_FLAG_AOUT   0x010"
+
+.PP
+Definizione alla linea 99 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_APM   0x200"
+
+.PP
+Definizione alla linea 104 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_CMDLINE   0x004"
+
+.PP
+Definizione alla linea 97 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_CONFIG   0x080"
+
+.PP
+Definizione alla linea 102 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_DEVICE   0x002"
+
+.PP
+Definizione alla linea 96 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_ELF   0x020"
+
+.PP
+Definizione alla linea 100 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_LOADER   0x100"
+
+.PP
+Definizione alla linea 103 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_MEM   0x001"
+
+.PP
+Definizione alla linea 95 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_MMAP   0x040"
+
+.PP
+Definizione alla linea 101 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_MODS   0x008"
+
+.PP
+Definizione alla linea 98 del file grub\&.h\&.
+.SS "#define MULTIBOOT_FLAG_VBE   0x400"
+
+.PP
+Definizione alla linea 105 del file grub\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fBBootInfo_t\fP  \fBBootInfo\fP"
+
+.SS "typedef struct \fBvesaInfo_t\fP  \fBvesaInfo\fP"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "struct \fBvesaModeInfo_t\fP __attribute__ ((packed))"
+
+.PP
+Definizione alla linea 44 del file desc\&.c\&.
+.PP
+.nf
+46                        {
+47     uint16_t limit;
+48     uint32_t base;
+49 } __attribute__((packed)) gdt_ptr_t;
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "unsigned short attributes"
+
+.PP
+Definizione alla linea 140 del file grub\&.h\&.
+.SS "unsigned char bank_size"
+
+.PP
+Definizione alla linea 150 del file grub\&.h\&.
+.SS "unsigned char banks"
+
+.PP
+Definizione alla linea 149 del file grub\&.h\&.
+.SS "unsigned char blue_mask"
+
+.PP
+Definizione alla linea 155 del file grub\&.h\&.
+.SS "unsigned char blue_position"
+
+.PP
+Definizione alla linea 155 del file grub\&.h\&.
+.SS "unsigned char bpp"
+
+.PP
+Definizione alla linea 149 del file grub\&.h\&.
+.SS "unsigned char directcolor_attributes"
+
+.PP
+Definizione alla linea 157 del file grub\&.h\&.
+.SS "unsigned short granularity"
+
+.PP
+Definizione alla linea 142 del file grub\&.h\&.
+.SS "unsigned char green_mask"
+
+.PP
+Definizione alla linea 154 del file grub\&.h\&.
+.SS "unsigned char green_position"
+
+.PP
+Definizione alla linea 154 del file grub\&.h\&.
+.SS "unsigned char image_pages"
+
+.PP
+Definizione alla linea 150 del file grub\&.h\&.
+.SS "unsigned int magic"
+
+.PP
+Definizione alla linea 42 del file mm\&.c\&.
+.SS "\fBBootInfo\fP* mbd"
+
+.SS "unsigned char memory_model"
+
+.PP
+Definizione alla linea 150 del file grub\&.h\&.
+.SS "unsigned int physbase"
+
+.PP
+Definizione alla linea 159 del file grub\&.h\&.
+.SS "unsigned short pitch"
+
+.PP
+Definizione alla linea 146 del file grub\&.h\&.
+.SS "unsigned char planes"
+
+.PP
+Definizione alla linea 149 del file grub\&.h\&.
+.SS "unsigned int realFctPtr"
+
+.PP
+Definizione alla linea 145 del file grub\&.h\&.
+.SS "unsigned char red_mask"
+
+.PP
+Definizione alla linea 153 del file grub\&.h\&.
+.SS "unsigned char red_position"
+
+.PP
+Definizione alla linea 153 del file grub\&.h\&.
+.SS "unsigned char reserved0"
+
+.PP
+Definizione alla linea 151 del file grub\&.h\&.
+.SS "unsigned int reserved1"
+
+.PP
+Definizione alla linea 160 del file grub\&.h\&.
+.SS "short reserved2"
+
+.PP
+Definizione alla linea 161 del file grub\&.h\&.
+.SS "unsigned char rsv_mask"
+
+.PP
+Definizione alla linea 156 del file grub\&.h\&.
+.SS "unsigned char rsv_position"
+
+.PP
+Definizione alla linea 156 del file grub\&.h\&.
+.SS "unsigned short segmentA"
+
+.PP
+Definizione alla linea 144 del file grub\&.h\&.
+.SS "unsigned short segmentB"
+
+.PP
+Definizione alla linea 144 del file grub\&.h\&.
+.SS "unsigned char Wchar"
+
+.PP
+Definizione alla linea 149 del file grub\&.h\&.
+.SS "unsigned char winA"
+
+.PP
+Definizione alla linea 141 del file grub\&.h\&.
+.SS "unsigned char winB"
+
+.PP
+Definizione alla linea 141 del file grub\&.h\&.
+.SS "unsigned short winsize"
+
+.PP
+Definizione alla linea 143 del file grub\&.h\&.
+.SS "unsigned short Xres"
+
+.PP
+Definizione alla linea 148 del file grub\&.h\&.
+.SS "unsigned char Ychar"
+
+.PP
+Definizione alla linea 149 del file grub\&.h\&.
+.SS "unsigned short Yres"
+
+.PP
+Definizione alla linea 148 del file grub\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

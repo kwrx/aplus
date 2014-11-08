@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>buffer</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/110.html#L18'>buffer</a>             18 src/net/slirp/slirp.c 	uint8_t* buffer;
+<a href='../S/110.html#L44'>buffer</a>             44 src/net/slirp/slirp.c 		if(slirpcard-&gt;buffer)
+<a href='../S/110.html#L45'>buffer</a>             45 src/net/slirp/slirp.c 			kfree(slirpcard-&gt;buffer);
+<a href='../S/110.html#L47'>buffer</a>             47 src/net/slirp/slirp.c 		slirpcard-&gt;buffer = (uint8_t*) kmalloc(sizeof(uint8_t) * SLIRP_BUFSIZ);
+<a href='../S/110.html#L56'>buffer</a>             56 src/net/slirp/slirp.c 		if(ipv4_recv(netif, slirpcard-&gt;buffer, slirpcard-&gt;offset) &gt; 0) {
+<a href='../S/110.html#L79'>buffer</a>             79 src/net/slirp/slirp.c 			slirpcard-&gt;buffer[slirpcard-&gt;offset++] = d;
+<a href='../S/110.html#L133'>buffer</a>            133 src/net/slirp/slirp.c 	slirpcard-&gt;buffer = NULL;
+</pre>
+</body>
+</html>

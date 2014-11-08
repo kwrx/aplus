@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="gettimeofday_8c">
+    <title>gettimeofday.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;fcntl.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/stat.h&gt;</programlisting>
+    <programlisting>#include &lt;dirent.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/time.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/times.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="gettimeofday_8c_1a0aa843ff444635c69c76f13b2f6b6ec6">sys_gettimeofday</link> (
+struct timeval * tv, struct timezone * tz)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="gettimeofday_8c_1ad590b1e420aff1c14b09d65c16c08d62">SYSCALL</link> (
+<link linkend="gettimeofday_8c_1a0aa843ff444635c69c76f13b2f6b6ec6">sys_gettimeofday</link> , 18 )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/syscall/gettimeofday.c</para>
+    </simplesect>
+</section>

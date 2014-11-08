@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>usr/src/libcrt0/src/crt0.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/178.html'>libcrt0</a>/<a href='../files/179.html'>src</a>/crt0.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L17'>[^]</a><a href='#L62'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L17' title='Defined at 17.'>__default_sighandler__</a>
+<li><a href='#L24' title='Defined at 24.'>__do_global_ctors</a>
+<li><a href='#L37' title='Defined at 37.'>__do_global_dtors</a>
+<li><a href='#L51' title='Defined at 51.'>__init_traps</a>
+<li><a href='#L62' title='Defined at 62.'>_start</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> "syscalls.c"
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;signal.h&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 
+<a name='L6'>   6 
+<a name='L7'>   7 <b>extern</b> <b>char</b>** <a href='../Y/237.html' title='Multiple used in 8 places.'>environ</a>;
+<a name='L8'>   8 <b>extern</b> <b>int</b> <a href='../D/459.html' title='Multiple defined in 3 places.'>main</a>(<b>int</b>, <b>char</b>**, <b>char</b>**);
+<a name='L9'>   9 
+<a name='L10'>  10 <b>extern</b> <b>int</b> <a href='../Y/66.html' title='Multiple used in 2 places.'>__bss_start</a>;
+<a name='L11'>  11 <b>extern</b> <b>int</b> <a href='../Y/82.html' title='Multiple used in 2 places.'>_end</a>;
+<a name='L12'>  12 
+<a name='L13'>  13 <b>extern</b> <b>int</b> __sigtramp(<b>int</b> <a href='../Y/573.html' title='Multiple used in 6 places.'>sig</a>);
+<a name='L14'>  14 
+<a name='L15'>  15 
+<a name='L16'>  16 
+<a name='L17'>  17 <b>static</b> <b>int</b> <a href='../R/176.html' title='Multiple refered from 7 places.'>__default_sighandler__</a>(<b>int</b> <a href='../Y/573.html' title='Multiple used in 6 places.'>sig</a>) <font color='red'>{</font>
+<a name='L18'>  18         <a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(<a href='../Y/573.html' title='Multiple used in 6 places.'>sig</a>, <a href='../S/84.html#L17' title='Defined at 17 in usr/src/libcrt0/src/crt0.c.'>__default_sighandler__</a>);
+<a name='L19'>  19         <a href='../Y/254.html' title='Multiple used in 2 places.'>exit</a>(<a href='../Y/573.html' title='Multiple used in 6 places.'>sig</a>);
+<a name='L20'>  20 <font color='red'>}</font>
+<a name='L21'>  21 
+<a name='L22'>  22 
+<a name='L23'>  23 <font color='darkred'>#if</font> 0
+<a name='L24'>  24 <b>static</b> <b>void</b> <a href='../S/84.html#L88' title='Refered from 88 in usr/src/libcrt0/src/crt0.c.'>__do_global_ctors</a>() <font color='red'>{</font>
+<a name='L25'>  25         <b>extern</b> <b>int</b> <a href='../Y/69.html' title='Multiple used in 2 places.'>__ctors_start</a>;
+<a name='L26'>  26         <b>extern</b> <b>int</b> <a href='../Y/68.html' title='Multiple used in 2 places.'>__ctors_end</a>;
+<a name='L27'>  27 
+<a name='L28'>  28         <b>void</b> (**<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>) () = (<b>void</b> (**) ()) &amp;<a href='../Y/69.html' title='Multiple used in 2 places.'>__ctors_start</a>;
+<a name='L29'>  29         <b>void</b> (**<a href='../Y/261.html' title='Multiple used in 4 places.'>fe</a>) () = (<b>void</b> (**) ()) &amp;<a href='../Y/68.html' title='Multiple used in 2 places.'>__ctors_end</a>;
+<a name='L30'>  30         
+<a name='L31'>  31         <b>while</b>(<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a> &lt; <a href='../Y/261.html' title='Multiple used in 4 places.'>fe</a>) <font color='red'>{</font>
+<a name='L32'>  32                 (*<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>) ();
+<a name='L33'>  33                 <a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>++;
+<a name='L34'>  34         <font color='red'>}</font>
+<a name='L35'>  35 <font color='red'>}</font>
+<a name='L36'>  36 
+<a name='L37'>  37 <b>static</b> <b>void</b> <a href='../S/84.html#L87' title='Refered from 87 in usr/src/libcrt0/src/crt0.c.'>__do_global_dtors</a>() <font color='red'>{</font>
+<a name='L38'>  38         <b>extern</b> <b>int</b> <a href='../Y/72.html' title='Multiple used in 2 places.'>__dtors_start</a>;
+<a name='L39'>  39         <b>extern</b> <b>int</b> <a href='../Y/71.html' title='Multiple used in 2 places.'>__dtors_end</a>;
+<a name='L40'>  40 
+<a name='L41'>  41         <b>void</b> (*<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>) () = (<b>void</b> (*) ()) &amp;<a href='../Y/72.html' title='Multiple used in 2 places.'>__dtors_start</a>;
+<a name='L42'>  42         <b>void</b> (*<a href='../Y/261.html' title='Multiple used in 4 places.'>fe</a>) () = (<b>void</b> (*) ()) &amp;<a href='../Y/71.html' title='Multiple used in 2 places.'>__dtors_end</a>;
+<a name='L43'>  43         
+<a name='L44'>  44         <b>while</b>(<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a> &lt; <a href='../Y/261.html' title='Multiple used in 4 places.'>fe</a>) <font color='red'>{</font>
+<a name='L45'>  45                 (*<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>) ();
+<a name='L46'>  46                 <a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>++;
+<a name='L47'>  47         <font color='red'>}</font>
+<a name='L48'>  48 <font color='red'>}</font>
+<a name='L49'>  49 <font color='darkred'>#endif</font>
+<a name='L50'>  50 
+<a name='L51'>  51 <b>static</b> <b>void</b> <a href='../S/84.html#L84' title='Refered from 84 in usr/src/libcrt0/src/crt0.c.'>__init_traps</a>() <font color='red'>{</font>
+<a name='L52'>  52         <a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(SIGABRT, <a href='../S/84.html#L17' title='Defined at 17 in usr/src/libcrt0/src/crt0.c.'>__default_sighandler__</a>);
+<a name='L53'>  53         <a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(SIGFPE, <a href='../S/84.html#L17' title='Defined at 17 in usr/src/libcrt0/src/crt0.c.'>__default_sighandler__</a>);
+<a name='L54'>  54         <a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(SIGILL, <a href='../S/84.html#L17' title='Defined at 17 in usr/src/libcrt0/src/crt0.c.'>__default_sighandler__</a>);
+<a name='L55'>  55         <a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(SIGINT, <a href='../S/84.html#L17' title='Defined at 17 in usr/src/libcrt0/src/crt0.c.'>__default_sighandler__</a>);
+<a name='L56'>  56         <a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(SIGSEGV, <a href='../S/84.html#L17' title='Defined at 17 in usr/src/libcrt0/src/crt0.c.'>__default_sighandler__</a>);
+<a name='L57'>  57         <a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(SIGTERM, <a href='../S/84.html#L17' title='Defined at 17 in usr/src/libcrt0/src/crt0.c.'>__default_sighandler__</a>);
+<a name='L58'>  58 <font color='red'>}</font>
+<a name='L59'>  59 
+<a name='L60'>  60 
+<a name='L61'>  61 <b>__attribute__</b>((<a href='../Y/416.html' title='Multiple used in 3 places.'>noreturn</a>))
+<a name='L62'>  62 <b>void</b> _start() <font color='red'>{</font>
+<a name='L63'>  63         
+<a name='L64'>  64         <b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>;
+<a name='L65'>  65         <b>for</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = (<b>int</b>) &amp;<a href='../Y/66.html' title='Multiple used in 2 places.'>__bss_start</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; (<b>int</b>) &amp;<a href='../Y/82.html' title='Multiple used in 2 places.'>_end</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)
+<a name='L66'>  66                 *(<b>char</b>*) <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0;
+<a name='L67'>  67 
+<a name='L68'>  68 
+<a name='L69'>  69         <a href='../Y/237.html' title='Multiple used in 8 places.'>environ</a> = (<b>char</b>**) <a href='../Y/96.html' title='Multiple used in 2 places.'>aplus_envp</a>();
+<a name='L70'>  70         <b>char</b>** <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a> = (<b>char</b>**) <a href='../Y/95.html' title='Multiple used in 2 places.'>aplus_argv</a>();
+<a name='L71'>  71 
+<a name='L72'>  72         <b>int</b> <a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a> = 0;
+<a name='L73'>  73         <b>while</b>(<a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>[<a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a>])
+<a name='L74'>  74                 <a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a> += 1;
+<a name='L75'>  75 
+<a name='L76'>  76 
+<a name='L77'>  77         <a href='../Y/437.html' title='Multiple used in 6 places.'>open</a>("/dev/stdin", 0, 0644);
+<a name='L78'>  78         <a href='../Y/437.html' title='Multiple used in 6 places.'>open</a>("/dev/stdout", 0, 0644);
+<a name='L79'>  79         <a href='../Y/437.html' title='Multiple used in 6 places.'>open</a>("/dev/stderr", 0, 0644);
+<a name='L80'>  80 
+<a name='L81'>  81 
+<a name='L82'>  82         <a href='../Y/98.html' title='Multiple used in 2 places.'>aplus_install_sighandler</a>(__sigtramp);
+<a name='L83'>  83         _init_signal();
+<a name='L84'>  84         <a href='../S/84.html#L51' title='Defined at 51 in usr/src/libcrt0/src/crt0.c.'>__init_traps</a>();
+<a name='L85'>  85 
+<a name='L86'>  86 <font color='darkred'>#if</font> 0
+<a name='L87'>  87         atexit(<a href='../S/84.html#L37' title='Defined at 37 in usr/src/libcrt0/src/crt0.c.'>__do_global_dtors</a>);
+<a name='L88'>  88         <a href='../S/84.html#L24' title='Defined at 24 in usr/src/libcrt0/src/crt0.c.'>__do_global_ctors</a>();
+<a name='L89'>  89 <font color='darkred'>#endif</font>
+<a name='L90'>  90 
+<a name='L91'>  91         <a href='../Y/254.html' title='Multiple used in 2 places.'>exit</a>(<a href='../D/459.html' title='Multiple defined in 3 places.'>main</a>(<a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>, <a href='../Y/237.html' title='Multiple used in 8 places.'>environ</a>));
+<a name='L92'>  92 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L17'>[^]</a><a href='#L62'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

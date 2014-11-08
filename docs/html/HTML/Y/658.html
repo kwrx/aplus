@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>syslist</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/163.html#L12'>syslist</a>            12 src/arch/syscall.c 	list_t* syslist = attribute("syscall");
+<a href='../S/163.html#L14'>syslist</a>            14 src/arch/syscall.c 	syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist-&gt;size);
+<a href='../S/163.html#L15'>syslist</a>            15 src/arch/syscall.c 	memset(syscall_handlers, 0, sizeof(void*) * syslist-&gt;size);
+<a href='../S/163.html#L17'>syslist</a>            17 src/arch/syscall.c 	list_foreach(value, syslist) {
+<a href='../S/163.html#L23'>syslist</a>            23 src/arch/syscall.c 	kprintf("syscall: loaded %d handlers\n", syslist-&gt;size);
+<a href='../S/163.html#L24'>syslist</a>            24 src/arch/syscall.c 	list_destroy(syslist);
+</pre>
+</body>
+</html>

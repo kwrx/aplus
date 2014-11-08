@@ -1,0 +1,98 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/pthread_mutexattr.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/pthread_mutexattr.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L8'>[^]</a><a href='#L62'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L8' title='Defined at 8.'>pthread_mutexattr_init</a>
+<li><a href='#L20' title='Defined at 20.'>pthread_mutexattr_destroy</a>
+<li><a href='#L32' title='Defined at 32.'>pthread_mutexattr_getpshared</a>
+<li><a href='#L42' title='Defined at 42.'>pthread_mutexattr_setpshared</a>
+<li><a href='#L52' title='Defined at 52.'>pthread_mutexattr_gettype</a>
+<li><a href='#L62' title='Defined at 62.'>pthread_mutexattr_settype</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='43.html'>pthread.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> "<a href='50.html'>pthread_internal.h</a>"
+<a name='L6'>   6 
+<a name='L7'>   7 
+<a name='L8'>   8 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L220' title='Refered from 220 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_init</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L9'>   9         <b>if</b>(!<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L10'>  10                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L11'>  11                 <b>return</b> 1;
+<a name='L12'>  12         <font color='red'>}</font>
+<a name='L13'>  13 
+<a name='L14'>  14         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = 0;
+<a name='L15'>  15         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a> = <a href='../S/43.html#L79' title='Defined at 79 in usr/src/libpthread/include/pthread.h.'>PTHREAD_MUTEX_DEFAULT</a>;
+<a name='L16'>  16         
+<a name='L17'>  17         <b>return</b> 0;
+<a name='L18'>  18 <font color='red'>}</font>
+<a name='L19'>  19 
+<a name='L20'>  20 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L221' title='Refered from 221 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_destroy</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L21'>  21         <b>if</b>(!<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L22'>  22                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L23'>  23                 <b>return</b> 1;
+<a name='L24'>  24         <font color='red'>}</font>
+<a name='L25'>  25 
+<a name='L26'>  26         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = 0;
+<a name='L27'>  27         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a> = 0;
+<a name='L28'>  28         
+<a name='L29'>  29         <b>return</b> 0;
+<a name='L30'>  30 <font color='red'>}</font>
+<a name='L31'>  31 
+<a name='L32'>  32 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L222' title='Refered from 222 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_getpshared</a>(<b>const</b> <a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>) <font color='red'>{</font>
+<a name='L33'>  33         <b>if</b>(!<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L34'>  34                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L35'>  35                 <b>return</b> 1;
+<a name='L36'>  36         <font color='red'>}</font>
+<a name='L37'>  37 
+<a name='L38'>  38         *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L39'>  39         <b>return</b> 0;
+<a name='L40'>  40 <font color='red'>}</font>
+<a name='L41'>  41 
+<a name='L42'>  42 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L223' title='Refered from 223 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_setpshared</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>) <font color='red'>{</font>
+<a name='L43'>  43         <b>if</b>(!<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L44'>  44                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L45'>  45                 <b>return</b> 1;
+<a name='L46'>  46         <font color='red'>}</font>
+<a name='L47'>  47 
+<a name='L48'>  48         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L49'>  49         <b>return</b> 0;
+<a name='L50'>  50 <font color='red'>}</font>
+<a name='L51'>  51 
+<a name='L52'>  52 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L224' title='Refered from 224 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_gettype</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>) <font color='red'>{</font>
+<a name='L53'>  53         <b>if</b>(!<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L54'>  54                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L55'>  55                 <b>return</b> 1;
+<a name='L56'>  56         <font color='red'>}</font>
+<a name='L57'>  57 
+<a name='L58'>  58         *<a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a> = <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>;
+<a name='L59'>  59         <b>return</b> 0;
+<a name='L60'>  60 <font color='red'>}</font>
+<a name='L61'>  61 
+<a name='L62'>  62 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L225' title='Refered from 225 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_settype</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>) <font color='red'>{</font>
+<a name='L63'>  63         <b>if</b>(!<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L64'>  64                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L65'>  65                 <b>return</b> 1;
+<a name='L66'>  66         <font color='red'>}</font>
+<a name='L67'>  67 
+<a name='L68'>  68         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a> = <a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>;
+<a name='L69'>  69         <b>return</b> 0;
+<a name='L70'>  70 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L8'>[^]</a><a href='#L62'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

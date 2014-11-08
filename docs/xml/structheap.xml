@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structheap" kind="struct" prot="public">
+    <compoundname>heap</compoundname>
+    <includes refid="mm_8h" local="no">mm.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref> *</type>
+        <definition>uint32_t* heap::bitmap</definition>
+        <argsstring></argsstring>
+        <name>bitmap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="63" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structheap_1a486fb531d24b9ee5f17b7ffe96689705" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t heap::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="64" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t heap::used</definition>
+        <argsstring></argsstring>
+        <name>used</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="65" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" prot="public" static="no" mutable="no">
+        <type>void *(*</type>
+        <definition>void*(* heap::alloc)(struct heap *, size_t)</definition>
+        <argsstring>)(struct heap *, size_t)</argsstring>
+        <name>alloc</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="67" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structheap_1ae53b14c50bbb9daab4346cd0873bda02" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* heap::free)(struct heap *, void *, size_t)</definition>
+        <argsstring>)(struct heap *, void *, size_t)</argsstring>
+        <name>free</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="68" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="39">
+        <label>heap</label>
+        <link refid="structheap"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="62" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="62" bodyend="69"/>
+    <listofallmembers>
+      <member refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" prot="public" virt="non-virtual"><scope>heap</scope><name>alloc</name></member>
+      <member refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" prot="public" virt="non-virtual"><scope>heap</scope><name>bitmap</name></member>
+      <member refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" prot="public" virt="non-virtual"><scope>heap</scope><name>free</name></member>
+      <member refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" prot="public" virt="non-virtual"><scope>heap</scope><name>size</name></member>
+      <member refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" prot="public" virt="non-virtual"><scope>heap</scope><name>used</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

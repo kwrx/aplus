@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>image</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L79'>image</a>              79 src/arch/task.c 	child-&gt;image.vaddr = current_task-&gt;image.vaddr;
+<a href='../S/159.html#L80'>image</a>              80 src/arch/task.c 	child-&gt;image.length = current_task-&gt;image.length;
+<a href='../S/159.html#L83'>image</a>              83 src/arch/task.c 	if(current_task-&gt;image.ptr) {
+<a href='../S/159.html#L84'>image</a>              84 src/arch/task.c 		void* addr = (void*) kmalloc(child-&gt;image.length);
+<a href='../S/159.html#L85'>image</a>              85 src/arch/task.c 		memcpy(addr, (void*) child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L87'>image</a>              87 src/arch/task.c 		vmm_map(child-&gt;context.cr3, mm_paddr(addr), child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L88'>image</a>              88 src/arch/task.c 		child-&gt;image.ptr = (uint32_t) mm_paddr(addr);
+<a href='../S/159.html#L142'>image</a>             142 src/arch/task.c 	child-&gt;image.vaddr = current_task-&gt;image.vaddr;
+<a href='../S/159.html#L143'>image</a>             143 src/arch/task.c 	child-&gt;image.length = current_task-&gt;image.length;
+<a href='../S/159.html#L144'>image</a>             144 src/arch/task.c 	child-&gt;image.ptr = current_task-&gt;image.ptr;
+<a href='../S/115.html#L111'>image</a>             111 src/exec.c     void* elf32_load(void* image) {
+<a href='../S/115.html#L112'>image</a>             112 src/exec.c     	if(image == NULL) {
+<a href='../S/115.html#L117'>image</a>             117 src/exec.c     	if(elf32_check(image) &lt; 0)
+<a href='../S/115.html#L120'>image</a>             120 src/exec.c     	elf32_hdr_t* hdr = (elf32_hdr_t*) image;
+<a href='../S/90.html#L93'>image</a>              93 src/include/aplus/task.h 	} image;
+<a href='../S/143.html#L155'>image</a>             155 src/sched.c    	kfree((void*) task-&gt;image.ptr);
+<a href='../S/143.html#L188'>image</a>             188 src/sched.c    	if(current_task-&gt;image.vaddr == 0)
+<a href='../S/143.html#L192'>image</a>             192 src/sched.c    		return (void*) ((uint32_t) current_task-&gt;image.vaddr + current_task-&gt;image.length);
+<a href='../S/143.html#L194'>image</a>             194 src/sched.c    	current_task-&gt;image.length += increment;
+<a href='../S/143.html#L195'>image</a>             195 src/sched.c    	current_task-&gt;image.ptr = (uint32_t) krealloc((void*) current_task-&gt;image.ptr, current_task-&gt;image.length);
+<a href='../S/143.html#L196'>image</a>             196 src/sched.c    	current_task-&gt;image.vaddr = vmm_map(current_task-&gt;context.cr3, mm_paddr((void*) current_task-&gt;image.ptr), current_task-&gt;image.vaddr, current_task-&gt;image.length, VMM_FLAGS_DEFAULT);
+<a href='../S/143.html#L198'>image</a>             198 src/sched.c    	return (void*) ((uint32_t) current_task-&gt;image.vaddr + current_task-&gt;image.length);
+<a href='../S/141.html#L24'>image</a>              24 src/syscall/execve.c 	void* image = kmalloc(size);
+<a href='../S/141.html#L25'>image</a>              25 src/syscall/execve.c 	if(!image) {
+<a href='../S/141.html#L32'>image</a>              32 src/syscall/execve.c 	if(sys_read(fd, image, size) &lt; size) {
+<a href='../S/141.html#L34'>image</a>              34 src/syscall/execve.c 		kfree(image);
+<a href='../S/141.html#L42'>image</a>              42 src/syscall/execve.c 	void (*entry) () = (void (*) ()) elf32_load(image);
+<a href='../S/141.html#L56'>image</a>              56 src/syscall/execve.c 	kfree(image);
+</pre>
+</body>
+</html>

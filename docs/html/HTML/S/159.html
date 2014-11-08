@@ -1,0 +1,233 @@
+<html>
+<head>
+<title>src/arch/task.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/165.html'>arch</a>/task.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L49'>[^]</a><a href='#L179'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L49' title='Defined at 49.'>task_fork</a>
+<li><a href='#L115' title='Defined at 115.'>task_clone</a>
+<li><a href='#L165' title='Defined at 165.'>task_switch</a>
+<li><a href='#L179' title='Defined at 179.'>task_init</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L7'>   7 
+<a name='L8'>   8 
+<a name='L9'>   9 <b>__asm__</b> (
+<a name='L10'>  10         ".global task_context_switch            \n"
+<a name='L11'>  11         "task_context_switch:                           \n"
+<a name='L12'>  12         "       push ebp                                                \n"
+<a name='L13'>  13         "       mov ebp, esp                                    \n"
+<a name='L14'>  14         "       pushf                                                   \n"
+<a name='L15'>  15         "       push edx                                                \n"
+<a name='L16'>  16         "       push eax                                                \n"     
+<a name='L17'>  17         "       push ecx                                                \n"
+<a name='L18'>  18         "       push ebx                                                \n"
+<a name='L19'>  19         "       push esi                                                \n"
+<a name='L20'>  20         "       push edi                                                \n"
+<a name='L21'>  21         "       mov eax, [ebp + 8]                              \n"
+<a name='L22'>  22         "       mov edx, [ebp + 12]                             \n"
+<a name='L23'>  23         "       mov [eax], esp                                  \n"
+<a name='L24'>  24         "       mov esp, [edx]                                  \n"
+<a name='L25'>  25         "       pop edi                                                 \n"
+<a name='L26'>  26         "       pop esi                                                 \n"
+<a name='L27'>  27         "       pop ebx                                                 \n"
+<a name='L28'>  28         "       pop ecx                                                 \n"
+<a name='L29'>  29         "       pop eax                                                 \n"
+<a name='L30'>  30         "       pop edx                                                 \n"
+<a name='L31'>  31         "       popf                                                    \n"
+<a name='L32'>  32         "       pop ebp                                                 \n"
+<a name='L33'>  33         "       sti                                                             \n"
+<a name='L34'>  34         "ret                                                            \n"
+<a name='L35'>  35 );
+<a name='L36'>  36 
+<a name='L37'>  37 
+<a name='L38'>  38 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L39'>  39 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/346.html' title='Multiple used in 5 places.'>kernel_task</a>;
+<a name='L40'>  40 <b>extern</b> <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>;
+<a name='L41'>  41 
+<a name='L42'>  42 <b>extern</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a>;
+<a name='L43'>  43 <b>extern</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>* <a href='../Y/185.html' title='Multiple used in 7 places.'>current_vmm</a>;
+<a name='L44'>  44 
+<a name='L45'>  45 <b>extern</b> <b>volatile</b> <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/751.html' title='Multiple used in 39 places.'>vfs_root</a>;
+<a name='L46'>  46 <b>extern</b> <b>void</b> task_context_switch(<a href='../S/90.html#L69' title='Defined at 69 in src/include/aplus/task.h.'>task_env_t</a>** <a href='../Y/430.html' title='Multiple used in 3 places.'>old</a>, <a href='../S/90.html#L69' title='Defined at 69 in src/include/aplus/task.h.'>task_env_t</a>** new);
+<a name='L47'>  47 
+<a name='L48'>  48 
+<a name='L49'>  49 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../S/122.html#L10' title='Refered from 10 in src/syscall/fork.c.'>task_fork</a>() <font color='red'>{</font>
+<a name='L50'>  50         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L51'>  51                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L52'>  52 
+<a name='L53'>  53         <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>));
+<a name='L54'>  54         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>, 0, <b>sizeof</b>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>));
+<a name='L55'>  55 
+<a name='L56'>  56         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> = <a href='../S/143.html#L59' title='Defined at 59 in src/sched.c.'>schedule_nextpid</a>();
+<a name='L57'>  57         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>;
+<a name='L58'>  58         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/247.html' title='Multiple used in 6 places.'>exe</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/247.html' title='Multiple used in 6 places.'>exe</a>;
+<a name='L59'>  59         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a>;
+<a name='L60'>  60         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a>;
+<a name='L61'>  61         
+<a name='L62'>  62         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a> = <a href='../S/90.html#L40' title='Defined at 40 in src/include/aplus/task.h.'>TASK_STATE_ALIVE</a>;
+<a name='L63'>  63         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a>;
+<a name='L64'>  64         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/157.html' title='Multiple used in 7 places.'>clock</a> = 0;
+<a name='L65'>  65         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/460.html' title='Multiple used in 16 places.'>parent</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L66'>  66 
+<a name='L67'>  67         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/575.html' title='Multiple used in 3 places.'>signal_handler</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/575.html' title='Multiple used in 3 places.'>signal_handler</a>;
+<a name='L68'>  68         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/576.html' title='Multiple used in 4 places.'>signal_sig</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/576.html' title='Multiple used in 4 places.'>signal_sig</a>;
+<a name='L69'>  69 
+<a name='L70'>  70         
+<a name='L71'>  71         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../S/90.html#L35' title='Defined at 35 in src/include/aplus/task.h.'>TASK_MAX_FD</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)
+<a name='L72'>  72                 <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>];
+<a name='L73'>  73 
+<a name='L74'>  74 
+<a name='L75'>  75         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a> = <a href='../S/150.html#L151' title='Defined at 151 in src/mm/paging.c.'>vmm_create</a>();
+<a name='L76'>  76         <a href='../S/150.html#L138' title='Defined at 138 in src/mm/paging.c.'>vmm_mapkernel</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>);
+<a name='L77'>  77 
+<a name='L78'>  78 
+<a name='L79'>  79         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>;
+<a name='L80'>  80         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L81'>  81 
+<a name='L82'>  82         
+<a name='L83'>  83         <b>if</b>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>) <font color='red'>{</font>
+<a name='L84'>  84                 <b>void</b>* <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a> = (<b>void</b>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L85'>  85                 <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>, (<b>void</b>*) <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>, <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L86'>  86 
+<a name='L87'>  87                 <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>, <a href='../S/87.html#L71' title='Defined at 71 in src/include/aplus/mm.h.'>mm_paddr</a>(<a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>), <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>, <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L88'>  88                 <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/87.html#L71' title='Defined at 71 in src/include/aplus/mm.h.'>mm_paddr</a>(<a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>);
+<a name='L89'>  89         <font color='red'>}</font>
+<a name='L90'>  90 
+<a name='L91'>  91         
+<a name='L92'>  92         
+<a name='L93'>  93         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>;
+<a name='L94'>  94         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>;
+<a name='L95'>  95 
+<a name='L96'>  96         <b>void</b>* <a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> = (<b>void</b>*) <a href='../S/87.html#L85' title='Defined at 85 in src/include/aplus/mm.h.'>mm_align</a>(<a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a> * 2));
+<a name='L97'>  97         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>, (<b>void</b>*) <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>, <a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a>);
+<a name='L98'>  98 
+<a name='L99'>  99         <a href='../S/150.html#L109' title='Defined at 109 in src/mm/paging.c.'>vmm_umap</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>, <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>, <a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a>);
+<a name='L100'> 100         <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>, <a href='../S/87.html#L71' title='Defined at 71 in src/include/aplus/mm.h.'>mm_paddr</a>(<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>), <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>, <a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a>, <a href='../S/87.html#L52' title='Defined at 52 in src/include/aplus/mm.h.'>VMM_FLAGS_DEFAULT</a> | <a href='../S/87.html#L51' title='Defined at 51 in src/include/aplus/mm.h.'>VMM_FLAGS_USER</a>);
+<a name='L101'> 101         
+<a name='L102'> 102 
+<a name='L103'> 103         <i><font color='green'>/* TODO: Set EIP for child */</font></i>
+<a name='L104'> 104         
+<a name='L105'> 105         <b>if</b>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a> == <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>)
+<a name='L106'> 106                 <b>return</b> 0;
+<a name='L107'> 107         
+<a name='L108'> 108 
+<a name='L109'> 109         <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>);
+<a name='L110'> 110         <b>return</b> <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>;
+<a name='L111'> 111 <font color='red'>}</font>
+<a name='L112'> 112 
+<a name='L113'> 113 
+<a name='L114'> 114 
+<a name='L115'> 115 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../S/126.html#L18' title='Refered from 18 in src/syscall/clone.c.'>task_clone</a>(<b>void</b>* <a href='../Y/235.html' title='Multiple used in 11 places.'>entry</a>, <b>void</b>* <a href='../Y/101.html' title='Multiple used in 7 places.'>arg</a>, <b>void</b>* <a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>) <font color='red'>{</font>
+<a name='L116'> 116         <b>if</b>(<a href='../Y/235.html' title='Multiple used in 11 places.'>entry</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>)
+<a name='L117'> 117                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L118'> 118 
+<a name='L119'> 119         <b>if</b>(<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>)
+<a name='L120'> 120                 <a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> = (<b>void</b>*) ((<b>int</b>) <a href='../S/87.html#L85' title='Defined at 85 in src/include/aplus/mm.h.'>mm_align</a>(<a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a> * 2)) + <a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a>);
+<a name='L121'> 121 
+<a name='L122'> 122         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>, 0, <a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a>);
+<a name='L123'> 123 
+<a name='L124'> 124 
+<a name='L125'> 125         <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>));
+<a name='L126'> 126         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>, 0, <b>sizeof</b>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>));
+<a name='L127'> 127 
+<a name='L128'> 128         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> = <a href='../S/143.html#L59' title='Defined at 59 in src/sched.c.'>schedule_nextpid</a>();
+<a name='L129'> 129         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>;
+<a name='L130'> 130         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/247.html' title='Multiple used in 6 places.'>exe</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/247.html' title='Multiple used in 6 places.'>exe</a>;
+<a name='L131'> 131         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a>;
+<a name='L132'> 132         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a>;
+<a name='L133'> 133         
+<a name='L134'> 134         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a> = <a href='../S/90.html#L40' title='Defined at 40 in src/include/aplus/task.h.'>TASK_STATE_ALIVE</a>;
+<a name='L135'> 135         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a>;
+<a name='L136'> 136         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/157.html' title='Multiple used in 7 places.'>clock</a> = 0;
+<a name='L137'> 137         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/460.html' title='Multiple used in 16 places.'>parent</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L138'> 138 
+<a name='L139'> 139         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/575.html' title='Multiple used in 3 places.'>signal_handler</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/575.html' title='Multiple used in 3 places.'>signal_handler</a>;
+<a name='L140'> 140         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/576.html' title='Multiple used in 4 places.'>signal_sig</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/576.html' title='Multiple used in 4 places.'>signal_sig</a>;
+<a name='L141'> 141 
+<a name='L142'> 142         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>;
+<a name='L143'> 143         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L144'> 144         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>;
+<a name='L145'> 145                 
+<a name='L146'> 146         
+<a name='L147'> 147         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>;
+<a name='L148'> 148         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> - <a href='../S/90.html#L37' title='Defined at 37 in src/include/aplus/task.h.'>TASK_STACKSIZE</a>;
+<a name='L149'> 149         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a> = (<a href='../S/90.html#L69' title='Defined at 69 in src/include/aplus/task.h.'>task_env_t</a>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> - <b>sizeof</b>(<a href='../S/90.html#L69' title='Defined at 69 in src/include/aplus/task.h.'>task_env_t</a>));
+<a name='L150'> 150 
+<a name='L151'> 151         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>-&gt;<a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/101.html' title='Multiple used in 7 places.'>arg</a>;
+<a name='L152'> 152         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>-&gt;<a href='../Y/232.html' title='Multiple used in 4 places.'>eip</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/235.html' title='Multiple used in 11 places.'>entry</a>;
+<a name='L153'> 153         <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>-&gt;<a href='../Y/226.html' title='Multiple used in 6 places.'>ebp</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>; 
+<a name='L154'> 154 
+<a name='L155'> 155         
+<a name='L156'> 156         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../S/90.html#L35' title='Defined at 35 in src/include/aplus/task.h.'>TASK_MAX_FD</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)
+<a name='L157'> 157                 <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>];
+<a name='L158'> 158 
+<a name='L159'> 159 
+<a name='L160'> 160         <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>);
+<a name='L161'> 161         <b>return</b> <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>;
+<a name='L162'> 162 <font color='red'>}</font>
+<a name='L163'> 163 
+<a name='L164'> 164 
+<a name='L165'> 165 <b>void</b> <a href='../R/510.html' title='Multiple refered from 3 places.'>task_switch</a>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a>) <font color='red'>{</font>
+<a name='L166'> 166         
+<a name='L167'> 167         <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/430.html' title='Multiple used in 3 places.'>old</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L168'> 168         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a> = <a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a>;
+<a name='L169'> 169 
+<a name='L170'> 170 
+<a name='L171'> 171         <a href='../S/150.html#L54' title='Defined at 54 in src/mm/paging.c.'>vmm_switch</a>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>);
+<a name='L172'> 172         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x20, 0x20);
+<a name='L173'> 173 
+<a name='L174'> 174         task_context_switch(&amp;<a href='../Y/430.html' title='Multiple used in 3 places.'>old</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>, &amp;<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>);
+<a name='L175'> 175 <font color='red'>}</font>
+<a name='L176'> 176 
+<a name='L177'> 177 
+<a name='L178'> 178 
+<a name='L179'> 179 <b>int</b> <a href='../S/143.html#L66' title='Refered from 66 in src/sched.c.'>task_init</a>() <font color='red'>{</font>
+<a name='L180'> 180 
+<a name='L181'> 181         <b>extern</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/345.html' title='Multiple used in 2 places.'>kernel_stack</a>;
+<a name='L182'> 182         
+<a name='L183'> 183         <a href='../Y/346.html' title='Multiple used in 5 places.'>kernel_task</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>));
+<a name='L184'> 184         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>, 0, <b>sizeof</b>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>));
+<a name='L185'> 185         
+<a name='L186'> 186         
+<a name='L187'> 187         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/236.html' title='Multiple used in 15 places.'>env</a> = (<a href='../S/90.html#L69' title='Defined at 69 in src/include/aplus/task.h.'>task_env_t</a>*) 0;
+<a name='L188'> 188         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/347.html' title='Multiple used in 9 places.'>kernel_vmm</a>;
+<a name='L189'> 189         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) &amp;<a href='../Y/345.html' title='Multiple used in 2 places.'>kernel_stack</a>;
+<a name='L190'> 190         
+<a name='L191'> 191         
+<a name='L192'> 192         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> = <a href='../S/143.html#L59' title='Defined at 59 in src/sched.c.'>schedule_nextpid</a>();
+<a name='L193'> 193         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = (<a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>*) <a href='../Y/751.html' title='Multiple used in 39 places.'>vfs_root</a>;
+<a name='L194'> 194         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a> = (<a href='../Y/717.html' title='Multiple used in 8 places.'>uid_t</a>) 0;
+<a name='L195'> 195         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a> = (<a href='../Y/287.html' title='Multiple used in 12 places.'>gid_t</a>) 0;
+<a name='L196'> 196         
+<a name='L197'> 197         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a> = <a href='../S/90.html#L40' title='Defined at 40 in src/include/aplus/task.h.'>TASK_STATE_ALIVE</a>;
+<a name='L198'> 198         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a> = <a href='../S/90.html#L46' title='Defined at 46 in src/include/aplus/task.h.'>TASK_PRIORITY_REGULAR</a>;
+<a name='L199'> 199         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/460.html' title='Multiple used in 16 places.'>parent</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L200'> 200 
+<a name='L201'> 201 
+<a name='L202'> 202         <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>);
+<a name='L203'> 203         <a href='../S/159.html#L165' title='Defined at 165 in src/arch/task.c.'>task_switch</a>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>);
+<a name='L204'> 204 
+<a name='L205'> 205 
+<a name='L206'> 206         <b>return</b> 0;
+<a name='L207'> 207 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L49'>[^]</a><a href='#L179'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

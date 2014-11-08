@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>usr/src/libposix/src/lstat.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/lstat.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L5'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L5' title='Defined at 5.'>lstat</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L3'>   3 
+<a name='L4'>   4 
+<a name='L5'>   5 <b>int</b> lstat(<b>const</b> <b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <b>struct</b> <a href='../Y/608.html' title='Multiple used in 10 places.'>stat</a>* <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>) <font color='red'>{</font>
+<a name='L6'>   6         <b>int</b> <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> = <a href='../Y/437.html' title='Multiple used in 6 places.'>open</a>(<a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <a href='../Y/30.html' title='Multiple used in 5 places.'>O_RDONLY</a> | <a href='../S/10.html#L46' title='Defined at 46 in usr/src/libposix/include/sys/dirent.h.'>O_NOFOLLOW</a>, 0644);
+<a name='L7'>   7         <b>if</b>(<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> &lt; 0)
+<a name='L8'>   8                 <b>return</b> -1;
+<a name='L9'>   9 
+<a name='L10'>  10         <b>int</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> = <a href='../Y/277.html' title='Multiple used in 4 places.'>fstat</a>(<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>, <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>);
+<a name='L11'>  11         <a href='../Y/160.html' title='Multiple used in 3 places.'>close</a>(<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>);
+<a name='L12'>  12         <b>return</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>;
+<a name='L13'>  13 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L5'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

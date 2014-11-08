@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="mm_8h">
+    <title>mm.h File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structheap">heap</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</link> 0x40000000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1afbad6879737307d726ae456844b05320">MM_VSIZE</link> (0xFFFFFFFF - MM_VBASE)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a1b54983be7272f850a1eef88a78db6f8">MM_LBASE</link> 0x00000000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a4b54a4ab7755c6c4dfebb91b75d9d956">MM_LSIZE</link> 0x00800000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a61d9fae3cb95715f92171f153d9ff018">MM_UBASE</link> 0x00A00000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a600b21bbb74401132349a1325dadfdbe">MM_USIZE</link> (<link linkend="mm_8h_1ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</link> - <link linkend="mm_8h_1a61d9fae3cb95715f92171f153d9ff018">MM_UBASE</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a9da196e1c5da9da3454cbcfa6d56c96e">VMM_FLAGS_PRESENT</link> 0x01</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a39ac3cb44ab9c4695214a59a3d199557">VMM_FLAGS_RDWR</link> 0x02</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a4f995b267ef97c4638c27370badecb21">VMM_FLAGS_USER</link> 0x04</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce">VMM_FLAGS_DEFAULT</link> (<link linkend="mm_8h_1a9da196e1c5da9da3454cbcfa6d56c96e">VMM_FLAGS_PRESENT</link> | <link linkend="mm_8h_1a39ac3cb44ab9c4695214a59a3d199557">VMM_FLAGS_RDWR</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a17f8a27ab3548000488ca27d70785240">VMM_MAX_MEMORY</link> (0xFFFFFFFF - MM_VBASE)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1ac4551bbc9efabf8378f35498f80b4679">BLKSIZE</link> 0x1000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</link> 0x1234</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structheap">heap</link>  <link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void * <link linkend="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</link> (
+void * vaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void * <link linkend="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</link> (
+void * paddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void * <link linkend="mm_8h_1acb964323e95c799eb3896dce8c61d329">mm_align</link> (
+void * vaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</link> (
+size_t )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="mm_8h_1acee1960bdb3a19cb495341ec725cafef">kfree</link> (
+void * )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="mm_8h_1a2e2878c4e9b542b6e68d7ceccfdcfc86">krealloc</link> (
+void * , size_t )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/mm.h</para>
+    </simplesect>
+</section>

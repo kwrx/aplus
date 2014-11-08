@@ -1,0 +1,230 @@
+.TH "usr/src/libpthread/src/pthread_cond.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_cond.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <sched\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_cond_init\fP (\fBpthread_cond_t\fP *cond, const \fBpthread_condattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_cond_destroy\fP (\fBpthread_cond_t\fP *cond)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_cond_timedwait\fP (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_cond_wait\fP (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_cond_signal\fP (\fBpthread_cond_t\fP *cond)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_cond_broadcast\fP (\fBpthread_cond_t\fP *cond)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBEXTERN\fP \fBpthread_context_t\fP * \fB__pthread_queue\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_cond_broadcast (\fBpthread_cond_t\fP *cond)"
+
+.PP
+Definizione alla linea 116 del file pthread_cond\&.c\&.
+.PP
+Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+116                                                         {
+117     if(!__pthread_queue) {
+118         errno = ESRCH;
+119         return -1;
+120     }
+121 
+122 
+123     pthread_context_t* tmp = __pthread_queue;
+124     while(tmp) {
+125         if(tmp->cond == cond) {
+126             if(tmp->cond->waiting) {
+127                 tmp->cond->semaphore = 0;       
+128             }
+129         }
+130 
+131         tmp = tmp->next;
+132     }
+133 
+134 
+135     return 0;
+136 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_cond_destroy (\fBpthread_cond_t\fP *cond)"
+
+.PP
+Definizione alla linea 25 del file pthread_cond\&.c\&.
+.PP
+Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+25                                                       {
+26     if(!cond) {
+27         errno = EINVAL;
+28         return 1;
+29     }
+30 
+31     if(cond->waiting) {
+32         errno = EBUSY;
+33         return 1;
+34     }
+35 
+36 
+37     cond->waiting = 0;
+38     cond->semaphore = 0;        
+39     
+40     return 0;
+41 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_cond_init (\fBpthread_cond_t\fP *cond, const \fBpthread_condattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 13 del file pthread_cond\&.c\&.
+.PP
+Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+13                                                                                    {
+14     if(!cond) {
+15         errno = EINVAL;
+16         return 1;
+17     }
+18 
+19     cond->waiting = 0;
+20     cond->semaphore = 0;
+21 
+22     return 0;
+23 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_cond_signal (\fBpthread_cond_t\fP *cond)"
+
+.PP
+Definizione alla linea 93 del file pthread_cond\&.c\&.
+.PP
+Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+93                                                      {
+94     if(!__pthread_queue) {
+95         errno = ESRCH;
+96         return -1;
+97     }
+98 
+99 
+100     pthread_context_t* tmp = __pthread_queue;
+101     while(tmp) {
+102         if(tmp->cond == cond) {
+103             if(tmp->cond->waiting) {
+104                 tmp->cond->semaphore = 0;
+105                 return 0;           
+106             }
+107         }
+108 
+109         tmp = tmp->next;
+110     }
+111 
+112     errno = ESRCH;
+113     return -1;
+114 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_cond_timedwait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
+
+.PP
+Definizione alla linea 44 del file pthread_cond\&.c\&.
+.PP
+Referenzia pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unlock(), pthread_self(), sched_yield(), pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+44                                                                                                                 {
+45         if(!cond) {
+46         errno = EINVAL;
+47         return 1;
+48     }
+49 
+50     if(!mutex) {
+51         errno = EINVAL;
+52         return 1;
+53     }
+54 
+55     if(mutex->owner != pthread_self()) {
+56         errno = EINVAL;
+57         return 1;
+58     }
+59 
+60     pthread_context_t* ctx = (pthread_context_t*) pthread_self();
+61     if(!ctx) {
+62         errno = EINVAL;
+63         return -1;
+64     }
+65 
+66     ctx->cond = cond;
+67     ctx->cond->waiting = 1;
+68     ctx->cond->semaphore = 1;
+69 
+70     int t0;
+71     if(abstime)
+72         t0 = time(NULL) + abstime->tv_sec;
+73     else
+74         t0 = ~0;
+75 
+76     while(ctx->cond->semaphore == 1 && (time(NULL) < t0))
+77         sched_yield();
+78 
+79     ctx->cond->waiting = 0;
+80     ctx->cond->semaphore = 0;
+81     ctx->cond = 0;
+82 
+83     pthread_mutex_unlock(mutex);
+84 
+85     return 0;
+86 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_cond_wait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex)"
+
+.PP
+Definizione alla linea 88 del file pthread_cond\&.c\&.
+.PP
+Referenzia pthread_cond_timedwait()\&.
+.PP
+.nf
+88                                                                            {
+89     return pthread_cond_timedwait(cond, mutex, NULL);
+90 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBEXTERN\fP \fBpthread_context_t\fP* __pthread_queue"
+
+.PP
+Definizione alla linea 9 del file pthread_cond\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

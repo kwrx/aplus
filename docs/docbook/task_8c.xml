@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="task_8c">
+    <title>task.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1ac08620610e2419aca3878305400a96b7">kernel_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="task_8c_1acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * <link linkend="task_8c_1afac53891df03c313fc0b5b24e0acc8a9">kernel_vmm</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * <link linkend="task_8c_1a9bed7071511863f81c2de43b3c3f7db9">current_vmm</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>volatile <link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * <link linkend="task_8c_1a93cc6260faf18f2e31742272b38a534c">vfs_root</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="task_8c_1a30c5de54c48d098388d2048073a393a7">__asm__</link> (
+&quot;.global <link linkend="task_8c_1a82b2dfd3955cf0689cda053f3dc24481">task_context_switch</link> \n&quot;&quot;task_context_switch: \n&quot;&quot; push <link linkend="aplus_8h_1aaba2ad0ff8ba480934feabfdab02b1e7">ebp</link> \n&quot;&quot; mov ebp, esp\n&quot;&quot;pushf\n&quot;&quot;push edx\n&quot;&quot;push eax\n&quot;&quot;push ecx\n&quot;&quot;push ebx\n&quot;&quot;push esi\n&quot;&quot;push edi\n&quot;&quot;mov eax, \n&quot;&quot;mov edx, \n&quot;&quot; mov, esp\n&quot;&quot;mov esp, \n&quot;&quot;pop edi\n&quot;&quot;pop esi\n&quot;&quot;pop ebx\n&quot;&quot;pop ecx\n&quot;&quot;pop eax\n&quot;&quot;pop edx\n&quot;&quot;popf\n&quot;&quot;pop ebp\n&quot;&quot;sti\n&quot;&quot;ret\n&quot; )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="task_8c_1a82b2dfd3955cf0689cda053f3dc24481">task_context_switch</link> (
+task_env_t ** old, task_env_t ** new)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1aa547121ba0907a969075a9d7530a98fb">task_fork</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1aa274b7334aace961395fdb788126712d">task_clone</link> (
+void * entry, void * arg, void * stack)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645">task_switch</link> (
+<link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * newtask)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="task_8c_1a30500c422833c90d6f42e44e2efb04a7">task_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/arch/task.c</para>
+    </simplesect>
+</section>

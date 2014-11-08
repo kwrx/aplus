@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>irqs</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L102'>irqs</a>              102 src/arch/desc.c static void* irqs[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+<a href='../S/158.html#L157'>irqs</a>              157 src/arch/desc.c 	if(irqs[r-&gt;int_no - 32])
+<a href='../S/158.html#L158'>irqs</a>              158 src/arch/desc.c 		((void (*)(regs_t*)) irqs[r-&gt;int_no - 32]) (r);
+<a href='../S/158.html#L340'>irqs</a>              340 src/arch/desc.c 	irqs[n] = handler;
+<a href='../S/158.html#L350'>irqs</a>              350 src/arch/desc.c 	irqs[n] = 0;
+<a href='../S/158.html#L360'>irqs</a>              360 src/arch/desc.c 	return irqs[n];
+</pre>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>src/syscall/fork.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/fork.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L9'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L9' title='Defined at 9.'>sys_fork</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <b>int</b> sys_fork() <font color='red'>{</font>
+<a name='L10'>  10         <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../S/159.html#L49' title='Defined at 49 in src/arch/task.c.'>task_fork</a>();
+<a name='L11'>  11         
+<a name='L12'>  12         <b>if</b>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>)
+<a name='L13'>  13                 <b>return</b> <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>;
+<a name='L14'>  14         <b>else</b>
+<a name='L15'>  15                 <b>return</b> 0;
+<a name='L16'>  16 <font color='red'>}</font>
+<a name='L17'>  17 
+<a name='L18'>  18 
+<a name='L19'>  19 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_fork, 3);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L9'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

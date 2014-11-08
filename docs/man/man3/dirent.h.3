@@ -1,0 +1,245 @@
+.TH "usr/src/libposix/include/sys/dirent.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/include/sys/dirent.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fB__DIR\fP"
+.br
+.ti -1c
+.RI "struct \fBdirent\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBO_DIRECTORY\fP   00200000"
+.br
+.ti -1c
+.RI "#define \fBO_NOFOLLOW\fP   00400000"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fB__DIR\fP \fBDIR\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBalphasort\fP (const struct \fBdirent\fP **a, const struct \fBdirent\fP **b)"
+.br
+.ti -1c
+.RI "int \fBclosedir\fP (\fBDIR\fP *\fBd\fP)"
+.br
+.ti -1c
+.RI "\fBDIR\fP * \fBopendir\fP (const char *path)"
+.br
+.ti -1c
+.RI "struct \fBdirent\fP * \fBreaddir\fP (\fBDIR\fP *\fBd\fP)"
+.br
+.ti -1c
+.RI "void \fBrewinddir\fP (\fBDIR\fP *\fBd\fP)"
+.br
+.ti -1c
+.RI "int \fBscandir\fP (const char *pathname, struct \fBdirent\fP ***namelist, int(*select)(const struct \fBdirent\fP *), int(*compar)(const struct \fBdirent\fP **, const struct \fBdirent\fP **))"
+.br
+.ti -1c
+.RI "void \fBseekdir\fP (\fBDIR\fP *\fBd\fP, off_t \fBoffset\fP)"
+.br
+.ti -1c
+.RI "off_t \fBtelldir\fP (\fBDIR\fP *\fBd\fP)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define O_DIRECTORY   00200000"
+
+.PP
+Definizione alla linea 42 del file dirent\&.h\&.
+.SS "#define O_NOFOLLOW   00400000"
+
+.PP
+Definizione alla linea 46 del file dirent\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fB__DIR\fP  \fBDIR\fP"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int alphasort (const struct \fBdirent\fP **a, const struct \fBdirent\fP **b)"
+
+.PP
+Definizione alla linea 12 del file alphasort\&.c\&.
+.PP
+.nf
+12                                                                 {
+13     return strcoll((*a)->d_name, (*b)->d_name);
+14 }
+.fi
+.SS "int closedir (\fBDIR\fP *d)"
+
+.PP
+Definizione alla linea 11 del file closedir\&.c\&.
+.PP
+Referenzia errno, __DIR::fd, e __DIR::position\&.
+.PP
+.nf
+11                      {
+12     if(d == NULL) {
+13         errno = EINVAL;
+14         return -1;
+15     }
+16 
+17     close(d->fd);
+18 
+19     d->fd = -1;
+20     d->position = -1;
+21 
+22     return 0;
+23 }
+.fi
+.SS "\fBDIR\fP* opendir (const char *path)"
+
+.PP
+Definizione alla linea 13 del file opendir\&.c\&.
+.PP
+Referenzia d, errno, __DIR::fd, O_DIRECTORY, e __DIR::position\&.
+.PP
+.nf
+13                                {
+14     int fd = open(path, O_RDONLY | O_DIRECTORY, 0644);
+15     if(fd < 0) {
+16         errno = ENOENT;
+17         return NULL;
+18     }
+19 
+20     DIR* d = (DIR*) malloc(sizeof(DIR));
+21     d->fd = fd;
+22     d->position = 0;
+23 
+24     return d;
+25 }
+.fi
+.SS "struct \fBdirent\fP* readdir (\fBDIR\fP *d)"
+
+.PP
+Definizione alla linea 15 del file readdir\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+15                                {
+16     if(d == NULL) {
+17         errno = EINVAL;
+18         return NULL;
+19     }
+20 
+21     return __os_readdir(d);
+22 }
+.fi
+.SS "void rewinddir (\fBDIR\fP *d)"
+
+.PP
+Definizione alla linea 11 del file rewinddir\&.c\&.
+.PP
+Referenzia __DIR::position\&.
+.PP
+.nf
+11                        {
+12     if(d)
+13         d->position = 0;
+14 }
+.fi
+.SS "int scandir (const char *pathname, struct \fBdirent\fP ***namelist, int(*)(const struct \fBdirent\fP *)select, int(*)(const struct \fBdirent\fP **, const struct \fBdirent\fP **)compar)"
+
+.PP
+Definizione alla linea 11 del file scandir\&.c\&.
+.PP
+Referenzia d, errno, opendir(), e readdir()\&.
+.PP
+.nf
+11                                                                                                                                                                   {
+12     DIR* d = opendir(pathname);
+13     if(d == NULL) {
+14         errno = ENOENT;
+15         return -1;
+16     }
+17 
+18     if(namelist == NULL) {
+19         errno = EINVAL;
+20         return -1;
+21     }
+22 
+23     const struct dirent* ent = NULL;
+24     const struct dirent** lst = (const struct dirent**) *namelist;
+25 
+26     int index = 0;
+27 
+28 
+29     while((ent = readdir(d))) {
+30         if(select)
+31             if(select(ent) != 0)
+32                 continue;
+33 
+34         
+35         if((index > 0) && (compar) && (compar(&lst[index - 1], &ent) > 0)) {
+36             lst[index] = lst[index - 1];
+37             lst[index - 1] = ent;
+38         } else
+39             lst[index] = ent;
+40 
+41         index += 1;
+42     }
+43 
+44     return index;
+45 }
+.fi
+.SS "void seekdir (\fBDIR\fP *d, off_toffset)"
+
+.PP
+Definizione alla linea 13 del file seekdir\&.c\&.
+.PP
+Referenzia offset, e __DIR::position\&.
+.PP
+.nf
+13                                    {
+14     if(d)
+15         d->position = offset;
+16 }
+.fi
+.SS "off_t telldir (\fBDIR\fP *d)"
+
+.PP
+Definizione alla linea 11 del file telldir\&.c\&.
+.PP
+Referenzia errno, e __DIR::position\&.
+.PP
+.nf
+11                       {
+12     if(d == NULL) {
+13         errno = EINVAL;
+14         return -1;
+15     }
+16 
+17     return d->position;
+18 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

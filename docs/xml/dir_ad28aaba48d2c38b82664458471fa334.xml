@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_ad28aaba48d2c38b82664458471fa334" kind="dir">
+    <compoundname>usr/src</compoundname>
+    <innerdir refid="dir_7eba538d4a0daa44b244b3c2ce5d4eb1">usr/src/libcrt0</innerdir>
+    <innerdir refid="dir_4e1c7ae8f9024ef006e86a9c3fc355ed">usr/src/libposix</innerdir>
+    <innerdir refid="dir_c23ec9db109baf02f825a52e3d8bd742">usr/src/libpthread</innerdir>
+    <innerdir refid="dir_e8086224b30c3cef66d8adbaa7f25de7">usr/src/libssp</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/"/>
+  </compounddef>
+</doxygen>

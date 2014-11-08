@@ -1,0 +1,640 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="slirp_8c" kind="file">
+    <compoundname>slirp.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includes refid="bufio_8h" local="no">aplus/bufio.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes refid="attribute_8h" local="no">aplus/attribute.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes refid="slirp_8h" local="yes">slirp.h</includes>
+    <incdepgraph>
+      <node id="1176">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1166">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1183">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1164" relation="include">
+        </childnode>
+        <childnode refid="1182" relation="include">
+        </childnode>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1167" relation="include">
+        </childnode>
+        <childnode refid="1172" relation="include">
+        </childnode>
+      </node>
+      <node id="1175">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1170" relation="include">
+        </childnode>
+        <childnode refid="1172" relation="include">
+        </childnode>
+        <childnode refid="1176" relation="include">
+        </childnode>
+        <childnode refid="1177" relation="include">
+        </childnode>
+      </node>
+      <node id="1163">
+        <label>src/net/slirp/slirp.c</label>
+        <link refid="slirp.c"/>
+        <childnode refid="1164" relation="include">
+        </childnode>
+        <childnode refid="1168" relation="include">
+        </childnode>
+        <childnode refid="1171" relation="include">
+        </childnode>
+        <childnode refid="1181" relation="include">
+        </childnode>
+        <childnode refid="1174" relation="include">
+        </childnode>
+        <childnode refid="1173" relation="include">
+        </childnode>
+        <childnode refid="1182" relation="include">
+        </childnode>
+        <childnode refid="1183" relation="include">
+        </childnode>
+        <childnode refid="1167" relation="include">
+        </childnode>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1184" relation="include">
+        </childnode>
+        <childnode refid="1185" relation="include">
+        </childnode>
+      </node>
+      <node id="1185">
+        <label>slirp.h</label>
+        <link refid="slirp_8h"/>
+      </node>
+      <node id="1165">
+        <label>stdint.h</label>
+      </node>
+      <node id="1180">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1174">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1164" relation="include">
+        </childnode>
+        <childnode refid="1175" relation="include">
+        </childnode>
+        <childnode refid="1179" relation="include">
+        </childnode>
+        <childnode refid="1172" relation="include">
+        </childnode>
+        <childnode refid="1180" relation="include">
+        </childnode>
+      </node>
+      <node id="1184">
+        <label>errno.h</label>
+      </node>
+      <node id="1169">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="1164" relation="include">
+        </childnode>
+        <childnode refid="1165" relation="include">
+        </childnode>
+      </node>
+      <node id="1170">
+        <label>stddef.h</label>
+      </node>
+      <node id="1182">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1170" relation="include">
+        </childnode>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1172" relation="include">
+        </childnode>
+        <childnode refid="1173" relation="include">
+        </childnode>
+        <childnode refid="1181" relation="include">
+        </childnode>
+      </node>
+      <node id="1164">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1166" relation="include">
+        </childnode>
+        <childnode refid="1167" relation="include">
+        </childnode>
+      </node>
+      <node id="1172">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1167">
+        <label>string.h</label>
+      </node>
+      <node id="1178">
+        <label>unistd.h</label>
+      </node>
+      <node id="1179">
+        <label>signal.h</label>
+      </node>
+      <node id="1168">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="1164" relation="include">
+        </childnode>
+        <childnode refid="1169" relation="include">
+        </childnode>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1170" relation="include">
+        </childnode>
+      </node>
+      <node id="1181">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1174" relation="include">
+        </childnode>
+      </node>
+      <node id="1177">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1178" relation="include">
+        </childnode>
+        <childnode refid="1172" relation="include">
+        </childnode>
+      </node>
+      <node id="1173">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="1171">
+        <label>aplus/bufio.h</label>
+        <link refid="bufio_8h"/>
+        <childnode refid="1165" relation="include">
+        </childnode>
+        <childnode refid="1170" relation="include">
+        </childnode>
+        <childnode refid="1172" relation="include">
+        </childnode>
+        <childnode refid="1173" relation="include">
+        </childnode>
+        <childnode refid="1174" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <innerclass refid="structslirpcard" prot="public">slirpcard</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="slirp_8c_1a568a798f46022c03ad5665b75e55909a" prot="public" static="no">
+        <type>struct <ref refid="structslirpcard" kindref="compound">slirpcard</ref></type>
+        <definition>typedef struct slirpcard  slirpcard_t</definition>
+        <argsstring></argsstring>
+        <name>slirpcard_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="24" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="slirp_8c_1a0f272b2d098a6c4df9edf6a275a4447f" prot="public" static="yes" mutable="no">
+        <type><ref refid="slirp_8c_1a568a798f46022c03ad5665b75e55909a" kindref="member">slirpcard_t</ref> *</type>
+        <definition>slirpcard_t* slirpcard</definition>
+        <argsstring></argsstring>
+        <name>slirpcard</name>
+        <initializer>= NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="26" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void slirp_handler</definition>
+        <argsstring>(void *unused)</argsstring>
+        <name>slirp_handler</name>
+        <param>
+          <type>void *</type>
+          <declname>unused</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="28" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="28" bodyend="82"/>
+        <references refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" compoundref="slirp_8c" startline="18">slirpcard::buffer</references>
+        <references refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</references>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" compoundref="slirp_8c" startline="22">slirpcard::ioport</references>
+        <references refid="ipv4_8c_1aef7e4d9aa0ca33ce3ed3d39d613ebf64" compoundref="ipv4_8c" startline="71" endline="114">ipv4_recv</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" compoundref="slirp_8c" startline="23">slirpcard::netif</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+        <references refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" compoundref="slirp_8c" startline="21">slirpcard::offset</references>
+        <references refid="structnetif_1a5a078449e22bb6f4d3d0068345d8dabc" compoundref="netif_8h" startline="56">netif::rx_bytes</references>
+        <references refid="structnetif_1adb3c694759403e67d539a5e81a552c92" compoundref="netif_8h" startline="57">netif::rx_errors</references>
+        <references refid="structnetif_1a80040f58867713ff1b5ec982a450221e" compoundref="netif_8h" startline="55">netif::rx_packets</references>
+        <references refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" compoundref="serial_8c" startline="16" endline="20">serial_recv</references>
+        <references refid="slirp_8h_1a1a2dfb64959285fee075cc1f612289cb" compoundref="slirp_8h" startline="9">SLIRP_BUFSIZ</references>
+        <references refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" compoundref="slirp_8h" startline="4">SLIRP_PACKET_END</references>
+        <references refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" compoundref="slirp_8h" startline="5">SLIRP_PACKET_ESC</references>
+        <references refid="slirp_8h_1ab3edcb78e24f3e17d99d94ac4494ca17" compoundref="slirp_8h" startline="6">SLIRP_PACKET_ESC_END</references>
+        <references refid="slirp_8h_1aadc4cd7d052d18d94b1b10e139628dc1" compoundref="slirp_8h" startline="7">SLIRP_PACKET_ESC_ESC</references>
+        <references refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64">netif::state</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+        <references refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" compoundref="slirp_8c" startline="19">slirpcard::used</references>
+      </memberdef>
+      <memberdef kind="function" id="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int slirp_send</definition>
+        <argsstring>(netif_t *netif, void *buf, size_t length, int type)</argsstring>
+        <name>slirp_send</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>length</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="85" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="85" bodyend="117"/>
+        <references refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" compoundref="netif_8h" startline="35">netif::data</references>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" compoundref="slirp_8c" startline="22">slirpcard::ioport</references>
+        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" compoundref="slirp_8c" startline="17">slirpcard::magic</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+        <references refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" compoundref="serial_8c" startline="11" endline="14">serial_send</references>
+        <references refid="slirp_8h_1aa2c40ffa219abb80aa6d683964c43e25" compoundref="slirp_8h" startline="12">SLIRP_MAGIC</references>
+        <references refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" compoundref="slirp_8h" startline="4">SLIRP_PACKET_END</references>
+        <references refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" compoundref="slirp_8h" startline="5">SLIRP_PACKET_ESC</references>
+        <references refid="slirp_8h_1ab3edcb78e24f3e17d99d94ac4494ca17" compoundref="slirp_8h" startline="6">SLIRP_PACKET_ESC_END</references>
+        <references refid="slirp_8h_1aadc4cd7d052d18d94b1b10e139628dc1" compoundref="slirp_8h" startline="7">SLIRP_PACKET_ESC_ESC</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int slirp_ifup</definition>
+        <argsstring>(netif_t *netif)</argsstring>
+        <name>slirp_ifup</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="119" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="119" bodyend="122"/>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+      </memberdef>
+      <memberdef kind="function" id="slirp_8c_1a145cf2e489aa075e08f69f79bdb19574" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int slirp_ifdown</definition>
+        <argsstring>(netif_t *netif)</argsstring>
+        <name>slirp_ifdown</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="124" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="124" bodyend="127"/>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+      </memberdef>
+      <memberdef kind="function" id="slirp_8c_1a8e7e3c2a9bf497a11fd8e2159976e5ad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int slirp_init</definition>
+        <argsstring>()</argsstring>
+        <name>slirp_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="129" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="129" bodyend="213"/>
+        <references refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" compoundref="slirp_8c" startline="18">slirpcard::buffer</references>
+        <references refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" compoundref="netif_8h" startline="35">netif::data</references>
+        <references refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e">netif::dns</references>
+        <references refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" compoundref="netif_8h" startline="68">netif::ifdown</references>
+        <references refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" compoundref="netif_8h" startline="67">netif::ifup</references>
+        <references refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" compoundref="slirp_8c" startline="22">slirpcard::ioport</references>
+        <references refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" compoundref="netif_8h" startline="38">netif::ipv4</references>
+        <references refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" compoundref="netif_8h" startline="37">netif::ipv6</references>
+        <references refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" compoundref="desc_8c" startline="334" endline="342">irq_set</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
+        <references refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" compoundref="slirp_8c" startline="17">slirpcard::magic</references>
+        <references refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" compoundref="netif_8h" startline="70">netif::mtu</references>
+        <references refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" compoundref="netif_8h" startline="34">netif::name</references>
+        <references refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" compoundref="slirp_8c" startline="23">slirpcard::netif</references>
+        <references refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" compoundref="netif_8c" startline="124" endline="212">netif_add</references>
+        <references refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" compoundref="netif_8h" startline="39">netif::netmask</references>
+        <references refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" compoundref="slirp_8c" startline="21">slirpcard::offset</references>
+        <references refid="structnetif_1a367e7d85725497d7703bfc0424f472cf">netif::primary</references>
+        <references refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2">netif::secondary</references>
+        <references refid="structnetif_1ac0505ae55088f68c2cefa77dc6871208" compoundref="netif_8h" startline="66">netif::send</references>
+        <references refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" compoundref="slirp_8c" startline="28" endline="82">slirp_handler</references>
+        <references refid="slirp_8c_1a145cf2e489aa075e08f69f79bdb19574" compoundref="slirp_8c" startline="124" endline="127">slirp_ifdown</references>
+        <references refid="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934" compoundref="slirp_8c" startline="119" endline="122">slirp_ifup</references>
+        <references refid="slirp_8h_1aa2c40ffa219abb80aa6d683964c43e25" compoundref="slirp_8h" startline="12">SLIRP_MAGIC</references>
+        <references refid="slirp_8h_1a96377139dd32f24736da76a132dafcf1" compoundref="slirp_8h" startline="10">SLIRP_MTU</references>
+        <references refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" compoundref="slirp_8c" startline="85" endline="117">slirp_send</references>
+        <references refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" compoundref="slirp_8c" startline="19">slirpcard::used</references>
+      </memberdef>
+      <memberdef kind="function" id="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>ATTRIBUTE</definition>
+        <argsstring>(&quot;netif&quot;, slirp_init)</argsstring>
+        <name>ATTRIBUTE</name>
+        <param>
+          <type>&quot;netif&quot;</type>
+        </param>
+        <param>
+          <type><ref refid="slirp_8c_1a8e7e3c2a9bf497a11fd8e2159976e5ad" kindref="member">slirp_init</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="215" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="bufio_8h" kindref="compound">aplus/bufio.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="attribute_8h" kindref="compound">aplus/attribute.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="slirp_8h" kindref="compound">slirp.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="structslirpcard" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structslirpcard" kindref="compound">slirpcard</ref><sp/>{</highlight></codeline>
+<codeline lineno="17" refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" kindref="member">magic</ref>;<sp/></highlight></codeline>
+<codeline lineno="18" refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>*<sp/><ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref>;</highlight></codeline>
+<codeline lineno="19" refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref>;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="21" refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="22" refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>;</highlight></codeline>
+<codeline lineno="23" refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" kindref="member">netif</ref>;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}<sp/><ref refid="slirp_8c_1a568a798f46022c03ad5665b75e55909a" kindref="member">slirpcard_t</ref>;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="slirp_8c_1a0f272b2d098a6c4df9edf6a275a4447f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structslirpcard" kindref="compound">slirpcard_t</ref>*<sp/><ref refid="structslirpcard" kindref="compound">slirpcard</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" kindref="member">slirp_handler</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>unused)<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(slirpcard<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>slirpcard-&gt;<ref refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" kindref="member">netif</ref>;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;slirp:<sp/>received<sp/>data\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref><sp/>=<sp/><ref refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" kindref="member">serial_recv</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(slirpcard-&gt;<ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref><sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d<sp/>!=<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>)</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref>)</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref>);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref><sp/>=<sp/>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>)<sp/>*<sp/><ref refid="slirp_8h_1a1a2dfb64959285fee075cc1f612289cb" kindref="member">SLIRP_BUFSIZ</ref>);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((d<sp/>==<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref><sp/>&amp;&amp;<sp/>slirpcard-&gt;<ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref>)<sp/>||<sp/>slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref><sp/>&gt;=<sp/><ref refid="slirp_8h_1a1a2dfb64959285fee075cc1f612289cb" kindref="member">SLIRP_BUFSIZ</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="ipv4_8c_1aef7e4d9aa0ca33ce3ed3d39d613ebf64" kindref="member">ipv4_recv</ref>(netif,<sp/>slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref>,<sp/>slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref>)<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1a80040f58867713ff1b5ec982a450221e" kindref="member">rx_packets</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1a5a078449e22bb6f4d3d0068345d8dabc" kindref="member">rx_bytes</ref><sp/>+=<sp/>slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1adb3c694759403e67d539a5e81a552c92" kindref="member">rx_errors</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(d)<sp/>{</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" kindref="member">SLIRP_PACKET_ESC</ref>:<sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d<sp/>=<sp/><ref refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" kindref="member">serial_recv</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(d)<sp/>{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="slirp_8h_1ab3edcb78e24f3e17d99d94ac4494ca17" kindref="member">SLIRP_PACKET_ESC_END</ref>:</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d<sp/>=<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="slirp_8h_1aadc4cd7d052d18d94b1b10e139628dc1" kindref="member">SLIRP_PACKET_ESC_ESC</ref>:</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d<sp/>=<sp/><ref refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" kindref="member">SLIRP_PACKET_ESC</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref>[slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref>++]<sp/>=<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="82"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85" refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" kindref="member">slirp_send</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structslirpcard" kindref="compound">slirpcard_t</ref>*<sp/>slirpcard<sp/>=<sp/>(<ref refid="structslirpcard" kindref="compound">slirpcard_t</ref>*)<sp/>netif-&gt;<ref refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(slirpcard-&gt;<ref refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" kindref="member">magic</ref><sp/>!=<sp/><ref refid="slirp_8h_1aa2c40ffa219abb80aa6d683964c43e25" kindref="member">SLIRP_MAGIC</ref>)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>*<sp/>b<sp/>=<sp/>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>*)<sp/>buf;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(b[i])<sp/>{</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>:</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" kindref="member">SLIRP_PACKET_ESC</ref>);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1ab3edcb78e24f3e17d99d94ac4494ca17" kindref="member">SLIRP_PACKET_ESC_END</ref>);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" kindref="member">SLIRP_PACKET_ESC</ref>:</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" kindref="member">SLIRP_PACKET_ESC</ref>);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1aadc4cd7d052d18d94b1b10e139628dc1" kindref="member">SLIRP_PACKET_ESC_ESC</ref>);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/>b[i]);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119" refid="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934" kindref="member">slirp_ifup</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>|=<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124" refid="slirp_8c_1a145cf2e489aa075e08f69f79bdb19574" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a145cf2e489aa075e08f69f79bdb19574" kindref="member">slirp_ifdown</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;=<sp/>~<ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129" refid="slirp_8c_1a8e7e3c2a9bf497a11fd8e2159976e5ad" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a8e7e3c2a9bf497a11fd8e2159976e5ad" kindref="member">slirp_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>slirpcard<sp/>=<sp/>(<ref refid="structslirpcard" kindref="compound">slirpcard_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structslirpcard" kindref="compound">slirpcard_t</ref>));</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" kindref="member">magic</ref><sp/>=<sp/><ref refid="slirp_8h_1aa2c40ffa219abb80aa6d683964c43e25" kindref="member">SLIRP_MAGIC</ref>;</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structnetif" kindref="compound">netif_t</ref>));</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(netif,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structnetif" kindref="compound">netif_t</ref>));</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/>strcpy(netif-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>,<sp/></highlight><highlight class="stringliteral">&quot;slp0&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[0]<sp/>=<sp/>10;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[1]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[2]<sp/>=<sp/>2;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[3]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[4]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[5]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[0]<sp/>=<sp/>10;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[1]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[2]<sp/>=<sp/>2;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[3]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[0]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[1]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[2]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[3]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[0]<sp/>=<sp/>0xfe80;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[1]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[2]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[3]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[4]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[5]<sp/>=<sp/>0x10ff;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[6]<sp/>=<sp/>0xcef9;</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[7]<sp/>=<sp/>0x9b70;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[0]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[1]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[2]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[3]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"></highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[0]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[1]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[2]<sp/>=<sp/>4;</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[3]<sp/>=<sp/>4;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[0]<sp/>=<sp/>0x2001;</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[1]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[2]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[3]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[4]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[5]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[6]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[7]<sp/>=<sp/>0x8888;</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[0]<sp/>=<sp/>0x2001;</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[1]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[2]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[3]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[4]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[5]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[6]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[7]<sp/>=<sp/>0x8844;</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" kindref="member">mtu</ref><sp/>=<sp/><ref refid="slirp_8h_1a96377139dd32f24736da76a132dafcf1" kindref="member">SLIRP_MTU</ref>;</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1ac0505ae55088f68c2cefa77dc6871208" kindref="member">send</ref><sp/>=<sp/><ref refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" kindref="member">slirp_send</ref>;</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" kindref="member">ifup</ref><sp/>=<sp/><ref refid="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934" kindref="member">slirp_ifup</ref>;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" kindref="member">ifdown</ref><sp/>=<sp/><ref refid="slirp_8c_1a145cf2e489aa075e08f69f79bdb19574" kindref="member">slirp_ifdown</ref>;</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" kindref="member">data</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>slirpcard;</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"></highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" kindref="member">netif</ref><sp/>=<sp/>netif;</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" kindref="member">netif_add</ref>(netif);</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" kindref="member">irq_set</ref>(4,<sp/><ref refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" kindref="member">slirp_handler</ref>);</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" kindref="member">irq_set</ref>(3,<sp/><ref refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" kindref="member">slirp_handler</ref>);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="213"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><ref refid="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae" kindref="member">ATTRIBUTE</ref>(</highlight><highlight class="stringliteral">&quot;netif&quot;</highlight><highlight class="normal">,<sp/><ref refid="slirp_8c_1a8e7e3c2a9bf497a11fd8e2159976e5ad" kindref="member">slirp_init</ref>);</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/net/slirp/slirp.c"/>
+  </compounddef>
+</doxygen>

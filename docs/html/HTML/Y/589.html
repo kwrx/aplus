@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>st</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/120.html#L15'>st</a>                 15 src/syscall/fstat.c int sys_fstat(int fd, struct stat* st) {
+<a href='../S/120.html#L16'>st</a>                 16 src/syscall/fstat.c 	if(!st) {
+<a href='../S/120.html#L28'>st</a>                 28 src/syscall/fstat.c 	st-&gt;st_mode = ino-&gt;mode;
+<a href='../S/120.html#L29'>st</a>                 29 src/syscall/fstat.c 	st-&gt;st_ino = ino-&gt;ino;
+<a href='../S/120.html#L30'>st</a>                 30 src/syscall/fstat.c 	st-&gt;st_dev = ino-&gt;dev;
+<a href='../S/120.html#L31'>st</a>                 31 src/syscall/fstat.c 	st-&gt;st_uid = ino-&gt;uid;
+<a href='../S/120.html#L32'>st</a>                 32 src/syscall/fstat.c 	st-&gt;st_gid = ino-&gt;gid;
+<a href='../S/120.html#L33'>st</a>                 33 src/syscall/fstat.c 	st-&gt;st_atime = ino-&gt;atime;
+<a href='../S/120.html#L34'>st</a>                 34 src/syscall/fstat.c 	st-&gt;st_ctime = ino-&gt;ctime;
+<a href='../S/120.html#L35'>st</a>                 35 src/syscall/fstat.c 	st-&gt;st_mtime = ino-&gt;mtime;
+<a href='../S/120.html#L36'>st</a>                 36 src/syscall/fstat.c 	st-&gt;st_nlink = ino-&gt;nlink;
+<a href='../S/120.html#L37'>st</a>                 37 src/syscall/fstat.c 	st-&gt;st_size = ino-&gt;size;
+<a href='../S/120.html#L38'>st</a>                 38 src/syscall/fstat.c 	st-&gt;st_rdev = ino-&gt;rdev;
+<a href='../S/120.html#L39'>st</a>                 39 src/syscall/fstat.c 	st-&gt;st_blksize = 512;
+<a href='../S/120.html#L40'>st</a>                 40 src/syscall/fstat.c 	st-&gt;st_blocks = st-&gt;st_size / st-&gt;st_blksize;
+<a href='../S/124.html#L15'>st</a>                 15 src/syscall/stat.c int sys_stat(const char* filename, struct stat* st) {
+<a href='../S/124.html#L21'>st</a>                 21 src/syscall/stat.c 	int ret = sys_fstat(fd, st);
+<a href='../S/32.html#L18'>st</a>                 18 usr/src/libposix/src/getcwd.c 	struct stat st;
+<a href='../S/32.html#L24'>st</a>                 24 usr/src/libposix/src/getcwd.c 	if(stat("/", &amp;st) != 0)
+<a href='../S/32.html#L26'>st</a>                 26 usr/src/libposix/src/getcwd.c 	root_ino = st.st_ino;
+<a href='../S/32.html#L28'>st</a>                 28 usr/src/libposix/src/getcwd.c 	if(stat(".", &amp;st) != 0)
+<a href='../S/32.html#L30'>st</a>                 30 usr/src/libposix/src/getcwd.c 	curr_ino = st.st_ino;
+<a href='../S/32.html#L44'>st</a>                 44 usr/src/libposix/src/getcwd.c 		if(stat(tmpbuf, &amp;st) != 0)
+<a href='../S/32.html#L47'>st</a>                 47 usr/src/libposix/src/getcwd.c 		curr_ino = st.st_ino;
+<a href='../S/16.html#L7'>st</a>                  7 usr/src/libposix/src/gid.c 	struct stat st;
+<a href='../S/16.html#L8'>st</a>                  8 usr/src/libposix/src/gid.c 	if(fstat(STDIN_FILENO, &amp;st) != 0)
+<a href='../S/16.html#L11'>st</a>                 11 usr/src/libposix/src/gid.c 	return st.st_gid;
+<a href='../S/34.html#L5'>st</a>                  5 usr/src/libposix/src/lstat.c int lstat(const char* filename, struct stat* st) {
+<a href='../S/34.html#L10'>st</a>                 10 usr/src/libposix/src/lstat.c 	int ret = fstat(fd, st);
+<a href='../S/40.html#L6'>st</a>                  6 usr/src/libposix/src/uid.c 	struct stat st;
+<a href='../S/40.html#L7'>st</a>                  7 usr/src/libposix/src/uid.c 	if(fstat(STDIN_FILENO, &amp;st) != 0)
+<a href='../S/40.html#L10'>st</a>                 10 usr/src/libposix/src/uid.c 	return st.st_uid;
+</pre>
+</body>
+</html>

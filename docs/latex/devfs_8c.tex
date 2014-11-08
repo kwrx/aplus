@@ -1,0 +1,158 @@
+\hypertarget{devfs_8c}{\section{Riferimenti per il file src/fs/devfs.c}
+\label{devfs_8c}\index{src/fs/devfs.\+c@{src/fs/devfs.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structinode}{inode} $\ast$ \hyperlink{devfs_8c_a268e4d56ebd88b1227eb40d20b247c03}{devfs\+\_\+creat} (struct \hyperlink{structinode}{inode} $\ast$\hyperlink{structinode}{inode}, char $\ast$\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, mode\+\_\+t mode)
+\item 
+\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ \hyperlink{devfs_8c_a12b8ede9eeee8603d4b89d189a484380}{devfs\+\_\+mount} ()
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ \hyperlink{devfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\+\_\+root}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{devfs_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\item 
+\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{devfs_8c_a268e4d56ebd88b1227eb40d20b247c03}{\index{devfs.\+c@{devfs.\+c}!devfs\+\_\+creat@{devfs\+\_\+creat}}
+\index{devfs\+\_\+creat@{devfs\+\_\+creat}!devfs.\+c@{devfs.\+c}}
+\subsubsection[{devfs\+\_\+creat}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf inode}$\ast$ devfs\+\_\+creat (
+\begin{DoxyParamCaption}
+\item[{struct {\bf inode} $\ast$}]{inode, }
+\item[{char $\ast$}]{name, }
+\item[{mode\+\_\+t}]{mode}
+\end{DoxyParamCaption}
+)}}\label{devfs_8c_a268e4d56ebd88b1227eb40d20b247c03}
+
+
+Definizione alla linea 24 del file devfs.\+c.
+
+
+
+Referenzia inode\+::chown, inode\+::creat, inode\+::dev, inode\+::finddir, inode\+::flush, inode\+::gid, task\+::gid, inode\+::ino, inode\+::ioctl, kmalloc(), inode\+::link, inode\+::mode, inode\+::name, inode\+::nlink, inode\+::parent, inode\+::rdev, inode\+::read, inode\+::readdir, inode\+::rename, inode\+::size, inode\+::uid, task\+::uid, inode\+::unlink, vfs\+\_\+map(), vfs\+\_\+mapped(), e inode\+::write.
+
+
+\begin{DoxyCode}
+24                                                                          \{
+25     \textcolor{keywordflow}{if}((\textcolor{keywordtype}{void}*) \hyperlink{vfs_8c_a99334446cfc1dfc32088d838b4f2895c}{vfs\_mapped}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}) != NULL)
+26         \textcolor{keywordflow}{return} NULL;
+27         
+28     \hyperlink{structinode}{inode\_t}* ino = (\hyperlink{structinode}{inode\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structinode}{inode\_t}));
+29     strcpy(ino->\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name}, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name});
+30     
+31     ino->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev} = inode->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev};
+32     ino->\hyperlink{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{ino} = 0;
+33     ino->\hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode} = mode;
+34     ino->\hyperlink{structinode_a1daedc820c86b5af32f0a137419f7a8f}{nlink} = 0;
+35     ino->\hyperlink{structinode_a0eac94e96ded19029e871d5cce815bcb}{uid} = \hyperlink{devfs_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid};
+36     ino->\hyperlink{structinode_a8434fb9dd05057d00b37ed713713835d}{gid} = \hyperlink{devfs_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aaf3b6e15445e766a5c4823b815bca630}{gid};
+37     ino->\hyperlink{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{rdev} = ino->\hyperlink{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{rdev};
+38     ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} = (size\_t) 0;
+39     \textcolor{comment}{//ino->atime = ino->ctime = ino->mtime = time(NULL);}
+40     ino->\hyperlink{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}{parent} = inode;
+41     ino->\hyperlink{structinode_a3533c53c5391601c66b3ae0f389c0843}{link} = NULL;
+42     
+43     ino->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read} = NULL;
+44     ino->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write} = NULL;
+45     ino->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir} = NULL;
+46     ino->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir} = NULL;
+47     ino->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat} = NULL;
+48     ino->\hyperlink{structinode_a5a309a9c4ada7e4d062162b06125a929}{rename} = NULL;
+49     ino->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink} = NULL;
+50     ino->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown} = NULL;
+51     ino->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = NULL;
+52     ino->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl} = NULL;
+53     
+54     \hyperlink{vfs_8c_acb87c78588a46c5526e933c495b69c2a}{vfs\_map}(ino);
+55     
+56     \textcolor{keywordflow}{return} ino;
+57 \}
+\end{DoxyCode}
+\hypertarget{devfs_8c_a12b8ede9eeee8603d4b89d189a484380}{\index{devfs.\+c@{devfs.\+c}!devfs\+\_\+mount@{devfs\+\_\+mount}}
+\index{devfs\+\_\+mount@{devfs\+\_\+mount}!devfs.\+c@{devfs.\+c}}
+\subsubsection[{devfs\+\_\+mount}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ devfs\+\_\+mount (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{devfs_8c_a12b8ede9eeee8603d4b89d189a484380}
+
+
+Definizione alla linea 60 del file devfs.\+c.
+
+
+
+Referenzia inode\+::chown, inode\+::creat, inode\+::dev, devfs, devfs\+\_\+creat(), inode\+::finddir, inode\+::flush, inode\+::gid, G\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::ino, inode\+::ioctl, kmalloc(), inode\+::link, inode\+::mode, inode\+::name, inode\+::nlink, inode\+::parent, inode\+::rdev, inode\+::read, inode\+::readdir, inode\+::rename, inode\+::size, inode\+::uid, U\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::unlink, vfs\+\_\+root, e inode\+::write.
+
+
+\begin{DoxyCode}
+60                        \{
+61     
+62     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs} = (\hyperlink{structinode}{inode\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structinode}{inode\_t}));
+63     strcpy(\hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name}, \textcolor{stringliteral}{"dev"});
+64     
+65     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev} = (dev\_t) 0;
+66     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{ino} = (ino\_t) 0;
+67     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode} = S\_IFDIR;
+68     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a1daedc820c86b5af32f0a137419f7a8f}{nlink} = 0;
+69     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a0eac94e96ded19029e871d5cce815bcb}{uid} = \hyperlink{fs_8h_a9cf90243a3f4070f29ff12e5740e4ae4}{UID\_ROOT};
+70     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a8434fb9dd05057d00b37ed713713835d}{gid} = \hyperlink{fs_8h_a2a5a81b6a48db264d1ec6048268ea154}{GID\_ROOT};
+71     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{rdev} = (dev\_t) 0;
+72     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} = (size\_t) 0;
+73     \textcolor{comment}{//devfs->atime = devfs->ctime = devfs->mtime = time(NULL);}
+74     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}{parent} = \hyperlink{devfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root};
+75     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a3533c53c5391601c66b3ae0f389c0843}{link} = NULL;
+76     
+77     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read} = NULL;
+78     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write} = NULL;
+79     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir} = NULL;
+80     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir} = NULL;
+81     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat} = \hyperlink{devfs_8c_a268e4d56ebd88b1227eb40d20b247c03}{devfs\_creat};
+82     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a5a309a9c4ada7e4d062162b06125a929}{rename} = NULL;
+83     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink} = NULL;
+84     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown} = NULL;
+85     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = NULL;
+86     \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs}->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl} = NULL;
+87     
+88     \textcolor{keywordflow}{return} \hyperlink{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{devfs};
+89 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{devfs_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{devfs.\+c@{devfs.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!devfs.\+c@{devfs.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{devfs_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Definizione alla linea 33 del file sched.\+c.
+
+\hypertarget{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}{\index{devfs.\+c@{devfs.\+c}!devfs@{devfs}}
+\index{devfs@{devfs}!devfs.\+c@{devfs.\+c}}
+\subsubsection[{devfs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ devfs}}\label{devfs_8c_a4765c88c7a671cb46fcf3db60a9e140a}
+
+
+Definizione alla linea 20 del file devfs.\+c.
+
+\hypertarget{devfs_8c_a9af8258c3554800f6613f8147544225f}{\index{devfs.\+c@{devfs.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
+\index{vfs\+\_\+root@{vfs\+\_\+root}!devfs.\+c@{devfs.\+c}}
+\subsubsection[{vfs\+\_\+root}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ vfs\+\_\+root}}\label{devfs_8c_a9af8258c3554800f6613f8147544225f}
+
+
+Definizione alla linea 19 del file vfs.\+c.
+

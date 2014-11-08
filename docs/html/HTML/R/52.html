@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>IPV4_MAX_LENGTH</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/113.html#L46'>IPV4_MAX_LENGTH</a>    46 src/net/ipv4.c 		ip-&gt;offset = IPV4_FLAGS_MF | (offset * IPV4_MAX_LENGTH);
+<a href='../S/113.html#L117'>IPV4_MAX_LENGTH</a>   117 src/net/ipv4.c 	if(length &lt; IPV4_MAX_LENGTH) {
+<a href='../S/113.html#L130'>IPV4_MAX_LENGTH</a>   130 src/net/ipv4.c 	int max = length / IPV4_MAX_LENGTH;
+<a href='../S/113.html#L132'>IPV4_MAX_LENGTH</a>   132 src/net/ipv4.c 	if(length % IPV4_MAX_LENGTH == 0)
+<a href='../S/113.html#L136'>IPV4_MAX_LENGTH</a>   136 src/net/ipv4.c 		void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), IPV4_MAX_LENGTH, type, dest, 0, i);
+<a href='../S/113.html#L137'>IPV4_MAX_LENGTH</a>   137 src/net/ipv4.c 		ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+<a href='../S/113.html#L142'>IPV4_MAX_LENGTH</a>   142 src/net/ipv4.c 	void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), length - ((i - 1) * IPV4_MAX_LENGTH), type, dest, -1, i);
+<a href='../S/113.html#L143'>IPV4_MAX_LENGTH</a>   143 src/net/ipv4.c 	ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+</pre>
+</body>
+</html>

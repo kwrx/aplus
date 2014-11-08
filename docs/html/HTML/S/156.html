@@ -1,0 +1,213 @@
+<html>
+<head>
+<title>src/bufio.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/bufio.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L20'>[^]</a><a href='#L168'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L20' title='Defined at 20.'>bufio_init</a>
+<li><a href='#L28' title='Defined at 28.'>bufio_free_unused</a>
+<li><a href='#L45' title='Defined at 45.'>bufio_alloc</a>
+<li><a href='#L68' title='Defined at 68.'>bufio_alloc_raw</a>
+<li><a href='#L90' title='Defined at 90.'>bufio_free</a>
+<li><a href='#L103' title='Defined at 103.'>bufio_seek</a>
+<li><a href='#L131' title='Defined at 131.'>bufio_tell</a>
+<li><a href='#L135' title='Defined at 135.'>bufio_clear</a>
+<li><a href='#L141' title='Defined at 141.'>bufio_read</a>
+<li><a href='#L154' title='Defined at 154.'>bufio_write</a>
+<li><a href='#L168' title='Defined at 168.'>bufio_find_by_type</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;<a href='98.html'>aplus/bufio.h</a>&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L12'>  12 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 <b>static</b> <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/362.html' title='Multiple used in 7 places.'>list_buffers</a>;
+<a name='L16'>  16 <b>static</b> <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/143.html' title='Multiple used in 4 places.'>buffers_length</a>;
+<a name='L17'>  17 
+<a name='L18'>  18 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L19'>  19 
+<a name='L20'>  20 <b>int</b> <a href='../S/154.html#L61' title='Refered from 61 in src/main.c.'>bufio_init</a>() <font color='red'>{</font>
+<a name='L21'>  21         <a href='../S/96.html#L187' title='Defined at 187 in src/include/aplus/list.h.'>list_init</a>(<a href='../Y/362.html' title='Multiple used in 7 places.'>list_buffers</a>);
+<a name='L22'>  22         
+<a name='L23'>  23         <b>return</b> 0;
+<a name='L24'>  24 <font color='red'>}</font>
+<a name='L25'>  25 
+<a name='L26'>  26 
+<a name='L27'>  27 
+<a name='L28'>  28 <b>void</b> bufio_free_unused() <font color='red'>{</font>
+<a name='L29'>  29 
+<a name='L30'>  30         <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>;
+<a name='L31'>  31         <a href='../S/96.html#L187' title='Defined at 187 in src/include/aplus/list.h.'>list_init</a>(<a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>);
+<a name='L32'>  32         <a href='../S/96.html#L119' title='Defined at 119 in src/include/aplus/list.h.'>list_clone</a>(<a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>, <a href='../Y/362.html' title='Multiple used in 7 places.'>list_buffers</a>);
+<a name='L33'>  33         
+<a name='L34'>  34         <a href='../S/96.html#L175' title='Defined at 175 in src/include/aplus/list.h.'>list_foreach</a>(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>) <font color='red'>{</font>
+<a name='L35'>  35                 <i><font color='green'>//bufio_t* value = (bufio_t*) value;</font></i>
+<a name='L36'>  36                 
+<a name='L37'>  37                 <i><font color='green'>//if(value-&gt;task-&gt;state == TASK_STATE_DEAD)</font></i>
+<a name='L38'>  38                 <i><font color='green'>//      bufio_free(value);</font></i>
+<a name='L39'>  39         <font color='red'>}</font>
+<a name='L40'>  40         
+<a name='L41'>  41         <a href='../S/96.html#L193' title='Defined at 193 in src/include/aplus/list.h.'>list_destroy</a>(<a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>);
+<a name='L42'>  42 <font color='red'>}</font>
+<a name='L43'>  43 
+<a name='L44'>  44 
+<a name='L45'>  45 <a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../S/145.html#L66' title='Refered from 66 in src/fs/pipe.c.'>bufio_alloc</a>(<a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) <font color='red'>{</font>
+<a name='L46'>  46         <b>void</b>* <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a> = (<b>void</b>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L47'>  47         <b>if</b>(!<a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>)
+<a name='L48'>  48                 <b>return</b> 0;
+<a name='L49'>  49                 
+<a name='L50'>  50         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>(); 
+<a name='L51'>  51         <a href='../Y/143.html' title='Multiple used in 4 places.'>buffers_length</a> += <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L52'>  52 
+<a name='L53'>  53 
+<a name='L54'>  54         <a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> = (<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L55'>  55         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a> = <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>;
+<a name='L56'>  56         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> = <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L57'>  57         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a> = 0;
+<a name='L58'>  58         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = (<a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a>) 0;
+<a name='L59'>  59         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L60'>  60 
+<a name='L61'>  61 
+<a name='L62'>  62         <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/362.html' title='Multiple used in 7 places.'>list_buffers</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>);
+<a name='L63'>  63 
+<a name='L64'>  64         <a href='../S/88.html#L42' title='Defined at 42 in src/include/aplus/spinlock.h.'>unlock</a>();
+<a name='L65'>  65         <b>return</b> <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L66'>  66 <font color='red'>}</font>
+<a name='L67'>  67 
+<a name='L68'>  68 <a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* bufio_alloc_raw(<b>void</b>* <a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) <font color='red'>{</font>
+<a name='L69'>  69         <b>if</b>(!<a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a>)
+<a name='L70'>  70                 <b>return</b> 0;
+<a name='L71'>  71 
+<a name='L72'>  72         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>(); 
+<a name='L73'>  73 
+<a name='L74'>  74         <a href='../Y/143.html' title='Multiple used in 4 places.'>buffers_length</a> += <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L75'>  75 
+<a name='L76'>  76         <a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> = (<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L77'>  77         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a> = <a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a>;
+<a name='L78'>  78         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> = <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L79'>  79         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a> = 0;
+<a name='L80'>  80         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = (<a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a>) 0;
+<a name='L81'>  81         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L82'>  82         
+<a name='L83'>  83         <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/362.html' title='Multiple used in 7 places.'>list_buffers</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>);
+<a name='L84'>  84 
+<a name='L85'>  85         <a href='../S/88.html#L42' title='Defined at 42 in src/include/aplus/spinlock.h.'>unlock</a>();
+<a name='L86'>  86         
+<a name='L87'>  87         <b>return</b> <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L88'>  88 <font color='red'>}</font>
+<a name='L89'>  89 
+<a name='L90'>  90 <b>void</b> <a href='../S/145.html#L57' title='Refered from 57 in src/fs/pipe.c.'>bufio_free</a>(<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>) <font color='red'>{</font>
+<a name='L91'>  91         <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>();
+<a name='L92'>  92         <a href='../Y/143.html' title='Multiple used in 4 places.'>buffers_length</a> -= <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L93'>  93         
+<a name='L94'>  94         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a>);
+<a name='L95'>  95         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>);
+<a name='L96'>  96         
+<a name='L97'>  97         <a href='../S/96.html#L73' title='Defined at 73 in src/include/aplus/list.h.'>list_remove</a>(<a href='../Y/362.html' title='Multiple used in 7 places.'>list_buffers</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>);
+<a name='L98'>  98         
+<a name='L99'>  99         
+<a name='L100'> 100         <a href='../S/88.html#L42' title='Defined at 42 in src/include/aplus/spinlock.h.'>unlock</a>();
+<a name='L101'> 101 <font color='red'>}</font>
+<a name='L102'> 102 
+<a name='L103'> 103 <b>int</b> <a href='../R/217.html' title='Multiple refered from 5 places.'>bufio_seek</a>(<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a> <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>, <b>int</b> <a href='../Y/200.html' title='Multiple used in 9 places.'>dir</a>) <font color='red'>{</font>
+<a name='L104'> 104 
+<a name='L105'> 105         <b>if</b>(<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> &gt; <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>)
+<a name='L106'> 106                 <b>return</b> -1;
+<a name='L107'> 107                 
+<a name='L108'> 108         <b>if</b>(<a href='../Y/200.html' title='Multiple used in 9 places.'>dir</a> == <a href='../Y/31.html' title='Multiple used in 5 places.'>SEEK_CUR</a> &amp;&amp; (<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> + <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>) &gt; <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>)
+<a name='L109'> 109                 <b>return</b> -1;
+<a name='L110'> 110 
+<a name='L111'> 111         <b>switch</b>(<a href='../Y/200.html' title='Multiple used in 9 places.'>dir</a>) <font color='red'>{</font>
+<a name='L112'> 112                 <b>case</b> <a href='../Y/33.html' title='Multiple used in 7 places.'>SEEK_SET</a>:
+<a name='L113'> 113                         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L114'> 114                         <b>break</b>;
+<a name='L115'> 115                         
+<a name='L116'> 116                 <b>case</b> <a href='../Y/32.html' title='Multiple used in 3 places.'>SEEK_END</a>:
+<a name='L117'> 117                         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> - <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L118'> 118                         <b>break</b>;
+<a name='L119'> 119                         
+<a name='L120'> 120                 <b>case</b> <a href='../Y/31.html' title='Multiple used in 5 places.'>SEEK_CUR</a>:
+<a name='L121'> 121                         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> += <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L122'> 122                         <b>break</b>;
+<a name='L123'> 123                         
+<a name='L124'> 124                 <b>default</b>:
+<a name='L125'> 125                         <b>return</b> -1;
+<a name='L126'> 126         <font color='red'>}</font>
+<a name='L127'> 127         
+<a name='L128'> 128         <b>return</b> <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L129'> 129 <font color='red'>}</font>
+<a name='L130'> 130 
+<a name='L131'> 131 <b>int</b> <a href='../R/219.html' title='Multiple refered from 2 places.'>bufio_tell</a>(<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>) <font color='red'>{</font>
+<a name='L132'> 132         <b>return</b> <a href='../S/156.html#L103' title='Defined at 103 in src/bufio.c.'>bufio_seek</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, 0, <a href='../Y/31.html' title='Multiple used in 5 places.'>SEEK_CUR</a>);
+<a name='L133'> 133 <font color='red'>}</font>
+<a name='L134'> 134 
+<a name='L135'> 135 <b>void</b> bufio_clear(<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>) <font color='red'>{</font>
+<a name='L136'> 136         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L137'> 137         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a>, 0, <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L138'> 138         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L139'> 139 <font color='red'>}</font>
+<a name='L140'> 140 
+<a name='L141'> 141 <b>int</b> <a href='../S/145.html#L35' title='Refered from 35 in src/fs/pipe.c.'>bufio_read</a>(<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <b>void</b>* <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>) <font color='red'>{</font>           
+<a name='L142'> 142         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L143'> 143         
+<a name='L144'> 144         <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> = (<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> + <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> &gt; <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) ? (<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> - <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>) : <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L145'> 145         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, (<b>void</b>*) ((<a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a> + <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>), <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>);
+<a name='L146'> 146         
+<a name='L147'> 147         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> += (<a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a>) <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L148'> 148         
+<a name='L149'> 149         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L150'> 150         
+<a name='L151'> 151         <b>return</b> (<b>int</b>) <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L152'> 152 <font color='red'>}</font>
+<a name='L153'> 153 
+<a name='L154'> 154 <b>int</b> <a href='../S/145.html#L47' title='Refered from 47 in src/fs/pipe.c.'>bufio_write</a>(<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <b>void</b>* <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>) <font color='red'>{</font>          
+<a name='L155'> 155         
+<a name='L156'> 156         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L157'> 157         
+<a name='L158'> 158         <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> = (<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> + <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> &gt; <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) ? (<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> - <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>) : <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L159'> 159         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>((<b>void</b>*) ((<a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a> + <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>), <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>);
+<a name='L160'> 160         
+<a name='L161'> 161         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> += (<a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a>) <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L162'> 162         
+<a name='L163'> 163         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L164'> 164         
+<a name='L165'> 165         <b>return</b> (<b>int</b>) <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L166'> 166 <font color='red'>}</font>
+<a name='L167'> 167 
+<a name='L168'> 168 <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* bufio_find_by_type(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L169'> 169         <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>;
+<a name='L170'> 170         <a href='../S/96.html#L187' title='Defined at 187 in src/include/aplus/list.h.'>list_init</a>(<a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>);
+<a name='L171'> 171         
+<a name='L172'> 172         <a href='../S/96.html#L175' title='Defined at 175 in src/include/aplus/list.h.'>list_foreach</a>(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/362.html' title='Multiple used in 7 places.'>list_buffers</a>) <font color='red'>{</font>
+<a name='L173'> 173                 <a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> = (<a href='../S/98.html#L39' title='Defined at 39 in src/include/aplus/bufio.h.'>bufio_t</a>*) <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L174'> 174 
+<a name='L175'> 175                 <b>if</b>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a> == <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>)
+<a name='L176'> 176                         <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>);
+<a name='L177'> 177         <font color='red'>}</font>
+<a name='L178'> 178         
+<a name='L179'> 179         <b>return</b> <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>;
+<a name='L180'> 180 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L20'>[^]</a><a href='#L168'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

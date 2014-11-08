@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="struct____pthread__key" kind="struct" prot="public">
+    <compoundname>__pthread_key</compoundname>
+    <includes refid="pthread__internal_8h" local="no">pthread_internal.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char __pthread_key::used</definition>
+        <argsstring></argsstring>
+        <name>used</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="32" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* __pthread_key::dtor)(void *)</definition>
+        <argsstring>)(void *)</argsstring>
+        <name>dtor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="33" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* __pthread_key::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="34" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="3">
+        <label>__pthread_key</label>
+        <link refid="struct____pthread__key"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="31" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="31" bodyend="35"/>
+    <listofallmembers>
+      <member refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" prot="public" virt="non-virtual"><scope>__pthread_key</scope><name>dtor</name></member>
+      <member refid="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" prot="public" virt="non-virtual"><scope>__pthread_key</scope><name>used</name></member>
+      <member refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" prot="public" virt="non-virtual"><scope>__pthread_key</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

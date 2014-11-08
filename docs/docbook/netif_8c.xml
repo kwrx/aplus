@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="netif_8c">
+    <title>netif.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/netif.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/net/arp.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="netif_8c_1aa7d07620133cc2243295b0c03ac8436e">lst_netif</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="netif_8c_1accbe476fec12cec39066f558e3040ef6">lst_packets</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="netif_8c_1ac75c28e791563771b563d670aeebd552">netif_htonl</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> h)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> <link linkend="netif_8c_1aa915d67e8c3d0b0e1beed32f3ee21749">netif_htons</link> (
+<link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> h)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="netif_8c_1a5e9c3efca67d84bdcfffdbbdfe70711b">netif_ntohl</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> h)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="netif_8c_1ae01b55d09345802921e2a0348cfeb9a0">netif_ntohs</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> h)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * <link linkend="netif_8c_1a7a9fee228b8774a921b2d7ea567a0006">netif_find_by_ipv4</link> (
+<link linkend="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a">ipv4_t</link> * ipv4)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * <link linkend="netif_8c_1a9f5e5c9b8dab074ad69fa4991dbe1898">netif_find_by_ipv6</link> (
+<link linkend="netif_8h_1a0a195da7affbedb767969c3a02c9a82d">ipv6_t</link> * ipv6)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * <link linkend="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b">netif_find_by_macaddr</link> (
+<link linkend="netif_8h_1a95d524a06a1ff12a314f88bac04db658">macaddr_t</link> * macaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * <link linkend="netif_8c_1a0de3666f699d7d9cc7ec52171b844fa0">netif_find_by_name</link> (
+char * name)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="netif_8c_1aa233de3d4ae3825f0beafd81d10fbe36">netif_ifup</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="netif_8c_1a801ea0d4582b551b79c186cd1023180c">netif_ifdown</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="netif_8c_1a01bed7c80274b7830923cdde25b1d48a">netif_add</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netdev)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="netif_8c_1a9c8fb9469b40267eb50031f262587eab">netif_remove</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netdev)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="netif_8c_1af7c3254022249b2dfa78151c8f345e77">netif_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="netif_8c_1a3edf21f1cc51e87714ea8911236d896c">netif_packets_add</link> (
+<link linkend="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c">netif_packet_t</link> * packet)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="netif_8c_1ae9331f4834a47cc6f7c9edf6490046cf">netif_packets_remove</link> (
+<link linkend="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c">netif_packet_t</link> * packet)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c">netif_packet_t</link> * <link linkend="netif_8c_1a298d555d31337e14e76688ecdbf08ef6">netif_packets_find_by_id</link> (
+uint64_t id)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="netif_8c_1ae6bde7bab4c04cc235035e789ae2854b">netif_packets_find_by_protocol</link> (
+int protocol)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c">netif_packet_t</link> * <link linkend="netif_8c_1aa14a95992efbcac98c16a43724dc0942">netif_packets_create</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif, int protocol, int tot_length, int head_length, void * data)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/net/netif.c</para>
+    </simplesect>
+</section>

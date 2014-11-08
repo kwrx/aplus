@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>bar</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L65'>bar</a>                65 src/arch/pci.c static uint32_t pci_get_bar(pci_device_t* device, uint8_t bar) {
+<a href='../S/160.html#L66'>bar</a>                66 src/arch/pci.c 	if(bar &gt;= 6)
+<a href='../S/160.html#L70'>bar</a>                70 src/arch/pci.c 	if(header == 0x02 || (header == 0x01 &amp;&amp; bar &lt; 2))
+<a href='../S/160.html#L73'>bar</a>                73 src/arch/pci.c 	uint8_t reg = 0x10 + (0x04 * bar);
+<a href='../S/160.html#L82'>bar</a>                82 src/arch/pci.c 		uint32_t bar = pci_get_bar(device, i++);
+<a href='../S/160.html#L83'>bar</a>                83 src/arch/pci.c 		if(bar &amp; 0x01)
+<a href='../S/160.html#L84'>bar</a>                84 src/arch/pci.c 			return bar &amp; 0xFFFFFFFC;
+<a href='../S/160.html#L95'>bar</a>                95 src/arch/pci.c 		uint32_t bar = pci_get_bar(device, i++);
+<a href='../S/160.html#L96'>bar</a>                96 src/arch/pci.c 		if((bar &amp; 0x01) == 0)
+<a href='../S/160.html#L97'>bar</a>                97 src/arch/pci.c 			return bar &amp; 0xFFFFFFF0;
+</pre>
+</body>
+</html>

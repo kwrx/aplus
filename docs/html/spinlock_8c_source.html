@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus:  File sorgente src/spinlock.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('spinlock_8c_source.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">spinlock.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="spinlock_8c.html">Vai alla documentazione di questo file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//  spinlock.c</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">//  Author:</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//  Copyright (c) 2014 WareX</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">//  This program is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">//  it under the terms of the GNU General Public License as published by</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">//  the Free Software Foundation, either version 3 of the License, or</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//  (at your option) any later version.</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//  This program is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//  but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//  GNU General Public License for more details.</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//  You should have received a copy of the GNU General Public License</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="spinlock_8h.html">aplus/spinlock.h</a>&gt;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="list_8h.html">aplus/list.h</a>&gt;</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="spinlock_8c.html#ab01e311f21f78fc3c2bd0bdf74ef85c4">   27</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="spinlock_8c.html#ab01e311f21f78fc3c2bd0bdf74ef85c4">spinlock_lock</a>(<a class="code" href="spinlock_8h.html#a7d562148dafb0dacf0ee876d482ed090">spinlock_t</a>* spin) {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">if</span>((*spin &amp; <a class="code" href="spinlock_8h.html#acf8c39cdbeaaab5ea8c011c77d5bca8b">SPINLOCK_FLAGS_FASTLOCK</a>) == 0)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="spinlock_8h.html#a9fd2288887ae3bf29520677b29e010a3">spinlock_waiton</a>(*spin &amp; <a class="code" href="spinlock_8h.html#aad28f3f1b6783cd56871b611ca2bcd97">SPINLOCK_FLAGS_LOCKED</a>);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="spinlock_8h.html#a34b538b8c053bec1d149f9a4258aca89">fastlock_waiton</a>(*spin &amp; SPINLOCK_FLAGS_LOCKED);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    *spin |= <a class="code" href="spinlock_8h.html#aad28f3f1b6783cd56871b611ca2bcd97">SPINLOCK_FLAGS_LOCKED</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="spinlock_8c.html#a4ca6e661fa1b704d39d834ac7341b360">   37</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="spinlock_8c.html#a4ca6e661fa1b704d39d834ac7341b360">spinlock_unlock</a>(<a class="code" href="spinlock_8h.html#a7d562148dafb0dacf0ee876d482ed090">spinlock_t</a>* spin) {</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    *spin &amp;= ~<a class="code" href="spinlock_8h.html#aad28f3f1b6783cd56871b611ca2bcd97">SPINLOCK_FLAGS_LOCKED</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="spinlock_8c.html#aef8280bb43eb7eecb8a7903f70af1906">   41</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="spinlock_8c.html#aef8280bb43eb7eecb8a7903f70af1906">spinlock_trylock</a>(<a class="code" href="spinlock_8h.html#a7d562148dafb0dacf0ee876d482ed090">spinlock_t</a>* spin) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span>(*spin &amp; <a class="code" href="spinlock_8h.html#aad28f3f1b6783cd56871b611ca2bcd97">SPINLOCK_FLAGS_LOCKED</a>)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    *spin |= <a class="code" href="spinlock_8h.html#aad28f3f1b6783cd56871b611ca2bcd97">SPINLOCK_FLAGS_LOCKED</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="spinlock_8c.html#aa40e1417e8410d92c2ffc313e57560e8">   49</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="spinlock_8c.html#aa40e1417e8410d92c2ffc313e57560e8">__spinlock_waiton</a>() {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="src_2sched_8c.html#a4002881c26790c4390e314ce0e1ef1e8">schedule_yield</a>();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="spinlock_8c.html#a2bf717efcda7e5189e3192e09e49c249">   53</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="spinlock_8c.html#a2bf717efcda7e5189e3192e09e49c249">__fastlock_waiton</a>() {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> __volatile__(<span class="stringliteral">&quot;pause&quot;</span>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
+<div class="ttc" id="spinlock_8h_html_a34b538b8c053bec1d149f9a4258aca89"><div class="ttname"><a href="spinlock_8h.html#a34b538b8c053bec1d149f9a4258aca89">fastlock_waiton</a></div><div class="ttdeci">#define fastlock_waiton(cond)</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8h_source.html#l00051">spinlock.h:51</a></div></div>
+<div class="ttc" id="spinlock_8c_html_aa40e1417e8410d92c2ffc313e57560e8"><div class="ttname"><a href="spinlock_8c.html#aa40e1417e8410d92c2ffc313e57560e8">__spinlock_waiton</a></div><div class="ttdeci">void __spinlock_waiton()</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8c_source.html#l00049">spinlock.c:49</a></div></div>
+<div class="ttc" id="spinlock_8c_html_ab01e311f21f78fc3c2bd0bdf74ef85c4"><div class="ttname"><a href="spinlock_8c.html#ab01e311f21f78fc3c2bd0bdf74ef85c4">spinlock_lock</a></div><div class="ttdeci">void spinlock_lock(spinlock_t *spin)</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8c_source.html#l00027">spinlock.c:27</a></div></div>
+<div class="ttc" id="spinlock_8c_html_aef8280bb43eb7eecb8a7903f70af1906"><div class="ttname"><a href="spinlock_8c.html#aef8280bb43eb7eecb8a7903f70af1906">spinlock_trylock</a></div><div class="ttdeci">int spinlock_trylock(spinlock_t *spin)</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8c_source.html#l00041">spinlock.c:41</a></div></div>
+<div class="ttc" id="spinlock_8c_html_a4ca6e661fa1b704d39d834ac7341b360"><div class="ttname"><a href="spinlock_8c.html#a4ca6e661fa1b704d39d834ac7341b360">spinlock_unlock</a></div><div class="ttdeci">void spinlock_unlock(spinlock_t *spin)</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8c_source.html#l00037">spinlock.c:37</a></div></div>
+<div class="ttc" id="spinlock_8h_html"><div class="ttname"><a href="spinlock_8h.html">spinlock.h</a></div></div>
+<div class="ttc" id="spinlock_8c_html_a2bf717efcda7e5189e3192e09e49c249"><div class="ttname"><a href="spinlock_8c.html#a2bf717efcda7e5189e3192e09e49c249">__fastlock_waiton</a></div><div class="ttdeci">void __fastlock_waiton()</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8c_source.html#l00053">spinlock.c:53</a></div></div>
+<div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [gdt_p]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</div></div>
+<div class="ttc" id="spinlock_8h_html_a7d562148dafb0dacf0ee876d482ed090"><div class="ttname"><a href="spinlock_8h.html#a7d562148dafb0dacf0ee876d482ed090">spinlock_t</a></div><div class="ttdeci">volatile int spinlock_t</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8h_source.html#l00029">spinlock.h:29</a></div></div>
+<div class="ttc" id="spinlock_8h_html_aad28f3f1b6783cd56871b611ca2bcd97"><div class="ttname"><a href="spinlock_8h.html#aad28f3f1b6783cd56871b611ca2bcd97">SPINLOCK_FLAGS_LOCKED</a></div><div class="ttdeci">#define SPINLOCK_FLAGS_LOCKED</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8h_source.html#l00026">spinlock.h:26</a></div></div>
+<div class="ttc" id="list_8h_html"><div class="ttname"><a href="list_8h.html">list.h</a></div></div>
+<div class="ttc" id="spinlock_8h_html_a9fd2288887ae3bf29520677b29e010a3"><div class="ttname"><a href="spinlock_8h.html#a9fd2288887ae3bf29520677b29e010a3">spinlock_waiton</a></div><div class="ttdeci">#define spinlock_waiton(cond)</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8h_source.html#l00047">spinlock.h:47</a></div></div>
+<div class="ttc" id="spinlock_8h_html_acf8c39cdbeaaab5ea8c011c77d5bca8b"><div class="ttname"><a href="spinlock_8h.html#acf8c39cdbeaaab5ea8c011c77d5bca8b">SPINLOCK_FLAGS_FASTLOCK</a></div><div class="ttdeci">#define SPINLOCK_FLAGS_FASTLOCK</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8h_source.html#l00027">spinlock.h:27</a></div></div>
+<div class="ttc" id="src_2sched_8c_html_a4002881c26790c4390e314ce0e1ef1e8"><div class="ttname"><a href="src_2sched_8c.html#a4002881c26790c4390e314ce0e1ef1e8">schedule_yield</a></div><div class="ttdeci">void schedule_yield()</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00109">sched.c:109</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="spinlock_8c.html">spinlock.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

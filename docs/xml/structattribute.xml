@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structattribute" kind="struct" prot="public">
+    <compoundname>attribute</compoundname>
+    <includes refid="attribute_8h" local="no">attribute.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structattribute_1ab0c3a4d25c5c24cd1ea3af2a6631267d" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char attribute::name[0x80]</definition>
+        <argsstring>[0x80]</argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="26" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structattribute_1a868a57c7ba49cfa75755e4061662abe3" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t attribute::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="27" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="11">
+        <label>attribute</label>
+        <link refid="structattribute"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="25" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="25" bodyend="28"/>
+    <listofallmembers>
+      <member refid="structattribute_1ab0c3a4d25c5c24cd1ea3af2a6631267d" prot="public" virt="non-virtual"><scope>attribute</scope><name>name</name></member>
+      <member refid="structattribute_1a868a57c7ba49cfa75755e4061662abe3" prot="public" virt="non-virtual"><scope>attribute</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

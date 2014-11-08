@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="paging_8c">
+    <title>paging.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;grub.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="paging_8c_1a5f96cb6ae6670e023c407cc2f77e1704">PGSIZE</link> (<link linkend="mm_8h_1ac4551bbc9efabf8378f35498f80b4679">BLKSIZE</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="paging_8c_1ad50f7c34909a1396931c4206fa1de672">PGFLAGS</link> (0x00000000)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="paging_8c_1ad1e1979b244e7f89d86e1bcb9500e177">PDSIZE</link> (1024)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="paging_8c_1a99467af8296ea3e135297cacd1e5526f">PDENTRY</link> ((<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>) x &gt;&gt; 22)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="paging_8c_1a28c1229acf69809be474fd0cda5c2bfa">PTSIZE</link> (1024)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="paging_8c_1a3af3f6fb4b2f4d2c0c89ab2af3c87cbf">PTENTRY</link> ((<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>) x &lt;&lt; 10 &gt;&gt; 10 &gt;&gt; 12)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>volatile <link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link> * <link linkend="paging_8c_1a3068f9054a832aa72e12ab9ad210dd99">current_heap</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="paging_8c_1a8ffb348d372acd38099f16b08bdaf4b5">memsize</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * <link linkend="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9">current_vmm</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * <link linkend="paging_8c_1afac53891df03c313fc0b5b24e0acc8a9">kernel_vmm</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="paging_8c_1a3744f58bc6d40534a3e026b2f242ab25">vmm_queue</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="paging_8c_1aa525b2cea53b39f8fdd94edd4730cff2">vmm_switch</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * addr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="paging_8c_1aa760eb29c4563f9ab05cc3d9331944ac">vmm_enable</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="paging_8c_1ae6c3d7080850f24c974dc0c53b653110">vmm_disable</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="paging_8c_1ae969f54f1646d5d8a871bef828a24239">vmm_map</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * pd, void * paddr, void * vaddr, size_t len, int flags)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="paging_8c_1ab6841aac2bf44152a7c0c12293a97440">vmm_umap</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * pd, void * addr, size_t len)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="paging_8c_1aebed4a90dd887506ed125f9efb953c93">vmm_alloc</link> (
+void * vaddr, size_t size, int flags)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="paging_8c_1a8828597ede1b2c5bcc5ea1a4ca7919a9">vmm_mapkernel</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * dest)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * <link linkend="paging_8c_1a200ca682c57c6acaa05f2f56c9f6f6de">vmm_create</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="paging_8c_1a22fcc252d0f4746924875b97d803b18b">vmm_destroy</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * vmm)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="paging_8c_1aac183f585641487a954ca46c0d7bde31">vmm_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/mm/paging.c</para>
+    </simplesect>
+</section>

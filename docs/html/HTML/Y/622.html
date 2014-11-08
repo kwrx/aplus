@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>sum</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/113.html#L15'>sum</a>                15 src/net/ipv4.c 	int sum = 0;
+<a href='../S/113.html#L19'>sum</a>                19 src/net/ipv4.c 		sum += 0xFFFF &amp; *((uint16_t*) buf);
+<a href='../S/113.html#L25'>sum</a>                25 src/net/ipv4.c 		sum += (0xFF &amp; *buf) &lt;&lt; 8;
+<a href='../S/113.html#L27'>sum</a>                27 src/net/ipv4.c 	while(sum &gt;&gt; 16)
+<a href='../S/113.html#L28'>sum</a>                28 src/net/ipv4.c 		sum = (sum &amp; 0xFFFF) + (sum &gt;&gt; 16);
+<a href='../S/113.html#L30'>sum</a>                30 src/net/ipv4.c 	uint16_t cksum = ((uint16_t) sum ^ 0xFFFF);
+</pre>
+</body>
+</html>

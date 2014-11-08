@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>n</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L200'>n</a>                 200 src/arch/desc.c 	#define gdt_set(n, b, l, a, g) 					\
+<a href='../S/158.html#L201'>n</a>                 201 src/arch/desc.c 		gdt_e[n].base_l = (b &amp; 0xFFFF);				\
+<a href='../S/158.html#L202'>n</a>                 202 src/arch/desc.c 		gdt_e[n].base_m = (b &gt;&gt; 16) &amp; 0xFF;			\
+<a href='../S/158.html#L203'>n</a>                 203 src/arch/desc.c 		gdt_e[n].base_h = (b &gt;&gt; 24) &amp; 0xFF;			\
+<a href='../S/158.html#L204'>n</a>                 204 src/arch/desc.c 		gdt_e[n].limit_l = (l &amp; 0xFFFF);			\
+<a href='../S/158.html#L205'>n</a>                 205 src/arch/desc.c 		gdt_e[n].granularity = (l &gt;&gt; 16) &amp; 0x0F;	\
+<a href='../S/158.html#L206'>n</a>                 206 src/arch/desc.c 		gdt_e[n].granularity |= g &amp; 0xF0;			\
+<a href='../S/158.html#L207'>n</a>                 207 src/arch/desc.c 		gdt_e[n].access = a
+<a href='../S/158.html#L240'>n</a>                 240 src/arch/desc.c 	#define _i(n)									\
+<a href='../S/158.html#L241'>n</a>                 241 src/arch/desc.c 		extern void isr##n();						\
+<a href='../S/158.html#L242'>n</a>                 242 src/arch/desc.c 		idt_set(n, (uint32_t)isr##n, 0x08, 0x8E)
+<a href='../S/158.html#L286'>n</a>                 286 src/arch/desc.c 	#define _i(n)										\
+<a href='../S/158.html#L287'>n</a>                 287 src/arch/desc.c 		extern void irq##n();							\
+<a href='../S/158.html#L288'>n</a>                 288 src/arch/desc.c 		idt_set(n + 32, (uint32_t)irq##n, 0x08, 0x8E)
+<a href='../S/158.html#L334'>n</a>                 334 src/arch/desc.c int irq_set(int n, void* handler) {
+<a href='../S/158.html#L335'>n</a>                 335 src/arch/desc.c 	if(n &gt; 16) {
+<a href='../S/158.html#L340'>n</a>                 340 src/arch/desc.c 	irqs[n] = handler;
+<a href='../S/158.html#L344'>n</a>                 344 src/arch/desc.c int irq_unset(int n) {
+<a href='../S/158.html#L345'>n</a>                 345 src/arch/desc.c 	if(n &gt; 16) {
+<a href='../S/158.html#L350'>n</a>                 350 src/arch/desc.c 	irqs[n] = 0;
+<a href='../S/158.html#L354'>n</a>                 354 src/arch/desc.c void* irq_get(int n) {
+<a href='../S/158.html#L355'>n</a>                 355 src/arch/desc.c 	if(n &gt; 16) {
+<a href='../S/158.html#L360'>n</a>                 360 src/arch/desc.c 	return irqs[n];
+<a href='../S/155.html#L37'>n</a>                  37 src/debug.c    		unsigned int n = value / 10;
+<a href='../S/155.html#L41'>n</a>                  41 src/debug.c    		value = n;
+<a href='../S/102.html#L32'>n</a>                  32 src/include/aplus.h #define read_reg(n)												\
+<a href='../S/102.html#L33'>n</a>                  33 src/include/aplus.h 	static inline uint32_t read_##n() {							\
+<a href='../S/102.html#L35'>n</a>                  35 src/include/aplus.h 		__asm__ __volatile__ ("mov %0, " #n : "=r"(ret));		\
+<a href='../S/102.html#L66'>n</a>                  66 src/include/aplus.h #define write_reg(n)											\
+<a href='../S/102.html#L67'>n</a>                  67 src/include/aplus.h 	static inline void write_##n(uint32_t val) {				\
+<a href='../S/102.html#L68'>n</a>                  68 src/include/aplus.h 		__asm__ __volatile__ ("mov " #n ", %0" : : "r"(val));	\
+<a href='../S/102.html#L96'>n</a>                  96 src/include/aplus.h #define outx(n, t, reg)												\
+<a href='../S/102.html#L97'>n</a>                  97 src/include/aplus.h 	static inline void out##n(uint16_t p, t v) {					\
+<a href='../S/102.html#L106'>n</a>                 106 src/include/aplus.h #define inx(n, t, reg)												\
+<a href='../S/102.html#L107'>n</a>                 107 src/include/aplus.h 	static inline t in##n(uint16_t p) {								\
+<a href='../S/102.html#L117'>n</a>                 117 src/include/aplus.h #define outsx(n, t, reg)											\
+<a href='../S/102.html#L118'>n</a>                 118 src/include/aplus.h 	static inline void outs##n(uint16_t p, t* v, uint32_t len) {	\
+<a href='../S/102.html#L120'>n</a>                 120 src/include/aplus.h 			out##n(p, v[i]);										\
+<a href='../S/102.html#L128'>n</a>                 128 src/include/aplus.h #define insx(n, t, reg)												\
+<a href='../S/102.html#L129'>n</a>                 129 src/include/aplus.h 	static inline t* ins##n(uint16_t p, t* v, uint32_t len) {		\
+<a href='../S/102.html#L131'>n</a>                 131 src/include/aplus.h 			v[i] = in##n(p);										\
+<a href='../S/86.html#L15'>n</a>                  15 src/include/aplus/syscall.h #define SYSCALL(h, n)														\
+<a href='../S/86.html#L16'>n</a>                  16 src/include/aplus/syscall.h 	static syscall_t syscall_##n = {										\
+<a href='../S/86.html#L17'>n</a>                  17 src/include/aplus/syscall.h 		(void*) h, (int) n													\
+<a href='../S/86.html#L19'>n</a>                  19 src/include/aplus/syscall.h 	ATTRIBUTE("syscall", syscall_##n)
+<a href='../S/83.html#L5'>n</a>                   5 usr/src/libcrt0/src/syscalls.c #define syscall0(n, h)					\
+<a href='../S/83.html#L11'>n</a>                  11 usr/src/libcrt0/src/syscalls.c 			: "a"(n)					\
+<a href='../S/83.html#L17'>n</a>                  17 usr/src/libcrt0/src/syscalls.c #define syscall1(n, h)					\
+<a href='../S/83.html#L23'>n</a>                  23 usr/src/libcrt0/src/syscalls.c 			: "a"(n), "b"(p1)			\
+<a href='../S/83.html#L29'>n</a>                  29 usr/src/libcrt0/src/syscalls.c #define syscall2(n, h)					\
+<a href='../S/83.html#L35'>n</a>                  35 usr/src/libcrt0/src/syscalls.c 			: "a"(n), "b"(p1), "c"(p2)	\
+<a href='../S/83.html#L41'>n</a>                  41 usr/src/libcrt0/src/syscalls.c #define syscall3(n, h)					\
+<a href='../S/83.html#L47'>n</a>                  47 usr/src/libcrt0/src/syscalls.c 			: "a"(n), "b"(p1), "c"(p2),	\
+<a href='../S/83.html#L54'>n</a>                  54 usr/src/libcrt0/src/syscalls.c #define syscall4(n, h)					\
+<a href='../S/83.html#L60'>n</a>                  60 usr/src/libcrt0/src/syscalls.c 			: "a"(n), "b"(p1), "c"(p2),	\
+<a href='../S/83.html#L67'>n</a>                  67 usr/src/libcrt0/src/syscalls.c #define syscall5(n, h)					\
+<a href='../S/83.html#L73'>n</a>                  73 usr/src/libcrt0/src/syscalls.c 			: "a"(n), "b"(p1), "c"(p2),	\
+</pre>
+</body>
+</html>

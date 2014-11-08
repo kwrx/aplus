@@ -1,0 +1,382 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="pthread__internal_8h" kind="file">
+    <compoundname>pthread_internal.h</compoundname>
+    <includes local="no">errno.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+    <includedby refid="pthread__attr_8c" local="yes">usr/src/libpthread/src/pthread_attr.c</includedby>
+    <includedby refid="pthread__barrier_8c" local="yes">usr/src/libpthread/src/pthread_barrier.c</includedby>
+    <includedby refid="pthread__barrierattr_8c" local="yes">usr/src/libpthread/src/pthread_barrierattr.c</includedby>
+    <includedby refid="pthread__cancel_8c" local="yes">usr/src/libpthread/src/pthread_cancel.c</includedby>
+    <includedby refid="pthread__cond_8c" local="yes">usr/src/libpthread/src/pthread_cond.c</includedby>
+    <includedby refid="pthread__condattr_8c" local="yes">usr/src/libpthread/src/pthread_condattr.c</includedby>
+    <includedby refid="pthread__create_8c" local="yes">usr/src/libpthread/src/pthread_create.c</includedby>
+    <includedby refid="pthread__detach_8c" local="yes">usr/src/libpthread/src/pthread_detach.c</includedby>
+    <includedby refid="pthread__equal_8c" local="yes">usr/src/libpthread/src/pthread_equal.c</includedby>
+    <includedby refid="pthread__exit_8c" local="yes">usr/src/libpthread/src/pthread_exit.c</includedby>
+    <includedby refid="pthread__join_8c" local="yes">usr/src/libpthread/src/pthread_join.c</includedby>
+    <includedby refid="pthread__key_8c" local="yes">usr/src/libpthread/src/pthread_key.c</includedby>
+    <includedby refid="pthread__mutex_8c" local="yes">usr/src/libpthread/src/pthread_mutex.c</includedby>
+    <includedby refid="pthread__mutexattr_8c" local="yes">usr/src/libpthread/src/pthread_mutexattr.c</includedby>
+    <includedby refid="pthread__once_8c" local="yes">usr/src/libpthread/src/pthread_once.c</includedby>
+    <includedby refid="pthread__queue_8c" local="yes">usr/src/libpthread/src/pthread_queue.c</includedby>
+    <includedby refid="pthread__rwlock_8c" local="yes">usr/src/libpthread/src/pthread_rwlock.c</includedby>
+    <includedby refid="pthread__rwlockattr_8c" local="yes">usr/src/libpthread/src/pthread_rwlockattr.c</includedby>
+    <includedby refid="pthread__sched_8c" local="yes">usr/src/libpthread/src/pthread_sched.c</includedby>
+    <includedby refid="pthread__self_8c" local="yes">usr/src/libpthread/src/pthread_self.c</includedby>
+    <includedby refid="pthread__spin_8c" local="yes">usr/src/libpthread/src/pthread_spin.c</includedby>
+    <incdepgraph>
+      <node id="2324">
+        <label>stdint.h</label>
+      </node>
+      <node id="2323">
+        <label>errno.h</label>
+      </node>
+      <node id="2322">
+        <label>usr/src/libpthread/src/pthread_internal.h</label>
+        <link refid="pthread_internal.h"/>
+        <childnode refid="2323" relation="include">
+        </childnode>
+        <childnode refid="2324" relation="include">
+        </childnode>
+        <childnode refid="2325" relation="include">
+        </childnode>
+      </node>
+      <node id="2325">
+        <label>pthread.h</label>
+        <link refid="pthread_8h"/>
+        <childnode refid="2324" relation="include">
+        </childnode>
+        <childnode refid="2326" relation="include">
+        </childnode>
+        <childnode refid="2327" relation="include">
+        </childnode>
+        <childnode refid="2328" relation="include">
+        </childnode>
+        <childnode refid="2329" relation="include">
+        </childnode>
+      </node>
+      <node id="2326">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2329">
+        <label>unistd.h</label>
+      </node>
+      <node id="2327">
+        <label>sys/time.h</label>
+      </node>
+      <node id="2328">
+        <label>sched.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2337">
+        <label>usr/src/libpthread/src/pthread_create.c</label>
+        <link refid="pthread__create_8c"/>
+      </node>
+      <node id="2341">
+        <label>usr/src/libpthread/src/pthread_join.c</label>
+        <link refid="pthread__join_8c"/>
+      </node>
+      <node id="2351">
+        <label>usr/src/libpthread/src/pthread_spin.c</label>
+        <link refid="pthread__spin_8c"/>
+      </node>
+      <node id="2339">
+        <label>usr/src/libpthread/src/pthread_equal.c</label>
+        <link refid="pthread__equal_8c"/>
+      </node>
+      <node id="2350">
+        <label>usr/src/libpthread/src/pthread_self.c</label>
+        <link refid="pthread__self_8c"/>
+      </node>
+      <node id="2330">
+        <label>usr/src/libpthread/src/pthread_internal.h</label>
+        <link refid="pthread_internal.h"/>
+        <childnode refid="2331" relation="include">
+        </childnode>
+        <childnode refid="2332" relation="include">
+        </childnode>
+        <childnode refid="2333" relation="include">
+        </childnode>
+        <childnode refid="2334" relation="include">
+        </childnode>
+        <childnode refid="2335" relation="include">
+        </childnode>
+        <childnode refid="2336" relation="include">
+        </childnode>
+        <childnode refid="2337" relation="include">
+        </childnode>
+        <childnode refid="2338" relation="include">
+        </childnode>
+        <childnode refid="2339" relation="include">
+        </childnode>
+        <childnode refid="2340" relation="include">
+        </childnode>
+        <childnode refid="2341" relation="include">
+        </childnode>
+        <childnode refid="2342" relation="include">
+        </childnode>
+        <childnode refid="2343" relation="include">
+        </childnode>
+        <childnode refid="2344" relation="include">
+        </childnode>
+        <childnode refid="2345" relation="include">
+        </childnode>
+        <childnode refid="2346" relation="include">
+        </childnode>
+        <childnode refid="2347" relation="include">
+        </childnode>
+        <childnode refid="2348" relation="include">
+        </childnode>
+        <childnode refid="2349" relation="include">
+        </childnode>
+        <childnode refid="2350" relation="include">
+        </childnode>
+        <childnode refid="2351" relation="include">
+        </childnode>
+      </node>
+      <node id="2344">
+        <label>usr/src/libpthread/src/pthread_mutexattr.c</label>
+        <link refid="pthread__mutexattr_8c"/>
+      </node>
+      <node id="2343">
+        <label>usr/src/libpthread/src/pthread_mutex.c</label>
+        <link refid="pthread__mutex_8c"/>
+      </node>
+      <node id="2346">
+        <label>usr/src/libpthread/src/pthread_queue.c</label>
+        <link refid="pthread__queue_8c"/>
+      </node>
+      <node id="2349">
+        <label>usr/src/libpthread/src/pthread_sched.c</label>
+        <link refid="pthread__sched_8c"/>
+      </node>
+      <node id="2334">
+        <label>usr/src/libpthread/src/pthread_cancel.c</label>
+        <link refid="pthread__cancel_8c"/>
+      </node>
+      <node id="2331">
+        <label>usr/src/libpthread/src/pthread_attr.c</label>
+        <link refid="pthread__attr_8c"/>
+      </node>
+      <node id="2333">
+        <label>usr/src/libpthread/src/pthread_barrierattr.c</label>
+        <link refid="pthread__barrierattr_8c"/>
+      </node>
+      <node id="2348">
+        <label>usr/src/libpthread/src/pthread_rwlockattr.c</label>
+        <link refid="pthread__rwlockattr_8c"/>
+      </node>
+      <node id="2340">
+        <label>usr/src/libpthread/src/pthread_exit.c</label>
+        <link refid="pthread__exit_8c"/>
+      </node>
+      <node id="2336">
+        <label>usr/src/libpthread/src/pthread_condattr.c</label>
+        <link refid="pthread__condattr_8c"/>
+      </node>
+      <node id="2345">
+        <label>usr/src/libpthread/src/pthread_once.c</label>
+        <link refid="pthread__once_8c"/>
+      </node>
+      <node id="2335">
+        <label>usr/src/libpthread/src/pthread_cond.c</label>
+        <link refid="pthread__cond_8c"/>
+      </node>
+      <node id="2342">
+        <label>usr/src/libpthread/src/pthread_key.c</label>
+        <link refid="pthread__key_8c"/>
+      </node>
+      <node id="2332">
+        <label>usr/src/libpthread/src/pthread_barrier.c</label>
+        <link refid="pthread__barrier_8c"/>
+      </node>
+      <node id="2338">
+        <label>usr/src/libpthread/src/pthread_detach.c</label>
+        <link refid="pthread__detach_8c"/>
+      </node>
+      <node id="2347">
+        <label>usr/src/libpthread/src/pthread_rwlock.c</label>
+        <link refid="pthread__rwlock_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="struct____pthread__key" prot="public">__pthread_key</innerclass>
+    <innerclass refid="structpthread__context" prot="public">pthread_context</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" prot="public" static="no">
+        <name>PRIVATE</name>
+        <initializer>static</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="11" column="10" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" prot="public" static="no">
+        <name>PUBLIC</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="15" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pthread__internal_8h_1a77366c1bd428629dc898e188bfd182a3" prot="public" static="no">
+        <name>EXTERN</name>
+        <initializer>extern</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="20" column="10" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" prot="public" static="no">
+        <name>PTHREAD_KEYS_MAX</name>
+        <initializer>64</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="25" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pthread__internal_8h_1a8b3dc1c5c1a165d6143b1dce950e8266" prot="public" static="no">
+        <name>PTHREAD_STACK_MIN</name>
+        <initializer>4096</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="26" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="pthread__internal_8h_1ab8f25dec585d6255fcf40b67db66c1c5" prot="public" static="no">
+        <name>PTHREAD_THREADS_MAX</name>
+        <initializer>2048</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="27" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="pthread__internal_8h_1af2e45523b401a6101f50c6f7be0d66a8" prot="public" static="no">
+        <type>struct <ref refid="struct____pthread__key" kindref="compound">__pthread_key</ref></type>
+        <definition>typedef struct __pthread_key  __pthread_key_t</definition>
+        <argsstring></argsstring>
+        <name>__pthread_key_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="35" column="1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="pthread__internal_8h_1acef1d04f94658c4052cd87213538f7e4" prot="public" static="no">
+        <type>struct <ref refid="structpthread__context" kindref="compound">pthread_context</ref></type>
+        <definition>typedef struct pthread_context  pthread_context_t</definition>
+        <argsstring></argsstring>
+        <name>pthread_context_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="48" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pthread__internal_8h_1a357cd4b34c13011749dfffb42b489f09" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sched_yield</definition>
+        <argsstring>(void)</argsstring>
+        <name>sched_yield</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h" line="51" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>PTHREAD_INTERNAL_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PTHREAD_INTERNAL_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="pthread_8h" kindref="compound">pthread.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PRIVATE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PRIVATE<sp/>static</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PUBLIC</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__cplusplus</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EXTERN<sp/>extern<sp/>&quot;C&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="pthread__internal_8h_1a77366c1bd428629dc898e188bfd182a3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EXTERN<sp/>extern</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PTHREAD_KEYS_MAX<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>64</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="pthread__internal_8h_1a8b3dc1c5c1a165d6143b1dce950e8266" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PTHREAD_STACK_MIN<sp/><sp/><sp/><sp/><sp/><sp/><sp/>4096</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="pthread__internal_8h_1ab8f25dec585d6255fcf40b67db66c1c5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PTHREAD_THREADS_MAX<sp/><sp/><sp/><sp/><sp/>2048</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="struct____pthread__key" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="struct____pthread__key" kindref="compound">__pthread_key</ref><sp/>{</highlight></codeline>
+<codeline lineno="32" refid="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="struct____pthread__key_1a81c10bf0d5d76671f389c4aec1af2e1b" kindref="member">used</ref>;</highlight></codeline>
+<codeline lineno="33" refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="struct____pthread__key_1a8a2c00bb7dbce7d43b3078c6214bc390" kindref="member">dtor</ref>)<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*);</highlight></codeline>
+<codeline lineno="34" refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal">}<sp/><ref refid="pthread__internal_8h_1af2e45523b401a6101f50c6f7be0d66a8" kindref="member">__pthread_key_t</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="structpthread__context" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structpthread__context" kindref="compound">pthread_context</ref><sp/>{</highlight></codeline>
+<codeline lineno="38" refid="structpthread__context_1a5b7aa396dbf3c140b1a54f09568c8253" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structpthread__context_1a5b7aa396dbf3c140b1a54f09568c8253" kindref="member">tid</ref>;</highlight></codeline>
+<codeline lineno="39" refid="structpthread__context_1a688eabe4cd81d34bed6c73abd442f54a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*(*entry)<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>p);</highlight></codeline>
+<codeline lineno="40" refid="structpthread__context_1afb0244aa84b0403cc0df2cd6ebdb94b4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="structpthread__context_1afb0244aa84b0403cc0df2cd6ebdb94b4" kindref="member">param</ref>;</highlight></codeline>
+<codeline lineno="41" refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" kindref="member">exitval</ref>;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpthread__once" kindref="compound">pthread_once_t</ref><sp/><ref refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" kindref="member">once</ref>;</highlight></codeline>
+<codeline lineno="44" refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/><ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>;</highlight></codeline>
+<codeline lineno="45" refid="structpthread__context_1ace03687a8a5dc35db9e23fdc96bf0667" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpthread__cond" kindref="compound">pthread_cond_t</ref>*<sp/><ref refid="structpthread__context_1ace03687a8a5dc35db9e23fdc96bf0667" kindref="member">cond</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="structpthread__context_1a876fe0d5cfa5b9886c90e5936b98f992" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structpthread__context" kindref="compound">pthread_context</ref>*<sp/><ref refid="structpthread__context_1a876fe0d5cfa5b9886c90e5936b98f992" kindref="member">next</ref>;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">}<sp/><ref refid="pthread__internal_8h_1acef1d04f94658c4052cd87213538f7e4" kindref="member">pthread_context_t</ref>;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__internal_8h_1a357cd4b34c13011749dfffb42b489f09" kindref="member">sched_yield</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_internal.h"/>
+  </compounddef>
+</doxygen>

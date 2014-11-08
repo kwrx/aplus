@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>src/syscall/clone.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/clone.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L8'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L8' title='Defined at 8.'>sys_clone</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L7'>   7 
+<a name='L8'>   8 <b>int</b> sys_clone(<b>int</b> (*<a href='../Y/269.html' title='Multiple used in 4 places.'>fn</a>)(<b>void</b>*), <b>void</b>* <a href='../Y/153.html' title='Multiple used in 2 places.'>child_stack</a>, <b>int</b> <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>, <b>void</b>* <a href='../Y/101.html' title='Multiple used in 7 places.'>arg</a>) <font color='red'>{</font>
+<a name='L9'>   9         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L10'>  10                 <b>return</b> -1;
+<a name='L11'>  11         
+<a name='L12'>  12         <b>if</b>(<a href='../Y/269.html' title='Multiple used in 4 places.'>fn</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L13'>  13                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L14'>  14                 <b>return</b> -1;
+<a name='L15'>  15         <font color='red'>}</font>
+<a name='L16'>  16 
+<a name='L17'>  17 
+<a name='L18'>  18         <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../S/159.html#L115' title='Defined at 115 in src/arch/task.c.'>task_clone</a>(<a href='../Y/269.html' title='Multiple used in 4 places.'>fn</a>, <a href='../Y/101.html' title='Multiple used in 7 places.'>arg</a>, <a href='../Y/153.html' title='Multiple used in 2 places.'>child_stack</a>);
+<a name='L19'>  19         <b>if</b>(!<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>) <font color='red'>{</font>
+<a name='L20'>  20                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/11.html' title='Multiple used in 4 places.'>EFAULT</a>;
+<a name='L21'>  21                 <b>return</b> -1;
+<a name='L22'>  22         <font color='red'>}</font>
+<a name='L23'>  23 
+<a name='L24'>  24         <b>return</b> <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>;
+<a name='L25'>  25 <font color='red'>}</font>
+<a name='L26'>  26 
+<a name='L27'>  27 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_clone, 22);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L8'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

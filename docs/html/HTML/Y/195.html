@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>dev</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L22'>dev</a>                22 src/arch/pci.c static int pci_get_address(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset) {
+<a href='../S/160.html#L23'>dev</a>                23 src/arch/pci.c 	return 0x80000000 | (bus &lt;&lt; 16) | (dev &lt;&lt; 11) | (func &lt;&lt; 8) | (offset &amp; 0xFC);
+<a href='../S/160.html#L26'>dev</a>                26 src/arch/pci.c static uint32_t pci_config_read(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset) {
+<a href='../S/160.html#L27'>dev</a>                27 src/arch/pci.c 	outl(PCI_CONFIG_ADDRESS, pci_get_address(bus, dev, func, offset));
+<a href='../S/160.html#L37'>dev</a>                37 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, 2) &amp; 0xFFFF;
+<a href='../S/160.html#L41'>dev</a>                41 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, 0) &amp; 0xFFFF;
+<a href='../S/160.html#L45'>dev</a>                45 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, 0x3D) &amp; 0xFF;
+<a href='../S/160.html#L49'>dev</a>                49 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, 0x3C) &amp; 0xFF;
+<a href='../S/160.html#L53'>dev</a>                53 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, 0x08) &amp; 0xFF;
+<a href='../S/160.html#L57'>dev</a>                57 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, 0x0B) &amp; 0xFF;
+<a href='../S/160.html#L61'>dev</a>                61 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, 0x0E) &amp; 0x7F;
+<a href='../S/160.html#L74'>dev</a>                74 src/arch/pci.c 	return pci_config_read(device-&gt;bus, device-&gt;dev, device-&gt;func, reg);
+<a href='../S/160.html#L103'>dev</a>               103 src/arch/pci.c static void pci_load_device(pci_device_t* device, uint8_t bus, uint8_t dev, uint8_t func) {
+<a href='../S/160.html#L105'>dev</a>               105 src/arch/pci.c 	device-&gt;dev = dev;
+<a href='../S/160.html#L150'>dev</a>               150 src/arch/pci.c 		for(int dev = 0; dev &lt; PCI_MAX_DEV; dev++) {
+<a href='../S/160.html#L152'>dev</a>               152 src/arch/pci.c 				uint32_t vendor = pci_config_read(bus, dev, func, 0) &amp; 0xFFFF;
+<a href='../S/160.html#L157'>dev</a>               157 src/arch/pci.c 				pci_load_device(&amp;pci_devices[i], bus, dev, func);
+<a href='../S/160.html#L162'>dev</a>               162 src/arch/pci.c 							pci_devices[i].dev,
+<a href='../S/147.html#L31'>dev</a>                31 src/fs/devfs.c 	ino-&gt;dev = inode-&gt;dev;
+<a href='../S/147.html#L65'>dev</a>                65 src/fs/devfs.c 	devfs-&gt;dev = (dev_t) 0;
+<a href='../S/144.html#L89'>dev</a>                89 src/fs/vfs.c   	vfs_root-&gt;dev = (dev_t) 0;
+<a href='../S/97.html#L39'>dev</a>                39 src/include/aplus/fs.h 	dev_t dev;
+<a href='../S/100.html#L28'>dev</a>                28 src/include/aplus/pci.h 	uint8_t dev;
+<a href='../S/104.html#L192'>dev</a>               192 src/net/rtl8139/rtl8139.c 		card-&gt;device-&gt;dev,
+<a href='../S/120.html#L30'>dev</a>                30 src/syscall/fstat.c 	st-&gt;st_dev = ino-&gt;dev;
+</pre>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structnetif__packet" kind="struct" prot="public">
+    <compoundname>netif_packet</compoundname>
+    <includes refid="netif_8h" local="no">netif.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structnetif__packet_1ac2dc39fe302e155960127c09161f36ae" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t netif_packet::id</definition>
+        <argsstring></argsstring>
+        <name>id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="78" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structnetif__packet_1a2517358f8125e0a674a0628a77f1095d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int netif_packet::protocol</definition>
+        <argsstring></argsstring>
+        <name>protocol</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="79" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structnetif__packet_1a244620016b7d377fd2558f5ccfc85d18" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int netif_packet::length</definition>
+        <argsstring></argsstring>
+        <name>length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="80" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structnetif__packet_1a3733c55855518d575eea678f5a2815e8" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* netif_packet::header</definition>
+        <argsstring></argsstring>
+        <name>header</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="82" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structnetif__packet_1a3b4b8603d752944ba4360db33c5870b5" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* netif_packet::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="83" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structnetif__packet_1a3590a941c954bab54971940eeab55144" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+        <definition>netif_t* netif_packet::netif</definition>
+        <argsstring></argsstring>
+        <name>netif</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="85" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="56">
+        <label>netif_packet</label>
+        <link refid="structnetif__packet"/>
+        <childnode refid="57" relation="usage">
+          <edgelabel>+netif</edgelabel>
+        </childnode>
+      </node>
+      <node id="58">
+        <label>pci_device</label>
+        <link refid="structpci__device"/>
+      </node>
+      <node id="57">
+        <label>netif</label>
+        <link refid="structnetif"/>
+        <childnode refid="58" relation="usage">
+          <edgelabel>+device</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="77" bodyend="86"/>
+    <listofallmembers>
+      <member refid="structnetif__packet_1a3b4b8603d752944ba4360db33c5870b5" prot="public" virt="non-virtual"><scope>netif_packet</scope><name>data</name></member>
+      <member refid="structnetif__packet_1a3733c55855518d575eea678f5a2815e8" prot="public" virt="non-virtual"><scope>netif_packet</scope><name>header</name></member>
+      <member refid="structnetif__packet_1ac2dc39fe302e155960127c09161f36ae" prot="public" virt="non-virtual"><scope>netif_packet</scope><name>id</name></member>
+      <member refid="structnetif__packet_1a244620016b7d377fd2558f5ccfc85d18" prot="public" virt="non-virtual"><scope>netif_packet</scope><name>length</name></member>
+      <member refid="structnetif__packet_1a3590a941c954bab54971940eeab55144" prot="public" virt="non-virtual"><scope>netif_packet</scope><name>netif</name></member>
+      <member refid="structnetif__packet_1a2517358f8125e0a674a0628a77f1095d" prot="public" virt="non-virtual"><scope>netif_packet</scope><name>protocol</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

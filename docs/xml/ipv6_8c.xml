@@ -1,0 +1,368 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="ipv6_8c" kind="file">
+    <compoundname>ipv6.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">string.h</includes>
+    <includes refid="eth_8h" local="no">aplus/net/eth.h</includes>
+    <includes refid="ipv6_8h" local="no">aplus/net/ipv6.h</includes>
+    <incdepgraph>
+      <node id="1071">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1062">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1070">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1065" relation="include">
+        </childnode>
+        <childnode refid="1066" relation="include">
+        </childnode>
+        <childnode refid="1071" relation="include">
+        </childnode>
+        <childnode refid="1072" relation="include">
+        </childnode>
+      </node>
+      <node id="1061">
+        <label>stdint.h</label>
+      </node>
+      <node id="1075">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1069">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1060" relation="include">
+        </childnode>
+        <childnode refid="1070" relation="include">
+        </childnode>
+        <childnode refid="1074" relation="include">
+        </childnode>
+        <childnode refid="1066" relation="include">
+        </childnode>
+        <childnode refid="1075" relation="include">
+        </childnode>
+      </node>
+      <node id="1079">
+        <label>aplus/net/ipv6.h</label>
+        <link refid="ipv6_8h"/>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1076" relation="include">
+        </childnode>
+      </node>
+      <node id="1077">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="1060" relation="include">
+        </childnode>
+        <childnode refid="1061" relation="include">
+        </childnode>
+      </node>
+      <node id="1065">
+        <label>stddef.h</label>
+      </node>
+      <node id="1064">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1065" relation="include">
+        </childnode>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1066" relation="include">
+        </childnode>
+        <childnode refid="1067" relation="include">
+        </childnode>
+        <childnode refid="1068" relation="include">
+        </childnode>
+      </node>
+      <node id="1078">
+        <label>aplus/net/eth.h</label>
+        <link refid="eth_8h"/>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1076" relation="include">
+        </childnode>
+      </node>
+      <node id="1060">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1062" relation="include">
+        </childnode>
+        <childnode refid="1063" relation="include">
+        </childnode>
+      </node>
+      <node id="1066">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1063">
+        <label>string.h</label>
+      </node>
+      <node id="1073">
+        <label>unistd.h</label>
+      </node>
+      <node id="1074">
+        <label>signal.h</label>
+      </node>
+      <node id="1076">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="1060" relation="include">
+        </childnode>
+        <childnode refid="1077" relation="include">
+        </childnode>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1065" relation="include">
+        </childnode>
+      </node>
+      <node id="1068">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1069" relation="include">
+        </childnode>
+      </node>
+      <node id="1072">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1073" relation="include">
+        </childnode>
+        <childnode refid="1066" relation="include">
+        </childnode>
+      </node>
+      <node id="1067">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="1059">
+        <label>src/net/ipv6.c</label>
+        <link refid="ipv6.c"/>
+        <childnode refid="1060" relation="include">
+        </childnode>
+        <childnode refid="1064" relation="include">
+        </childnode>
+        <childnode refid="1076" relation="include">
+        </childnode>
+        <childnode refid="1065" relation="include">
+        </childnode>
+        <childnode refid="1061" relation="include">
+        </childnode>
+        <childnode refid="1063" relation="include">
+        </childnode>
+        <childnode refid="1078" relation="include">
+        </childnode>
+        <childnode refid="1079" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="ipv6_8c_1a6e97b6f8ba31f1160a8e6c677832f3e3" prot="public" static="no">
+        <name>__params</name>
+        <initializer><ref refid="structnetif" kindref="compound">netif</ref>, (void*) ((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>) ip + sizeof(ipv6_header_t)), <ref refid="udp_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref> - sizeof(ipv6_header_t)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/ipv6.c" line="21" column="10"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="ipv6_8c_1a65c6f6768d3db7c82274e94dbd24c141" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int ipv6_recv</definition>
+        <argsstring>(netif_t *netif, void *buf, size_t length, int type)</argsstring>
+        <name>ipv6_recv</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>length</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/ipv6.c" line="14" column="1" bodyfile="/opt/prj/aPlus/src/net/ipv6.c" bodystart="14" bodyend="53"/>
+        <references refid="ipv6_8h_1a2fdd498e777544abf4550a4dcabc0956" compoundref="ipv6_8h" startline="8">IPV6_CHECK_VERSION</references>
+        <references refid="ipv6_8h_1a10f6aee7b292cec10261ac1bdfac9f65" compoundref="ipv6_8h" startline="11">IPV6_PROTO_ICMP</references>
+        <references refid="ipv6_8h_1a58e09bc38cf1ae0c45e962c3654cc811" compoundref="ipv6_8h" startline="12">IPV6_PROTO_TCP</references>
+        <references refid="ipv6_8h_1ac20f7482f4004cf280be3faac5426286" compoundref="ipv6_8h" startline="13">IPV6_PROTO_UDP</references>
+        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="netif_8h_1a9bd90d73c2b516907768b552d6bbaa56" compoundref="netif_8h" startline="17">NETIF_INET6</references>
+        <references refid="netif_8c_1a3edf21f1cc51e87714ea8911236d896c" compoundref="netif_8c" startline="242" endline="247">netif_packets_add</references>
+        <references refid="netif_8c_1aa14a95992efbcac98c16a43724dc0942" compoundref="netif_8c" startline="279" endline="289">netif_packets_create</references>
+      </memberdef>
+      <memberdef kind="function" id="ipv6_8c_1a825b0204f5a5e52b8ab9ed49c393821e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int ipv6_send</definition>
+        <argsstring>(netif_t *netif, void *buf, size_t length, int type, ipv6_t dest)</argsstring>
+        <name>ipv6_send</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>length</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type><ref refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kindref="member">ipv6_t</ref></type>
+          <declname>dest</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/ipv6.c" line="55" column="1" bodyfile="/opt/prj/aPlus/src/net/ipv6.c" bodystart="55" bodyend="89"/>
+        <references refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" compoundref="eth_8c" startline="79" endline="103">eth_send</references>
+        <references refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" compoundref="netif_8h" startline="37">netif::ipv6</references>
+        <references refid="ipv6_8h_1a10f6aee7b292cec10261ac1bdfac9f65" compoundref="ipv6_8h" startline="11">IPV6_PROTO_ICMP</references>
+        <references refid="ipv6_8h_1a5ab0d8305d9494be97f24a9fb241978c" compoundref="ipv6_8h" startline="10">IPV6_PROTO_RAW</references>
+        <references refid="ipv6_8h_1a58e09bc38cf1ae0c45e962c3654cc811" compoundref="ipv6_8h" startline="12">IPV6_PROTO_TCP</references>
+        <references refid="ipv6_8h_1ac20f7482f4004cf280be3faac5426286" compoundref="ipv6_8h" startline="13">IPV6_PROTO_UDP</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="netif_8h_1aaca7f6ff0ebc3b44543507ad70e9685f" compoundref="netif_8h" startline="22">NETIF_ICMP</references>
+        <references refid="netif_8h_1a9bd90d73c2b516907768b552d6bbaa56" compoundref="netif_8h" startline="17">NETIF_INET6</references>
+        <references refid="netif_8h_1a572091993e27c5d0b0b1786b05a9d233" compoundref="netif_8h" startline="21">NETIF_TCP</references>
+        <references refid="netif_8h_1a4da4a42cc7d9462ce613d54d0393f8d1" compoundref="netif_8h" startline="20">NETIF_UDP</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="eth_8h" kindref="compound">aplus/net/eth.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="ipv6_8h" kindref="compound">aplus/net/ipv6.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="ipv6_8c_1a65c6f6768d3db7c82274e94dbd24c141" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="ipv6_8c_1a65c6f6768d3db7c82274e94dbd24c141" kindref="member">ipv6_recv</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>ipv6_header_t*<sp/>ip<sp/>=<sp/>(ipv6_header_t*)<sp/>buf;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="ipv6_8h_1a2fdd498e777544abf4550a4dcabc0956" kindref="member">IPV6_CHECK_VERSION</ref>(ip)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>__params<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="22"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif,<sp/>(void*)<sp/>((uint32_t)<sp/>ip<sp/>+<sp/>sizeof(ipv6_header_t)),<sp/>length<sp/>-<sp/>sizeof(ipv6_header_t)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(ip-&gt;protocol)<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="ipv6_8h_1ac20f7482f4004cf280be3faac5426286" kindref="member">IPV6_PROTO_UDP</ref>:</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//if(udp_recv(__params)<sp/>==<sp/>0)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/>return<sp/>0;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="ipv6_8h_1a58e09bc38cf1ae0c45e962c3654cc811" kindref="member">IPV6_PROTO_TCP</ref>:</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//if(tcp_recv(__params)<sp/>==<sp/>0)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>/*<sp/>Support<sp/>for<sp/>TCP<sp/>??<sp/>-&gt;<sp/>pfff..<sp/>ù.ù<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/>return<sp/>0;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="ipv6_8h_1a10f6aee7b292cec10261ac1bdfac9f65" kindref="member">IPV6_PROTO_ICMP</ref>:</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//if(icmp_recv(__params)<sp/>==<sp/>0)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/>return<sp/>0;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>IPV6_PROTO_RAW<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8c_1a3edf21f1cc51e87714ea8911236d896c" kindref="member">netif_packets_add</ref><sp/>(</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="netif_8c_1aa14a95992efbcac98c16a43724dc0942" kindref="member">netif_packets_create</ref><sp/>(</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif,</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="netif_8h_1a9bd90d73c2b516907768b552d6bbaa56" kindref="member">NETIF_INET6</ref>,<sp/></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>length,<sp/></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(ipv6_header_t),<sp/></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="ipv6_8c_1a825b0204f5a5e52b8ab9ed49c393821e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="ipv6_8c_1a825b0204f5a5e52b8ab9ed49c393821e" kindref="member">ipv6_send</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>,<sp/><ref refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kindref="member">ipv6_t</ref><sp/><ref refid="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4" kindref="member">dest</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>ipv6_header_t*<sp/>ip<sp/>=<sp/>(ipv6_header_t*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(length<sp/>+<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(ipv6_header_t));</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>ip-&gt;version<sp/>=<sp/>6;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>ip-&gt;traffic<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>ip-&gt;flow<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>ip-&gt;length<sp/>=<sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>ip-&gt;ttl<sp/>=<sp/>0xFF;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(type)<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="netif_8h_1a4da4a42cc7d9462ce613d54d0393f8d1" kindref="member">NETIF_UDP</ref>:</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ip-&gt;protocol<sp/>=<sp/><ref refid="ipv6_8h_1ac20f7482f4004cf280be3faac5426286" kindref="member">IPV6_PROTO_UDP</ref>;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="netif_8h_1a572091993e27c5d0b0b1786b05a9d233" kindref="member">NETIF_TCP</ref>:</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ip-&gt;protocol<sp/>=<sp/><ref refid="ipv6_8h_1a58e09bc38cf1ae0c45e962c3654cc811" kindref="member">IPV6_PROTO_TCP</ref>;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="netif_8h_1aaca7f6ff0ebc3b44543507ad70e9685f" kindref="member">NETIF_ICMP</ref>:</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ip-&gt;protocol<sp/>=<sp/><ref refid="ipv6_8h_1a10f6aee7b292cec10261ac1bdfac9f65" kindref="member">IPV6_PROTO_ICMP</ref>;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ip-&gt;protocol<sp/>=<sp/><ref refid="ipv6_8h_1a5ab0d8305d9494be97f24a9fb241978c" kindref="member">IPV6_PROTO_RAW</ref>;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(ip-&gt;dest,<sp/>dest,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kindref="member">ipv6_t</ref>));</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(ip-&gt;source,<sp/>netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kindref="member">ipv6_t</ref>));</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>ip<sp/>+<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(ipv6_header_t)),<sp/>buf,<sp/>length);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ret<sp/>=<sp/><ref refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" kindref="member">eth_send</ref>(netif,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>ip,<sp/>length<sp/>+<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(ipv6_header_t),<sp/><ref refid="netif_8h_1a9bd90d73c2b516907768b552d6bbaa56" kindref="member">NETIF_INET6</ref>);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(ip);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ret)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/net/ipv6.c"/>
+  </compounddef>
+</doxygen>

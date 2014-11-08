@@ -1,0 +1,107 @@
+.TH "src/syscall/execve.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/execve.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_execve\fP (char *filename, char **argv, char **\fBenviron\fP)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_execve\fP, 2)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_execve (char *filename, char **argv, char **environ)"
+
+.PP
+Definizione alla linea 12 del file execve\&.c\&.
+.PP
+Referenzia task::argv, elf32_load(), environ, task::envp, errno, task::exe, task::fd, kfree(), kmalloc(), size, sys_close(), sys_lseek(), sys_open(), e sys_read()\&.
+.PP
+.nf
+12                                                             {
+13     
+14     int fd = sys_open(filename, O_RDONLY, 0644);
+15     if(fd < 0) {
+16         errno = ENOENT;
+17         return -1;
+18     }
+19 
+20     sys_lseek(fd, 0, SEEK_END);
+21     size_t size = sys_lseek(fd, 0, SEEK_CUR);
+22     sys_lseek(fd, 0, SEEK_SET);
+23 
+24     void* image = kmalloc(size);
+25     if(!image) {
+26         sys_close(fd);
+27 
+28         errno = ENOMEM;
+29         return -1;
+30     }
+31 
+32     if(sys_read(fd, image, size) < size) {
+33         sys_close(fd);
+34         kfree(image);
+35         
+36         errno = EIO;
+37         return -1;
+38     }
+39 
+40     
+41 
+42     void (*entry) () = (void (*) ()) elf32_load(image);
+43     if(entry) {
+44 
+45         current_task->exe = current_task->fd[fd];
+46         current_task->argv = argv;
+47         current_task->envp = environ;
+48 
+49         sys_close(fd);
+50 
+51 
+52         entry(); /* never return */
+53     }
+54 
+55     sys_close(fd);
+56     kfree(image);
+57     return -1;
+58 }
+.fi
+.SS "SYSCALL (\fBsys_execve\fP, 2)"
+
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

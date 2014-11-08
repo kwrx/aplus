@@ -1,0 +1,278 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="rtl8139_8h">
+    <title>rtl8139.h File Reference</title>
+    <programlisting>#include &lt;aplus/netif.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a1dcdf537152ab9cc49e4a26bd9d2f47d">REG_ID0</link> 0x00</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1ac5dc5d6d71f71dcdf3ff2a7e911c7248">REG_ID4</link> 0x04</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a15e2164bee77a940134b3c0618e207d3">REG_TRANSMIT_STATUS0</link> 0x10</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a42f10cfb594910b5a1e2bcfad9086271">REG_TRANSMIT_ADDR0</link> 0x20</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a988a4299b417f298b34e9ae012fb3829">REG_RECEIVE_BUFFER</link> 0x30</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a3b2613e7a11853fee7b0164d592b477a">REG_COMMAND</link> 0x37</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a9690a77264be5910191756632842b04d">REG_CUR_READ_ADDR</link> 0x38</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1ab4c18def6442e5a12813bff4707a95f4">REG_INTERRUPT_MASK</link> 0x3C</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1ae643783aefff2e6a891b5fa59bfcd344">REG_INTERRUPT_STATUS</link> 0x3E</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1ae71202863cf99afcc3eab3865699dcf9">REG_TRANSMIT_CONFIGURATION</link> 0x40</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a66a6f3026d2e079b8fc7056dcd00fe91">REG_RECEIVE_CONFIGURATION</link> 0x44</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a5b93ab1d3172cbf4cbddb358cd790dec">REG_CONFIG1</link> 0x52</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1ab2a1fddf4be3a5b61bc6136a759d2450">CR_RESET</link> (1 &lt;&lt; 4)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1afbe4a2ad282a15a449afe27c8477d7a4">CR_RECEIVER_ENABLE</link> (1 &lt;&lt; 3)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a724cc791aabf32482dca4be45cc5d160">CR_TRANSMITTER_ENABLE</link> (1 &lt;&lt; 2)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a57ac94bdc04f48c7a66ced30aa060624">CR_BUFFER_IS_EMPTY</link> (1 &lt;&lt; 0)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1aae6b5a7b3905eadb0f15a8ffa647b520">TCR_IFG_STANDARD</link> (3 &lt;&lt; 24)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a878054e18cfb85ec78fbc6a3f8c60f42">TCR_MXDMA_256</link> (4 &lt;&lt; 8)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a4807a51726d5b1cbee7a7f53661f97ef">TCR_MXDMA_512</link> (5 &lt;&lt; 8)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1aaa0a851076ddddbd82e92d328cb2644a">TCR_MXDMA_1024</link> (6 &lt;&lt; 8)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1af8057a0fe6148f3c91254f0fa0e615e5">TCR_MXDMA_2048</link> (7 &lt;&lt; 8)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a4427f16eaabc39f54c76ccf043f0937b">RCR_MXDMA_512</link> (5 &lt;&lt; 8)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a1e9de544d0767a77182daf17beb30f86">RCR_MXDMA_1024</link> (6 &lt;&lt; 8)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a160445e9a8cb8827d32d5cc6417b3fda">RCR_MXDMA_UNLIMITED</link> (7 &lt;&lt; 8)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a14d20c8a78d65ef7542b5c59e695d4fa">RCR_ACCEPT_BROADCAST</link> (1 &lt;&lt; 3)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a92d4aa960780ad69ee5ec28ab2776705">RCR_ACCEPT_MULTICAST</link> (1 &lt;&lt; 2)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a40752262c4c0d282513c5ad5f1449ffa">RCR_ACCEPT_PHYS_MATCH</link> (1 &lt;&lt; 1)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a6097974b84e7d2fd54f26877ce8980a9">ISR_RECEIVE_BUFFER_OVERFLOW</link> (1 &lt;&lt; 4)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1afcba7a5ffbbdce80f9b4d8038a2900c4">ISR_TRANSMIT_OK</link> (1 &lt;&lt; 2)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1aacce0c98835613c89c957d571340a176">ISR_RECEIVE_OK</link> (1 &lt;&lt; 0)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092">RX_BUFFER_SIZE</link> 8192</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a9ab33647617098646990fe263600b650">TX_BUFFER_SIZE</link> 4096</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a9d09a7af406abb667672c750d24cda0b">int_out8</link> outb(<link linkend="structcard">card</link>-&gt;device-&gt;iobase + port, <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826">int_out16</link> outw(<link linkend="structcard">card</link>-&gt;device-&gt;iobase + port, <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232">int_out32</link> outl(<link linkend="structcard">card</link>-&gt;device-&gt;iobase + port, <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a7d11540c9ed834d78c06a0f58bc2861d">int_in8</link> inb(<link linkend="structcard">card</link>-&gt;device-&gt;iobase + port)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1ab4126d6287621dc529d43e6fc5cd2f27">int_in16</link> inw(<link linkend="structcard">card</link>-&gt;device-&gt;iobase + port)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="rtl8139_8h_1a3f0fc1302723b502d1f2c6b8eddcbf4f">RTL8139_MAGIC</link> 0x8139FFFF</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/net/rtl8139/rtl8139.h</para>
+    </simplesect>
+</section>

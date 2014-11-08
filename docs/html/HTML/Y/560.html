@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>sh_addr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/115.html#L78'>sh_addr</a>            78 src/exec.c     	Elf32_Addr sh_addr;
+<a href='../S/115.html#L127'>sh_addr</a>           127 src/exec.c     		if((sec-&gt;sh_addr + sec-&gt;sh_size) &lt; MM_UBASE || (sec-&gt;sh_addr + sec-&gt;sh_size) &gt; (MM_UBASE + MM_USIZE))
+<a href='../S/115.html#L132'>sh_addr</a>           132 src/exec.c     		kprintf("elf: copy section to 0x%8x (%d KB)\n", sec-&gt;sh_addr, sh-&gt;sh_size / 1024);
+<a href='../S/115.html#L135'>sh_addr</a>           135 src/exec.c     		if(sec-&gt;sh_addr &amp;&amp; sec-&gt;sh_offset) {
+<a href='../S/115.html#L136'>sh_addr</a>           136 src/exec.c     			if(vmm_alloc((void*) sec-&gt;sh_addr, sec-&gt;sh_size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER))
+<a href='../S/115.html#L137'>sh_addr</a>           137 src/exec.c     				memcpy((void*) sec-&gt;sh_addr, (void*) ((uint32_t) hdr + sec-&gt;sh_offset), sec-&gt;sh_size);
+</pre>
+</body>
+</html>

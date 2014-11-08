@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpipeinfo" kind="struct" prot="public">
+    <compoundname>pipeinfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" prot="public" static="no" mutable="no">
+        <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+        <definition>bufio_t* pipeinfo::stream</definition>
+        <argsstring></argsstring>
+        <name>stream</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="21" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" prot="public" static="no" mutable="no">
+        <type>off_t</type>
+        <definition>off_t pipeinfo::read_offset</definition>
+        <argsstring></argsstring>
+        <name>read_offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" prot="public" static="no" mutable="no">
+        <type>off_t</type>
+        <definition>off_t pipeinfo::write_offset</definition>
+        <argsstring></argsstring>
+        <name>write_offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="23" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="67">
+        <label>inode</label>
+        <link refid="structinode"/>
+        <childnode refid="67" relation="usage">
+          <edgelabel>+finddir</edgelabel>
+          <edgelabel>+link</edgelabel>
+          <edgelabel>+parent</edgelabel>
+          <edgelabel>+creat</edgelabel>
+        </childnode>
+        <childnode refid="68" relation="usage">
+          <edgelabel>+readdir</edgelabel>
+        </childnode>
+      </node>
+      <node id="66">
+        <label>task</label>
+        <link refid="structtask"/>
+        <childnode refid="67" relation="usage">
+          <edgelabel>+cwd</edgelabel>
+          <edgelabel>+exe</edgelabel>
+          <edgelabel>+fd</edgelabel>
+        </childnode>
+        <childnode refid="66" relation="usage">
+          <edgelabel>+parent</edgelabel>
+        </childnode>
+      </node>
+      <node id="68">
+        <label>dirent</label>
+        <link refid="structdirent"/>
+      </node>
+      <node id="64">
+        <label>pipeinfo</label>
+        <link refid="structpipeinfo"/>
+        <childnode refid="65" relation="usage">
+          <edgelabel>+stream</edgelabel>
+        </childnode>
+      </node>
+      <node id="65">
+        <label>bufio</label>
+        <link refid="structbufio"/>
+        <childnode refid="66" relation="usage">
+          <edgelabel>+task</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/fs/pipe.c" line="20" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="20" bodyend="24"/>
+    <listofallmembers>
+      <member refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" prot="public" virt="non-virtual"><scope>pipeinfo</scope><name>read_offset</name></member>
+      <member refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" prot="public" virt="non-virtual"><scope>pipeinfo</scope><name>stream</name></member>
+      <member refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" prot="public" virt="non-virtual"><scope>pipeinfo</scope><name>write_offset</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

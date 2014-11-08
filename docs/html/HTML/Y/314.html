@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>index</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/146.html#L32'>index</a>              32 src/fs/fs.c    struct dirent* fs_readdir (struct inode* inode, int index) {
+<a href='../S/146.html#L34'>index</a>              34 src/fs/fs.c    	if((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL) {
+<a href='../S/146.html#L43'>index</a>              43 src/fs/fs.c    		return inode-&gt;readdir(inode, index - vfs_mapped_count(inode));
+<a href='../S/144.html#L44'>index</a>              44 src/fs/vfs.c   inode_t* vfs_mapped_at_index(inode_t* parent, int index) {
+<a href='../S/144.html#L49'>index</a>              49 src/fs/vfs.c   			index--;
+<a href='../S/144.html#L51'>index</a>              51 src/fs/vfs.c   		if(index == -1)
+<a href='../S/144.html#L59'>index</a>              59 src/fs/vfs.c   	int index = 0;
+<a href='../S/144.html#L65'>index</a>              65 src/fs/vfs.c   			index++;
+<a href='../S/144.html#L68'>index</a>              68 src/fs/vfs.c   	return index;
+<a href='../S/97.html#L58'>index</a>              58 src/include/aplus/fs.h 	struct dirent* (*readdir) (struct inode* inode, int index);
+<a href='../S/153.html#L90'>index</a>              90 src/mm/kheap.c 	int index = bitmap_first(heap, size);
+<a href='../S/153.html#L91'>index</a>              91 src/mm/kheap.c 	if(index == -1)
+<a href='../S/153.html#L95'>index</a>              95 src/mm/kheap.c 		BITMAP_SET(heap-&gt;bitmap, (index + i));
+<a href='../S/153.html#L100'>index</a>             100 src/mm/kheap.c 	return (void*) (index * BLKSIZE);
+<a href='../S/153.html#L119'>index</a>             119 src/mm/kheap.c 	int index = GETBIT(addr);
+<a href='../S/153.html#L121'>index</a>             121 src/mm/kheap.c 		BITMAP_CLR(heap-&gt;bitmap, (index + i));
+<a href='../S/18.html#L26'>index</a>              26 usr/src/libposix/src/scandir.c 	int index = 0;
+<a href='../S/18.html#L35'>index</a>              35 usr/src/libposix/src/scandir.c 		if((index &gt; 0) &amp;&amp; (compar) &amp;&amp; (compar(&amp;lst[index - 1], &amp;ent) &gt; 0)) {
+<a href='../S/18.html#L36'>index</a>              36 usr/src/libposix/src/scandir.c 			lst[index] = lst[index - 1];
+<a href='../S/18.html#L37'>index</a>              37 usr/src/libposix/src/scandir.c 			lst[index - 1] = ent;
+<a href='../S/18.html#L39'>index</a>              39 usr/src/libposix/src/scandir.c 			lst[index] = ent;
+<a href='../S/18.html#L41'>index</a>              41 usr/src/libposix/src/scandir.c 		index += 1;
+<a href='../S/18.html#L44'>index</a>              44 usr/src/libposix/src/scandir.c 	return index;
+</pre>
+</body>
+</html>

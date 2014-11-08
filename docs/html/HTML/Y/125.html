@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>barrier</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L271'>barrier</a>           271 usr/src/libpthread/include/pthread.h int pthread_barrier_init(pthread_barrier_t *barrier, const pthread_barrierattr_t *attr, unsigned int count);
+<a href='../S/43.html#L272'>barrier</a>           272 usr/src/libpthread/include/pthread.h int pthread_barrier_destroy(pthread_barrier_t *barrier);
+<a href='../S/43.html#L273'>barrier</a>           273 usr/src/libpthread/include/pthread.h int pthread_barrier_wait(pthread_barrier_t *barrier);
+<a href='../S/57.html#L9'>barrier</a>             9 usr/src/libpthread/src/pthread_barrier.c PUBLIC int pthread_barrier_init(pthread_barrier_t *barrier, const pthread_barrierattr_t *attr, unsigned int count) {
+<a href='../S/57.html#L10'>barrier</a>            10 usr/src/libpthread/src/pthread_barrier.c 	if(barrier == NULL) {
+<a href='../S/57.html#L20'>barrier</a>            20 usr/src/libpthread/src/pthread_barrier.c 	barrier-&gt;curr_height = 0;
+<a href='../S/57.html#L21'>barrier</a>            21 usr/src/libpthread/src/pthread_barrier.c 	barrier-&gt;init_height = count;
+<a href='../S/57.html#L28'>barrier</a>            28 usr/src/libpthread/src/pthread_barrier.c PUBLIC int pthread_barrier_destroy(pthread_barrier_t *barrier) {
+<a href='../S/57.html#L29'>barrier</a>            29 usr/src/libpthread/src/pthread_barrier.c 	if(barrier == NULL) {
+<a href='../S/57.html#L34'>barrier</a>            34 usr/src/libpthread/src/pthread_barrier.c 	barrier-&gt;curr_height = 0;
+<a href='../S/57.html#L35'>barrier</a>            35 usr/src/libpthread/src/pthread_barrier.c 	barrier-&gt;init_height = 0;
+<a href='../S/57.html#L42'>barrier</a>            42 usr/src/libpthread/src/pthread_barrier.c PUBLIC int pthread_barrier_wait(pthread_barrier_t *barrier) {
+<a href='../S/57.html#L43'>barrier</a>            43 usr/src/libpthread/src/pthread_barrier.c 	if(barrier == NULL) {
+<a href='../S/57.html#L48'>barrier</a>            48 usr/src/libpthread/src/pthread_barrier.c 	barrier-&gt;curr_height += 1;
+<a href='../S/57.html#L50'>barrier</a>            50 usr/src/libpthread/src/pthread_barrier.c 	while(barrier-&gt;curr_height &lt; barrier-&gt;init_height)
+</pre>
+</body>
+</html>

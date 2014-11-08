@@ -1,0 +1,124 @@
+.TH "usr/src/libpthread/test/main.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/test/main.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <assert\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "static void * \fB__test_pthread_1\fP (void *p)"
+.br
+.ti -1c
+.RI "int \fBmain\fP (int argc, char **argv)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "static void* __test_pthread_1 (void *p)\fC [static]\fP"
+
+.PP
+Definizione alla linea 7 del file main\&.c\&.
+.PP
+.nf
+7                                         {
+8     return (void*) 200;
+9 }
+.fi
+.SS "int main (intargc, char **argv)"
+
+.PP
+Definizione alla linea 12 del file main\&.c\&.
+.PP
+Referenzia __test_pthread_1(), pthread_barrier_destroy(), pthread_barrier_init(), PTHREAD_BARRIER_SERIAL_THREAD, pthread_barrier_wait(), pthread_cond_destroy(), pthread_cond_init(), pthread_create(), pthread_getspecific(), pthread_join(), pthread_key_create(), pthread_key_delete(), pthread_mutex_destroy(), pthread_mutex_init(), pthread_mutex_trylock(), pthread_mutex_unlock(), pthread_rwlock_destroy(), pthread_rwlock_init(), pthread_rwlock_tryrdlock(), pthread_rwlock_trywrlock(), pthread_rwlock_unlock(), pthread_setspecific(), pthread_spin_destroy(), pthread_spin_init(), pthread_spin_trylock(), e pthread_spin_unlock()\&.
+.PP
+.nf
+12                                 {
+13 
+14     printf("Test #1 - Create and join thread\n");
+15 
+16     pthread_t ptx_1;
+17     void* retval_1;
+18 
+19     assert(pthread_create(&ptx_1, NULL, __test_pthread_1, NULL) == 0);
+20     assert(pthread_join(ptx_1, &retval_1) == 0);
+21     assert((int) retval_1 == 200 && "bad returned value");
+22 
+23     
+24 
+25     printf("Test #2 - Create and lock/unlock mutex\n");
+26     pthread_mutex_t mtx_2;
+27     
+28     assert(pthread_mutex_init(&mtx_2, NULL) == 0);
+29     assert(pthread_mutex_trylock(&mtx_2) == 0);
+30     assert(pthread_mutex_unlock(&mtx_2) == 0);
+31     assert(pthread_mutex_destroy(&mtx_2) == 0);
+32         
+33 
+34 
+35     printf("Test #3 - Create and lock/unlock spinlock\n");
+36     pthread_spinlock_t spl_3;
+37     
+38     assert(pthread_spin_init(&spl_3, 0) == 0);
+39     assert(pthread_spin_trylock(&spl_3) == 0);
+40     assert(pthread_spin_unlock(&spl_3) == 0);
+41     assert(pthread_spin_destroy(&spl_3) == 0);
+42 
+43 
+44 
+45     printf("Test #4 - Create and lock/unlock condition\n");
+46     pthread_cond_t cond_4;
+47     pthread_mutex_t mtx_4;
+48 
+49     assert(pthread_mutex_init(&mtx_4, NULL) == 0);
+50     assert(pthread_cond_init(&cond_4, NULL) == 0);
+51     assert(pthread_cond_destroy(&cond_4) == 0);
+52 
+53 
+54 
+55     printf("Test #5 - Create and lock/unlock Read-Write lock\n");
+56     pthread_rwlock_t rw_5;
+57     
+58     assert(pthread_rwlock_init(&rw_5, NULL) == 0);
+59     assert(pthread_rwlock_tryrdlock(&rw_5) == 0);
+60     assert(pthread_rwlock_unlock(&rw_5) == 0);
+61     assert(pthread_rwlock_trywrlock(&rw_5) == 0);
+62     assert(pthread_rwlock_unlock(&rw_5) == 0);
+63     assert(pthread_rwlock_destroy(&rw_5) == 0);
+64 
+65     printf("Test #6 - Create and wait barrier\n");
+66     pthread_barrier_t bar_6;
+67     
+68     assert(pthread_barrier_init(&bar_6, NULL, 1) == 0);
+69     assert(pthread_barrier_wait(&bar_6) == PTHREAD_BARRIER_SERIAL_THREAD);
+70     assert(pthread_barrier_destroy(&bar_6) == 0);
+71 
+72 
+73 
+74     printf("Test #7 - Store and read from TLS\n");
+75     pthread_key_t key_7;
+76 
+77     assert(pthread_key_create(&key_7, NULL) == 0);
+78     assert(pthread_setspecific(key_7, (const void*) 200) == 0);
+79     assert((int) pthread_getspecific(key_7) == 200 && "bad returned value");
+80     assert(pthread_key_delete(key_7) == 0);
+81 
+82 
+83 
+84     printf("\nTest OK\n");
+85     return 0;
+86 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>write_offset</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/145.html#L23'>write_offset</a>       23 src/fs/pipe.c  	off_t write_offset;
+<a href='../S/145.html#L30'>write_offset</a>       30 src/fs/pipe.c  	spinlock_waiton(pipe-&gt;read_offset + len &gt; pipe-&gt;write_offset);
+<a href='../S/145.html#L38'>write_offset</a>       38 src/fs/pipe.c  	pipe-&gt;write_offset = bufio_tell(pipe-&gt;stream);
+<a href='../S/145.html#L44'>write_offset</a>       44 src/fs/pipe.c  	bufio_seek(pipe-&gt;stream, pipe-&gt;write_offset % pipe-&gt;stream-&gt;size, SEEK_SET);
+<a href='../S/145.html#L50'>write_offset</a>       50 src/fs/pipe.c  	pipe-&gt;write_offset = bufio_tell(pipe-&gt;stream);
+<a href='../S/145.html#L68'>write_offset</a>       68 src/fs/pipe.c  	pipe-&gt;write_offset = 0;
+</pre>
+</body>
+</html>

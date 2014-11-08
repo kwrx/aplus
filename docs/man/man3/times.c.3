@@ -1,0 +1,85 @@
+.TH "src/syscall/times.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/times.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/times\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "clock_t \fBsys_times\fP (struct tms *tm)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_times\fP, 14)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "clock_t sys_times (struct tms *tm)"
+
+.PP
+Definizione alla linea 15 del file times\&.c\&.
+.PP
+Referenzia task::clock, pit_getticks(), e schedule_child()\&.
+.PP
+.nf
+15                                   {
+16     if(tm == NULL) 
+17         return (clock_t) pit_getticks();
+18     
+19 
+20     tm->tms_utime = current_task->clock;
+21     tm->tms_stime = 0;
+22     tm->tms_cstime = 0;
+23 
+24     
+25     task_t* child = (task_t*) schedule_child();
+26     if(child)
+27         tm->tms_cutime = current_task->clock + child->clock;
+28      else 
+29         tm->tms_cutime = 0;
+30 
+31 
+32     return (clock_t) pit_getticks();
+33 }
+.fi
+.SS "SYSCALL (\fBsys_times\fP, 14)"
+
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

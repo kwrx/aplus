@@ -1,0 +1,113 @@
+<html>
+<head>
+<title>src/include/aplus/netif.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/netif.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/26.html' title='Multiple included from 16 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/89.html#L2' title='Defined at 2 in src/include/aplus/netif.h.'>_NETIF_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/89.html#L1' title='Refered from 1 in src/include/aplus/netif.h.'>_NETIF_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='100.html'>aplus/pci.h</a>&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 
+<a name='L10'>  10 <b>typedef</b> <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../R/277.html' title='Multiple refered from 20 places.'>ipv4_t</a>[4];
+<a name='L11'>  11 <b>typedef</b> <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../R/280.html' title='Multiple refered from 10 places.'>ipv6_t</a>[8];
+<a name='L12'>  12 <b>typedef</b> <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../R/309.html' title='Multiple refered from 19 places.'>macaddr_t</a>[6];
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 <font color='darkred'>#define</font> <a href='../S/104.html#L307' title='Refered from 307 in src/net/rtl8139/rtl8139.c.'>NETIF_RAW</a>                       0
+<a name='L16'>  16 <font color='darkred'>#define</font> <a href='../R/74.html' title='Multiple refered from 5 places.'>NETIF_INET</a>                      1
+<a name='L17'>  17 <font color='darkred'>#define</font> <a href='../R/75.html' title='Multiple refered from 3 places.'>NETIF_INET6</a>                     2
+<a name='L18'>  18 <font color='darkred'>#define</font> <a href='../R/70.html' title='Multiple refered from 2 places.'>NETIF_ARP</a>                       3
+<a name='L19'>  19 <font color='darkred'>#define</font> <a href='../R/71.html' title='Multiple refered from 2 places.'>NETIF_ETH</a>                       4
+<a name='L20'>  20 <font color='darkred'>#define</font> <a href='../R/78.html' title='Multiple refered from 3 places.'>NETIF_UDP</a>                       5
+<a name='L21'>  21 <font color='darkred'>#define</font> <a href='../R/77.html' title='Multiple refered from 2 places.'>NETIF_TCP</a>                       6
+<a name='L22'>  22 <font color='darkred'>#define</font> <a href='../R/73.html' title='Multiple refered from 2 places.'>NETIF_ICMP</a>                      7
+<a name='L23'>  23 <font color='darkred'>#define</font> NETIF_TELNET            8
+<a name='L24'>  24 
+<a name='L25'>  25 
+<a name='L26'>  26 <font color='darkred'>#define</font> <a href='../R/72.html' title='Multiple refered from 12 places.'>NETIF_FLAGS_ENABLE</a>                      1
+<a name='L27'>  27 
+<a name='L28'>  28 
+<a name='L29'>  29 <font color='darkred'>#define</font> <a href='../R/1.html' title='Multiple refered from 2 places.'>ARP_DEBUG</a>
+<a name='L30'>  30 <font color='darkred'>#define</font> <a href='../R/121.html' title='Multiple refered from 6 places.'>RTL8139_DEBUG</a>
+<a name='L31'>  31 
+<a name='L32'>  32 
+<a name='L33'>  33 <b>typedef</b> <b>struct</b> <a href='../R/317.html' title='Multiple refered from 226 places.'>netif</a> <font color='red'>{</font>
+<a name='L34'>  34         <b>char</b> <a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>[32];
+<a name='L35'>  35         <b>void</b>* <a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>;
+<a name='L36'>  36         
+<a name='L37'>  37         <a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a> <a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>;
+<a name='L38'>  38         <a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a> <a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>;
+<a name='L39'>  39         <a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a> <a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>; 
+<a name='L40'>  40         <a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a> <a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>;
+<a name='L41'>  41 
+<a name='L42'>  42         <b>struct</b> <font color='red'>{</font>
+<a name='L43'>  43                 <b>struct</b> <font color='red'>{</font>
+<a name='L44'>  44                         <a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a> <a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>;
+<a name='L45'>  45                         <a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a> <a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>;
+<a name='L46'>  46                 <font color='red'>}</font> <a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>;
+<a name='L47'>  47 
+<a name='L48'>  48                 <b>struct</b> <font color='red'>{</font>
+<a name='L49'>  49                         <a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a> <a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>;
+<a name='L50'>  50                         <a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a> <a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>;
+<a name='L51'>  51                 <font color='red'>}</font> <a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>;
+<a name='L52'>  52         <font color='red'>}</font> <a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>;
+<a name='L53'>  53 
+<a name='L54'>  54         <b>struct</b> <font color='red'>{</font>
+<a name='L55'>  55                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/539.html' title='Multiple used in 4 places.'>rx_packets</a>;
+<a name='L56'>  56                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/536.html' title='Multiple used in 4 places.'>rx_bytes</a>;
+<a name='L57'>  57                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/538.html' title='Multiple used in 4 places.'>rx_errors</a>;
+<a name='L58'>  58                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> rx_dropped;
+<a name='L59'>  59 
+<a name='L60'>  60                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/713.html' title='Multiple used in 3 places.'>tx_packets</a>;
+<a name='L61'>  61                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/710.html' title='Multiple used in 3 places.'>tx_bytes</a>;
+<a name='L62'>  62                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/712.html' title='Multiple used in 3 places.'>tx_errors</a>;
+<a name='L63'>  63                 <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> tx_dropped;
+<a name='L64'>  64         <font color='red'>}</font> <a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>;
+<a name='L65'>  65 
+<a name='L66'>  66         <b>int</b> (*<a href='../Y/557.html' title='Multiple used in 5 places.'>send</a>) (<b>struct</b> <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>*, <b>void</b>*, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a>, <b>int</b>);
+<a name='L67'>  67         <b>int</b> (*<a href='../Y/308.html' title='Multiple used in 6 places.'>ifup</a>)     (<b>struct</b> <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>*);
+<a name='L68'>  68         <b>int</b> (*<a href='../Y/307.html' title='Multiple used in 6 places.'>ifdown</a>) (<b>struct</b> <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>*);
+<a name='L69'>  69 
+<a name='L70'>  70         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/394.html' title='Multiple used in 7 places.'>mtu</a>;
+<a name='L71'>  71         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>;
+<a name='L72'>  72 
+<a name='L73'>  73         <a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>;
+<a name='L74'>  74 <font color='red'>}</font> <a href='../R/327.html' title='Multiple refered from 45 places.'>netif_t</a>;
+<a name='L75'>  75 
+<a name='L76'>  76 
+<a name='L77'>  77 <b>typedef</b> <b>struct</b> netif_packet <font color='red'>{</font>
+<a name='L78'>  78         <a href='../Y/720.html' title='Multiple used in 12 places.'>uint64_t</a> <a href='../Y/303.html' title='Multiple used in 6 places.'>id</a>;
+<a name='L79'>  79         <b>int</b> <a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a>;
+<a name='L80'>  80         <b>int</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L81'>  81 
+<a name='L82'>  82         <b>void</b>* <a href='../Y/298.html' title='Multiple used in 7 places.'>header</a>;
+<a name='L83'>  83         <b>void</b>* <a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>;
+<a name='L84'>  84 
+<a name='L85'>  85         <a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>;
+<a name='L86'>  86 <font color='red'>}</font> <a href='../R/324.html' title='Multiple refered from 7 places.'>netif_packet_t</a>;
+<a name='L87'>  87 
+<a name='L88'>  88 
+<a name='L89'>  89 
+<a name='L90'>  90 <b>typedef</b> <b>struct</b> netif_socket <font color='red'>{</font>
+<a name='L91'>  91         
+<a name='L92'>  92 <font color='red'>}</font> netif_socket_t;
+<a name='L93'>  93 
+<a name='L94'>  94 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

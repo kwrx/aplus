@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__cond" kind="struct" prot="public">
+    <compoundname>pthread_cond</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__cond_1a37ab813587afbb6cfc356963c7960776" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_cond::waiting</definition>
+        <argsstring></argsstring>
+        <name>waiting</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="106" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__cond_1add81721af4853baaa6a8f13733a527cc" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref></type>
+        <definition>handle_t pthread_cond::semaphore</definition>
+        <argsstring></argsstring>
+        <name>semaphore</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="107" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="76">
+        <label>pthread_cond</label>
+        <link refid="structpthread__cond"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="105" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="105" bodyend="108"/>
+    <listofallmembers>
+      <member refid="structpthread__cond_1add81721af4853baaa6a8f13733a527cc" prot="public" virt="non-virtual"><scope>pthread_cond</scope><name>semaphore</name></member>
+      <member refid="structpthread__cond_1a37ab813587afbb6cfc356963c7960776" prot="public" virt="non-virtual"><scope>pthread_cond</scope><name>waiting</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

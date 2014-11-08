@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/platform/posix/hooks.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/<a href='../files/188.html'>platform</a>/<a href='../files/189.html'>posix</a>/hooks.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../D/269.html' title='Multiple defined in 2 places.'>_PTHREAD_HOOKS_T</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../R/166.html' title='Multiple refered from 2 places.'>_PTHREAD_HOOKS_T</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#define</font> _GNU_SOURCE
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;sched.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <b>extern</b> <b>int</b> clone(<b>int</b> (*<a href='../Y/269.html' title='Multiple used in 4 places.'>fn</a>)(<b>void</b>*), <b>void</b>*, <b>int</b>, <b>void</b>*);
+<a name='L8'>   8 <b>extern</b> <b>int</b> kill(<b>int</b>, <b>int</b>);
+<a name='L9'>   9 <b>extern</b> <b>int</b> getpid();
+<a name='L10'>  10 
+<a name='L11'>  11 <font color='darkred'>#ifndef</font> <a href='../S/62.html#L12' title='Defined at 12 in usr/src/libpthread/src/platform/posix/hooks.h.'>CLONE_VM</a>
+<a name='L12'>  12 <font color='darkred'>#define</font> <a href='../R/17.html' title='Multiple refered from 2 places.'>CLONE_VM</a> 0
+<a name='L13'>  13 <font color='darkred'>#endif</font>
+<a name='L14'>  14 
+<a name='L15'>  15 <i><font color='green'>/* Hooks */</font></i>
+<a name='L16'>  16 <font color='darkred'>#define</font> <a href='../S/64.html#L81' title='Refered from 81 in usr/src/libpthread/src/pthread_create.c.'>__os_thread_create</a>(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>, <a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>, <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>)                     <a href='../Y/159.html' title='Multiple used in 2 places.'>clone</a>((<b>int</b>(*)(<b>void</b>*)) <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>, <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>, <a href='../S/62.html#L12' title='Defined at 12 in usr/src/libpthread/src/platform/posix/hooks.h.'>CLONE_VM</a>, <a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>)
+<a name='L17'>  17 <font color='darkred'>#define</font> <a href='../S/56.html#L24' title='Refered from 24 in usr/src/libpthread/src/pthread_detach.c.'>__os_thread_kill</a>(<a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>)                          <a href='../Y/352.html' title='Multiple used in 2 places.'>kill</a>(<a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>, <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>)
+<a name='L18'>  18 <font color='darkred'>#define</font> <a href='../R/183.html' title='Multiple refered from 2 places.'>__os_gettid</a>()                                   <a href='../Y/284.html' title='Multiple used in 2 places.'>getpid</a>()
+<a name='L19'>  19 
+<a name='L20'>  20 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

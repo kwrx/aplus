@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>usr/src/libposix/src/getcwd.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/getcwd.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L7'>[^]</a><a href='#L17'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L7' title='Defined at 7.'>strcat_inv</a>
+<li><a href='#L17' title='Defined at 17.'>getcwd</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <b>static</b> <b>char</b>* <a href='../R/493.html' title='Multiple refered from 3 places.'>strcat_inv</a>(<b>char</b>* <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <b>char</b>* <a href='../Y/612.html' title='Multiple used in 6 places.'>str</a>) <font color='red'>{</font>
+<a name='L8'>   8         <b>char</b>* <a href='../Y/519.html' title='Multiple used in 5 places.'>res</a> = <a href='../Y/372.html' title='Multiple used in 5 places.'>malloc</a>(<a href='../Y/621.html' title='Multiple used in 3 places.'>strlen</a>(<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>) + <a href='../Y/621.html' title='Multiple used in 3 places.'>strlen</a>(<a href='../Y/612.html' title='Multiple used in 6 places.'>str</a>));
+<a name='L9'>   9         <a href='../Y/618.html' title='Multiple used in 10 places.'>strcpy</a>(<a href='../Y/519.html' title='Multiple used in 5 places.'>res</a>, <a href='../Y/612.html' title='Multiple used in 6 places.'>str</a>);       
+<a name='L10'>  10         <a href='../Y/613.html' title='Multiple used in 5 places.'>strcat</a>(<a href='../Y/519.html' title='Multiple used in 5 places.'>res</a>, <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>);
+<a name='L11'>  11         <a href='../Y/618.html' title='Multiple used in 10 places.'>strcpy</a>(<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <a href='../Y/519.html' title='Multiple used in 5 places.'>res</a>);
+<a name='L12'>  12 
+<a name='L13'>  13         <a href='../Y/274.html' title='Multiple used in 8 places.'>free</a>(<a href='../Y/519.html' title='Multiple used in 5 places.'>res</a>);
+<a name='L14'>  14         <b>return</b> <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>;
+<a name='L15'>  15 <font color='red'>}</font>
+<a name='L16'>  16 
+<a name='L17'>  17 <b>char</b>* getcwd(<b>char</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) <font color='red'>{</font>
+<a name='L18'>  18         <b>struct</b> <a href='../Y/608.html' title='Multiple used in 10 places.'>stat</a> <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>;
+<a name='L19'>  19         <b>char</b> <a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>[1024];
+<a name='L20'>  20 
+<a name='L21'>  21         <b>int</b> <a href='../Y/527.html' title='Multiple used in 5 places.'>root_ino</a> = 0;
+<a name='L22'>  22         <b>int</b> <a href='../Y/182.html' title='Multiple used in 7 places.'>curr_ino</a> = 0;
+<a name='L23'>  23 
+<a name='L24'>  24         <b>if</b>(<a href='../Y/608.html' title='Multiple used in 10 places.'>stat</a>("/", &amp;<a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>) != 0)
+<a name='L25'>  25                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L26'>  26         <a href='../Y/527.html' title='Multiple used in 5 places.'>root_ino</a> = <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>.<a href='../Y/596.html' title='Multiple used in 4 places.'>st_ino</a>;
+<a name='L27'>  27 
+<a name='L28'>  28         <b>if</b>(<a href='../Y/608.html' title='Multiple used in 10 places.'>stat</a>(".", &amp;<a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>) != 0)
+<a name='L29'>  29                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L30'>  30         <a href='../Y/182.html' title='Multiple used in 7 places.'>curr_ino</a> = <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>.<a href='../Y/596.html' title='Multiple used in 4 places.'>st_ino</a>;
+<a name='L31'>  31 
+<a name='L32'>  32 
+<a name='L33'>  33         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, 0, <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L34'>  34         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>, 0, 1024);
+<a name='L35'>  35         <a href='../Y/613.html' title='Multiple used in 5 places.'>strcat</a>(<a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>, ".");
+<a name='L36'>  36 
+<a name='L37'>  37         <b>if</b>(<a href='../Y/182.html' title='Multiple used in 7 places.'>curr_ino</a> == <a href='../Y/527.html' title='Multiple used in 5 places.'>root_ino</a>) <font color='red'>{</font>
+<a name='L38'>  38                 <a href='../S/32.html#L7' title='Defined at 7 in usr/src/libposix/src/getcwd.c.'>strcat_inv</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, "/");
+<a name='L39'>  39                 <b>return</b> <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L40'>  40         <font color='red'>}</font>
+<a name='L41'>  41 
+<a name='L42'>  42 
+<a name='L43'>  43         <b>while</b>(<a href='../Y/182.html' title='Multiple used in 7 places.'>curr_ino</a> != <a href='../Y/527.html' title='Multiple used in 5 places.'>root_ino</a>) <font color='red'>{</font>
+<a name='L44'>  44                 <b>if</b>(<a href='../Y/608.html' title='Multiple used in 10 places.'>stat</a>(<a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>, &amp;<a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>) != 0)
+<a name='L45'>  45                         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L46'>  46 
+<a name='L47'>  47                 <a href='../Y/182.html' title='Multiple used in 7 places.'>curr_ino</a> = <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>.<a href='../Y/596.html' title='Multiple used in 4 places.'>st_ino</a>;
+<a name='L48'>  48 
+<a name='L49'>  49                 <b>if</b>(<a href='../Y/182.html' title='Multiple used in 7 places.'>curr_ino</a> == <a href='../Y/527.html' title='Multiple used in 5 places.'>root_ino</a>)
+<a name='L50'>  50                         <b>break</b>;
+<a name='L51'>  51 
+<a name='L52'>  52                 <a href='../Y/613.html' title='Multiple used in 5 places.'>strcat</a>(<a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>, "/..");
+<a name='L53'>  53                 <a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../Y/200.html' title='Multiple used in 9 places.'>dir</a> = <a href='../S/42.html#L13' title='Defined at 13 in usr/src/libposix/src/opendir.c.'>opendir</a>(<a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>);
+<a name='L54'>  54                 <b>if</b>(!<a href='../Y/200.html' title='Multiple used in 9 places.'>dir</a>)
+<a name='L55'>  55                         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L56'>  56 
+<a name='L57'>  57                 <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>* <a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>;
+<a name='L58'>  58                 <b>while</b>((<a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a> = <a href='../S/35.html#L15' title='Defined at 15 in usr/src/libposix/src/readdir.c.'>readdir</a>(<a href='../Y/200.html' title='Multiple used in 9 places.'>dir</a>))) <font color='red'>{</font>
+<a name='L59'>  59                         <b>if</b>(<a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>-&gt;<a href='../Y/188.html' title='Multiple used in 3 places.'>d_ino</a> == <a href='../Y/182.html' title='Multiple used in 7 places.'>curr_ino</a>) <font color='red'>{</font>
+<a name='L60'>  60                                 <a href='../S/32.html#L7' title='Defined at 7 in usr/src/libposix/src/getcwd.c.'>strcat_inv</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>-&gt;<a href='../Y/189.html' title='Multiple used in 4 places.'>d_name</a>);
+<a name='L61'>  61                                 <a href='../S/32.html#L7' title='Defined at 7 in usr/src/libposix/src/getcwd.c.'>strcat_inv</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, "/");                   
+<a name='L62'>  62                         <font color='red'>}</font>
+<a name='L63'>  63 
+<a name='L64'>  64                         <a href='../Y/274.html' title='Multiple used in 8 places.'>free</a>(<a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>);
+<a name='L65'>  65                 <font color='red'>}</font>
+<a name='L66'>  66 
+<a name='L67'>  67                 <a href='../S/21.html#L11' title='Defined at 11 in usr/src/libposix/src/closedir.c.'>closedir</a>(<a href='../Y/200.html' title='Multiple used in 9 places.'>dir</a>);
+<a name='L68'>  68         <font color='red'>}</font>
+<a name='L69'>  69 
+<a name='L70'>  70         <b>return</b> <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L71'>  71 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L7'>[^]</a><a href='#L17'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

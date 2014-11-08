@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>stack</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L93'>stack</a>              93 src/arch/task.c 	child-&gt;context.stack = current_task-&gt;context.stack;
+<a href='../S/159.html#L96'>stack</a>              96 src/arch/task.c 	void* stack = (void*) mm_align(kmalloc(TASK_STACKSIZE * 2));
+<a href='../S/159.html#L97'>stack</a>              97 src/arch/task.c 	memcpy(stack, (void*) child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L99'>stack</a>              99 src/arch/task.c 	vmm_umap(child-&gt;context.cr3, child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L100'>stack</a>             100 src/arch/task.c 	vmm_map(child-&gt;context.cr3, mm_paddr(stack), child-&gt;context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+<a href='../S/159.html#L115'>stack</a>             115 src/arch/task.c task_t* task_clone(void* entry, void* arg, void* stack) {
+<a href='../S/159.html#L119'>stack</a>             119 src/arch/task.c 	if(stack == NULL)
+<a href='../S/159.html#L120'>stack</a>             120 src/arch/task.c 		stack = (void*) ((int) mm_align(kmalloc(TASK_STACKSIZE * 2)) + TASK_STACKSIZE);
+<a href='../S/159.html#L122'>stack</a>             122 src/arch/task.c 	memset(stack, 0, TASK_STACKSIZE);
+<a href='../S/159.html#L148'>stack</a>             148 src/arch/task.c 	child-&gt;context.stack = (uint32_t) stack - TASK_STACKSIZE;
+<a href='../S/159.html#L149'>stack</a>             149 src/arch/task.c 	child-&gt;context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+<a href='../S/159.html#L189'>stack</a>             189 src/arch/task.c 	current_task-&gt;context.stack = (uint32_t) &amp;kernel_stack;
+<a href='../S/90.html#L77'>stack</a>              77 src/include/aplus/task.h 		uint32_t stack;
+</pre>
+</body>
+</html>

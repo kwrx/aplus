@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>src/syscall/fstat.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/fstat.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L15'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L15' title='Defined at 15.'>sys_fstat</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L12'>  12 
+<a name='L13'>  13 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L14'>  14 
+<a name='L15'>  15 <b>int</b> <a href='../S/124.html#L21' title='Refered from 21 in src/syscall/stat.c.'>sys_fstat</a>(<b>int</b> <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>, <b>struct</b> <a href='../Y/608.html' title='Multiple used in 10 places.'>stat</a>* <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>) <font color='red'>{</font>
+<a name='L16'>  16         <b>if</b>(!<a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>) <font color='red'>{</font>
+<a name='L17'>  17                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L18'>  18                 <b>return</b> -1;
+<a name='L19'>  19         <font color='red'>}</font>
+<a name='L20'>  20 
+<a name='L21'>  21         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>];
+<a name='L22'>  22         <b>if</b>(!<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>) <font color='red'>{</font>
+<a name='L23'>  23                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("sys_fstat: %s.", <a href='../Y/620.html' title='Multiple used in 3 places.'>strerror</a>(<a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a>));
+<a name='L24'>  24                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/7.html' title='Multiple used in 8 places.'>EBADF</a>;
+<a name='L25'>  25                 <b>return</b> -1;
+<a name='L26'>  26         <font color='red'>}</font>
+<a name='L27'>  27         
+<a name='L28'>  28         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_mode = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>;
+<a name='L29'>  29         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;<a href='../Y/596.html' title='Multiple used in 4 places.'>st_ino</a> = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>;
+<a name='L30'>  30         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_dev = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>;
+<a name='L31'>  31         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;<a href='../Y/602.html' title='Multiple used in 2 places.'>st_uid</a> = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a>;
+<a name='L32'>  32         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;<a href='../Y/595.html' title='Multiple used in 2 places.'>st_gid</a> = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a>;
+<a name='L33'>  33         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_atime = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/111.html' title='Multiple used in 2 places.'>atime</a>;
+<a name='L34'>  34         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_ctime = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/178.html' title='Multiple used in 2 places.'>ctime</a>;
+<a name='L35'>  35         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_mtime = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/393.html' title='Multiple used in 2 places.'>mtime</a>;
+<a name='L36'>  36         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_nlink = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/414.html' title='Multiple used in 5 places.'>nlink</a>;
+<a name='L37'>  37         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;<a href='../Y/601.html' title='Multiple used in 2 places.'>st_size</a> = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L38'>  38         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_rdev = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>-&gt;<a href='../Y/498.html' title='Multiple used in 5 places.'>rdev</a>;
+<a name='L39'>  39         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;<a href='../Y/591.html' title='Multiple used in 2 places.'>st_blksize</a> = 512;
+<a name='L40'>  40         <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;st_blocks = <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;<a href='../Y/601.html' title='Multiple used in 2 places.'>st_size</a> / <a href='../Y/589.html' title='Multiple used in 32 places.'>st</a>-&gt;<a href='../Y/591.html' title='Multiple used in 2 places.'>st_blksize</a>;
+<a name='L41'>  41         
+<a name='L42'>  42         <b>return</b> 0;
+<a name='L43'>  43 <font color='red'>}</font>
+<a name='L44'>  44 
+<a name='L45'>  45 
+<a name='L46'>  46 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_fstat, 4);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L15'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

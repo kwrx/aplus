@@ -1,0 +1,413 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="arp_8c" kind="file">
+    <compoundname>arp.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">string.h</includes>
+    <includes refid="eth_8h" local="no">aplus/net/eth.h</includes>
+    <includes refid="arp_8h" local="no">aplus/net/arp.h</includes>
+    <incdepgraph>
+      <node id="1005">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="996">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1004">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="999" relation="include">
+        </childnode>
+        <childnode refid="1000" relation="include">
+        </childnode>
+        <childnode refid="1005" relation="include">
+        </childnode>
+        <childnode refid="1006" relation="include">
+        </childnode>
+      </node>
+      <node id="995">
+        <label>stdint.h</label>
+      </node>
+      <node id="1009">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1003">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="994" relation="include">
+        </childnode>
+        <childnode refid="1004" relation="include">
+        </childnode>
+        <childnode refid="1008" relation="include">
+        </childnode>
+        <childnode refid="1000" relation="include">
+        </childnode>
+        <childnode refid="1009" relation="include">
+        </childnode>
+      </node>
+      <node id="1011">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="994" relation="include">
+        </childnode>
+        <childnode refid="995" relation="include">
+        </childnode>
+      </node>
+      <node id="999">
+        <label>stddef.h</label>
+      </node>
+      <node id="998">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="999" relation="include">
+        </childnode>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="1000" relation="include">
+        </childnode>
+        <childnode refid="1001" relation="include">
+        </childnode>
+        <childnode refid="1002" relation="include">
+        </childnode>
+      </node>
+      <node id="1012">
+        <label>aplus/net/eth.h</label>
+        <link refid="eth_8h"/>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="1010" relation="include">
+        </childnode>
+      </node>
+      <node id="1013">
+        <label>aplus/net/arp.h</label>
+        <link refid="arp_8h"/>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="1010" relation="include">
+        </childnode>
+        <childnode refid="1012" relation="include">
+        </childnode>
+        <childnode refid="1014" relation="include">
+        </childnode>
+      </node>
+      <node id="994">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="996" relation="include">
+        </childnode>
+        <childnode refid="997" relation="include">
+        </childnode>
+      </node>
+      <node id="1000">
+        <label>sys/types.h</label>
+      </node>
+      <node id="997">
+        <label>string.h</label>
+      </node>
+      <node id="1007">
+        <label>unistd.h</label>
+      </node>
+      <node id="1008">
+        <label>signal.h</label>
+      </node>
+      <node id="1010">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="994" relation="include">
+        </childnode>
+        <childnode refid="1011" relation="include">
+        </childnode>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="999" relation="include">
+        </childnode>
+      </node>
+      <node id="1002">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="1003" relation="include">
+        </childnode>
+      </node>
+      <node id="1014">
+        <label>time.h</label>
+      </node>
+      <node id="1006">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1007" relation="include">
+        </childnode>
+        <childnode refid="1000" relation="include">
+        </childnode>
+      </node>
+      <node id="1001">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="993">
+        <label>src/net/arp.c</label>
+        <link refid="arp.c"/>
+        <childnode refid="994" relation="include">
+        </childnode>
+        <childnode refid="998" relation="include">
+        </childnode>
+        <childnode refid="1010" relation="include">
+        </childnode>
+        <childnode refid="999" relation="include">
+        </childnode>
+        <childnode refid="995" relation="include">
+        </childnode>
+        <childnode refid="997" relation="include">
+        </childnode>
+        <childnode refid="1012" relation="include">
+        </childnode>
+        <childnode refid="1013" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="arp_8c_1af0c8c4708050f018c061291a0b18275f" prot="public" static="no" mutable="no">
+        <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+        <definition>list_t* arp_cache</definition>
+        <argsstring></argsstring>
+        <name>arp_cache</name>
+        <initializer>= NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/arp.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/net/arp.c" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="arp_8c_1adfa3881c2f0f72ec135119b5260a5039" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="arp_8h_1a9b4be1be5ee1e2531c81fa075b4f55d1" kindref="member">arp_cache_entry_t</ref> *</type>
+        <definition>arp_cache_entry_t* arp_cache_find_by_macaddr</definition>
+        <argsstring>(macaddr_t macaddr)</argsstring>
+        <name>arp_cache_find_by_macaddr</name>
+        <param>
+          <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
+          <declname>macaddr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/arp.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/net/arp.c" bodystart="16" bodyend="31"/>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="49" endline="54">list_empty</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="structarp__cache__entry_1abc5be464b787fc7c71a45330c9b979af" compoundref="arp_8h" startline="41">arp_cache_entry::macaddr</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int arp_cache_add</definition>
+        <argsstring>(macaddr_t macaddr, ipv4_t ipv4)</argsstring>
+        <name>arp_cache_add</name>
+        <param>
+          <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
+          <declname>macaddr</declname>
+        </param>
+        <param>
+          <type><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref></type>
+          <declname>ipv4</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/arp.c" line="33" column="1" bodyfile="/opt/prj/aPlus/src/net/arp.c" bodystart="33" bodyend="65"/>
+        <references refid="arp_8c_1adfa3881c2f0f72ec135119b5260a5039" compoundref="arp_8c" startline="16" endline="31">arp_cache_find_by_macaddr</references>
+        <references refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" compoundref="netif_8h" startline="38">netif::ipv4</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
+        <references refid="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b" compoundref="netif_8c" startline="66" endline="78">netif_find_by_macaddr</references>
+      </memberdef>
+      <memberdef kind="function" id="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int arp_recv</definition>
+        <argsstring>(netif_t *netif, void *buf, size_t length)</argsstring>
+        <name>arp_recv</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/arp.c" line="67" column="1" bodyfile="/opt/prj/aPlus/src/net/arp.c" bodystart="67" bodyend="76"/>
+        <references refid="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65" compoundref="arp_8c" startline="33" endline="65">arp_cache_add</references>
+        <references refid="arp_8h_1ad32703851a1b58336c54dbe3f4e4f8ee" compoundref="arp_8h" startline="19">ARP_OPERATION_REPLY</references>
+        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
+      </memberdef>
+      <memberdef kind="function" id="arp_8c_1a0494cc7052a3d81efd628c0e4cc98f97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int arp_send</definition>
+        <argsstring>(netif_t *netif)</argsstring>
+        <name>arp_send</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/arp.c" line="79" column="1" bodyfile="/opt/prj/aPlus/src/net/arp.c" bodystart="79" bodyend="100"/>
+        <references refid="arp_8h_1a1e4785e681402a451395c42f39b7b1cf" compoundref="arp_8h" startline="16">ARP_HWLEN</references>
+        <references refid="arp_8h_1a8054d75c10f454d169e571ba0bbd0020" compoundref="arp_8h" startline="15">ARP_HWTYPE</references>
+        <references refid="arp_8h_1a46acf87c581047a4931a07ca60a3d057" compoundref="arp_8h" startline="18">ARP_OPERATION_REQUEST</references>
+        <references refid="arp_8h_1a8ea0479afe5a85f08dd59c3323febcbd" compoundref="arp_8h" startline="13">ARP_PRLEN</references>
+        <references refid="arp_8h_1acd36df131f3c821461809b22fdc59d15" compoundref="arp_8h" startline="12">ARP_PRTYPE</references>
+        <references refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" compoundref="eth_8c" startline="79" endline="103">eth_send</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
+        <references refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" compoundref="netif_8h" startline="34">netif::name</references>
+        <references refid="netif_8h_1ae9935405723cb9caabff3f18b66446ca" compoundref="netif_8h" startline="18">NETIF_ARP</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="eth_8h" kindref="compound">aplus/net/eth.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="arp_8h" kindref="compound">aplus/net/arp.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="arp_8c_1af0c8c4708050f018c061291a0b18275f" refkind="member"><highlight class="normal"><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="arp_8c_1af0c8c4708050f018c061291a0b18275f" kindref="member">arp_cache</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="arp_8c_1adfa3881c2f0f72ec135119b5260a5039" refkind="member"><highlight class="normal"><ref refid="structarp__cache__entry" kindref="compound">arp_cache_entry_t</ref>*<sp/><ref refid="arp_8c_1adfa3881c2f0f72ec135119b5260a5039" kindref="member">arp_cache_find_by_macaddr</ref>(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref><sp/>macaddr)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(arp_cache<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(arp_cache))</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>arp_cache)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structarp__cache__entry" kindref="compound">arp_cache_entry_t</ref>*<sp/>arp<sp/>=<sp/>(<ref refid="structarp__cache__entry" kindref="compound">arp_cache_entry_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(memcmp(arp-&gt;<ref refid="structarp__cache__entry_1abc5be464b787fc7c71a45330c9b979af" kindref="member">macaddr</ref>,<sp/>macaddr,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>))<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>arp;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65" kindref="member">arp_cache_add</ref>(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref><sp/>macaddr,<sp/><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref><sp/>ipv4)<sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(arp_cache<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(arp_cache);</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structarp__cache__entry" kindref="compound">arp_cache_entry_t</ref>*<sp/>arp<sp/>=<sp/><ref refid="arp_8c_1adfa3881c2f0f72ec135119b5260a5039" kindref="member">arp_cache_find_by_macaddr</ref>(macaddr);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(arp)</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="list_8h_1a4470c240b622941415ae5250067699b5" kindref="member">list_remove</ref>(arp_cache,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>arp);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>arp<sp/>=<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structarp__cache__entry" kindref="compound">arp_cache_entry_t</ref>));</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(arp-&gt;macaddr,<sp/>macaddr,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>));</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(arp-&gt;ipv4,<sp/>ipv4,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref>));</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//arp-&gt;ttl<sp/>=<sp/>time(NULL)<sp/>+<sp/>ARP_TTL;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ARP_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;arp:<sp/>added<sp/>new<sp/>cache<sp/>entry<sp/>(%02x.%02x.%02x.%02x)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arp-&gt;ipv4[0],</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arp-&gt;ipv4[1],</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arp-&gt;ipv4[2],</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arp-&gt;ipv4[3]</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b" kindref="member">netif_find_by_macaddr</ref>(arp-&gt;macaddr);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(netif)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy(netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>,<sp/>arp-&gt;ipv4,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref>));</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(arp_cache,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>arp);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c" kindref="member">arp_recv</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>arp_header_t*<sp/>arp<sp/>=<sp/>(arp_header_t*)<sp/>buf;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(arp-&gt;operation<sp/>==<sp/><ref refid="arp_8h_1ad32703851a1b58336c54dbe3f4e4f8ee" kindref="member">ARP_OPERATION_REPLY</ref>)</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(memcmp(netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>,<sp/>arp-&gt;tha,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>))<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65" kindref="member">arp_cache_add</ref>(arp-&gt;tha,<sp/>arp-&gt;tpa);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79" refid="arp_8c_1a0494cc7052a3d81efd628c0e4cc98f97" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="arp_8c_1a0494cc7052a3d81efd628c0e4cc98f97" kindref="member">arp_send</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>arp_header_t*<sp/>arp<sp/>=<sp/>(arp_header_t*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(arp_header_t));</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>arp-&gt;hwtype<sp/>=<sp/><ref refid="arp_8h_1a8054d75c10f454d169e571ba0bbd0020" kindref="member">ARP_HWTYPE</ref>;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>arp-&gt;prtype<sp/>=<sp/><ref refid="arp_8h_1acd36df131f3c821461809b22fdc59d15" kindref="member">ARP_PRTYPE</ref>;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>arp-&gt;hwlen<sp/>=<sp/><ref refid="arp_8h_1a1e4785e681402a451395c42f39b7b1cf" kindref="member">ARP_HWLEN</ref>;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>arp-&gt;prlen<sp/>=<sp/><ref refid="arp_8h_1a8ea0479afe5a85f08dd59c3323febcbd" kindref="member">ARP_PRLEN</ref>;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>arp-&gt;operation<sp/>=<sp/><ref refid="arp_8h_1a46acf87c581047a4931a07ca60a3d057" kindref="member">ARP_OPERATION_REQUEST</ref>;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(arp-&gt;sha,<sp/>netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>));</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(arp-&gt;tha,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>));</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(arp-&gt;spa,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref>));</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(arp-&gt;tpa,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref>));</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ARP_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;arp:<sp/>sending<sp/>request<sp/>for<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>netif-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ret<sp/>=<sp/><ref refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" kindref="member">eth_send</ref>(netif,<sp/>arp,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(arp_header_t),<sp/><ref refid="netif_8h_1ae9935405723cb9caabff3f18b66446ca" kindref="member">NETIF_ARP</ref>);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(arp);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ret;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/net/arp.c"/>
+  </compounddef>
+</doxygen>

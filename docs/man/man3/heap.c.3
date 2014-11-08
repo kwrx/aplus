@@ -1,0 +1,60 @@
+.TH "src/mm/heap.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/mm/heap.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "void * \fBhalloc\fP (\fBheap_t\fP *\fBheap\fP, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "void \fBhfree\fP (\fBheap_t\fP *\fBheap\fP, void *addr, size_t \fBsize\fP)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "void* halloc (\fBheap_t\fP *heap, size_tsize)"
+
+.PP
+Definizione alla linea 28 del file heap\&.c\&.
+.PP
+Referenzia heap::alloc\&.
+.PP
+.nf
+28                                         {
+29     if(heap)
+30         if(heap->alloc)
+31             return heap->alloc(heap, size);
+32             
+33     return 0;
+34 }
+.fi
+.SS "void hfree (\fBheap_t\fP *heap, void *addr, size_tsize)"
+
+.PP
+Definizione alla linea 36 del file heap\&.c\&.
+.PP
+Referenzia heap::free\&.
+.PP
+.nf
+36                                                   {
+37     if(heap)
+38         if(heap->free)
+39             heap->free(heap, addr, size);
+40 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

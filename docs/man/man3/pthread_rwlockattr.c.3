@@ -1,0 +1,117 @@
+.TH "usr/src/libpthread/src/pthread_rwlockattr.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_rwlockattr.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <sched\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_rwlockattr_init\fP (\fBpthread_rwlockattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_rwlockattr_destroy\fP (\fBpthread_rwlockattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_rwlockattr_getpshared\fP (const \fBpthread_rwlockattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_rwlockattr_setpshared\fP (\fBpthread_rwlockattr_t\fP *attr, int pshared)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_rwlockattr_destroy (\fBpthread_rwlockattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 19 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+19                                                                   {
+20     if(attr == NULL) {
+21         errno = EINVAL;
+22         return 1;
+23     }
+24 
+25     attr->pshared = 0;
+26     return 0;
+27 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_rwlockattr_getpshared (const \fBpthread_rwlockattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 29 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+29                                                                                          {
+30     if(attr == NULL) {
+31         errno = EINVAL;
+32         return 1;
+33     }
+34 
+35     if(pshared == NULL) {
+36         errno = EINVAL;
+37         return 1;
+38     }
+39 
+40     *pshared = attr->pshared;
+41     return 0;
+42 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_rwlockattr_init (\fBpthread_rwlockattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 9 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+9                                                                {
+10     if(attr == NULL) {
+11         errno = EINVAL;
+12         return 1;
+13     }
+14 
+15     attr->pshared = 0;
+16     return 0;
+17 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_rwlockattr_setpshared (\fBpthread_rwlockattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 44 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+44                                                                                   {
+45     if(attr == NULL) {
+46         errno = EINVAL;
+47         return 1;
+48     }
+49 
+50     attr->pshared = pshared;
+51     return 0;
+52 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

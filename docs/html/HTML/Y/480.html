@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>position</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/97.html#L47'>position</a>           47 src/include/aplus/fs.h 	off_t position;
+<a href='../S/132.html#L31'>position</a>           31 src/syscall/lseek.c 			ino-&gt;position = pos;
+<a href='../S/132.html#L34'>position</a>           34 src/syscall/lseek.c 			ino-&gt;position = ino-&gt;size - pos;
+<a href='../S/132.html#L37'>position</a>           37 src/syscall/lseek.c 			ino-&gt;position = (ino-&gt;position + pos &gt; ino-&gt;size ? ino-&gt;size : ino-&gt;position + pos);
+<a href='../S/132.html#L44'>position</a>           44 src/syscall/lseek.c 	return ino-&gt;position;
+<a href='../S/140.html#L9'>position</a>            9 src/syscall/readdir.c struct dirent* sys_readdir(int fd, int position) {
+<a href='../S/140.html#L21'>position</a>           21 src/syscall/readdir.c 	return (struct dirent*) fs_readdir(ino, position);
+<a href='../S/10.html#L31'>position</a>           31 usr/src/libposix/include/sys/dirent.h 	int position;
+<a href='../S/21.html#L20'>position</a>           20 usr/src/libposix/src/closedir.c 	d-&gt;position = -1;
+<a href='../S/20.html#L11'>position</a>           11 usr/src/libposix/src/config.h #define __os_readdir(d)						aplus_readdir(d-&gt;fd, d-&gt;position)
+<a href='../S/42.html#L22'>position</a>           22 usr/src/libposix/src/opendir.c 	d-&gt;position = 0;
+<a href='../S/27.html#L13'>position</a>           13 usr/src/libposix/src/rewinddir.c 		d-&gt;position = 0;
+<a href='../S/25.html#L15'>position</a>           15 usr/src/libposix/src/seekdir.c 		d-&gt;position = offset;
+<a href='../S/41.html#L17'>position</a>           17 usr/src/libposix/src/telldir.c 	return d-&gt;position;
+</pre>
+</body>
+</html>

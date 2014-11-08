@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>usr/src/libcrt0/src/syscalls.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/178.html'>libcrt0</a>/<a href='../files/179.html'>src</a>/syscalls.c</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L2'>   2 
+<a name='L3'>   3 <font color='darkred'>#define</font> <a href='../R/135.html' title='Multiple refered from 6 places.'>SYSCODE</a>                 "int $0x80"
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#define</font> syscall0(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>)                                  \
+<a name='L6'>   6         <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>() <font color='red'>{</font>                                                           \
+<a name='L7'>   7                 <b>int</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>, <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                                       \
+<a name='L8'>   8                 <b>__asm__</b> <b>__volatile__</b> (                  \
+<a name='L9'>   9                         <a href='../S/83.html#L3' title='Defined at 3 in usr/src/libcrt0/src/syscalls.c.'>SYSCODE</a>                                         \
+<a name='L10'>  10                         : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>), "=b"(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>)      \
+<a name='L11'>  11                         : "a"(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>)                                        \
+<a name='L12'>  12                 );                                                              \
+<a name='L13'>  13                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                              \
+<a name='L14'>  14                 <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                               \
+<a name='L15'>  15         <font color='red'>}</font>
+<a name='L16'>  16 
+<a name='L17'>  17 <font color='darkred'>#define</font> <a href='../S/83.html#L81' title='Refered from 81 in usr/src/libcrt0/src/syscalls.c.'>syscall1</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>)                                  \
+<a name='L18'>  18         <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>) <font color='red'>{</font>                                                         \
+<a name='L19'>  19                 <b>int</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>, <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                                       \
+<a name='L20'>  20                 <b>__asm__</b> <b>__volatile__</b> (                  \
+<a name='L21'>  21                         <a href='../S/83.html#L3' title='Defined at 3 in usr/src/libcrt0/src/syscalls.c.'>SYSCODE</a>                                         \
+<a name='L22'>  22                         : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>), "=b"(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>)      \
+<a name='L23'>  23                         : "a"(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>), "b"(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>)                       \
+<a name='L24'>  24                 );                                                              \
+<a name='L25'>  25                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                              \
+<a name='L26'>  26                 <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                               \
+<a name='L27'>  27         <font color='red'>}</font>
+<a name='L28'>  28 
+<a name='L29'>  29 <font color='darkred'>#define</font> syscall2(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>)                                  \
+<a name='L30'>  30         <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>, <a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>) <font color='red'>{</font>                                                     \
+<a name='L31'>  31                 <b>int</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>, <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                                       \
+<a name='L32'>  32                 <b>__asm__</b> <b>__volatile__</b> (                  \
+<a name='L33'>  33                         <a href='../S/83.html#L3' title='Defined at 3 in usr/src/libcrt0/src/syscalls.c.'>SYSCODE</a>                                         \
+<a name='L34'>  34                         : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>), "=b"(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>)      \
+<a name='L35'>  35                         : "a"(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>), "b"(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>), "c"(<a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>)      \
+<a name='L36'>  36                 );                                                              \
+<a name='L37'>  37                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                              \
+<a name='L38'>  38                 <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                               \
+<a name='L39'>  39         <font color='red'>}</font>
+<a name='L40'>  40 
+<a name='L41'>  41 <font color='darkred'>#define</font> syscall3(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>)                                  \
+<a name='L42'>  42         <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>, <a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>, <a href='../Y/451.html' title='Multiple used in 8 places.'>p3</a>) <font color='red'>{</font>                                         \
+<a name='L43'>  43                 <b>int</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>, <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                                       \
+<a name='L44'>  44                 <b>__asm__</b> <b>__volatile__</b> (                  \
+<a name='L45'>  45                         <a href='../S/83.html#L3' title='Defined at 3 in usr/src/libcrt0/src/syscalls.c.'>SYSCODE</a>                                         \
+<a name='L46'>  46                         : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>), "=b"(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>)      \
+<a name='L47'>  47                         : "a"(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>), "b"(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>), "c"(<a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>),     \
+<a name='L48'>  48                           "d"(<a href='../Y/451.html' title='Multiple used in 8 places.'>p3</a>)                                       \
+<a name='L49'>  49                 );                                                              \
+<a name='L50'>  50                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                              \
+<a name='L51'>  51                 <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                               \
+<a name='L52'>  52         <font color='red'>}</font>
+<a name='L53'>  53 
+<a name='L54'>  54 <font color='darkred'>#define</font> syscall4(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>)                                  \
+<a name='L55'>  55         <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>, <a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>, <a href='../Y/451.html' title='Multiple used in 8 places.'>p3</a>, <a href='../Y/452.html' title='Multiple used in 6 places.'>p4</a>) <font color='red'>{</font>                                     \
+<a name='L56'>  56                 <b>int</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>, <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                                       \
+<a name='L57'>  57                 <b>__asm__</b> <b>__volatile__</b> (                  \
+<a name='L58'>  58                         <a href='../S/83.html#L3' title='Defined at 3 in usr/src/libcrt0/src/syscalls.c.'>SYSCODE</a>                                         \
+<a name='L59'>  59                         : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>), "=b"(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>)      \
+<a name='L60'>  60                         : "a"(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>), "b"(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>), "c"(<a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>),     \
+<a name='L61'>  61                           "d"(<a href='../Y/451.html' title='Multiple used in 8 places.'>p3</a>), "S"(<a href='../Y/452.html' title='Multiple used in 6 places.'>p4</a>)                      \
+<a name='L62'>  62                 );                                                              \
+<a name='L63'>  63                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                              \
+<a name='L64'>  64                 <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                               \
+<a name='L65'>  65         <font color='red'>}</font>
+<a name='L66'>  66 
+<a name='L67'>  67 <font color='darkred'>#define</font> syscall5(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>)                                  \
+<a name='L68'>  68         <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>, <a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>, <a href='../Y/451.html' title='Multiple used in 8 places.'>p3</a>, <a href='../Y/452.html' title='Multiple used in 6 places.'>p4</a>, <a href='../Y/453.html' title='Multiple used in 2 places.'>p5</a>) <font color='red'>{</font>                         \
+<a name='L69'>  69                 <b>int</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>, <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                                       \
+<a name='L70'>  70                 <b>__asm__</b> <b>__volatile__</b> (                  \
+<a name='L71'>  71                         <a href='../S/83.html#L3' title='Defined at 3 in usr/src/libcrt0/src/syscalls.c.'>SYSCODE</a>                                         \
+<a name='L72'>  72                         : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>), "=b"(<a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>)      \
+<a name='L73'>  73                         : "a"(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>), "b"(<a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>), "c"(<a href='../Y/450.html' title='Multiple used in 10 places.'>p2</a>),     \
+<a name='L74'>  74                           "d"(<a href='../Y/451.html' title='Multiple used in 8 places.'>p3</a>), "S"(<a href='../Y/452.html' title='Multiple used in 6 places.'>p4</a>), "D"(<a href='../Y/453.html' title='Multiple used in 2 places.'>p5</a>)     \
+<a name='L75'>  75                 );                                                              \
+<a name='L76'>  76                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/210.html' title='Multiple used in 27 places.'>e</a>;                                              \
+<a name='L77'>  77                 <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;                                               \
+<a name='L78'>  78         <font color='red'>}</font>
+<a name='L79'>  79 
+<a name='L80'>  80 
+<a name='L81'>  81 <a href='../S/83.html#L17' title='Defined at 17 in usr/src/libcrt0/src/syscalls.c.'>syscall1</a>(0, <a href='../Y/83.html' title='Multiple used in 3 places.'>_exit</a>)
+<a name='L82'>  82 <a href='../Y/652.html' title='Multiple used in 7 places.'>syscall1</a>(1, <a href='../Y/160.html' title='Multiple used in 3 places.'>close</a>)
+<a name='L83'>  83 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(2, <a href='../Y/252.html' title='Multiple used in 2 places.'>execve</a>)
+<a name='L84'>  84 <a href='../Y/651.html' title='Multiple used in 5 places.'>syscall0</a>(3, fork)
+<a name='L85'>  85 <a href='../Y/653.html' title='Multiple used in 7 places.'>syscall2</a>(4, <a href='../Y/277.html' title='Multiple used in 4 places.'>fstat</a>)
+<a name='L86'>  86 <a href='../Y/651.html' title='Multiple used in 5 places.'>syscall0</a>(5, <a href='../Y/284.html' title='Multiple used in 2 places.'>getpid</a>)
+<a name='L87'>  87 <a href='../Y/652.html' title='Multiple used in 7 places.'>syscall1</a>(6, isatty)
+<a name='L88'>  88 <a href='../Y/653.html' title='Multiple used in 7 places.'>syscall2</a>(7, <a href='../Y/352.html' title='Multiple used in 2 places.'>kill</a>)
+<a name='L89'>  89 <a href='../Y/653.html' title='Multiple used in 7 places.'>syscall2</a>(8, <a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>)
+<a name='L90'>  90 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(9, lseek)
+<a name='L91'>  91 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(10, <a href='../Y/437.html' title='Multiple used in 6 places.'>open</a>)
+<a name='L92'>  92 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(11, <a href='../Y/501.html' title='Multiple used in 8 places.'>read</a>)
+<a name='L93'>  93 <a href='../Y/652.html' title='Multiple used in 7 places.'>syscall1</a>(12, sbrk)
+<a name='L94'>  94 <a href='../Y/653.html' title='Multiple used in 7 places.'>syscall2</a>(13, <a href='../Y/608.html' title='Multiple used in 10 places.'>stat</a>)
+<a name='L95'>  95 <a href='../Y/652.html' title='Multiple used in 7 places.'>syscall1</a>(14, times)
+<a name='L96'>  96 <a href='../Y/652.html' title='Multiple used in 7 places.'>syscall1</a>(15, <a href='../Y/722.html' title='Multiple used in 7 places.'>unlink</a>)
+<a name='L97'>  97 <a href='../Y/652.html' title='Multiple used in 7 places.'>syscall1</a>(16, wait)
+<a name='L98'>  98 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(17, <a href='../Y/763.html' title='Multiple used in 8 places.'>write</a>)
+<a name='L99'>  99 <a href='../Y/653.html' title='Multiple used in 7 places.'>syscall2</a>(18, <a href='../Y/285.html' title='Multiple used in 3 places.'>gettimeofday</a>)
+<a name='L100'> 100 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(19, <a href='../Y/259.html' title='Multiple used in 2 places.'>fcntl</a>)
+<a name='L101'> 101 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(20, <a href='../Y/335.html' title='Multiple used in 7 places.'>ioctl</a>)
+<a name='L102'> 102 <a href='../Y/654.html' title='Multiple used in 8 places.'>syscall3</a>(21, <a href='../Y/154.html' title='Multiple used in 7 places.'>chown</a>)
+<a name='L103'> 103 syscall4(22, <a href='../Y/159.html' title='Multiple used in 2 places.'>clone</a>)
+<a name='L104'> 104 <a href='../Y/651.html' title='Multiple used in 5 places.'>syscall0</a>(23, <a href='../Y/547.html' title='Multiple used in 6 places.'>sched_yield</a>)
+<a name='L105'> 105 
+<a name='L106'> 106 <font color='darkred'>#ifdef</font> <a href='../Y/65.html' title='Multiple used in 3 places.'>__aplus__</a>
+<a name='L107'> 107 <a href='../Y/653.html' title='Multiple used in 7 places.'>syscall2</a>(80, <a href='../Y/99.html' title='Multiple used in 2 places.'>aplus_readdir</a>)
+<a name='L108'> 108 <a href='../Y/653.html' title='Multiple used in 7 places.'>syscall2</a>(81, <a href='../Y/97.html' title='Multiple used in 2 places.'>aplus_getgroups</a>)
+<a name='L109'> 109 <a href='../Y/651.html' title='Multiple used in 5 places.'>syscall0</a>(100, <a href='../Y/95.html' title='Multiple used in 2 places.'>aplus_argv</a>)
+<a name='L110'> 110 <a href='../Y/651.html' title='Multiple used in 5 places.'>syscall0</a>(101, <a href='../Y/96.html' title='Multiple used in 2 places.'>aplus_envp</a>)
+<a name='L111'> 111 <a href='../Y/652.html' title='Multiple used in 7 places.'>syscall1</a>(102, <a href='../Y/98.html' title='Multiple used in 2 places.'>aplus_install_sighandler</a>);
+<a name='L112'> 112 <font color='darkred'>#endif</font>
+<a name='L113'> 113 
+<a name='L114'> 114 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

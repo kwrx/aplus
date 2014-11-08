@@ -1,0 +1,222 @@
+<html>
+<head>
+<title>src/arch/pci.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/165.html'>arch</a>/pci.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L22'>[^]</a><a href='#L144'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L22' title='Defined at 22.'>pci_get_address</a>
+<li><a href='#L26' title='Defined at 26.'>pci_config_read</a>
+<li><a href='#L36' title='Defined at 36.'>pci_get_device_id</a>
+<li><a href='#L40' title='Defined at 40.'>pci_get_vendor_id</a>
+<li><a href='#L44' title='Defined at 44.'>pci_get_intr_pin</a>
+<li><a href='#L48' title='Defined at 48.'>pci_get_intr_line</a>
+<li><a href='#L52' title='Defined at 52.'>pci_get_revision</a>
+<li><a href='#L56' title='Defined at 56.'>pci_get_class</a>
+<li><a href='#L60' title='Defined at 60.'>pci_get_header_type</a>
+<li><a href='#L65' title='Defined at 65.'>pci_get_bar</a>
+<li><a href='#L77' title='Defined at 77.'>pci_get_iobase</a>
+<li><a href='#L90' title='Defined at 90.'>pci_get_membase</a>
+<li><a href='#L103' title='Defined at 103.'>pci_load_device</a>
+<li><a href='#L120' title='Defined at 120.'>pci_find_by_id</a>
+<li><a href='#L131' title='Defined at 131.'>pci_find_by_class</a>
+<li><a href='#L144' title='Defined at 144.'>pci_init</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='100.html'>aplus/pci.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 
+<a name='L11'>  11 <font color='darkred'>#define</font> <a href='../S/160.html#L27' title='Refered from 27 in src/arch/pci.c.'>PCI_CONFIG_ADDRESS</a>              0x0CF8
+<a name='L12'>  12 <font color='darkred'>#define</font> <a href='../R/83.html' title='Multiple refered from 2 places.'>PCI_CONFIG_DATA</a>                 0x0CFC
+<a name='L13'>  13 <font color='darkred'>#define</font> <a href='../R/86.html' title='Multiple refered from 4 places.'>PCI_MAX_DEVICES</a>                 65536
+<a name='L14'>  14 <font color='darkred'>#define</font> <a href='../S/160.html#L149' title='Refered from 149 in src/arch/pci.c.'>PCI_MAX_BUS</a>                             255
+<a name='L15'>  15 <font color='darkred'>#define</font> <a href='../S/160.html#L150' title='Refered from 150 in src/arch/pci.c.'>PCI_MAX_DEV</a>                             32
+<a name='L16'>  16 <font color='darkred'>#define</font> <a href='../S/160.html#L151' title='Refered from 151 in src/arch/pci.c.'>PCI_MAX_FUNC</a>                    8
+<a name='L17'>  17 
+<a name='L18'>  18 
+<a name='L19'>  19 <a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L20'>  20 
+<a name='L21'>  21 
+<a name='L22'>  22 <b>static</b> <b>int</b> <a href='../S/160.html#L27' title='Refered from 27 in src/arch/pci.c.'>pci_get_address</a>(<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>) <font color='red'>{</font>
+<a name='L23'>  23         <b>return</b> 0x80000000 | (<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a> &lt;&lt; 16) | (<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a> &lt;&lt; 11) | (<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a> &lt;&lt; 8) | (<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> &amp; 0xFC);
+<a name='L24'>  24 <font color='red'>}</font>
+<a name='L25'>  25 
+<a name='L26'>  26 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../R/330.html' title='Multiple refered from 9 places.'>pci_config_read</a>(<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>) <font color='red'>{</font>
+<a name='L27'>  27         <a href='../Y/441.html' title='Multiple used in 2 places.'>outl</a>(<a href='../S/160.html#L11' title='Defined at 11 in src/arch/pci.c.'>PCI_CONFIG_ADDRESS</a>, <a href='../S/160.html#L22' title='Defined at 22 in src/arch/pci.c.'>pci_get_address</a>(<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>));
+<a name='L28'>  28         
+<a name='L29'>  29         <b>if</b>(<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> % 4 == 0)
+<a name='L30'>  30                 <b>return</b> <a href='../Y/320.html' title='Multiple used in 2 places.'>inl</a>(<a href='../S/160.html#L12' title='Defined at 12 in src/arch/pci.c.'>PCI_CONFIG_DATA</a>);
+<a name='L31'>  31 
+<a name='L32'>  32         <b>return</b> (<a href='../Y/320.html' title='Multiple used in 2 places.'>inl</a>(<a href='../S/160.html#L12' title='Defined at 12 in src/arch/pci.c.'>PCI_CONFIG_DATA</a>) &gt;&gt; ((<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> % 4) * 8));
+<a name='L33'>  33 <font color='red'>}</font>
+<a name='L34'>  34 
+<a name='L35'>  35 
+<a name='L36'>  36 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L109' title='Refered from 109 in src/arch/pci.c.'>pci_get_device_id</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L37'>  37         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 2) &amp; 0xFFFF;
+<a name='L38'>  38 <font color='red'>}</font>
+<a name='L39'>  39 
+<a name='L40'>  40 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L108' title='Refered from 108 in src/arch/pci.c.'>pci_get_vendor_id</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L41'>  41         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 0) &amp; 0xFFFF;
+<a name='L42'>  42 <font color='red'>}</font>
+<a name='L43'>  43 
+<a name='L44'>  44 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L115' title='Refered from 115 in src/arch/pci.c.'>pci_get_intr_pin</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L45'>  45         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 0x3D) &amp; 0xFF;
+<a name='L46'>  46 <font color='red'>}</font>
+<a name='L47'>  47 
+<a name='L48'>  48 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L116' title='Refered from 116 in src/arch/pci.c.'>pci_get_intr_line</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L49'>  49         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 0x3C) &amp; 0xFF;
+<a name='L50'>  50 <font color='red'>}</font>
+<a name='L51'>  51 
+<a name='L52'>  52 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L110' title='Refered from 110 in src/arch/pci.c.'>pci_get_revision</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L53'>  53         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 0x08) &amp; 0xFF;
+<a name='L54'>  54 <font color='red'>}</font>
+<a name='L55'>  55 
+<a name='L56'>  56 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L111' title='Refered from 111 in src/arch/pci.c.'>pci_get_class</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L57'>  57         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 0x0B) &amp; 0xFF;
+<a name='L58'>  58 <font color='red'>}</font>
+<a name='L59'>  59 
+<a name='L60'>  60 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../R/337.html' title='Multiple refered from 4 places.'>pci_get_header_type</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L61'>  61         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 0x0E) &amp; 0x7F;
+<a name='L62'>  62 <font color='red'>}</font>
+<a name='L63'>  63 
+<a name='L64'>  64 
+<a name='L65'>  65 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../R/334.html' title='Multiple refered from 2 places.'>pci_get_bar</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a>) <font color='red'>{</font>
+<a name='L66'>  66         <b>if</b>(<a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> &gt;= 6)
+<a name='L67'>  67                 <b>return</b> 0;
+<a name='L68'>  68 
+<a name='L69'>  69         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/298.html' title='Multiple used in 7 places.'>header</a> = <a href='../S/160.html#L60' title='Defined at 60 in src/arch/pci.c.'>pci_get_header_type</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L70'>  70         <b>if</b>(<a href='../Y/298.html' title='Multiple used in 7 places.'>header</a> == 0x02 || (<a href='../Y/298.html' title='Multiple used in 7 places.'>header</a> == 0x01 &amp;&amp; <a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> &lt; 2))
+<a name='L71'>  71                 <b>return</b> 0;
+<a name='L72'>  72 
+<a name='L73'>  73         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a> = 0x10 + (0x04 * <a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a>);
+<a name='L74'>  74         <b>return</b> <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, <a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a>);
+<a name='L75'>  75 <font color='red'>}</font>
+<a name='L76'>  76 
+<a name='L77'>  77 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L112' title='Refered from 112 in src/arch/pci.c.'>pci_get_iobase</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L78'>  78         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/126.html' title='Multiple used in 4 places.'>bars</a> = 6 - <a href='../S/160.html#L60' title='Defined at 60 in src/arch/pci.c.'>pci_get_header_type</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) * 4;
+<a name='L79'>  79         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0;
+<a name='L80'>  80 
+<a name='L81'>  81         <b>while</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/126.html' title='Multiple used in 4 places.'>bars</a>) <font color='red'>{</font>
+<a name='L82'>  82                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> = <a href='../S/160.html#L65' title='Defined at 65 in src/arch/pci.c.'>pci_get_bar</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>, <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++);
+<a name='L83'>  83                 <b>if</b>(<a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> &amp; 0x01)
+<a name='L84'>  84                         <b>return</b> <a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> &amp; 0xFFFFFFFC;
+<a name='L85'>  85         <font color='red'>}</font>
+<a name='L86'>  86 
+<a name='L87'>  87         <b>return</b> 0;
+<a name='L88'>  88 <font color='red'>}</font>
+<a name='L89'>  89 
+<a name='L90'>  90 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/160.html#L113' title='Refered from 113 in src/arch/pci.c.'>pci_get_membase</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) <font color='red'>{</font>
+<a name='L91'>  91         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/126.html' title='Multiple used in 4 places.'>bars</a> = 6 - <a href='../S/160.html#L60' title='Defined at 60 in src/arch/pci.c.'>pci_get_header_type</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>) * 4;
+<a name='L92'>  92         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0;
+<a name='L93'>  93 
+<a name='L94'>  94         <b>while</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/126.html' title='Multiple used in 4 places.'>bars</a>) <font color='red'>{</font>
+<a name='L95'>  95                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> = <a href='../S/160.html#L65' title='Defined at 65 in src/arch/pci.c.'>pci_get_bar</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>, <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++);
+<a name='L96'>  96                 <b>if</b>((<a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> &amp; 0x01) == 0)
+<a name='L97'>  97                         <b>return</b> <a href='../Y/123.html' title='Multiple used in 10 places.'>bar</a> &amp; 0xFFFFFFF0;
+<a name='L98'>  98         <font color='red'>}</font>
+<a name='L99'>  99 
+<a name='L100'> 100         <b>return</b> 0;
+<a name='L101'> 101 <font color='red'>}</font>
+<a name='L102'> 102 
+<a name='L103'> 103 <b>static</b> <b>void</b> <a href='../S/160.html#L157' title='Refered from 157 in src/arch/pci.c.'>pci_load_device</a>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>) <font color='red'>{</font>
+<a name='L104'> 104         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a> = <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>;
+<a name='L105'> 105         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a> = <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>;
+<a name='L106'> 106         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a> = <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>;
+<a name='L107'> 107 
+<a name='L108'> 108         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/748.html' title='Multiple used in 5 places.'>vendorID</a> = <a href='../S/160.html#L40' title='Defined at 40 in src/arch/pci.c.'>pci_get_vendor_id</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L109'> 109         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/199.html' title='Multiple used in 5 places.'>deviceID</a> = <a href='../S/160.html#L36' title='Defined at 36 in src/arch/pci.c.'>pci_get_device_id</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L110'> 110         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/525.html' title='Multiple used in 3 places.'>revision</a> = <a href='../S/160.html#L52' title='Defined at 52 in src/arch/pci.c.'>pci_get_revision</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L111'> 111         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/463.html' title='Multiple used in 4 places.'>pci_class</a> = <a href='../S/160.html#L56' title='Defined at 56 in src/arch/pci.c.'>pci_get_class</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L112'> 112         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a> = <a href='../S/160.html#L77' title='Defined at 77 in src/arch/pci.c.'>pci_get_iobase</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L113'> 113         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/379.html' title='Multiple used in 3 places.'>membase</a> = <a href='../S/160.html#L90' title='Defined at 90 in src/arch/pci.c.'>pci_get_membase</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L114'> 114         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/298.html' title='Multiple used in 7 places.'>header</a> = <a href='../S/160.html#L60' title='Defined at 60 in src/arch/pci.c.'>pci_get_header_type</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L115'> 115         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/331.html' title='Multiple used in 3 places.'>intr_pin</a> = <a href='../S/160.html#L44' title='Defined at 44 in src/arch/pci.c.'>pci_get_intr_pin</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L116'> 116         <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/330.html' title='Multiple used in 6 places.'>intr_line</a> = <a href='../S/160.html#L48' title='Defined at 48 in src/arch/pci.c.'>pci_get_intr_line</a>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>);
+<a name='L117'> 117 <font color='red'>}</font>
+<a name='L118'> 118 
+<a name='L119'> 119 
+<a name='L120'> 120 <a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../S/104.html#L167' title='Refered from 167 in src/net/rtl8139/rtl8139.c.'>pci_find_by_id</a>(<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/748.html' title='Multiple used in 5 places.'>vendorID</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/199.html' title='Multiple used in 5 places.'>deviceID</a>) <font color='red'>{</font>
+<a name='L121'> 121         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../S/160.html#L13' title='Defined at 13 in src/arch/pci.c.'>PCI_MAX_DEVICES</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++) <font color='red'>{</font>
+<a name='L122'> 122                 <b>if</b>(<a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/748.html' title='Multiple used in 5 places.'>vendorID</a> != <a href='../Y/748.html' title='Multiple used in 5 places.'>vendorID</a> &amp;&amp; <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/199.html' title='Multiple used in 5 places.'>deviceID</a> != <a href='../Y/199.html' title='Multiple used in 5 places.'>deviceID</a>)
+<a name='L123'> 123                         <b>continue</b>;
+<a name='L124'> 124 
+<a name='L125'> 125                 <b>return</b> &amp;<a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>];
+<a name='L126'> 126         <font color='red'>}</font>
+<a name='L127'> 127 
+<a name='L128'> 128         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L129'> 129 <font color='red'>}</font>
+<a name='L130'> 130 
+<a name='L131'> 131 <b>int</b> pci_find_by_class(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>** <a href='../Y/499.html' title='Multiple used in 2 places.'>rdevs</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/156.html' title='Multiple used in 2 places.'>class</a>, <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) <font color='red'>{</font>
+<a name='L132'> 132         <b>int</b> <a href='../Y/344.html' title='Multiple used in 10 places.'>j</a> = 0;      
+<a name='L133'> 133         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../S/160.html#L13' title='Defined at 13 in src/arch/pci.c.'>PCI_MAX_DEVICES</a> &amp;&amp; <a href='../Y/344.html' title='Multiple used in 10 places.'>j</a> &lt; <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++) <font color='red'>{</font>
+<a name='L134'> 134                 <b>if</b>(<a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/463.html' title='Multiple used in 4 places.'>pci_class</a> != <a href='../Y/156.html' title='Multiple used in 2 places.'>class</a>)
+<a name='L135'> 135                         <b>continue</b>;
+<a name='L136'> 136 
+<a name='L137'> 137                 <a href='../Y/499.html' title='Multiple used in 2 places.'>rdevs</a>[<a href='../Y/344.html' title='Multiple used in 10 places.'>j</a>++] = &amp;<a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>];
+<a name='L138'> 138         <font color='red'>}</font>
+<a name='L139'> 139 
+<a name='L140'> 140         <b>return</b> <a href='../Y/344.html' title='Multiple used in 10 places.'>j</a>;
+<a name='L141'> 141 <font color='red'>}</font>
+<a name='L142'> 142 
+<a name='L143'> 143 
+<a name='L144'> 144 <b>int</b> <a href='../S/154.html#L62' title='Refered from 62 in src/main.c.'>pci_init</a>() <font color='red'>{</font>
+<a name='L145'> 145         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a> = (<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../S/160.html#L13' title='Defined at 13 in src/arch/pci.c.'>PCI_MAX_DEVICES</a> * <b>sizeof</b>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>));
+<a name='L146'> 146         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>, 0xFF, <a href='../S/160.html#L13' title='Defined at 13 in src/arch/pci.c.'>PCI_MAX_DEVICES</a> * <b>sizeof</b>(<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>));
+<a name='L147'> 147 
+<a name='L148'> 148         <b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0;
+<a name='L149'> 149         <b>for</b>(<b>int</b> <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a> = 0; <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a> &lt; <a href='../S/160.html#L14' title='Defined at 14 in src/arch/pci.c.'>PCI_MAX_BUS</a>; <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>++) <font color='red'>{</font>
+<a name='L150'> 150                 <b>for</b>(<b>int</b> <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a> = 0; <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a> &lt; <a href='../S/160.html#L15' title='Defined at 15 in src/arch/pci.c.'>PCI_MAX_DEV</a>; <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>++) <font color='red'>{</font>
+<a name='L151'> 151                         <b>for</b>(<b>int</b> <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a> = 0; <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a> &lt; <a href='../S/160.html#L16' title='Defined at 16 in src/arch/pci.c.'>PCI_MAX_FUNC</a>; <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>++) <font color='red'>{</font>
+<a name='L152'> 152                                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/747.html' title='Multiple used in 2 places.'>vendor</a> = <a href='../S/160.html#L26' title='Defined at 26 in src/arch/pci.c.'>pci_config_read</a>(<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>, 0) &amp; 0xFFFF;
+<a name='L153'> 153 
+<a name='L154'> 154                                 <b>if</b>(<a href='../Y/747.html' title='Multiple used in 2 places.'>vendor</a> == 0xFFFF || <a href='../Y/747.html' title='Multiple used in 2 places.'>vendor</a> == 0)
+<a name='L155'> 155                                         <b>continue</b>;
+<a name='L156'> 156 
+<a name='L157'> 157                                 <a href='../S/160.html#L103' title='Defined at 103 in src/arch/pci.c.'>pci_load_device</a>(&amp;<a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>], <a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>, <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>, <a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>);
+<a name='L158'> 158 
+<a name='L159'> 159 <font color='darkred'>#if</font> 1
+<a name='L160'> 160                                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("pci: %d:%d.%d: [%x:%x] (rev %x class %x iobase %x mmio %x type %x int %d pin %d)\n",
+<a name='L161'> 161                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>,
+<a name='L162'> 162                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>,
+<a name='L163'> 163                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>,
+<a name='L164'> 164                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/748.html' title='Multiple used in 5 places.'>vendorID</a>,
+<a name='L165'> 165                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/199.html' title='Multiple used in 5 places.'>deviceID</a>,
+<a name='L166'> 166                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/525.html' title='Multiple used in 3 places.'>revision</a>,
+<a name='L167'> 167                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/463.html' title='Multiple used in 4 places.'>pci_class</a>,
+<a name='L168'> 168                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a>,
+<a name='L169'> 169                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/379.html' title='Multiple used in 3 places.'>membase</a>,
+<a name='L170'> 170                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/298.html' title='Multiple used in 7 places.'>header</a>,
+<a name='L171'> 171                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/330.html' title='Multiple used in 6 places.'>intr_line</a>,
+<a name='L172'> 172                                                         <a href='../Y/464.html' title='Multiple used in 20 places.'>pci_devices</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/331.html' title='Multiple used in 3 places.'>intr_pin</a>);
+<a name='L173'> 173 <font color='darkred'>#endif</font>
+<a name='L174'> 174 
+<a name='L175'> 175                                 <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++;
+<a name='L176'> 176                         <font color='red'>}</font>
+<a name='L177'> 177                 <font color='red'>}</font>
+<a name='L178'> 178         <font color='red'>}</font>
+<a name='L179'> 179 
+<a name='L180'> 180 
+<a name='L181'> 181         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("pci: loaded %d devices\n", <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>);
+<a name='L182'> 182 
+<a name='L183'> 183         <b>return</b> 0;
+<a name='L184'> 184 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L22'>[^]</a><a href='#L144'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

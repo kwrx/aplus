@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>ip</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/113.html#L36'>ip</a>                 36 src/net/ipv4.c 	ipv4_header_t* ip = (ipv4_header_t*) kmalloc(length + sizeof(ipv4_header_t));
+<a href='../S/113.html#L37'>ip</a>                 37 src/net/ipv4.c 	ip-&gt;info = (((sizeof(ipv4_header_t) &gt;&gt; 2) &amp; 0xF) &lt;&lt; 4) | 4;	/* length: 20 byte; Version: ipv4; */
+<a href='../S/113.html#L38'>ip</a>                 38 src/net/ipv4.c 	ip-&gt;tos = 0;
+<a href='../S/113.html#L39'>ip</a>                 39 src/net/ipv4.c 	ip-&gt;length = length + sizeof(ipv4_header_t);
+<a href='../S/113.html#L40'>ip</a>                 40 src/net/ipv4.c 	ip-&gt;id = 0;
+<a href='../S/113.html#L41'>ip</a>                 41 src/net/ipv4.c 	ip-&gt;ttl = 0xFF;
+<a href='../S/113.html#L44'>ip</a>                 44 src/net/ipv4.c 		ip-&gt;offset = offset;
+<a href='../S/113.html#L46'>ip</a>                 46 src/net/ipv4.c 		ip-&gt;offset = IPV4_FLAGS_MF | (offset * IPV4_MAX_LENGTH);
+<a href='../S/113.html#L50'>ip</a>                 50 src/net/ipv4.c 			ip-&gt;protocol = IPV4_PROTO_UDP;
+<a href='../S/113.html#L53'>ip</a>                 53 src/net/ipv4.c 			ip-&gt;protocol = IPV4_PROTO_TCP;
+<a href='../S/113.html#L56'>ip</a>                 56 src/net/ipv4.c 			ip-&gt;protocol = IPV4_PROTO_ICMP;
+<a href='../S/113.html#L59'>ip</a>                 59 src/net/ipv4.c 			ip-&gt;protocol = IPV4_PROTO_RAW;
+<a href='../S/113.html#L63'>ip</a>                 63 src/net/ipv4.c 	memcpy(ip-&gt;source, netif-&gt;ipv4, sizeof(ipv4_t));
+<a href='../S/113.html#L64'>ip</a>                 64 src/net/ipv4.c 	memcpy(ip-&gt;dest, dest, sizeof(ipv4_t));
+<a href='../S/113.html#L65'>ip</a>                 65 src/net/ipv4.c 	memcpy((void*) ((uint32_t) ip + sizeof(ipv4_header_t)), buf, length);
+<a href='../S/113.html#L67'>ip</a>                 67 src/net/ipv4.c 	ip-&gt;checksum = ipv4_checksum(ip);
+<a href='../S/113.html#L68'>ip</a>                 68 src/net/ipv4.c 	return (void*) ip;
+<a href='../S/113.html#L72'>ip</a>                 72 src/net/ipv4.c 	ipv4_header_t* ip = (ipv4_header_t*) buf;
+<a href='../S/113.html#L74'>ip</a>                 74 src/net/ipv4.c 	if(IPV4_CHECK_VERSION(ip) == 0)
+<a href='../S/113.html#L77'>ip</a>                 77 src/net/ipv4.c 	if(IPV4_FLAGS(ip) &amp; IPV4_FLAGS_MF)
+<a href='../S/113.html#L82'>ip</a>                 82 src/net/ipv4.c 		netif, (void*) ((uint32_t) ip + IPV4_HEADER_LENGTH(ip)), length - IPV4_HEADER_LENGTH(ip)
+<a href='../S/113.html#L84'>ip</a>                 84 src/net/ipv4.c 	switch(ip-&gt;protocol) {
+<a href='../S/113.html#L107'>ip</a>                107 src/net/ipv4.c 							IPV4_HEADER_LENGTH(ip), 
+<a href='../S/106.html#L15'>ip</a>                 15 src/net/ipv6.c 	ipv6_header_t* ip = (ipv6_header_t*) buf;
+<a href='../S/106.html#L17'>ip</a>                 17 src/net/ipv6.c 	if(IPV6_CHECK_VERSION(ip) == 0)
+<a href='../S/106.html#L22'>ip</a>                 22 src/net/ipv6.c 		netif, (void*) ((uint32_t) ip + sizeof(ipv6_header_t)), length - sizeof(ipv6_header_t)
+<a href='../S/106.html#L24'>ip</a>                 24 src/net/ipv6.c 	switch(ip-&gt;protocol) {
+<a href='../S/106.html#L56'>ip</a>                 56 src/net/ipv6.c 	ipv6_header_t* ip = (ipv6_header_t*) kmalloc(length + sizeof(ipv6_header_t));
+<a href='../S/106.html#L57'>ip</a>                 57 src/net/ipv6.c 	ip-&gt;version = 6;
+<a href='../S/106.html#L58'>ip</a>                 58 src/net/ipv6.c 	ip-&gt;traffic = 0;
+<a href='../S/106.html#L59'>ip</a>                 59 src/net/ipv6.c 	ip-&gt;flow = 0;
+<a href='../S/106.html#L60'>ip</a>                 60 src/net/ipv6.c 	ip-&gt;length = length;
+<a href='../S/106.html#L61'>ip</a>                 61 src/net/ipv6.c 	ip-&gt;ttl = 0xFF;
+<a href='../S/106.html#L65'>ip</a>                 65 src/net/ipv6.c 			ip-&gt;protocol = IPV6_PROTO_UDP;
+<a href='../S/106.html#L68'>ip</a>                 68 src/net/ipv6.c 			ip-&gt;protocol = IPV6_PROTO_TCP;
+<a href='../S/106.html#L71'>ip</a>                 71 src/net/ipv6.c 			ip-&gt;protocol = IPV6_PROTO_ICMP;
+<a href='../S/106.html#L74'>ip</a>                 74 src/net/ipv6.c 			ip-&gt;protocol = IPV6_PROTO_RAW;
+<a href='../S/106.html#L78'>ip</a>                 78 src/net/ipv6.c 	memcpy(ip-&gt;dest, dest, sizeof(ipv6_t));
+<a href='../S/106.html#L79'>ip</a>                 79 src/net/ipv6.c 	memcpy(ip-&gt;source, netif-&gt;ipv6, sizeof(ipv6_t));
+<a href='../S/106.html#L80'>ip</a>                 80 src/net/ipv6.c 	memcpy((void*) ((uint32_t) ip + sizeof(ipv6_header_t)), buf, length);
+<a href='../S/106.html#L82'>ip</a>                 82 src/net/ipv6.c 	int ret = eth_send(netif, (void*) ip, length + sizeof(ipv6_header_t), NETIF_INET6);
+<a href='../S/106.html#L83'>ip</a>                 83 src/net/ipv6.c 	kfree(ip);
+</pre>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="execlp_8c" kind="file">
+    <compoundname>execlp.c</compoundname>
+    <includes local="no">_ansi.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">varargs.h</includes>
+    <incdepgraph>
+      <node id="2067">
+        <label>_ansi.h</label>
+      </node>
+      <node id="2069">
+        <label>varargs.h</label>
+      </node>
+      <node id="2066">
+        <label>usr/src/libposix/src/execlp.c</label>
+        <link refid="execlp.c"/>
+        <childnode refid="2067" relation="include">
+        </childnode>
+        <childnode refid="2068" relation="include">
+        </childnode>
+        <childnode refid="2069" relation="include">
+        </childnode>
+      </node>
+      <node id="2068">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="execlp_8c_1accd0d84615f4b84367796ea088af9d72" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int _execve</definition>
+        <argsstring>(const char *filename, char *const args[], char *const env[])</argsstring>
+        <name>_execve</name>
+        <param>
+          <type>const char *</type>
+          <declname>filename</declname>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>args</declname>
+          <array>[]</array>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>env</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execlp.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/_execve.c" bodystart="8" bodyend="10"/>
+      </memberdef>
+      <memberdef kind="function" id="execlp_8c_1aab09774ec2290c965f64151463f38eee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int _DEFUN</definition>
+        <argsstring>(execlp,(path, arg0, va_alist), _CONST char *path _AND _CONST char *arg0 _AND va_dcl)</argsstring>
+        <name>_DEFUN</name>
+        <param>
+          <type>execlp</type>
+        </param>
+        <param>
+          <type>(path, arg0, va_alist)</type>
+        </param>
+        <param>
+          <type>_CONST char *path _AND _CONST char *arg0 _AND</type>
+          <declname>va_dcl</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execlp.c" line="25" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/execlp.c" bodystart="25" bodyend="46"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*<sp/>execlp.c<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>This<sp/>and<sp/>the<sp/>other<sp/>exec*.c<sp/>files<sp/>in<sp/>this<sp/>directory<sp/>require<sp/></highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/><sp/><sp/>the<sp/>target<sp/>to<sp/>provide<sp/>the<sp/>_execve<sp/>syscall.<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;_ansi.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="execlp_8c_1accd0d84615f4b84367796ea088af9d72" kindref="member">_execve</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filename,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>args[],<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>env[]);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>_HAVE_STDC</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdarg.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><ref refid="execlp_8c_1aab09774ec2290c965f64151463f38eee" kindref="member">_DEFUN</ref>(execlp,<sp/>(path,<sp/>arg0,<sp/>...),</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_CONST<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*path<sp/>_AND</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>_CONST<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*arg0<sp/>_DOTS)</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;varargs.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="execlp_8c_1aab09774ec2290c965f64151463f38eee" refkind="member"><highlight class="normal"><ref refid="execlp_8c_1aab09774ec2290c965f64151463f38eee" kindref="member">_DEFUN</ref>(execlp,<sp/>(path,<sp/>arg0,<sp/>va_alist),</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>_CONST<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*path<sp/>_AND</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>_CONST<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*arg0<sp/>_AND</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/>va_dcl)</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/>va_list<sp/>args;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/>_CONST<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*argv[256];</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/>va_start<sp/>(args,<sp/>arg0);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/>argv[0]<sp/>=<sp/>arg0;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/>i<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">do</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>argv[i]<sp/>=<sp/>va_arg<sp/>(args,<sp/>_CONST<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(argv[i++]<sp/>!=<sp/>NULL);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/>va_end<sp/>(args);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>execvp<sp/>(path,<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/>_CONST<sp/>*)<sp/>argv);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/execlp.c"/>
+  </compounddef>
+</doxygen>

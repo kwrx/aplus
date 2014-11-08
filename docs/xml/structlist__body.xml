@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structlist__body" kind="struct" prot="public">
+    <compoundname>list_body</compoundname>
+    <includes refid="list_8h" local="no">list.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" prot="public" static="no" mutable="no">
+        <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+        <definition>listval_t list_body::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="36" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlist__body_1ae0f31e0790456c070895880578d171ca" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structlist__body" kindref="compound">list_body</ref> *</type>
+        <definition>struct list_body* list_body::next</definition>
+        <argsstring></argsstring>
+        <name>next</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="38" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="51">
+        <label>list_body</label>
+        <link refid="structlist__body"/>
+        <childnode refid="51" relation="usage">
+          <edgelabel>+next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="35" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="35" bodyend="39"/>
+    <listofallmembers>
+      <member refid="structlist__body_1ae0f31e0790456c070895880578d171ca" prot="public" virt="non-virtual"><scope>list_body</scope><name>next</name></member>
+      <member refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" prot="public" virt="non-virtual"><scope>list_body</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

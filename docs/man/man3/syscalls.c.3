@@ -1,0 +1,150 @@
+.TH "usr/src/libcrt0/src/syscalls.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libcrt0/src/syscalls.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSYSCODE\fP   'int $0x80'"
+.br
+.ti -1c
+.RI "#define \fBsyscall0\fP(n, h)"
+.br
+.ti -1c
+.RI "#define \fBsyscall1\fP(n, h)"
+.br
+.ti -1c
+.RI "#define \fBsyscall2\fP(n, h)"
+.br
+.ti -1c
+.RI "#define \fBsyscall3\fP(n, h)"
+.br
+.ti -1c
+.RI "#define \fBsyscall4\fP(n, h)"
+.br
+.ti -1c
+.RI "#define \fBsyscall5\fP(n, h)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define syscall0(n, h)"
+\fBValore:\fP
+.PP
+.nf
+h() {                             \
+        int r, e;                           \\
+		__asm__ __volatile__ (            \
+            SYSCODE                     \
+            : "=a"(r), "=b"(e)  \
+            : "a"(n)                    \
+        );                              \\
+		errno = e;                        \
+        return r;                       \
+    }
+.fi
+.PP
+Definizione alla linea 5 del file syscalls\&.c\&.
+.SS "#define syscall1(n, h)"
+\fBValore:\fP
+.PP
+.nf
+h(p1) {                             \
+        int r, e;                           \\
+		__asm__ __volatile__ (            \
+            SYSCODE                     \
+            : "=a"(r), "=b"(e)  \
+            : "a"(n), "b"(p1)           \
+        );                              \\
+		errno = e;                        \
+        return r;                       \
+    }
+.fi
+.PP
+Definizione alla linea 17 del file syscalls\&.c\&.
+.SS "#define syscall2(n, h)"
+\fBValore:\fP
+.PP
+.nf
+h(p1, p2) {                            \
+        int r, e;                           \\
+		__asm__ __volatile__ (            \
+            SYSCODE                     \
+            : "=a"(r), "=b"(e)  \
+            : "a"(n), "b"(p1), "c"(p2)  \
+        );                              \\
+		errno = e;                        \
+        return r;                       \
+    }
+.fi
+.PP
+Definizione alla linea 29 del file syscalls\&.c\&.
+.SS "#define syscall3(n, h)"
+\fBValore:\fP
+.PP
+.nf
+h(p1, p2, p3) {                        \
+        int r, e;                           \\
+		__asm__ __volatile__ (            \
+            SYSCODE                     \
+            : "=a"(r), "=b"(e)  \
+            : "a"(n), "b"(p1), "c"(p2), \
+              "d"(p3)                   \
+        );                              \\
+		errno = e;                        \
+        return r;                       \
+    }
+.fi
+.PP
+Definizione alla linea 41 del file syscalls\&.c\&.
+.SS "#define syscall4(n, h)"
+\fBValore:\fP
+.PP
+.nf
+h(p1, p2, p3, p4) {                    \
+        int r, e;                           \\
+		__asm__ __volatile__ (            \
+            SYSCODE                     \
+            : "=a"(r), "=b"(e)  \
+            : "a"(n), "b"(p1), "c"(p2), \
+              "d"(p3), "S"(p4)          \
+        );                              \\
+		errno = e;                        \
+        return r;                       \
+    }
+.fi
+.PP
+Definizione alla linea 54 del file syscalls\&.c\&.
+.SS "#define syscall5(n, h)"
+\fBValore:\fP
+.PP
+.nf
+h(p1, p2, p3, p4, p5) {                \
+        int r, e;                           \\
+		__asm__ __volatile__ (            \
+            SYSCODE                     \
+            : "=a"(r), "=b"(e)  \
+            : "a"(n), "b"(p1), "c"(p2), \
+              "d"(p3), "S"(p4), "D"(p5) \
+        );                              \\
+		errno = e;                        \
+        return r;                       \
+    }
+.fi
+.PP
+Definizione alla linea 67 del file syscalls\&.c\&.
+.SS "#define SYSCODE   'int $0x80'"
+
+.PP
+Definizione alla linea 3 del file syscalls\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__join_8c">
+    <title>pthread_join.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__join_8c_1a3a07eea4fe20b2d6457494decbae0232">pthread_join</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> thread, void ** value_ptr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_join.c</para>
+    </simplesect>
+</section>

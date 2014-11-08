@@ -1,0 +1,157 @@
+<html>
+<head>
+<title>src/syscall/open.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/open.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L19'>[^]</a><a href='#L107'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L19' title='Defined at 19.'>ino_open</a>
+<li><a href='#L107' title='Defined at 107.'>sys_open</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L12'>  12 
+<a name='L13'>  13 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L14'>  14 
+<a name='L15'>  15 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L16'>  16 <b>extern</b> <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/751.html' title='Multiple used in 39 places.'>vfs_root</a>;
+<a name='L17'>  17 
+<a name='L18'>  18 
+<a name='L19'>  19 <b>static</b> <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../S/139.html#L111' title='Refered from 111 in src/syscall/open.c.'>ino_open</a>(<b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <b>int</b> <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>, <a href='../Y/389.html' title='Multiple used in 6 places.'>mode_t</a> <a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>) <font color='red'>{</font>
+<a name='L20'>  20         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L21'>  21 
+<a name='L22'>  22         <b>if</b>(<a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>[0] == '/')
+<a name='L23'>  23                 <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/751.html' title='Multiple used in 39 places.'>vfs_root</a>;
+<a name='L24'>  24         <b>else</b>
+<a name='L25'>  25                 <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>;
+<a name='L26'>  26         
+<a name='L27'>  27         <b>if</b>(!<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>) <font color='red'>{</font>
+<a name='L28'>  28                 <b>if</b>(!<a href='../Y/751.html' title='Multiple used in 39 places.'>vfs_root</a>) <font color='red'>{</font>
+<a name='L29'>  29                         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("sys_open: no root found for cwd.");
+<a name='L30'>  30                 
+<a name='L31'>  31                         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/18.html' title='Multiple used in 7 places.'>ENOENT</a>;
+<a name='L32'>  32                         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L33'>  33                 <font color='red'>}</font>
+<a name='L34'>  34                 
+<a name='L35'>  35                 <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/751.html' title='Multiple used in 39 places.'>vfs_root</a>;
+<a name='L36'>  36         <font color='red'>}</font>
+<a name='L37'>  37         
+<a name='L38'>  38         
+<a name='L39'>  39         <b>if</b>(<a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>[0] == '/')
+<a name='L40'>  40                 <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>++;
+<a name='L41'>  41                 
+<a name='L42'>  42         <b>if</b>(<a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>[0] == 0)
+<a name='L43'>  43                 <b>return</b> <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>;
+<a name='L44'>  44                 
+<a name='L45'>  45         
+<a name='L46'>  46         <b>char</b>* <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a> = <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>;
+<a name='L47'>  47         <b>char</b>* <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a> = <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>;
+<a name='L48'>  48         
+<a name='L49'>  49         <b>while</b>(*<a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>) <font color='red'>{</font>
+<a name='L50'>  50                 <b>if</b>((<a href='../Y/447.html' title='Multiple used in 16 places.'>p</a> = <a href='../Y/615.html' title='Multiple used in 2 places.'>strchr</a>(<a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>, '/'))) <font color='red'>{</font>
+<a name='L51'>  51                         *<a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>++ = 0;
+<a name='L52'>  52                 
+<a name='L53'>  53                         <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = (<a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>*) <a href='../S/146.html#L49' title='Defined at 49 in src/fs/fs.c.'>fs_finddir</a>(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>, <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>);
+<a name='L54'>  54                         <b>if</b>(!<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>) <font color='red'>{</font>
+<a name='L55'>  55                                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/18.html' title='Multiple used in 7 places.'>ENOENT</a>;
+<a name='L56'>  56                                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L57'>  57                         <font color='red'>}</font>
+<a name='L58'>  58 
+<a name='L59'>  59                         <b>while</b>(<a href='../Y/48.html' title='Multiple used in 2 places.'>S_ISLNK</a>(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>))
+<a name='L60'>  60                                 <b>if</b>(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>)
+<a name='L61'>  61                                         <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>;
+<a name='L62'>  62                                 <b>else</b>
+<a name='L63'>  63                                         <b>break</b>;
+<a name='L64'>  64 
+<a name='L65'>  65                         <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a> = <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>;
+<a name='L66'>  66                 <font color='red'>}</font> <b>else</b>
+<a name='L67'>  67                         <b>break</b>;
+<a name='L68'>  68         <font color='red'>}</font>
+<a name='L69'>  69 
+<a name='L70'>  70         <b>if</b>(*<a href='../Y/540.html' title='Multiple used in 18 places.'>s</a> == 0) <font color='red'>{</font>
+<a name='L71'>  71                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/18.html' title='Multiple used in 7 places.'>ENOENT</a>;
+<a name='L72'>  72                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L73'>  73         <font color='red'>}</font>
+<a name='L74'>  74 
+<a name='L75'>  75         <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = (<a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>*) <a href='../S/146.html#L49' title='Defined at 49 in src/fs/fs.c.'>fs_finddir</a>(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>, <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>);
+<a name='L76'>  76         <b>if</b>(!<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>) <font color='red'>{</font>
+<a name='L77'>  77                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/18.html' title='Multiple used in 7 places.'>ENOENT</a>;
+<a name='L78'>  78                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L79'>  79         <font color='red'>}</font>
+<a name='L80'>  80 
+<a name='L81'>  81 
+<a name='L82'>  82         <b>if</b>(!(<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/10.html#L46' title='Defined at 46 in usr/src/libposix/include/sys/dirent.h.'>O_NOFOLLOW</a>)) <font color='red'>{</font>
+<a name='L83'>  83                 <b>while</b>(<a href='../Y/48.html' title='Multiple used in 2 places.'>S_ISLNK</a>(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>)) <font color='red'>{</font>
+<a name='L84'>  84                         <b>if</b>(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> == <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>) <font color='red'>{</font>
+<a name='L85'>  85                                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = ELOOP;
+<a name='L86'>  86                                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L87'>  87                         <font color='red'>}</font>                       
+<a name='L88'>  88 
+<a name='L89'>  89                         <b>if</b>(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>)
+<a name='L90'>  90                                 <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a> = <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>;
+<a name='L91'>  91                         <b>else</b>
+<a name='L92'>  92                                 <b>break</b>;
+<a name='L93'>  93                 <font color='red'>}</font>
+<a name='L94'>  94         <font color='red'>}</font>
+<a name='L95'>  95 
+<a name='L96'>  96         <b>if</b>(<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/10.html#L42' title='Defined at 42 in usr/src/libposix/include/sys/dirent.h.'>O_DIRECTORY</a>) <font color='red'>{</font>
+<a name='L97'>  97                 <b>if</b>(!(S_ISDIR(<a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>-&gt;<a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>))) <font color='red'>{</font>
+<a name='L98'>  98                         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = ENOTDIR;
+<a name='L99'>  99                         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L100'> 100                 <font color='red'>}</font>
+<a name='L101'> 101         <font color='red'>}</font>
+<a name='L102'> 102 
+<a name='L103'> 103 
+<a name='L104'> 104         <b>return</b> <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>;
+<a name='L105'> 105 <font color='red'>}</font>
+<a name='L106'> 106 
+<a name='L107'> 107 <b>int</b> <a href='../R/497.html' title='Multiple refered from 3 places.'>sys_open</a>(<b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <b>int</b> <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>, <a href='../Y/389.html' title='Multiple used in 6 places.'>mode_t</a> <a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>) <font color='red'>{</font>
+<a name='L108'> 108         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L109'> 109                 <b>return</b> -1;
+<a name='L110'> 110                 
+<a name='L111'> 111         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a> = <a href='../S/139.html#L19' title='Defined at 19 in src/syscall/open.c.'>ino_open</a>(<a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>, <a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>);
+<a name='L112'> 112         <b>if</b>(!<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>)
+<a name='L113'> 113                 <b>return</b> -1;
+<a name='L114'> 114         
+<a name='L115'> 115         
+<a name='L116'> 116         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>** <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L117'> 117         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../S/90.html#L35' title='Defined at 35 in src/include/aplus/task.h.'>TASK_MAX_FD</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++) <font color='red'>{</font>
+<a name='L118'> 118                 <b>if</b>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] == 0) <font color='red'>{</font>
+<a name='L119'> 119                         <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> = &amp;<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>];
+<a name='L120'> 120                         <b>break</b>;
+<a name='L121'> 121                 <font color='red'>}</font>
+<a name='L122'> 122         <font color='red'>}</font>
+<a name='L123'> 123         
+<a name='L124'> 124         <b>if</b>(<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L125'> 125                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = EMFILE;
+<a name='L126'> 126                 <b>return</b> -1;
+<a name='L127'> 127         <font color='red'>}</font>
+<a name='L128'> 128         
+<a name='L129'> 129         *<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> = <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>;
+<a name='L130'> 130         <b>return</b> 0;
+<a name='L131'> 131 <font color='red'>}</font>
+<a name='L132'> 132 
+<a name='L133'> 133 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_open, 10);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L19'>[^]</a><a href='#L107'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="seekdir_8c" kind="file">
+    <compoundname>seekdir.c</compoundname>
+    <includes refid="dirent_8h" local="no">dirent.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">fcntl.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <incdepgraph>
+      <node id="2148">
+        <label>stdlib.h</label>
+      </node>
+      <node id="2150">
+        <label>errno.h</label>
+      </node>
+      <node id="2142">
+        <label>usr/src/libposix/src/seekdir.c</label>
+        <link refid="seekdir.c"/>
+        <childnode refid="2143" relation="include">
+        </childnode>
+        <childnode refid="2144" relation="include">
+        </childnode>
+        <childnode refid="2146" relation="include">
+        </childnode>
+        <childnode refid="2147" relation="include">
+        </childnode>
+        <childnode refid="2148" relation="include">
+        </childnode>
+        <childnode refid="2149" relation="include">
+        </childnode>
+        <childnode refid="2150" relation="include">
+        </childnode>
+        <childnode refid="2145" relation="include">
+        </childnode>
+      </node>
+      <node id="2146">
+        <label>fcntl.h</label>
+      </node>
+      <node id="2145">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2149">
+        <label>string.h</label>
+      </node>
+      <node id="2144">
+        <label>unistd.h</label>
+      </node>
+      <node id="2143">
+        <label>dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="2144" relation="include">
+        </childnode>
+        <childnode refid="2145" relation="include">
+        </childnode>
+      </node>
+      <node id="2147">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void seekdir</definition>
+        <argsstring>(DIR *d, off_t offset)</argsstring>
+        <name>seekdir</name>
+        <param>
+          <type><ref refid="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa" kindref="member">DIR</ref> *</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type>off_t</type>
+          <declname>offset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/seekdir.c" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/seekdir.c" bodystart="13" bodyend="16"/>
+        <references refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" compoundref="ipv4_8h" startline="51">offset</references>
+        <references refid="struct____DIR_1adcec35c0ea0ed4342c5425c494554397" compoundref="dirent_8h" startline="31">__DIR::position</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" kindref="member">seekdir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>,<sp/>off_t<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d)</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d-&gt;<ref refid="struct____DIR_1adcec35c0ea0ed4342c5425c494554397" kindref="member">position</ref><sp/>=<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/seekdir.c"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,81 @@
+.TH "src/syscall/wait.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/wait.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_wait\fP (int *status)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_wait\fP, 16)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_wait (int *status)"
+
+.PP
+Definizione alla linea 12 del file wait\&.c\&.
+.PP
+Referenzia errno, task::pid, schedule_child(), e schedule_wait()\&.
+.PP
+.nf
+12                           {
+13     if(current_task == NULL) {
+14         errno = EFAULT;
+15         return -1;
+16     }
+17 
+18     task_t* child = (task_t*) schedule_child();
+19     if(child == NULL) {
+20         errno = ECHILD;
+21         return -1;
+22     }
+23 
+24     int exitcode = schedule_wait(child);
+25 
+26     if(status)
+27         *status = exitcode;
+28 
+29     return child->pid;
+30 }
+.fi
+.SS "SYSCALL (\fBsys_wait\fP, 16)"
+
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

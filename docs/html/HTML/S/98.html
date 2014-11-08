@@ -1,0 +1,60 @@
+<html>
+<head>
+<title>src/include/aplus/bufio.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/bufio.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/17.html' title='Multiple included from 5 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  bufio.h</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#ifndef</font> <a href='../S/98.html#L23' title='Defined at 23 in src/include/aplus/bufio.h.'>_BUFIO_H</a>
+<a name='L23'>  23 <font color='darkred'>#define</font> <a href='../S/98.html#L22' title='Refered from 22 in src/include/aplus/bufio.h.'>_BUFIO_H</a>
+<a name='L24'>  24 
+<a name='L25'>  25 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L26'>  26 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L28'>  28 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L29'>  29 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L30'>  30 
+<a name='L31'>  31 
+<a name='L32'>  32 <b>typedef</b> <b>struct</b> bufio <font color='red'>{</font>
+<a name='L33'>  33         <b>void</b>* <a href='../Y/497.html' title='Multiple used in 9 places.'>raw</a>;
+<a name='L34'>  34         <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L35'>  35         <a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a> <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L36'>  36         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>;
+<a name='L37'>  37         <a href='../S/88.html#L29' title='Defined at 29 in src/include/aplus/spinlock.h.'>spinlock_t</a> <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>;
+<a name='L38'>  38         <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>;
+<a name='L39'>  39 <font color='red'>}</font> <a href='../R/218.html' title='Multiple refered from 13 places.'>bufio_t</a>;
+<a name='L40'>  40 
+<a name='L41'>  41 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

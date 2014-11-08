@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="list_8h">
+    <title>list.h File Reference</title>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structlist__body">list_body</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structlist">list</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="list_8h_1a22853dfff2d59e6a8ea2d77eeed5f293">list_safe_begin</link> <link linkend="spinlock_8c_1ab01e311f21f78fc3c2bd0bdf74ef85c4">spinlock_lock</link>(&amp;<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="list_8h_1a55d0a2f3e6dcbf7213b13e9e0dd9d981">list_safe_end</link> <link linkend="spinlock_8c_1a4ca6e661fa1b704d39d834ac7341b360">spinlock_unlock</link>(&amp;<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="list_8h_1a1f44c976d2c698407a17fef984a5b232">list_foreach</link> for(<link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link> = <link linkend="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149">list_head</link>(<link linkend="structlist">list</link>); 					\
+		<link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>; 												\
+		<link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link> = <link linkend="list_8h_1abcd4418be12b04265c44dd69a1cfee1f">list_next</link>(<link linkend="structlist">list</link>, <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>)						\
+		)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="list_8h_1a6e172d1395eb664ce14adbb6ab82abf3">list_foreach_inverse</link> for(<link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link> = <link linkend="list_8h_1aea7ba4088b37f0bd303771d71a066a90">list_tail</link>(<link linkend="structlist">list</link>); 					\
+		<link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>; 												\
+		<link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link> = <link linkend="list_8h_1ae9b833d2dc140368303ecffecce7fe3f">list_prev</link>(<link linkend="structlist">list</link>, <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>)						\
+		)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="list_8h_1aa288c0785df071ed8643763202928c82">list_init</link> <link linkend="structlist">list</link> = (<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link>*) <link linkend="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</link>(sizeof(<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link>));				\
+	<link linkend="structlist">list</link>-&gt;body = 0;											\
+	<link linkend="structlist">list</link>-&gt;<link linkend="mm_8c_1a854352f53b148adc24983a58a1866d66">size</link> = 0;											\
+	<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link> = 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990">list_destroy</link> <link linkend="list_8h_1ae055500d6fc23c82c45b2e5926df3b40">list_clear</link>(<link linkend="structlist">list</link>);										\
+	<link linkend="mm_8c_1a069f85a5001d71bc44d8be6532a4e432">kfree</link>(<link linkend="structlist">list</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>  <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structlist__body">list_body</link>  <link linkend="list_8h_1a26009b16c17e2336df1025f49f3ebd7e">list_body_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structlist">list</link>  <link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static int <link linkend="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754">list_empty</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static int <link linkend="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0">list_add</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list, <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> v)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static int <link linkend="list_8h_1a4470c240b622941415ae5250067699b5">list_remove</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list, <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> v)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static int <link linkend="list_8h_1ae055500d6fc23c82c45b2e5926df3b40">list_clear</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void <link linkend="list_8h_1ad29245eda34d4cdac400323a1bd63cdd">list_clone</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * dest, <link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * src)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> <link linkend="list_8h_1ae9b833d2dc140368303ecffecce7fe3f">list_prev</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list, <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> val)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> <link linkend="list_8h_1abcd4418be12b04265c44dd69a1cfee1f">list_next</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list, <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> val)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> <link linkend="list_8h_1aea7ba4088b37f0bd303771d71a066a90">list_tail</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link> <link linkend="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149">list_head</link> (
+<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * list)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/list.h</para>
+    </simplesect>
+</section>

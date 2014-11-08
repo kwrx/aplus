@@ -1,0 +1,65 @@
+<html>
+<head>
+<title>len</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/156.html#L141'>len</a>               141 src/bufio.c    int bufio_read(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L144'>len</a>               144 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/156.html#L145'>len</a>               145 src/bufio.c    	memcpy(ptr, (void*) ((off_t) buf-&gt;raw + buf-&gt;offset), len);
+<a href='../S/156.html#L147'>len</a>               147 src/bufio.c    	buf-&gt;offset += (off_t) len;
+<a href='../S/156.html#L151'>len</a>               151 src/bufio.c    	return (int) len;
+<a href='../S/156.html#L154'>len</a>               154 src/bufio.c    int bufio_write(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L158'>len</a>               158 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/156.html#L159'>len</a>               159 src/bufio.c    	memcpy((void*) ((off_t) buf-&gt;raw + buf-&gt;offset), ptr, len);
+<a href='../S/156.html#L161'>len</a>               161 src/bufio.c    	buf-&gt;offset += (off_t) len;
+<a href='../S/156.html#L165'>len</a>               165 src/bufio.c    	return (int) len;
+<a href='../S/155.html#L78'>len</a>                78 src/debug.c    	int len = strlen(fmt);
+<a href='../S/155.html#L79'>len</a>                79 src/debug.c    	for ( ; i &lt; len &amp;&amp; fmt[i]; ++i) {
+<a href='../S/146.html#L16'>len</a>                16 src/fs/fs.c    int fs_read (struct inode* inode, char* ptr, int len) {
+<a href='../S/146.html#L18'>len</a>                18 src/fs/fs.c    		return inode-&gt;read(inode, ptr, len);
+<a href='../S/146.html#L24'>len</a>                24 src/fs/fs.c    int fs_write (struct inode* inode, char* ptr, int len) {
+<a href='../S/146.html#L26'>len</a>                26 src/fs/fs.c    		return inode-&gt;write(inode, ptr, len);
+<a href='../S/145.html#L27'>len</a>                27 src/fs/pipe.c  int pipe_read(inode_t* inode, char* ptr, int len) {
+<a href='../S/145.html#L30'>len</a>                30 src/fs/pipe.c  	spinlock_waiton(pipe-&gt;read_offset + len &gt; pipe-&gt;write_offset);
+<a href='../S/145.html#L35'>len</a>                35 src/fs/pipe.c  	while((tolen = bufio_read(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/145.html#L39'>len</a>                39 src/fs/pipe.c  	return (int) len;
+<a href='../S/145.html#L42'>len</a>                42 src/fs/pipe.c  int pipe_write(inode_t* inode, char* ptr, int len) {
+<a href='../S/145.html#L47'>len</a>                47 src/fs/pipe.c  	while((tolen = bufio_write(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/145.html#L51'>len</a>                51 src/fs/pipe.c  	return (int) len;
+<a href='../S/102.html#L118'>len</a>               118 src/include/aplus.h 	static inline void outs##n(uint16_t p, t* v, uint32_t len) {	\
+<a href='../S/102.html#L119'>len</a>               119 src/include/aplus.h 		for(int i = 0; i &lt; len; i++)								\
+<a href='../S/102.html#L129'>len</a>               129 src/include/aplus.h 	static inline t* ins##n(uint16_t p, t* v, uint32_t len) {		\
+<a href='../S/102.html#L130'>len</a>               130 src/include/aplus.h 		for(int i = 0; i &lt; len; i++)								\
+<a href='../S/97.html#L55'>len</a>                55 src/include/aplus/fs.h 	int (*read) (struct inode* inode, char* ptr, int len);
+<a href='../S/97.html#L56'>len</a>                56 src/include/aplus/fs.h 	int (*write) (struct inode* inode, char* ptr, int len);
+<a href='../S/150.html#L72'>len</a>                72 src/mm/paging.c void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {	
+<a href='../S/150.html#L79'>len</a>                79 src/mm/paging.c 	int pages = (len / PGSIZE) + 1;
+<a href='../S/150.html#L109'>len</a>               109 src/mm/paging.c void vmm_umap(uint32_t* pd, void* addr, size_t len) {
+<a href='../S/150.html#L115'>len</a>               115 src/mm/paging.c 	int pages = (len / PGSIZE) + 1;
+<a href='../S/111.html#L31'>len</a>                31 src/net/loopback/loopback.c int loopback_recv(netif_t* netif, void* buf, size_t len) {
+<a href='../S/111.html#L35'>len</a>                35 src/net/loopback/loopback.c 	if(eth_recv(netif, buf, len) &gt; 0) {
+<a href='../S/111.html#L37'>len</a>                37 src/net/loopback/loopback.c 		netif-&gt;state.rx_bytes += len;
+<a href='../S/111.html#L39'>len</a>                39 src/net/loopback/loopback.c 		return len;
+<a href='../S/111.html#L46'>len</a>                46 src/net/loopback/loopback.c int loopback_send(netif_t* netif, void* buf, size_t len, int type) {
+<a href='../S/111.html#L50'>len</a>                50 src/net/loopback/loopback.c 	if(len &gt; LOOPBACK_MTU) {
+<a href='../S/111.html#L57'>len</a>                57 src/net/loopback/loopback.c 	netif-&gt;state.tx_bytes += len;
+<a href='../S/111.html#L60'>len</a>                60 src/net/loopback/loopback.c 	loopback_recv(netif, buf, len);	
+<a href='../S/111.html#L61'>len</a>                61 src/net/loopback/loopback.c 	return len;
+<a href='../S/104.html#L54'>len</a>                54 src/net/rtl8139/rtl8139.c int rtl8139_send(netif_t* netif, void* buf, size_t len, int type) {
+<a href='../S/104.html#L62'>len</a>                62 src/net/rtl8139/rtl8139.c 	if(len &gt; 1500) {
+<a href='../S/104.html#L69'>len</a>                69 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;txBuffer, buf, len);
+<a href='../S/104.html#L70'>len</a>                70 src/net/rtl8139/rtl8139.c 	if(len &lt; 60) {
+<a href='../S/104.html#L71'>len</a>                71 src/net/rtl8139/rtl8139.c 		memset((void*) ((uint32_t) card-&gt;txBuffer + len), 0, 60 - len);
+<a href='../S/104.html#L72'>len</a>                72 src/net/rtl8139/rtl8139.c 		len = 60;
+<a href='../S/104.html#L80'>len</a>                80 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), ((256 &lt;&lt; 11) &amp; 0x003F0000) | len);
+<a href='../S/104.html#L83'>len</a>                83 src/net/rtl8139/rtl8139.c 	netif-&gt;state.tx_bytes += len;
+<a href='../S/104.html#L85'>len</a>                85 src/net/rtl8139/rtl8139.c 	return len;
+<a href='../S/20.html#L12'>len</a>                12 usr/src/libposix/src/config.h #define __os_getgroups(len, lst)			aplus_getgroups(len, lst)
+<a href='../S/16.html#L18'>len</a>                18 usr/src/libposix/src/gid.c int getgroups(int len, gid_t* list) {
+<a href='../S/16.html#L19'>len</a>                19 usr/src/libposix/src/gid.c 	return __os_getgroups(len, list);
+</pre>
+</body>
+</html>

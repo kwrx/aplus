@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>heap</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/87.html#L67'>heap</a>               67 src/include/aplus/mm.h 	void* (*alloc) (struct heap*, size_t);
+<a href='../S/87.html#L68'>heap</a>               68 src/include/aplus/mm.h 	void (*free) (struct heap*, void*, size_t);
+<a href='../S/152.html#L29'>heap</a>               29 src/mm/heap.c  	if(heap)
+<a href='../S/152.html#L30'>heap</a>               30 src/mm/heap.c  		if(heap-&gt;alloc)
+<a href='../S/152.html#L31'>heap</a>               31 src/mm/heap.c  			return heap-&gt;alloc(heap, size);
+<a href='../S/152.html#L37'>heap</a>               37 src/mm/heap.c  	if(heap)
+<a href='../S/152.html#L38'>heap</a>               38 src/mm/heap.c  		if(heap-&gt;free)
+<a href='../S/152.html#L39'>heap</a>               39 src/mm/heap.c  			heap-&gt;free(heap, addr, size);
+<a href='../S/153.html#L56'>heap</a>               56 src/mm/kheap.c 	for(int i = 0; i &lt; heap-&gt;size; i++) {	
+<a href='../S/153.html#L58'>heap</a>               58 src/mm/kheap.c 			if(BITMAP_TST(heap-&gt;bitmap, (i + j)))
+<a href='../S/153.html#L73'>heap</a>               73 src/mm/kheap.c 	if(!heap)
+<a href='../S/153.html#L76'>heap</a>               76 src/mm/kheap.c 	if(!heap-&gt;bitmap)
+<a href='../S/153.html#L79'>heap</a>               79 src/mm/kheap.c 	if(heap-&gt;used &gt;= heap-&gt;size)
+<a href='../S/153.html#L90'>heap</a>               90 src/mm/kheap.c 	int index = bitmap_first(heap, size);
+<a href='../S/153.html#L95'>heap</a>               95 src/mm/kheap.c 		BITMAP_SET(heap-&gt;bitmap, (index + i));
+<a href='../S/153.html#L98'>heap</a>               98 src/mm/kheap.c 	heap-&gt;used += size;
+<a href='../S/153.html#L104'>heap</a>              104 src/mm/kheap.c 	if(!heap)
+<a href='../S/153.html#L107'>heap</a>              107 src/mm/kheap.c 	if(!heap-&gt;bitmap)
+<a href='../S/153.html#L121'>heap</a>              121 src/mm/kheap.c 		BITMAP_CLR(heap-&gt;bitmap, (index + i));
+<a href='../S/153.html#L124'>heap</a>              124 src/mm/kheap.c 	heap-&gt;used -= size;
+<a href='../S/151.html#L114'>heap</a>              114 src/mm/mm.c    	current_heap = heap;
+</pre>
+</body>
+</html>

@@ -1,0 +1,109 @@
+.TH "usr/src/libposix/src/execvp.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/execvp.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <_ansi\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <ctype\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPATH_DELIM\fP   ':'"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "static char * \fB_DEFUN\fP (strccpy,(s1, s2, c), char *s1 _AND char *s2 _AND char c)"
+.br
+.ti -1c
+.RI "int \fB_DEFUN\fP (execvp,(file, argv), _CONST char *file _AND char *_CONST argv[])"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define PATH_DELIM   ':'"
+
+.PP
+Definizione alla linea 16 del file execvp\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "static char* _DEFUN (strccpy, (s1, s2, c), char *s1 _AND char *s2 _AND charc)\fC [static]\fP"
+
+.PP
+Definizione alla linea 24 del file execvp\&.c\&.
+.PP
+Referenzia dest\&.
+.PP
+.nf
+28 {
+29   char *dest = s1;
+30 
+31   while (*s2 && *s2 != c)
+32     *s1++ = *s2++;
+33   *s1 = 0;
+34 
+35   return dest;
+36 }
+.fi
+.SS "int _DEFUN (execvp, (file, argv), _CONST char *file _AND char *_CONSTargv[])"
+
+.PP
+Definizione alla linea 39 del file execvp\&.c\&.
+.PP
+Referenzia PATH_DELIM\&.
+.PP
+.nf
+42 {
+43   char *path = getenv ("PATH");
+44   char buf[MAXNAMLEN];
+45 
+46   /* If $PATH doesn't exist, just pass FILE on unchanged\&.  */
+47   if (!path)
+48     return execv (file, argv);
+49 
+50   /* If FILE contains a directory, don't search $PATH\&.  */
+51   if (strchr (file, '/')
+52       )
+53     return execv (file, argv);
+54 
+55   while (*path)
+56     {
+57       strccpy (buf, path, PATH_DELIM);
+58       /* An empty entry means the current directory\&.  */
+59       if (*buf != 0 && buf[strlen(buf) - 1] != '/')
+60     strcat (buf, "/");
+61       strcat (buf, file);
+62       if(execv (buf, argv) == 0)
+63         return 0;       
+64 
+65       while (*path && *path != PATH_DELIM)
+66     path++;
+67       if (*path == PATH_DELIM)
+68     path++;         /* skip over delim */
+69     }
+70 
+71   return -1;
+72 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

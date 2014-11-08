@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>src/syscall/write.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/write.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L19'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L19' title='Defined at 19.'>sys_write</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L12'>  12 
+<a name='L13'>  13 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L14'>  14 
+<a name='L15'>  15 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L16'>  16 <b>extern</b> <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/751.html' title='Multiple used in 39 places.'>vfs_root</a>;
+<a name='L17'>  17 
+<a name='L18'>  18 
+<a name='L19'>  19 <b>int</b> sys_write(<b>int</b> <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>, <b>void</b>* <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) <font color='red'>{</font>
+<a name='L20'>  20         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L21'>  21                 <b>return</b> -1;
+<a name='L22'>  22                 
+<a name='L23'>  23         
+<a name='L24'>  24         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>];
+<a name='L25'>  25         <b>if</b>(!<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>) <font color='red'>{</font>
+<a name='L26'>  26                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/7.html' title='Multiple used in 8 places.'>EBADF</a>;
+<a name='L27'>  27                 <b>return</b> -1;
+<a name='L28'>  28         <font color='red'>}</font>
+<a name='L29'>  29 
+<a name='L30'>  30 
+<a name='L31'>  31         <b>return</b> <a href='../S/146.html#L24' title='Defined at 24 in src/fs/fs.c.'>fs_write</a>(<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>, <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L32'>  32 <font color='red'>}</font>
+<a name='L33'>  33 
+<a name='L34'>  34 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_write, 17);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L19'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<html>
+<head>
+<title>length</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L131'>length</a>            131 src/arch/pci.c int pci_find_by_class(pci_device_t** rdevs, uint32_t class, uint32_t length) {
+<a href='../S/160.html#L133'>length</a>            133 src/arch/pci.c 	for(int i = 0; i &lt; PCI_MAX_DEVICES &amp;&amp; j &lt; length; i++) {
+<a href='../S/159.html#L80'>length</a>             80 src/arch/task.c 	child-&gt;image.length = current_task-&gt;image.length;
+<a href='../S/159.html#L84'>length</a>             84 src/arch/task.c 		void* addr = (void*) kmalloc(child-&gt;image.length);
+<a href='../S/159.html#L85'>length</a>             85 src/arch/task.c 		memcpy(addr, (void*) child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L87'>length</a>             87 src/arch/task.c 		vmm_map(child-&gt;context.cr3, mm_paddr(addr), child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L143'>length</a>            143 src/arch/task.c 	child-&gt;image.length = current_task-&gt;image.length;
+<a href='../S/95.html#L33'>length</a>             33 src/include/aplus/net/ipv4.h 	uint16_t length;
+<a href='../S/92.html#L20'>length</a>             20 src/include/aplus/net/ipv6.h 	uint16_t length;
+<a href='../S/91.html#L10'>length</a>             10 src/include/aplus/net/udp.h 	uint16_t length;
+<a href='../S/89.html#L80'>length</a>             80 src/include/aplus/netif.h 	int length;
+<a href='../S/90.html#L92'>length</a>             92 src/include/aplus/task.h 		uint32_t length;
+<a href='../S/108.html#L67'>length</a>             67 src/net/arp.c  int arp_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/108.html#L75'>length</a>             75 src/net/arp.c  	return length;
+<a href='../S/112.html#L11'>length</a>             11 src/net/eth.c  int eth_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/112.html#L15'>length</a>             15 src/net/eth.c  		netif, (void*) ((uint32_t) buf + sizeof(eth_header_t)), length - sizeof(eth_header_t)
+<a href='../S/112.html#L21'>length</a>             21 src/net/eth.c  			return length;
+<a href='../S/112.html#L26'>length</a>             26 src/net/eth.c  			return length;
+<a href='../S/112.html#L31'>length</a>             31 src/net/eth.c  			return length;
+<a href='../S/112.html#L40'>length</a>             40 src/net/eth.c  							length, 
+<a href='../S/112.html#L45'>length</a>             45 src/net/eth.c  	return length;
+<a href='../S/112.html#L49'>length</a>             49 src/net/eth.c  static int eth_send_packet(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/112.html#L50'>length</a>             50 src/net/eth.c  	eth_header_t* ethpkt = kmalloc(length + sizeof(eth_header_t));
+<a href='../S/112.html#L53'>length</a>             53 src/net/eth.c  	memcpy((void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), buf, length);
+<a href='../S/112.html#L71'>length</a>             71 src/net/eth.c  	length += sizeof(eth_header_t);
+<a href='../S/112.html#L73'>length</a>             73 src/net/eth.c  	int ret = netif-&gt;send(netif, ethpkt, length, NETIF_ETH);
+<a href='../S/112.html#L79'>length</a>             79 src/net/eth.c  int eth_send(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/112.html#L81'>length</a>             81 src/net/eth.c  	if(length + sizeof(eth_header_t) &lt; netif-&gt;mtu) {
+<a href='../S/112.html#L82'>length</a>             82 src/net/eth.c  		if(eth_send_packet(netif, buf, length, type) &gt; 0)
+<a href='../S/112.html#L83'>length</a>             83 src/net/eth.c  			return length;
+<a href='../S/112.html#L92'>length</a>             92 src/net/eth.c  	for(int i = 0; i &lt; length; i += delta)
+<a href='../S/112.html#L95'>length</a>             95 src/net/eth.c  	if((length % delta) != 0)
+<a href='../S/112.html#L96'>length</a>             96 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + length - (length % delta)), length % delta, type);
+<a href='../S/112.html#L100'>length</a>            100 src/net/eth.c  		return length;
+<a href='../S/113.html#L14'>length</a>             14 src/net/ipv4.c 	int length = sizeof(ipv4_header_t);
+<a href='../S/113.html#L18'>length</a>             18 src/net/ipv4.c 	while(length &gt; 1) {
+<a href='../S/113.html#L21'>length</a>             21 src/net/ipv4.c 		length -= sizeof(uint16_t);
+<a href='../S/113.html#L24'>length</a>             24 src/net/ipv4.c 	if(length)
+<a href='../S/113.html#L34'>length</a>             34 src/net/ipv4.c void* ipv4_create_packet(netif_t* netif, void* buf, size_t length, int type, ipv4_t dest, int fragment, int offset) {
+<a href='../S/113.html#L36'>length</a>             36 src/net/ipv4.c 	ipv4_header_t* ip = (ipv4_header_t*) kmalloc(length + sizeof(ipv4_header_t));
+<a href='../S/113.html#L39'>length</a>             39 src/net/ipv4.c 	ip-&gt;length = length + sizeof(ipv4_header_t);
+<a href='../S/113.html#L65'>length</a>             65 src/net/ipv4.c 	memcpy((void*) ((uint32_t) ip + sizeof(ipv4_header_t)), buf, length);
+<a href='../S/113.html#L71'>length</a>             71 src/net/ipv4.c int ipv4_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/113.html#L82'>length</a>             82 src/net/ipv4.c 		netif, (void*) ((uint32_t) ip + IPV4_HEADER_LENGTH(ip)), length - IPV4_HEADER_LENGTH(ip)
+<a href='../S/113.html#L88'>length</a>             88 src/net/ipv4.c 			return length;
+<a href='../S/113.html#L93'>length</a>             93 src/net/ipv4.c 			return length;
+<a href='../S/113.html#L98'>length</a>             98 src/net/ipv4.c 			return length;
+<a href='../S/113.html#L106'>length</a>            106 src/net/ipv4.c 							length, 
+<a href='../S/113.html#L113'>length</a>            113 src/net/ipv4.c 	return length;
+<a href='../S/113.html#L116'>length</a>            116 src/net/ipv4.c int ipv4_send(netif_t* netif, void* buf, size_t length, int type, ipv4_t dest) {
+<a href='../S/113.html#L117'>length</a>            117 src/net/ipv4.c 	if(length &lt; IPV4_MAX_LENGTH) {
+<a href='../S/113.html#L118'>length</a>            118 src/net/ipv4.c 		void* pkt = ipv4_create_packet(netif, buf, length, type, dest, -1, 0);
+<a href='../S/113.html#L119'>length</a>            119 src/net/ipv4.c 		int ret = eth_send(netif, pkt, length + sizeof(ipv4_header_t), NETIF_INET);
+<a href='../S/113.html#L123'>length</a>            123 src/net/ipv4.c 			return length;
+<a href='../S/113.html#L130'>length</a>            130 src/net/ipv4.c 	int max = length / IPV4_MAX_LENGTH;
+<a href='../S/113.html#L132'>length</a>            132 src/net/ipv4.c 	if(length % IPV4_MAX_LENGTH == 0)
+<a href='../S/113.html#L142'>length</a>            142 src/net/ipv4.c 	void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), length - ((i - 1) * IPV4_MAX_LENGTH), type, dest, -1, i);
+<a href='../S/113.html#L147'>length</a>            147 src/net/ipv4.c 		return length;
+<a href='../S/106.html#L14'>length</a>             14 src/net/ipv6.c int ipv6_recv(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/106.html#L22'>length</a>             22 src/net/ipv6.c 		netif, (void*) ((uint32_t) ip + sizeof(ipv6_header_t)), length - sizeof(ipv6_header_t)
+<a href='../S/106.html#L28'>length</a>             28 src/net/ipv6.c 			return length;
+<a href='../S/106.html#L33'>length</a>             33 src/net/ipv6.c 			return length;
+<a href='../S/106.html#L38'>length</a>             38 src/net/ipv6.c 			return length;
+<a href='../S/106.html#L46'>length</a>             46 src/net/ipv6.c 							length, 
+<a href='../S/106.html#L52'>length</a>             52 src/net/ipv6.c 	return length;
+<a href='../S/106.html#L55'>length</a>             55 src/net/ipv6.c int ipv6_send(netif_t* netif, void* buf, size_t length, int type, ipv6_t dest) {
+<a href='../S/106.html#L56'>length</a>             56 src/net/ipv6.c 	ipv6_header_t* ip = (ipv6_header_t*) kmalloc(length + sizeof(ipv6_header_t));
+<a href='../S/106.html#L60'>length</a>             60 src/net/ipv6.c 	ip-&gt;length = length;
+<a href='../S/106.html#L80'>length</a>             80 src/net/ipv6.c 	memcpy((void*) ((uint32_t) ip + sizeof(ipv6_header_t)), buf, length);
+<a href='../S/106.html#L82'>length</a>             82 src/net/ipv6.c 	int ret = eth_send(netif, (void*) ip, length + sizeof(ipv6_header_t), NETIF_INET6);
+<a href='../S/106.html#L86'>length</a>             86 src/net/ipv6.c 		return length;
+<a href='../S/107.html#L283'>length</a>            283 src/net/netif.c 	pkt-&gt;length = tot_length - head_length;
+<a href='../S/107.html#L286'>length</a>            286 src/net/netif.c 	memcpy(pkt-&gt;data, (void*) ((uint32_t) data + head_length), pkt-&gt;length);
+<a href='../S/104.html#L105'>length</a>            105 src/net/rtl8139/rtl8139.c 		uint16_t length = *rxBuffer++;
+<a href='../S/104.html#L106'>length</a>            106 src/net/rtl8139/rtl8139.c 		length -= 4;
+<a href='../S/104.html#L111'>length</a>            111 src/net/rtl8139/rtl8139.c 		void* data = kmalloc(length);
+<a href='../S/104.html#L112'>length</a>            112 src/net/rtl8139/rtl8139.c 		if((card-&gt;rxBufferOffset + length) &gt;= RX_BUFFER_SIZE) {
+<a href='../S/104.html#L114'>length</a>            114 src/net/rtl8139/rtl8139.c 			memcpy((void*) ((uint32_t) data + RX_BUFFER_SIZE - card-&gt;rxBufferOffset), card-&gt;rxBuffer, length - (RX_BUFFER_SIZE - card-&gt;rxBufferOffset));
+<a href='../S/104.html#L116'>length</a>            116 src/net/rtl8139/rtl8139.c 			memcpy(data, rxBuffer, length);
+<a href='../S/104.html#L119'>length</a>            119 src/net/rtl8139/rtl8139.c 		kprintf("rtl8139: receveid %d bytes\n", length);
+<a href='../S/104.html#L123'>length</a>            123 src/net/rtl8139/rtl8139.c 		if(udp_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L125'>length</a>            125 src/net/rtl8139/rtl8139.c 		if(eth_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L128'>length</a>            128 src/net/rtl8139/rtl8139.c 			card-&gt;netif-&gt;state.rx_bytes += length;
+<a href='../S/104.html#L133'>length</a>            133 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset += length + 4;
+<a href='../S/110.html#L85'>length</a>             85 src/net/slirp/slirp.c int slirp_send(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/110.html#L97'>length</a>             97 src/net/slirp/slirp.c 	for(int i = 0; i &lt; length; i++) {
+<a href='../S/110.html#L116'>length</a>            116 src/net/slirp/slirp.c 	return length;
+<a href='../S/114.html#L12'>length</a>             12 src/net/udp.c  int udp_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/114.html#L18'>length</a>             18 src/net/udp.c  							length, 
+<a href='../S/114.html#L24'>length</a>             24 src/net/udp.c  	return length;
+<a href='../S/143.html#L192'>length</a>            192 src/sched.c    		return (void*) ((uint32_t) current_task-&gt;image.vaddr + current_task-&gt;image.length);
+<a href='../S/143.html#L194'>length</a>            194 src/sched.c    	current_task-&gt;image.length += increment;
+<a href='../S/143.html#L195'>length</a>            195 src/sched.c    	current_task-&gt;image.ptr = (uint32_t) krealloc((void*) current_task-&gt;image.ptr, current_task-&gt;image.length);
+<a href='../S/143.html#L196'>length</a>            196 src/sched.c    	current_task-&gt;image.vaddr = vmm_map(current_task-&gt;context.cr3, mm_paddr((void*) current_task-&gt;image.ptr), current_task-&gt;image.vaddr, current_task-&gt;image.length, VMM_FLAGS_DEFAULT);
+<a href='../S/143.html#L198'>length</a>            198 src/sched.c    	return (void*) ((uint32_t) current_task-&gt;image.vaddr + current_task-&gt;image.length);
+<a href='../S/142.html#L18'>length</a>             18 src/syscall/getgroups.c int sys_getgroups(int length, gid_t* list) {
+<a href='../S/142.html#L19'>length</a>             19 src/syscall/getgroups.c 	if(length &lt; 0) {
+<a href='../S/142.html#L29'>length</a>             29 src/syscall/getgroups.c 	if(length == 0)
+<a href='../S/142.html#L34'>length</a>             34 src/syscall/getgroups.c 		if(i &gt;= length)
+</pre>
+</body>
+</html>

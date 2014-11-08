@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>__current_thread</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/61.html#L6'>__current_thread</a>    6 usr/src/libpthread/src/pthread_queue.c PRIVATE pthread_context_t __current_thread;
+<a href='../S/61.html#L8'>__current_thread</a>    8 usr/src/libpthread/src/pthread_queue.c PUBLIC pthread_context_t* __pthread_queue = &amp;__current_thread;
+<a href='../S/61.html#L13'>__current_thread</a>   13 usr/src/libpthread/src/pthread_queue.c 	if(__current_thread.tid)
+<a href='../S/61.html#L16'>__current_thread</a>   16 usr/src/libpthread/src/pthread_queue.c 	__current_thread.tid = __os_gettid();
+<a href='../S/61.html#L17'>__current_thread</a>   17 usr/src/libpthread/src/pthread_queue.c 	__current_thread.entry = NULL;
+<a href='../S/61.html#L18'>__current_thread</a>   18 usr/src/libpthread/src/pthread_queue.c 	__current_thread.param = NULL;
+<a href='../S/61.html#L19'>__current_thread</a>   19 usr/src/libpthread/src/pthread_queue.c 	__current_thread.exitval = NULL;
+<a href='../S/61.html#L20'>__current_thread</a>   20 usr/src/libpthread/src/pthread_queue.c 	__current_thread.once.done = 0;
+<a href='../S/61.html#L21'>__current_thread</a>   21 usr/src/libpthread/src/pthread_queue.c 	__current_thread.once.started = -1;
+<a href='../S/61.html#L22'>__current_thread</a>   22 usr/src/libpthread/src/pthread_queue.c 	__current_thread.cond = NULL;
+<a href='../S/61.html#L23'>__current_thread</a>   23 usr/src/libpthread/src/pthread_queue.c 	__current_thread.next = NULL;
+<a href='../S/61.html#L25'>__current_thread</a>   25 usr/src/libpthread/src/pthread_queue.c 	memset(&amp;__current_thread.attr, 0, sizeof(pthread_attr_t));
+</pre>
+</body>
+</html>

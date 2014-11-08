@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__mutex_8c">
+    <title>pthread_mutex.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8">PRIVATE</link> int <link linkend="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0">__locked_mtx</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutex_8c_1a8033a9fb4c16036471e20a33cb7361bd">pthread_mutex_init</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex, const <link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutex_8c_1a1de946179f5a8b0d08dd8a14c19775fe">pthread_mutex_destroy</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d">pthread_mutex_lock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutex_8c_1a2e14cfabd118a24af57bea058285e7b1">pthread_mutex_timedlock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutex_8c_1a53c032e9b0fe998bcded3c3c381b4418">pthread_mutex_trylock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805">pthread_mutex_unlock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c</para>
+    </simplesect>
+</section>

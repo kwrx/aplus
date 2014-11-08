@@ -1,0 +1,258 @@
+.TH "src/include/aplus/mm.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/mm.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBheap\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBMM_VBASE\fP   0x40000000"
+.br
+.ti -1c
+.RI "#define \fBMM_VSIZE\fP   (0xFFFFFFFF - MM_VBASE)"
+.br
+.ti -1c
+.RI "#define \fBMM_LBASE\fP   0x00000000"
+.br
+.ti -1c
+.RI "#define \fBMM_LSIZE\fP   0x00800000"
+.br
+.ti -1c
+.RI "#define \fBMM_UBASE\fP   0x00A00000"
+.br
+.ti -1c
+.RI "#define \fBMM_USIZE\fP   (\fBMM_VBASE\fP - \fBMM_UBASE\fP)"
+.br
+.ti -1c
+.RI "#define \fBVMM_FLAGS_PRESENT\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBVMM_FLAGS_RDWR\fP   0x02"
+.br
+.ti -1c
+.RI "#define \fBVMM_FLAGS_USER\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBVMM_FLAGS_DEFAULT\fP   (\fBVMM_FLAGS_PRESENT\fP | \fBVMM_FLAGS_RDWR\fP)"
+.br
+.ti -1c
+.RI "#define \fBVMM_MAX_MEMORY\fP   (0xFFFFFFFF - MM_VBASE)"
+.br
+.ti -1c
+.RI "#define \fBBLKSIZE\fP   0x1000"
+.br
+.ti -1c
+.RI "#define \fBBLKMAGIC\fP   0x1234"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBheap\fP \fBheap_t\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "static void * \fBmm_paddr\fP (void *vaddr)"
+.br
+.ti -1c
+.RI "static void * \fBmm_vaddr\fP (void *paddr)"
+.br
+.ti -1c
+.RI "static void * \fBmm_align\fP (void *vaddr)"
+.br
+.ti -1c
+.RI "void * \fBkmalloc\fP (size_t)"
+.br
+.ti -1c
+.RI "void \fBkfree\fP (void *)"
+.br
+.ti -1c
+.RI "void * \fBkrealloc\fP (void *, size_t)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define BLKMAGIC   0x1234"
+
+.PP
+Definizione alla linea 58 del file mm\&.h\&.
+.SS "#define BLKSIZE   0x1000"
+
+.PP
+Definizione alla linea 57 del file mm\&.h\&.
+.SS "#define MM_LBASE   0x00000000"
+
+.PP
+Definizione alla linea 41 del file mm\&.h\&.
+.SS "#define MM_LSIZE   0x00800000"
+
+.PP
+Definizione alla linea 42 del file mm\&.h\&.
+.SS "#define MM_UBASE   0x00A00000"
+
+.PP
+Definizione alla linea 44 del file mm\&.h\&.
+.SS "#define MM_USIZE   (\fBMM_VBASE\fP - \fBMM_UBASE\fP)"
+
+.PP
+Definizione alla linea 45 del file mm\&.h\&.
+.SS "#define MM_VBASE   0x40000000"
+
+.PP
+Definizione alla linea 38 del file mm\&.h\&.
+.SS "#define MM_VSIZE   (0xFFFFFFFF - MM_VBASE)"
+
+.PP
+Definizione alla linea 39 del file mm\&.h\&.
+.SS "#define VMM_FLAGS_DEFAULT   (\fBVMM_FLAGS_PRESENT\fP | \fBVMM_FLAGS_RDWR\fP)"
+
+.PP
+Definizione alla linea 52 del file mm\&.h\&.
+.SS "#define VMM_FLAGS_PRESENT   0x01"
+
+.PP
+Definizione alla linea 49 del file mm\&.h\&.
+.SS "#define VMM_FLAGS_RDWR   0x02"
+
+.PP
+Definizione alla linea 50 del file mm\&.h\&.
+.SS "#define VMM_FLAGS_USER   0x04"
+
+.PP
+Definizione alla linea 51 del file mm\&.h\&.
+.SS "#define VMM_MAX_MEMORY   (0xFFFFFFFF - MM_VBASE)"
+
+.PP
+Definizione alla linea 54 del file mm\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fBheap\fP  \fBheap_t\fP"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "void kfree (void *)"
+
+.PP
+Definizione alla linea 66 del file mm\&.c\&.
+.PP
+Referenzia BLKMAGIC, hfree(), mm_align(), mm_paddr(), e size\&.
+.PP
+.nf
+66                       {
+67     if(!ptr)
+68         return;
+69         
+70     
+71     block_t* block = (block_t*) ptr;
+72     if(block->magic != BLKMAGIC)
+73         return;
+74         
+75     size_t size = block->size;
+76     block->size = 0;
+77     block->magic = 0;
+78     
+79     
+80     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+81 }
+.fi
+.SS "void* kmalloc (size_t)"
+
+.SS "void* krealloc (void *, size_t)"
+
+.PP
+Definizione alla linea 84 del file mm\&.c\&.
+.PP
+Referenzia BLKMAGIC, kfree(), e kmalloc()\&.
+.PP
+.nf
+84                                        {
+85     if(ptr == NULL)
+86         return kmalloc(size);
+87         
+88     if(size == 0) {
+89         kfree(ptr);
+90         return NULL;
+91     }   
+92 
+93     block_t* block = (block_t*) ptr;
+94     if(block->magic != BLKMAGIC)
+95         return NULL;
+96         
+97     void* newptr = kmalloc(size);
+98     if(!newptr)
+99         return NULL;
+100         
+101     if(size > block->size)
+102         size = block->size;
+103         
+104     memcpy(newptr, ptr, size);
+105     kfree(ptr);
+106     
+107     return newptr;
+108 }
+.fi
+.SS "static void* mm_align (void *vaddr)\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definizione alla linea 85 del file mm\&.h\&.
+.PP
+Referenzia uint32_t\&.
+.PP
+.nf
+85                                           {
+86     return (void*) ((uint32_t) vaddr & ~0xFFF);
+87 }
+.fi
+.SS "static void* mm_paddr (void *vaddr)\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definizione alla linea 71 del file mm\&.h\&.
+.PP
+Referenzia MM_VBASE, e uint32_t\&.
+.PP
+.nf
+71                                           {
+72     if((uint32_t) vaddr > MM_VBASE)
+73         vaddr = (void*) ((uint32_t) vaddr - MM_VBASE);
+74         
+75     return vaddr;
+76 }
+.fi
+.SS "static void* mm_vaddr (void *paddr)\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definizione alla linea 78 del file mm\&.h\&.
+.PP
+Referenzia MM_VBASE, e uint32_t\&.
+.PP
+.nf
+78                                           {
+79     if((uint32_t) paddr < MM_VBASE)
+80         paddr = (void*) ((uint32_t) paddr + MM_VBASE);
+81         
+82     return paddr;
+83 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

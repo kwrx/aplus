@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__attr" kind="struct" prot="public">
+    <compoundname>pthread_attr</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__attr_1a004b9c2b7c75177f4de0262277f48333" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* pthread_attr::stackaddr</definition>
+        <argsstring></argsstring>
+        <name>stackaddr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="58" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__attr_1a8b8eaabf2bc9b4cec33d7764bbb115d9" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t pthread_attr::stacksize</definition>
+        <argsstring></argsstring>
+        <name>stacksize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="59" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__attr_1a2ac0f3f9d4513024bbafc7db17c25a46" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_attr::detachstate</definition>
+        <argsstring></argsstring>
+        <name>detachstate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="60" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__attr_1a371c70c9e51a2444860395f7045bbd3e" prot="public" static="no" mutable="no">
+        <type>struct sched_param</type>
+        <definition>struct sched_param pthread_attr::param</definition>
+        <argsstring></argsstring>
+        <name>param</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="60" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__attr_1ab6bef83bc858c0ffb3c8d0b461ba4396" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_attr::inheritsched</definition>
+        <argsstring></argsstring>
+        <name>inheritsched</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="62" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__attr_1a1d5ca4923f6814d754208080896a360a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_attr::contentionscope</definition>
+        <argsstring></argsstring>
+        <name>contentionscope</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="63" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="70">
+        <label>pthread_attr</label>
+        <link refid="structpthread__attr"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="57" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="57" bodyend="64"/>
+    <listofallmembers>
+      <member refid="structpthread__attr_1a1d5ca4923f6814d754208080896a360a" prot="public" virt="non-virtual"><scope>pthread_attr</scope><name>contentionscope</name></member>
+      <member refid="structpthread__attr_1a2ac0f3f9d4513024bbafc7db17c25a46" prot="public" virt="non-virtual"><scope>pthread_attr</scope><name>detachstate</name></member>
+      <member refid="structpthread__attr_1ab6bef83bc858c0ffb3c8d0b461ba4396" prot="public" virt="non-virtual"><scope>pthread_attr</scope><name>inheritsched</name></member>
+      <member refid="structpthread__attr_1a371c70c9e51a2444860395f7045bbd3e" prot="public" virt="non-virtual"><scope>pthread_attr</scope><name>param</name></member>
+      <member refid="structpthread__attr_1a004b9c2b7c75177f4de0262277f48333" prot="public" virt="non-virtual"><scope>pthread_attr</scope><name>stackaddr</name></member>
+      <member refid="structpthread__attr_1a8b8eaabf2bc9b4cec33d7764bbb115d9" prot="public" virt="non-virtual"><scope>pthread_attr</scope><name>stacksize</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

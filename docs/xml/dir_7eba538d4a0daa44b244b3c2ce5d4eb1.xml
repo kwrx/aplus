@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_7eba538d4a0daa44b244b3c2ce5d4eb1" kind="dir">
+    <compoundname>usr/src/libcrt0</compoundname>
+    <innerdir refid="dir_d8973e1d382d4046c5526cf7094d954c">usr/src/libcrt0/src</innerdir>
+    <innerdir refid="dir_bd7089357e82a1d024ba8f2a5dce0de0">usr/src/libcrt0/test</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libcrt0/"/>
+  </compounddef>
+</doxygen>

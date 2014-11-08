@@ -1,0 +1,41 @@
+\hypertarget{lstat_8c}{\section{Riferimenti per il file usr/src/libposix/src/lstat.c}
+\label{lstat_8c}\index{usr/src/libposix/src/lstat.\+c@{usr/src/libposix/src/lstat.\+c}}
+}
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{lstat_8c_adf958baeacaf3d34b582ce8f1318d4c0}{lstat} (const char $\ast$filename, struct stat $\ast$st)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{lstat_8c_adf958baeacaf3d34b582ce8f1318d4c0}{\index{lstat.\+c@{lstat.\+c}!lstat@{lstat}}
+\index{lstat@{lstat}!lstat.\+c@{lstat.\+c}}
+\subsubsection[{lstat}]{\setlength{\rightskip}{0pt plus 5cm}int lstat (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{filename, }
+\item[{struct stat $\ast$}]{st}
+\end{DoxyParamCaption}
+)}}\label{lstat_8c_adf958baeacaf3d34b582ce8f1318d4c0}
+
+
+Definizione alla linea 5 del file lstat.\+c.
+
+
+
+Referenzia O\+\_\+\+N\+O\+F\+O\+L\+L\+O\+W.
+
+
+\begin{DoxyCode}
+5                                                  \{
+6     \textcolor{keywordtype}{int} fd = open(filename, O\_RDONLY | \hyperlink{dirent_8h_a82d4d551b214905742c9e045185d352a}{O\_NOFOLLOW}, 0644);
+7     \textcolor{keywordflow}{if}(fd < 0)
+8         \textcolor{keywordflow}{return} -1;
+9 
+10     \textcolor{keywordtype}{int} ret = fstat(fd, st);
+11     close(fd);
+12     \textcolor{keywordflow}{return} ret;
+13 \}
+\end{DoxyCode}

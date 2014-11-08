@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>body</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/96.html#L42'>body</a>               42 src/include/aplus/list.h 	list_body_t* body;
+<a href='../S/96.html#L64'>body</a>               64 src/include/aplus/list.h 	val-&gt;next = list-&gt;body;
+<a href='../S/96.html#L66'>body</a>               66 src/include/aplus/list.h 	list-&gt;body = val;
+<a href='../S/96.html#L76'>body</a>               76 src/include/aplus/list.h 	list_body_t* body = list-&gt;body;
+<a href='../S/96.html#L79'>body</a>               79 src/include/aplus/list.h 	while(body) {
+<a href='../S/96.html#L80'>body</a>               80 src/include/aplus/list.h 		if(body-&gt;value == v) {
+<a href='../S/96.html#L82'>body</a>               82 src/include/aplus/list.h 				prev-&gt;next = body-&gt;next;
+<a href='../S/96.html#L84'>body</a>               84 src/include/aplus/list.h 				list-&gt;body = body-&gt;next;
+<a href='../S/96.html#L86'>body</a>               86 src/include/aplus/list.h 			body-&gt;value = 0;
+<a href='../S/96.html#L87'>body</a>               87 src/include/aplus/list.h 			kfree(body);
+<a href='../S/96.html#L91'>body</a>               91 src/include/aplus/list.h 		prev = body;
+<a href='../S/96.html#L92'>body</a>               92 src/include/aplus/list.h 		body = body-&gt;next;
+<a href='../S/96.html#L102'>body</a>              102 src/include/aplus/list.h 	list_body_t* body = list-&gt;body;
+<a href='../S/96.html#L103'>body</a>              103 src/include/aplus/list.h 	list_body_t* tmp = list-&gt;body;
+<a href='../S/96.html#L105'>body</a>              105 src/include/aplus/list.h 	while(body) {
+<a href='../S/96.html#L106'>body</a>              106 src/include/aplus/list.h 		tmp = body-&gt;next;
+<a href='../S/96.html#L107'>body</a>              107 src/include/aplus/list.h 		kfree(body);
+<a href='../S/96.html#L108'>body</a>              108 src/include/aplus/list.h 		body = tmp;
+<a href='../S/96.html#L111'>body</a>              111 src/include/aplus/list.h 	list-&gt;body = 0;
+<a href='../S/96.html#L122'>body</a>              122 src/include/aplus/list.h 	for(list_body_t* i = src-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L130'>body</a>              130 src/include/aplus/list.h 	for(list_body_t* i = list-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L140'>body</a>              140 src/include/aplus/list.h 	for(list_body_t* i = list-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L150'>body</a>              150 src/include/aplus/list.h 	if(list-&gt;body)
+<a href='../S/96.html#L151'>body</a>              151 src/include/aplus/list.h 		return list-&gt;body-&gt;value;
+<a href='../S/96.html#L158'>body</a>              158 src/include/aplus/list.h 	if(!list-&gt;body)
+<a href='../S/96.html#L161'>body</a>              161 src/include/aplus/list.h 	list_body_t* tmp = list-&gt;body;
+<a href='../S/96.html#L189'>body</a>              189 src/include/aplus/list.h 	list-&gt;body = 0;											\
+</pre>
+</body>
+</html>

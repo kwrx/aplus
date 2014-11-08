@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="usleep_8c" kind="file">
+    <compoundname>usleep.c</compoundname>
+    <includes local="no">errno.h</includes>
+    <includes local="no">time.h</includes>
+    <includes local="no">unistd.h</includes>
+    <incdepgraph>
+      <node id="2171">
+        <label>usr/src/libposix/src/usleep.c</label>
+        <link refid="usleep.c"/>
+        <childnode refid="2172" relation="include">
+        </childnode>
+        <childnode refid="2173" relation="include">
+        </childnode>
+        <childnode refid="2174" relation="include">
+        </childnode>
+      </node>
+      <node id="2172">
+        <label>errno.h</label>
+      </node>
+      <node id="2174">
+        <label>unistd.h</label>
+      </node>
+      <node id="2173">
+        <label>time.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="usleep_8c_1a1beaecc28fb9396d30c206bde6aa4717" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int nanosleep</definition>
+        <argsstring>(struct timespec *ts, struct timespec *tr)</argsstring>
+        <name>nanosleep</name>
+        <param>
+          <type>struct timespec *</type>
+          <declname>ts</declname>
+        </param>
+        <param>
+          <type>struct timespec *</type>
+          <declname>tr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/usleep.c" line="5" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="usleep_8c_1a59715f1a0a2ee4dc75e8343aca15c1dd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int usleep</definition>
+        <argsstring>(useconds_t useconds)</argsstring>
+        <name>usleep</name>
+        <param>
+          <type>useconds_t</type>
+          <declname>useconds</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/usleep.c" line="7" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/usleep.c" bodystart="7" bodyend="15"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="usleep_8c_1a1beaecc28fb9396d30c206bde6aa4717">nanosleep</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="usleep_8c_1a1beaecc28fb9396d30c206bde6aa4717" kindref="member">nanosleep</ref>(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>timespec*<sp/>ts,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>timespec*<sp/>tr);</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="usleep_8c_1a59715f1a0a2ee4dc75e8343aca15c1dd" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="usleep_8c_1a59715f1a0a2ee4dc75e8343aca15c1dd" kindref="member">usleep</ref>(useconds_t<sp/>useconds)<sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">timespec<sp/>ts;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/>ts.tv_sec<sp/>=<sp/>(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>int)useconds<sp/>/<sp/>1000000;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/>ts.tv_nsec<sp/>=<sp/>((</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/>int)useconds<sp/>%<sp/>1000000);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!<ref refid="usleep_8c_1a1beaecc28fb9396d30c206bde6aa4717" kindref="member">nanosleep</ref>(&amp;ts,&amp;ts))<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>==<sp/>EINTR)<sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ts.tv_sec;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/usleep.c"/>
+  </compounddef>
+</doxygen>

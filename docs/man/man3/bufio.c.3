@@ -1,0 +1,345 @@
+.TH "src/bufio.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/bufio.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+\fC#include <aplus/bufio\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBbufio_init\fP ()"
+.br
+.ti -1c
+.RI "void \fBbufio_free_unused\fP ()"
+.br
+.ti -1c
+.RI "\fBbufio_t\fP * \fBbufio_alloc\fP (size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBbufio_t\fP * \fBbufio_alloc_raw\fP (void *raw, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "void \fBbufio_free\fP (\fBbufio_t\fP *buf)"
+.br
+.ti -1c
+.RI "int \fBbufio_seek\fP (\fBbufio_t\fP *buf, off_t \fBoffset\fP, int dir)"
+.br
+.ti -1c
+.RI "int \fBbufio_tell\fP (\fBbufio_t\fP *buf)"
+.br
+.ti -1c
+.RI "void \fBbufio_clear\fP (\fBbufio_t\fP *buf)"
+.br
+.ti -1c
+.RI "int \fBbufio_read\fP (\fBbufio_t\fP *buf, void *ptr, size_t len)"
+.br
+.ti -1c
+.RI "int \fBbufio_write\fP (\fBbufio_t\fP *buf, void *ptr, size_t len)"
+.br
+.ti -1c
+.RI "\fBlist_t\fP * \fBbufio_find_by_type\fP (\fBuint32_t\fP \fBtype\fP)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "static \fBlist_t\fP * \fBlist_buffers\fP"
+.br
+.ti -1c
+.RI "static uint64_t \fBbuffers_length\fP"
+.br
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBbufio_t\fP* bufio_alloc (size_tsize)"
+
+.PP
+Definizione alla linea 45 del file bufio\&.c\&.
+.PP
+Referenzia buffers_length, current_task, kmalloc(), list_add(), lock, bufio::offset, bufio::raw, bufio::size, size, bufio::task, bufio::type, e unlock\&.
+.PP
+.nf
+45                                   {
+46     void* addr = (void*) kmalloc(size);
+47     if(!addr)
+48         return 0;
+49         
+50     lock(); 
+51     buffers_length += size;
+52 
+53 
+54     bufio_t* buf = (bufio_t*) kmalloc(size);
+55     buf->raw = addr;
+56     buf->size = size;
+57     buf->type = 0;
+58     buf->offset = (off_t) 0;
+59     buf->task = current_task;
+60 
+61 
+62     list_add(list_buffers, (listval_t) buf);
+63 
+64     unlock();
+65     return buf;
+66 }
+.fi
+.SS "\fBbufio_t\fP* bufio_alloc_raw (void *raw, size_tsize)"
+
+.PP
+Definizione alla linea 68 del file bufio\&.c\&.
+.PP
+Referenzia buffers_length, current_task, kmalloc(), list_add(), lock, bufio::offset, bufio::raw, bufio::size, size, bufio::task, bufio::type, e unlock\&.
+.PP
+.nf
+68                                                  {
+69     if(!raw)
+70         return 0;
+71 
+72     lock(); 
+73 
+74     buffers_length += size;
+75 
+76     bufio_t* buf = (bufio_t*) kmalloc(size);
+77     buf->raw = raw;
+78     buf->size = size;
+79     buf->type = 0;
+80     buf->offset = (off_t) 0;
+81     buf->task = current_task;
+82     
+83     list_add(list_buffers, (listval_t) buf);
+84 
+85     unlock();
+86     
+87     return buf;
+88 }
+.fi
+.SS "void bufio_clear (\fBbufio_t\fP *buf)"
+
+.PP
+Definizione alla linea 135 del file bufio\&.c\&.
+.PP
+Referenzia bufio::lock, bufio::raw, bufio::size, spinlock_lock(), e spinlock_unlock()\&.
+.PP
+.nf
+135                                {
+136     spinlock_lock(&buf->lock);
+137     memset(buf->raw, 0, buf->size);
+138     spinlock_unlock(&buf->lock);
+139 }
+.fi
+.SS "\fBlist_t\fP* bufio_find_by_type (\fBuint32_t\fPtype)"
+
+.PP
+Definizione alla linea 168 del file bufio\&.c\&.
+.PP
+Referenzia list_add(), list_foreach, list_init, bufio::type, e value\&.
+.PP
+.nf
+168                                           {
+169     list_t* tmp;
+170     list_init(tmp);
+171     
+172     list_foreach(value, list_buffers) {
+173         bufio_t* buf = (bufio_t*) value;
+174 
+175         if(buf->type == type)
+176             list_add(tmp, (listval_t) buf);
+177     }
+178     
+179     return tmp;
+180 }
+.fi
+.SS "void bufio_free (\fBbufio_t\fP *buf)"
+
+.PP
+Definizione alla linea 90 del file bufio\&.c\&.
+.PP
+Referenzia buffers_length, kfree(), list_remove(), lock, bufio::raw, bufio::size, e unlock\&.
+.PP
+.nf
+90                               {
+91     lock();
+92     buffers_length -= buf->size;
+93     
+94     kfree(buf->raw);
+95     kfree(buf);
+96     
+97     list_remove(list_buffers, (listval_t) buf);
+98     
+99     
+100     unlock();
+101 }
+.fi
+.SS "void bufio_free_unused ()"
+
+.PP
+Definizione alla linea 28 del file bufio\&.c\&.
+.PP
+Referenzia list_clone(), list_destroy, list_foreach, list_init, e value\&.
+.PP
+.nf
+28                          {
+29 
+30     list_t* tmp;
+31     list_init(tmp);
+32     list_clone(tmp, list_buffers);
+33     
+34     list_foreach(value, tmp) {
+35         //bufio_t* value = (bufio_t*) value;
+36         
+37         //if(value->task->state == TASK_STATE_DEAD)
+38         //  bufio_free(value);
+39     }
+40     
+41     list_destroy(tmp);
+42 }
+.fi
+.SS "int bufio_init ()"
+
+.PP
+Definizione alla linea 20 del file bufio\&.c\&.
+.PP
+Referenzia list_init\&.
+.PP
+.nf
+20                  {
+21     list_init(list_buffers);
+22     
+23     return 0;
+24 }
+.fi
+.SS "int bufio_read (\fBbufio_t\fP *buf, void *ptr, size_tlen)"
+
+.PP
+Definizione alla linea 141 del file bufio\&.c\&.
+.PP
+Referenzia bufio::lock, bufio::offset, bufio::raw, bufio::size, spinlock_lock(), e spinlock_unlock()\&.
+.PP
+.nf
+141                                                     {     
+142     spinlock_lock(&buf->lock);
+143     
+144     len = (len + buf->offset > buf->size) ? (buf->size - buf->offset) : len;
+145     memcpy(ptr, (void*) ((off_t) buf->raw + buf->offset), len);
+146     
+147     buf->offset += (off_t) len;
+148     
+149     spinlock_unlock(&buf->lock);
+150     
+151     return (int) len;
+152 }
+.fi
+.SS "int bufio_seek (\fBbufio_t\fP *buf, off_toffset, intdir)"
+
+.PP
+Definizione alla linea 103 del file bufio\&.c\&.
+.PP
+Referenzia bufio::offset, offset, e bufio::size\&.
+.PP
+.nf
+103                                                     {
+104 
+105     if(offset > buf->size)
+106         return -1;
+107         
+108     if(dir == SEEK_CUR && (offset + buf->offset) > buf->size)
+109         return -1;
+110 
+111     switch(dir) {
+112         case SEEK_SET:
+113             buf->offset = offset;
+114             break;
+115             
+116         case SEEK_END:
+117             buf->offset = buf->offset - offset;
+118             break;
+119             
+120         case SEEK_CUR:
+121             buf->offset += offset;
+122             break;
+123             
+124         default:
+125             return -1;
+126     }
+127     
+128     return buf->offset;
+129 }
+.fi
+.SS "int bufio_tell (\fBbufio_t\fP *buf)"
+
+.PP
+Definizione alla linea 131 del file bufio\&.c\&.
+.PP
+Referenzia bufio_seek()\&.
+.PP
+.nf
+131                              {
+132     return bufio_seek(buf, 0, SEEK_CUR);
+133 }
+.fi
+.SS "int bufio_write (\fBbufio_t\fP *buf, void *ptr, size_tlen)"
+
+.PP
+Definizione alla linea 154 del file bufio\&.c\&.
+.PP
+Referenzia bufio::lock, bufio::offset, bufio::raw, bufio::size, spinlock_lock(), e spinlock_unlock()\&.
+.PP
+.nf
+154                                                      {       
+155     
+156     spinlock_lock(&buf->lock);
+157     
+158     len = (len + buf->offset > buf->size) ? (buf->size - buf->offset) : len;
+159     memcpy((void*) ((off_t) buf->raw + buf->offset), ptr, len);
+160     
+161     buf->offset += (off_t) len;
+162     
+163     spinlock_unlock(&buf->lock);
+164     
+165     return (int) len;
+166 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "uint64_t buffers_length\fC [static]\fP"
+
+.PP
+Definizione alla linea 16 del file bufio\&.c\&.
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SS "\fBlist_t\fP* list_buffers\fC [static]\fP"
+
+.PP
+Definizione alla linea 15 del file bufio\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

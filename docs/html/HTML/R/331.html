@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>pci_device_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L19'>pci_device_t</a>       19 src/arch/pci.c pci_device_t* pci_devices = NULL;
+<a href='../S/160.html#L36'>pci_device_t</a>       36 src/arch/pci.c static uint32_t pci_get_device_id(pci_device_t* device) {
+<a href='../S/160.html#L40'>pci_device_t</a>       40 src/arch/pci.c static uint32_t pci_get_vendor_id(pci_device_t* device) {
+<a href='../S/160.html#L44'>pci_device_t</a>       44 src/arch/pci.c static uint32_t pci_get_intr_pin(pci_device_t* device) {
+<a href='../S/160.html#L48'>pci_device_t</a>       48 src/arch/pci.c static uint32_t pci_get_intr_line(pci_device_t* device) {
+<a href='../S/160.html#L52'>pci_device_t</a>       52 src/arch/pci.c static uint32_t pci_get_revision(pci_device_t* device) {
+<a href='../S/160.html#L56'>pci_device_t</a>       56 src/arch/pci.c static uint32_t pci_get_class(pci_device_t* device) {
+<a href='../S/160.html#L60'>pci_device_t</a>       60 src/arch/pci.c static uint32_t pci_get_header_type(pci_device_t* device) {
+<a href='../S/160.html#L65'>pci_device_t</a>       65 src/arch/pci.c static uint32_t pci_get_bar(pci_device_t* device, uint8_t bar) {
+<a href='../S/160.html#L77'>pci_device_t</a>       77 src/arch/pci.c static uint32_t pci_get_iobase(pci_device_t* device) {
+<a href='../S/160.html#L90'>pci_device_t</a>       90 src/arch/pci.c static uint32_t pci_get_membase(pci_device_t* device) {
+<a href='../S/160.html#L103'>pci_device_t</a>      103 src/arch/pci.c static void pci_load_device(pci_device_t* device, uint8_t bus, uint8_t dev, uint8_t func) {
+<a href='../S/160.html#L120'>pci_device_t</a>      120 src/arch/pci.c pci_device_t* pci_find_by_id(uint32_t vendorID, uint32_t deviceID) {
+<a href='../S/160.html#L131'>pci_device_t</a>      131 src/arch/pci.c int pci_find_by_class(pci_device_t** rdevs, uint32_t class, uint32_t length) {
+<a href='../S/160.html#L145'>pci_device_t</a>      145 src/arch/pci.c 	pci_devices = (pci_device_t*) kmalloc(PCI_MAX_DEVICES * sizeof(pci_device_t));
+<a href='../S/160.html#L146'>pci_device_t</a>      146 src/arch/pci.c 	memset(pci_devices, 0xFF, PCI_MAX_DEVICES * sizeof(pci_device_t));
+<a href='../S/89.html#L73'>pci_device_t</a>       73 src/include/aplus/netif.h 	pci_device_t* device;
+<a href='../S/104.html#L19'>pci_device_t</a>       19 src/net/rtl8139/rtl8139.c 	pci_device_t* device;
+<a href='../S/104.html#L167'>pci_device_t</a>      167 src/net/rtl8139/rtl8139.c 	pci_device_t* device = (pci_device_t*) pci_find_by_id(0x10EC, 0x8139);
+</pre>
+</body>
+</html>

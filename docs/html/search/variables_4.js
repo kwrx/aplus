@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['d_5fino',['d_ino',['../structdirent.html#aef01e92a29cba347e6e6a5f22d4908a2',1,'dirent']]],
+  ['d_5fname',['d_name',['../structdirent.html#a39a9af609c1808f0bdf90155bd3f55ed',1,'dirent']]],
+  ['data',['data',['../structnetif.html#af45fb467da3492eb4473cb9208044ac8',1,'netif::data()'],['../structnetif__packet.html#a3b4b8603d752944ba4360db33c5870b5',1,'netif_packet::data()']]],
+  ['dest',['dest',['../structeth__header.html#a60d1b5300409163d627fbe1f033ef3bc',1,'eth_header::dest()'],['../structipv4__header.html#ad678f7696656cd04188dd3442294a793',1,'ipv4_header::dest()'],['../structipv6__header.html#ae2c5d1ad1745ee57c4be6f9e5ed46511',1,'ipv6_header::dest()'],['../eth_8h.html#a15f677ba1a36e16b06f2b91f545be2f4',1,'dest():&#160;eth.h'],['../ipv4_8h.html#af6f6370d40d60101052050b5a6f3766b',1,'dest():&#160;ipv4.h'],['../ipv6_8h.html#ab4bf83701631abccacef4ebedf8db65e',1,'dest():&#160;ipv6.h']]],
+  ['detachstate',['detachstate',['../structpthread__attr.html#a2ac0f3f9d4513024bbafc7db17c25a46',1,'pthread_attr']]],
+  ['dev',['dev',['../structinode.html#a127a2eb030df332fa64a81188731ad6b',1,'inode::dev()'],['../structpci__device.html#ae456e0d5fb85c5d367b1a4e27f996b96',1,'pci_device::dev()']]],
+  ['devfs',['devfs',['../devfs_8c.html#a4765c88c7a671cb46fcf3db60a9e140a',1,'devfs.c']]],
+  ['device',['device',['../structnetif.html#a8d0c9464b5010487798a5ea8adce5a39',1,'netif::device()'],['../structcard.html#ac4d735012434df4c445edaffce28bd73',1,'card::device()']]],
+  ['deviceid',['deviceID',['../structpci__device.html#a86ce8ddd306b0395037ec7eee789a929',1,'pci_device']]],
+  ['directcolor_5fattributes',['directcolor_attributes',['../structvesaModeInfo__t.html#afb95209f1e3ffa74635cb68495ecec26',1,'vesaModeInfo_t::directcolor_attributes()'],['../grub_8h.html#a8badd781205f0a5db81752962c9357a6',1,'directcolor_attributes():&#160;grub.h']]],
+  ['dns',['dns',['../structnetif.html#a30f1247e8e2ef8ac954833c81873608e',1,'netif']]],
+  ['done',['done',['../structpthread__once.html#acffdc3852414e4eeece3c8e7cf80ffc1',1,'pthread_once']]],
+  ['drives_5faddr',['drives_addr',['../structBootInfo__t.html#aa355db96d835f264c29a00f15ba126bf',1,'BootInfo_t']]],
+  ['drives_5flength',['drives_length',['../structBootInfo__t.html#adc0745eb234059fc6eb37d8a6c18e4b4',1,'BootInfo_t']]],
+  ['ds',['ds',['../structregs.html#aa29daa3553339a188913853a1d91e30a',1,'regs::ds()'],['../aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b',1,'ds():&#160;aplus.h']]],
+  ['dst_5fport',['dst_port',['../structudp__header.html#a0cabb64601f3523a8defb137a90da96a',1,'udp_header::dst_port()'],['../udp_8h.html#ae18defed4756b8c15e34718f51e86e55',1,'dst_port():&#160;udp.h']]],
+  ['dtor',['dtor',['../struct____pthread__key.html#a8a2c00bb7dbce7d43b3078c6214bc390',1,'__pthread_key']]]
+];

@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>txBuffer</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/104.html#L27'>txBuffer</a>           27 src/net/rtl8139/rtl8139.c 	char* txBuffer;
+<a href='../S/104.html#L69'>txBuffer</a>           69 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;txBuffer, buf, len);
+<a href='../S/104.html#L71'>txBuffer</a>           71 src/net/rtl8139/rtl8139.c 		memset((void*) ((uint32_t) card-&gt;txBuffer + len), 0, 60 - len);
+<a href='../S/104.html#L79'>txBuffer</a>           79 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * curBuffer));
+<a href='../S/104.html#L211'>txBuffer</a>          211 src/net/rtl8139/rtl8139.c 	card-&gt;txBuffer = (char*) rtl8139_txbuffer;
+<a href='../S/104.html#L218'>txBuffer</a>          218 src/net/rtl8139/rtl8139.c 	memset(card-&gt;txBuffer, 0, TX_BUFFER_SIZE * 4 + 16);
+<a href='../S/104.html#L231'>txBuffer</a>          231 src/net/rtl8139/rtl8139.c 		int_out32(card, REG_TRANSMIT_ADDR0 + (4 * i), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * i));
+</pre>
+</body>
+</html>

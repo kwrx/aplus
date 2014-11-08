@@ -1,0 +1,82 @@
+<html>
+<head>
+<title>src/spinlock.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/spinlock.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L27'>[^]</a><a href='#L53'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L27' title='Defined at 27.'>spinlock_lock</a>
+<li><a href='#L37' title='Defined at 37.'>spinlock_unlock</a>
+<li><a href='#L41' title='Defined at 41.'>spinlock_trylock</a>
+<li><a href='#L49' title='Defined at 49.'>__spinlock_waiton</a>
+<li><a href='#L53' title='Defined at 53.'>__fastlock_waiton</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  spinlock.c</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L23'>  23 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L24'>  24 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L25'>  25 
+<a name='L26'>  26 
+<a name='L27'>  27 <b>void</b> <a href='../R/488.html' title='Multiple refered from 10 places.'>spinlock_lock</a>(<a href='../S/88.html#L29' title='Defined at 29 in src/include/aplus/spinlock.h.'>spinlock_t</a>* <a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a>) <font color='red'>{</font>
+<a name='L28'>  28         <b>if</b>((*<a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a> &amp; <a href='../S/88.html#L27' title='Defined at 27 in src/include/aplus/spinlock.h.'>SPINLOCK_FLAGS_FASTLOCK</a>) == 0)
+<a name='L29'>  29                 <a href='../S/88.html#L47' title='Defined at 47 in src/include/aplus/spinlock.h.'>spinlock_waiton</a>(*<a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a> &amp; <a href='../S/88.html#L26' title='Defined at 26 in src/include/aplus/spinlock.h.'>SPINLOCK_FLAGS_LOCKED</a>);
+<a name='L30'>  30         <b>else</b>
+<a name='L31'>  31                 <a href='../S/88.html#L51' title='Defined at 51 in src/include/aplus/spinlock.h.'>fastlock_waiton</a>(*<a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a> &amp; <a href='../S/88.html#L26' title='Defined at 26 in src/include/aplus/spinlock.h.'>SPINLOCK_FLAGS_LOCKED</a>);
+<a name='L32'>  32 
+<a name='L33'>  33         *<a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a> |= <a href='../S/88.html#L26' title='Defined at 26 in src/include/aplus/spinlock.h.'>SPINLOCK_FLAGS_LOCKED</a>;
+<a name='L34'>  34 <font color='red'>}</font>
+<a name='L35'>  35 
+<a name='L36'>  36 
+<a name='L37'>  37 <b>void</b> <a href='../R/491.html' title='Multiple refered from 10 places.'>spinlock_unlock</a>(<a href='../S/88.html#L29' title='Defined at 29 in src/include/aplus/spinlock.h.'>spinlock_t</a>* <a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a>) <font color='red'>{</font>
+<a name='L38'>  38         *<a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a> &amp;= ~<a href='../S/88.html#L26' title='Defined at 26 in src/include/aplus/spinlock.h.'>SPINLOCK_FLAGS_LOCKED</a>;
+<a name='L39'>  39 <font color='red'>}</font>
+<a name='L40'>  40 
+<a name='L41'>  41 <b>int</b> <a href='../S/88.html#L33' title='Refered from 33 in src/include/aplus/spinlock.h.'>spinlock_trylock</a>(<a href='../S/88.html#L29' title='Defined at 29 in src/include/aplus/spinlock.h.'>spinlock_t</a>* <a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a>) <font color='red'>{</font>
+<a name='L42'>  42         <b>if</b>(*<a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a> &amp; <a href='../S/88.html#L26' title='Defined at 26 in src/include/aplus/spinlock.h.'>SPINLOCK_FLAGS_LOCKED</a>)
+<a name='L43'>  43                 <b>return</b> -1;
+<a name='L44'>  44                 
+<a name='L45'>  45         *<a href='../Y/584.html' title='Multiple used in 15 places.'>spin</a> |= <a href='../S/88.html#L26' title='Defined at 26 in src/include/aplus/spinlock.h.'>SPINLOCK_FLAGS_LOCKED</a>;
+<a name='L46'>  46         <b>return</b> 0;
+<a name='L47'>  47 <font color='red'>}</font>
+<a name='L48'>  48 
+<a name='L49'>  49 <b>void</b> <a href='../R/191.html' title='Multiple refered from 2 places.'>__spinlock_waiton</a>() <font color='red'>{</font>
+<a name='L50'>  50         <a href='../S/143.html#L106' title='Defined at 106 in src/sched.c.'>schedule_yield</a>();
+<a name='L51'>  51 <font color='red'>}</font>
+<a name='L52'>  52 
+<a name='L53'>  53 <b>void</b> <a href='../R/179.html' title='Multiple refered from 2 places.'>__fastlock_waiton</a>() <font color='red'>{</font>
+<a name='L54'>  54         <b>__asm__</b> <b>__volatile__</b>("pause");
+<a name='L55'>  55 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L27'>[^]</a><a href='#L53'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

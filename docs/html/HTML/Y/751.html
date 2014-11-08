@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>vfs_root</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L45'>vfs_root</a>           45 src/arch/task.c extern volatile inode_t* vfs_root;
+<a href='../S/159.html#L193'>vfs_root</a>          193 src/arch/task.c 	current_task-&gt;cwd = (inode_t*) vfs_root;
+<a href='../S/147.html#L16'>vfs_root</a>           16 src/fs/devfs.c extern inode_t* vfs_root;
+<a href='../S/147.html#L74'>vfs_root</a>           74 src/fs/devfs.c 	devfs-&gt;parent = vfs_root;
+<a href='../S/144.html#L19'>vfs_root</a>           19 src/fs/vfs.c   inode_t* vfs_root; 
+<a href='../S/144.html#L73'>vfs_root</a>           73 src/fs/vfs.c   	vfs_root = root;
+<a href='../S/144.html#L74'>vfs_root</a>           74 src/fs/vfs.c   	vfs_root-&gt;parent = 0;
+<a href='../S/144.html#L85'>vfs_root</a>           85 src/fs/vfs.c   	vfs_root = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/144.html#L86'>vfs_root</a>           86 src/fs/vfs.c   	vfs_root-&gt;name[0] = '/';
+<a href='../S/144.html#L87'>vfs_root</a>           87 src/fs/vfs.c   	vfs_root-&gt;name[1] = 0;
+<a href='../S/144.html#L89'>vfs_root</a>           89 src/fs/vfs.c   	vfs_root-&gt;dev = (dev_t) 0;
+<a href='../S/144.html#L90'>vfs_root</a>           90 src/fs/vfs.c   	vfs_root-&gt;ino = (ino_t) nextinode++;
+<a href='../S/144.html#L91'>vfs_root</a>           91 src/fs/vfs.c   	vfs_root-&gt;mode = S_IFDIR;
+<a href='../S/144.html#L92'>vfs_root</a>           92 src/fs/vfs.c   	vfs_root-&gt;nlink = 0;
+<a href='../S/144.html#L93'>vfs_root</a>           93 src/fs/vfs.c   	vfs_root-&gt;uid = UID_ROOT;
+<a href='../S/144.html#L94'>vfs_root</a>           94 src/fs/vfs.c   	vfs_root-&gt;gid = GID_ROOT;
+<a href='../S/144.html#L95'>vfs_root</a>           95 src/fs/vfs.c   	vfs_root-&gt;rdev = (dev_t) 0;
+<a href='../S/144.html#L96'>vfs_root</a>           96 src/fs/vfs.c   	vfs_root-&gt;size = (size_t) 0;
+<a href='../S/144.html#L98'>vfs_root</a>           98 src/fs/vfs.c   	vfs_root-&gt;parent = (inode_t*) NULL;
+<a href='../S/144.html#L99'>vfs_root</a>           99 src/fs/vfs.c   	vfs_root-&gt;link = (inode_t*) NULL;
+<a href='../S/144.html#L101'>vfs_root</a>          101 src/fs/vfs.c   	vfs_root-&gt;read = NULL;
+<a href='../S/144.html#L102'>vfs_root</a>          102 src/fs/vfs.c   	vfs_root-&gt;write = NULL;
+<a href='../S/144.html#L103'>vfs_root</a>          103 src/fs/vfs.c   	vfs_root-&gt;readdir = NULL;
+<a href='../S/144.html#L104'>vfs_root</a>          104 src/fs/vfs.c   	vfs_root-&gt;finddir = NULL;
+<a href='../S/144.html#L105'>vfs_root</a>          105 src/fs/vfs.c   	vfs_root-&gt;creat = NULL;
+<a href='../S/144.html#L106'>vfs_root</a>          106 src/fs/vfs.c   	vfs_root-&gt;rename = NULL;
+<a href='../S/144.html#L107'>vfs_root</a>          107 src/fs/vfs.c   	vfs_root-&gt;unlink = NULL;
+<a href='../S/144.html#L108'>vfs_root</a>          108 src/fs/vfs.c   	vfs_root-&gt;chown = NULL;
+<a href='../S/144.html#L109'>vfs_root</a>          109 src/fs/vfs.c   	vfs_root-&gt;flush = NULL;
+<a href='../S/144.html#L110'>vfs_root</a>          110 src/fs/vfs.c   	vfs_root-&gt;ioctl = NULL;
+<a href='../S/144.html#L112'>vfs_root</a>          112 src/fs/vfs.c   	list_add(list_inodes, (listval_t) vfs_root);
+<a href='../S/154.html#L41'>vfs_root</a>           41 src/main.c     extern inode_t* vfs_root;
+<a href='../S/138.html#L16'>vfs_root</a>           16 src/syscall/fcntl.c extern inode_t* vfs_root;
+<a href='../S/139.html#L16'>vfs_root</a>           16 src/syscall/open.c extern inode_t* vfs_root;
+<a href='../S/139.html#L23'>vfs_root</a>           23 src/syscall/open.c 		cwd = vfs_root;
+<a href='../S/139.html#L28'>vfs_root</a>           28 src/syscall/open.c 		if(!vfs_root) {
+<a href='../S/139.html#L35'>vfs_root</a>           35 src/syscall/open.c 		cwd = vfs_root;
+<a href='../S/127.html#L16'>vfs_root</a>           16 src/syscall/read.c extern inode_t* vfs_root;
+<a href='../S/128.html#L16'>vfs_root</a>           16 src/syscall/write.c extern inode_t* vfs_root;
+</pre>
+</body>
+</html>

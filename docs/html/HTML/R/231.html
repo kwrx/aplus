@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>dirent</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/146.html#L32'>dirent</a>             32 src/fs/fs.c    struct dirent* fs_readdir (struct inode* inode, int index) {
+<a href='../S/146.html#L35'>dirent</a>             35 src/fs/fs.c    		struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
+<a href='../S/97.html#L58'>dirent</a>             58 src/include/aplus/fs.h 	struct dirent* (*readdir) (struct inode* inode, int index);
+<a href='../S/140.html#L9'>dirent</a>              9 src/syscall/readdir.c struct dirent* sys_readdir(int fd, int position) {
+<a href='../S/140.html#L21'>dirent</a>             21 src/syscall/readdir.c 	return (struct dirent*) fs_readdir(ino, position);
+<a href='../S/10.html#L54'>dirent</a>             54 usr/src/libposix/include/sys/dirent.h int alphasort(const struct dirent **a, const struct dirent **b);
+<a href='../S/10.html#L57'>dirent</a>             57 usr/src/libposix/include/sys/dirent.h struct dirent* readdir(DIR* d);
+<a href='../S/10.html#L59'>dirent</a>             59 usr/src/libposix/include/sys/dirent.h int scandir(const char *pathname, struct dirent ***namelist, int (*select)(const struct dirent *), int (*compar)(const struct dirent **, const struct dirent **));
+<a href='../S/20.html#L8'>dirent</a>              8 usr/src/libposix/src/config.h extern struct dirent* aplus_readdir(int, int);
+<a href='../S/32.html#L57'>dirent</a>             57 usr/src/libposix/src/getcwd.c 		struct dirent* ent;
+<a href='../S/35.html#L15'>dirent</a>             15 usr/src/libposix/src/readdir.c struct dirent* readdir(DIR* d) {
+<a href='../S/18.html#L23'>dirent</a>             23 usr/src/libposix/src/scandir.c 	const struct dirent* ent = NULL;
+<a href='../S/18.html#L24'>dirent</a>             24 usr/src/libposix/src/scandir.c 	const struct dirent** lst = (const struct dirent**) *namelist;
+</pre>
+</body>
+</html>

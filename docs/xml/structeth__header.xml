@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structeth__header" kind="struct" prot="public">
+    <compoundname>eth_header</compoundname>
+    <includes refid="eth_8h" local="no">eth.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structeth__header_1a60d1b5300409163d627fbe1f033ef3bc" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
+        <definition>macaddr_t eth_header::dest</definition>
+        <argsstring></argsstring>
+        <name>dest</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="21" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structeth__header_1a2f9bf23af31f9234e9ebe6efdf6f38da" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
+        <definition>macaddr_t eth_header::source</definition>
+        <argsstring></argsstring>
+        <name>source</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="22" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structeth__header_1a1f44bfea959183d53e42185c107fa7c0" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t eth_header::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="23" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="33">
+        <label>eth_header</label>
+        <link refid="structeth__header"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="20" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="20" bodyend="24"/>
+    <listofallmembers>
+      <member refid="structeth__header_1a60d1b5300409163d627fbe1f033ef3bc" prot="public" virt="non-virtual"><scope>eth_header</scope><name>dest</name></member>
+      <member refid="structeth__header_1a2f9bf23af31f9234e9ebe6efdf6f38da" prot="public" virt="non-virtual"><scope>eth_header</scope><name>source</name></member>
+      <member refid="structeth__header_1a1f44bfea959183d53e42185c107fa7c0" prot="public" virt="non-virtual"><scope>eth_header</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

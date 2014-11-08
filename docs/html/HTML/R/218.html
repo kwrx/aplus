@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>bufio_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/156.html#L45'>bufio_t</a>            45 src/bufio.c    bufio_t* bufio_alloc(size_t size) {
+<a href='../S/156.html#L54'>bufio_t</a>            54 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/156.html#L68'>bufio_t</a>            68 src/bufio.c    bufio_t* bufio_alloc_raw(void* raw, size_t size) {
+<a href='../S/156.html#L76'>bufio_t</a>            76 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/156.html#L90'>bufio_t</a>            90 src/bufio.c    void bufio_free(bufio_t* buf) {
+<a href='../S/156.html#L103'>bufio_t</a>           103 src/bufio.c    int bufio_seek(bufio_t* buf, off_t offset, int dir) {
+<a href='../S/156.html#L131'>bufio_t</a>           131 src/bufio.c    int bufio_tell(bufio_t* buf) {
+<a href='../S/156.html#L135'>bufio_t</a>           135 src/bufio.c    void bufio_clear(bufio_t* buf) {
+<a href='../S/156.html#L141'>bufio_t</a>           141 src/bufio.c    int bufio_read(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L154'>bufio_t</a>           154 src/bufio.c    int bufio_write(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L173'>bufio_t</a>           173 src/bufio.c    		bufio_t* buf = (bufio_t*) value;
+<a href='../S/145.html#L21'>bufio_t</a>            21 src/fs/pipe.c  	bufio_t* stream;
+<a href='../S/145.html#L66'>bufio_t</a>            66 src/fs/pipe.c  	pipe-&gt;stream = (bufio_t*) bufio_alloc(BUFSIZ);
+</pre>
+</body>
+</html>

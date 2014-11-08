@@ -1,0 +1,232 @@
+<html>
+<head>
+<title>src/include/aplus/list.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/list.h</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L49'>[^]</a><a href='#L156'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/19.html' title='Multiple included from 19 places.'>INCLUDED FROM</a></h2>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L49' title='Defined at 49.'>list_empty</a>
+<li><a href='#L56' title='Defined at 56.'>list_add</a>
+<li><a href='#L73' title='Defined at 73.'>list_remove</a>
+<li><a href='#L99' title='Defined at 99.'>list_clear</a>
+<li><a href='#L119' title='Defined at 119.'>list_clone</a>
+<li><a href='#L129' title='Defined at 129.'>list_prev</a>
+<li><a href='#L139' title='Defined at 139.'>list_next</a>
+<li><a href='#L149' title='Defined at 149.'>list_tail</a>
+<li><a href='#L156' title='Defined at 156.'>list_head</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  list.h</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#ifndef</font> <a href='../S/96.html#L23' title='Defined at 23 in src/include/aplus/list.h.'>_LIST_H</a>
+<a name='L23'>  23 <font color='darkred'>#define</font> <a href='../S/96.html#L22' title='Refered from 22 in src/include/aplus/list.h.'>_LIST_H</a>
+<a name='L24'>  24 
+<a name='L25'>  25 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L26'>  26 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L28'>  28 
+<a name='L29'>  29 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L30'>  30 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L31'>  31 
+<a name='L32'>  32 
+<a name='L33'>  33 <b>typedef</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../R/303.html' title='Multiple refered from 34 places.'>listval_t</a>;
+<a name='L34'>  34 
+<a name='L35'>  35 <b>typedef</b> <b>struct</b> <a href='../S/96.html#L38' title='Refered from 38 in src/include/aplus/list.h.'>list_body</a> <font color='red'>{</font>
+<a name='L36'>  36         <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L37'>  37         
+<a name='L38'>  38         <b>struct</b> <a href='../S/96.html#L35' title='Defined at 35 in src/include/aplus/list.h.'>list_body</a>* <a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>;
+<a name='L39'>  39 <font color='red'>}</font> <a href='../R/290.html' title='Multiple refered from 10 places.'>list_body_t</a>;
+<a name='L40'>  40 
+<a name='L41'>  41 <b>typedef</b> <b>struct</b> <a href='../R/287.html' title='Multiple refered from 38 places.'>list</a> <font color='red'>{</font>
+<a name='L42'>  42         <a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>;
+<a name='L43'>  43         
+<a name='L44'>  44         <a href='../S/88.html#L29' title='Defined at 29 in src/include/aplus/spinlock.h.'>spinlock_t</a> <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>;
+<a name='L45'>  45         <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L46'>  46 <font color='red'>}</font> <a href='../R/301.html' title='Multiple refered from 29 places.'>list_t</a>;
+<a name='L47'>  47 
+<a name='L48'>  48 
+<a name='L49'>  49 <b>static</b> <b>inline</b> <b>int</b> <a href='../R/294.html' title='Multiple refered from 4 places.'>list_empty</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>) <font color='red'>{</font>
+<a name='L50'>  50         <b>if</b>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>)
+<a name='L51'>  51                 <b>return</b> <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> == 0;
+<a name='L52'>  52         <b>else</b>
+<a name='L53'>  53                 <b>return</b> 1;       <i><font color='green'>/* empty */</font></i>
+<a name='L54'>  54 <font color='red'>}</font>
+<a name='L55'>  55 
+<a name='L56'>  56 <b>static</b> <b>inline</b> <b>int</b> <a href='../R/288.html' title='Multiple refered from 14 places.'>list_add</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>, <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>) <font color='red'>{</font>
+<a name='L57'>  57         <a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a> = (<a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>));
+<a name='L58'>  58         <b>if</b>(!<a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>)
+<a name='L59'>  59                 <b>return</b> -1;
+<a name='L60'>  60                 
+<a name='L61'>  61         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L62'>  62                 
+<a name='L63'>  63         <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> = <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>;
+<a name='L64'>  64         <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a> = <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>;
+<a name='L65'>  65         
+<a name='L66'>  66         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>;
+<a name='L67'>  67         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> += 1;
+<a name='L68'>  68         
+<a name='L69'>  69         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L70'>  70         <b>return</b> 0;
+<a name='L71'>  71 <font color='red'>}</font>
+<a name='L72'>  72 
+<a name='L73'>  73 <b>static</b> <b>inline</b> <b>int</b> <a href='../R/300.html' title='Multiple refered from 6 places.'>list_remove</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>, <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>) <font color='red'>{</font>
+<a name='L74'>  74         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L75'>  75         
+<a name='L76'>  76         <a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>;
+<a name='L77'>  77         <a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/481.html' title='Multiple used in 4 places.'>prev</a> = 0;
+<a name='L78'>  78         
+<a name='L79'>  79         <b>while</b>(<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>) <font color='red'>{</font>
+<a name='L80'>  80                 <b>if</b>(<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> == <a href='../Y/729.html' title='Multiple used in 11 places.'>v</a>) <font color='red'>{</font>
+<a name='L81'>  81                         <b>if</b>(<a href='../Y/481.html' title='Multiple used in 4 places.'>prev</a>)
+<a name='L82'>  82                                 <a href='../Y/481.html' title='Multiple used in 4 places.'>prev</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a> = <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>;
+<a name='L83'>  83                         <b>else</b>
+<a name='L84'>  84                                 <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>;
+<a name='L85'>  85                                 
+<a name='L86'>  86                         <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> = 0;
+<a name='L87'>  87                         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>);
+<a name='L88'>  88                         <b>break</b>;
+<a name='L89'>  89                 <font color='red'>}</font>
+<a name='L90'>  90                 
+<a name='L91'>  91                 <a href='../Y/481.html' title='Multiple used in 4 places.'>prev</a> = <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>;
+<a name='L92'>  92                 <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>;
+<a name='L93'>  93         <font color='red'>}</font>
+<a name='L94'>  94         
+<a name='L95'>  95         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L96'>  96         <b>return</b> 0;
+<a name='L97'>  97 <font color='red'>}</font>
+<a name='L98'>  98 
+<a name='L99'>  99 <b>static</b> <b>inline</b> <b>int</b> <a href='../S/96.html#L194' title='Refered from 194 in src/include/aplus/list.h.'>list_clear</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>) <font color='red'>{</font>
+<a name='L100'> 100         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L101'> 101         
+<a name='L102'> 102         <a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>;
+<a name='L103'> 103         <a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a> = <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>;
+<a name='L104'> 104         
+<a name='L105'> 105         <b>while</b>(<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>) <font color='red'>{</font>
+<a name='L106'> 106                 <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a> = <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>;
+<a name='L107'> 107                 <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>);
+<a name='L108'> 108                 <a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>;
+<a name='L109'> 109         <font color='red'>}</font>
+<a name='L110'> 110         
+<a name='L111'> 111         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = 0;
+<a name='L112'> 112         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> = 0;
+<a name='L113'> 113         
+<a name='L114'> 114         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L115'> 115         <b>return</b> 0;
+<a name='L116'> 116 <font color='red'>}</font>
+<a name='L117'> 117 
+<a name='L118'> 118 
+<a name='L119'> 119 <b>static</b> <b>inline</b> <b>void</b> <a href='../S/156.html#L32' title='Refered from 32 in src/bufio.c.'>list_clone</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/586.html' title='Multiple used in 4 places.'>src</a>) <font color='red'>{</font>
+<a name='L120'> 120         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../Y/586.html' title='Multiple used in 4 places.'>src</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L121'> 121         
+<a name='L122'> 122         <b>for</b>(<a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = <a href='../Y/586.html' title='Multiple used in 4 places.'>src</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>) <font color='red'>{</font>
+<a name='L123'> 123                 <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>);
+<a name='L124'> 124         <font color='red'>}</font>
+<a name='L125'> 125         
+<a name='L126'> 126         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../Y/586.html' title='Multiple used in 4 places.'>src</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L127'> 127 <font color='red'>}</font>
+<a name='L128'> 128 
+<a name='L129'> 129 <b>static</b> <b>inline</b> <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../S/96.html#L184' title='Refered from 184 in src/include/aplus/list.h.'>list_prev</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>, <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>) <font color='red'>{</font>
+<a name='L130'> 130         <b>for</b>(<a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>) <font color='red'>{</font>
+<a name='L131'> 131                 <b>if</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> == <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>)
+<a name='L132'> 132                         <b>if</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>)
+<a name='L133'> 133                                 <b>return</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L134'> 134         <font color='red'>}</font>
+<a name='L135'> 135         
+<a name='L136'> 136         <b>return</b> (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L137'> 137 <font color='red'>}</font>
+<a name='L138'> 138 
+<a name='L139'> 139 <b>static</b> <b>inline</b> <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../R/298.html' title='Multiple refered from 2 places.'>list_next</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>, <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>) <font color='red'>{</font>
+<a name='L140'> 140         <b>for</b>(<a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>) <font color='red'>{</font>
+<a name='L141'> 141                 <b>if</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>)
+<a name='L142'> 142                         <b>if</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> == <a href='../Y/737.html' title='Multiple used in 13 places.'>val</a>)
+<a name='L143'> 143                                 <b>return</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L144'> 144         <font color='red'>}</font>
+<a name='L145'> 145         
+<a name='L146'> 146         <b>return</b> (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L147'> 147 <font color='red'>}</font>
+<a name='L148'> 148 
+<a name='L149'> 149 <b>static</b> <b>inline</b> <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../S/96.html#L182' title='Refered from 182 in src/include/aplus/list.h.'>list_tail</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>) <font color='red'>{</font>
+<a name='L150'> 150         <b>if</b>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>)
+<a name='L151'> 151                 <b>return</b> <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L152'> 152                 
+<a name='L153'> 153         <b>return</b> (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L154'> 154 <font color='red'>}</font>
+<a name='L155'> 155 
+<a name='L156'> 156 <b>static</b> <b>inline</b> <a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../R/296.html' title='Multiple refered from 2 places.'>list_head</a>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>) <font color='red'>{</font>
+<a name='L157'> 157 
+<a name='L158'> 158         <b>if</b>(!<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>)
+<a name='L159'> 159                 <b>return</b> (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L160'> 160         
+<a name='L161'> 161         <a href='../S/96.html#L39' title='Defined at 39 in src/include/aplus/list.h.'>list_body_t</a>* <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a> = <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a>;
+<a name='L162'> 162         <b>while</b>(<a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>)
+<a name='L163'> 163                 <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a> = <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>;
+<a name='L164'> 164                 
+<a name='L165'> 165         <b>return</b> (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/687.html' title='Multiple used in 53 places.'>tmp</a>-&gt;<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L166'> 166 <font color='red'>}</font>
+<a name='L167'> 167 
+<a name='L168'> 168 
+<a name='L169'> 169 <font color='darkred'>#define</font> list_safe_begin(<a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>)                                                           \
+<a name='L170'> 170         <a href='../S/149.html#L27' title='Defined at 27 in src/spinlock.c.'>spinlock_lock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>)
+<a name='L171'> 171         
+<a name='L172'> 172 <font color='darkred'>#define</font> list_safe_end(<a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>)                                                                     \
+<a name='L173'> 173         <a href='../S/149.html#L37' title='Defined at 37 in src/spinlock.c.'>spinlock_unlock</a>(&amp;<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>)
+<a name='L174'> 174         
+<a name='L175'> 175 <font color='darkred'>#define</font> <a href='../R/295.html' title='Multiple refered from 19 places.'>list_foreach</a>(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>)                                                       \
+<a name='L176'> 176         <b>for</b>(<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> = <a href='../S/96.html#L156' title='Defined at 156 in src/include/aplus/list.h.'>list_head</a>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>);                                  \
+<a name='L177'> 177                 <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;                                                                                          \
+<a name='L178'> 178                 <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> = <a href='../S/96.html#L139' title='Defined at 139 in src/include/aplus/list.h.'>list_next</a>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)                                          \
+<a name='L179'> 179                 )
+<a name='L180'> 180                 
+<a name='L181'> 181 <font color='darkred'>#define</font> list_foreach_inverse(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>)                                       \
+<a name='L182'> 182         <b>for</b>(<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a> <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> = <a href='../S/96.html#L149' title='Defined at 149 in src/include/aplus/list.h.'>list_tail</a>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>);                                  \
+<a name='L183'> 183                 <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;                                                                                          \
+<a name='L184'> 184                 <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a> = <a href='../S/96.html#L129' title='Defined at 129 in src/include/aplus/list.h.'>list_prev</a>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)                                          \
+<a name='L185'> 185                 )
+<a name='L186'> 186 
+<a name='L187'> 187 <font color='darkred'>#define</font> <a href='../R/297.html' title='Multiple refered from 11 places.'>list_init</a>(<a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>)                                                                         \
+<a name='L188'> 188         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a> = (<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>));                               \
+<a name='L189'> 189         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/137.html' title='Multiple used in 27 places.'>body</a> = 0;                                                                                 \
+<a name='L190'> 190         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../Y/578.html' title='Multiple used in 91 places.'>size</a> = 0;                                                                                 \
+<a name='L191'> 191         <a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>-&gt;<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a> = 0
+<a name='L192'> 192         
+<a name='L193'> 193 <font color='darkred'>#define</font> <a href='../R/293.html' title='Multiple refered from 3 places.'>list_destroy</a>(<a href='../Y/361.html' title='Multiple used in 16 places.'>list</a>)                                                                      \
+<a name='L194'> 194         <a href='../S/96.html#L99' title='Defined at 99 in src/include/aplus/list.h.'>list_clear</a>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>);                                                                               \
+<a name='L195'> 195         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../S/96.html#L41' title='Defined at 41 in src/include/aplus/list.h.'>list</a>)
+<a name='L196'> 196 
+<a name='L197'> 197 
+<a name='L198'> 198 
+<a name='L199'> 199 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L49'>[^]</a><a href='#L156'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

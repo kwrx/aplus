@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>rtc</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L380'>rtc</a>               380 src/arch/desc.c 	t.tm_sec = BCD2BIN(rtc(0));
+<a href='../S/158.html#L381'>rtc</a>               381 src/arch/desc.c 	t.tm_min = BCD2BIN(rtc(2));
+<a href='../S/158.html#L382'>rtc</a>               382 src/arch/desc.c 	t.tm_hour = BCD2BIN2(rtc(4)) + 2;
+<a href='../S/158.html#L383'>rtc</a>               383 src/arch/desc.c 	t.tm_mday = BCD2BIN(rtc(7));
+<a href='../S/158.html#L384'>rtc</a>               384 src/arch/desc.c 	t.tm_mon = BCD2BIN(rtc(8)) - 1;
+<a href='../S/158.html#L385'>rtc</a>               385 src/arch/desc.c 	t.tm_year = (BCD2BIN(rtc(9)) + 100);
+</pre>
+</body>
+</html>

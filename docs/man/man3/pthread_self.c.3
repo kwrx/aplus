@@ -1,0 +1,67 @@
+.TH "usr/src/libpthread/src/pthread_self.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_self.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP \fBpthread_t\fP \fBpthread_self\fP (void)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBEXTERN\fP \fBpthread_context_t\fP * \fB__pthread_queue\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP \fBpthread_t\fP pthread_self (void)"
+
+.PP
+Definizione alla linea 10 del file pthread_self\&.c\&.
+.PP
+Referenzia __os_gettid, __pthread_queue, errno, pthread_context::next, e pthread_context::tid\&.
+.PP
+.nf
+10                                     {
+11     if(!__pthread_queue) {
+12         errno = ESRCH;
+13         return 0;
+14     }
+15 
+16     int tid = __os_gettid();
+17     pthread_context_t* tmp = __pthread_queue;
+18     while(tmp) {
+19         if(tmp->tid == tid)
+20             return (pthread_t) tmp;
+21 
+22         tmp = tmp->next;
+23     }
+24 
+25     errno = ESRCH;
+26     return 0;
+27 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBEXTERN\fP \fBpthread_context_t\fP* __pthread_queue"
+
+.PP
+Definizione alla linea 8 del file pthread_self\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

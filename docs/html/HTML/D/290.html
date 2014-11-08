@@ -1,0 +1,13 @@
+<html>
+<head>
+<title>__os_thread_create</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/62.html#L16'>__os_thread_create</a>   16 usr/src/libpthread/src/platform/posix/hooks.h #define __os_thread_create(e, a, p)			clone((int(*)(void*)) e, NULL, CLONE_VM, a)
+<a href='../S/63.html#L9'>__os_thread_create</a>    9 usr/src/libpthread/src/platform/win32/hooks.h #define __os_thread_create(e, a, p)			((int) CreateThread(0, 0, e, a, 0))					
+</pre>
+</body>
+</html>

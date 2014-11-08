@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="usr_2src_2libpthread_2README_8md" kind="file">
+    <compoundname>README.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Posix<sp/>Thread<sp/>library</highlight></codeline>
+<codeline><highlight class="normal">POSIX<sp/>Threads,<sp/>usually<sp/>referred<sp/>to<sp/>as<sp/>Pthreads,<sp/>is<sp/>a<sp/>POSIX<sp/>standard<sp/>for<sp/>threads.<sp/>The<sp/>standard,<sp/>POSIX.1c,<sp/>Threads<sp/>extensions<sp/>(IEEE<sp/>Std<sp/>1003.1c-1995),<sp/>defines<sp/>an<sp/>API<sp/>for<sp/>creating<sp/>and<sp/>manipulating<sp/>threads.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Required<sp/>function</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Create<sp/>a<sp/>Thread;</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Terminate<sp/>a<sp/>Thread;</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Get<sp/>Thread<sp/>ID.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/>tid_t<sp/>__os_thread_create(void*<sp/>entrypoint,<sp/>void*<sp/>params,<sp/>int<sp/>priority);</highlight></codeline>
+<codeline><highlight class="normal"><sp/>int<sp/>__os_thread_kill(int<sp/>killid,<sp/>int<sp/>exitcode);</highlight></codeline>
+<codeline><highlight class="normal"><sp/>tid_t<sp/>__os_gettid();</highlight></codeline>
+<codeline><highlight class="normal"><sp/></highlight></codeline>
+<codeline><highlight class="normal"><sp/>See<sp/>&quot;/platform/win32/hooks.h&quot;<sp/>as<sp/>example.</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">####<sp/>Current<sp/>status</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Thread<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Thread<sp/>attribute<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Scheduling<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Thread<sp/>specific<sp/>data<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Mutex<sp/>attribute<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Mutex<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Condition<sp/>variable<sp/>attribute<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Condition<sp/>variable<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Barrier<sp/>attribute<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Barrier<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Read-write<sp/>lock<sp/>attribute<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Read-write<sp/>lock<sp/>functions</highlight></codeline>
+<codeline><highlight class="normal">-<sp/>[X]<sp/>Spinlock<sp/>functions</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/README.md"/>
+  </compounddef>
+</doxygen>

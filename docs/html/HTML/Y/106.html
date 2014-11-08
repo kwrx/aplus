@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>argv</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/90.html#L99'>argv</a>               99 src/include/aplus/task.h 	char** argv;
+<a href='../S/141.html#L12'>argv</a>               12 src/syscall/execve.c int sys_execve(char* filename, char** argv, char** environ) {
+<a href='../S/141.html#L46'>argv</a>               46 src/syscall/execve.c 		current_task-&gt;argv = argv;
+<a href='../S/84.html#L70'>argv</a>               70 usr/src/libcrt0/src/crt0.c 	char** argv = (char**) aplus_argv();
+<a href='../S/84.html#L73'>argv</a>               73 usr/src/libcrt0/src/crt0.c 	while(argv[argc])
+<a href='../S/84.html#L91'>argv</a>               91 usr/src/libcrt0/src/crt0.c 	exit(main(argc, argv, environ));
+<a href='../S/79.html#L16'>argv</a>               16 usr/src/libcrt0/test/main.c static int test_args(int argc, char** argv) {
+<a href='../S/79.html#L22'>argv</a>               22 usr/src/libcrt0/test/main.c 		printf("argv[%d] =&gt; \"%s\"\n", i, argv[i]);
+<a href='../S/79.html#L34'>argv</a>               34 usr/src/libcrt0/test/main.c int main(int argc, char** argv) {
+<a href='../S/79.html#L37'>argv</a>               37 usr/src/libcrt0/test/main.c 	assert(test_args(argc, argv) &amp;&amp; "Test arguments failed");
+<a href='../S/19.html#L39'>argv</a>               39 usr/src/libposix/src/execl.c   _CONST char *argv[256];
+<a href='../S/19.html#L42'>argv</a>               42 usr/src/libposix/src/execl.c   argv[0] = arg0;
+<a href='../S/19.html#L45'>argv</a>               45 usr/src/libposix/src/execl.c       argv[i] = va_arg (args, _CONST char *);
+<a href='../S/19.html#L46'>argv</a>               46 usr/src/libposix/src/execl.c   while (argv[i++] != NULL);
+<a href='../S/19.html#L49'>argv</a>               49 usr/src/libposix/src/execl.c   return _execve (path, (char * _CONST  *) argv, *p_environ);
+<a href='../S/39.html#L36'>argv</a>               36 usr/src/libposix/src/execle.c   _CONST char *argv[256];
+<a href='../S/39.html#L39'>argv</a>               39 usr/src/libposix/src/execle.c   argv[0] = arg0;
+<a href='../S/39.html#L42'>argv</a>               42 usr/src/libposix/src/execle.c     argv[i] = va_arg (args, _CONST char *);
+<a href='../S/39.html#L43'>argv</a>               43 usr/src/libposix/src/execle.c   while (argv[i++] != NULL);
+<a href='../S/39.html#L47'>argv</a>               47 usr/src/libposix/src/execle.c   return _execve (path, (char * _CONST *) argv, (char * _CONST *) envp);
+<a href='../S/30.html#L35'>argv</a>               35 usr/src/libposix/src/execlp.c   _CONST char *argv[256];
+<a href='../S/30.html#L38'>argv</a>               38 usr/src/libposix/src/execlp.c   argv[0] = arg0;
+<a href='../S/30.html#L41'>argv</a>               41 usr/src/libposix/src/execlp.c       argv[i] = va_arg (args, _CONST char *);
+<a href='../S/30.html#L42'>argv</a>               42 usr/src/libposix/src/execlp.c   while (argv[i++] != NULL);
+<a href='../S/30.html#L45'>argv</a>               45 usr/src/libposix/src/execlp.c   return execvp (path, (char * _CONST *) argv);
+<a href='../S/22.html#L17'>argv</a>               17 usr/src/libposix/src/execv.c _DEFUN (execv, (path, argv), 
+<a href='../S/22.html#L19'>argv</a>               19 usr/src/libposix/src/execv.c 	char * const argv[])
+<a href='../S/22.html#L21'>argv</a>               21 usr/src/libposix/src/execv.c   return _execve (path, (char * _CONST *) argv, *p_environ);
+<a href='../S/29.html#L39'>argv</a>               39 usr/src/libposix/src/execvp.c _DEFUN (execvp, (file, argv),
+<a href='../S/29.html#L41'>argv</a>               41 usr/src/libposix/src/execvp.c 	char * _CONST argv[])
+<a href='../S/29.html#L48'>argv</a>               48 usr/src/libposix/src/execvp.c     return execv (file, argv);
+<a href='../S/29.html#L53'>argv</a>               53 usr/src/libposix/src/execvp.c     return execv (file, argv);
+<a href='../S/29.html#L62'>argv</a>               62 usr/src/libposix/src/execvp.c       if(execv (buf, argv) == 0)
+<a href='../S/47.html#L12'>argv</a>               12 usr/src/libpthread/test/main.c int main(int argc, char** argv) {
+</pre>
+</body>
+</html>

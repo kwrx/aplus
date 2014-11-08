@@ -1,0 +1,180 @@
+.TH "src/fs/pipe.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/fs/pipe.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/bufio\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBpipeinfo\fP"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBpipeinfo\fP \fBpipeinfo_t\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBpipe_read\fP (\fBinode_t\fP *\fBinode\fP, char *ptr, int len)"
+.br
+.ti -1c
+.RI "int \fBpipe_write\fP (\fBinode_t\fP *\fBinode\fP, char *ptr, int len)"
+.br
+.ti -1c
+.RI "void \fBpipe_flush\fP (\fBinode_t\fP *\fBinode\fP)"
+.br
+.ti -1c
+.RI "int \fBpipe_create\fP (\fBinode_t\fP inodes[2])"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fBpipeinfo\fP  \fBpipeinfo_t\fP"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int pipe_create (\fBinode_t\fPinodes[2])"
+
+.PP
+Definizione alla linea 63 del file pipe\&.c\&.
+.PP
+Referenzia bufio_alloc(), inode::flush, inode::gid, task::gid, kmalloc(), inode::mode, name, pipe_flush(), pipe_read(), pipe_write(), inode::read, pipeinfo::read_offset, inode::size, pipeinfo::stream, inode::uid, task::uid, inode::userdata, inode::write, e pipeinfo::write_offset\&.
+.PP
+.nf
+63                                    {
+64 
+65     pipeinfo_t* pipe = (pipeinfo_t*) kmalloc(sizeof(pipeinfo_t));
+66     pipe->stream = (bufio_t*) bufio_alloc(BUFSIZ);
+67     pipe->read_offset = 0;
+68     pipe->write_offset = 0;
+69 
+70 
+71     for(int i = 0; i < 2; i++) {
+72         memset((void*) &inodes[i], 0, sizeof(inode_t));
+73         
+74         //inodes[i]\&.atime = inodes[i]\&.mtime = inodes[i]\&.ctime = time(NULL);
+75         inodes[i]\&.read = pipe_read;
+76         inodes[i]\&.write = pipe_write;
+77         inodes[i]\&.flush = pipe_flush;
+78         inodes[i]\&.uid = current_task->uid;
+79         inodes[i]\&.gid = current_task->gid;
+80         inodes[i]\&.mode = S_IFIFO;
+81         inodes[i]\&.userdata = (void*) pipe;
+82         inodes[i]\&.size = (size_t) BUFSIZ;
+83     }
+84     
+85     
+86     strcpy(inodes[0]\&.name, "[pipe:read]");
+87     strcpy(inodes[1]\&.name, "[pipe:write]");
+88     
+89     return 0;
+90 }
+.fi
+.SS "void pipe_flush (\fBinode_t\fP *inode)"
+
+.PP
+Definizione alla linea 54 del file pipe\&.c\&.
+.PP
+Referenzia bufio_free(), kfree(), pipeinfo::stream, e inode::userdata\&.
+.PP
+.nf
+54                                 {
+55     pipeinfo_t* pipe = inode->userdata;
+56     
+57     bufio_free(pipe->stream);
+58     kfree(pipe);
+59 }
+.fi
+.SS "int pipe_read (\fBinode_t\fP *inode, char *ptr, intlen)"
+
+.PP
+Definizione alla linea 27 del file pipe\&.c\&.
+.PP
+Referenzia bufio_read(), bufio_seek(), bufio_tell(), pipeinfo::read_offset, bufio::size, spinlock_waiton, pipeinfo::stream, inode::userdata, e pipeinfo::write_offset\&.
+.PP
+.nf
+27                                                   {
+28     pipeinfo_t* pipe = inode->userdata;
+29     
+30     spinlock_waiton(pipe->read_offset + len > pipe->write_offset);
+31     
+32     bufio_seek(pipe->stream, pipe->read_offset % pipe->stream->size, SEEK_SET);
+33     
+34     size_t tolen = 0;
+35     while((tolen = bufio_read(pipe->stream, (void*) ((off_t) ptr + (off_t) tolen), len)) < len)
+36         bufio_seek(pipe->stream, 0, SEEK_SET);
+37         
+38     pipe->write_offset = bufio_tell(pipe->stream);
+39     return (int) len;
+40 }
+.fi
+.SS "int pipe_write (\fBinode_t\fP *inode, char *ptr, intlen)"
+
+.PP
+Definizione alla linea 42 del file pipe\&.c\&.
+.PP
+Referenzia bufio_seek(), bufio_tell(), bufio_write(), bufio::size, pipeinfo::stream, inode::userdata, e pipeinfo::write_offset\&.
+.PP
+.nf
+42                                                    {
+43     pipeinfo_t* pipe = inode->userdata;
+44     bufio_seek(pipe->stream, pipe->write_offset % pipe->stream->size, SEEK_SET);
+45     
+46     size_t tolen = 0;
+47     while((tolen = bufio_write(pipe->stream, (void*) ((off_t) ptr + (off_t) tolen), len)) < len)
+48         bufio_seek(pipe->stream, 0, SEEK_SET);
+49         
+50     pipe->write_offset = bufio_tell(pipe->stream);
+51     return (int) len;
+52 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

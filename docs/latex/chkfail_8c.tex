@@ -1,0 +1,71 @@
+\hypertarget{chkfail_8c}{\section{Riferimenti per il file usr/src/libssp/src/chkfail.c}
+\label{chkfail_8c}\index{usr/src/libssp/src/chkfail.\+c@{usr/src/libssp/src/chkfail.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{chkfail_8c_adc3192edb8f484b8bd460a9f5e3ab023}{S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D}~0xe2dee396
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{chkfail_8c_a1b6824bfd4ec0404a4f875ed8db0274e}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((noreturn))
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{chkfail_8c_a4d89a2b9acdd92bbf45a2af64c570bb3}{\+\_\+\+\_\+stack\+\_\+chk\+\_\+guard} = (void$\ast$) \hyperlink{chkfail_8c_adc3192edb8f484b8bd460a9f5e3ab023}{S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{chkfail_8c_adc3192edb8f484b8bd460a9f5e3ab023}{\index{chkfail.\+c@{chkfail.\+c}!S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D@{S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D}}
+\index{S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D@{S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D}!chkfail.\+c@{chkfail.\+c}}
+\subsubsection[{S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D~0xe2dee396}}\label{chkfail_8c_adc3192edb8f484b8bd460a9f5e3ab023}
+
+
+Definizione alla linea 10 del file chkfail.\+c.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{chkfail_8c_a1b6824bfd4ec0404a4f875ed8db0274e}{\index{chkfail.\+c@{chkfail.\+c}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!chkfail.\+c@{chkfail.\+c}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(noreturn)}]{}
+\end{DoxyParamCaption}
+)}}\label{chkfail_8c_a1b6824bfd4ec0404a4f875ed8db0274e}
+
+
+Definizione alla linea 18 del file chkfail.\+c.
+
+
+\begin{DoxyCode}
+19                             \{
+20 
+21 \textcolor{preprocessor}{#ifdef \_\_GNU\_LIBRARY\_\_}
+22     \textcolor{keyword}{extern} \textcolor{keywordtype}{char}* \_\_progname;
+23 \textcolor{preprocessor}{#else}
+24     \textcolor{keyword}{static} \textcolor{keyword}{const} \textcolor{keywordtype}{char} \_\_progname[] = \textcolor{stringliteral}{"panic"};
+25 \textcolor{preprocessor}{#endif}
+26 
+27     fprintf(stderr, \textcolor{stringliteral}{"%s: stack smashing detected\(\backslash\)n"}, \_\_progname);
+28     abort();
+29 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{chkfail_8c_a4d89a2b9acdd92bbf45a2af64c570bb3}{\index{chkfail.\+c@{chkfail.\+c}!\+\_\+\+\_\+stack\+\_\+chk\+\_\+guard@{\+\_\+\+\_\+stack\+\_\+chk\+\_\+guard}}
+\index{\+\_\+\+\_\+stack\+\_\+chk\+\_\+guard@{\+\_\+\+\_\+stack\+\_\+chk\+\_\+guard}!chkfail.\+c@{chkfail.\+c}}
+\subsubsection[{\+\_\+\+\_\+stack\+\_\+chk\+\_\+guard}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ \+\_\+\+\_\+stack\+\_\+chk\+\_\+guard = (void$\ast$) {\bf S\+T\+A\+C\+K\+\_\+\+C\+H\+K\+\_\+\+G\+U\+A\+R\+D}}}\label{chkfail_8c_a4d89a2b9acdd92bbf45a2af64c570bb3}
+
+
+Definizione alla linea 15 del file chkfail.\+c.
+

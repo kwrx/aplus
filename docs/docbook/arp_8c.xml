@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="arp_8c">
+    <title>arp.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/netif.h&gt;</programlisting>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/net/eth.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/net/arp.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="arp_8c_1af0c8c4708050f018c061291a0b18275f">arp_cache</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="arp_8h_1a9b4be1be5ee1e2531c81fa075b4f55d1">arp_cache_entry_t</link> * <link linkend="arp_8c_1adfa3881c2f0f72ec135119b5260a5039">arp_cache_find_by_macaddr</link> (
+<link linkend="netif_8h_1a95d524a06a1ff12a314f88bac04db658">macaddr_t</link> macaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65">arp_cache_add</link> (
+<link linkend="netif_8h_1a95d524a06a1ff12a314f88bac04db658">macaddr_t</link> macaddr, <link linkend="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a">ipv4_t</link> ipv4)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c">arp_recv</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif, void * buf, size_t length)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="arp_8c_1a0494cc7052a3d81efd628c0e4cc98f97">arp_send</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/net/arp.c</para>
+    </simplesect>
+</section>

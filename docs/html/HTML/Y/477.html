@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>policy</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/26.html#L14'>policy</a>             14 usr/src/libposix/src/sched.c int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param) {
+<a href='../S/26.html#L60'>policy</a>             60 usr/src/libposix/src/sched.c int sched_get_priority_max(int policy) {
+<a href='../S/26.html#L65'>policy</a>             65 usr/src/libposix/src/sched.c int sched_get_priority_min(int policy) {
+<a href='../S/43.html#L175'>policy</a>            175 usr/src/libpthread/include/pthread.h int pthread_attr_getschedpolicy(pthread_attr_t *attr, int *policy);
+<a href='../S/43.html#L176'>policy</a>            176 usr/src/libpthread/include/pthread.h int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy);
+<a href='../S/43.html#L202'>policy</a>            202 usr/src/libpthread/include/pthread.h int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param);
+<a href='../S/43.html#L203'>policy</a>            203 usr/src/libpthread/include/pthread.h int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param);
+<a href='../S/65.html#L123'>policy</a>            123 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getschedpolicy(pthread_attr_t *attr, int *policy) {
+<a href='../S/65.html#L128'>policy</a>            128 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy) {
+<a href='../S/51.html#L11'>policy</a>             11 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param) {
+<a href='../S/51.html#L26'>policy</a>             26 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param) {
+<a href='../S/51.html#L38'>policy</a>             38 usr/src/libpthread/src/pthread_sched.c 	if((*policy = sched_getparam(ctx-&gt;tid, param)) != -1)
+</pre>
+</body>
+</html>

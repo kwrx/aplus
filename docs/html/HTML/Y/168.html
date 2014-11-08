@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>context</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L75'>context</a>            75 src/arch/task.c 	child-&gt;context.cr3 = vmm_create();
+<a href='../S/159.html#L76'>context</a>            76 src/arch/task.c 	vmm_mapkernel(child-&gt;context.cr3);
+<a href='../S/159.html#L87'>context</a>            87 src/arch/task.c 		vmm_map(child-&gt;context.cr3, mm_paddr(addr), child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L93'>context</a>            93 src/arch/task.c 	child-&gt;context.stack = current_task-&gt;context.stack;
+<a href='../S/159.html#L94'>context</a>            94 src/arch/task.c 	child-&gt;context.env = current_task-&gt;context.env;
+<a href='../S/159.html#L97'>context</a>            97 src/arch/task.c 	memcpy(stack, (void*) child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L99'>context</a>            99 src/arch/task.c 	vmm_umap(child-&gt;context.cr3, child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L100'>context</a>           100 src/arch/task.c 	vmm_map(child-&gt;context.cr3, mm_paddr(stack), child-&gt;context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+<a href='../S/159.html#L147'>context</a>           147 src/arch/task.c 	child-&gt;context.cr3 = current_task-&gt;context.cr3;
+<a href='../S/159.html#L148'>context</a>           148 src/arch/task.c 	child-&gt;context.stack = (uint32_t) stack - TASK_STACKSIZE;
+<a href='../S/159.html#L149'>context</a>           149 src/arch/task.c 	child-&gt;context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+<a href='../S/159.html#L151'>context</a>           151 src/arch/task.c 	child-&gt;context.env-&gt;eax = (uint32_t) arg;
+<a href='../S/159.html#L152'>context</a>           152 src/arch/task.c 	child-&gt;context.env-&gt;eip = (uint32_t) entry;
+<a href='../S/159.html#L153'>context</a>           153 src/arch/task.c 	child-&gt;context.env-&gt;ebp = (uint32_t) child-&gt;context.env; 
+<a href='../S/159.html#L171'>context</a>           171 src/arch/task.c 	vmm_switch(current_task-&gt;context.cr3);
+<a href='../S/159.html#L174'>context</a>           174 src/arch/task.c 	task_context_switch(&amp;old-&gt;context.env, &amp;current_task-&gt;context.env);
+<a href='../S/159.html#L187'>context</a>           187 src/arch/task.c 	current_task-&gt;context.env = (task_env_t*) 0;
+<a href='../S/159.html#L188'>context</a>           188 src/arch/task.c 	current_task-&gt;context.cr3 = (uint32_t) kernel_vmm;
+<a href='../S/159.html#L189'>context</a>           189 src/arch/task.c 	current_task-&gt;context.stack = (uint32_t) &amp;kernel_stack;
+<a href='../S/90.html#L79'>context</a>            79 src/include/aplus/task.h 	} context;
+<a href='../S/143.html#L196'>context</a>           196 src/sched.c    	current_task-&gt;image.vaddr = vmm_map(current_task-&gt;context.cr3, mm_paddr((void*) current_task-&gt;image.ptr), current_task-&gt;image.vaddr, current_task-&gt;image.length, VMM_FLAGS_DEFAULT);
+</pre>
+</body>
+</html>

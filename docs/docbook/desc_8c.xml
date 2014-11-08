@@ -1,0 +1,328 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="desc_8c">
+    <title>desc.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;grub.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/times.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structgdt__entry">gdt_entry</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1aeef7411226f7c2a6d1328386a2b3832d">FAULT_MASK</link> 0x3FFFFFE3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35">PIT_FREQ</link> (CLOCKS_PER_SEC)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</link> <link linkend="desc_8c_1a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</link>[n].<link linkend="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec">base_l</link> = (b &amp; 0xFFFF);				\
+		gdt_e[n].base_m = (b &gt;&gt; 16) &amp; 0xFF;			\
+		gdt_e[n].base_h = (b &gt;&gt; 24) &amp; 0xFF;			\
+		gdt_e[n].limit_l = (l &amp; 0xFFFF);			\
+		gdt_e[n].granularity = (l &gt;&gt; 16) &amp; 0x0F;	\
+		gdt_e[n].granularity |= g &amp; 0xF0;			\
+		gdt_e[n].access = a</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1a57d9d99abdf93e1b7d838f47efc6af1c">idt_set</link> <link linkend="desc_8c_1a248e57c601e50474a60c9d42c6ac8fb3">idt_e</link>[i].<link linkend="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec">base_l</link> = b &amp; 0xFFFF;				\
+		idt_e[i].base_h = (b &gt;&gt; 16) &amp; 0xFFFF;		\
+		idt_e[i].sel = s;							\
+		idt_e[i].null = 0;							\
+		idt_e[i].flags = f</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296">_i</link> extern void isr##n();						\
+		<link linkend="desc_8c_1a57d9d99abdf93e1b7d838f47efc6af1c">idt_set</link>(n, (<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>)isr##n, 0x08, 0x8E)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296">_i</link> extern void irq##n();							\
+		<link linkend="desc_8c_1a57d9d99abdf93e1b7d838f47efc6af1c">idt_set</link>(n + 32, (<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>)irq##n, 0x08, 0x8E)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</link> ((((bcd) &amp; 0x0F) + ((bcd) / 16) * 10))</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="desc_8c_1a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</link> (((((bcd) &amp; 0x0F) + ((bcd &amp; 0x70) / 16) * 10)) | (bcd &amp; 0x80))</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> <link linkend="desc_8c_1aea6d44db9dbbcd64642fcb7904f41d9a">limit_l</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> <link linkend="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec">base_l</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="desc_8c_1a98fb2af33fad804398328d56ccf01ec2">base_m</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="desc_8c_1a8b0d6200bc639dd37ff68847a0adde5f">access</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="desc_8c_1acfea365f69e71368a2db03333d4afd6f">granularity</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="desc_8c_1a8fef9c987f038778feaf85edfcc9c060">base_h</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void * <link linkend="desc_8c_1a8e2066f75678ef3cb314db1e33fe5e4d">irqs</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static gdt_entry_t <link linkend="desc_8c_1a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static gdt_ptr_t <link linkend="desc_8c_1af67a6154264e775ccf3c976fefe43618">gdt_p</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static idt_entry_t <link linkend="desc_8c_1a248e57c601e50474a60c9d42c6ac8fb3">idt_e</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static idt_ptr_t <link linkend="desc_8c_1acd81c3f56ebae00c0f2af978d2b48d42">idt_p</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="desc_8c_1a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="desc_8c_1aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="desc_8c_1adbf6021113d80f4e06464449823d18ca">pit_days</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="desc_8c_1ab391065c3b916fa1704b6bfb7b099d04">keyboard_ready</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structgdt__entry">gdt_entry</link> <link linkend="desc_8c_1a88d6351e81fa254cec37b8a9a1353401">__attribute__</link> (
+(packed) )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="desc_8c_1a7d06701ac073c331c83519e3909b7fce">schedule</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="desc_8c_1ab36b30e25787b3f4887160064ba2f43a">syscall_handler</link> (
+regs_t * )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</link> (
+&quot;.section .text \n\ .global gdt_load \n\ gdt_load: \n\ lgdt  \n\ \n\ mov ax, 0x10\n\mov ds, ax\n\mov es, ax\n\mov fs, ax\n\mov gs, ax\n\mov ss, ax\n\jmp 0x08:.done\n\\n\.done:\n\ret\n\\n\\n\\n\\n\.global idt_load\n\idt_load:\n\lidt\n\ret\n\\n\\n&quot; )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="desc_8c_1a5ec693d5682a18cbeb87ae5c5ea25c03">isr_handler</link> (
+regs_t * r)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="desc_8c_1a16eb17da95d62143431a37e9381af3ee">irq_handler</link> (
+regs_t * r)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="desc_8c_1a28c9747160a8526a5272ea44e68f45b6">pit_handler</link> (
+regs_t * r)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="desc_8c_1a4f2dd94350b058e8e8ba473a2822cf7a">pagefault_handler</link> (
+regs_t * r)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="desc_8c_1a6a369f578313199f231869f97e16802d">desc_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace">irq_set</link> (
+int n, void * handler)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="desc_8c_1a4992b098d3d233475016a0288e6cc918">irq_unset</link> (
+int n)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="desc_8c_1ae5e75d23e9ca091bdf2f1c5007481202">irq_get</link> (
+int n)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="desc_8c_1a1d44575d1f90766872fc87b63171102b">rtc</link> (
+<link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> addr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="desc_8c_1a0c9b7a41bf04c15de2b484df54fcb62b">pit_gettime</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="desc_8c_1affef3cc40072321b8d54e4c00aa4de85">pit_getticks</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/arch/desc.c</para>
+    </simplesect>
+</section>

@@ -1,0 +1,65 @@
+\hypertarget{pthread__self_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+self.c}
+\label{pthread__self_8c}\index{usr/src/libpthread/src/pthread\+\_\+self.\+c@{usr/src/libpthread/src/pthread\+\_\+self.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} \hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\+\_\+t} \hyperlink{pthread__self_8c_a9c6edadf970f4bdebbed416f892f30d4}{pthread\+\_\+self} (void)
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_a77366c1bd428629dc898e188bfd182a3}{E\+X\+T\+E\+R\+N} \hyperlink{pthread__internal_8h_acef1d04f94658c4052cd87213538f7e4}{pthread\+\_\+context\+\_\+t} $\ast$ \hyperlink{pthread__self_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}{\+\_\+\+\_\+pthread\+\_\+queue}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__self_8c_a9c6edadf970f4bdebbed416f892f30d4}{\index{pthread\+\_\+self.\+c@{pthread\+\_\+self.\+c}!pthread\+\_\+self@{pthread\+\_\+self}}
+\index{pthread\+\_\+self@{pthread\+\_\+self}!pthread\+\_\+self.\+c@{pthread\+\_\+self.\+c}}
+\subsubsection[{pthread\+\_\+self}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} {\bf pthread\+\_\+t} pthread\+\_\+self (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{pthread__self_8c_a9c6edadf970f4bdebbed416f892f30d4}
+
+
+Definizione alla linea 10 del file pthread\+\_\+self.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+os\+\_\+gettid, \+\_\+\+\_\+pthread\+\_\+queue, errno, pthread\+\_\+context\+::next, e pthread\+\_\+context\+::tid.
+
+
+\begin{DoxyCode}
+10                                     \{
+11     \textcolor{keywordflow}{if}(!\hyperlink{pthread__self_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}{\_\_pthread\_queue}) \{
+12         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ESRCH;
+13         \textcolor{keywordflow}{return} 0;
+14     \}
+15 
+16     \textcolor{keywordtype}{int} tid = \hyperlink{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\_\_os\_gettid}();
+17     \hyperlink{structpthread__context}{pthread\_context\_t}* tmp = \hyperlink{pthread__self_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}{\_\_pthread\_queue};
+18     \textcolor{keywordflow}{while}(tmp) \{
+19         \textcolor{keywordflow}{if}(tmp->\hyperlink{structpthread__context_a5b7aa396dbf3c140b1a54f09568c8253}{tid} == tid)
+20             \textcolor{keywordflow}{return} (\hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\_t}) tmp;
+21 
+22         tmp = tmp->\hyperlink{structpthread__context_a876fe0d5cfa5b9886c90e5936b98f992}{next};
+23     \}
+24 
+25     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ESRCH;
+26     \textcolor{keywordflow}{return} 0;
+27 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{pthread__self_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}{\index{pthread\+\_\+self.\+c@{pthread\+\_\+self.\+c}!\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}}
+\index{\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}!pthread\+\_\+self.\+c@{pthread\+\_\+self.\+c}}
+\subsubsection[{\+\_\+\+\_\+pthread\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf E\+X\+T\+E\+R\+N} {\bf pthread\+\_\+context\+\_\+t}$\ast$ \+\_\+\+\_\+pthread\+\_\+queue}}\label{pthread__self_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}
+
+
+Definizione alla linea 8 del file pthread\+\_\+self.\+c.
+

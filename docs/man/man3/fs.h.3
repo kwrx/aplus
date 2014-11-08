@@ -1,0 +1,81 @@
+.TH "src/include/aplus/fs.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/fs.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <sys/dirent\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBinode\fP"
+.br
+.ti -1c
+.RI "struct \fBfs\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBUID_ROOT\fP   0"
+.br
+.ti -1c
+.RI "#define \fBGID_ROOT\fP   0"
+.br
+.ti -1c
+.RI "#define \fBFS\fP(\fBname\fP, mount)"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBinode\fP \fBinode_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBfs\fP \fBfs_t\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define FS(\fBname\fP, mount)"
+\fBValore:\fP
+.PP
+.nf
+fs_t fs_##name = {                                                     \
+        #name, mount                                                        \
+    }; ATTRIBUTE("fs", fs_##name)
+.fi
+.PP
+Definizione alla linea 80 del file fs\&.h\&.
+.SS "#define GID_ROOT   0"
+
+.PP
+Definizione alla linea 27 del file fs\&.h\&.
+.SS "#define UID_ROOT   0"
+
+.PP
+Definizione alla linea 26 del file fs\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fBfs\fP  \fBfs_t\fP"
+
+.SS "typedef struct \fBinode\fP  \fBinode_t\fP"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

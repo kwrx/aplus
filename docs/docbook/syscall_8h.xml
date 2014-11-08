@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="syscall_8h">
+    <title>syscall.h File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="struct____syscall">__syscall</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscall_8h_1a66a9851e5871109859df72962d80c3a6">SYSCALL</link> static <link linkend="syscall_8h_1ae65b9b33e5689e1897162dab3777e62f">syscall_t</link> syscall_##n = {										\
+		(void*) h, (int) n													\
+	}; 																		\
+	<link linkend="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae">ATTRIBUTE</link>(&quot;syscall&quot;, syscall_##n)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="struct____syscall">__syscall</link>  <link linkend="syscall_8h_1ae65b9b33e5689e1897162dab3777e62f">syscall_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/syscall.h</para>
+    </simplesect>
+</section>

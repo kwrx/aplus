@@ -1,0 +1,41 @@
+.TH "usr/src/libpthread/src/platform/win32/hooks.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/platform/win32/hooks.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <windows\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fB__os_thread_create\fP(e, a, p)   ((int) CreateThread(0, 0, e, a, 0))"
+.br
+.ti -1c
+.RI "#define \fB__os_thread_kill\fP(t, s)   TerminateThread(t, s)"
+.br
+.ti -1c
+.RI "#define \fB__os_gettid\fP()   GetCurrentThreadId()"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define __os_gettid()   GetCurrentThreadId()"
+
+.PP
+Definizione alla linea 11 del file hooks\&.h\&.
+.SS "#define __os_thread_create(e, a, p)   ((int) CreateThread(0, 0, e, a, 0))"
+
+.PP
+Definizione alla linea 9 del file hooks\&.h\&.
+.SS "#define __os_thread_kill(t, s)   TerminateThread(t, s)"
+
+.PP
+Definizione alla linea 10 del file hooks\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>mm_paddr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L87'>mm_paddr</a>           87 src/arch/task.c 		vmm_map(child-&gt;context.cr3, mm_paddr(addr), child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L88'>mm_paddr</a>           88 src/arch/task.c 		child-&gt;image.ptr = (uint32_t) mm_paddr(addr);
+<a href='../S/159.html#L100'>mm_paddr</a>          100 src/arch/task.c 	vmm_map(child-&gt;context.cr3, mm_paddr(stack), child-&gt;context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+<a href='../S/151.html#L80'>mm_paddr</a>           80 src/mm/mm.c    	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+<a href='../S/150.html#L57'>mm_paddr</a>           57 src/mm/paging.c 	write_cr3((uint32_t) mm_paddr((void*) addr));
+<a href='../S/143.html#L196'>mm_paddr</a>          196 src/sched.c    	current_task-&gt;image.vaddr = vmm_map(current_task-&gt;context.cr3, mm_paddr((void*) current_task-&gt;image.ptr), current_task-&gt;image.vaddr, current_task-&gt;image.length, VMM_FLAGS_DEFAULT);
+</pre>
+</body>
+</html>

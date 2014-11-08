@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_2d579b6f65d7044c5d8c526b8dd0d809" kind="dir">
+    <compoundname>usr/src/libpthread/src/platform/posix</compoundname>
+    <innerfile refid="posix_2hooks_8h">hooks.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/"/>
+  </compounddef>
+</doxygen>

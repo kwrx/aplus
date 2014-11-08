@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__rwlockattr" kind="struct" prot="public">
+    <compoundname>pthread_rwlockattr</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_rwlockattr::pshared</definition>
+        <argsstring></argsstring>
+        <name>pshared</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="128" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="94">
+        <label>pthread_rwlockattr</label>
+        <link refid="structpthread__rwlockattr"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="127" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="127" bodyend="129"/>
+    <listofallmembers>
+      <member refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" prot="public" virt="non-virtual"><scope>pthread_rwlockattr</scope><name>pshared</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

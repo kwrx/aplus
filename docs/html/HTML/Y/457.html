@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>paddr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/87.html#L78'>paddr</a>              78 src/include/aplus/mm.h static inline void* mm_vaddr(void* paddr) {
+<a href='../S/87.html#L79'>paddr</a>              79 src/include/aplus/mm.h 	if((uint32_t) paddr &lt; MM_VBASE)
+<a href='../S/87.html#L80'>paddr</a>              80 src/include/aplus/mm.h 		paddr = (void*) ((uint32_t) paddr + MM_VBASE);
+<a href='../S/87.html#L82'>paddr</a>              82 src/include/aplus/mm.h 	return paddr;
+<a href='../S/150.html#L72'>paddr</a>              72 src/mm/paging.c void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {	
+<a href='../S/150.html#L74'>paddr</a>              74 src/mm/paging.c 		return paddr;
+<a href='../S/150.html#L76'>paddr</a>              76 src/mm/paging.c 	paddr = mm_align(paddr);
+<a href='../S/150.html#L80'>paddr</a>              80 src/mm/paging.c 	uint32_t pframe = (uint32_t) paddr;
+<a href='../S/150.html#L131'>paddr</a>             131 src/mm/paging.c 	void* paddr = (void*) halloc(current_heap, size);
+<a href='../S/150.html#L133'>paddr</a>             133 src/mm/paging.c 	vmm_map(current_vmm, paddr, vaddr, size, flags);
+<a href='../S/150.html#L135'>paddr</a>             135 src/mm/paging.c 	return paddr;
+</pre>
+</body>
+</html>

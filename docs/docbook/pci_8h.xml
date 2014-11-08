@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pci_8h">
+    <title>pci.h File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpci__device">pci_device</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1aeb32c363b03ebf8389c32c3a8c4f44f6">PCI_CLASS_OLD</link> 0x00</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1aac645ca490ecbca0a73b2878951895ad">PCI_CLASS_STORAGE</link> 0x01</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a3c07e5c8d327660315bb6a423929636f">PCI_CLASS_NETWORK</link> 0x02</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a61f94d72dd9ca69ac0cbf4be0680cde4">PCI_CLASS_DISPLAY</link> 0x03</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a90b08a0d7cf59514faa0acd3be1a2ace">PCI_CLASS_MULTIMEDIA</link> 0x04</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a6874e3541cfd978632b933114ecf6c72">PCI_CLASS_MEMORY</link> 0x05</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a4a905fe67d0b5bc0d1843d7820d1e6b1">PCI_CLASS_BRIDGE</link> 0x06</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1ace29a93d634090755d95315d8e8ab760">PCI_CLASS_SIMCOM</link> 0x07</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a38166c1c314037751b5b11270a93eef6">PCI_CLASS_SYSPERIPHERAL</link> 0x08</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1aadf2b16632b4f96c17001432e084d0ad">PCI_CLASS_INPUT</link> 0x09</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a477992eb41eca28df0c4cccbe90ff202">PCI_CLASS_DOCK</link> 0x0A</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a69ad4e3568e57c18c75591b9094119b0">PCI_CLASS_PROCESSOR</link> 0x0B</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a407690a64f8fc65525ea03c4448d3016">PCI_CLASS_SERIAL</link> 0x0C</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pci_8h_1a101c0119d0c0a8492374f72b1c7073bd">PCI_CLASS_MISC</link> 0xFF</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpci__device">pci_device</link>  <link linkend="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b">pci_device_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/pci.h</para>
+    </simplesect>
+</section>

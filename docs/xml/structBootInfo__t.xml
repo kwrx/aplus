@@ -1,0 +1,365 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structBootInfo__t" kind="struct" prot="public">
+    <compoundname>BootInfo_t</compoundname>
+    <includes refid="grub_8h" local="no">grub.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structBootInfo__t_1a255b75459b2ed645abe749075f3ca25d" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::flags</definition>
+        <argsstring></argsstring>
+        <name>flags</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="65" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a4b144c9db5fe2c5a9d72522068d65138" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::mem_lower</definition>
+        <argsstring></argsstring>
+        <name>mem_lower</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="66" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1ab20281f521d626a49714e06b62291be9" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::mem_upper</definition>
+        <argsstring></argsstring>
+        <name>mem_upper</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="67" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a11fa989df3074f1a90fcb646aa434b97" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::boot_device</definition>
+        <argsstring></argsstring>
+        <name>boot_device</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="68" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a23d97e399056fd818fdd31ceb1a07f42" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::cmdline</definition>
+        <argsstring></argsstring>
+        <name>cmdline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="69" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a178ef95a8fbd89ec018899b9ba241d92" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::mods_count</definition>
+        <argsstring></argsstring>
+        <name>mods_count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="70" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" prot="public" static="no" mutable="no">
+        <type>unsigned int **</type>
+        <definition>unsigned int** BootInfo_t::mods_addr</definition>
+        <argsstring></argsstring>
+        <name>mods_addr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a6a38dc50fe6f5719f544488a265b8cf1" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::num</definition>
+        <argsstring></argsstring>
+        <name>num</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="72" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a761344d9a2bf10e1551dca7bd77f90cf" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="73" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1ac0a248c150ec1bceaafc488988174a1d" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::addr</definition>
+        <argsstring></argsstring>
+        <name>addr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="74" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1ab2c8b3b8778032a87c0c2fe73245e9e8" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::shndx</definition>
+        <argsstring></argsstring>
+        <name>shndx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="75" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1ac44eb8289f5f6fbbca78dc24e5052be7" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::mmap_length</definition>
+        <argsstring></argsstring>
+        <name>mmap_length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="76" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a904e8344d4c4ef9a650305409b933b17" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::mmap_addr</definition>
+        <argsstring></argsstring>
+        <name>mmap_addr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1adc0745eb234059fc6eb37d8a6c18e4b4" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::drives_length</definition>
+        <argsstring></argsstring>
+        <name>drives_length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="78" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1aa355db96d835f264c29a00f15ba126bf" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::drives_addr</definition>
+        <argsstring></argsstring>
+        <name>drives_addr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="79" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a43ae8547b0cea379829329a622d9bc4c" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::config_table</definition>
+        <argsstring></argsstring>
+        <name>config_table</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="80" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a49973d2d24c8f4159b125f2fe0a42e3d" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::boot_loader_name</definition>
+        <argsstring></argsstring>
+        <name>boot_loader_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="81" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a1ce55d9a9d425ccbc6c447a8d73ffdba" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::apm_table</definition>
+        <argsstring></argsstring>
+        <name>apm_table</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="82" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a8a09488fd20d514ccd02e07e5ca45d6d" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::vbe_control_info</definition>
+        <argsstring></argsstring>
+        <name>vbe_control_info</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="83" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1ad583d2ecbdc34a87c6ab29a2fded69b6" prot="public" static="no" mutable="no">
+        <type>vesaModeInfo *</type>
+        <definition>vesaModeInfo* BootInfo_t::vbe_mode_info</definition>
+        <argsstring></argsstring>
+        <name>vbe_mode_info</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="84" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a55a278b70ee059fd245f08f3293440d9" prot="public" static="no" mutable="no">
+        <type><ref refid="grub_8h_1a949fefd565685608cdc3489425f32a93" kindref="member">vesaInfo</ref> *</type>
+        <definition>vesaInfo* BootInfo_t::vbe_mode</definition>
+        <argsstring></argsstring>
+        <name>vbe_mode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="85" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a878cf7a1a61c7b7d21b704feee0fcc60" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::vbe_interface_seg</definition>
+        <argsstring></argsstring>
+        <name>vbe_interface_seg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="86" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a2359d311e9a6d45dcebb8e6fae1a1f63" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::vbe_interface_off</definition>
+        <argsstring></argsstring>
+        <name>vbe_interface_off</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="87" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structBootInfo__t_1a47ae9ab2b4242be9be167ea095956097" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int BootInfo_t::vbe_interface_len</definition>
+        <argsstring></argsstring>
+        <name>vbe_interface_len</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="88" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="15">
+        <label>BootInfo_t</label>
+        <link refid="structBootInfo__t"/>
+        <childnode refid="16" relation="usage">
+          <edgelabel>+vbe_mode</edgelabel>
+        </childnode>
+      </node>
+      <node id="16">
+        <label>vesaInfo_t</label>
+        <link refid="structvesaInfo__t"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/grub.h" line="64" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="64" bodyend="89"/>
+    <listofallmembers>
+      <member refid="structBootInfo__t_1ac0a248c150ec1bceaafc488988174a1d" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>addr</name></member>
+      <member refid="structBootInfo__t_1a1ce55d9a9d425ccbc6c447a8d73ffdba" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>apm_table</name></member>
+      <member refid="structBootInfo__t_1a11fa989df3074f1a90fcb646aa434b97" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>boot_device</name></member>
+      <member refid="structBootInfo__t_1a49973d2d24c8f4159b125f2fe0a42e3d" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>boot_loader_name</name></member>
+      <member refid="structBootInfo__t_1a23d97e399056fd818fdd31ceb1a07f42" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>cmdline</name></member>
+      <member refid="structBootInfo__t_1a43ae8547b0cea379829329a622d9bc4c" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>config_table</name></member>
+      <member refid="structBootInfo__t_1aa355db96d835f264c29a00f15ba126bf" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>drives_addr</name></member>
+      <member refid="structBootInfo__t_1adc0745eb234059fc6eb37d8a6c18e4b4" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>drives_length</name></member>
+      <member refid="structBootInfo__t_1a255b75459b2ed645abe749075f3ca25d" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>flags</name></member>
+      <member refid="structBootInfo__t_1a4b144c9db5fe2c5a9d72522068d65138" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>mem_lower</name></member>
+      <member refid="structBootInfo__t_1ab20281f521d626a49714e06b62291be9" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>mem_upper</name></member>
+      <member refid="structBootInfo__t_1a904e8344d4c4ef9a650305409b933b17" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>mmap_addr</name></member>
+      <member refid="structBootInfo__t_1ac44eb8289f5f6fbbca78dc24e5052be7" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>mmap_length</name></member>
+      <member refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>mods_addr</name></member>
+      <member refid="structBootInfo__t_1a178ef95a8fbd89ec018899b9ba241d92" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>mods_count</name></member>
+      <member refid="structBootInfo__t_1a6a38dc50fe6f5719f544488a265b8cf1" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>num</name></member>
+      <member refid="structBootInfo__t_1ab2c8b3b8778032a87c0c2fe73245e9e8" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>shndx</name></member>
+      <member refid="structBootInfo__t_1a761344d9a2bf10e1551dca7bd77f90cf" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>size</name></member>
+      <member refid="structBootInfo__t_1a8a09488fd20d514ccd02e07e5ca45d6d" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>vbe_control_info</name></member>
+      <member refid="structBootInfo__t_1a47ae9ab2b4242be9be167ea095956097" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>vbe_interface_len</name></member>
+      <member refid="structBootInfo__t_1a2359d311e9a6d45dcebb8e6fae1a1f63" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>vbe_interface_off</name></member>
+      <member refid="structBootInfo__t_1a878cf7a1a61c7b7d21b704feee0fcc60" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>vbe_interface_seg</name></member>
+      <member refid="structBootInfo__t_1a55a278b70ee059fd245f08f3293440d9" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>vbe_mode</name></member>
+      <member refid="structBootInfo__t_1ad583d2ecbdc34a87c6ab29a2fded69b6" prot="public" virt="non-virtual"><scope>BootInfo_t</scope><name>vbe_mode_info</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

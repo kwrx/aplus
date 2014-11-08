@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>usr/src/libposix/src/sched.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/sched.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L14'>[^]</a><a href='#L93'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L14' title='Defined at 14.'>sched_setscheduler</a>
+<li><a href='#L29' title='Defined at 29.'>sched_getscheduler</a>
+<li><a href='#L35' title='Defined at 35.'>sched_setparam</a>
+<li><a href='#L50' title='Defined at 50.'>sched_getparam</a>
+<li><a href='#L60' title='Defined at 60.'>sched_get_priority_max</a>
+<li><a href='#L65' title='Defined at 65.'>sched_get_priority_min</a>
+<li><a href='#L70' title='Defined at 70.'>sched_rr_get_interval</a>
+<li><a href='#L88' title='Defined at 88.'>sched_setaffinity</a>
+<li><a href='#L93' title='Defined at 93.'>sched_getaffinity</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> "<a href='20.html'>config.h</a>"
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;sched.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;sys/times.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;sys/times.h&gt;
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;time.h&gt;
+<a name='L10'>  10 
+<a name='L11'>  11 <b>typedef</b> <b>int</b> <a href='../R/225.html' title='Multiple refered from 2 places.'>cpu_set_t</a>;
+<a name='L12'>  12 
+<a name='L13'>  13 
+<a name='L14'>  14 <b>int</b> sched_setscheduler(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>, <b>int</b> <a href='../Y/477.html' title='Multiple used in 12 places.'>policy</a>, <b>const</b> <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a>* <a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>) <font color='red'>{</font>
+<a name='L15'>  15         <b>if</b>(<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L16'>  16                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L17'>  17                 <b>return</b> -1;
+<a name='L18'>  18         <font color='red'>}</font>
+<a name='L19'>  19 
+<a name='L20'>  20         <b>if</b>(<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> &lt; 0) <font color='red'>{</font>
+<a name='L21'>  21                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L22'>  22                 <b>return</b> -1;
+<a name='L23'>  23         <font color='red'>}</font>
+<a name='L24'>  24 
+<a name='L25'>  25         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L26'>  26         <b>return</b> -1;
+<a name='L27'>  27 <font color='red'>}</font>
+<a name='L28'>  28 
+<a name='L29'>  29 <b>int</b> sched_getscheduler(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>) <font color='red'>{</font>
+<a name='L30'>  30         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L31'>  31         <b>return</b> -1;
+<a name='L32'>  32 <font color='red'>}</font>
+<a name='L33'>  33 
+<a name='L34'>  34 
+<a name='L35'>  35 <b>int</b> <a href='../R/462.html' title='Multiple refered from 2 places.'>sched_setparam</a>(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>, <b>const</b> <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a> *<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>) <font color='red'>{</font>
+<a name='L36'>  36         <b>if</b>(<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L37'>  37                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L38'>  38                 <b>return</b> -1;
+<a name='L39'>  39         <font color='red'>}</font>
+<a name='L40'>  40 
+<a name='L41'>  41         <b>if</b>(<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> &lt; 0) <font color='red'>{</font>
+<a name='L42'>  42                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L43'>  43                 <b>return</b> -1;
+<a name='L44'>  44         <font color='red'>}</font>
+<a name='L45'>  45 
+<a name='L46'>  46         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L47'>  47         <b>return</b> -1;
+<a name='L48'>  48 <font color='red'>}</font>
+<a name='L49'>  49 
+<a name='L50'>  50 <b>int</b> <a href='../R/461.html' title='Multiple refered from 2 places.'>sched_getparam</a>(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>, <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a> *<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>) <font color='red'>{</font>
+<a name='L51'>  51         <b>if</b>(<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> &lt; 0) <font color='red'>{</font>
+<a name='L52'>  52                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L53'>  53                 <b>return</b> -1;
+<a name='L54'>  54         <font color='red'>}</font>
+<a name='L55'>  55 
+<a name='L56'>  56         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L57'>  57         <b>return</b> -1;
+<a name='L58'>  58 <font color='red'>}</font>
+<a name='L59'>  59 
+<a name='L60'>  60 <b>int</b> sched_get_priority_max(<b>int</b> <a href='../Y/477.html' title='Multiple used in 12 places.'>policy</a>) <font color='red'>{</font>
+<a name='L61'>  61         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L62'>  62         <b>return</b> -1;
+<a name='L63'>  63 <font color='red'>}</font>
+<a name='L64'>  64 
+<a name='L65'>  65 <b>int</b> sched_get_priority_min(<b>int</b> <a href='../Y/477.html' title='Multiple used in 12 places.'>policy</a>) <font color='red'>{</font>
+<a name='L66'>  66         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L67'>  67         <b>return</b> -1;
+<a name='L68'>  68 <font color='red'>}</font>
+<a name='L69'>  69 
+<a name='L70'>  70 <b>int</b> sched_rr_get_interval(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>, <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a>* <a href='../Y/698.html' title='Multiple used in 4 places.'>tp</a>) <font color='red'>{</font>
+<a name='L71'>  71         <b>if</b>(<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> &lt; 0) <font color='red'>{</font>
+<a name='L72'>  72                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L73'>  73                 <b>return</b> -1;
+<a name='L74'>  74         <font color='red'>}</font>
+<a name='L75'>  75 
+<a name='L76'>  76         <b>if</b>(<a href='../Y/698.html' title='Multiple used in 4 places.'>tp</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L77'>  77                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L78'>  78                 <b>return</b> -1;
+<a name='L79'>  79         <font color='red'>}</font>
+<a name='L80'>  80 
+<a name='L81'>  81         <a href='../Y/698.html' title='Multiple used in 4 places.'>tp</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a> = 0;
+<a name='L82'>  82         <a href='../Y/698.html' title='Multiple used in 4 places.'>tp</a>-&gt;<a href='../Y/705.html' title='Multiple used in 5 places.'>tv_nsec</a> = <a href='../Y/2.html' title='Multiple used in 2 places.'>CLOCKS_PER_SEC</a> / 1000000000;
+<a name='L83'>  83 
+<a name='L84'>  84         <b>return</b> 0;
+<a name='L85'>  85 <font color='red'>}</font>
+<a name='L86'>  86 
+<a name='L87'>  87 
+<a name='L88'>  88 <b>int</b> sched_setaffinity(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/170.html' title='Multiple used in 2 places.'>cpusetsize</a>, <b>const</b> <a href='../S/26.html#L11' title='Defined at 11 in usr/src/libposix/src/sched.c.'>cpu_set_t</a> *<a href='../Y/374.html' title='Multiple used in 2 places.'>mask</a>) <font color='red'>{</font>
+<a name='L89'>  89         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L90'>  90         <b>return</b> -1;
+<a name='L91'>  91 <font color='red'>}</font>
+<a name='L92'>  92 
+<a name='L93'>  93 <b>int</b> sched_getaffinity(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/170.html' title='Multiple used in 2 places.'>cpusetsize</a>, <a href='../S/26.html#L11' title='Defined at 11 in usr/src/libposix/src/sched.c.'>cpu_set_t</a> *<a href='../Y/374.html' title='Multiple used in 2 places.'>mask</a>) <font color='red'>{</font>
+<a name='L94'>  94         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L95'>  95         <b>return</b> -1;
+<a name='L96'>  96 <font color='red'>}</font>
+<a name='L97'>  97 
+<a name='L98'>  98 
+<a name='L99'>  99 
+<a name='L100'> 100 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L14'>[^]</a><a href='#L93'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

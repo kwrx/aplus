@@ -1,0 +1,824 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="rtl8139_8c" kind="file">
+    <compoundname>rtl8139.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includes refid="bufio_8h" local="no">aplus/bufio.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes refid="attribute_8h" local="no">aplus/attribute.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes refid="eth_8h" local="no">aplus/net/eth.h</includes>
+    <includes refid="rtl8139_8h" local="yes">rtl8139.h</includes>
+    <incdepgraph>
+      <node id="1141">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1131">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1148">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1129" relation="include">
+        </childnode>
+        <childnode refid="1147" relation="include">
+        </childnode>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1132" relation="include">
+        </childnode>
+        <childnode refid="1137" relation="include">
+        </childnode>
+      </node>
+      <node id="1128">
+        <label>src/net/rtl8139/rtl8139.c</label>
+        <link refid="rtl8139.c"/>
+        <childnode refid="1129" relation="include">
+        </childnode>
+        <childnode refid="1133" relation="include">
+        </childnode>
+        <childnode refid="1136" relation="include">
+        </childnode>
+        <childnode refid="1146" relation="include">
+        </childnode>
+        <childnode refid="1139" relation="include">
+        </childnode>
+        <childnode refid="1138" relation="include">
+        </childnode>
+        <childnode refid="1147" relation="include">
+        </childnode>
+        <childnode refid="1148" relation="include">
+        </childnode>
+        <childnode refid="1132" relation="include">
+        </childnode>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1149" relation="include">
+        </childnode>
+        <childnode refid="1150" relation="include">
+        </childnode>
+        <childnode refid="1151" relation="include">
+        </childnode>
+      </node>
+      <node id="1151">
+        <label>rtl8139.h</label>
+        <link refid="rtl8139_8h"/>
+        <childnode refid="1133" relation="include">
+        </childnode>
+      </node>
+      <node id="1140">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1135" relation="include">
+        </childnode>
+        <childnode refid="1137" relation="include">
+        </childnode>
+        <childnode refid="1141" relation="include">
+        </childnode>
+        <childnode refid="1142" relation="include">
+        </childnode>
+      </node>
+      <node id="1130">
+        <label>stdint.h</label>
+      </node>
+      <node id="1145">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1139">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1129" relation="include">
+        </childnode>
+        <childnode refid="1140" relation="include">
+        </childnode>
+        <childnode refid="1144" relation="include">
+        </childnode>
+        <childnode refid="1137" relation="include">
+        </childnode>
+        <childnode refid="1145" relation="include">
+        </childnode>
+      </node>
+      <node id="1149">
+        <label>errno.h</label>
+      </node>
+      <node id="1134">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="1129" relation="include">
+        </childnode>
+        <childnode refid="1130" relation="include">
+        </childnode>
+      </node>
+      <node id="1135">
+        <label>stddef.h</label>
+      </node>
+      <node id="1147">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1135" relation="include">
+        </childnode>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1137" relation="include">
+        </childnode>
+        <childnode refid="1138" relation="include">
+        </childnode>
+        <childnode refid="1146" relation="include">
+        </childnode>
+      </node>
+      <node id="1150">
+        <label>aplus/net/eth.h</label>
+        <link refid="eth_8h"/>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1133" relation="include">
+        </childnode>
+      </node>
+      <node id="1129">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1131" relation="include">
+        </childnode>
+        <childnode refid="1132" relation="include">
+        </childnode>
+      </node>
+      <node id="1137">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1132">
+        <label>string.h</label>
+      </node>
+      <node id="1143">
+        <label>unistd.h</label>
+      </node>
+      <node id="1144">
+        <label>signal.h</label>
+      </node>
+      <node id="1133">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="1129" relation="include">
+        </childnode>
+        <childnode refid="1134" relation="include">
+        </childnode>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1135" relation="include">
+        </childnode>
+      </node>
+      <node id="1146">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1139" relation="include">
+        </childnode>
+      </node>
+      <node id="1142">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1143" relation="include">
+        </childnode>
+        <childnode refid="1137" relation="include">
+        </childnode>
+      </node>
+      <node id="1138">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="1136">
+        <label>aplus/bufio.h</label>
+        <link refid="bufio_8h"/>
+        <childnode refid="1130" relation="include">
+        </childnode>
+        <childnode refid="1135" relation="include">
+        </childnode>
+        <childnode refid="1137" relation="include">
+        </childnode>
+        <childnode refid="1138" relation="include">
+        </childnode>
+        <childnode refid="1139" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <innerclass refid="structcard" prot="public">card</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="rtl8139_8c_1a7e6e6d124063a40473b1f33abf41448a" prot="public" static="no">
+        <type>struct <ref refid="structcard" kindref="compound">card</ref></type>
+        <definition>typedef struct card  card_t</definition>
+        <argsstring></argsstring>
+        <name>card_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="32" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="rtl8139_8c_1a457f6197ba2a5b8c30f24394fcabd0f7" prot="public" static="yes" mutable="no">
+        <type><ref refid="rtl8139_8c_1a7e6e6d124063a40473b1f33abf41448a" kindref="member">card_t</ref> *</type>
+        <definition>card_t* card</definition>
+        <argsstring></argsstring>
+        <name>card</name>
+        <initializer>= NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="35" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="rtl8139_8c_1af88d9433833650f4c4ff826564aa87d2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>__attribute__</definition>
+        <argsstring>((align(0x1000)))</argsstring>
+        <name>__attribute__</name>
+        <param>
+          <type>(align(0x1000))</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="37" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="37" bodyend="47"/>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+      </memberdef>
+      <memberdef kind="function" id="rtl8139_8c_1a4320ac409c8d37bf1452e4bae38a1bb5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int rtl8139_ifdown</definition>
+        <argsstring>(netif_t *netif)</argsstring>
+        <name>rtl8139_ifdown</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="49" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="49" bodyend="52"/>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+      </memberdef>
+      <memberdef kind="function" id="rtl8139_8c_1aa7f42bc6b6e362957934c268a98e1396" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int rtl8139_send</definition>
+        <argsstring>(netif_t *netif, void *buf, size_t len, int type)</argsstring>
+        <name>rtl8139_send</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>len</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="54" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="54" bodyend="86"/>
+        <references refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" compoundref="rtl8139_8c" startline="29">card::curBuffer</references>
+        <references refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" compoundref="netif_8h" startline="35">netif::data</references>
+        <references refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" compoundref="spinlock_8h" startline="51">fastlock_waiton</references>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" compoundref="rtl8139_8h" startline="48">int_out32</references>
+        <references refid="structcard_1a63721f311b12c89790089bbcacc0060b" compoundref="rtl8139_8c" startline="31">card::magic</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+        <references refid="rtl8139_8h_1a42f10cfb594910b5a1e2bcfad9086271" compoundref="rtl8139_8h" startline="10">REG_TRANSMIT_ADDR0</references>
+        <references refid="rtl8139_8h_1a15e2164bee77a940134b3c0618e207d3" compoundref="rtl8139_8h" startline="9">REG_TRANSMIT_STATUS0</references>
+        <references refid="rtl8139_8h_1a3f0fc1302723b502d1f2c6b8eddcbf4f" compoundref="rtl8139_8h" startline="53">RTL8139_MAGIC</references>
+        <references refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64">netif::state</references>
+        <references refid="rtl8139_8h_1a9ab33647617098646990fe263600b650" compoundref="rtl8139_8h" startline="43">TX_BUFFER_SIZE</references>
+        <references refid="structnetif_1ac340647ad948b8103aa9a4e3c7b3fd0f" compoundref="netif_8h" startline="61">netif::tx_bytes</references>
+        <references refid="structnetif_1adac4c9e26ac4c17089eaf3a0e060f601" compoundref="netif_8h" startline="62">netif::tx_errors</references>
+        <references refid="structnetif_1aabafd7c28253a190863f673bd5e4320a" compoundref="netif_8h" startline="60">netif::tx_packets</references>
+        <references refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" compoundref="rtl8139_8c" startline="27">card::txBuffer</references>
+        <references refid="structcard_1a2294d3601ad6be7638b30f68496d589e" compoundref="rtl8139_8c" startline="28">card::txBufferUsed</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="rtl8139_8c_1a819dd51ffb70dad1dcb15bace2135e4d" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void recvdata</definition>
+        <argsstring>(card_t *card)</argsstring>
+        <name>recvdata</name>
+        <param>
+          <type><ref refid="rtl8139_8c_1a7e6e6d124063a40473b1f33abf41448a" kindref="member">card_t</ref> *</type>
+          <declname>card</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="89" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="89" bodyend="139"/>
+        <references refid="rtl8139_8h_1a57ac94bdc04f48c7a66ced30aa060624" compoundref="rtl8139_8h" startline="23">CR_BUFFER_IS_EMPTY</references>
+        <references refid="eth_8c_1af8e21540e459402877e8e7143d17f47c" compoundref="eth_8c" startline="11" endline="46">eth_recv</references>
+        <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
+        <references refid="rtl8139_8h_1a7d11540c9ed834d78c06a0f58bc2861d" compoundref="rtl8139_8h" startline="50">int_in8</references>
+        <references refid="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826" compoundref="rtl8139_8h" startline="47">int_out16</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" compoundref="rtl8139_8c" startline="20">card::netif</references>
+        <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
+        <references refid="rtl8139_8h_1a3b2613e7a11853fee7b0164d592b477a" compoundref="rtl8139_8h" startline="12">REG_COMMAND</references>
+        <references refid="rtl8139_8h_1a9690a77264be5910191756632842b04d" compoundref="rtl8139_8h" startline="13">REG_CUR_READ_ADDR</references>
+        <references refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" compoundref="rtl8139_8h" startline="42">RX_BUFFER_SIZE</references>
+        <references refid="structnetif_1a5a078449e22bb6f4d3d0068345d8dabc" compoundref="netif_8h" startline="56">netif::rx_bytes</references>
+        <references refid="structnetif_1adb3c694759403e67d539a5e81a552c92" compoundref="netif_8h" startline="57">netif::rx_errors</references>
+        <references refid="structnetif_1a80040f58867713ff1b5ec982a450221e" compoundref="netif_8h" startline="55">netif::rx_packets</references>
+        <references refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" compoundref="rtl8139_8c" startline="24">card::rxBuffer</references>
+        <references refid="structcard_1a9492d8053fa4c304877e1f9959b48731" compoundref="rtl8139_8c" startline="25">card::rxBufferOffset</references>
+        <references refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64">netif::state</references>
+        <references refid="udp_8c_1a9721c26507ac0169090b8934a33b1098" compoundref="udp_8c" startline="12" endline="25">udp_recv</references>
+        <references refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" compoundref="aplus_8h" startline="102">uint16_t</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
+      </memberdef>
+      <memberdef kind="function" id="rtl8139_8c_1aa5ce80a5e67e896eb7a7799c5d21d542" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void rtl8139_handler</definition>
+        <argsstring>(void *unused)</argsstring>
+        <name>rtl8139_handler</name>
+        <param>
+          <type>void *</type>
+          <declname>unused</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="141" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="141" bodyend="163"/>
+        <references refid="rtl8139_8h_1ab4126d6287621dc529d43e6fc5cd2f27" compoundref="rtl8139_8h" startline="51">int_in16</references>
+        <references refid="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826" compoundref="rtl8139_8h" startline="47">int_out16</references>
+        <references refid="rtl8139_8h_1aacce0c98835613c89c957d571340a176" compoundref="rtl8139_8h" startline="40">ISR_RECEIVE_OK</references>
+        <references refid="rtl8139_8h_1afcba7a5ffbbdce80f9b4d8038a2900c4" compoundref="rtl8139_8h" startline="39">ISR_TRANSMIT_OK</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="rtl8139_8c_1a819dd51ffb70dad1dcb15bace2135e4d" compoundref="rtl8139_8c" startline="89" endline="139">recvdata</references>
+        <references refid="rtl8139_8h_1ae643783aefff2e6a891b5fa59bfcd344" compoundref="rtl8139_8h" startline="15">REG_INTERRUPT_STATUS</references>
+        <references refid="structcard_1a2294d3601ad6be7638b30f68496d589e" compoundref="rtl8139_8c" startline="28">card::txBufferUsed</references>
+        <references refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" compoundref="aplus_8h" startline="102">uint16_t</references>
+      </memberdef>
+      <memberdef kind="function" id="rtl8139_8c_1a9fc900b0fe44c386645d1c211187c0ad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int rtl8139_init</definition>
+        <argsstring>()</argsstring>
+        <name>rtl8139_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="166" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="166" bodyend="314"/>
+        <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
+        <references refid="rtl8139_8h_1afbe4a2ad282a15a449afe27c8477d7a4" compoundref="rtl8139_8h" startline="21">CR_RECEIVER_ENABLE</references>
+        <references refid="rtl8139_8h_1ab2a1fddf4be3a5b61bc6136a759d2450" compoundref="rtl8139_8h" startline="20">CR_RESET</references>
+        <references refid="rtl8139_8h_1a724cc791aabf32482dca4be45cc5d160" compoundref="rtl8139_8h" startline="22">CR_TRANSMITTER_ENABLE</references>
+        <references refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" compoundref="rtl8139_8c" startline="29">card::curBuffer</references>
+        <references refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" compoundref="netif_8h" startline="35">netif::data</references>
+        <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
+        <references refid="structcard_1ac4d735012434df4c445edaffce28bd73" compoundref="rtl8139_8c" startline="19">card::device</references>
+        <references refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e">netif::dns</references>
+        <references refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" compoundref="eth_8c" startline="79" endline="103">eth_send</references>
+        <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
+        <references refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" compoundref="netif_8h" startline="68">netif::ifdown</references>
+        <references refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" compoundref="netif_8h" startline="67">netif::ifup</references>
+        <references refid="rtl8139_8h_1a7d11540c9ed834d78c06a0f58bc2861d" compoundref="rtl8139_8h" startline="50">int_in8</references>
+        <references refid="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826" compoundref="rtl8139_8h" startline="47">int_out16</references>
+        <references refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" compoundref="rtl8139_8h" startline="48">int_out32</references>
+        <references refid="rtl8139_8h_1a9d09a7af406abb667672c750d24cda0b" compoundref="rtl8139_8h" startline="46">int_out8</references>
+        <references refid="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" compoundref="pci_8h" startline="38">pci_device::intr_line</references>
+        <references refid="structpci__device_1a5b15ddf1741aaae55aa9933f53876d11" compoundref="pci_8h" startline="33">pci_device::iobase</references>
+        <references refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" compoundref="netif_8h" startline="38">netif::ipv4</references>
+        <references refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" compoundref="netif_8h" startline="37">netif::ipv6</references>
+        <references refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" compoundref="desc_8c" startline="334" endline="342">irq_set</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" compoundref="rtl8139_8c" startline="22">card::macaddr</references>
+        <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
+        <references refid="structcard_1a63721f311b12c89790089bbcacc0060b" compoundref="rtl8139_8c" startline="31">card::magic</references>
+        <references refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" compoundref="netif_8h" startline="70">netif::mtu</references>
+        <references refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" compoundref="netif_8h" startline="34">netif::name</references>
+        <references refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" compoundref="rtl8139_8c" startline="20">card::netif</references>
+        <references refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" compoundref="netif_8c" startline="124" endline="212">netif_add</references>
+        <references refid="netif_8h_1a92b354424f46fe25b001e3cf311fb951" compoundref="netif_8h" startline="15">NETIF_RAW</references>
+        <references refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" compoundref="netif_8h" startline="39">netif::netmask</references>
+        <references refid="pci_8c_1abca1ff85a7e4d518a83cc17348aa39cb" compoundref="pci_8c" startline="120" endline="129">pci_find_by_id</references>
+        <references refid="structnetif_1a367e7d85725497d7703bfc0424f472cf">netif::primary</references>
+        <references refid="rtl8139_8h_1a14d20c8a78d65ef7542b5c59e695d4fa" compoundref="rtl8139_8h" startline="34">RCR_ACCEPT_BROADCAST</references>
+        <references refid="rtl8139_8h_1a40752262c4c0d282513c5ad5f1449ffa" compoundref="rtl8139_8h" startline="36">RCR_ACCEPT_PHYS_MATCH</references>
+        <references refid="rtl8139_8h_1a160445e9a8cb8827d32d5cc6417b3fda" compoundref="rtl8139_8h" startline="33">RCR_MXDMA_UNLIMITED</references>
+        <references refid="rtl8139_8h_1a3b2613e7a11853fee7b0164d592b477a" compoundref="rtl8139_8h" startline="12">REG_COMMAND</references>
+        <references refid="rtl8139_8h_1a5b93ab1d3172cbf4cbddb358cd790dec" compoundref="rtl8139_8h" startline="18">REG_CONFIG1</references>
+        <references refid="rtl8139_8h_1ab4c18def6442e5a12813bff4707a95f4" compoundref="rtl8139_8h" startline="14">REG_INTERRUPT_MASK</references>
+        <references refid="rtl8139_8h_1ae643783aefff2e6a891b5fa59bfcd344" compoundref="rtl8139_8h" startline="15">REG_INTERRUPT_STATUS</references>
+        <references refid="rtl8139_8h_1a988a4299b417f298b34e9ae012fb3829" compoundref="rtl8139_8h" startline="11">REG_RECEIVE_BUFFER</references>
+        <references refid="rtl8139_8h_1a66a6f3026d2e079b8fc7056dcd00fe91" compoundref="rtl8139_8h" startline="17">REG_RECEIVE_CONFIGURATION</references>
+        <references refid="rtl8139_8h_1a42f10cfb594910b5a1e2bcfad9086271" compoundref="rtl8139_8h" startline="10">REG_TRANSMIT_ADDR0</references>
+        <references refid="rtl8139_8h_1ae71202863cf99afcc3eab3865699dcf9" compoundref="rtl8139_8h" startline="16">REG_TRANSMIT_CONFIGURATION</references>
+        <references refid="rtl8139_8c_1aa5ce80a5e67e896eb7a7799c5d21d542" compoundref="rtl8139_8c" startline="141" endline="163">rtl8139_handler</references>
+        <references refid="rtl8139_8c_1a4320ac409c8d37bf1452e4bae38a1bb5" compoundref="rtl8139_8c" startline="49" endline="52">rtl8139_ifdown</references>
+        <references refid="rtl8139_8h_1a3f0fc1302723b502d1f2c6b8eddcbf4f" compoundref="rtl8139_8h" startline="53">RTL8139_MAGIC</references>
+        <references refid="rtl8139_8c_1aa7f42bc6b6e362957934c268a98e1396" compoundref="rtl8139_8c" startline="54" endline="86">rtl8139_send</references>
+        <references refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" compoundref="rtl8139_8h" startline="42">RX_BUFFER_SIZE</references>
+        <references refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" compoundref="rtl8139_8c" startline="24">card::rxBuffer</references>
+        <references refid="structcard_1a9492d8053fa4c304877e1f9959b48731" compoundref="rtl8139_8c" startline="25">card::rxBufferOffset</references>
+        <references refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2">netif::secondary</references>
+        <references refid="structnetif_1ac0505ae55088f68c2cefa77dc6871208" compoundref="netif_8h" startline="66">netif::send</references>
+        <references refid="rtl8139_8h_1aae6b5a7b3905eadb0f15a8ffa647b520" compoundref="rtl8139_8h" startline="25">TCR_IFG_STANDARD</references>
+        <references refid="rtl8139_8h_1a878054e18cfb85ec78fbc6a3f8c60f42" compoundref="rtl8139_8h" startline="26">TCR_MXDMA_256</references>
+        <references refid="rtl8139_8h_1a9ab33647617098646990fe263600b650" compoundref="rtl8139_8h" startline="43">TX_BUFFER_SIZE</references>
+        <references refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" compoundref="rtl8139_8c" startline="27">card::txBuffer</references>
+        <references refid="structcard_1a2294d3601ad6be7638b30f68496d589e" compoundref="rtl8139_8c" startline="28">card::txBufferUsed</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      <memberdef kind="function" id="rtl8139_8c_1a99eafb39dc3c4d9f91fce547ad519f1d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>ATTRIBUTE</definition>
+        <argsstring>(&quot;netif&quot;, rtl8139_init)</argsstring>
+        <name>ATTRIBUTE</name>
+        <param>
+          <type>&quot;netif&quot;</type>
+        </param>
+        <param>
+          <type><ref refid="rtl8139_8c_1a9fc900b0fe44c386645d1c211187c0ad" kindref="member">rtl8139_init</ref></type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="318" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="bufio_8h" kindref="compound">aplus/bufio.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="attribute_8h" kindref="compound">aplus/attribute.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="eth_8h" kindref="compound">aplus/net/eth.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="rtl8139_8h" kindref="compound">rtl8139.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="structcard" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structcard" kindref="compound">card</ref><sp/>{</highlight></codeline>
+<codeline lineno="19" refid="structcard_1ac4d735012434df4c445edaffce28bd73" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/><ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>;</highlight></codeline>
+<codeline lineno="20" refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="22" refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[6];</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="24" refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" kindref="member">rxBuffer</ref>;</highlight></codeline>
+<codeline lineno="25" refid="structcard_1a9492d8053fa4c304877e1f9959b48731" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" kindref="member">txBuffer</ref>;</highlight></codeline>
+<codeline lineno="28" refid="structcard_1a2294d3601ad6be7638b30f68496d589e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structcard_1a2294d3601ad6be7638b30f68496d589e" kindref="member">txBufferUsed</ref>:1;</highlight></codeline>
+<codeline lineno="29" refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" kindref="member">curBuffer</ref>;<sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="structcard_1a63721f311b12c89790089bbcacc0060b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structcard_1a63721f311b12c89790089bbcacc0060b" kindref="member">magic</ref>;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}<sp/><ref refid="rtl8139_8c_1a7e6e6d124063a40473b1f33abf41448a" kindref="member">card_t</ref>;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35" refid="rtl8139_8c_1a457f6197ba2a5b8c30f24394fcabd0f7" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structcard" kindref="compound">card_t</ref>*<sp/><ref refid="structcard" kindref="compound">card</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="rtl8139_8c_1af88d9433833650f4c4ff826564aa87d2" refkind="member"><highlight class="normal"><ref refid="rtl8139_8c_1af88d9433833650f4c4ff826564aa87d2" kindref="member">__attribute__</ref><sp/>((align(0x1000)))</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>rtl8139_rxbuffer[<ref refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" kindref="member">RX_BUFFER_SIZE</ref><sp/>+<sp/>16];</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><ref refid="rtl8139_8c_1af88d9433833650f4c4ff826564aa87d2" kindref="member">__attribute__</ref><sp/>((align(0x1000)))</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>rtl8139_txbuffer[<ref refid="rtl8139_8h_1a9ab33647617098646990fe263600b650" kindref="member">TX_BUFFER_SIZE</ref><sp/>*<sp/>4<sp/>+<sp/>16];<sp/></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>rtl8139_ifup(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;flags<sp/>|=<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="rtl8139_8c_1a4320ac409c8d37bf1452e4bae38a1bb5" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="rtl8139_8c_1a4320ac409c8d37bf1452e4bae38a1bb5" kindref="member">rtl8139_ifdown</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;=<sp/>~<ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="rtl8139_8c_1aa7f42bc6b6e362957934c268a98e1396" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="rtl8139_8c_1aa7f42bc6b6e362957934c268a98e1396" kindref="member">rtl8139_send</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structcard" kindref="compound">card_t</ref>*<sp/>card<sp/>=<sp/>(<ref refid="structcard" kindref="compound">card_t</ref>*)<sp/>netif-&gt;<ref refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(card-&gt;<ref refid="structcard_1a63721f311b12c89790089bbcacc0060b" kindref="member">magic</ref><sp/>!=<sp/><ref refid="rtl8139_8h_1a3f0fc1302723b502d1f2c6b8eddcbf4f" kindref="member">RTL8139_MAGIC</ref>)</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(len<sp/>&gt;<sp/>1500)<sp/>{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1adac4c9e26ac4c17089eaf3a0e060f601" kindref="member">tx_errors</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" kindref="member">fastlock_waiton</ref>(card-&gt;<ref refid="structcard_1a2294d3601ad6be7638b30f68496d589e" kindref="member">txBufferUsed</ref>);</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(card-&gt;<ref refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" kindref="member">txBuffer</ref>,<sp/>buf,<sp/>len);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(len<sp/>&lt;<sp/>60)<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memset((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>card-&gt;<ref refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" kindref="member">txBuffer</ref><sp/>+<sp/>len),<sp/>0,<sp/>60<sp/>-<sp/>len);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>len<sp/>=<sp/>60;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>curBuffer<sp/>=<sp/>card-&gt;<ref refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" kindref="member">curBuffer</ref>++;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" kindref="member">curBuffer</ref><sp/>%=<sp/>4;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" kindref="member">int_out32</ref>(card,<sp/><ref refid="rtl8139_8h_1a42f10cfb594910b5a1e2bcfad9086271" kindref="member">REG_TRANSMIT_ADDR0</ref><sp/>+<sp/>(4<sp/>*<sp/>curBuffer),<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>card-&gt;<ref refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" kindref="member">txBuffer</ref><sp/>+<sp/>(<ref refid="rtl8139_8h_1a9ab33647617098646990fe263600b650" kindref="member">TX_BUFFER_SIZE</ref><sp/>*<sp/>curBuffer));</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" kindref="member">int_out32</ref>(card,<sp/><ref refid="rtl8139_8h_1a15e2164bee77a940134b3c0618e207d3" kindref="member">REG_TRANSMIT_STATUS0</ref><sp/>+<sp/>(4<sp/>*<sp/>curBuffer),<sp/>((256<sp/>&lt;&lt;<sp/>11)<sp/>&amp;<sp/>0x003F0000)<sp/>|<sp/>len);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1aabafd7c28253a190863f673bd5e4320a" kindref="member">tx_packets</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1ac340647ad948b8103aa9a4e3c7b3fd0f" kindref="member">tx_bytes</ref><sp/>+=<sp/>len;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>len;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89" refid="rtl8139_8c_1a819dd51ffb70dad1dcb15bace2135e4d" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rtl8139_8c_1a819dd51ffb70dad1dcb15bace2135e4d" kindref="member">recvdata</ref>(<ref refid="structcard" kindref="compound">card_t</ref>*<sp/>card)<sp/>{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(1)<sp/>{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>cmd<sp/>=<sp/><ref refid="rtl8139_8h_1a7d11540c9ed834d78c06a0f58bc2861d" kindref="member">int_in8</ref>(card,<sp/><ref refid="rtl8139_8h_1a3b2613e7a11853fee7b0164d592b477a" kindref="member">REG_COMMAND</ref>);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(cmd<sp/>&amp;<sp/><ref refid="rtl8139_8h_1a57ac94bdc04f48c7a66ced30aa060624" kindref="member">CR_BUFFER_IS_EMPTY</ref>)</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref>*<sp/>rxBuffer<sp/>=<sp/>(<ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>card-&gt;<ref refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" kindref="member">rxBuffer</ref><sp/>+<sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref>);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>head<sp/>=<sp/>*rxBuffer++;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((head<sp/>&amp;<sp/>1)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref><sp/>=<sp/>*rxBuffer++;</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>length<sp/>-=<sp/>4;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>+=<sp/>4;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data<sp/>=<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(length);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>+<sp/>length)<sp/>&gt;=<sp/><ref refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" kindref="member">RX_BUFFER_SIZE</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy(data,<sp/>rxBuffer,<sp/><ref refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" kindref="member">RX_BUFFER_SIZE</ref><sp/>-<sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref>);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>data<sp/>+<sp/><ref refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" kindref="member">RX_BUFFER_SIZE</ref><sp/>-<sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref>),<sp/>card-&gt;<ref refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" kindref="member">rxBuffer</ref>,<sp/>length<sp/>-<sp/>(<ref refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" kindref="member">RX_BUFFER_SIZE</ref><sp/>-<sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref>));</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy(data,<sp/>rxBuffer,<sp/>length);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;rtl8139:<sp/>receveid<sp/>%d<sp/>bytes\n&quot;</highlight><highlight class="normal">,<sp/>length);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>USERNET</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="udp_8c_1a9721c26507ac0169090b8934a33b1098" kindref="member">udp_recv</ref>(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>,<sp/>data,<sp/>length)<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="eth_8c_1af8e21540e459402877e8e7143d17f47c" kindref="member">eth_recv</ref>(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>,<sp/>data,<sp/>length)<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1a80040f58867713ff1b5ec982a450221e" kindref="member">rx_packets</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1a5a078449e22bb6f4d3d0068345d8dabc" kindref="member">rx_bytes</ref><sp/>+=<sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a5ae2198374cbfd44de7e41e646aaae64" kindref="member">state</ref>.<ref refid="structnetif_1adb3c694759403e67d539a5e81a552c92" kindref="member">rx_errors</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>+=<sp/>length<sp/>+<sp/>4;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>=<sp/>(card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>+<sp/>3)<sp/>&amp;<sp/>~3;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>%=<sp/><ref refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" kindref="member">RX_BUFFER_SIZE</ref>;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826" kindref="member">int_out16</ref>(card,<sp/><ref refid="rtl8139_8h_1a9690a77264be5910191756632842b04d" kindref="member">REG_CUR_READ_ADDR</ref>,<sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>-<sp/>0x10);</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="139"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141" refid="rtl8139_8c_1aa5ce80a5e67e896eb7a7799c5d21d542" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rtl8139_8c_1aa5ce80a5e67e896eb7a7799c5d21d542" kindref="member">rtl8139_handler</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>unused)<sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>isr<sp/>=<sp/><ref refid="rtl8139_8h_1ab4126d6287621dc529d43e6fc5cd2f27" kindref="member">int_in16</ref>(card,<sp/><ref refid="rtl8139_8h_1ae643783aefff2e6a891b5fa59bfcd344" kindref="member">REG_INTERRUPT_STATUS</ref>);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>nsr<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(isr<sp/>&amp;<sp/><ref refid="rtl8139_8h_1afcba7a5ffbbdce80f9b4d8038a2900c4" kindref="member">ISR_TRANSMIT_OK</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;rtl8139:<sp/>Transmitted<sp/>data<sp/>successfully\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"></highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a2294d3601ad6be7638b30f68496d589e" kindref="member">txBufferUsed</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nsr<sp/>|=<sp/><ref refid="rtl8139_8h_1afcba7a5ffbbdce80f9b4d8038a2900c4" kindref="member">ISR_TRANSMIT_OK</ref>;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(isr<sp/>&amp;<sp/><ref refid="rtl8139_8h_1aacce0c98835613c89c957d571340a176" kindref="member">ISR_RECEIVE_OK</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;rtl8139:<sp/>Received<sp/>data\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rtl8139_8c_1a819dd51ffb70dad1dcb15bace2135e4d" kindref="member">recvdata</ref>(card);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>nsr<sp/>|=<sp/><ref refid="rtl8139_8h_1aacce0c98835613c89c957d571340a176" kindref="member">ISR_RECEIVE_OK</ref>;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826" kindref="member">int_out16</ref>(card,<sp/><ref refid="rtl8139_8h_1ae643783aefff2e6a891b5fa59bfcd344" kindref="member">REG_INTERRUPT_STATUS</ref>,<sp/>nsr);</highlight></codeline>
+<codeline lineno="163"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166" refid="rtl8139_8c_1a9fc900b0fe44c386645d1c211187c0ad" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="rtl8139_8c_1a9fc900b0fe44c386645d1c211187c0ad" kindref="member">rtl8139_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpci__device" kindref="compound">pci_device_t</ref>*<sp/>device<sp/>=<sp/>(<ref refid="structpci__device" kindref="compound">pci_device_t</ref>*)<sp/><ref refid="pci_8c_1abca1ff85a7e4d518a83cc17348aa39cb" kindref="member">pci_find_by_id</ref>(0x10EC,<sp/>0x8139);</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(device<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;rtl8139:<sp/>no<sp/>device<sp/>found\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/>card<sp/>=<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structcard" kindref="compound">card_t</ref>));</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a63721f311b12c89790089bbcacc0060b" kindref="member">magic</ref><sp/>=<sp/><ref refid="rtl8139_8h_1a3f0fc1302723b502d1f2c6b8eddcbf4f" kindref="member">RTL8139_MAGIC</ref>;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref><sp/>=<sp/>device;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a9d09a7af406abb667672c750d24cda0b" kindref="member">int_out8</ref>(card,<sp/><ref refid="rtl8139_8h_1a5b93ab1d3172cbf4cbddb358cd790dec" kindref="member">REG_CONFIG1</ref>,<sp/>0);</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a9d09a7af406abb667672c750d24cda0b" kindref="member">int_out8</ref>(card,<sp/><ref refid="rtl8139_8h_1a3b2613e7a11853fee7b0164d592b477a" kindref="member">REG_COMMAND</ref>,<sp/><ref refid="rtl8139_8h_1ab2a1fddf4be3a5b61bc6136a759d2450" kindref="member">CR_RESET</ref>);</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">((<ref refid="rtl8139_8h_1a7d11540c9ed834d78c06a0f58bc2861d" kindref="member">int_in8</ref>(card,<sp/><ref refid="rtl8139_8h_1a3b2613e7a11853fee7b0164d592b477a" kindref="member">REG_COMMAND</ref>)<sp/>&amp;<sp/><ref refid="rtl8139_8h_1a3b2613e7a11853fee7b0164d592b477a" kindref="member">REG_COMMAND</ref>)<sp/>==<sp/><ref refid="rtl8139_8h_1ab2a1fddf4be3a5b61bc6136a759d2450" kindref="member">CR_RESET</ref>);</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"></highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>,<sp/>0,<sp/>6);</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>6;<sp/>i++)</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[i]<sp/>=<sp/><ref refid="rtl8139_8h_1a7d11540c9ed834d78c06a0f58bc2861d" kindref="member">int_in8</ref>(card,<sp/>i);</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="188"><highlight class="normal"></highlight></codeline>
+<codeline lineno="189"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;rtl8139:<sp/>%d:%d.%d,<sp/>iobase<sp/>0x%x,<sp/>irq<sp/>%d,<sp/>MAC<sp/>Address<sp/>%02x:%02x:%02x:%02x:%02x:%02x\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>-&gt;<ref refid="structpci__device_1a832940e219d52a08725a39fc97663d07" kindref="member">bus</ref>,</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>-&gt;<ref refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" kindref="member">dev</ref>,</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>-&gt;<ref refid="structpci__device_1ac292358b1097064cb388125a45740aff" kindref="member">func</ref>,</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>-&gt;<ref refid="structpci__device_1a5b15ddf1741aaae55aa9933f53876d11" kindref="member">iobase</ref>,</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>-&gt;<ref refid="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" kindref="member">intr_line</ref>,</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[0],</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[1],</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[2],</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[3],</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[4],</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>[5]</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"></highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>-&gt;<ref refid="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" kindref="member">intr_line</ref><sp/>==<sp/>0xFF)<sp/>{</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;rtl8139:<sp/>network<sp/>card<sp/>isn&apos;t<sp/>connected<sp/>to<sp/>the<sp/>PIC\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" kindref="member">rxBuffer</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>rtl8139_rxbuffer;</highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" kindref="member">txBuffer</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>rtl8139_txbuffer;</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a9492d8053fa4c304877e1f9959b48731" kindref="member">rxBufferOffset</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" kindref="member">curBuffer</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1a2294d3601ad6be7638b30f68496d589e" kindref="member">txBufferUsed</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"></highlight></codeline>
+<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(card-&gt;<ref refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" kindref="member">rxBuffer</ref>,<sp/>0,<sp/><ref refid="rtl8139_8h_1a739a2a1a0047c98ac1b18ecd25dac092" kindref="member">RX_BUFFER_SIZE</ref><sp/>+<sp/>16);</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(card-&gt;<ref refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" kindref="member">txBuffer</ref>,<sp/>0,<sp/><ref refid="rtl8139_8h_1a9ab33647617098646990fe263600b650" kindref="member">TX_BUFFER_SIZE</ref><sp/>*<sp/>4<sp/>+<sp/>16);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"></highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a47adfd20d4b7265f3e5c95c08d6bdace" kindref="member">irq_set</ref>(card-&gt;<ref refid="structcard_1ac4d735012434df4c445edaffce28bd73" kindref="member">device</ref>-&gt;<ref refid="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" kindref="member">intr_line</ref>,<sp/><ref refid="rtl8139_8c_1aa5ce80a5e67e896eb7a7799c5d21d542" kindref="member">rtl8139_handler</ref>);</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"></highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826" kindref="member">int_out16</ref>(card,<sp/><ref refid="rtl8139_8h_1ab4c18def6442e5a12813bff4707a95f4" kindref="member">REG_INTERRUPT_MASK</ref>,<sp/>0x0005);</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a1bce2233ee943a85ae84648382e64826" kindref="member">int_out16</ref>(card,<sp/><ref refid="rtl8139_8h_1ae643783aefff2e6a891b5fa59bfcd344" kindref="member">REG_INTERRUPT_STATUS</ref>,<sp/>0);</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"></highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a9d09a7af406abb667672c750d24cda0b" kindref="member">int_out8</ref>(card,<sp/>REG_COMMAND,<sp/><ref refid="rtl8139_8h_1afbe4a2ad282a15a449afe27c8477d7a4" kindref="member">CR_RECEIVER_ENABLE</ref><sp/>|<sp/><ref refid="rtl8139_8h_1a724cc791aabf32482dca4be45cc5d160" kindref="member">CR_TRANSMITTER_ENABLE</ref>);</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" kindref="member">int_out32</ref>(card,<sp/><ref refid="rtl8139_8h_1a988a4299b417f298b34e9ae012fb3829" kindref="member">REG_RECEIVE_BUFFER</ref>,<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>card-&gt;<ref refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" kindref="member">rxBuffer</ref>);</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"></highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>4;<sp/>i++)</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" kindref="member">int_out32</ref>(card,<sp/><ref refid="rtl8139_8h_1a42f10cfb594910b5a1e2bcfad9086271" kindref="member">REG_TRANSMIT_ADDR0</ref><sp/>+<sp/>(4<sp/>*<sp/>i),<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>card-&gt;<ref refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" kindref="member">txBuffer</ref><sp/>+<sp/>(<ref refid="rtl8139_8h_1a9ab33647617098646990fe263600b650" kindref="member">TX_BUFFER_SIZE</ref><sp/>*<sp/>i));</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" kindref="member">int_out32</ref>(card,<sp/><ref refid="rtl8139_8h_1a66a6f3026d2e079b8fc7056dcd00fe91" kindref="member">REG_RECEIVE_CONFIGURATION</ref>,<sp/><ref refid="rtl8139_8h_1a160445e9a8cb8827d32d5cc6417b3fda" kindref="member">RCR_MXDMA_UNLIMITED</ref><sp/>|<sp/><ref refid="rtl8139_8h_1a14d20c8a78d65ef7542b5c59e695d4fa" kindref="member">RCR_ACCEPT_BROADCAST</ref><sp/>|<sp/><ref refid="rtl8139_8h_1a40752262c4c0d282513c5ad5f1449ffa" kindref="member">RCR_ACCEPT_PHYS_MATCH</ref>);</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1aee35c32a8d730227f65850dfc577c232" kindref="member">int_out32</ref>(card,<sp/><ref refid="rtl8139_8h_1ae71202863cf99afcc3eab3865699dcf9" kindref="member">REG_TRANSMIT_CONFIGURATION</ref>,<sp/><ref refid="rtl8139_8h_1aae6b5a7b3905eadb0f15a8ffa647b520" kindref="member">TCR_IFG_STANDARD</ref><sp/>|<sp/><ref refid="rtl8139_8h_1a878054e18cfb85ec78fbc6a3f8c60f42" kindref="member">TCR_MXDMA_256</ref>);</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"></highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8h_1a9d09a7af406abb667672c750d24cda0b" kindref="member">int_out8</ref>(card,<sp/>REG_COMMAND,<sp/><ref refid="rtl8139_8h_1afbe4a2ad282a15a449afe27c8477d7a4" kindref="member">CR_RECEIVER_ENABLE</ref><sp/>|<sp/><ref refid="rtl8139_8h_1a724cc791aabf32482dca4be45cc5d160" kindref="member">CR_TRANSMITTER_ENABLE</ref>);</highlight></codeline>
+<codeline lineno="237"><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"></highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structnetif" kindref="compound">netif_t</ref>));</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structnetif" kindref="compound">netif_t</ref>));</highlight></codeline>
+<codeline lineno="241"><highlight class="normal"></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/>strcpy(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>,<sp/></highlight><highlight class="stringliteral">&quot;eth0&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>,<sp/>card-&gt;<ref refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" kindref="member">macaddr</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>));</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[0]<sp/>=<sp/>192;</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[1]<sp/>=<sp/>168;</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[2]<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[3]<sp/>=<sp/>80;</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[0]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[1]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[2]<sp/>=<sp/>255;</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[3]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
+<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[0]<sp/>=<sp/>0xfe80;</highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[1]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[2]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[3]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[4]<sp/>=<sp/>0x021d;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[5]<sp/>=<sp/>0x72ff;</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[6]<sp/>=<sp/>0xfef9;</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[7]<sp/>=<sp/>0x9b71;</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[0]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[1]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[2]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[3]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="269"><highlight class="normal"></highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[0]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[1]<sp/>=<sp/>8;</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[2]<sp/>=<sp/>4;</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[3]<sp/>=<sp/>4;</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="275"><highlight class="normal"></highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[0]<sp/>=<sp/>0x2001;</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[1]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[2]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[3]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[4]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[5]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[6]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[7]<sp/>=<sp/>0x8888;</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[0]<sp/>=<sp/>0x2001;</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[1]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[2]<sp/>=<sp/>0x4860;</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[3]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[4]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[5]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[6]<sp/>=<sp/>0x0000;</highlight></codeline>
+<codeline lineno="291"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[7]<sp/>=<sp/>0x8844;</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"></highlight></codeline>
+<codeline lineno="293"><highlight class="normal"></highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" kindref="member">mtu</ref><sp/>=<sp/>1500;</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1ac0505ae55088f68c2cefa77dc6871208" kindref="member">send</ref><sp/>=<sp/><ref refid="rtl8139_8c_1aa7f42bc6b6e362957934c268a98e1396" kindref="member">rtl8139_send</ref>;</highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" kindref="member">ifup</ref><sp/>=<sp/>rtl8139_ifup;</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" kindref="member">ifdown</ref><sp/>=<sp/><ref refid="rtl8139_8c_1a4320ac409c8d37bf1452e4bae38a1bb5" kindref="member">rtl8139_ifdown</ref>;</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/>card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>-&gt;<ref refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" kindref="member">data</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>card;</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"></highlight></codeline>
+<codeline lineno="300"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;rtl8139:<sp/>sending<sp/>data<sp/>for<sp/>test<sp/>(512<sp/>Bytes)\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>tmpbuf<sp/>=<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(512);</highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(tmpbuf,<sp/>0xFF,<sp/>512);</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"></highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/>rtl8139_ifup(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>);</highlight></codeline>
+<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" kindref="member">eth_send</ref>(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>,<sp/>tmpbuf,<sp/>512,<sp/><ref refid="netif_8h_1a92b354424f46fe25b001e3cf311fb951" kindref="member">NETIF_RAW</ref>);<sp/></highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="rtl8139_8c_1a4320ac409c8d37bf1452e4bae38a1bb5" kindref="member">rtl8139_ifdown</ref>(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>);</highlight></codeline>
+<codeline lineno="309"><highlight class="normal"></highlight></codeline>
+<codeline lineno="310"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="311"><highlight class="normal"></highlight></codeline>
+<codeline lineno="312"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" kindref="member">netif_add</ref>(card-&gt;<ref refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" kindref="member">netif</ref>);</highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="314"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="315"><highlight class="normal"></highlight></codeline>
+<codeline lineno="316"><highlight class="normal"></highlight></codeline>
+<codeline lineno="317"><highlight class="normal"></highlight></codeline>
+<codeline lineno="318"><highlight class="normal"><ref refid="rtl8139_8c_1a99eafb39dc3c4d9f91fce547ad519f1d" kindref="member">ATTRIBUTE</ref>(</highlight><highlight class="stringliteral">&quot;netif&quot;</highlight><highlight class="normal">,<sp/><ref refid="rtl8139_8c_1a9fc900b0fe44c386645d1c211187c0ad" kindref="member">rtl8139_init</ref>);</highlight></codeline>
+<codeline lineno="319"><highlight class="normal"></highlight></codeline>
+<codeline lineno="320"><highlight class="normal"></highlight></codeline>
+<codeline lineno="321"><highlight class="normal"></highlight></codeline>
+<codeline lineno="322"><highlight class="normal"></highlight></codeline>
+<codeline lineno="323"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c"/>
+  </compounddef>
+</doxygen>

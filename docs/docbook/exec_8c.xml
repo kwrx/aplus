@@ -1,0 +1,344 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="exec_8c">
+    <title>exec.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structelf32__hdr">elf32_hdr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structelf32__shdr">elf32_shdr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1ae407130db14180c6737390604ba7c1fe">EI_NIDENT</link> 16</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f">EI_MAG0</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a2cae3878d982911632b418680718d53b">EI_MAG1</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739">EI_MAG2</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1ace03d4c5e8952e27b8505581432c3b84">EI_MAG3</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636">EI_CLASS</link> 4</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a79c714b4bf89638ff576e163d7d2144f">EI_DATA</link> 5</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1aac8694b14e6500d9dc5047ef62518845">EI_VERSION</link> 6</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1aed24a379d553d0e36853949dd6ddd6c1">EI_PAD</link> 7</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a8d944947af59b67d47a445ae2bef32e3">ELF_MAG0</link> 0x7F</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9">ELF_MAG1</link> &apos;E&apos;</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a60668f0dfd2613d5ccccac355f147726">ELF_MAG2</link> &apos;L&apos;</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a40443fcac019afd6b173b8890fd25e6c">ELF_MAG3</link> &apos;F&apos;</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69">ELF_CLASS_32</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a24ed2e132c3545d8d8d680f2ca2cd7fb">ELF_CLASS_64</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a2746b48aac96a65735bed83598d5d68a">ELF_DATA_LSB</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a716af0ca966a3f918b82c4a4a8a73f9e">ELF_DATA_MSB</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a1566f4c14cff9f4b539b00af54d62dbb">SHT_NULL</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a4bff22edbae51353ba9b3572d424b91a">SHT_PROGBITS</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a4add7784e43ec3d3b9c09d3ffc476a81">SHT_SYMTAB</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1af4b916dc4ca5016fb5c374068002a532">SHT_STRTAB</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1abf2fc2781a2869352c2ffa0555f34118">SHT_RELA</link> 4</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a446fd322326bea21373453c80c3f7925">SHT_HASH</link> 5</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a3a9278d12cf2c9e7eaca87688d0a6e37">SHT_DYNAMIC</link> 6</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a65506a79f0e972c851851af7b1008d94">SHT_NOTE</link> 7</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a820ff00317949be2ea1fd634a17dc13e">SHT_NOBITS</link> 8</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a2aea2ed985f81f13a157fe2da02a621a">SHT_REL</link> 9</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1ace0ce008ff50406077a9450174fe55a5">SHT_SHLIB</link> 10</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1aa9949aedf49107f6a07e618d5d791d40">SHT_DYNSYM</link> 11</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a025c79223b0fee4676337d660f76b59b">SHF_WRITE</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a38476fe4ed88ac83ba86a4e103199a86">SHF_ALLOC</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1ab3780594e35fbbc6e5028bcb921d0a76">SHF_EXECINSTR</link> 4</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1acf36e75ca9c55c229039ee298abb5bb0">SHF_MASK</link> 0xF0000000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9">check</link> if(cond) {					\
+			<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = ENOEXEC;		\
+			return -1;				\
+		}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>  <link linkend="exec_8c_1a40c6d4571e6001f443cc6a6474620158">Elf32_Addr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link>  <link linkend="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca">Elf32_Half</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>  <link linkend="exec_8c_1a655751f9b317369b93c581ea8ed84516">Elf32_Off</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef int32_t  <link linkend="exec_8c_1a30ce6352cf03c667272698ada477da95">Elf32_Sword</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>  <link linkend="exec_8c_1af5924ece606c732e86f8263a19408e45">Elf32_Word</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structelf32__hdr">elf32_hdr</link>  <link linkend="exec_8c_1a34edb44226509e467315e3bd81c3d7dc">elf32_hdr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structelf32__shdr">elf32_shdr</link>  <link linkend="exec_8c_1ad7b97ddfcb82a63cd28a9cb88f21984a">elf32_shdr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a">elf32_check</link> (
+<link linkend="exec_8c_1a34edb44226509e467315e3bd81c3d7dc">elf32_hdr_t</link> * hdr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="exec_8c_1a7473eb0ac8edeee7e0a7502c5ed08dc8">elf32_load</link> (
+void * image)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/exec.c</para>
+    </simplesect>
+</section>

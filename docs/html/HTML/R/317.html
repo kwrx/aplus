@@ -1,0 +1,237 @@
+<html>
+<head>
+<title>netif</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/89.html#L66'>netif</a>              66 src/include/aplus/netif.h 	int (*send) (struct netif*, void*, size_t, int);
+<a href='../S/89.html#L67'>netif</a>              67 src/include/aplus/netif.h 	int (*ifup)	(struct netif*);
+<a href='../S/89.html#L68'>netif</a>              68 src/include/aplus/netif.h 	int (*ifdown) (struct netif*);
+<a href='../S/89.html#L85'>netif</a>              85 src/include/aplus/netif.h 	netif_t* netif;
+<a href='../S/108.html#L60'>netif</a>              60 src/net/arp.c  	netif_t* netif = (netif_t*) netif_find_by_macaddr(arp-&gt;macaddr);
+<a href='../S/108.html#L61'>netif</a>              61 src/net/arp.c  	if(netif)
+<a href='../S/108.html#L62'>netif</a>              62 src/net/arp.c  		memcpy(netif-&gt;ipv4, arp-&gt;ipv4, sizeof(ipv4_t));
+<a href='../S/108.html#L72'>netif</a>              72 src/net/arp.c  		if(memcmp(netif-&gt;macaddr, arp-&gt;tha, sizeof(macaddr_t)) == 0)
+<a href='../S/108.html#L87'>netif</a>              87 src/net/arp.c  	memcpy(arp-&gt;sha, netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/108.html#L93'>netif</a>              93 src/net/arp.c  	kprintf("arp: sending request for %s\n", netif-&gt;name);
+<a href='../S/108.html#L96'>netif</a>              96 src/net/arp.c  	int ret = eth_send(netif, arp, sizeof(arp_header_t), NETIF_ARP);
+<a href='../S/112.html#L15'>netif</a>              15 src/net/eth.c  		netif, (void*) ((uint32_t) buf + sizeof(eth_header_t)), length - sizeof(eth_header_t)
+<a href='../S/112.html#L38'>netif</a>              38 src/net/eth.c  							netif,
+<a href='../S/112.html#L52'>netif</a>              52 src/net/eth.c  	memcpy((void*) ethpkt-&gt;source, (void*) netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/112.html#L73'>netif</a>              73 src/net/eth.c  	int ret = netif-&gt;send(netif, ethpkt, length, NETIF_ETH);
+<a href='../S/112.html#L81'>netif</a>              81 src/net/eth.c  	if(length + sizeof(eth_header_t) &lt; netif-&gt;mtu) {
+<a href='../S/112.html#L82'>netif</a>              82 src/net/eth.c  		if(eth_send_packet(netif, buf, length, type) &gt; 0)
+<a href='../S/112.html#L88'>netif</a>              88 src/net/eth.c  	int delta = netif-&gt;mtu - sizeof(eth_header_t);
+<a href='../S/112.html#L93'>netif</a>              93 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + i), delta, type);
+<a href='../S/112.html#L96'>netif</a>              96 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + length - (length % delta)), length % delta, type);
+<a href='../S/113.html#L63'>netif</a>              63 src/net/ipv4.c 	memcpy(ip-&gt;source, netif-&gt;ipv4, sizeof(ipv4_t));
+<a href='../S/113.html#L82'>netif</a>              82 src/net/ipv4.c 		netif, (void*) ((uint32_t) ip + IPV4_HEADER_LENGTH(ip)), length - IPV4_HEADER_LENGTH(ip)
+<a href='../S/113.html#L104'>netif</a>             104 src/net/ipv4.c 							netif,
+<a href='../S/113.html#L118'>netif</a>             118 src/net/ipv4.c 		void* pkt = ipv4_create_packet(netif, buf, length, type, dest, -1, 0);
+<a href='../S/113.html#L119'>netif</a>             119 src/net/ipv4.c 		int ret = eth_send(netif, pkt, length + sizeof(ipv4_header_t), NETIF_INET);
+<a href='../S/113.html#L136'>netif</a>             136 src/net/ipv4.c 		void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), IPV4_MAX_LENGTH, type, dest, 0, i);
+<a href='../S/113.html#L137'>netif</a>             137 src/net/ipv4.c 		ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+<a href='../S/113.html#L142'>netif</a>             142 src/net/ipv4.c 	void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), length - ((i - 1) * IPV4_MAX_LENGTH), type, dest, -1, i);
+<a href='../S/113.html#L143'>netif</a>             143 src/net/ipv4.c 	ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+<a href='../S/106.html#L22'>netif</a>              22 src/net/ipv6.c 		netif, (void*) ((uint32_t) ip + sizeof(ipv6_header_t)), length - sizeof(ipv6_header_t)
+<a href='../S/106.html#L44'>netif</a>              44 src/net/ipv6.c 							netif,
+<a href='../S/106.html#L79'>netif</a>              79 src/net/ipv6.c 	memcpy(ip-&gt;source, netif-&gt;ipv6, sizeof(ipv6_t));
+<a href='../S/106.html#L82'>netif</a>              82 src/net/ipv6.c 	int ret = eth_send(netif, (void*) ip, length + sizeof(ipv6_header_t), NETIF_INET6);
+<a href='../S/111.html#L20'>netif</a>              20 src/net/loopback/loopback.c 	netif-&gt;flags |= NETIF_FLAGS_ENABLE;
+<a href='../S/111.html#L25'>netif</a>              25 src/net/loopback/loopback.c 	netif-&gt;flags &amp;= ~NETIF_FLAGS_ENABLE;
+<a href='../S/111.html#L32'>netif</a>              32 src/net/loopback/loopback.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/111.html#L35'>netif</a>              35 src/net/loopback/loopback.c 	if(eth_recv(netif, buf, len) &gt; 0) {
+<a href='../S/111.html#L36'>netif</a>              36 src/net/loopback/loopback.c 		netif-&gt;state.rx_packets += 1;
+<a href='../S/111.html#L37'>netif</a>              37 src/net/loopback/loopback.c 		netif-&gt;state.rx_bytes += len;
+<a href='../S/111.html#L42'>netif</a>              42 src/net/loopback/loopback.c 	netif-&gt;state.rx_errors += 1;
+<a href='../S/111.html#L47'>netif</a>              47 src/net/loopback/loopback.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/111.html#L51'>netif</a>              51 src/net/loopback/loopback.c 		netif-&gt;state.tx_errors += 1;
+<a href='../S/111.html#L56'>netif</a>              56 src/net/loopback/loopback.c 	netif-&gt;state.tx_packets += 1;
+<a href='../S/111.html#L57'>netif</a>              57 src/net/loopback/loopback.c 	netif-&gt;state.tx_bytes += len;
+<a href='../S/111.html#L60'>netif</a>              60 src/net/loopback/loopback.c 	loopback_recv(netif, buf, len);	
+<a href='../S/111.html#L67'>netif</a>              67 src/net/loopback/loopback.c 	netif_t* netif = (netif_t*) kmalloc(sizeof(netif_t));
+<a href='../S/111.html#L68'>netif</a>              68 src/net/loopback/loopback.c 	memset(netif, 0, sizeof(netif_t));
+<a href='../S/111.html#L71'>netif</a>              71 src/net/loopback/loopback.c 	strcpy(netif-&gt;name, "lo");
+<a href='../S/111.html#L72'>netif</a>              72 src/net/loopback/loopback.c 	memset(netif-&gt;macaddr, 0xFF, sizeof(macaddr_t));
+<a href='../S/111.html#L74'>netif</a>              74 src/net/loopback/loopback.c 	netif-&gt;ipv4[0] = 127;
+<a href='../S/111.html#L75'>netif</a>              75 src/net/loopback/loopback.c 	netif-&gt;ipv4[1] = 0;
+<a href='../S/111.html#L76'>netif</a>              76 src/net/loopback/loopback.c 	netif-&gt;ipv4[2] = 0;
+<a href='../S/111.html#L77'>netif</a>              77 src/net/loopback/loopback.c 	netif-&gt;ipv4[3] = 1;
+<a href='../S/111.html#L79'>netif</a>              79 src/net/loopback/loopback.c 	netif-&gt;ipv6[0] = 0;
+<a href='../S/111.html#L80'>netif</a>              80 src/net/loopback/loopback.c 	netif-&gt;ipv6[1] = 0;
+<a href='../S/111.html#L81'>netif</a>              81 src/net/loopback/loopback.c 	netif-&gt;ipv6[2] = 0;
+<a href='../S/111.html#L82'>netif</a>              82 src/net/loopback/loopback.c 	netif-&gt;ipv6[3] = 0;
+<a href='../S/111.html#L83'>netif</a>              83 src/net/loopback/loopback.c 	netif-&gt;ipv6[4] = 0;
+<a href='../S/111.html#L84'>netif</a>              84 src/net/loopback/loopback.c 	netif-&gt;ipv6[5] = 0;
+<a href='../S/111.html#L85'>netif</a>              85 src/net/loopback/loopback.c 	netif-&gt;ipv6[6] = 0;
+<a href='../S/111.html#L86'>netif</a>              86 src/net/loopback/loopback.c 	netif-&gt;ipv6[7] = 1;
+<a href='../S/111.html#L88'>netif</a>              88 src/net/loopback/loopback.c 	netif-&gt;netmask[0] = 255;
+<a href='../S/111.html#L89'>netif</a>              89 src/net/loopback/loopback.c 	netif-&gt;netmask[1] = 255;
+<a href='../S/111.html#L90'>netif</a>              90 src/net/loopback/loopback.c 	netif-&gt;netmask[2] = 255;
+<a href='../S/111.html#L91'>netif</a>              91 src/net/loopback/loopback.c 	netif-&gt;netmask[3] = 255;
+<a href='../S/111.html#L94'>netif</a>              94 src/net/loopback/loopback.c 	netif-&gt;mtu = LOOPBACK_MTU;
+<a href='../S/111.html#L95'>netif</a>              95 src/net/loopback/loopback.c 	netif-&gt;send = loopback_send;
+<a href='../S/111.html#L96'>netif</a>              96 src/net/loopback/loopback.c 	netif-&gt;ifup = loopback_ifup;
+<a href='../S/111.html#L97'>netif</a>              97 src/net/loopback/loopback.c 	netif-&gt;ifdown = loopback_ifdown;
+<a href='../S/111.html#L98'>netif</a>              98 src/net/loopback/loopback.c 	netif-&gt;data = NULL;
+<a href='../S/111.html#L100'>netif</a>             100 src/net/loopback/loopback.c 	netif_add(netif);
+<a href='../S/107.html#L41'>netif</a>              41 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L43'>netif</a>              43 src/net/netif.c 		if(memcmp(netif-&gt;ipv4, ipv4, sizeof(ipv4_t)) == 0)
+<a href='../S/107.html#L44'>netif</a>              44 src/net/netif.c 			return netif;
+<a href='../S/107.html#L55'>netif</a>              55 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L57'>netif</a>              57 src/net/netif.c 		if(memcmp(netif-&gt;ipv6, ipv6, sizeof(ipv6_t)) == 0)
+<a href='../S/107.html#L58'>netif</a>              58 src/net/netif.c 			return netif;
+<a href='../S/107.html#L71'>netif</a>              71 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L73'>netif</a>              73 src/net/netif.c 		if(memcmp(netif-&gt;macaddr, macaddr, sizeof(macaddr_t)) == 0)
+<a href='../S/107.html#L74'>netif</a>              74 src/net/netif.c 			return netif;
+<a href='../S/107.html#L85'>netif</a>              85 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L87'>netif</a>              87 src/net/netif.c 		if(strcmp(netif-&gt;name, name) == 0)
+<a href='../S/107.html#L88'>netif</a>              88 src/net/netif.c 			return netif;
+<a href='../S/107.html#L99'>netif</a>              99 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L101'>netif</a>             101 src/net/netif.c 		if(netif-&gt;ifup)
+<a href='../S/107.html#L102'>netif</a>             102 src/net/netif.c 			netif-&gt;ifup(netif);
+<a href='../S/107.html#L104'>netif</a>             104 src/net/netif.c 		arp_send(netif);
+<a href='../S/107.html#L115'>netif</a>             115 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L117'>netif</a>             117 src/net/netif.c 		if(netif-&gt;ifdown)
+<a href='../S/107.html#L118'>netif</a>             118 src/net/netif.c 			netif-&gt;ifdown(netif);
+<a href='../S/107.html#L281'>netif</a>             281 src/net/netif.c 	pkt-&gt;netif = netif;
+<a href='../S/104.html#L20'>netif</a>              20 src/net/rtl8139/rtl8139.c 	netif_t* netif;
+<a href='../S/104.html#L45'>netif</a>              45 src/net/rtl8139/rtl8139.c 	netif-&gt;flags |= NETIF_FLAGS_ENABLE;
+<a href='../S/104.html#L50'>netif</a>              50 src/net/rtl8139/rtl8139.c 	netif-&gt;flags &amp;= ~NETIF_FLAGS_ENABLE;
+<a href='../S/104.html#L55'>netif</a>              55 src/net/rtl8139/rtl8139.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/104.html#L58'>netif</a>              58 src/net/rtl8139/rtl8139.c 	card_t* card = (card_t*) netif-&gt;data;
+<a href='../S/104.html#L63'>netif</a>              63 src/net/rtl8139/rtl8139.c 		netif-&gt;state.tx_errors += 1;
+<a href='../S/104.html#L82'>netif</a>              82 src/net/rtl8139/rtl8139.c 	netif-&gt;state.tx_packets += 1;
+<a href='../S/104.html#L83'>netif</a>              83 src/net/rtl8139/rtl8139.c 	netif-&gt;state.tx_bytes += len;
+<a href='../S/104.html#L90'>netif</a>              90 src/net/rtl8139/rtl8139.c 	if((card-&gt;netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/104.html#L123'>netif</a>             123 src/net/rtl8139/rtl8139.c 		if(udp_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L125'>netif</a>             125 src/net/rtl8139/rtl8139.c 		if(eth_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L127'>netif</a>             127 src/net/rtl8139/rtl8139.c 			card-&gt;netif-&gt;state.rx_packets += 1;
+<a href='../S/104.html#L128'>netif</a>             128 src/net/rtl8139/rtl8139.c 			card-&gt;netif-&gt;state.rx_bytes += length;
+<a href='../S/104.html#L130'>netif</a>             130 src/net/rtl8139/rtl8139.c 			card-&gt;netif-&gt;state.rx_errors += 1;
+<a href='../S/104.html#L239'>netif</a>             239 src/net/rtl8139/rtl8139.c 	card-&gt;netif = (netif_t*) kmalloc(sizeof(netif_t));
+<a href='../S/104.html#L240'>netif</a>             240 src/net/rtl8139/rtl8139.c 	memset(card-&gt;netif, 0, sizeof(netif_t));
+<a href='../S/104.html#L243'>netif</a>             243 src/net/rtl8139/rtl8139.c 	strcpy(card-&gt;netif-&gt;name, "eth0");
+<a href='../S/104.html#L244'>netif</a>             244 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;netif-&gt;macaddr, card-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/104.html#L246'>netif</a>             246 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[0] = 192;
+<a href='../S/104.html#L247'>netif</a>             247 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[1] = 168;
+<a href='../S/104.html#L248'>netif</a>             248 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[2] = 1;
+<a href='../S/104.html#L249'>netif</a>             249 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[3] = 80;
+<a href='../S/104.html#L251'>netif</a>             251 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[0] = 255;
+<a href='../S/104.html#L252'>netif</a>             252 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[1] = 255;
+<a href='../S/104.html#L253'>netif</a>             253 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[2] = 255;
+<a href='../S/104.html#L254'>netif</a>             254 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[3] = 0;
+<a href='../S/104.html#L256'>netif</a>             256 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[0] = 0xfe80;
+<a href='../S/104.html#L257'>netif</a>             257 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[1] = 0x0000;
+<a href='../S/104.html#L258'>netif</a>             258 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[2] = 0x0000;
+<a href='../S/104.html#L259'>netif</a>             259 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[3] = 0x0000;
+<a href='../S/104.html#L260'>netif</a>             260 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[4] = 0x021d;
+<a href='../S/104.html#L261'>netif</a>             261 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[5] = 0x72ff;
+<a href='../S/104.html#L262'>netif</a>             262 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[6] = 0xfef9;
+<a href='../S/104.html#L263'>netif</a>             263 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[7] = 0x9b71;
+<a href='../S/104.html#L265'>netif</a>             265 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[0] = 8;
+<a href='../S/104.html#L266'>netif</a>             266 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[1] = 8;
+<a href='../S/104.html#L267'>netif</a>             267 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[2] = 8;
+<a href='../S/104.html#L268'>netif</a>             268 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[3] = 8;
+<a href='../S/104.html#L270'>netif</a>             270 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[0] = 8;
+<a href='../S/104.html#L271'>netif</a>             271 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[1] = 8;
+<a href='../S/104.html#L272'>netif</a>             272 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[2] = 4;
+<a href='../S/104.html#L273'>netif</a>             273 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[3] = 4;
+<a href='../S/104.html#L276'>netif</a>             276 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[0] = 0x2001;
+<a href='../S/104.html#L277'>netif</a>             277 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[1] = 0x4860;
+<a href='../S/104.html#L278'>netif</a>             278 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[2] = 0x4860;
+<a href='../S/104.html#L279'>netif</a>             279 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[3] = 0x0000;
+<a href='../S/104.html#L280'>netif</a>             280 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[4] = 0x0000;
+<a href='../S/104.html#L281'>netif</a>             281 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[5] = 0x0000;
+<a href='../S/104.html#L282'>netif</a>             282 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[6] = 0x0000;
+<a href='../S/104.html#L283'>netif</a>             283 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[7] = 0x8888;
+<a href='../S/104.html#L284'>netif</a>             284 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[0] = 0x2001;
+<a href='../S/104.html#L285'>netif</a>             285 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[1] = 0x4860;
+<a href='../S/104.html#L286'>netif</a>             286 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[2] = 0x4860;
+<a href='../S/104.html#L287'>netif</a>             287 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[3] = 0x0000;
+<a href='../S/104.html#L288'>netif</a>             288 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[4] = 0x0000;
+<a href='../S/104.html#L289'>netif</a>             289 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[5] = 0x0000;
+<a href='../S/104.html#L290'>netif</a>             290 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[6] = 0x0000;
+<a href='../S/104.html#L291'>netif</a>             291 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[7] = 0x8844;
+<a href='../S/104.html#L294'>netif</a>             294 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;mtu = 1500;
+<a href='../S/104.html#L295'>netif</a>             295 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;send = rtl8139_send;
+<a href='../S/104.html#L296'>netif</a>             296 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ifup = rtl8139_ifup;
+<a href='../S/104.html#L297'>netif</a>             297 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ifdown = rtl8139_ifdown;
+<a href='../S/104.html#L298'>netif</a>             298 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;data = (void*) card;
+<a href='../S/104.html#L306'>netif</a>             306 src/net/rtl8139/rtl8139.c 	rtl8139_ifup(card-&gt;netif);
+<a href='../S/104.html#L307'>netif</a>             307 src/net/rtl8139/rtl8139.c 	eth_send(card-&gt;netif, tmpbuf, 512, NETIF_RAW); 
+<a href='../S/104.html#L308'>netif</a>             308 src/net/rtl8139/rtl8139.c 	rtl8139_ifdown(card-&gt;netif);
+<a href='../S/104.html#L312'>netif</a>             312 src/net/rtl8139/rtl8139.c 	netif_add(card-&gt;netif);
+<a href='../S/110.html#L23'>netif</a>              23 src/net/slirp/slirp.c 	netif_t* netif;
+<a href='../S/110.html#L32'>netif</a>              32 src/net/slirp/slirp.c 	netif_t* netif = slirpcard-&gt;netif;
+<a href='../S/110.html#L34'>netif</a>              34 src/net/slirp/slirp.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/110.html#L56'>netif</a>              56 src/net/slirp/slirp.c 		if(ipv4_recv(netif, slirpcard-&gt;buffer, slirpcard-&gt;offset) &gt; 0) {
+<a href='../S/110.html#L57'>netif</a>              57 src/net/slirp/slirp.c 			netif-&gt;state.rx_packets += 1;
+<a href='../S/110.html#L58'>netif</a>              58 src/net/slirp/slirp.c 			netif-&gt;state.rx_bytes += slirpcard-&gt;offset;
+<a href='../S/110.html#L60'>netif</a>              60 src/net/slirp/slirp.c 			netif-&gt;state.rx_errors += 1;
+<a href='../S/110.html#L86'>netif</a>              86 src/net/slirp/slirp.c 	if((netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/110.html#L89'>netif</a>              89 src/net/slirp/slirp.c 	slirpcard_t* slirpcard = (slirpcard_t*) netif-&gt;data;
+<a href='../S/110.html#L120'>netif</a>             120 src/net/slirp/slirp.c 	netif-&gt;flags |= NETIF_FLAGS_ENABLE;
+<a href='../S/110.html#L125'>netif</a>             125 src/net/slirp/slirp.c 	netif-&gt;flags &amp;= ~NETIF_FLAGS_ENABLE;
+<a href='../S/110.html#L138'>netif</a>             138 src/net/slirp/slirp.c 	netif_t* netif = (netif_t*) kmalloc(sizeof(netif_t));
+<a href='../S/110.html#L139'>netif</a>             139 src/net/slirp/slirp.c 	memset(netif, 0, sizeof(netif_t));
+<a href='../S/110.html#L142'>netif</a>             142 src/net/slirp/slirp.c 	strcpy(netif-&gt;name, "slp0");
+<a href='../S/110.html#L145'>netif</a>             145 src/net/slirp/slirp.c 	netif-&gt;macaddr[0] = 10;
+<a href='../S/110.html#L146'>netif</a>             146 src/net/slirp/slirp.c 	netif-&gt;macaddr[1] = 0;
+<a href='../S/110.html#L147'>netif</a>             147 src/net/slirp/slirp.c 	netif-&gt;macaddr[2] = 2;
+<a href='../S/110.html#L148'>netif</a>             148 src/net/slirp/slirp.c 	netif-&gt;macaddr[3] = 0;
+<a href='../S/110.html#L149'>netif</a>             149 src/net/slirp/slirp.c 	netif-&gt;macaddr[4] = 255;
+<a href='../S/110.html#L150'>netif</a>             150 src/net/slirp/slirp.c 	netif-&gt;macaddr[5] = 255;
+<a href='../S/110.html#L152'>netif</a>             152 src/net/slirp/slirp.c 	netif-&gt;ipv4[0] = 10;
+<a href='../S/110.html#L153'>netif</a>             153 src/net/slirp/slirp.c 	netif-&gt;ipv4[1] = 0;
+<a href='../S/110.html#L154'>netif</a>             154 src/net/slirp/slirp.c 	netif-&gt;ipv4[2] = 2;
+<a href='../S/110.html#L155'>netif</a>             155 src/net/slirp/slirp.c 	netif-&gt;ipv4[3] = 0;
+<a href='../S/110.html#L157'>netif</a>             157 src/net/slirp/slirp.c 	netif-&gt;netmask[0] = 255;
+<a href='../S/110.html#L158'>netif</a>             158 src/net/slirp/slirp.c 	netif-&gt;netmask[1] = 255;
+<a href='../S/110.html#L159'>netif</a>             159 src/net/slirp/slirp.c 	netif-&gt;netmask[2] = 255;
+<a href='../S/110.html#L160'>netif</a>             160 src/net/slirp/slirp.c 	netif-&gt;netmask[3] = 0;
+<a href='../S/110.html#L162'>netif</a>             162 src/net/slirp/slirp.c 	netif-&gt;ipv6[0] = 0xfe80;
+<a href='../S/110.html#L163'>netif</a>             163 src/net/slirp/slirp.c 	netif-&gt;ipv6[1] = 0x0000;
+<a href='../S/110.html#L164'>netif</a>             164 src/net/slirp/slirp.c 	netif-&gt;ipv6[2] = 0x0000;
+<a href='../S/110.html#L165'>netif</a>             165 src/net/slirp/slirp.c 	netif-&gt;ipv6[3] = 0x0000;
+<a href='../S/110.html#L166'>netif</a>             166 src/net/slirp/slirp.c 	netif-&gt;ipv6[4] = 0x0000;
+<a href='../S/110.html#L167'>netif</a>             167 src/net/slirp/slirp.c 	netif-&gt;ipv6[5] = 0x10ff;
+<a href='../S/110.html#L168'>netif</a>             168 src/net/slirp/slirp.c 	netif-&gt;ipv6[6] = 0xcef9;
+<a href='../S/110.html#L169'>netif</a>             169 src/net/slirp/slirp.c 	netif-&gt;ipv6[7] = 0x9b70;
+<a href='../S/110.html#L171'>netif</a>             171 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[0] = 8;
+<a href='../S/110.html#L172'>netif</a>             172 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[1] = 8;
+<a href='../S/110.html#L173'>netif</a>             173 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[2] = 8;
+<a href='../S/110.html#L174'>netif</a>             174 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[3] = 8;
+<a href='../S/110.html#L176'>netif</a>             176 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[0] = 8;
+<a href='../S/110.html#L177'>netif</a>             177 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[1] = 8;
+<a href='../S/110.html#L178'>netif</a>             178 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[2] = 4;
+<a href='../S/110.html#L179'>netif</a>             179 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[3] = 4;
+<a href='../S/110.html#L182'>netif</a>             182 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[0] = 0x2001;
+<a href='../S/110.html#L183'>netif</a>             183 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[1] = 0x4860;
+<a href='../S/110.html#L184'>netif</a>             184 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[2] = 0x4860;
+<a href='../S/110.html#L185'>netif</a>             185 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[3] = 0x0000;
+<a href='../S/110.html#L186'>netif</a>             186 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[4] = 0x0000;
+<a href='../S/110.html#L187'>netif</a>             187 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[5] = 0x0000;
+<a href='../S/110.html#L188'>netif</a>             188 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[6] = 0x0000;
+<a href='../S/110.html#L189'>netif</a>             189 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv6[7] = 0x8888;
+<a href='../S/110.html#L190'>netif</a>             190 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[0] = 0x2001;
+<a href='../S/110.html#L191'>netif</a>             191 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[1] = 0x4860;
+<a href='../S/110.html#L192'>netif</a>             192 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[2] = 0x4860;
+<a href='../S/110.html#L193'>netif</a>             193 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[3] = 0x0000;
+<a href='../S/110.html#L194'>netif</a>             194 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[4] = 0x0000;
+<a href='../S/110.html#L195'>netif</a>             195 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[5] = 0x0000;
+<a href='../S/110.html#L196'>netif</a>             196 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[6] = 0x0000;
+<a href='../S/110.html#L197'>netif</a>             197 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv6[7] = 0x8844;
+<a href='../S/110.html#L200'>netif</a>             200 src/net/slirp/slirp.c 	netif-&gt;mtu = SLIRP_MTU;
+<a href='../S/110.html#L201'>netif</a>             201 src/net/slirp/slirp.c 	netif-&gt;send = slirp_send;
+<a href='../S/110.html#L202'>netif</a>             202 src/net/slirp/slirp.c 	netif-&gt;ifup = slirp_ifup;
+<a href='../S/110.html#L203'>netif</a>             203 src/net/slirp/slirp.c 	netif-&gt;ifdown = slirp_ifdown;
+<a href='../S/110.html#L204'>netif</a>             204 src/net/slirp/slirp.c 	netif-&gt;data = (void*) slirpcard;
+<a href='../S/110.html#L206'>netif</a>             206 src/net/slirp/slirp.c 	slirpcard-&gt;netif = netif;
+<a href='../S/110.html#L207'>netif</a>             207 src/net/slirp/slirp.c 	netif_add(netif);
+<a href='../S/114.html#L16'>netif</a>              16 src/net/udp.c  							netif,
+</pre>
+</body>
+</html>

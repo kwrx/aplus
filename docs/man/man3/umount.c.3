@@ -1,0 +1,107 @@
+.TH "src/syscall/umount.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/umount.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/attribute\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_umount2\fP (const char *file, int flags)"
+.br
+.ti -1c
+.RI "int \fBsys_umount\fP (const char *file)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_umount (const char *file)"
+
+.PP
+Definizione alla linea 47 del file umount\&.c\&.
+.PP
+Referenzia sys_umount2()\&.
+.PP
+.nf
+47                                  {
+48     return sys_umount2(file, 0);
+49 }
+.fi
+.SS "int sys_umount2 (const char *file, intflags)"
+
+.PP
+Definizione alla linea 19 del file umount\&.c\&.
+.PP
+Referenzia inode::chown, inode::creat, inode::dev, errno, task::fd, inode::finddir, inode::flush, inode::mode, inode::readdir, sys_close(), sys_open(), e inode::unlink\&.
+.PP
+.nf
+19                                              {
+20     if(!file) {
+21         errno = EINVAL;
+22         return -1;
+23     }
+24 
+25     int fd = sys_open(file, O_RDONLY, 0644);
+26     if(fd < 0) {
+27         errno = ENOENT;
+28         return -1;
+29     }
+30 
+31     inode_t* ino = current_task->fd[fd];
+32     sys_close(fd);
+33 
+34     ino->readdir = NULL;
+35     ino->finddir = NULL;
+36     ino->creat = NULL;
+37     ino->unlink = NULL;
+38     ino->flush = NULL;
+39     ino->chown = NULL;
+40 
+41     ino->dev = (dev_t) 0;
+42     ino->mode &= ~S_IFMT;
+43 
+44     return 0;
+45 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>port</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/161.html#L11'>port</a>               11 src/arch/serial.c void serial_send(uint8_t port, uint8_t value) {
+<a href='../S/161.html#L12'>port</a>               12 src/arch/serial.c 	fastlock_waiton(((inb(serial[port] + 5) &amp; 32) == 0));
+<a href='../S/161.html#L13'>port</a>               13 src/arch/serial.c 	outb(serial[port], value);
+<a href='../S/161.html#L16'>port</a>               16 src/arch/serial.c uint8_t serial_recv(uint8_t port) {
+<a href='../S/161.html#L17'>port</a>               17 src/arch/serial.c 	fastlock_waiton((inb(serial[port] + 5) &amp; 1) == 0);
+<a href='../S/161.html#L19'>port</a>               19 src/arch/serial.c 	return inb(serial[port]);
+<a href='../S/105.html#L46'>port</a>               46 src/net/rtl8139/rtl8139.h #define int_out8(card, port, value) 			outb(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L47'>port</a>               47 src/net/rtl8139/rtl8139.h #define int_out16(card, port, value) 			outw(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L48'>port</a>               48 src/net/rtl8139/rtl8139.h #define int_out32(card, port, value) 			outl(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L50'>port</a>               50 src/net/rtl8139/rtl8139.h #define int_in8(card, port) 					inb(card-&gt;device-&gt;iobase + port)
+<a href='../S/105.html#L51'>port</a>               51 src/net/rtl8139/rtl8139.h #define int_in16(card, port) 					inw(card-&gt;device-&gt;iobase + port)
+</pre>
+</body>
+</html>

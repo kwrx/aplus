@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="spinlock_8c">
+    <title>spinlock.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8c_1ab01e311f21f78fc3c2bd0bdf74ef85c4">spinlock_lock</link> (
+<link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link> * spin)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8c_1a4ca6e661fa1b704d39d834ac7341b360">spinlock_unlock</link> (
+<link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link> * spin)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="spinlock_8c_1aef8280bb43eb7eecb8a7903f70af1906">spinlock_trylock</link> (
+<link linkend="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090">spinlock_t</link> * spin)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8c_1aa40e1417e8410d92c2ffc313e57560e8">__spinlock_waiton</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="spinlock_8c_1a2bf717efcda7e5189e3192e09e49c249">__fastlock_waiton</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/spinlock.c</para>
+    </simplesect>
+</section>

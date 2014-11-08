@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>faultaddr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L184'>faultaddr</a>         184 src/arch/desc.c 	uint32_t faultaddr;
+<a href='../S/158.html#L185'>faultaddr</a>         185 src/arch/desc.c 	__asm__ __volatile__("mov eax, cr2" : "=a"(faultaddr));
+<a href='../S/158.html#L187'>faultaddr</a>         187 src/arch/desc.c 	kprintf("Page fault at address: 0x%x\n", faultaddr);
+</pre>
+</body>
+</html>

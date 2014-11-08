@@ -1,0 +1,314 @@
+\hypertarget{ipv4_8h}{\section{Riferimenti per il file src/include/aplus/net/ipv4.h}
+\label{ipv4_8h}\index{src/include/aplus/net/ipv4.\+h@{src/include/aplus/net/ipv4.\+h}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structipv4__header}{ipv4\+\_\+header}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{ipv4_8h_a50bcca0d0dd2ebc5380ebc78f288b5dd}{\+\_\+\+I\+P\+V4\+\_\+h}
+\item 
+\#define \hyperlink{ipv4_8h_a42321de534b24a284cfb2d1f95d9f379}{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+F}~0x01	/$\ast$ Don't fragment $\ast$/
+\item 
+\#define \hyperlink{ipv4_8h_a41977e1a3755af1ec6de3b8e67c0feae}{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F}~0x02	/$\ast$ More fragment $\ast$/
+\item 
+\#define \hyperlink{ipv4_8h_a59c0d38a97217da8f5724ba7c8ee111a}{I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N}(head)~((head-\/$>$\hyperlink{ipv4_8h_a3b5693c71298b922c6188573f2474227}{info} \& 0x0\+F) == 4)
+\item 
+\#define \hyperlink{ipv4_8h_ac2a02acc2c7e7b4a4503969db99e9020}{I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}(head)~(((head-\/$>$\hyperlink{ipv4_8h_a3b5693c71298b922c6188573f2474227}{info} \& 0x\+F0) $>$$>$ 4) $\ast$ 4)
+\item 
+\#define \hyperlink{ipv4_8h_a9ee4d424ec9987335719448cae6e8b81}{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S}(head)~(head-\/$>$\hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset} \& 3)
+\item 
+\#define \hyperlink{ipv4_8h_a22499ee9877ed00277df76a340b82739}{I\+P\+V4\+\_\+\+O\+F\+F\+S\+E\+T}(head)~((head-\/$>$\hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset} $>$$>$ 2) $\ast$ 8)
+\item 
+\#define \hyperlink{ipv4_8h_a40c19b8c3b66748b0636b8483b1793de}{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y}(\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos})~(\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos} \& 3)
+\item 
+\#define \hyperlink{ipv4_8h_a2538c1165f857303e4b83f60f0cdd389}{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+L\+A\+T\+E\+N\+C\+Y}(\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos})~((\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos} $>$$>$ 2) \& 1)
+\item 
+\#define \hyperlink{ipv4_8h_a510281d41bad02d3d3fe8650567072a1}{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+T\+R\+O\+U\+G\+H\+P\+U\+T}(\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos})~((\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos} $>$$>$ 3) \& 1)
+\item 
+\#define \hyperlink{ipv4_8h_ade48bcf8af18a3bdaa1a0694f064ee04}{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+R\+E\+L\+I\+A\+B\+I\+L\+I\+T\+Y}(\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos})~((\hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos} $>$$>$ 4) \& 1)
+\item 
+\#define \hyperlink{ipv4_8h_a6874b2adc2b7870b8e17ce781c8c11b4}{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W}~0
+\item 
+\#define \hyperlink{ipv4_8h_a56f6b815cc9ea10fd0469800263b2a00}{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P}~1
+\item 
+\#define \hyperlink{ipv4_8h_a65b17e757e3d1e3404e10bdf2eccd228}{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P}~6
+\item 
+\#define \hyperlink{ipv4_8h_a1ee065c0b162a088813ad6ee277cb571}{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P}~17
+\item 
+\#define \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H}~65536
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structipv4__header}{ipv4\+\_\+header} \hyperlink{ipv4_8h_aedc8b3a56af6d6fa02c12255c4176f30}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) ipv4\+\_\+header\+\_\+t
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{ipv4_8h_a3b5693c71298b922c6188573f2474227}{info}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{tos}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{ipv4_8h_a4fc3a0c58dfbd1e68224521185cb9384}{id}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{ipv4_8h_a4d402503271315376ddf4e47674d4965}{ttl}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{ipv4_8h_ad124d3d2e02c729afa303c775295278e}{protocol}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{ipv4_8h_a6796c847bbd16253ce2538754c250bd6}{checksum}
+\item 
+\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} \hyperlink{ipv4_8h_a60fd0a2d96e0bd3eaada00c98c0e121f}{source}
+\item 
+\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} \hyperlink{ipv4_8h_af6f6370d40d60101052050b5a6f3766b}{dest}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{ipv4_8h_a50bcca0d0dd2ebc5380ebc78f288b5dd}{\index{ipv4.\+h@{ipv4.\+h}!\+\_\+\+I\+P\+V4\+\_\+h@{\+\_\+\+I\+P\+V4\+\_\+h}}
+\index{\+\_\+\+I\+P\+V4\+\_\+h@{\+\_\+\+I\+P\+V4\+\_\+h}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{\+\_\+\+I\+P\+V4\+\_\+h}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+I\+P\+V4\+\_\+h}}\label{ipv4_8h_a50bcca0d0dd2ebc5380ebc78f288b5dd}
+
+
+Definizione alla linea 2 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a59c0d38a97217da8f5724ba7c8ee111a}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N@{I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N}}
+\index{I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N@{I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N(
+\begin{DoxyParamCaption}
+\item[{}]{head}
+\end{DoxyParamCaption}
+)~((head-\/$>${\bf info} \& 0x0\+F) == 4)}}\label{ipv4_8h_a59c0d38a97217da8f5724ba7c8ee111a}
+
+
+Definizione alla linea 11 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a9ee4d424ec9987335719448cae6e8b81}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+F\+L\+A\+G\+S@{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S}}
+\index{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S@{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+F\+L\+A\+G\+S(
+\begin{DoxyParamCaption}
+\item[{}]{head}
+\end{DoxyParamCaption}
+)~(head-\/$>${\bf offset} \& 3)}}\label{ipv4_8h_a9ee4d424ec9987335719448cae6e8b81}
+
+
+Definizione alla linea 13 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a42321de534b24a284cfb2d1f95d9f379}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+F@{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+F}}
+\index{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+F@{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+F}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+F}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+F~0x01	/$\ast$ Don't fragment $\ast$/}}\label{ipv4_8h_a42321de534b24a284cfb2d1f95d9f379}
+
+
+Definizione alla linea 8 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a41977e1a3755af1ec6de3b8e67c0feae}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F@{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F}}
+\index{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F@{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F~0x02	/$\ast$ More fragment $\ast$/}}\label{ipv4_8h_a41977e1a3755af1ec6de3b8e67c0feae}
+
+
+Definizione alla linea 9 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_ac2a02acc2c7e7b4a4503969db99e9020}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H@{I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}}
+\index{I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H@{I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H(
+\begin{DoxyParamCaption}
+\item[{}]{head}
+\end{DoxyParamCaption}
+)~(((head-\/$>${\bf info} \& 0x\+F0) $>$$>$ 4) $\ast$ 4)}}\label{ipv4_8h_ac2a02acc2c7e7b4a4503969db99e9020}
+
+
+Definizione alla linea 12 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H@{I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H}}
+\index{I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H@{I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H~65536}}\label{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}
+
+
+Definizione alla linea 27 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a22499ee9877ed00277df76a340b82739}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+O\+F\+F\+S\+E\+T@{I\+P\+V4\+\_\+\+O\+F\+F\+S\+E\+T}}
+\index{I\+P\+V4\+\_\+\+O\+F\+F\+S\+E\+T@{I\+P\+V4\+\_\+\+O\+F\+F\+S\+E\+T}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+O\+F\+F\+S\+E\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+O\+F\+F\+S\+E\+T(
+\begin{DoxyParamCaption}
+\item[{}]{head}
+\end{DoxyParamCaption}
+)~((head-\/$>${\bf offset} $>$$>$ 2) $\ast$ 8)}}\label{ipv4_8h_a22499ee9877ed00277df76a340b82739}
+
+
+Definizione alla linea 14 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a56f6b815cc9ea10fd0469800263b2a00}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P}}
+\index{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P~1}}\label{ipv4_8h_a56f6b815cc9ea10fd0469800263b2a00}
+
+
+Definizione alla linea 23 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a6874b2adc2b7870b8e17ce781c8c11b4}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W}}
+\index{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W~0}}\label{ipv4_8h_a6874b2adc2b7870b8e17ce781c8c11b4}
+
+
+Definizione alla linea 22 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a65b17e757e3d1e3404e10bdf2eccd228}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P}}
+\index{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P~6}}\label{ipv4_8h_a65b17e757e3d1e3404e10bdf2eccd228}
+
+
+Definizione alla linea 24 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a1ee065c0b162a088813ad6ee277cb571}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P}}
+\index{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P@{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P~17}}\label{ipv4_8h_a1ee065c0b162a088813ad6ee277cb571}
+
+
+Definizione alla linea 25 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a2538c1165f857303e4b83f60f0cdd389}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+L\+A\+T\+E\+N\+C\+Y@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+L\+A\+T\+E\+N\+C\+Y}}
+\index{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+L\+A\+T\+E\+N\+C\+Y@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+L\+A\+T\+E\+N\+C\+Y}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+L\+A\+T\+E\+N\+C\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+L\+A\+T\+E\+N\+C\+Y(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf tos}}
+\end{DoxyParamCaption}
+)~(({\bf tos} $>$$>$ 2) \& 1)}}\label{ipv4_8h_a2538c1165f857303e4b83f60f0cdd389}
+
+
+Definizione alla linea 17 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a40c19b8c3b66748b0636b8483b1793de}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y}}
+\index{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf tos}}
+\end{DoxyParamCaption}
+)~({\bf tos} \& 3)}}\label{ipv4_8h_a40c19b8c3b66748b0636b8483b1793de}
+
+
+Definizione alla linea 16 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_ade48bcf8af18a3bdaa1a0694f064ee04}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+R\+E\+L\+I\+A\+B\+I\+L\+I\+T\+Y@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+R\+E\+L\+I\+A\+B\+I\+L\+I\+T\+Y}}
+\index{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+R\+E\+L\+I\+A\+B\+I\+L\+I\+T\+Y@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+R\+E\+L\+I\+A\+B\+I\+L\+I\+T\+Y}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+R\+E\+L\+I\+A\+B\+I\+L\+I\+T\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+R\+E\+L\+I\+A\+B\+I\+L\+I\+T\+Y(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf tos}}
+\end{DoxyParamCaption}
+)~(({\bf tos} $>$$>$ 4) \& 1)}}\label{ipv4_8h_ade48bcf8af18a3bdaa1a0694f064ee04}
+
+
+Definizione alla linea 19 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a510281d41bad02d3d3fe8650567072a1}{\index{ipv4.\+h@{ipv4.\+h}!I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+T\+R\+O\+U\+G\+H\+P\+U\+T@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+T\+R\+O\+U\+G\+H\+P\+U\+T}}
+\index{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+T\+R\+O\+U\+G\+H\+P\+U\+T@{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+T\+R\+O\+U\+G\+H\+P\+U\+T}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+T\+R\+O\+U\+G\+H\+P\+U\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+P\+V4\+\_\+\+T\+O\+S\+\_\+\+T\+R\+O\+U\+G\+H\+P\+U\+T(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf tos}}
+\end{DoxyParamCaption}
+)~(({\bf tos} $>$$>$ 3) \& 1)}}\label{ipv4_8h_a510281d41bad02d3d3fe8650567072a1}
+
+
+Definizione alla linea 18 del file ipv4.\+h.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{ipv4_8h_aedc8b3a56af6d6fa02c12255c4176f30}{\index{ipv4.\+h@{ipv4.\+h}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf ipv4\+\_\+header} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(packed)}]{}
+\end{DoxyParamCaption}
+)}}\label{ipv4_8h_aedc8b3a56af6d6fa02c12255c4176f30}
+
+
+Definizione alla linea 44 del file desc.\+c.
+
+
+\begin{DoxyCode}
+46                        \{
+47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
+48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
+49 \} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{ipv4_8h_a6796c847bbd16253ce2538754c250bd6}{\index{ipv4.\+h@{ipv4.\+h}!checksum@{checksum}}
+\index{checksum@{checksum}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{checksum}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} checksum}}\label{ipv4_8h_a6796c847bbd16253ce2538754c250bd6}
+
+
+Definizione alla linea 54 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_af6f6370d40d60101052050b5a6f3766b}{\index{ipv4.\+h@{ipv4.\+h}!dest@{dest}}
+\index{dest@{dest}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{dest}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ipv4\+\_\+t} dest}}\label{ipv4_8h_af6f6370d40d60101052050b5a6f3766b}
+
+
+Definizione alla linea 57 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a4fc3a0c58dfbd1e68224521185cb9384}{\index{ipv4.\+h@{ipv4.\+h}!id@{id}}
+\index{id@{id}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{id}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} id}}\label{ipv4_8h_a4fc3a0c58dfbd1e68224521185cb9384}
+
+
+Definizione alla linea 50 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a3b5693c71298b922c6188573f2474227}{\index{ipv4.\+h@{ipv4.\+h}!info@{info}}
+\index{info@{info}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{info}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} info}}\label{ipv4_8h_a3b5693c71298b922c6188573f2474227}
+
+
+Definizione alla linea 47 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{\index{ipv4.\+h@{ipv4.\+h}!length@{length}}
+\index{length@{length}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{length}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} length}}\label{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}
+
+
+Definizione alla linea 49 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_ac681806181c80437cfab37335f62ff39}{\index{ipv4.\+h@{ipv4.\+h}!offset@{offset}}
+\index{offset@{offset}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{offset}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} offset}}\label{ipv4_8h_ac681806181c80437cfab37335f62ff39}
+
+
+Definizione alla linea 51 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_ad124d3d2e02c729afa303c775295278e}{\index{ipv4.\+h@{ipv4.\+h}!protocol@{protocol}}
+\index{protocol@{protocol}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{protocol}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} protocol}}\label{ipv4_8h_ad124d3d2e02c729afa303c775295278e}
+
+
+Definizione alla linea 53 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a60fd0a2d96e0bd3eaada00c98c0e121f}{\index{ipv4.\+h@{ipv4.\+h}!source@{source}}
+\index{source@{source}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{source}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ipv4\+\_\+t} source}}\label{ipv4_8h_a60fd0a2d96e0bd3eaada00c98c0e121f}
+
+
+Definizione alla linea 56 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}{\index{ipv4.\+h@{ipv4.\+h}!tos@{tos}}
+\index{tos@{tos}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{tos}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} tos}}\label{ipv4_8h_a3bdbe295d838b7f44e47ad5f4c3fac27}
+
+
+Definizione alla linea 48 del file ipv4.\+h.
+
+\hypertarget{ipv4_8h_a4d402503271315376ddf4e47674d4965}{\index{ipv4.\+h@{ipv4.\+h}!ttl@{ttl}}
+\index{ttl@{ttl}!ipv4.\+h@{ipv4.\+h}}
+\subsubsection[{ttl}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} ttl}}\label{ipv4_8h_a4d402503271315376ddf4e47674d4965}
+
+
+Definizione alla linea 52 del file ipv4.\+h.
+

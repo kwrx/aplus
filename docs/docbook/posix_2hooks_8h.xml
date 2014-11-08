@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="posix_2hooks_8h">
+    <title>hooks.h File Reference</title>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1a369266c24eacffb87046522897a570d5">_GNU_SOURCE</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5">CLONE_VM</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34">__os_thread_create</link> <link linkend="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe">clone</link>((int(*)(void*)) e, NULL, <link linkend="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5">CLONE_VM</link>, a)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1ab48a49c5d6297d7b9023b8796a1c996e">__os_thread_kill</link> <link linkend="posix_2hooks_8h_1a6edea8ed9aecaef5fc4762da7ec641ff">kill</link>(t, s)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d">__os_gettid</link> <link linkend="posix_2hooks_8h_1a2ccdeb931b6cfcf884ca5ad73e0ba11c">getpid</link>()</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe">clone</link> (
+int(*)(void *) fn, void * , int , void * )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="posix_2hooks_8h_1a6edea8ed9aecaef5fc4762da7ec641ff">kill</link> (
+int , int )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="posix_2hooks_8h_1a2ccdeb931b6cfcf884ca5ad73e0ba11c">getpid</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h</para>
+    </simplesect>
+</section>

@@ -1,0 +1,335 @@
+<html>
+<head>
+<title>usr/src/libpthread/include/pthread.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/186.html'>include</a>/pthread.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/109.html' title='Multiple included from 23 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <i><font color='green'>//</font></i>
+<a name='L3'>   3 <i><font color='green'>//  pthread.h</font></i>
+<a name='L4'>   4 <i><font color='green'>//</font></i>
+<a name='L5'>   5 <i><font color='green'>//  Author:</font></i>
+<a name='L6'>   6 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L7'>   7 <i><font color='green'>//</font></i>
+<a name='L8'>   8 <i><font color='green'>//  Copyright (c) 2014 Antonio Natale</font></i>
+<a name='L9'>   9 <i><font color='green'>//</font></i>
+<a name='L10'>  10 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L11'>  11 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L12'>  12 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L13'>  13 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L14'>  14 <i><font color='green'>//</font></i>
+<a name='L15'>  15 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L16'>  16 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L17'>  17 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L18'>  18 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L19'>  19 <i><font color='green'>//</font></i>
+<a name='L20'>  20 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L21'>  21 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L22'>  22 
+<a name='L23'>  23 <font color='darkred'>#ifndef</font> <a href='../S/43.html#L24' title='Defined at 24 in usr/src/libpthread/include/pthread.h.'>PTHREAD_H</a>
+<a name='L24'>  24 <font color='darkred'>#define</font> <a href='../S/43.html#L23' title='Refered from 23 in usr/src/libpthread/include/pthread.h.'>PTHREAD_H</a>
+<a name='L25'>  25 
+<a name='L26'>  26 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L28'>  28 <font color='darkred'>#include</font> &lt;sys/time.h&gt;
+<a name='L29'>  29 <font color='darkred'>#include</font> &lt;sched.h&gt;
+<a name='L30'>  30 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L31'>  31 
+<a name='L32'>  32 <font color='darkred'>#define</font> _POSIX_THREADS
+<a name='L33'>  33 
+<a name='L34'>  34 
+<a name='L35'>  35 <b>typedef</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/43.html#L38' title='Refered from 38 in usr/src/libpthread/include/pthread.h.'>tls_t</a>;
+<a name='L36'>  36 <b>typedef</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../R/257.html' title='Multiple refered from 9 places.'>handle_t</a>;
+<a name='L37'>  37 <b>typedef</b> <a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a> <a href='../R/450.html' title='Multiple refered from 28 places.'>pthread_t</a>;
+<a name='L38'>  38 <b>typedef</b> <a href='../S/43.html#L35' title='Defined at 35 in usr/src/libpthread/include/pthread.h.'>tls_t</a> <a href='../R/406.html' title='Multiple refered from 9 places.'>pthread_key_t</a>;
+<a name='L39'>  39 
+<a name='L40'>  40 <font color='darkred'>#define</font> PTHREAD_CREATE_JOINABLE         0
+<a name='L41'>  41 <font color='darkred'>#define</font> PTHREAD_CREATE_DETACHED         1
+<a name='L42'>  42 
+<a name='L43'>  43 <font color='darkred'>#define</font> <a href='../S/64.html#L63' title='Refered from 63 in usr/src/libpthread/src/pthread_create.c.'>PTHREAD_INHERIT_SCHED</a>           0
+<a name='L44'>  44 <font color='darkred'>#define</font> PTHREAD_EXPLICIT_SCHED          1
+<a name='L45'>  45 
+<a name='L46'>  46 <font color='darkred'>#define</font> PTHREAD_SCOPE_PROCESS           0
+<a name='L47'>  47 <font color='darkred'>#define</font> PTHREAD_SCOPE_SYSTEM            1
+<a name='L48'>  48 
+<a name='L49'>  49 <font color='darkred'>#define</font> PTHREAD_CANCEL_ENABLE           0
+<a name='L50'>  50 <font color='darkred'>#define</font> PTHREAD_CANCEL_DISABLE          1
+<a name='L51'>  51 
+<a name='L52'>  52 <font color='darkred'>#define</font> PTHREAD_PROCESS_PRIVATE         0
+<a name='L53'>  53 <font color='darkred'>#define</font> PTHREAD_PROCESS_SHARED          1
+<a name='L54'>  54 
+<a name='L55'>  55 
+<a name='L56'>  56 
+<a name='L57'>  57 <b>typedef</b> <b>struct</b> pthread_attr <font color='red'>{</font>
+<a name='L58'>  58         <b>void</b>* <a href='../Y/604.html' title='Multiple used in 8 places.'>stackaddr</a>;
+<a name='L59'>  59         <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/605.html' title='Multiple used in 8 places.'>stacksize</a>;
+<a name='L60'>  60         <b>int</b> <a href='../Y/194.html' title='Multiple used in 8 places.'>detachstate</a>;
+<a name='L61'>  61         <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a> <a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>;
+<a name='L62'>  62         <b>int</b> <a href='../Y/317.html' title='Multiple used in 9 places.'>inheritsched</a>;
+<a name='L63'>  63         <b>int</b> <a href='../Y/167.html' title='Multiple used in 8 places.'>contentionscope</a>;
+<a name='L64'>  64 <font color='red'>}</font> <a href='../R/371.html' title='Multiple refered from 38 places.'>pthread_attr_t</a>;
+<a name='L65'>  65 
+<a name='L66'>  66 
+<a name='L67'>  67 <b>typedef</b> <b>struct</b> <a href='../S/43.html#L196' title='Refered from 196 in usr/src/libpthread/include/pthread.h.'>pthread_once</a> <font color='red'>{</font>
+<a name='L68'>  68         <b>volatile</b> <b>int</b> <a href='../Y/204.html' title='Multiple used in 5 places.'>done</a>;
+<a name='L69'>  69         <b>int</b> <a href='../Y/607.html' title='Multiple used in 3 places.'>started</a>;
+<a name='L70'>  70 <font color='red'>}</font> <a href='../R/422.html' title='Multiple refered from 3 places.'>pthread_once_t</a>;
+<a name='L71'>  71 
+<a name='L72'>  72 <font color='darkred'>#define</font> PTHREAD_ONCE_INIT               <font color='red'>{</font> 0, -1 <font color='red'>}</font>
+<a name='L73'>  73 
+<a name='L74'>  74 
+<a name='L75'>  75 
+<a name='L76'>  76 <font color='darkred'>#define</font> <a href='../S/43.html#L79' title='Refered from 79 in usr/src/libpthread/include/pthread.h.'>PTHREAD_MUTEX_NORMAL</a>            0
+<a name='L77'>  77 <font color='darkred'>#define</font> <a href='../R/103.html' title='Multiple refered from 3 places.'>PTHREAD_MUTEX_RECURSIVE</a>         1
+<a name='L78'>  78 <font color='darkred'>#define</font> <a href='../R/100.html' title='Multiple refered from 3 places.'>PTHREAD_MUTEX_ERRORCHECK</a>        2
+<a name='L79'>  79 <font color='darkred'>#define</font> <a href='../R/99.html' title='Multiple refered from 2 places.'>PTHREAD_MUTEX_DEFAULT</a>           <a href='../S/43.html#L76' title='Defined at 76 in usr/src/libpthread/include/pthread.h.'>PTHREAD_MUTEX_NORMAL</a>
+<a name='L80'>  80 
+<a name='L81'>  81 <b>typedef</b> <b>struct</b> pthread_mutexattr <font color='red'>{</font>
+<a name='L82'>  82         <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L83'>  83         <b>int</b> <a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>;
+<a name='L84'>  84 <font color='red'>}</font> <a href='../R/420.html' title='Multiple refered from 14 places.'>pthread_mutexattr_t</a>;
+<a name='L85'>  85 
+<a name='L86'>  86 
+<a name='L87'>  87 <b>typedef</b> <b>struct</b> pthread_mutex <font color='red'>{</font>
+<a name='L88'>  88         <b>int</b> <a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>;
+<a name='L89'>  89         <b>int</b> <a href='../Y/509.html' title='Multiple used in 8 places.'>recursion</a>;
+<a name='L90'>  90         <b>int</b> <a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>;
+<a name='L91'>  91         <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a>;
+<a name='L92'>  92         <a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a> <a href='../Y/244.html' title='Multiple used in 3 places.'>event</a>;
+<a name='L93'>  93     <b>int</b> <a href='../Y/671.html' title='Multiple used in 9 places.'>time</a>;
+<a name='L94'>  94 <font color='red'>}</font> <a href='../R/410.html' title='Multiple refered from 22 places.'>pthread_mutex_t</a>;
+<a name='L95'>  95 
+<a name='L96'>  96 
+<a name='L97'>  97 <font color='darkred'>#define</font> <a href='../S/43.html#L142' title='Refered from 142 in usr/src/libpthread/include/pthread.h.'>PTHREAD_MUTEX_INITIALIZER</a> <font color='red'>{</font> 0, 0, -1, -1, -1 <font color='red'>}</font>
+<a name='L98'>  98 <font color='darkred'>#define</font> PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP <font color='red'>{</font> 0, 0, -1, -1, -1 <font color='red'>}</font>
+<a name='L99'>  99 
+<a name='L100'> 100 
+<a name='L101'> 101 <b>typedef</b> <b>struct</b> pthread_condattr <font color='red'>{</font>
+<a name='L102'> 102         <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L103'> 103 <font color='red'>}</font> <a href='../R/393.html' title='Multiple refered from 10 places.'>pthread_condattr_t</a>;
+<a name='L104'> 104 
+<a name='L105'> 105 <b>typedef</b> <b>struct</b> pthread_cond <font color='red'>{</font>
+<a name='L106'> 106         <b>int</b> <a href='../Y/758.html' title='Multiple used in 8 places.'>waiting</a>;
+<a name='L107'> 107         <a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a> <a href='../Y/556.html' title='Multiple used in 8 places.'>semaphore</a>;
+<a name='L108'> 108 <font color='red'>}</font> <a href='../R/386.html' title='Multiple refered from 15 places.'>pthread_cond_t</a>;
+<a name='L109'> 109 
+<a name='L110'> 110 <font color='darkred'>#define</font> PTHREAD_COND_INITIALIZER ((<a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a>) -1)
+<a name='L111'> 111 
+<a name='L112'> 112 
+<a name='L113'> 113 
+<a name='L114'> 114 <font color='darkred'>#define</font> <a href='../S/47.html#L69' title='Refered from 69 in usr/src/libpthread/test/main.c.'>PTHREAD_BARRIER_SERIAL_THREAD</a>           ~0
+<a name='L115'> 115 
+<a name='L116'> 116 <b>typedef</b> <b>struct</b> pthread_barrierattr <font color='red'>{</font>
+<a name='L117'> 117         <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L118'> 118 <font color='red'>}</font> <a href='../R/380.html' title='Multiple refered from 10 places.'>pthread_barrierattr_t</a>;
+<a name='L119'> 119 
+<a name='L120'> 120 
+<a name='L121'> 121 <b>typedef</b> <b>struct</b> pthread_barrier <font color='red'>{</font>
+<a name='L122'> 122         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/181.html' title='Multiple used in 5 places.'>curr_height</a>;
+<a name='L123'> 123         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/318.html' title='Multiple used in 4 places.'>init_height</a>;
+<a name='L124'> 124 <font color='red'>}</font> <a href='../R/374.html' title='Multiple refered from 7 places.'>pthread_barrier_t</a>;
+<a name='L125'> 125 
+<a name='L126'> 126 
+<a name='L127'> 127 <b>typedef</b> <b>struct</b> pthread_rwlockattr <font color='red'>{</font>
+<a name='L128'> 128         <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L129'> 129 <font color='red'>}</font> <a href='../R/437.html' title='Multiple refered from 10 places.'>pthread_rwlockattr_t</a>;
+<a name='L130'> 130 
+<a name='L131'> 131 
+<a name='L132'> 132 <b>typedef</b> <b>struct</b> pthread_rwlock <font color='red'>{</font>
+<a name='L133'> 133         <a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> <a href='../Y/500.html' title='Multiple used in 7 places.'>rdmutex</a>;
+<a name='L134'> 134         <a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> <a href='../Y/771.html' title='Multiple used in 7 places.'>wrmutex</a>;
+<a name='L135'> 135         <a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a> <a href='../Y/571.html' title='Multiple used in 3 places.'>shared_waiters</a>;
+<a name='L136'> 136         <a href='../S/43.html#L36' title='Defined at 36 in usr/src/libpthread/include/pthread.h.'>handle_t</a> <a href='../Y/246.html' title='Multiple used in 3 places.'>exclusive_waiters</a>;
+<a name='L137'> 137         <b>int</b> <a href='../Y/421.html' title='Multiple used in 3 places.'>num_shared_waiters</a>;
+<a name='L138'> 138         <b>int</b> <a href='../Y/420.html' title='Multiple used in 3 places.'>num_exclusive_waiters</a>;
+<a name='L139'> 139         <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a>;
+<a name='L140'> 140 <font color='red'>}</font> <a href='../R/426.html' title='Multiple refered from 19 places.'>pthread_rwlock_t</a>; 
+<a name='L141'> 141 
+<a name='L142'> 142 <font color='darkred'>#define</font> PTHREAD_RWLOCK_INITIALIZER <font color='red'>{</font> <a href='../S/43.html#L97' title='Defined at 97 in usr/src/libpthread/include/pthread.h.'>PTHREAD_MUTEX_INITIALIZER</a>, 0, 0, 0, 0, 0, 0 <font color='red'>}</font>
+<a name='L143'> 143 
+<a name='L144'> 144 
+<a name='L145'> 145 <font color='darkred'>#define</font> SPINLOCK_UNLOCKED       1
+<a name='L146'> 146 <font color='darkred'>#define</font> SPINLOCK_LOCKED         2
+<a name='L147'> 147 <font color='darkred'>#define</font> SPINLOCK_USEMUTEX       3
+<a name='L148'> 148 
+<a name='L149'> 149 <b>typedef</b> <b>struct</b> pthread_spinlock <font color='red'>{</font>
+<a name='L150'> 150         <b>int</b> <a href='../Y/329.html' title='Multiple used in 6 places.'>interlock</a>;
+<a name='L151'> 151         <a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> <a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>;
+<a name='L152'> 152 <font color='red'>}</font> <a href='../R/449.html' title='Multiple refered from 11 places.'>pthread_spinlock_t</a>;
+<a name='L153'> 153 
+<a name='L154'> 154 <font color='darkred'>#define</font> PTHREAD_SPINLOCK_INITIALIZER <font color='red'>{</font> 0, 0 <font color='red'>}</font>
+<a name='L155'> 155 
+<a name='L156'> 156 
+<a name='L157'> 157 <font color='darkred'>#ifdef</font> <a href='../Y/67.html' title='Multiple used in 5 places.'>__cplusplus</a>
+<a name='L158'> 158 <b>extern</b> "C" <font color='red'>{</font>
+<a name='L159'> 159 <font color='darkred'>#endif</font>
+<a name='L160'> 160 
+<a name='L161'> 161 <i><font color='green'>//</font></i>
+<a name='L162'> 162 <i><font color='green'>// Thread attribute functions</font></i>
+<a name='L163'> 163 <i><font color='green'>//</font></i>
+<a name='L164'> 164 
+<a name='L165'> 165 <b>int</b> <a href='../S/65.html#L12' title='Defined at 12 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_init</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L166'> 166 <b>int</b> <a href='../S/65.html#L28' title='Defined at 28 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_destroy</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L167'> 167 <b>int</b> <a href='../S/65.html#L38' title='Defined at 38 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_getdetachstate</a>(<b>const</b> <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/194.html' title='Multiple used in 8 places.'>detachstate</a>);
+<a name='L168'> 168 <b>int</b> <a href='../S/65.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setdetachstate</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/194.html' title='Multiple used in 8 places.'>detachstate</a>);
+<a name='L169'> 169 <b>int</b> <a href='../S/65.html#L58' title='Defined at 58 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_getstackaddr</a>(<b>const</b> <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>void</b> **<a href='../Y/604.html' title='Multiple used in 8 places.'>stackaddr</a>);
+<a name='L170'> 170 <b>int</b> <a href='../S/65.html#L68' title='Defined at 68 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setstackaddr</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>void</b> *<a href='../Y/604.html' title='Multiple used in 8 places.'>stackaddr</a>);
+<a name='L171'> 171 <b>int</b> <a href='../S/65.html#L79' title='Defined at 79 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_getstacksize</a>(<b>const</b> <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> *<a href='../Y/605.html' title='Multiple used in 8 places.'>stacksize</a>);
+<a name='L172'> 172 <b>int</b> <a href='../S/65.html#L89' title='Defined at 89 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setstacksize</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/605.html' title='Multiple used in 8 places.'>stacksize</a>);
+<a name='L173'> 173 <b>int</b> <a href='../S/65.html#L100' title='Defined at 100 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_getschedparam</a>(<b>const</b> <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a> *<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>);
+<a name='L174'> 174 <b>int</b> <a href='../S/65.html#L112' title='Defined at 112 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setschedparam</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>const</b> <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a> *<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>);
+<a name='L175'> 175 <b>int</b> <a href='../S/65.html#L123' title='Defined at 123 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_getschedpolicy</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/477.html' title='Multiple used in 12 places.'>policy</a>);
+<a name='L176'> 176 <b>int</b> <a href='../S/65.html#L128' title='Defined at 128 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setschedpolicy</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/477.html' title='Multiple used in 12 places.'>policy</a>);
+<a name='L177'> 177 <b>int</b> <a href='../S/65.html#L133' title='Defined at 133 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_getinheritsched</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/317.html' title='Multiple used in 9 places.'>inheritsched</a>);
+<a name='L178'> 178 <b>int</b> <a href='../S/65.html#L143' title='Defined at 143 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setinheritsched</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/317.html' title='Multiple used in 9 places.'>inheritsched</a>);
+<a name='L179'> 179 <b>int</b> <a href='../S/65.html#L153' title='Defined at 153 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_getscope</a>(<b>const</b> <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/167.html' title='Multiple used in 8 places.'>contentionscope</a>);
+<a name='L180'> 180 <b>int</b> <a href='../S/65.html#L163' title='Defined at 163 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setscope</a>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/167.html' title='Multiple used in 8 places.'>contentionscope</a>);
+<a name='L181'> 181 
+<a name='L182'> 182 <i><font color='green'>//</font></i>
+<a name='L183'> 183 <i><font color='green'>// Thread functions</font></i>
+<a name='L184'> 184 <i><font color='green'>//</font></i>
+<a name='L185'> 185 
+<a name='L186'> 186 <b>int</b> <a href='../S/64.html#L37' title='Defined at 37 in usr/src/libpthread/src/pthread_create.c.'>pthread_create</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> *<a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>, <b>const</b> <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>void</b> *(*<a href='../Y/606.html' title='Multiple used in 3 places.'>start</a>)(<b>void</b> *), <b>void</b> *<a href='../Y/101.html' title='Multiple used in 7 places.'>arg</a>);
+<a name='L187'> 187 <b>int</b> <a href='../S/56.html#L12' title='Defined at 12 in usr/src/libpthread/src/pthread_detach.c.'>pthread_detach</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>);
+<a name='L188'> 188 <b>int</b> <a href='../S/52.html#L7' title='Defined at 7 in usr/src/libpthread/src/pthread_equal.c.'>pthread_equal</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/661.html' title='Multiple used in 6 places.'>t1</a>, <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/662.html' title='Multiple used in 3 places.'>t2</a>);
+<a name='L189'> 189 <b>void</b> <a href='../S/55.html#L8' title='Defined at 8 in usr/src/libpthread/src/pthread_exit.c.'>pthread_exit</a>(<b>void</b> *<a href='../Y/739.html' title='Multiple used in 7 places.'>value_ptr</a>);
+<a name='L190'> 190 <b>int</b> <a href='../S/73.html#L8' title='Defined at 8 in usr/src/libpthread/src/pthread_join.c.'>pthread_join</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>, <b>void</b> **<a href='../Y/739.html' title='Multiple used in 7 places.'>value_ptr</a>);
+<a name='L191'> 191 <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../S/69.html#L10' title='Defined at 10 in usr/src/libpthread/src/pthread_self.c.'>pthread_self</a>(<b>void</b>);
+<a name='L192'> 192 <b>int</b> <a href='../S/58.html#L7' title='Defined at 7 in usr/src/libpthread/src/pthread_cancel.c.'>pthread_cancel</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>);
+<a name='L193'> 193 <b>int</b> <a href='../S/58.html#L12' title='Defined at 12 in usr/src/libpthread/src/pthread_cancel.c.'>pthread_setcancelstate</a>(<b>int</b> <a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>, <b>int</b> *<a href='../Y/433.html' title='Multiple used in 2 places.'>oldstate</a>);
+<a name='L194'> 194 <b>int</b> <a href='../S/58.html#L18' title='Defined at 18 in usr/src/libpthread/src/pthread_cancel.c.'>pthread_setcanceltype</a>(<b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>, <b>int</b> *<a href='../Y/434.html' title='Multiple used in 2 places.'>oldtype</a>);
+<a name='L195'> 195 <b>void</b> <a href='../S/58.html#L23' title='Defined at 23 in usr/src/libpthread/src/pthread_cancel.c.'>pthread_testcancel</a>(<b>void</b>);
+<a name='L196'> 196 <b>int</b> <a href='../D/598.html' title='Multiple defined in 2 places.'>pthread_once</a>(<a href='../S/43.html#L70' title='Defined at 70 in usr/src/libpthread/include/pthread.h.'>pthread_once_t</a> *<a href='../Y/436.html' title='Multiple used in 2 places.'>once_control</a>, <b>void</b> (*<a href='../Y/319.html' title='Multiple used in 2 places.'>init_routine</a>)(<b>void</b>));
+<a name='L197'> 197 
+<a name='L198'> 198 <i><font color='green'>//</font></i>
+<a name='L199'> 199 <i><font color='green'>// Scheduling functions</font></i>
+<a name='L200'> 200 <i><font color='green'>//</font></i>
+<a name='L201'> 201 
+<a name='L202'> 202 <b>int</b> <a href='../S/51.html#L11' title='Defined at 11 in usr/src/libpthread/src/pthread_sched.c.'>pthread_setschedparam</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>, <b>int</b> <a href='../Y/477.html' title='Multiple used in 12 places.'>policy</a>, <b>const</b> <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a> *<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>);
+<a name='L203'> 203 <b>int</b> <a href='../S/51.html#L26' title='Defined at 26 in usr/src/libpthread/src/pthread_sched.c.'>pthread_getschedparam</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>, <b>int</b> *<a href='../Y/477.html' title='Multiple used in 12 places.'>policy</a>, <b>struct</b> <a href='../Y/545.html' title='Multiple used in 16 places.'>sched_param</a> *<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>);
+<a name='L204'> 204 <b>int</b> <a href='../S/51.html#L44' title='Defined at 44 in usr/src/libpthread/src/pthread_sched.c.'>pthread_setconcurrency</a>(<b>int</b> <a href='../Y/357.html' title='Multiple used in 3 places.'>level</a>);
+<a name='L205'> 205 <b>int</b> <a href='../S/51.html#L57' title='Defined at 57 in usr/src/libpthread/src/pthread_sched.c.'>pthread_getconcurrency</a>(<b>void</b>);
+<a name='L206'> 206 
+<a name='L207'> 207 <i><font color='green'>//</font></i>
+<a name='L208'> 208 <i><font color='green'>// Thread specific data functions</font></i>
+<a name='L209'> 209 <i><font color='green'>//</font></i>
+<a name='L210'> 210 
+<a name='L211'> 211 <b>int</b> <a href='../S/70.html#L9' title='Defined at 9 in usr/src/libpthread/src/pthread_key.c.'>pthread_key_create</a>(<a href='../S/43.html#L38' title='Defined at 38 in usr/src/libpthread/include/pthread.h.'>pthread_key_t</a> *<a href='../Y/348.html' title='Multiple used in 22 places.'>key</a>, <b>void</b> (*<a href='../Y/193.html' title='Multiple used in 3 places.'>destructor</a>)(<b>void</b> *));
+<a name='L212'> 212 <b>int</b> <a href='../S/70.html#L32' title='Defined at 32 in usr/src/libpthread/src/pthread_key.c.'>pthread_key_delete</a>(<a href='../S/43.html#L38' title='Defined at 38 in usr/src/libpthread/include/pthread.h.'>pthread_key_t</a> <a href='../Y/348.html' title='Multiple used in 22 places.'>key</a>);
+<a name='L213'> 213 <b>int</b> <a href='../S/70.html#L49' title='Defined at 49 in usr/src/libpthread/src/pthread_key.c.'>pthread_setspecific</a>(<a href='../S/43.html#L38' title='Defined at 38 in usr/src/libpthread/include/pthread.h.'>pthread_key_t</a> <a href='../Y/348.html' title='Multiple used in 22 places.'>key</a>, <b>const</b> <b>void</b> *<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>);
+<a name='L214'> 214 <b>void</b> *<a href='../S/70.html#L65' title='Defined at 65 in usr/src/libpthread/src/pthread_key.c.'>pthread_getspecific</a>(<a href='../S/43.html#L38' title='Defined at 38 in usr/src/libpthread/include/pthread.h.'>pthread_key_t</a> <a href='../Y/348.html' title='Multiple used in 22 places.'>key</a>);
+<a name='L215'> 215 
+<a name='L216'> 216 <i><font color='green'>//</font></i>
+<a name='L217'> 217 <i><font color='green'>// Mutex attribute functions</font></i>
+<a name='L218'> 218 <i><font color='green'>//</font></i>
+<a name='L219'> 219 
+<a name='L220'> 220 <b>int</b> <a href='../S/68.html#L8' title='Defined at 8 in usr/src/libpthread/src/pthread_mutexattr.c.'>pthread_mutexattr_init</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L221'> 221 <b>int</b> <a href='../S/68.html#L20' title='Defined at 20 in usr/src/libpthread/src/pthread_mutexattr.c.'>pthread_mutexattr_destroy</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L222'> 222 <b>int</b> <a href='../S/68.html#L32' title='Defined at 32 in usr/src/libpthread/src/pthread_mutexattr.c.'>pthread_mutexattr_getpshared</a>(<b>const</b> <a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L223'> 223 <b>int</b> <a href='../S/68.html#L42' title='Defined at 42 in usr/src/libpthread/src/pthread_mutexattr.c.'>pthread_mutexattr_setpshared</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L224'> 224 <b>int</b> <a href='../S/68.html#L52' title='Defined at 52 in usr/src/libpthread/src/pthread_mutexattr.c.'>pthread_mutexattr_gettype</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>);
+<a name='L225'> 225 <b>int</b> <a href='../S/68.html#L62' title='Defined at 62 in usr/src/libpthread/src/pthread_mutexattr.c.'>pthread_mutexattr_settype</a>(<a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/353.html' title='Multiple used in 19 places.'>kind</a>);
+<a name='L226'> 226 
+<a name='L227'> 227 <i><font color='green'>//</font></i>
+<a name='L228'> 228 <i><font color='green'>// Mutex functions</font></i>
+<a name='L229'> 229 <i><font color='green'>//</font></i>
+<a name='L230'> 230 
+<a name='L231'> 231 <b>int</b> <a href='../S/59.html#L26' title='Defined at 26 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_init</a>(<a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>, <b>const</b> <a href='../S/43.html#L84' title='Defined at 84 in usr/src/libpthread/include/pthread.h.'>pthread_mutexattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L232'> 232 <b>int</b> <a href='../S/59.html#L46' title='Defined at 46 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_destroy</a>(<a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>);
+<a name='L233'> 233 <b>int</b> <a href='../S/59.html#L67' title='Defined at 67 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_lock</a>(<a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>);
+<a name='L234'> 234 <b>int</b> <a href='../S/59.html#L92' title='Defined at 92 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_timedlock</a>(<a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>, <b>const</b> <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a> *<a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>);
+<a name='L235'> 235 <b>int</b> <a href='../S/59.html#L107' title='Defined at 107 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_trylock</a>(<a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>);
+<a name='L236'> 236 <b>int</b> <a href='../S/59.html#L133' title='Defined at 133 in usr/src/libpthread/src/pthread_mutex.c.'>pthread_mutex_unlock</a>(<a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>);
+<a name='L237'> 237 
+<a name='L238'> 238 <i><font color='green'>//</font></i>
+<a name='L239'> 239 <i><font color='green'>// Condition variable attribute functions</font></i>
+<a name='L240'> 240 <i><font color='green'>//</font></i>
+<a name='L241'> 241 
+<a name='L242'> 242 <b>int</b> <a href='../S/66.html#L7' title='Defined at 7 in usr/src/libpthread/src/pthread_condattr.c.'>pthread_condattr_init</a>(<a href='../S/43.html#L103' title='Defined at 103 in usr/src/libpthread/include/pthread.h.'>pthread_condattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L243'> 243 <b>int</b> <a href='../S/66.html#L18' title='Defined at 18 in usr/src/libpthread/src/pthread_condattr.c.'>pthread_condattr_destroy</a>(<a href='../S/43.html#L103' title='Defined at 103 in usr/src/libpthread/include/pthread.h.'>pthread_condattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L244'> 244 <b>int</b> <a href='../S/66.html#L29' title='Defined at 29 in usr/src/libpthread/src/pthread_condattr.c.'>pthread_condattr_getpshared</a>(<b>const</b> <a href='../S/43.html#L103' title='Defined at 103 in usr/src/libpthread/include/pthread.h.'>pthread_condattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L245'> 245 <b>int</b> <a href='../S/66.html#L41' title='Defined at 41 in usr/src/libpthread/src/pthread_condattr.c.'>pthread_condattr_setpshared</a>(<a href='../S/43.html#L103' title='Defined at 103 in usr/src/libpthread/include/pthread.h.'>pthread_condattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L246'> 246 
+<a name='L247'> 247 <i><font color='green'>//</font></i>
+<a name='L248'> 248 <i><font color='green'>// Condition variable functions</font></i>
+<a name='L249'> 249 <i><font color='green'>//</font></i>
+<a name='L250'> 250 
+<a name='L251'> 251 <b>int</b> <a href='../S/71.html#L13' title='Defined at 13 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_init</a>(<a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a> *<a href='../Y/164.html' title='Multiple used in 42 places.'>cond</a>, <b>const</b> <a href='../S/43.html#L103' title='Defined at 103 in usr/src/libpthread/include/pthread.h.'>pthread_condattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L252'> 252 <b>int</b> <a href='../S/71.html#L25' title='Defined at 25 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_destroy</a>(<a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a> *<a href='../Y/164.html' title='Multiple used in 42 places.'>cond</a>);
+<a name='L253'> 253 <b>int</b> <a href='../S/71.html#L88' title='Defined at 88 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_wait</a>(<a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a> *<a href='../Y/164.html' title='Multiple used in 42 places.'>cond</a>, <a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>);
+<a name='L254'> 254 <b>int</b> <a href='../S/71.html#L44' title='Defined at 44 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_timedwait</a>(<a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a> *<a href='../Y/164.html' title='Multiple used in 42 places.'>cond</a>, <a href='../S/43.html#L94' title='Defined at 94 in usr/src/libpthread/include/pthread.h.'>pthread_mutex_t</a> *<a href='../Y/397.html' title='Multiple used in 75 places.'>mutex</a>, <b>const</b> <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a> *<a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>);
+<a name='L255'> 255 <b>int</b> <a href='../S/71.html#L93' title='Defined at 93 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_signal</a>(<a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a> *<a href='../Y/164.html' title='Multiple used in 42 places.'>cond</a>);
+<a name='L256'> 256 <b>int</b> <a href='../S/71.html#L116' title='Defined at 116 in usr/src/libpthread/src/pthread_cond.c.'>pthread_cond_broadcast</a>(<a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a> *<a href='../Y/164.html' title='Multiple used in 42 places.'>cond</a>);
+<a name='L257'> 257 
+<a name='L258'> 258 <i><font color='green'>//</font></i>
+<a name='L259'> 259 <i><font color='green'>// Barrier attribute functions</font></i>
+<a name='L260'> 260 <i><font color='green'>//</font></i>
+<a name='L261'> 261 
+<a name='L262'> 262 <b>int</b> <a href='../S/54.html#L9' title='Defined at 9 in usr/src/libpthread/src/pthread_barrierattr.c.'>pthread_barrierattr_init</a>(<a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L263'> 263 <b>int</b> <a href='../S/54.html#L20' title='Defined at 20 in usr/src/libpthread/src/pthread_barrierattr.c.'>pthread_barrierattr_destroy</a>(<a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L264'> 264 <b>int</b> <a href='../S/54.html#L31' title='Defined at 31 in usr/src/libpthread/src/pthread_barrierattr.c.'>pthread_barrierattr_getpshared</a>(<b>const</b> <a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L265'> 265 <b>int</b> <a href='../S/54.html#L47' title='Defined at 47 in usr/src/libpthread/src/pthread_barrierattr.c.'>pthread_barrierattr_setpshared</a>(<a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L266'> 266 
+<a name='L267'> 267 <i><font color='green'>//</font></i>
+<a name='L268'> 268 <i><font color='green'>// Barrier functions</font></i>
+<a name='L269'> 269 <i><font color='green'>//</font></i>
+<a name='L270'> 270 
+<a name='L271'> 271 <b>int</b> <a href='../S/57.html#L9' title='Defined at 9 in usr/src/libpthread/src/pthread_barrier.c.'>pthread_barrier_init</a>(<a href='../S/43.html#L124' title='Defined at 124 in usr/src/libpthread/include/pthread.h.'>pthread_barrier_t</a> *<a href='../Y/125.html' title='Multiple used in 15 places.'>barrier</a>, <b>const</b> <a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>unsigned</b> <b>int</b> <a href='../Y/169.html' title='Multiple used in 5 places.'>count</a>);
+<a name='L272'> 272 <b>int</b> <a href='../S/57.html#L28' title='Defined at 28 in usr/src/libpthread/src/pthread_barrier.c.'>pthread_barrier_destroy</a>(<a href='../S/43.html#L124' title='Defined at 124 in usr/src/libpthread/include/pthread.h.'>pthread_barrier_t</a> *<a href='../Y/125.html' title='Multiple used in 15 places.'>barrier</a>);
+<a name='L273'> 273 <b>int</b> <a href='../S/57.html#L42' title='Defined at 42 in usr/src/libpthread/src/pthread_barrier.c.'>pthread_barrier_wait</a>(<a href='../S/43.html#L124' title='Defined at 124 in usr/src/libpthread/include/pthread.h.'>pthread_barrier_t</a> *<a href='../Y/125.html' title='Multiple used in 15 places.'>barrier</a>);
+<a name='L274'> 274 
+<a name='L275'> 275 <i><font color='green'>//</font></i>
+<a name='L276'> 276 <i><font color='green'>// Read-write lock attribute functions</font></i>
+<a name='L277'> 277 <i><font color='green'>//</font></i>
+<a name='L278'> 278 
+<a name='L279'> 279 <b>int</b> <a href='../S/60.html#L9' title='Defined at 9 in usr/src/libpthread/src/pthread_rwlockattr.c.'>pthread_rwlockattr_init</a>(<a href='../S/43.html#L129' title='Defined at 129 in usr/src/libpthread/include/pthread.h.'>pthread_rwlockattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L280'> 280 <b>int</b> <a href='../S/60.html#L19' title='Defined at 19 in usr/src/libpthread/src/pthread_rwlockattr.c.'>pthread_rwlockattr_destroy</a>(<a href='../S/43.html#L129' title='Defined at 129 in usr/src/libpthread/include/pthread.h.'>pthread_rwlockattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L281'> 281 <b>int</b> <a href='../S/60.html#L29' title='Defined at 29 in usr/src/libpthread/src/pthread_rwlockattr.c.'>pthread_rwlockattr_getpshared</a>(<b>const</b> <a href='../S/43.html#L129' title='Defined at 129 in usr/src/libpthread/include/pthread.h.'>pthread_rwlockattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L282'> 282 <b>int</b> <a href='../S/60.html#L44' title='Defined at 44 in usr/src/libpthread/src/pthread_rwlockattr.c.'>pthread_rwlockattr_setpshared</a>(<a href='../S/43.html#L129' title='Defined at 129 in usr/src/libpthread/include/pthread.h.'>pthread_rwlockattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L283'> 283 
+<a name='L284'> 284 <i><font color='green'>//</font></i>
+<a name='L285'> 285 <i><font color='green'>// Read-write lock functions</font></i>
+<a name='L286'> 286 <i><font color='green'>//</font></i>
+<a name='L287'> 287 
+<a name='L288'> 288 <b>int</b> <a href='../S/72.html#L10' title='Defined at 10 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_init</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>, <b>const</b> <a href='../S/43.html#L129' title='Defined at 129 in usr/src/libpthread/include/pthread.h.'>pthread_rwlockattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>);
+<a name='L289'> 289 <b>int</b> <a href='../S/72.html#L34' title='Defined at 34 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_destroy</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L290'> 290 <b>int</b> <a href='../S/72.html#L63' title='Defined at 63 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_tryrdlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L291'> 291 <b>int</b> <a href='../S/72.html#L72' title='Defined at 72 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_trywrlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L292'> 292 <b>int</b> <a href='../S/72.html#L81' title='Defined at 81 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_rdlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L293'> 293 <b>int</b> <a href='../S/72.html#L90' title='Defined at 90 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_timedrdlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>, <b>const</b> <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a> *<a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>);
+<a name='L294'> 294 <b>int</b> <a href='../S/72.html#L99' title='Defined at 99 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_wrlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L295'> 295 <b>int</b> <a href='../S/72.html#L108' title='Defined at 108 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_timedwrlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>, <b>const</b> <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a> *<a href='../Y/88.html' title='Multiple used in 14 places.'>abstime</a>);
+<a name='L296'> 296 <b>int</b> <a href='../S/72.html#L117' title='Defined at 117 in usr/src/libpthread/src/pthread_rwlock.c.'>pthread_rwlock_unlock</a>(<a href='../S/43.html#L140' title='Defined at 140 in usr/src/libpthread/include/pthread.h.'>pthread_rwlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L297'> 297 
+<a name='L298'> 298 <i><font color='green'>//</font></i>
+<a name='L299'> 299 <i><font color='green'>// Spinlock functions</font></i>
+<a name='L300'> 300 <i><font color='green'>//</font></i>
+<a name='L301'> 301 
+<a name='L302'> 302 <b>int</b> <a href='../S/53.html#L7' title='Defined at 7 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_init</a>(<a href='../S/43.html#L152' title='Defined at 152 in usr/src/libpthread/include/pthread.h.'>pthread_spinlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>, <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>);
+<a name='L303'> 303 <b>int</b> <a href='../S/53.html#L19' title='Defined at 19 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_destroy</a>(<a href='../S/43.html#L152' title='Defined at 152 in usr/src/libpthread/include/pthread.h.'>pthread_spinlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L304'> 304 <b>int</b> <a href='../S/53.html#L31' title='Defined at 31 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_lock</a>(<a href='../S/43.html#L152' title='Defined at 152 in usr/src/libpthread/include/pthread.h.'>pthread_spinlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L305'> 305 <b>int</b> <a href='../S/53.html#L45' title='Defined at 45 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_trylock</a>(<a href='../S/43.html#L152' title='Defined at 152 in usr/src/libpthread/include/pthread.h.'>pthread_spinlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L306'> 306 <b>int</b> <a href='../S/53.html#L59' title='Defined at 59 in usr/src/libpthread/src/pthread_spin.c.'>pthread_spin_unlock</a>(<a href='../S/43.html#L152' title='Defined at 152 in usr/src/libpthread/include/pthread.h.'>pthread_spinlock_t</a> *<a href='../S/88.html#L38' title='Defined at 38 in src/include/aplus/spinlock.h.'>lock</a>);
+<a name='L307'> 307 
+<a name='L308'> 308 
+<a name='L309'> 309 
+<a name='L310'> 310 <font color='darkred'>#ifdef</font> <a href='../Y/67.html' title='Multiple used in 5 places.'>__cplusplus</a>
+<a name='L311'> 311 <font color='red'>}</font>
+<a name='L312'> 312 <font color='darkred'>#endif</font>
+<a name='L313'> 313 
+<a name='L314'> 314 
+<a name='L315'> 315 
+<a name='L316'> 316 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

@@ -1,0 +1,231 @@
+.TH "src/include/aplus/task.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/task.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <signal\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <setjmp\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBtask_env\fP"
+.br
+.ti -1c
+.RI "struct \fBtask\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBTASK_MAX_FD\fP   512"
+.br
+.ti -1c
+.RI "#define \fBTASK_STACKSIZE\fP   0x1000"
+.br
+.ti -1c
+.RI "#define \fBTASK_STACKADDR\fP   0xF0000000"
+.br
+.ti -1c
+.RI "#define \fBTASK_STATE_ALIVE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBTASK_STATE_ZOMBIE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBTASK_STATE_DEAD\fP   2"
+.br
+.ti -1c
+.RI "#define \fBTASK_PRIORITY_MIN\fP   1"
+.br
+.ti -1c
+.RI "#define \fBTASK_PRIORITY_LOW\fP   5"
+.br
+.ti -1c
+.RI "#define \fBTASK_PRIORITY_REGULAR\fP   15"
+.br
+.ti -1c
+.RI "#define \fBTASK_PRIORITY_HIGH\fP   30"
+.br
+.ti -1c
+.RI "#define \fBTASK_PRIORITY_MAX\fP   50"
+.br
+.ti -1c
+.RI "#define \fBUID_SUPERUSER\fP   1000"
+.br
+.ti -1c
+.RI "#define \fBGID_SUPERUSER\fP   1000"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBtask\fP \fBtask_t\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "struct \fBtask_env\fP \fB__attribute__\fP ((packed)) task_env_t"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBuint32_t\fP \fBedi\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBesi\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBebx\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBecx\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBeax\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBedx\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBeflags\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBebp\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBeip\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define GID_SUPERUSER   1000"
+
+.PP
+Definizione alla linea 52 del file task\&.h\&.
+.SS "#define TASK_MAX_FD   512"
+
+.PP
+Definizione alla linea 35 del file task\&.h\&.
+.SS "#define TASK_PRIORITY_HIGH   30"
+
+.PP
+Definizione alla linea 47 del file task\&.h\&.
+.SS "#define TASK_PRIORITY_LOW   5"
+
+.PP
+Definizione alla linea 45 del file task\&.h\&.
+.SS "#define TASK_PRIORITY_MAX   50"
+
+.PP
+Definizione alla linea 48 del file task\&.h\&.
+.SS "#define TASK_PRIORITY_MIN   1"
+
+.PP
+Definizione alla linea 44 del file task\&.h\&.
+.SS "#define TASK_PRIORITY_REGULAR   15"
+
+.PP
+Definizione alla linea 46 del file task\&.h\&.
+.SS "#define TASK_STACKADDR   0xF0000000"
+
+.PP
+Definizione alla linea 38 del file task\&.h\&.
+.SS "#define TASK_STACKSIZE   0x1000"
+
+.PP
+Definizione alla linea 37 del file task\&.h\&.
+.SS "#define TASK_STATE_ALIVE   0"
+
+.PP
+Definizione alla linea 40 del file task\&.h\&.
+.SS "#define TASK_STATE_DEAD   2"
+
+.PP
+Definizione alla linea 42 del file task\&.h\&.
+.SS "#define TASK_STATE_ZOMBIE   1"
+
+.PP
+Definizione alla linea 41 del file task\&.h\&.
+.SS "#define UID_SUPERUSER   1000"
+
+.PP
+Definizione alla linea 51 del file task\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fBtask\fP  \fBtask_t\fP"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "struct \fBtask_env\fP __attribute__ ((packed))"
+
+.PP
+Definizione alla linea 44 del file desc\&.c\&.
+.PP
+.nf
+46                        {
+47     uint16_t limit;
+48     uint32_t base;
+49 } __attribute__((packed)) gdt_ptr_t;
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBuint32_t\fP eax"
+
+.PP
+Definizione alla linea 16 del file task\&.h\&.
+.SS "\fBuint32_t\fP ebp"
+
+.PP
+Definizione alla linea 19 del file task\&.h\&.
+.SS "\fBuint32_t\fP ebx"
+
+.PP
+Definizione alla linea 14 del file task\&.h\&.
+.SS "\fBuint32_t\fP ecx"
+
+.PP
+Definizione alla linea 15 del file task\&.h\&.
+.SS "\fBuint32_t\fP edi"
+
+.PP
+Definizione alla linea 12 del file task\&.h\&.
+.SS "\fBuint32_t\fP edx"
+
+.PP
+Definizione alla linea 17 del file task\&.h\&.
+.SS "\fBuint32_t\fP eflags"
+
+.PP
+Definizione alla linea 18 del file task\&.h\&.
+.SS "\fBuint32_t\fP eip"
+
+.PP
+Definizione alla linea 20 del file task\&.h\&.
+.SS "\fBuint32_t\fP esi"
+
+.PP
+Definizione alla linea 13 del file task\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

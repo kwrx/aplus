@@ -1,0 +1,52 @@
+.TH "src/syscall/getpid.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/getpid.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "pid_t \fBsys_getpid\fP ()"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_getpid\fP, 5)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "pid_t sys_getpid ()"
+
+.PP
+Definizione alla linea 13 del file getpid\&.c\&.
+.PP
+Referenzia schedule_getpid()\&.
+.PP
+.nf
+13                    {
+14     return schedule_getpid();
+15 }
+.fi
+.SS "SYSCALL (\fBsys_getpid\fP, 5)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

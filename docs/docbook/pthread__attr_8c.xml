@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__attr_8c">
+    <title>pthread_attr.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;stdlib.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread__attr_8c_1a0a650187b2651a3c274ee6ca75d87089">STACK_DEFAULT_SIZE</link> <link linkend="pthread__internal_8h_1a8b3dc1c5c1a165d6143b1dce950e8266">PTHREAD_STACK_MIN</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1af03ef0e46750b54105e8ed916bb70155">pthread_attr_init</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1aaccee3f8e8dbb83b8e1d18b4405c728c">pthread_attr_destroy</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a385e4dce7a25168d155d4bdab3fa269b">pthread_attr_getdetachstate</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * detachstate)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a94a485fc9d97f9f5e47c9c1ac994376c">pthread_attr_setdetachstate</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int detachstate)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a45442f9eeecd4a5039494fd873ddfc58">pthread_attr_getstackaddr</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, void ** stackaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1af3eca20d0a4629dff6321451c7b2f917">pthread_attr_setstackaddr</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, void * stackaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a368a4252fc0d17110db0de3397a2f403">pthread_attr_getstacksize</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, size_t * stacksize)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1ab7121cb17b007178c7e771502cf4c532">pthread_attr_setstacksize</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, size_t stacksize)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a8cff04eb377101c2c4575b80abc8f267">pthread_attr_getschedparam</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1abc92c074e629b699bd9c89e8b67e9da9">pthread_attr_setschedparam</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, const struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a4da85194679065e47445ae1461797574">pthread_attr_getschedpolicy</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * policy)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a5f9da295a78b61a6f1b0a76860558f91">pthread_attr_setschedpolicy</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int policy)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a595dae2ff76e400f791025affc3295cb">pthread_attr_getinheritsched</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * inheritsched)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a60d0fdc89742cedc8b5ac4cdbc9a1eed">pthread_attr_setinheritsched</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int inheritsched)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1af45a1519538d33ebe6440688ddd2dfbb">pthread_attr_getscope</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * contentionscope)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__attr_8c_1a9d33b3c0846822f99a8b62e72612702b">pthread_attr_setscope</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int contentionscope)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_attr.c</para>
+    </simplesect>
+</section>

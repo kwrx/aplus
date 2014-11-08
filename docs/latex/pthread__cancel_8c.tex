@@ -1,0 +1,104 @@
+\hypertarget{pthread__cancel_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+cancel.c}
+\label{pthread__cancel_8c}\index{usr/src/libpthread/src/pthread\+\_\+cancel.\+c@{usr/src/libpthread/src/pthread\+\_\+cancel.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__cancel_8c_a1565adeadf6f97f79c63a3fed9315e78}{pthread\+\_\+cancel} (\hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\+\_\+t} thread)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__cancel_8c_a2a6fc36ee68f574473a99923d45e9bdd}{pthread\+\_\+setcancelstate} (int state, int $\ast$oldstate)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__cancel_8c_a440eefe8962f370346a3cbb73f69d5bf}{pthread\+\_\+setcanceltype} (int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}, int $\ast$oldtype)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} void \hyperlink{pthread__cancel_8c_aaf4677eb9e1341cd553be1c32fd738a9}{pthread\+\_\+testcancel} (void)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__cancel_8c_a1565adeadf6f97f79c63a3fed9315e78}{\index{pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}!pthread\+\_\+cancel@{pthread\+\_\+cancel}}
+\index{pthread\+\_\+cancel@{pthread\+\_\+cancel}!pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}}
+\subsubsection[{pthread\+\_\+cancel}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+cancel (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+t}}]{thread}
+\end{DoxyParamCaption}
+)}}\label{pthread__cancel_8c_a1565adeadf6f97f79c63a3fed9315e78}
+
+
+Definizione alla linea 7 del file pthread\+\_\+cancel.\+c.
+
+
+
+Referenzia pthread\+\_\+detach().
+
+
+\begin{DoxyCode}
+7                                             \{
+8     \textcolor{keywordflow}{return} \hyperlink{pthread_8h_a7c275c509c26566b6dd95a2de1668a2f}{pthread\_detach}(thread);
+9 \}
+\end{DoxyCode}
+\hypertarget{pthread__cancel_8c_a2a6fc36ee68f574473a99923d45e9bdd}{\index{pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}!pthread\+\_\+setcancelstate@{pthread\+\_\+setcancelstate}}
+\index{pthread\+\_\+setcancelstate@{pthread\+\_\+setcancelstate}!pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}}
+\subsubsection[{pthread\+\_\+setcancelstate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+setcancelstate (
+\begin{DoxyParamCaption}
+\item[{int}]{state, }
+\item[{int $\ast$}]{oldstate}
+\end{DoxyParamCaption}
+)}}\label{pthread__cancel_8c_a2a6fc36ee68f574473a99923d45e9bdd}
+
+
+Definizione alla linea 12 del file pthread\+\_\+cancel.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+12                                                             \{
+13     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+14     \textcolor{keywordflow}{return} 1;
+15 \}
+\end{DoxyCode}
+\hypertarget{pthread__cancel_8c_a440eefe8962f370346a3cbb73f69d5bf}{\index{pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}!pthread\+\_\+setcanceltype@{pthread\+\_\+setcanceltype}}
+\index{pthread\+\_\+setcanceltype@{pthread\+\_\+setcanceltype}!pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}}
+\subsubsection[{pthread\+\_\+setcanceltype}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+setcanceltype (
+\begin{DoxyParamCaption}
+\item[{int}]{type, }
+\item[{int $\ast$}]{oldtype}
+\end{DoxyParamCaption}
+)}}\label{pthread__cancel_8c_a440eefe8962f370346a3cbb73f69d5bf}
+
+
+Definizione alla linea 18 del file pthread\+\_\+cancel.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+18                                                          \{
+19     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+20     \textcolor{keywordflow}{return} 1;
+21 \}
+\end{DoxyCode}
+\hypertarget{pthread__cancel_8c_aaf4677eb9e1341cd553be1c32fd738a9}{\index{pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}!pthread\+\_\+testcancel@{pthread\+\_\+testcancel}}
+\index{pthread\+\_\+testcancel@{pthread\+\_\+testcancel}!pthread\+\_\+cancel.\+c@{pthread\+\_\+cancel.\+c}}
+\subsubsection[{pthread\+\_\+testcancel}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} void pthread\+\_\+testcancel (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{pthread__cancel_8c_aaf4677eb9e1341cd553be1c32fd738a9}
+
+
+Definizione alla linea 23 del file pthread\+\_\+cancel.\+c.
+
+
+\begin{DoxyCode}
+23                                      \{
+24     \textcolor{comment}{/* Boh ?? */}
+25 \}
+\end{DoxyCode}

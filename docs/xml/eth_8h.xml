@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="eth_8h" kind="file">
+    <compoundname>eth.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includedby refid="arp_8h" local="no">src/include/aplus/net/arp.h</includedby>
+    <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
+    <includedby refid="arp_8c" local="no">src/net/arp.c</includedby>
+    <includedby refid="eth_8c" local="no">src/net/eth.c</includedby>
+    <includedby refid="ipv4_8c" local="no">src/net/ipv4.c</includedby>
+    <includedby refid="ipv6_8c" local="no">src/net/ipv6.c</includedby>
+    <includedby refid="rtl8139_8c" local="no">src/net/rtl8139/rtl8139.c</includedby>
+    <includedby refid="udp_8c" local="no">src/net/udp.c</includedby>
+    <incdepgraph>
+      <node id="599">
+        <label>stdarg.h</label>
+      </node>
+      <node id="596">
+        <label>stdint.h</label>
+      </node>
+      <node id="601">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="598" relation="include">
+        </childnode>
+        <childnode refid="596" relation="include">
+        </childnode>
+      </node>
+      <node id="602">
+        <label>stddef.h</label>
+      </node>
+      <node id="595">
+        <label>src/include/aplus/net/eth.h</label>
+        <link refid="eth.h"/>
+        <childnode refid="596" relation="include">
+        </childnode>
+        <childnode refid="597" relation="include">
+        </childnode>
+      </node>
+      <node id="598">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="596" relation="include">
+        </childnode>
+        <childnode refid="599" relation="include">
+        </childnode>
+        <childnode refid="600" relation="include">
+        </childnode>
+      </node>
+      <node id="600">
+        <label>string.h</label>
+      </node>
+      <node id="597">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="598" relation="include">
+        </childnode>
+        <childnode refid="601" relation="include">
+        </childnode>
+        <childnode refid="596" relation="include">
+        </childnode>
+        <childnode refid="602" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="607">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="611">
+        <label>src/net/rtl8139/rtl8139.c</label>
+        <link refid="rtl8139_8c"/>
+      </node>
+      <node id="606">
+        <label>src/net/netif.c</label>
+        <link refid="netif_8c"/>
+      </node>
+      <node id="603">
+        <label>src/include/aplus/net/eth.h</label>
+        <link refid="eth.h"/>
+        <childnode refid="604" relation="include">
+        </childnode>
+        <childnode refid="607" relation="include">
+        </childnode>
+        <childnode refid="605" relation="include">
+        </childnode>
+        <childnode refid="608" relation="include">
+        </childnode>
+        <childnode refid="609" relation="include">
+        </childnode>
+        <childnode refid="610" relation="include">
+        </childnode>
+        <childnode refid="611" relation="include">
+        </childnode>
+        <childnode refid="612" relation="include">
+        </childnode>
+      </node>
+      <node id="609">
+        <label>src/net/ipv4.c</label>
+        <link refid="ipv4_8c"/>
+      </node>
+      <node id="604">
+        <label>src/include/aplus/net/arp.h</label>
+        <link refid="arp_8h"/>
+        <childnode refid="605" relation="include">
+        </childnode>
+        <childnode refid="606" relation="include">
+        </childnode>
+      </node>
+      <node id="608">
+        <label>src/net/eth.c</label>
+        <link refid="eth_8c"/>
+      </node>
+      <node id="612">
+        <label>src/net/udp.c</label>
+        <link refid="udp_8c"/>
+      </node>
+      <node id="610">
+        <label>src/net/ipv6.c</label>
+        <link refid="ipv6_8c"/>
+      </node>
+      <node id="605">
+        <label>src/net/arp.c</label>
+        <link refid="arp_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structeth__header" prot="public">eth_header</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="eth_8h_1acba2f68ee7a6d728108123f0209690fb" prot="public" static="no">
+        <name>ETH_TYPE_IPV4</name>
+        <initializer>0x0800</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="12" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="eth_8h_1a14a88f547fcbf1570273a1582e823f87" prot="public" static="no">
+        <name>ETH_TYPE_ARP</name>
+        <initializer>0x0806</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="13" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="eth_8h_1a9f5c136f58003cd8efe144d478877ead" prot="public" static="no">
+        <name>ETH_TYPE_IPV6</name>
+        <initializer>0x86DD</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="14" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="eth_8h_1a4ee455ff428c9a93c9ad5730bf120785" prot="public" static="no">
+        <name>ETH_TYPE_WAKEONLAN</name>
+        <initializer>0x0842</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="15" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="eth_8h_1a7278aac14aa7e9e425b13b1d676878b7" prot="public" static="no">
+        <name>ETH_TYPE_RARP</name>
+        <initializer>0x8035</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="16" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="eth_8h_1aec9f2aac7e6a6448440cf0e28bb401e8" prot="public" static="no">
+        <name>ETH_TYPE_RAW</name>
+        <initializer>0xFFFF</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="17" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
+        <definition>macaddr_t dest</definition>
+        <argsstring></argsstring>
+        <name>dest</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="44" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="eth_8h_1ad67aa3eb3b4517f80ebf59a2b845ffc5" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
+        <definition>macaddr_t source</definition>
+        <argsstring></argsstring>
+        <name>source</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="45" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="46" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/eth.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="eth_8h_1a5af061aaa0da1dfd1022f738cc6686cc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structeth__header" kindref="compound">eth_header</ref></type>
+        <definition>struct eth_header __attribute__</definition>
+        <argsstring>((packed)) eth_header_t</argsstring>
+        <name>__attribute__</name>
+        <param>
+          <type>(packed)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="43" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_ETH_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_ETH_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>ETH:</highlight></codeline>
+<codeline lineno="8"><highlight class="comment"><sp/>*<sp/><sp/>[dest]<sp/>[source]<sp/>[type]<sp/>[data...]<sp/>[crc32]<sp/></highlight></codeline>
+<codeline lineno="9"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="eth_8h_1acba2f68ee7a6d728108123f0209690fb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ETH_TYPE_IPV4<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x0800</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="eth_8h_1a14a88f547fcbf1570273a1582e823f87" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ETH_TYPE_ARP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x0806</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="eth_8h_1a9f5c136f58003cd8efe144d478877ead" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ETH_TYPE_IPV6<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x86DD</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="eth_8h_1a4ee455ff428c9a93c9ad5730bf120785" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ETH_TYPE_WAKEONLAN<sp/><sp/><sp/><sp/><sp/><sp/>0x0842</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="eth_8h_1a7278aac14aa7e9e425b13b1d676878b7" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ETH_TYPE_RARP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x8035</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="eth_8h_1aec9f2aac7e6a6448440cf0e28bb401e8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ETH_TYPE_RAW<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0xFFFF</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="structeth__header" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structeth__header" kindref="compound">eth_header</ref><sp/>{</highlight></codeline>
+<codeline lineno="21" refid="structeth__header_1a60d1b5300409163d627fbe1f033ef3bc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref><sp/><ref refid="structeth__header_1a60d1b5300409163d627fbe1f033ef3bc" kindref="member">dest</ref>;</highlight></codeline>
+<codeline lineno="22" refid="structeth__header_1a2f9bf23af31f9234e9ebe6efdf6f38da" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref><sp/><ref refid="structeth__header_1a2f9bf23af31f9234e9ebe6efdf6f38da" kindref="member">source</ref>;</highlight></codeline>
+<codeline lineno="23" refid="structeth__header_1a1f44bfea959183d53e42185c107fa7c0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structeth__header_1a1f44bfea959183d53e42185c107fa7c0" kindref="member">type</ref>;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}<sp/><ref refid="eth_8h_1a5af061aaa0da1dfd1022f738cc6686cc" kindref="member">__attribute__</ref>((packed))<sp/>eth_header_t;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,104 @@
+\hypertarget{pthread__internal_8h}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+internal.h}
+\label{pthread__internal_8h}\index{usr/src/libpthread/src/pthread\+\_\+internal.\+h@{usr/src/libpthread/src/pthread\+\_\+internal.\+h}}
+}
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct____pthread__key}{\+\_\+\+\_\+pthread\+\_\+key}
+\item 
+struct \hyperlink{structpthread__context}{pthread\+\_\+context}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{pthread__internal_8h_a5e151c615eda34903514212f05a5ccf8}{P\+R\+I\+V\+A\+T\+E}~static
+\item 
+\#define \hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C}
+\item 
+\#define \hyperlink{pthread__internal_8h_a77366c1bd428629dc898e188bfd182a3}{E\+X\+T\+E\+R\+N}~extern
+\item 
+\#define \hyperlink{pthread__internal_8h_a0a23e66e087bcf5c253b9b2746f19a64}{P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X}~64
+\item 
+\#define \hyperlink{pthread__internal_8h_a8b3dc1c5c1a165d6143b1dce950e8266}{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N}~4096
+\item 
+\#define \hyperlink{pthread__internal_8h_ab8f25dec585d6255fcf40b67db66c1c5}{P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X}~2048
+\end{DoxyCompactItemize}
+\subsection*{Ridefinizioni di tipo (typedef)}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{struct____pthread__key}{\+\_\+\+\_\+pthread\+\_\+key} \hyperlink{pthread__internal_8h_af2e45523b401a6101f50c6f7be0d66a8}{\+\_\+\+\_\+pthread\+\_\+key\+\_\+t}
+\item 
+typedef struct \hyperlink{structpthread__context}{pthread\+\_\+context} \hyperlink{pthread__internal_8h_acef1d04f94658c4052cd87213538f7e4}{pthread\+\_\+context\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{pthread__internal_8h_a357cd4b34c13011749dfffb42b489f09}{sched\+\_\+yield} (void)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{pthread__internal_8h_a77366c1bd428629dc898e188bfd182a3}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!E\+X\+T\+E\+R\+N@{E\+X\+T\+E\+R\+N}}
+\index{E\+X\+T\+E\+R\+N@{E\+X\+T\+E\+R\+N}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{E\+X\+T\+E\+R\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+X\+T\+E\+R\+N~extern}}\label{pthread__internal_8h_a77366c1bd428629dc898e188bfd182a3}
+
+
+Definizione alla linea 20 del file pthread\+\_\+internal.\+h.
+
+\hypertarget{pthread__internal_8h_a5e151c615eda34903514212f05a5ccf8}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!P\+R\+I\+V\+A\+T\+E@{P\+R\+I\+V\+A\+T\+E}}
+\index{P\+R\+I\+V\+A\+T\+E@{P\+R\+I\+V\+A\+T\+E}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{P\+R\+I\+V\+A\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+R\+I\+V\+A\+T\+E~static}}\label{pthread__internal_8h_a5e151c615eda34903514212f05a5ccf8}
+
+
+Definizione alla linea 11 del file pthread\+\_\+internal.\+h.
+
+\hypertarget{pthread__internal_8h_a0a23e66e087bcf5c253b9b2746f19a64}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X@{P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X}}
+\index{P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X@{P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X~64}}\label{pthread__internal_8h_a0a23e66e087bcf5c253b9b2746f19a64}
+
+
+Definizione alla linea 25 del file pthread\+\_\+internal.\+h.
+
+\hypertarget{pthread__internal_8h_a8b3dc1c5c1a165d6143b1dce950e8266}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N}}
+\index{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N~4096}}\label{pthread__internal_8h_a8b3dc1c5c1a165d6143b1dce950e8266}
+
+
+Definizione alla linea 26 del file pthread\+\_\+internal.\+h.
+
+\hypertarget{pthread__internal_8h_ab8f25dec585d6255fcf40b67db66c1c5}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X@{P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X}}
+\index{P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X@{P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X~2048}}\label{pthread__internal_8h_ab8f25dec585d6255fcf40b67db66c1c5}
+
+
+Definizione alla linea 27 del file pthread\+\_\+internal.\+h.
+
+\hypertarget{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!P\+U\+B\+L\+I\+C@{P\+U\+B\+L\+I\+C}}
+\index{P\+U\+B\+L\+I\+C@{P\+U\+B\+L\+I\+C}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{P\+U\+B\+L\+I\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+U\+B\+L\+I\+C}}\label{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}
+
+
+Definizione alla linea 15 del file pthread\+\_\+internal.\+h.
+
+
+
+\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\hypertarget{pthread__internal_8h_af2e45523b401a6101f50c6f7be0d66a8}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!\+\_\+\+\_\+pthread\+\_\+key\+\_\+t@{\+\_\+\+\_\+pthread\+\_\+key\+\_\+t}}
+\index{\+\_\+\+\_\+pthread\+\_\+key\+\_\+t@{\+\_\+\+\_\+pthread\+\_\+key\+\_\+t}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{\+\_\+\+\_\+pthread\+\_\+key\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \+\_\+\+\_\+pthread\+\_\+key}  {\bf \+\_\+\+\_\+pthread\+\_\+key\+\_\+t}}}\label{pthread__internal_8h_af2e45523b401a6101f50c6f7be0d66a8}
+\hypertarget{pthread__internal_8h_acef1d04f94658c4052cd87213538f7e4}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!pthread\+\_\+context\+\_\+t@{pthread\+\_\+context\+\_\+t}}
+\index{pthread\+\_\+context\+\_\+t@{pthread\+\_\+context\+\_\+t}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{pthread\+\_\+context\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf pthread\+\_\+context}  {\bf pthread\+\_\+context\+\_\+t}}}\label{pthread__internal_8h_acef1d04f94658c4052cd87213538f7e4}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__internal_8h_a357cd4b34c13011749dfffb42b489f09}{\index{pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}!sched\+\_\+yield@{sched\+\_\+yield}}
+\index{sched\+\_\+yield@{sched\+\_\+yield}!pthread\+\_\+internal.\+h@{pthread\+\_\+internal.\+h}}
+\subsubsection[{sched\+\_\+yield}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+yield (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{pthread__internal_8h_a357cd4b34c13011749dfffb42b489f09}

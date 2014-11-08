@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__self_8c">
+    <title>pthread_self.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1a77366c1bd428629dc898e188bfd182a3">EXTERN</link> <link linkend="pthread__internal_8h_1acef1d04f94658c4052cd87213538f7e4">pthread_context_t</link> * <link linkend="pthread__self_8c_1a9ed893dd8f37e017f207c1c6ccdb41ec">__pthread_queue</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> <link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> <link linkend="pthread__self_8c_1a9c6edadf970f4bdebbed416f892f30d4">pthread_self</link> (
+void )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_self.c</para>
+    </simplesect>
+</section>

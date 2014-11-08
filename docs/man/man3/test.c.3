@@ -1,0 +1,44 @@
+.TH "src/syscall/test.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/test.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_test\fP (int p0, int p1)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_test\fP, 1000)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_test (intp0, intp1)"
+
+.PP
+Definizione alla linea 4 del file test\&.c\&.
+.PP
+Referenzia kprintf\&.
+.PP
+.nf
+4                              {
+5     kprintf("sys_test called with (p0: %d; p1: %d)\n", p0, p1);
+6 
+7     return 255;
+8 }
+.fi
+.SS "SYSCALL (\fBsys_test\fP, 1000)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

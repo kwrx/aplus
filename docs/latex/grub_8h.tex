@@ -1,0 +1,467 @@
+\hypertarget{grub_8h}{\section{Riferimenti per il file src/include/grub.h}
+\label{grub_8h}\index{src/include/grub.\+h@{src/include/grub.\+h}}
+}
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structvesaInfo__t}{vesa\+Info\+\_\+t}
+\item 
+struct \hyperlink{structvesaModeInfo__t}{vesa\+Mode\+Info\+\_\+t}
+\item 
+struct \hyperlink{structBootInfo__t}{Boot\+Info\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{grub_8h_a3efad85ab30d96e506aba9003c0ee4dd}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+E\+M}~0x001
+\item 
+\#define \hyperlink{grub_8h_a9f338ee148fe6f4c672e8e53e608d985}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+D\+E\+V\+I\+C\+E}~0x002
+\item 
+\#define \hyperlink{grub_8h_af58e2129db03f11e8f3d1be24c67f273}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+M\+D\+L\+I\+N\+E}~0x004
+\item 
+\#define \hyperlink{grub_8h_a05c950e0dfa2339451b7256de3b6634b}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+O\+D\+S}~0x008
+\item 
+\#define \hyperlink{grub_8h_a8ab64e4da5caf65cf7ae2991b984a3cf}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+O\+U\+T}~0x010
+\item 
+\#define \hyperlink{grub_8h_ae67a3767b0bcf8b3a57a1f9d84a0d12c}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+E\+L\+F}~0x020
+\item 
+\#define \hyperlink{grub_8h_a2ed735dcce6c8367f6e3ee5f56e16a42}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+M\+A\+P}~0x040
+\item 
+\#define \hyperlink{grub_8h_ab3d220808412fa0f715b0a1844f1843f}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+O\+N\+F\+I\+G}~0x080
+\item 
+\#define \hyperlink{grub_8h_ab80180da32c134cf24f3dd64e3e14176}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+L\+O\+A\+D\+E\+R}~0x100
+\item 
+\#define \hyperlink{grub_8h_a3fb3ddd4db5c7fb88fd513c66577735a}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+P\+M}~0x200
+\item 
+\#define \hyperlink{grub_8h_a852a5720b636e1bdc5799f72dd04b8d8}{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+V\+B\+E}~0x400
+\end{DoxyCompactItemize}
+\subsection*{Ridefinizioni di tipo (typedef)}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structvesaInfo__t}{vesa\+Info\+\_\+t} \hyperlink{grub_8h_a949fefd565685608cdc3489425f32a93}{vesa\+Info}
+\item 
+typedef struct \hyperlink{structBootInfo__t}{Boot\+Info\+\_\+t} \hyperlink{grub_8h_aaf761d57d118a95f28fd464fd6eaf593}{Boot\+Info}
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structvesaModeInfo__t}{vesa\+Mode\+Info\+\_\+t} \hyperlink{grub_8h_afa73cc1cb823e7947162fcc569b64e5a}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) vesa\+Mode\+Info
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+unsigned short \hyperlink{grub_8h_a448571b444d84b29e9528860d6198688}{attributes}
+\item 
+unsigned char \hyperlink{grub_8h_a5b375a9d989dccc8cf3e3b452552eee8}{win\+A}
+\item 
+unsigned char \hyperlink{grub_8h_ae9719a24ee031bd20ea4c0cacb5c77b0}{win\+B}
+\item 
+unsigned short \hyperlink{grub_8h_a78687e772fb4891075ad895a984b3d50}{granularity}
+\item 
+unsigned short \hyperlink{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{winsize}
+\item 
+unsigned short \hyperlink{grub_8h_ac1dd41cdbe52db68044288e65284f178}{segment\+A}
+\item 
+unsigned short \hyperlink{grub_8h_ab80bf8c9c3587a6b04b7eb6188557c81}{segment\+B}
+\item 
+unsigned int \hyperlink{grub_8h_a9329c4f8f09e8a7ba8edcb7979b0724d}{real\+Fct\+Ptr}
+\item 
+unsigned short \hyperlink{grub_8h_aa8bd203bb72055179d33b87afbfaafdf}{pitch}
+\item 
+unsigned short \hyperlink{grub_8h_a92b3661512e0dc29b5e5fe94b249a0a8}{Xres}
+\item 
+unsigned short \hyperlink{grub_8h_aa642f35e530d0e197056de47b7a24679}{Yres}
+\item 
+unsigned char \hyperlink{grub_8h_af822f8807abe8e921d0622a13d619e57}{Wchar}
+\item 
+unsigned char \hyperlink{grub_8h_a386cee69730f3541482246638e04a662}{Ychar}
+\item 
+unsigned char \hyperlink{grub_8h_a234b1cba8a11f25edbe4473129954041}{planes}
+\item 
+unsigned char \hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp}
+\item 
+unsigned char \hyperlink{grub_8h_af8898775b98504132a77f294f60914ad}{banks}
+\item 
+unsigned char \hyperlink{grub_8h_ab17dac0f2b0af0515bd1dcde0e8eb29d}{memory\+\_\+model}
+\item 
+unsigned char \hyperlink{grub_8h_a32d05d9fdf87ed2f2fe33d299c279df7}{bank\+\_\+size}
+\item 
+unsigned char \hyperlink{grub_8h_a09782d07df1b4bb29e0aeab2347bd4f7}{image\+\_\+pages}
+\item 
+unsigned char \hyperlink{grub_8h_a91deebede3408c2739eaf833278ac98d}{reserved0}
+\item 
+unsigned char \hyperlink{grub_8h_a9bbaeb61ae0158164a6478df20df6d2a}{red\+\_\+mask}
+\item 
+unsigned char \hyperlink{grub_8h_ac0012f5fa55e6e780ad2d34752fc092a}{red\+\_\+position}
+\item 
+unsigned char \hyperlink{grub_8h_a2b05ae4ade4d301d04912921911089f1}{green\+\_\+mask}
+\item 
+unsigned char \hyperlink{grub_8h_a3b620a4a97d8a86e7ddbb0bcb758e33b}{green\+\_\+position}
+\item 
+unsigned char \hyperlink{grub_8h_a2bed3c9924cd7dd9ea7213a94e0f516b}{blue\+\_\+mask}
+\item 
+unsigned char \hyperlink{grub_8h_a87172d563ac78dbb31b20f32baf3ed85}{blue\+\_\+position}
+\item 
+unsigned char \hyperlink{grub_8h_abd702c4796391fd472a86c57720397ff}{rsv\+\_\+mask}
+\item 
+unsigned char \hyperlink{grub_8h_ad837b538d4b0b41c8fb2ff139a2a931b}{rsv\+\_\+position}
+\item 
+unsigned char \hyperlink{grub_8h_a8badd781205f0a5db81752962c9357a6}{directcolor\+\_\+attributes}
+\item 
+unsigned int \hyperlink{grub_8h_a2000b367a91e9bd30bebc900c40203b8}{physbase}
+\item 
+unsigned int \hyperlink{grub_8h_ae9f4ffc72ce26b93734d48c73f726ad4}{reserved1}
+\item 
+short \hyperlink{grub_8h_a69bce65d59ea99847ac5bccfbf6ce0f9}{reserved2}
+\item 
+\hyperlink{grub_8h_aaf761d57d118a95f28fd464fd6eaf593}{Boot\+Info} $\ast$ \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}
+\item 
+unsigned int \hyperlink{grub_8h_a7154179fe070a40c828f7c03f454d4d6}{magic}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{grub_8h_a8ab64e4da5caf65cf7ae2991b984a3cf}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+O\+U\+T@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+O\+U\+T}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+O\+U\+T@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+O\+U\+T}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+O\+U\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+O\+U\+T~0x010}}\label{grub_8h_a8ab64e4da5caf65cf7ae2991b984a3cf}
+
+
+Definizione alla linea 99 del file grub.\+h.
+
+\hypertarget{grub_8h_a3fb3ddd4db5c7fb88fd513c66577735a}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+P\+M@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+P\+M}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+P\+M@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+P\+M}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+P\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+A\+P\+M~0x200}}\label{grub_8h_a3fb3ddd4db5c7fb88fd513c66577735a}
+
+
+Definizione alla linea 104 del file grub.\+h.
+
+\hypertarget{grub_8h_af58e2129db03f11e8f3d1be24c67f273}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+M\+D\+L\+I\+N\+E@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+M\+D\+L\+I\+N\+E}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+M\+D\+L\+I\+N\+E@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+M\+D\+L\+I\+N\+E}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+M\+D\+L\+I\+N\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+M\+D\+L\+I\+N\+E~0x004}}\label{grub_8h_af58e2129db03f11e8f3d1be24c67f273}
+
+
+Definizione alla linea 97 del file grub.\+h.
+
+\hypertarget{grub_8h_ab3d220808412fa0f715b0a1844f1843f}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+O\+N\+F\+I\+G@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+O\+N\+F\+I\+G}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+O\+N\+F\+I\+G@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+O\+N\+F\+I\+G}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+O\+N\+F\+I\+G}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+C\+O\+N\+F\+I\+G~0x080}}\label{grub_8h_ab3d220808412fa0f715b0a1844f1843f}
+
+
+Definizione alla linea 102 del file grub.\+h.
+
+\hypertarget{grub_8h_a9f338ee148fe6f4c672e8e53e608d985}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+D\+E\+V\+I\+C\+E@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+D\+E\+V\+I\+C\+E}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+D\+E\+V\+I\+C\+E@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+D\+E\+V\+I\+C\+E}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+D\+E\+V\+I\+C\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+D\+E\+V\+I\+C\+E~0x002}}\label{grub_8h_a9f338ee148fe6f4c672e8e53e608d985}
+
+
+Definizione alla linea 96 del file grub.\+h.
+
+\hypertarget{grub_8h_ae67a3767b0bcf8b3a57a1f9d84a0d12c}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+E\+L\+F@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+E\+L\+F}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+E\+L\+F@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+E\+L\+F}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+E\+L\+F}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+E\+L\+F~0x020}}\label{grub_8h_ae67a3767b0bcf8b3a57a1f9d84a0d12c}
+
+
+Definizione alla linea 100 del file grub.\+h.
+
+\hypertarget{grub_8h_ab80180da32c134cf24f3dd64e3e14176}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+L\+O\+A\+D\+E\+R@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+L\+O\+A\+D\+E\+R}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+L\+O\+A\+D\+E\+R@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+L\+O\+A\+D\+E\+R}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+L\+O\+A\+D\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+L\+O\+A\+D\+E\+R~0x100}}\label{grub_8h_ab80180da32c134cf24f3dd64e3e14176}
+
+
+Definizione alla linea 103 del file grub.\+h.
+
+\hypertarget{grub_8h_a3efad85ab30d96e506aba9003c0ee4dd}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+E\+M@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+E\+M}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+E\+M@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+E\+M}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+E\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+E\+M~0x001}}\label{grub_8h_a3efad85ab30d96e506aba9003c0ee4dd}
+
+
+Definizione alla linea 95 del file grub.\+h.
+
+\hypertarget{grub_8h_a2ed735dcce6c8367f6e3ee5f56e16a42}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+M\+A\+P@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+M\+A\+P}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+M\+A\+P@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+M\+A\+P}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+M\+A\+P}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+M\+A\+P~0x040}}\label{grub_8h_a2ed735dcce6c8367f6e3ee5f56e16a42}
+
+
+Definizione alla linea 101 del file grub.\+h.
+
+\hypertarget{grub_8h_a05c950e0dfa2339451b7256de3b6634b}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+O\+D\+S@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+O\+D\+S}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+O\+D\+S@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+O\+D\+S}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+O\+D\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+M\+O\+D\+S~0x008}}\label{grub_8h_a05c950e0dfa2339451b7256de3b6634b}
+
+
+Definizione alla linea 98 del file grub.\+h.
+
+\hypertarget{grub_8h_a852a5720b636e1bdc5799f72dd04b8d8}{\index{grub.\+h@{grub.\+h}!M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+V\+B\+E@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+V\+B\+E}}
+\index{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+V\+B\+E@{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+V\+B\+E}!grub.\+h@{grub.\+h}}
+\subsubsection[{M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+V\+B\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+U\+L\+T\+I\+B\+O\+O\+T\+\_\+\+F\+L\+A\+G\+\_\+\+V\+B\+E~0x400}}\label{grub_8h_a852a5720b636e1bdc5799f72dd04b8d8}
+
+
+Definizione alla linea 105 del file grub.\+h.
+
+
+
+\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\hypertarget{grub_8h_aaf761d57d118a95f28fd464fd6eaf593}{\index{grub.\+h@{grub.\+h}!Boot\+Info@{Boot\+Info}}
+\index{Boot\+Info@{Boot\+Info}!grub.\+h@{grub.\+h}}
+\subsubsection[{Boot\+Info}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Boot\+Info\+\_\+t}  {\bf Boot\+Info}}}\label{grub_8h_aaf761d57d118a95f28fd464fd6eaf593}
+\hypertarget{grub_8h_a949fefd565685608cdc3489425f32a93}{\index{grub.\+h@{grub.\+h}!vesa\+Info@{vesa\+Info}}
+\index{vesa\+Info@{vesa\+Info}!grub.\+h@{grub.\+h}}
+\subsubsection[{vesa\+Info}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf vesa\+Info\+\_\+t}  {\bf vesa\+Info}}}\label{grub_8h_a949fefd565685608cdc3489425f32a93}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{grub_8h_afa73cc1cb823e7947162fcc569b64e5a}{\index{grub.\+h@{grub.\+h}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!grub.\+h@{grub.\+h}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf vesa\+Mode\+Info\+\_\+t} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(packed)}]{}
+\end{DoxyParamCaption}
+)}}\label{grub_8h_afa73cc1cb823e7947162fcc569b64e5a}
+
+
+Definizione alla linea 44 del file desc.\+c.
+
+
+\begin{DoxyCode}
+46                        \{
+47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
+48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
+49 \} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{grub_8h_a448571b444d84b29e9528860d6198688}{\index{grub.\+h@{grub.\+h}!attributes@{attributes}}
+\index{attributes@{attributes}!grub.\+h@{grub.\+h}}
+\subsubsection[{attributes}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short attributes}}\label{grub_8h_a448571b444d84b29e9528860d6198688}
+
+
+Definizione alla linea 140 del file grub.\+h.
+
+\hypertarget{grub_8h_a32d05d9fdf87ed2f2fe33d299c279df7}{\index{grub.\+h@{grub.\+h}!bank\+\_\+size@{bank\+\_\+size}}
+\index{bank\+\_\+size@{bank\+\_\+size}!grub.\+h@{grub.\+h}}
+\subsubsection[{bank\+\_\+size}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char bank\+\_\+size}}\label{grub_8h_a32d05d9fdf87ed2f2fe33d299c279df7}
+
+
+Definizione alla linea 150 del file grub.\+h.
+
+\hypertarget{grub_8h_af8898775b98504132a77f294f60914ad}{\index{grub.\+h@{grub.\+h}!banks@{banks}}
+\index{banks@{banks}!grub.\+h@{grub.\+h}}
+\subsubsection[{banks}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char banks}}\label{grub_8h_af8898775b98504132a77f294f60914ad}
+
+
+Definizione alla linea 149 del file grub.\+h.
+
+\hypertarget{grub_8h_a2bed3c9924cd7dd9ea7213a94e0f516b}{\index{grub.\+h@{grub.\+h}!blue\+\_\+mask@{blue\+\_\+mask}}
+\index{blue\+\_\+mask@{blue\+\_\+mask}!grub.\+h@{grub.\+h}}
+\subsubsection[{blue\+\_\+mask}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char blue\+\_\+mask}}\label{grub_8h_a2bed3c9924cd7dd9ea7213a94e0f516b}
+
+
+Definizione alla linea 155 del file grub.\+h.
+
+\hypertarget{grub_8h_a87172d563ac78dbb31b20f32baf3ed85}{\index{grub.\+h@{grub.\+h}!blue\+\_\+position@{blue\+\_\+position}}
+\index{blue\+\_\+position@{blue\+\_\+position}!grub.\+h@{grub.\+h}}
+\subsubsection[{blue\+\_\+position}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char blue\+\_\+position}}\label{grub_8h_a87172d563ac78dbb31b20f32baf3ed85}
+
+
+Definizione alla linea 155 del file grub.\+h.
+
+\hypertarget{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{\index{grub.\+h@{grub.\+h}!bpp@{bpp}}
+\index{bpp@{bpp}!grub.\+h@{grub.\+h}}
+\subsubsection[{bpp}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char bpp}}\label{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}
+
+
+Definizione alla linea 149 del file grub.\+h.
+
+\hypertarget{grub_8h_a8badd781205f0a5db81752962c9357a6}{\index{grub.\+h@{grub.\+h}!directcolor\+\_\+attributes@{directcolor\+\_\+attributes}}
+\index{directcolor\+\_\+attributes@{directcolor\+\_\+attributes}!grub.\+h@{grub.\+h}}
+\subsubsection[{directcolor\+\_\+attributes}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char directcolor\+\_\+attributes}}\label{grub_8h_a8badd781205f0a5db81752962c9357a6}
+
+
+Definizione alla linea 157 del file grub.\+h.
+
+\hypertarget{grub_8h_a78687e772fb4891075ad895a984b3d50}{\index{grub.\+h@{grub.\+h}!granularity@{granularity}}
+\index{granularity@{granularity}!grub.\+h@{grub.\+h}}
+\subsubsection[{granularity}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short granularity}}\label{grub_8h_a78687e772fb4891075ad895a984b3d50}
+
+
+Definizione alla linea 142 del file grub.\+h.
+
+\hypertarget{grub_8h_a2b05ae4ade4d301d04912921911089f1}{\index{grub.\+h@{grub.\+h}!green\+\_\+mask@{green\+\_\+mask}}
+\index{green\+\_\+mask@{green\+\_\+mask}!grub.\+h@{grub.\+h}}
+\subsubsection[{green\+\_\+mask}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char green\+\_\+mask}}\label{grub_8h_a2b05ae4ade4d301d04912921911089f1}
+
+
+Definizione alla linea 154 del file grub.\+h.
+
+\hypertarget{grub_8h_a3b620a4a97d8a86e7ddbb0bcb758e33b}{\index{grub.\+h@{grub.\+h}!green\+\_\+position@{green\+\_\+position}}
+\index{green\+\_\+position@{green\+\_\+position}!grub.\+h@{grub.\+h}}
+\subsubsection[{green\+\_\+position}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char green\+\_\+position}}\label{grub_8h_a3b620a4a97d8a86e7ddbb0bcb758e33b}
+
+
+Definizione alla linea 154 del file grub.\+h.
+
+\hypertarget{grub_8h_a09782d07df1b4bb29e0aeab2347bd4f7}{\index{grub.\+h@{grub.\+h}!image\+\_\+pages@{image\+\_\+pages}}
+\index{image\+\_\+pages@{image\+\_\+pages}!grub.\+h@{grub.\+h}}
+\subsubsection[{image\+\_\+pages}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char image\+\_\+pages}}\label{grub_8h_a09782d07df1b4bb29e0aeab2347bd4f7}
+
+
+Definizione alla linea 150 del file grub.\+h.
+
+\hypertarget{grub_8h_a7154179fe070a40c828f7c03f454d4d6}{\index{grub.\+h@{grub.\+h}!magic@{magic}}
+\index{magic@{magic}!grub.\+h@{grub.\+h}}
+\subsubsection[{magic}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int magic}}\label{grub_8h_a7154179fe070a40c828f7c03f454d4d6}
+
+
+Definizione alla linea 42 del file mm.\+c.
+
+\hypertarget{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{\index{grub.\+h@{grub.\+h}!mbd@{mbd}}
+\index{mbd@{mbd}!grub.\+h@{grub.\+h}}
+\subsubsection[{mbd}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Boot\+Info}$\ast$ mbd}}\label{grub_8h_abac514a5a8c938a1de6fb08f542f5962}
+\hypertarget{grub_8h_ab17dac0f2b0af0515bd1dcde0e8eb29d}{\index{grub.\+h@{grub.\+h}!memory\+\_\+model@{memory\+\_\+model}}
+\index{memory\+\_\+model@{memory\+\_\+model}!grub.\+h@{grub.\+h}}
+\subsubsection[{memory\+\_\+model}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char memory\+\_\+model}}\label{grub_8h_ab17dac0f2b0af0515bd1dcde0e8eb29d}
+
+
+Definizione alla linea 150 del file grub.\+h.
+
+\hypertarget{grub_8h_a2000b367a91e9bd30bebc900c40203b8}{\index{grub.\+h@{grub.\+h}!physbase@{physbase}}
+\index{physbase@{physbase}!grub.\+h@{grub.\+h}}
+\subsubsection[{physbase}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int physbase}}\label{grub_8h_a2000b367a91e9bd30bebc900c40203b8}
+
+
+Definizione alla linea 159 del file grub.\+h.
+
+\hypertarget{grub_8h_aa8bd203bb72055179d33b87afbfaafdf}{\index{grub.\+h@{grub.\+h}!pitch@{pitch}}
+\index{pitch@{pitch}!grub.\+h@{grub.\+h}}
+\subsubsection[{pitch}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short pitch}}\label{grub_8h_aa8bd203bb72055179d33b87afbfaafdf}
+
+
+Definizione alla linea 146 del file grub.\+h.
+
+\hypertarget{grub_8h_a234b1cba8a11f25edbe4473129954041}{\index{grub.\+h@{grub.\+h}!planes@{planes}}
+\index{planes@{planes}!grub.\+h@{grub.\+h}}
+\subsubsection[{planes}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char planes}}\label{grub_8h_a234b1cba8a11f25edbe4473129954041}
+
+
+Definizione alla linea 149 del file grub.\+h.
+
+\hypertarget{grub_8h_a9329c4f8f09e8a7ba8edcb7979b0724d}{\index{grub.\+h@{grub.\+h}!real\+Fct\+Ptr@{real\+Fct\+Ptr}}
+\index{real\+Fct\+Ptr@{real\+Fct\+Ptr}!grub.\+h@{grub.\+h}}
+\subsubsection[{real\+Fct\+Ptr}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int real\+Fct\+Ptr}}\label{grub_8h_a9329c4f8f09e8a7ba8edcb7979b0724d}
+
+
+Definizione alla linea 145 del file grub.\+h.
+
+\hypertarget{grub_8h_a9bbaeb61ae0158164a6478df20df6d2a}{\index{grub.\+h@{grub.\+h}!red\+\_\+mask@{red\+\_\+mask}}
+\index{red\+\_\+mask@{red\+\_\+mask}!grub.\+h@{grub.\+h}}
+\subsubsection[{red\+\_\+mask}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char red\+\_\+mask}}\label{grub_8h_a9bbaeb61ae0158164a6478df20df6d2a}
+
+
+Definizione alla linea 153 del file grub.\+h.
+
+\hypertarget{grub_8h_ac0012f5fa55e6e780ad2d34752fc092a}{\index{grub.\+h@{grub.\+h}!red\+\_\+position@{red\+\_\+position}}
+\index{red\+\_\+position@{red\+\_\+position}!grub.\+h@{grub.\+h}}
+\subsubsection[{red\+\_\+position}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char red\+\_\+position}}\label{grub_8h_ac0012f5fa55e6e780ad2d34752fc092a}
+
+
+Definizione alla linea 153 del file grub.\+h.
+
+\hypertarget{grub_8h_a91deebede3408c2739eaf833278ac98d}{\index{grub.\+h@{grub.\+h}!reserved0@{reserved0}}
+\index{reserved0@{reserved0}!grub.\+h@{grub.\+h}}
+\subsubsection[{reserved0}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char reserved0}}\label{grub_8h_a91deebede3408c2739eaf833278ac98d}
+
+
+Definizione alla linea 151 del file grub.\+h.
+
+\hypertarget{grub_8h_ae9f4ffc72ce26b93734d48c73f726ad4}{\index{grub.\+h@{grub.\+h}!reserved1@{reserved1}}
+\index{reserved1@{reserved1}!grub.\+h@{grub.\+h}}
+\subsubsection[{reserved1}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int reserved1}}\label{grub_8h_ae9f4ffc72ce26b93734d48c73f726ad4}
+
+
+Definizione alla linea 160 del file grub.\+h.
+
+\hypertarget{grub_8h_a69bce65d59ea99847ac5bccfbf6ce0f9}{\index{grub.\+h@{grub.\+h}!reserved2@{reserved2}}
+\index{reserved2@{reserved2}!grub.\+h@{grub.\+h}}
+\subsubsection[{reserved2}]{\setlength{\rightskip}{0pt plus 5cm}short reserved2}}\label{grub_8h_a69bce65d59ea99847ac5bccfbf6ce0f9}
+
+
+Definizione alla linea 161 del file grub.\+h.
+
+\hypertarget{grub_8h_abd702c4796391fd472a86c57720397ff}{\index{grub.\+h@{grub.\+h}!rsv\+\_\+mask@{rsv\+\_\+mask}}
+\index{rsv\+\_\+mask@{rsv\+\_\+mask}!grub.\+h@{grub.\+h}}
+\subsubsection[{rsv\+\_\+mask}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char rsv\+\_\+mask}}\label{grub_8h_abd702c4796391fd472a86c57720397ff}
+
+
+Definizione alla linea 156 del file grub.\+h.
+
+\hypertarget{grub_8h_ad837b538d4b0b41c8fb2ff139a2a931b}{\index{grub.\+h@{grub.\+h}!rsv\+\_\+position@{rsv\+\_\+position}}
+\index{rsv\+\_\+position@{rsv\+\_\+position}!grub.\+h@{grub.\+h}}
+\subsubsection[{rsv\+\_\+position}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char rsv\+\_\+position}}\label{grub_8h_ad837b538d4b0b41c8fb2ff139a2a931b}
+
+
+Definizione alla linea 156 del file grub.\+h.
+
+\hypertarget{grub_8h_ac1dd41cdbe52db68044288e65284f178}{\index{grub.\+h@{grub.\+h}!segment\+A@{segment\+A}}
+\index{segment\+A@{segment\+A}!grub.\+h@{grub.\+h}}
+\subsubsection[{segment\+A}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short segment\+A}}\label{grub_8h_ac1dd41cdbe52db68044288e65284f178}
+
+
+Definizione alla linea 144 del file grub.\+h.
+
+\hypertarget{grub_8h_ab80bf8c9c3587a6b04b7eb6188557c81}{\index{grub.\+h@{grub.\+h}!segment\+B@{segment\+B}}
+\index{segment\+B@{segment\+B}!grub.\+h@{grub.\+h}}
+\subsubsection[{segment\+B}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short segment\+B}}\label{grub_8h_ab80bf8c9c3587a6b04b7eb6188557c81}
+
+
+Definizione alla linea 144 del file grub.\+h.
+
+\hypertarget{grub_8h_af822f8807abe8e921d0622a13d619e57}{\index{grub.\+h@{grub.\+h}!Wchar@{Wchar}}
+\index{Wchar@{Wchar}!grub.\+h@{grub.\+h}}
+\subsubsection[{Wchar}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Wchar}}\label{grub_8h_af822f8807abe8e921d0622a13d619e57}
+
+
+Definizione alla linea 149 del file grub.\+h.
+
+\hypertarget{grub_8h_a5b375a9d989dccc8cf3e3b452552eee8}{\index{grub.\+h@{grub.\+h}!win\+A@{win\+A}}
+\index{win\+A@{win\+A}!grub.\+h@{grub.\+h}}
+\subsubsection[{win\+A}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char win\+A}}\label{grub_8h_a5b375a9d989dccc8cf3e3b452552eee8}
+
+
+Definizione alla linea 141 del file grub.\+h.
+
+\hypertarget{grub_8h_ae9719a24ee031bd20ea4c0cacb5c77b0}{\index{grub.\+h@{grub.\+h}!win\+B@{win\+B}}
+\index{win\+B@{win\+B}!grub.\+h@{grub.\+h}}
+\subsubsection[{win\+B}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char win\+B}}\label{grub_8h_ae9719a24ee031bd20ea4c0cacb5c77b0}
+
+
+Definizione alla linea 141 del file grub.\+h.
+
+\hypertarget{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{\index{grub.\+h@{grub.\+h}!winsize@{winsize}}
+\index{winsize@{winsize}!grub.\+h@{grub.\+h}}
+\subsubsection[{winsize}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short winsize}}\label{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}
+
+
+Definizione alla linea 143 del file grub.\+h.
+
+\hypertarget{grub_8h_a92b3661512e0dc29b5e5fe94b249a0a8}{\index{grub.\+h@{grub.\+h}!Xres@{Xres}}
+\index{Xres@{Xres}!grub.\+h@{grub.\+h}}
+\subsubsection[{Xres}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short Xres}}\label{grub_8h_a92b3661512e0dc29b5e5fe94b249a0a8}
+
+
+Definizione alla linea 148 del file grub.\+h.
+
+\hypertarget{grub_8h_a386cee69730f3541482246638e04a662}{\index{grub.\+h@{grub.\+h}!Ychar@{Ychar}}
+\index{Ychar@{Ychar}!grub.\+h@{grub.\+h}}
+\subsubsection[{Ychar}]{\setlength{\rightskip}{0pt plus 5cm}unsigned char Ychar}}\label{grub_8h_a386cee69730f3541482246638e04a662}
+
+
+Definizione alla linea 149 del file grub.\+h.
+
+\hypertarget{grub_8h_aa642f35e530d0e197056de47b7a24679}{\index{grub.\+h@{grub.\+h}!Yres@{Yres}}
+\index{Yres@{Yres}!grub.\+h@{grub.\+h}}
+\subsubsection[{Yres}]{\setlength{\rightskip}{0pt plus 5cm}unsigned short Yres}}\label{grub_8h_aa642f35e530d0e197056de47b7a24679}
+
+
+Definizione alla linea 148 del file grub.\+h.
+

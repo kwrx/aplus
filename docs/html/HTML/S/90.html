@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>src/include/aplus/task.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/task.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/30.html' title='Multiple included from 37 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  task.h</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#ifndef</font> <a href='../S/90.html#L23' title='Defined at 23 in src/include/aplus/task.h.'>_TASK_H</a>
+<a name='L23'>  23 <font color='darkred'>#define</font> <a href='../S/90.html#L22' title='Refered from 22 in src/include/aplus/task.h.'>_TASK_H</a>
+<a name='L24'>  24 
+<a name='L25'>  25 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L26'>  26 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L28'>  28 
+<a name='L29'>  29 <font color='darkred'>#include</font> &lt;signal.h&gt;
+<a name='L30'>  30 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L31'>  31 
+<a name='L32'>  32 <font color='darkred'>#include</font> &lt;setjmp.h&gt;
+<a name='L33'>  33 
+<a name='L34'>  34 
+<a name='L35'>  35 <font color='darkred'>#define</font> <a href='../R/136.html' title='Multiple refered from 4 places.'>TASK_MAX_FD</a>                                     512
+<a name='L36'>  36 
+<a name='L37'>  37 <font color='darkred'>#define</font> <a href='../R/139.html' title='Multiple refered from 7 places.'>TASK_STACKSIZE</a>                          0x1000
+<a name='L38'>  38 <font color='darkred'>#define</font> TASK_STACKADDR                          0xF0000000
+<a name='L39'>  39 
+<a name='L40'>  40 <font color='darkred'>#define</font> <a href='../R/140.html' title='Multiple refered from 4 places.'>TASK_STATE_ALIVE</a>                        0
+<a name='L41'>  41 <font color='darkred'>#define</font> TASK_STATE_ZOMBIE                       1
+<a name='L42'>  42 <font color='darkred'>#define</font> <a href='../R/141.html' title='Multiple refered from 2 places.'>TASK_STATE_DEAD</a>                         2
+<a name='L43'>  43 
+<a name='L44'>  44 <font color='darkred'>#define</font> TASK_PRIORITY_MIN                       1
+<a name='L45'>  45 <font color='darkred'>#define</font> <a href='../S/154.html#L46' title='Refered from 46 in src/main.c.'>TASK_PRIORITY_LOW</a>                       5
+<a name='L46'>  46 <font color='darkred'>#define</font> <a href='../S/159.html#L198' title='Refered from 198 in src/arch/task.c.'>TASK_PRIORITY_REGULAR</a>           15
+<a name='L47'>  47 <font color='darkred'>#define</font> TASK_PRIORITY_HIGH                      30
+<a name='L48'>  48 <font color='darkred'>#define</font> TASK_PRIORITY_MAX                       50
+<a name='L49'>  49 
+<a name='L50'>  50 
+<a name='L51'>  51 <font color='darkred'>#define</font> <a href='../S/143.html#L45' title='Refered from 45 in src/sched.c.'>UID_SUPERUSER</a>                           1000
+<a name='L52'>  52 <font color='darkred'>#define</font> <a href='../R/47.html' title='Multiple refered from 2 places.'>GID_SUPERUSER</a>                           1000
+<a name='L53'>  53 
+<a name='L54'>  54 
+<a name='L55'>  55 
+<a name='L56'>  56 
+<a name='L57'>  57 
+<a name='L58'>  58 
+<a name='L59'>  59 <b>typedef</b> <b>struct</b> task_env <font color='red'>{</font>
+<a name='L60'>  60         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/229.html' title='Multiple used in 6 places.'>edi</a>;
+<a name='L61'>  61         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/241.html' title='Multiple used in 6 places.'>esi</a>;
+<a name='L62'>  62         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/227.html' title='Multiple used in 6 places.'>ebx</a>;
+<a name='L63'>  63         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/228.html' title='Multiple used in 6 places.'>ecx</a>;
+<a name='L64'>  64         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>;
+<a name='L65'>  65         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/230.html' title='Multiple used in 6 places.'>edx</a>;
+<a name='L66'>  66         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/231.html' title='Multiple used in 3 places.'>eflags</a>;
+<a name='L67'>  67         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/226.html' title='Multiple used in 6 places.'>ebp</a>;
+<a name='L68'>  68         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/232.html' title='Multiple used in 4 places.'>eip</a>;
+<a name='L69'>  69 <font color='red'>}</font> <b>__attribute__</b> ((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../R/507.html' title='Multiple refered from 4 places.'>task_env_t</a>;
+<a name='L70'>  70 
+<a name='L71'>  71 
+<a name='L72'>  72 <b>typedef</b> <b>struct</b> <a href='../R/505.html' title='Multiple refered from 18 places.'>task</a> <font color='red'>{</font>
+<a name='L73'>  73         <a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>;
+<a name='L74'>  74 
+<a name='L75'>  75         <b>struct</b> <font color='red'>{</font>
+<a name='L76'>  76                 <a href='../S/90.html#L69' title='Defined at 69 in src/include/aplus/task.h.'>task_env_t</a>* <a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>;
+<a name='L77'>  77                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/603.html' title='Multiple used in 13 places.'>stack</a>;
+<a name='L78'>  78                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>;
+<a name='L79'>  79         <font color='red'>}</font> <a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>;
+<a name='L80'>  80 
+<a name='L81'>  81 
+<a name='L82'>  82         <a href='../Y/717.html' title='Multiple used in 8 places.'>uid_t</a> <a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a>;
+<a name='L83'>  83         <a href='../Y/287.html' title='Multiple used in 12 places.'>gid_t</a> <a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a>;
+<a name='L84'>  84         
+<a name='L85'>  85         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/186.html' title='Multiple used in 23 places.'>cwd</a>;
+<a name='L86'>  86         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/247.html' title='Multiple used in 6 places.'>exe</a>;
+<a name='L87'>  87         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../S/90.html#L35' title='Defined at 35 in src/include/aplus/task.h.'>TASK_MAX_FD</a>];
+<a name='L88'>  88         
+<a name='L89'>  89         <b>struct</b> <font color='red'>{</font>
+<a name='L90'>  90                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>;
+<a name='L91'>  91                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>;
+<a name='L92'>  92                 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L93'>  93         <font color='red'>}</font> <a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>;
+<a name='L94'>  94         
+<a name='L95'>  95         <b>void</b> (*<a href='../Y/575.html' title='Multiple used in 3 places.'>signal_handler</a>) (<b>int</b>);
+<a name='L96'>  96         <b>int</b> <a href='../Y/576.html' title='Multiple used in 4 places.'>signal_sig</a>;
+<a name='L97'>  97         
+<a name='L98'>  98 
+<a name='L99'>  99         <b>char</b>** <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>;
+<a name='L100'> 100         <b>char</b>** <a href='../Y/238.html' title='Multiple used in 5 places.'>envp</a>;
+<a name='L101'> 101         
+<a name='L102'> 102         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>;
+<a name='L103'> 103         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a>;
+<a name='L104'> 104         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/157.html' title='Multiple used in 7 places.'>clock</a>;
+<a name='L105'> 105         <b>int</b> <a href='../Y/255.html' title='Multiple used in 5 places.'>exitcode</a>;
+<a name='L106'> 106         
+<a name='L107'> 107         
+<a name='L108'> 108         <b>struct</b> <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>* <a href='../Y/460.html' title='Multiple used in 16 places.'>parent</a>;
+<a name='L109'> 109 <font color='red'>}</font> <a href='../R/511.html' title='Multiple refered from 53 places.'>task_t</a>;
+<a name='L110'> 110 
+<a name='L111'> 111 
+<a name='L112'> 112 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

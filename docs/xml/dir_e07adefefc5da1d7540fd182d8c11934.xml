@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_e07adefefc5da1d7540fd182d8c11934" kind="dir">
+    <compoundname>src/mm</compoundname>
+    <innerfile refid="heap_8c">heap.c</innerfile>
+    <innerfile refid="kheap_8c">kheap.c</innerfile>
+    <innerfile refid="mm_8c">mm.c</innerfile>
+    <innerfile refid="paging_8c">paging.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/mm/"/>
+  </compounddef>
+</doxygen>

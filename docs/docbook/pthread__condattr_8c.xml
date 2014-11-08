@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__condattr_8c">
+    <title>pthread_condattr.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__condattr_8c_1a7d351c6a3ea6eafeb14ee7e1342706cb">pthread_condattr_init</link> (
+<link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__condattr_8c_1a117a54e7c997793f2abefa2a93cdf164">pthread_condattr_destroy</link> (
+<link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__condattr_8c_1a7c60fc5b7ba2ea6952b609243d2a5e35">pthread_condattr_getpshared</link> (
+const <link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__condattr_8c_1a5ddce760ea168a554415d41a6359bfff">pthread_condattr_setpshared</link> (
+<link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_condattr.c</para>
+    </simplesect>
+</section>

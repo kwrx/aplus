@@ -1,0 +1,428 @@
+<html>
+<head>
+<title>src/arch/desc.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/165.html'>arch</a>/desc.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L151'>[^]</a><a href='#L393'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L151' title='Defined at 151.'>isr_handler</a>
+<li><a href='#L155' title='Defined at 155.'>irq_handler</a>
+<li><a href='#L166' title='Defined at 166.'>pit_handler</a>
+<li><a href='#L183' title='Defined at 183.'>pagefault_handler</a>
+<li><a href='#L195' title='Defined at 195.'>desc_init</a>
+<li><a href='#L334' title='Defined at 334.'>irq_set</a>
+<li><a href='#L344' title='Defined at 344.'>irq_unset</a>
+<li><a href='#L354' title='Defined at 354.'>irq_get</a>
+<li><a href='#L365' title='Defined at 365.'>rtc</a>
+<li><a href='#L373' title='Defined at 373.'>pit_gettime</a>
+<li><a href='#L393' title='Defined at 393.'>pit_getticks</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  desc.c</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 
+<a name='L23'>  23 
+<a name='L24'>  24 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L25'>  25 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L26'>  26 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L27'>  27 
+<a name='L28'>  28 <font color='darkred'>#include</font> &lt;<a href='101.html'>grub.h</a>&gt;
+<a name='L29'>  29 
+<a name='L30'>  30 
+<a name='L31'>  31 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L32'>  32 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L33'>  33 <font color='darkred'>#include</font> &lt;time.h&gt;
+<a name='L34'>  34 <font color='darkred'>#include</font> &lt;sys/times.h&gt;
+<a name='L35'>  35 
+<a name='L36'>  36 
+<a name='L37'>  37 <font color='darkred'>#define</font> FAULT_MASK              0x3FFFFFE3
+<a name='L38'>  38 <font color='darkred'>#define</font> <a href='../R/91.html' title='Multiple refered from 2 places.'>PIT_FREQ</a>                (<a href='../Y/2.html' title='Multiple used in 2 places.'>CLOCKS_PER_SEC</a>)
+<a name='L39'>  39 
+<a name='L40'>  40 
+<a name='L41'>  41 <b>typedef</b> <b>struct</b> gdt_entry <font color='red'>{</font>
+<a name='L42'>  42         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/359.html' title='Multiple used in 2 places.'>limit_l</a>, <a href='../Y/129.html' title='Multiple used in 4 places.'>base_l</a>;
+<a name='L43'>  43         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/130.html' title='Multiple used in 2 places.'>base_m</a>, <a href='../Y/89.html' title='Multiple used in 2 places.'>access</a>, <a href='../Y/288.html' title='Multiple used in 4 places.'>granularity</a>, <a href='../Y/128.html' title='Multiple used in 4 places.'>base_h</a>;
+<a name='L44'>  44 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../R/251.html' title='Multiple refered from 3 places.'>gdt_entry_t</a>;
+<a name='L45'>  45 
+<a name='L46'>  46 <b>typedef</b> <b>struct</b> gdt_ptr <font color='red'>{</font>
+<a name='L47'>  47         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/358.html' title='Multiple used in 4 places.'>limit</a>;
+<a name='L48'>  48         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/127.html' title='Multiple used in 4 places.'>base</a>;
+<a name='L49'>  49 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../S/158.html#L105' title='Refered from 105 in src/arch/desc.c.'>gdt_ptr_t</a>;
+<a name='L50'>  50 
+<a name='L51'>  51 <b>typedef</b> <b>struct</b> idt_entry <font color='red'>{</font>
+<a name='L52'>  52         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/129.html' title='Multiple used in 4 places.'>base_l</a>, <a href='../Y/554.html' title='Multiple used in 2 places.'>sel</a>;
+<a name='L53'>  53         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/418.html' title='Multiple used in 2 places.'>null</a>, <a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a>;
+<a name='L54'>  54         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/128.html' title='Multiple used in 4 places.'>base_h</a>;
+<a name='L55'>  55 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../R/261.html' title='Multiple refered from 3 places.'>idt_entry_t</a>;
+<a name='L56'>  56 
+<a name='L57'>  57 <b>typedef</b> <b>struct</b> idt_ptr <font color='red'>{</font>
+<a name='L58'>  58         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/358.html' title='Multiple used in 4 places.'>limit</a>;
+<a name='L59'>  59         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/127.html' title='Multiple used in 4 places.'>base</a>;
+<a name='L60'>  60 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../S/158.html#L108' title='Refered from 108 in src/arch/desc.c.'>idt_ptr_t</a>;
+<a name='L61'>  61 
+<a name='L62'>  62 
+<a name='L63'>  63 
+<a name='L64'>  64 <b>static</b> <b>char</b> *<a href='../Y/245.html' title='Multiple used in 2 places.'>exception_messages</a>[] = <font color='red'>{</font>
+<a name='L65'>  65         "Division By Zero",
+<a name='L66'>  66         "Debug",
+<a name='L67'>  67         "Non Maskable Interrupt",
+<a name='L68'>  68         "Breakpoint",
+<a name='L69'>  69         "Into Detected Overflow",
+<a name='L70'>  70         "Out of Bounds",
+<a name='L71'>  71         "Invalid Opcode",
+<a name='L72'>  72         "No Coprocessor",
+<a name='L73'>  73 
+<a name='L74'>  74         "Double Fault",
+<a name='L75'>  75         "Coprocessor Segment Overrun",
+<a name='L76'>  76         "Bad TSS",
+<a name='L77'>  77         "Segment Not Present",
+<a name='L78'>  78         "Stack Fault",
+<a name='L79'>  79         "General Protection Fault",
+<a name='L80'>  80         "Page Fault",
+<a name='L81'>  81         "Unknown Interrupt",
+<a name='L82'>  82 
+<a name='L83'>  83         "Coprocessor Fault",
+<a name='L84'>  84         "Alignment Check",
+<a name='L85'>  85         "Machine Check",
+<a name='L86'>  86         "Reserved",
+<a name='L87'>  87         "Reserved",
+<a name='L88'>  88         "Reserved",
+<a name='L89'>  89         "Reserved",
+<a name='L90'>  90         "Reserved",
+<a name='L91'>  91 
+<a name='L92'>  92         "Reserved",
+<a name='L93'>  93         "Reserved",
+<a name='L94'>  94         "Reserved",
+<a name='L95'>  95         "Reserved",
+<a name='L96'>  96         "Reserved",
+<a name='L97'>  97         "Reserved",
+<a name='L98'>  98         "Reserved",
+<a name='L99'>  99         "Reserved"
+<a name='L100'> 100 <font color='red'>}</font>;
+<a name='L101'> 101 
+<a name='L102'> 102 <b>static</b> <b>void</b>* <a href='../Y/341.html' title='Multiple used in 6 places.'>irqs</a>[16] = <font color='red'>{</font> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 <font color='red'>}</font>;
+<a name='L103'> 103 
+<a name='L104'> 104 <b>static</b> <a href='../S/158.html#L44' title='Defined at 44 in src/arch/desc.c.'>gdt_entry_t</a> <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[5];
+<a name='L105'> 105 <b>static</b> <a href='../S/158.html#L49' title='Defined at 49 in src/arch/desc.c.'>gdt_ptr_t</a> <a href='../Y/282.html' title='Multiple used in 3 places.'>gdt_p</a>;
+<a name='L106'> 106 
+<a name='L107'> 107 <b>static</b> <a href='../S/158.html#L55' title='Defined at 55 in src/arch/desc.c.'>idt_entry_t</a> <a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>[256];
+<a name='L108'> 108 <b>static</b> <a href='../S/158.html#L60' title='Defined at 60 in src/arch/desc.c.'>idt_ptr_t</a> <a href='../Y/306.html' title='Multiple used in 3 places.'>idt_p</a>;
+<a name='L109'> 109 
+<a name='L110'> 110 
+<a name='L111'> 111 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/473.html' title='Multiple used in 5 places.'>pit_ticks</a>;
+<a name='L112'> 112 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/472.html' title='Multiple used in 5 places.'>pit_seconds</a>;
+<a name='L113'> 113 <b>static</b> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/471.html' title='Multiple used in 3 places.'>pit_days</a>;
+<a name='L114'> 114 
+<a name='L115'> 115 <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> keyboard_ready = 0;
+<a name='L116'> 116 
+<a name='L117'> 117 
+<a name='L118'> 118 <b>extern</b> <b>void</b> <a href='../S/143.html#L90' title='Defined at 90 in src/sched.c.'>schedule</a>();
+<a name='L119'> 119 <b>extern</b> <b>void</b> <a href='../S/163.html#L53' title='Defined at 53 in src/arch/syscall.c.'>syscall_handler</a>(<a href='../Y/514.html' title='Multiple used in 8 places.'>regs_t</a>*);
+<a name='L120'> 120 
+<a name='L121'> 121 
+<a name='L122'> 122 <b>__asm__</b> (
+<a name='L123'> 123         ".section .text         \n\
+<a name='L124'> 124         .global gdt_load        \n\
+<a name='L125'> 125         gdt_load:                       \n\
+<a name='L126'> 126         lgdt [gdt_p]            \n\
+<a name='L127'> 127                                                 \n\
+<a name='L128'> 128         mov ax, 0x10            \n\
+<a name='L129'> 129         mov ds, ax                      \n\
+<a name='L130'> 130         mov es, ax                      \n\
+<a name='L131'> 131         mov fs, ax                      \n\
+<a name='L132'> 132         mov gs, ax                      \n\
+<a name='L133'> 133         mov ss, ax                      \n\
+<a name='L134'> 134         jmp 0x08:.done          \n\
+<a name='L135'> 135                                                 \n\
+<a name='L136'> 136         .done:                          \n\
+<a name='L137'> 137         ret                                     \n\
+<a name='L138'> 138                                                 \n\
+<a name='L139'> 139                                                 \n\
+<a name='L140'> 140                                                 \n\
+<a name='L141'> 141                                                 \n\
+<a name='L142'> 142         .global idt_load        \n\
+<a name='L143'> 143         idt_load:                       \n\
+<a name='L144'> 144         lidt [idt_p]            \n\
+<a name='L145'> 145         ret                                     \n\
+<a name='L146'> 146                                                 \n\
+<a name='L147'> 147                                                 \n"
+<a name='L148'> 148 );
+<a name='L149'> 149 
+<a name='L150'> 150 
+<a name='L151'> 151 <b>void</b> isr_handler(<a href='../Y/514.html' title='Multiple used in 8 places.'>regs_t</a>* <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>) <font color='red'>{</font>
+<a name='L152'> 152         <a href='../S/148.html#L79' title='Defined at 79 in src/panic.c.'>panic</a>(<a href='../Y/245.html' title='Multiple used in 2 places.'>exception_messages</a>[<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>-&gt;<a href='../Y/328.html' title='Multiple used in 5 places.'>int_no</a>]);
+<a name='L153'> 153 <font color='red'>}</font>
+<a name='L154'> 154 
+<a name='L155'> 155 <b>void</b> irq_handler(<a href='../Y/514.html' title='Multiple used in 8 places.'>regs_t</a>* <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>) <font color='red'>{</font>
+<a name='L156'> 156 
+<a name='L157'> 157         <b>if</b>(<a href='../Y/341.html' title='Multiple used in 6 places.'>irqs</a>[<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>-&gt;<a href='../Y/328.html' title='Multiple used in 5 places.'>int_no</a> - 32])
+<a name='L158'> 158                 ((<b>void</b> (*)(<a href='../Y/514.html' title='Multiple used in 8 places.'>regs_t</a>*)) <a href='../Y/341.html' title='Multiple used in 6 places.'>irqs</a>[<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>-&gt;<a href='../Y/328.html' title='Multiple used in 5 places.'>int_no</a> - 32]) (<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>);
+<a name='L159'> 159 
+<a name='L160'> 160         <b>if</b>(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>-&gt;<a href='../Y/328.html' title='Multiple used in 5 places.'>int_no</a> &gt;= 40)
+<a name='L161'> 161                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0xA0, 0x20);
+<a name='L162'> 162                 
+<a name='L163'> 163         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x20, 0x20);
+<a name='L164'> 164 <font color='red'>}</font>
+<a name='L165'> 165 
+<a name='L166'> 166 <b>void</b> <a href='../S/158.html#L325' title='Refered from 325 in src/arch/desc.c.'>pit_handler</a>(<a href='../Y/514.html' title='Multiple used in 8 places.'>regs_t</a>* <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>) <font color='red'>{</font>
+<a name='L167'> 167         <a href='../Y/473.html' title='Multiple used in 5 places.'>pit_ticks</a> += (1000 / <a href='../S/158.html#L38' title='Defined at 38 in src/arch/desc.c.'>PIT_FREQ</a>);
+<a name='L168'> 168         
+<a name='L169'> 169         <b>if</b>(<a href='../Y/473.html' title='Multiple used in 5 places.'>pit_ticks</a> &gt;= 1000) <font color='red'>{</font>
+<a name='L170'> 170                 <a href='../Y/473.html' title='Multiple used in 5 places.'>pit_ticks</a> = 0;
+<a name='L171'> 171                 <a href='../Y/472.html' title='Multiple used in 5 places.'>pit_seconds</a> += 1;
+<a name='L172'> 172         <font color='red'>}</font>
+<a name='L173'> 173         
+<a name='L174'> 174         <b>if</b>(<a href='../Y/472.html' title='Multiple used in 5 places.'>pit_seconds</a> &gt;= 86400) <font color='red'>{</font>
+<a name='L175'> 175                 <a href='../Y/472.html' title='Multiple used in 5 places.'>pit_seconds</a> = 0;
+<a name='L176'> 176                 <a href='../Y/471.html' title='Multiple used in 3 places.'>pit_days</a> += 1;
+<a name='L177'> 177         <font color='red'>}</font>
+<a name='L178'> 178         
+<a name='L179'> 179         <a href='../S/143.html#L90' title='Defined at 90 in src/sched.c.'>schedule</a>();
+<a name='L180'> 180 <font color='red'>}</font>
+<a name='L181'> 181 
+<a name='L182'> 182 
+<a name='L183'> 183 <b>void</b> pagefault_handler(<a href='../Y/514.html' title='Multiple used in 8 places.'>regs_t</a>* <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>) <font color='red'>{</font>
+<a name='L184'> 184         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/258.html' title='Multiple used in 3 places.'>faultaddr</a>;
+<a name='L185'> 185         <b>__asm__</b> <b>__volatile__</b>("mov eax, cr2" : "=a"(<a href='../Y/258.html' title='Multiple used in 3 places.'>faultaddr</a>));
+<a name='L186'> 186 
+<a name='L187'> 187         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("Page fault at address: 0x%x\n", <a href='../Y/258.html' title='Multiple used in 3 places.'>faultaddr</a>);
+<a name='L188'> 188         <a href='../S/148.html#L79' title='Defined at 79 in src/panic.c.'>panic</a>("Page Fault");
+<a name='L189'> 189 <font color='red'>}</font>
+<a name='L190'> 190 
+<a name='L191'> 191 
+<a name='L192'> 192 
+<a name='L193'> 193 
+<a name='L194'> 194 
+<a name='L195'> 195 <b>int</b> <a href='../S/154.html#L57' title='Refered from 57 in src/main.c.'>desc_init</a>() <font color='red'>{</font>
+<a name='L196'> 196 
+<a name='L197'> 197         <b>__asm__</b> ("cli");
+<a name='L198'> 198         
+<a name='L199'> 199 
+<a name='L200'> 200 <font color='darkred'>        #define</font> <a href='../R/253.html' title='Multiple refered from 5 places.'>gdt_set</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>, <a href='../Y/354.html' title='Multiple used in 7 places.'>l</a>, <a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>, <a href='../Y/279.html' title='Multiple used in 2 places.'>g</a>)                                  \
+<a name='L201'> 201                 <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>].<a href='../Y/129.html' title='Multiple used in 4 places.'>base_l</a> = (<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a> &amp; 0xFFFF);                         \
+<a name='L202'> 202                 <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>].<a href='../Y/130.html' title='Multiple used in 2 places.'>base_m</a> = (<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a> &gt;&gt; 16) &amp; 0xFF;                     \
+<a name='L203'> 203                 <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>].<a href='../Y/128.html' title='Multiple used in 4 places.'>base_h</a> = (<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a> &gt;&gt; 24) &amp; 0xFF;                     \
+<a name='L204'> 204                 <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>].<a href='../Y/359.html' title='Multiple used in 2 places.'>limit_l</a> = (<a href='../Y/354.html' title='Multiple used in 7 places.'>l</a> &amp; 0xFFFF);                        \
+<a name='L205'> 205                 <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>].<a href='../Y/288.html' title='Multiple used in 4 places.'>granularity</a> = (<a href='../Y/354.html' title='Multiple used in 7 places.'>l</a> &gt;&gt; 16) &amp; 0x0F;        \
+<a name='L206'> 206                 <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>].<a href='../Y/288.html' title='Multiple used in 4 places.'>granularity</a> |= <a href='../Y/279.html' title='Multiple used in 2 places.'>g</a> &amp; 0xF0;                       \
+<a name='L207'> 207                 <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>].<a href='../Y/89.html' title='Multiple used in 2 places.'>access</a> = <a href='../Y/86.html' title='Multiple used in 8 places.'>a</a>
+<a name='L208'> 208                                 
+<a name='L209'> 209         
+<a name='L210'> 210         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(&amp;<a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>, 0, <b>sizeof</b>(<a href='../S/158.html#L44' title='Defined at 44 in src/arch/desc.c.'>gdt_entry_t</a>) * 5);
+<a name='L211'> 211                 
+<a name='L212'> 212         <a href='../Y/282.html' title='Multiple used in 3 places.'>gdt_p</a>.<a href='../Y/358.html' title='Multiple used in 4 places.'>limit</a> = <b>sizeof</b>(<a href='../S/158.html#L44' title='Defined at 44 in src/arch/desc.c.'>gdt_entry_t</a>) * 5 - 1;
+<a name='L213'> 213         <a href='../Y/282.html' title='Multiple used in 3 places.'>gdt_p</a>.<a href='../Y/127.html' title='Multiple used in 4 places.'>base</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/280.html' title='Multiple used in 10 places.'>gdt_e</a>;
+<a name='L214'> 214                 
+<a name='L215'> 215         <a href='../S/158.html#L200' title='Defined at 200 in src/arch/desc.c.'>gdt_set</a>(0, 0, 0, 0, 0);
+<a name='L216'> 216         <a href='../S/158.html#L200' title='Defined at 200 in src/arch/desc.c.'>gdt_set</a>(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
+<a name='L217'> 217         <a href='../S/158.html#L200' title='Defined at 200 in src/arch/desc.c.'>gdt_set</a>(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+<a name='L218'> 218         <a href='../S/158.html#L200' title='Defined at 200 in src/arch/desc.c.'>gdt_set</a>(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
+<a name='L219'> 219         <a href='../S/158.html#L200' title='Defined at 200 in src/arch/desc.c.'>gdt_set</a>(4, 0, 0xFFFFFFFF, 0XF2, 0xCF);
+<a name='L220'> 220 
+<a name='L221'> 221         
+<a name='L222'> 222 
+<a name='L223'> 223         gdt_load();
+<a name='L224'> 224         
+<a name='L225'> 225         
+<a name='L226'> 226         <a href='../Y/306.html' title='Multiple used in 3 places.'>idt_p</a>.<a href='../Y/358.html' title='Multiple used in 4 places.'>limit</a> = <b>sizeof</b>(<a href='../S/158.html#L55' title='Defined at 55 in src/arch/desc.c.'>idt_entry_t</a>) * 256 - 1;
+<a name='L227'> 227         <a href='../Y/306.html' title='Multiple used in 3 places.'>idt_p</a>.<a href='../Y/127.html' title='Multiple used in 4 places.'>base</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>;
+<a name='L228'> 228         
+<a name='L229'> 229         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>, 0, <b>sizeof</b>(<a href='../S/158.html#L55' title='Defined at 55 in src/arch/desc.c.'>idt_entry_t</a>) * 256);
+<a name='L230'> 230         
+<a name='L231'> 231         
+<a name='L232'> 232 <font color='darkred'>        #define</font> <a href='../R/263.html' title='Multiple refered from 2 places.'>idt_set</a>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>, <a href='../Y/120.html' title='Multiple used in 18 places.'>b</a>, <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>, <a href='../Y/257.html' title='Multiple used in 5 places.'>f</a>)                                             \
+<a name='L233'> 233                 <a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/129.html' title='Multiple used in 4 places.'>base_l</a> = <a href='../Y/120.html' title='Multiple used in 18 places.'>b</a> &amp; 0xFFFF;                           \
+<a name='L234'> 234                 <a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/128.html' title='Multiple used in 4 places.'>base_h</a> = (<a href='../Y/120.html' title='Multiple used in 18 places.'>b</a> &gt;&gt; 16) &amp; 0xFFFF;           \
+<a name='L235'> 235                 <a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/554.html' title='Multiple used in 2 places.'>sel</a> = <a href='../Y/540.html' title='Multiple used in 18 places.'>s</a>;                                                       \
+<a name='L236'> 236                 <a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/418.html' title='Multiple used in 2 places.'>null</a> = 0;                                                      \
+<a name='L237'> 237                 <a href='../Y/304.html' title='Multiple used in 8 places.'>idt_e</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>].<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> = <a href='../Y/257.html' title='Multiple used in 5 places.'>f</a>
+<a name='L238'> 238         
+<a name='L239'> 239         
+<a name='L240'> 240 <font color='darkred'>        #define</font> <a href='../R/197.html' title='Multiple refered from 50 places.'>_i</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>)                                                                   \
+<a name='L241'> 241                 <b>extern</b> <b>void</b> <a href='../Y/343.html' title='Multiple used in 5 places.'>isr</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>();                                           \
+<a name='L242'> 242                 <a href='../S/158.html#L232' title='Defined at 232 in src/arch/desc.c.'>idt_set</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>)<a href='../Y/343.html' title='Multiple used in 5 places.'>isr</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, 0x08, 0x8E)
+<a name='L243'> 243                 
+<a name='L244'> 244         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(0);
+<a name='L245'> 245         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(1);
+<a name='L246'> 246         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(2);
+<a name='L247'> 247         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(3);
+<a name='L248'> 248         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(4);
+<a name='L249'> 249         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(5);
+<a name='L250'> 250         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(6);
+<a name='L251'> 251         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(7);
+<a name='L252'> 252         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(8);
+<a name='L253'> 253         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(9);
+<a name='L254'> 254         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(10);
+<a name='L255'> 255         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(11);
+<a name='L256'> 256         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(12);
+<a name='L257'> 257         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(13);
+<a name='L258'> 258         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(14);
+<a name='L259'> 259         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(15);
+<a name='L260'> 260         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(16);
+<a name='L261'> 261         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(17);
+<a name='L262'> 262         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(18);
+<a name='L263'> 263         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(19);
+<a name='L264'> 264         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(20);
+<a name='L265'> 265         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(21);
+<a name='L266'> 266         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(22);
+<a name='L267'> 267         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(23);
+<a name='L268'> 268         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(24);
+<a name='L269'> 269         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(25);
+<a name='L270'> 270         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(26);
+<a name='L271'> 271         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(27);
+<a name='L272'> 272         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(28);
+<a name='L273'> 273         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(29);
+<a name='L274'> 274         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(30);
+<a name='L275'> 275         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(31);
+<a name='L276'> 276         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(0x80);
+<a name='L277'> 277 
+<a name='L278'> 278         
+<a name='L279'> 279         idt_load();
+<a name='L280'> 280 
+<a name='L281'> 281         
+<a name='L282'> 282 <font color='darkred'>        #ifdef</font> <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>
+<a name='L283'> 283 <font color='darkred'>        #undef</font> <a href='../R/197.html' title='Multiple refered from 50 places.'>_i</a>
+<a name='L284'> 284 <font color='darkred'>        #endif</font>
+<a name='L285'> 285         
+<a name='L286'> 286 <font color='darkred'>        #define</font> <a href='../R/197.html' title='Multiple refered from 50 places.'>_i</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>)                                                                           \
+<a name='L287'> 287                 <b>extern</b> <b>void</b> <a href='../Y/340.html' title='Multiple used in 2 places.'>irq</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>();                                                   \
+<a name='L288'> 288                 <a href='../S/158.html#L232' title='Defined at 232 in src/arch/desc.c.'>idt_set</a>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a> + 32, (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>)<a href='../Y/340.html' title='Multiple used in 2 places.'>irq</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, 0x08, 0x8E)
+<a name='L289'> 289                 
+<a name='L290'> 290         
+<a name='L291'> 291         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x20, 0x11);
+<a name='L292'> 292         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0xA0, 0x11);
+<a name='L293'> 293         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x21, 0x20);
+<a name='L294'> 294         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0xA1, 0x28);
+<a name='L295'> 295         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x21, 0x04);
+<a name='L296'> 296         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0xA1, 0x02);
+<a name='L297'> 297         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x21, 0x01);
+<a name='L298'> 298         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0xA1, 0x01);
+<a name='L299'> 299         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x21, 0x00);
+<a name='L300'> 300         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0xA1, 0x00);
+<a name='L301'> 301         
+<a name='L302'> 302         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(0);
+<a name='L303'> 303         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(1);
+<a name='L304'> 304         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(2);
+<a name='L305'> 305         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(3);
+<a name='L306'> 306         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(4);
+<a name='L307'> 307         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(5);
+<a name='L308'> 308         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(6);
+<a name='L309'> 309         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(7);
+<a name='L310'> 310         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(8);
+<a name='L311'> 311         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(9);
+<a name='L312'> 312         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(10);
+<a name='L313'> 313         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(11);
+<a name='L314'> 314         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(12);
+<a name='L315'> 315         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(13);
+<a name='L316'> 316         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(14);
+<a name='L317'> 317         <a href='../D/305.html' title='Multiple defined in 3 places.'>_i</a>(15);
+<a name='L318'> 318         
+<a name='L319'> 319         
+<a name='L320'> 320         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/275.html' title='Multiple used in 3 places.'>freq</a> = 1193180 / <a href='../S/158.html#L38' title='Defined at 38 in src/arch/desc.c.'>PIT_FREQ</a>;
+<a name='L321'> 321         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x43, 0x36);
+<a name='L322'> 322         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x40, (<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>) (<a href='../Y/275.html' title='Multiple used in 3 places.'>freq</a> &amp; 0xFF));
+<a name='L323'> 323         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x40, (<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>) ((<a href='../Y/275.html' title='Multiple used in 3 places.'>freq</a> &gt;&gt; 8) &amp; 0xFF));
+<a name='L324'> 324         
+<a name='L325'> 325         <a href='../S/158.html#L334' title='Defined at 334 in src/arch/desc.c.'>irq_set</a>(0, (<b>void</b>*) <a href='../S/158.html#L166' title='Defined at 166 in src/arch/desc.c.'>pit_handler</a>);
+<a name='L326'> 326         
+<a name='L327'> 327         <b>__asm__</b> ("sti");
+<a name='L328'> 328 
+<a name='L329'> 329         <b>return</b> 0;
+<a name='L330'> 330 <font color='red'>}</font>
+<a name='L331'> 331 
+<a name='L332'> 332 
+<a name='L333'> 333 
+<a name='L334'> 334 <b>int</b> <a href='../R/281.html' title='Multiple refered from 4 places.'>irq_set</a>(<b>int</b> <a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>, <b>void</b>* <a href='../Y/294.html' title='Multiple used in 10 places.'>handler</a>) <font color='red'>{</font>
+<a name='L335'> 335         <b>if</b>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a> &gt; 16) <font color='red'>{</font>
+<a name='L336'> 336                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L337'> 337                 <b>return</b> -1;
+<a name='L338'> 338         <font color='red'>}</font>
+<a name='L339'> 339         
+<a name='L340'> 340         <a href='../Y/341.html' title='Multiple used in 6 places.'>irqs</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>] = <a href='../Y/294.html' title='Multiple used in 10 places.'>handler</a>;
+<a name='L341'> 341         <b>return</b> 0;
+<a name='L342'> 342 <font color='red'>}</font>
+<a name='L343'> 343 
+<a name='L344'> 344 <b>int</b> irq_unset(<b>int</b> <a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>) <font color='red'>{</font>
+<a name='L345'> 345         <b>if</b>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a> &gt; 16) <font color='red'>{</font>
+<a name='L346'> 346                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L347'> 347                 <b>return</b> -1;
+<a name='L348'> 348         <font color='red'>}</font>
+<a name='L349'> 349         
+<a name='L350'> 350         <a href='../Y/341.html' title='Multiple used in 6 places.'>irqs</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>] = 0;
+<a name='L351'> 351         <b>return</b> 0;
+<a name='L352'> 352 <font color='red'>}</font>
+<a name='L353'> 353 
+<a name='L354'> 354 <b>void</b>* irq_get(<b>int</b> <a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>) <font color='red'>{</font>
+<a name='L355'> 355         <b>if</b>(<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a> &gt; 16) <font color='red'>{</font>
+<a name='L356'> 356                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L357'> 357                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L358'> 358         <font color='red'>}</font>
+<a name='L359'> 359         
+<a name='L360'> 360         <b>return</b> <a href='../Y/341.html' title='Multiple used in 6 places.'>irqs</a>[<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>];
+<a name='L361'> 361 <font color='red'>}</font>
+<a name='L362'> 362 
+<a name='L363'> 363 
+<a name='L364'> 364 
+<a name='L365'> 365 <b>static</b> <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../R/455.html' title='Multiple refered from 6 places.'>rtc</a>(<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>) <font color='red'>{</font>
+<a name='L366'> 366         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(0x70, <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>);
+<a name='L367'> 367         
+<a name='L368'> 368         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a> = 0;
+<a name='L369'> 369         <b>__asm__</b>("inb 0x71" : "=a"(<a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>));
+<a name='L370'> 370         <b>return</b> <a href='../Y/495.html' title='Multiple used in 39 places.'>r</a>;
+<a name='L371'> 371 <font color='red'>}</font>
+<a name='L372'> 372 
+<a name='L373'> 373 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../S/129.html#L21' title='Refered from 21 in src/syscall/gettimeofday.c.'>pit_gettime</a>() <font color='red'>{</font>
+<a name='L374'> 374 
+<a name='L375'> 375 <font color='darkred'>        #define</font> <a href='../R/9.html' title='Multiple refered from 5 places.'>BCD2BIN</a>(<a href='../Y/131.html' title='Multiple used in 2 places.'>bcd</a>)    ((((<a href='../Y/131.html' title='Multiple used in 2 places.'>bcd</a>) &amp; 0x0F) + ((<a href='../Y/131.html' title='Multiple used in 2 places.'>bcd</a>) / 16) * 10))
+<a name='L376'> 376 <font color='darkred'>        #define</font> <a href='../S/158.html#L382' title='Refered from 382 in src/arch/desc.c.'>BCD2BIN2</a>(<a href='../Y/131.html' title='Multiple used in 2 places.'>bcd</a>)   (((((<a href='../Y/131.html' title='Multiple used in 2 places.'>bcd</a>) &amp; 0x0F) + ((<a href='../Y/131.html' title='Multiple used in 2 places.'>bcd</a> &amp; 0x70) / 16) * 10)) | (<a href='../Y/131.html' title='Multiple used in 2 places.'>bcd</a> &amp; 0x80))
+<a name='L377'> 377 
+<a name='L378'> 378         
+<a name='L379'> 379         <b>static</b> <b>struct</b> <a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a> <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>;
+<a name='L380'> 380         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_sec = <a href='../S/158.html#L375' title='Defined at 375 in src/arch/desc.c.'>BCD2BIN</a>(<a href='../S/158.html#L365' title='Defined at 365 in src/arch/desc.c.'>rtc</a>(0));
+<a name='L381'> 381         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_min = <a href='../S/158.html#L375' title='Defined at 375 in src/arch/desc.c.'>BCD2BIN</a>(<a href='../S/158.html#L365' title='Defined at 365 in src/arch/desc.c.'>rtc</a>(2));
+<a name='L382'> 382         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_hour = <a href='../S/158.html#L376' title='Defined at 376 in src/arch/desc.c.'>BCD2BIN2</a>(<a href='../S/158.html#L365' title='Defined at 365 in src/arch/desc.c.'>rtc</a>(4)) + 2;
+<a name='L383'> 383         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_mday = <a href='../S/158.html#L375' title='Defined at 375 in src/arch/desc.c.'>BCD2BIN</a>(<a href='../S/158.html#L365' title='Defined at 365 in src/arch/desc.c.'>rtc</a>(7));
+<a name='L384'> 384         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_mon = <a href='../S/158.html#L375' title='Defined at 375 in src/arch/desc.c.'>BCD2BIN</a>(<a href='../S/158.html#L365' title='Defined at 365 in src/arch/desc.c.'>rtc</a>(8)) - 1;
+<a name='L385'> 385         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_year = (<a href='../S/158.html#L375' title='Defined at 375 in src/arch/desc.c.'>BCD2BIN</a>(<a href='../S/158.html#L365' title='Defined at 365 in src/arch/desc.c.'>rtc</a>(9)) + 100);
+<a name='L386'> 386         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_wday = 0;
+<a name='L387'> 387         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_yday = 0;
+<a name='L388'> 388         <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>.tm_isdst = 0;
+<a name='L389'> 389         
+<a name='L390'> 390         <b>return</b> (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) mktime(&amp;<a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>);
+<a name='L391'> 391 <font color='red'>}</font>
+<a name='L392'> 392 
+<a name='L393'> 393 <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../R/350.html' title='Multiple refered from 3 places.'>pit_getticks</a>() <font color='red'>{</font>
+<a name='L394'> 394         <b>return</b> ((<a href='../Y/471.html' title='Multiple used in 3 places.'>pit_days</a> * 86400) * 1000) + (<a href='../Y/472.html' title='Multiple used in 5 places.'>pit_seconds</a> * 1000) + <a href='../Y/473.html' title='Multiple used in 5 places.'>pit_ticks</a>;
+<a name='L395'> 395 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L151'>[^]</a><a href='#L393'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

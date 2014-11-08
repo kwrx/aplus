@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>args</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/155.html#L74'>args</a>               74 src/debug.c    size_t vasprintf(char * buf, const char *fmt, va_list args) {
+<a href='../S/155.html#L94'>args</a>               94 src/debug.c    				s = (char *)va_arg(args, char *);
+<a href='../S/155.html#L103'>args</a>              103 src/debug.c    				buf[ptr++] = (char)va_arg(args, int);
+<a href='../S/155.html#L106'>args</a>              106 src/debug.c    				print_hex((unsigned long)va_arg(args, unsigned long), arg_width, buf, &amp;ptr);
+<a href='../S/155.html#L109'>args</a>              109 src/debug.c    				print_dec((unsigned long)va_arg(args, unsigned long), arg_width, buf, &amp;ptr);
+<a href='../S/23.html#L6'>args</a>                6 usr/src/libposix/src/_execve.c extern int execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/23.html#L8'>args</a>                8 usr/src/libposix/src/_execve.c int _execve(const char* filename, char* const args[], char* const env[]) {
+<a href='../S/23.html#L9'>args</a>                9 usr/src/libposix/src/_execve.c 	return execve(filename, args, env);
+<a href='../S/19.html#L13'>args</a>               13 usr/src/libposix/src/execl.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/19.html#L38'>args</a>               38 usr/src/libposix/src/execl.c   va_list args;
+<a href='../S/19.html#L41'>args</a>               41 usr/src/libposix/src/execl.c   va_start (args, arg0);
+<a href='../S/19.html#L45'>args</a>               45 usr/src/libposix/src/execl.c       argv[i] = va_arg (args, _CONST char *);
+<a href='../S/19.html#L47'>args</a>               47 usr/src/libposix/src/execl.c   va_end (args);
+<a href='../S/39.html#L9'>args</a>                9 usr/src/libposix/src/execle.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/39.html#L34'>args</a>               34 usr/src/libposix/src/execle.c   va_list args;
+<a href='../S/39.html#L38'>args</a>               38 usr/src/libposix/src/execle.c   va_start (args, arg0);
+<a href='../S/39.html#L42'>args</a>               42 usr/src/libposix/src/execle.c     argv[i] = va_arg (args, _CONST char *);
+<a href='../S/39.html#L44'>args</a>               44 usr/src/libposix/src/execle.c   envp = va_arg (args, _CONST char * _CONST *);
+<a href='../S/39.html#L45'>args</a>               45 usr/src/libposix/src/execle.c   va_end (args);
+<a href='../S/30.html#L9'>args</a>                9 usr/src/libposix/src/execlp.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/30.html#L34'>args</a>               34 usr/src/libposix/src/execlp.c   va_list args;
+<a href='../S/30.html#L37'>args</a>               37 usr/src/libposix/src/execlp.c   va_start (args, arg0);
+<a href='../S/30.html#L41'>args</a>               41 usr/src/libposix/src/execlp.c       argv[i] = va_arg (args, _CONST char *);
+<a href='../S/30.html#L43'>args</a>               43 usr/src/libposix/src/execlp.c   va_end (args);
+<a href='../S/22.html#L14'>args</a>               14 usr/src/libposix/src/execv.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+</pre>
+</body>
+</html>

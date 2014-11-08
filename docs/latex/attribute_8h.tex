@@ -1,0 +1,151 @@
+\hypertarget{attribute_8h}{\section{Riferimenti per il file src/include/aplus/attribute.h}
+\label{attribute_8h}\index{src/include/aplus/attribute.\+h@{src/include/aplus/attribute.\+h}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structattribute}{attribute}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{attribute_8h_affb81d409ffa74c8bfb080cb1c3047db}{\+\_\+\+\_\+\+U\+N\+I\+O\+N2}(x, y, z)~x \#\# y \#\# z
+\item 
+\#define \hyperlink{attribute_8h_afc6a4ef8385e48238a0037eb5fedf21a}{\+\_\+\+\_\+\+U\+N\+I\+O\+N}(x, y, z)~\hyperlink{attribute_8h_affb81d409ffa74c8bfb080cb1c3047db}{\+\_\+\+\_\+\+U\+N\+I\+O\+N2}(x, y, z)
+\item 
+\#define \hyperlink{attribute_8h_a672da6e381bbc58f66bf3f332d6fbb97}{A\+T\+T\+R\+I\+B\+U\+T\+E}(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structattribute}{attribute} \hyperlink{attribute_8h_a4b7f6d2e9be3c83ead055e037a05f9d0}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((aligned(0x100))) attribute\+\_\+t
+\item 
+static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{attribute_8h_ab96abe3fdf944e75a2316807105c1b6e}{attribute} (const char $\ast$\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name})
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+char \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name} \mbox{[}0x80\mbox{]}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{attribute_8h_afc6a4ef8385e48238a0037eb5fedf21a}{\index{attribute.\+h@{attribute.\+h}!\+\_\+\+\_\+\+U\+N\+I\+O\+N@{\+\_\+\+\_\+\+U\+N\+I\+O\+N}}
+\index{\+\_\+\+\_\+\+U\+N\+I\+O\+N@{\+\_\+\+\_\+\+U\+N\+I\+O\+N}!attribute.\+h@{attribute.\+h}}
+\subsubsection[{\+\_\+\+\_\+\+U\+N\+I\+O\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+U\+N\+I\+O\+N(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y, }
+\item[{}]{z}
+\end{DoxyParamCaption}
+)~{\bf \+\_\+\+\_\+\+U\+N\+I\+O\+N2}(x, y, z)}}\label{attribute_8h_afc6a4ef8385e48238a0037eb5fedf21a}
+
+
+Definizione alla linea 15 del file attribute.\+h.
+
+\hypertarget{attribute_8h_affb81d409ffa74c8bfb080cb1c3047db}{\index{attribute.\+h@{attribute.\+h}!\+\_\+\+\_\+\+U\+N\+I\+O\+N2@{\+\_\+\+\_\+\+U\+N\+I\+O\+N2}}
+\index{\+\_\+\+\_\+\+U\+N\+I\+O\+N2@{\+\_\+\+\_\+\+U\+N\+I\+O\+N2}!attribute.\+h@{attribute.\+h}}
+\subsubsection[{\+\_\+\+\_\+\+U\+N\+I\+O\+N2}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+\+U\+N\+I\+O\+N2(
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y, }
+\item[{}]{z}
+\end{DoxyParamCaption}
+)~x \#\# y \#\# z}}\label{attribute_8h_affb81d409ffa74c8bfb080cb1c3047db}
+
+
+Definizione alla linea 12 del file attribute.\+h.
+
+\hypertarget{attribute_8h_a672da6e381bbc58f66bf3f332d6fbb97}{\index{attribute.\+h@{attribute.\+h}!A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}}
+\index{A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}!attribute.\+h@{attribute.\+h}}
+\subsubsection[{A\+T\+T\+R\+I\+B\+U\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+T\+T\+R\+I\+B\+U\+T\+E(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf name}, }
+\item[{}]{{\bf value}}
+\end{DoxyParamCaption}
+)}}\label{attribute_8h_a672da6e381bbc58f66bf3f332d6fbb97}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+attribute\_t \hyperlink{attribute_8h_afc6a4ef8385e48238a0037eb5fedf21a}{\_\_UNION}(attribute\_, \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \_\_COUNTER\_\_) \hyperlink{attribute_8h_a4b7f6d2e9be3c83ead055e037a05f9d0}{\_\_attribute\_\_}((section(".
+      \hyperlink{structattribute}{attribute}"))) = \{  \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{\(\backslash\)}
+\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{        name}, (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) &\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}                                                                      
+      \(\backslash\)
+    \}                                                                                               \(\backslash\)
+\end{DoxyCode}
+
+
+Definizione alla linea 18 del file attribute.\+h.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{attribute_8h_a4b7f6d2e9be3c83ead055e037a05f9d0}{\index{attribute.\+h@{attribute.\+h}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!attribute.\+h@{attribute.\+h}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf attribute} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(aligned(0x100))}]{}
+\end{DoxyParamCaption}
+)}}\label{attribute_8h_a4b7f6d2e9be3c83ead055e037a05f9d0}
+\hypertarget{attribute_8h_ab96abe3fdf944e75a2316807105c1b6e}{\index{attribute.\+h@{attribute.\+h}!attribute@{attribute}}
+\index{attribute@{attribute}!attribute.\+h@{attribute.\+h}}
+\subsubsection[{attribute}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf list\+\_\+t}$\ast$ {\bf attribute} (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{name}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{attribute_8h_ab96abe3fdf944e75a2316807105c1b6e}
+
+
+Definizione alla linea 31 del file attribute.\+h.
+
+
+
+Referenzia list\+\_\+add(), list\+\_\+init, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+31                                                   \{
+32     \textcolor{keyword}{extern} \textcolor{keywordtype}{int} attribute\_start;
+33     \textcolor{keyword}{extern} \textcolor{keywordtype}{int} attribute\_end;
+34     
+35     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} attr\_s = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) &attribute\_start;
+36     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} attr\_e = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) &attribute\_end;
+37     
+38     \hyperlink{structlist}{list\_t}* tmp;
+39     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(tmp);
+40     
+41     \textcolor{keywordflow}{while}(attr\_s < attr\_e) \{
+42         attribute\_t* attr = (attribute\_t*) attr\_s;
+43 
+44         \textcolor{keywordflow}{if}(strcmp(attr->name, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}) == 0)
+45             \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(tmp, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) attr->value);
+46             
+47         attr\_s += \textcolor{keyword}{sizeof}(attribute\_t);
+48     \}
+49     
+50     \textcolor{keywordflow}{return} tmp;
+51 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{\index{attribute.\+h@{attribute.\+h}!name@{name}}
+\index{name@{name}!attribute.\+h@{attribute.\+h}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}char name\mbox{[}0x80\mbox{]}}}\label{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}
+
+
+Definizione alla linea 82 del file attribute.\+h.
+
+\hypertarget{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{\index{attribute.\+h@{attribute.\+h}!value@{value}}
+\index{value@{value}!attribute.\+h@{attribute.\+h}}
+\subsubsection[{value}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} value}}\label{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}
+
+
+Definizione alla linea 83 del file attribute.\+h.
+

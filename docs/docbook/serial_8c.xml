@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="serial_8c">
+    <title>serial.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> <link linkend="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d">serial</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="serial_8c_1a554c0b79338d298c39a06027b790edb5">serial_send</link> (
+<link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> port, <link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> value)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c">serial_recv</link> (
+<link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> port)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="serial_8c_1a459999cfa35c788b64284953a93c4b57">serial_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/arch/serial.c</para>
+    </simplesect>
+</section>

@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>src/net/rtl8139/rtl8139.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/<a href='../files/173.html'>rtl8139</a>/rtl8139.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='104.html#L16' title='Included from 16 in src/net/rtl8139/rtl8139.c.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/105.html#L2' title='Defined at 2 in src/net/rtl8139/rtl8139.h.'>_RTL8139_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/105.html#L1' title='Refered from 1 in src/net/rtl8139/rtl8139.h.'>_RTL8139_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#define</font> REG_ID0                                                                 0x00
+<a name='L7'>   7 <font color='darkred'>#define</font> REG_ID4                                                                 0x04
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#define</font> <a href='../S/104.html#L80' title='Refered from 80 in src/net/rtl8139/rtl8139.c.'>REG_TRANSMIT_STATUS0</a>                                    0x10
+<a name='L10'>  10 <font color='darkred'>#define</font> <a href='../R/118.html' title='Multiple refered from 2 places.'>REG_TRANSMIT_ADDR0</a>                                              0x20
+<a name='L11'>  11 <font color='darkred'>#define</font> <a href='../S/104.html#L228' title='Refered from 228 in src/net/rtl8139/rtl8139.c.'>REG_RECEIVE_BUFFER</a>                                              0x30
+<a name='L12'>  12 <font color='darkred'>#define</font> <a href='../R/111.html' title='Multiple refered from 5 places.'>REG_COMMAND</a>                                                             0x37
+<a name='L13'>  13 <font color='darkred'>#define</font> <a href='../S/104.html#L137' title='Refered from 137 in src/net/rtl8139/rtl8139.c.'>REG_CUR_READ_ADDR</a>                                               0x38
+<a name='L14'>  14 <font color='darkred'>#define</font> <a href='../S/104.html#L223' title='Refered from 223 in src/net/rtl8139/rtl8139.c.'>REG_INTERRUPT_MASK</a>                                              0x3C
+<a name='L15'>  15 <font color='darkred'>#define</font> <a href='../R/115.html' title='Multiple refered from 3 places.'>REG_INTERRUPT_STATUS</a>                                    0x3E
+<a name='L16'>  16 <font color='darkred'>#define</font> <a href='../S/104.html#L234' title='Refered from 234 in src/net/rtl8139/rtl8139.c.'>REG_TRANSMIT_CONFIGURATION</a>                              0x40
+<a name='L17'>  17 <font color='darkred'>#define</font> <a href='../S/104.html#L233' title='Refered from 233 in src/net/rtl8139/rtl8139.c.'>REG_RECEIVE_CONFIGURATION</a>                               0x44
+<a name='L18'>  18 <font color='darkred'>#define</font> <a href='../S/104.html#L179' title='Refered from 179 in src/net/rtl8139/rtl8139.c.'>REG_CONFIG1</a>                                                             0x52
+<a name='L19'>  19 
+<a name='L20'>  20 <font color='darkred'>#define</font> <a href='../R/20.html' title='Multiple refered from 2 places.'>CR_RESET</a>                                                                (1 &lt;&lt; 4)
+<a name='L21'>  21 <font color='darkred'>#define</font> <a href='../R/19.html' title='Multiple refered from 2 places.'>CR_RECEIVER_ENABLE</a>                                              (1 &lt;&lt; 3)
+<a name='L22'>  22 <font color='darkred'>#define</font> <a href='../R/21.html' title='Multiple refered from 2 places.'>CR_TRANSMITTER_ENABLE</a>                                   (1 &lt;&lt; 2)
+<a name='L23'>  23 <font color='darkred'>#define</font> <a href='../S/104.html#L96' title='Refered from 96 in src/net/rtl8139/rtl8139.c.'>CR_BUFFER_IS_EMPTY</a>                                              (1 &lt;&lt; 0)
+<a name='L24'>  24 
+<a name='L25'>  25 <font color='darkred'>#define</font> <a href='../S/104.html#L234' title='Refered from 234 in src/net/rtl8139/rtl8139.c.'>TCR_IFG_STANDARD</a>                                                (3 &lt;&lt; 24)
+<a name='L26'>  26 <font color='darkred'>#define</font> <a href='../S/104.html#L234' title='Refered from 234 in src/net/rtl8139/rtl8139.c.'>TCR_MXDMA_256</a>                                                   (4 &lt;&lt; 8)
+<a name='L27'>  27 <font color='darkred'>#define</font> TCR_MXDMA_512                                                   (5 &lt;&lt; 8)
+<a name='L28'>  28 <font color='darkred'>#define</font> TCR_MXDMA_1024                                                  (6 &lt;&lt; 8)
+<a name='L29'>  29 <font color='darkred'>#define</font> TCR_MXDMA_2048                                                  (7 &lt;&lt; 8)
+<a name='L30'>  30 
+<a name='L31'>  31 <font color='darkred'>#define</font> RCR_MXDMA_512                                                   (5 &lt;&lt; 8)
+<a name='L32'>  32 <font color='darkred'>#define</font> RCR_MXDMA_1024                                                  (6 &lt;&lt; 8)
+<a name='L33'>  33 <font color='darkred'>#define</font> <a href='../S/104.html#L233' title='Refered from 233 in src/net/rtl8139/rtl8139.c.'>RCR_MXDMA_UNLIMITED</a>                                     (7 &lt;&lt; 8)
+<a name='L34'>  34 <font color='darkred'>#define</font> <a href='../S/104.html#L233' title='Refered from 233 in src/net/rtl8139/rtl8139.c.'>RCR_ACCEPT_BROADCAST</a>                                    (1 &lt;&lt; 3)
+<a name='L35'>  35 <font color='darkred'>#define</font> RCR_ACCEPT_MULTICAST                                    (1 &lt;&lt; 2)
+<a name='L36'>  36 <font color='darkred'>#define</font> <a href='../S/104.html#L233' title='Refered from 233 in src/net/rtl8139/rtl8139.c.'>RCR_ACCEPT_PHYS_MATCH</a>                                   (1 &lt;&lt; 1)
+<a name='L37'>  37 
+<a name='L38'>  38 <font color='darkred'>#define</font> ISR_RECEIVE_BUFFER_OVERFLOW                     (1 &lt;&lt; 4)
+<a name='L39'>  39 <font color='darkred'>#define</font> <a href='../R/63.html' title='Multiple refered from 2 places.'>ISR_TRANSMIT_OK</a>                                                 (1 &lt;&lt; 2)
+<a name='L40'>  40 <font color='darkred'>#define</font> <a href='../R/62.html' title='Multiple refered from 2 places.'>ISR_RECEIVE_OK</a>                                                  (1 &lt;&lt; 0)
+<a name='L41'>  41 
+<a name='L42'>  42 <font color='darkred'>#define</font> <a href='../R/123.html' title='Multiple refered from 6 places.'>RX_BUFFER_SIZE</a>                                                  8192
+<a name='L43'>  43 <font color='darkred'>#define</font> <a href='../R/144.html' title='Multiple refered from 4 places.'>TX_BUFFER_SIZE</a>                                                  4096
+<a name='L44'>  44 
+<a name='L45'>  45 
+<a name='L46'>  46 <font color='darkred'>#define</font> <a href='../R/272.html' title='Multiple refered from 4 places.'>int_out8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)                     <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/149.html' title='Multiple used in 6 places.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a> + <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)
+<a name='L47'>  47 <font color='darkred'>#define</font> <a href='../R/270.html' title='Multiple refered from 4 places.'>int_out16</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)                    outw(<a href='../Y/149.html' title='Multiple used in 6 places.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a> + <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)
+<a name='L48'>  48 <font color='darkred'>#define</font> <a href='../R/271.html' title='Multiple refered from 6 places.'>int_out32</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)                    <a href='../Y/441.html' title='Multiple used in 2 places.'>outl</a>(<a href='../Y/149.html' title='Multiple used in 6 places.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a> + <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>, <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>)
+<a name='L49'>  49 
+<a name='L50'>  50 <font color='darkred'>#define</font> <a href='../R/269.html' title='Multiple refered from 3 places.'>int_in8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>)                                     <a href='../Y/312.html' title='Multiple used in 4 places.'>inb</a>(<a href='../Y/149.html' title='Multiple used in 6 places.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a> + <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>)
+<a name='L51'>  51 <font color='darkred'>#define</font> <a href='../S/104.html#L142' title='Refered from 142 in src/net/rtl8139/rtl8139.c.'>int_in16</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>)                                    inw(<a href='../Y/149.html' title='Multiple used in 6 places.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a> + <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>)
+<a name='L52'>  52 
+<a name='L53'>  53 <font color='darkred'>#define</font> <a href='../R/122.html' title='Multiple refered from 2 places.'>RTL8139_MAGIC</a>                                                   0x8139FFFF
+<a name='L54'>  54 
+<a name='L55'>  55 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

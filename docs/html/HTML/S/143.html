@@ -1,0 +1,238 @@
+<html>
+<head>
+<title>src/sched.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/sched.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L41'>[^]</a><a href='#L184'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L41' title='Defined at 41.'>im_superuser</a>
+<li><a href='#L51' title='Defined at 51.'>schedule_enable</a>
+<li><a href='#L55' title='Defined at 55.'>schedule_disable</a>
+<li><a href='#L59' title='Defined at 59.'>schedule_nextpid</a>
+<li><a href='#L64' title='Defined at 64.'>schedule_init</a>
+<li><a href='#L75' title='Defined at 75.'>schedule_next</a>
+<li><a href='#L90' title='Defined at 90.'>schedule</a>
+<li><a href='#L106' title='Defined at 106.'>schedule_yield</a>
+<li><a href='#L116' title='Defined at 116.'>schedule_setpriority</a>
+<li><a href='#L123' title='Defined at 123.'>schedule_wait</a>
+<li><a href='#L131' title='Defined at 131.'>schedule_child</a>
+<li><a href='#L146' title='Defined at 146.'>schedule_exit2</a>
+<li><a href='#L159' title='Defined at 159.'>schedule_exit</a>
+<li><a href='#L163' title='Defined at 163.'>schedule_getpid</a>
+<li><a href='#L170' title='Defined at 170.'>schedule_getbypid</a>
+<li><a href='#L184' title='Defined at 184.'>schedule_sbrk</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  sched.c</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L23'>  23 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L24'>  24 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L25'>  25 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L26'>  26 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L27'>  27 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L28'>  28 
+<a name='L29'>  29 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L30'>  30 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L31'>  31 
+<a name='L32'>  32 
+<a name='L33'>  33 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L34'>  34 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/346.html' title='Multiple used in 5 places.'>kernel_task</a>;
+<a name='L35'>  35 
+<a name='L36'>  36 <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>;
+<a name='L37'>  37 
+<a name='L38'>  38 <b>static</b> <b>int</b> <a href='../Y/544.html' title='Multiple used in 5 places.'>sched_enabled</a> = 0;
+<a name='L39'>  39 
+<a name='L40'>  40 
+<a name='L41'>  41 <b>int</b> <a href='../S/133.html#L14' title='Refered from 14 in src/syscall/chown.c.'>im_superuser</a>() <font color='red'>{</font>
+<a name='L42'>  42         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L43'>  43                 <b>return</b> -1;
+<a name='L44'>  44                 
+<a name='L45'>  45         <b>if</b>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a> == <a href='../S/90.html#L51' title='Defined at 51 in src/include/aplus/task.h.'>UID_SUPERUSER</a> &amp;&amp; <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a> == <a href='../S/90.html#L52' title='Defined at 52 in src/include/aplus/task.h.'>GID_SUPERUSER</a>)
+<a name='L46'>  46                 <b>return</b> 1;
+<a name='L47'>  47         <b>else</b>
+<a name='L48'>  48                 <b>return</b> 0;
+<a name='L49'>  49 <font color='red'>}</font>
+<a name='L50'>  50 
+<a name='L51'>  51 <b>void</b> <a href='../S/143.html#L69' title='Refered from 69 in src/sched.c.'>schedule_enable</a>() <font color='red'>{</font>
+<a name='L52'>  52         <a href='../Y/544.html' title='Multiple used in 5 places.'>sched_enabled</a> = 1;
+<a name='L53'>  53 <font color='red'>}</font>
+<a name='L54'>  54 
+<a name='L55'>  55 <b>void</b> schedule_disable() <font color='red'>{</font>
+<a name='L56'>  56         <a href='../Y/544.html' title='Multiple used in 5 places.'>sched_enabled</a> = 0;
+<a name='L57'>  57 <font color='red'>}</font>
+<a name='L58'>  58 
+<a name='L59'>  59 <a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../R/472.html' title='Multiple refered from 3 places.'>schedule_nextpid</a>() <font color='red'>{</font>
+<a name='L60'>  60         <b>static</b> <a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/413.html' title='Multiple used in 2 places.'>nextpid</a> = 0;
+<a name='L61'>  61         <b>return</b> <a href='../Y/413.html' title='Multiple used in 2 places.'>nextpid</a>++;
+<a name='L62'>  62 <font color='red'>}</font>
+<a name='L63'>  63 
+<a name='L64'>  64 <b>int</b> <a href='../S/154.html#L60' title='Refered from 60 in src/main.c.'>schedule_init</a>() <font color='red'>{</font>
+<a name='L65'>  65         <a href='../S/96.html#L187' title='Defined at 187 in src/include/aplus/list.h.'>list_init</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>);
+<a name='L66'>  66         <a href='../S/159.html#L179' title='Defined at 179 in src/arch/task.c.'>task_init</a>();
+<a name='L67'>  67         
+<a name='L68'>  68         
+<a name='L69'>  69         <a href='../S/143.html#L51' title='Defined at 51 in src/sched.c.'>schedule_enable</a>();
+<a name='L70'>  70         <b>return</b> 0;
+<a name='L71'>  71 <font color='red'>}</font>
+<a name='L72'>  72 
+<a name='L73'>  73 
+<a name='L74'>  74 
+<a name='L75'>  75 <b>static</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../R/471.html' title='Multiple refered from 2 places.'>schedule_next</a>() <font color='red'>{</font>
+<a name='L76'>  76         
+<a name='L77'>  77         <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L78'>  78         
+<a name='L79'>  79         <b>do</b> <font color='red'>{</font>
+<a name='L80'>  80                 <a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../S/96.html#L139' title='Defined at 139 in src/include/aplus/list.h.'>list_next</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a>);
+<a name='L81'>  81                 <b>if</b>(!<a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a>)
+<a name='L82'>  82                         <a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../S/96.html#L156' title='Defined at 156 in src/include/aplus/list.h.'>list_head</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>);
+<a name='L83'>  83                 
+<a name='L84'>  84         <font color='red'>}</font> <b>while</b>(<a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a> != <a href='../S/90.html#L40' title='Defined at 40 in src/include/aplus/task.h.'>TASK_STATE_ALIVE</a>);
+<a name='L85'>  85 
+<a name='L86'>  86         
+<a name='L87'>  87         <b>return</b> <a href='../Y/409.html' title='Multiple used in 8 places.'>newtask</a>;
+<a name='L88'>  88 <font color='red'>}</font>
+<a name='L89'>  89 
+<a name='L90'>  90 <b>void</b> <a href='../R/463.html' title='Multiple refered from 2 places.'>schedule</a>() <font color='red'>{</font>
+<a name='L91'>  91         <b>if</b>(<a href='../Y/544.html' title='Multiple used in 5 places.'>sched_enabled</a> == 0)
+<a name='L92'>  92                 <b>return</b>;
+<a name='L93'>  93                 
+<a name='L94'>  94         <b>if</b>(<a href='../S/96.html#L49' title='Defined at 49 in src/include/aplus/list.h.'>list_empty</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>))
+<a name='L95'>  95                 <b>return</b>;
+<a name='L96'>  96 
+<a name='L97'>  97                 
+<a name='L98'>  98         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/157.html' title='Multiple used in 7 places.'>clock</a> += 1;
+<a name='L99'>  99         
+<a name='L100'> 100         <b>if</b>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/157.html' title='Multiple used in 7 places.'>clock</a> % <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a>)
+<a name='L101'> 101                 <b>return</b>;
+<a name='L102'> 102                 
+<a name='L103'> 103         <a href='../S/159.html#L165' title='Defined at 165 in src/arch/task.c.'>task_switch</a>(<a href='../S/143.html#L75' title='Defined at 75 in src/sched.c.'>schedule_next</a>());
+<a name='L104'> 104 <font color='red'>}</font>
+<a name='L105'> 105 
+<a name='L106'> 106 <b>void</b> <a href='../R/476.html' title='Multiple refered from 3 places.'>schedule_yield</a>() <font color='red'>{</font>
+<a name='L107'> 107         <b>if</b>(<a href='../Y/544.html' title='Multiple used in 5 places.'>sched_enabled</a> == 0)
+<a name='L108'> 108                 <b>return</b>;
+<a name='L109'> 109                 
+<a name='L110'> 110         <b>if</b>(<a href='../S/96.html#L49' title='Defined at 49 in src/include/aplus/list.h.'>list_empty</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>))
+<a name='L111'> 111                 <b>return</b>;
+<a name='L112'> 112                 
+<a name='L113'> 113         <a href='../S/159.html#L165' title='Defined at 165 in src/arch/task.c.'>task_switch</a>(<a href='../S/143.html#L75' title='Defined at 75 in src/sched.c.'>schedule_next</a>());
+<a name='L114'> 114 <font color='red'>}</font>
+<a name='L115'> 115 
+<a name='L116'> 116 <b>void</b> <a href='../S/154.html#L46' title='Refered from 46 in src/main.c.'>schedule_setpriority</a>(<b>int</b> <a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a>) <font color='red'>{</font>
+<a name='L117'> 117         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L118'> 118                 <b>return</b>;
+<a name='L119'> 119                 
+<a name='L120'> 120         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a> = <a href='../Y/485.html' title='Multiple used in 7 places.'>priority</a>;
+<a name='L121'> 121 <font color='red'>}</font>
+<a name='L122'> 122 
+<a name='L123'> 123 <b>int</b> <a href='../S/137.html#L24' title='Refered from 24 in src/syscall/wait.c.'>schedule_wait</a>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>) <font color='red'>{</font>
+<a name='L124'> 124         <b>if</b>(!<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>)
+<a name='L125'> 125                 <b>return</b> -1;
+<a name='L126'> 126                 
+<a name='L127'> 127         <a href='../S/88.html#L47' title='Defined at 47 in src/include/aplus/spinlock.h.'>spinlock_waiton</a>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a> != <a href='../S/90.html#L42' title='Defined at 42 in src/include/aplus/task.h.'>TASK_STATE_DEAD</a>);
+<a name='L128'> 128         <b>return</b> <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/255.html' title='Multiple used in 5 places.'>exitcode</a>;
+<a name='L129'> 129 <font color='red'>}</font>
+<a name='L130'> 130 
+<a name='L131'> 131 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../R/464.html' title='Multiple refered from 2 places.'>schedule_child</a>() <font color='red'>{</font>
+<a name='L132'> 132         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L133'> 133                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L134'> 134                 
+<a name='L135'> 135 
+<a name='L136'> 136         <a href='../S/96.html#L175' title='Defined at 175 in src/include/aplus/list.h.'>list_foreach</a>(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>) <font color='red'>{</font>
+<a name='L137'> 137                 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L138'> 138                 
+<a name='L139'> 139                 <b>if</b>(<a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>-&gt;<a href='../Y/460.html' title='Multiple used in 16 places.'>parent</a> == <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L140'> 140                         <b>return</b> <a href='../Y/152.html' title='Multiple used in 75 places.'>child</a>;
+<a name='L141'> 141         <font color='red'>}</font>
+<a name='L142'> 142         
+<a name='L143'> 143         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L144'> 144 <font color='red'>}</font>
+<a name='L145'> 145 
+<a name='L146'> 146 <b>void</b> <a href='../S/143.html#L160' title='Refered from 160 in src/sched.c.'>schedule_exit2</a>(<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* task, <b>int</b> <a href='../Y/610.html' title='Multiple used in 9 places.'>status</a>) <font color='red'>{</font>
+<a name='L147'> 147         <b>if</b>(!<a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>)
+<a name='L148'> 148                 <b>return</b>;
+<a name='L149'> 149                 
+<a name='L150'> 150         <a href='../S/96.html#L73' title='Defined at 73 in src/include/aplus/list.h.'>list_remove</a>(<a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>);
+<a name='L151'> 151                 
+<a name='L152'> 152         <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a> = <a href='../S/90.html#L42' title='Defined at 42 in src/include/aplus/task.h.'>TASK_STATE_DEAD</a>;
+<a name='L153'> 153         <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>-&gt;<a href='../Y/255.html' title='Multiple used in 5 places.'>exitcode</a> = <a href='../Y/610.html' title='Multiple used in 9 places.'>status</a>;
+<a name='L154'> 154         
+<a name='L155'> 155         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>((<b>void</b>*) <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>);
+<a name='L156'> 156         <a href='../S/143.html#L106' title='Defined at 106 in src/sched.c.'>schedule_yield</a>();
+<a name='L157'> 157 <font color='red'>}</font>
+<a name='L158'> 158 
+<a name='L159'> 159 <b>void</b> <a href='../S/135.html#L7' title='Refered from 7 in src/syscall/_exit.c.'>schedule_exit</a>(<b>int</b> <a href='../Y/610.html' title='Multiple used in 9 places.'>status</a>) <font color='red'>{</font>
+<a name='L160'> 160         <a href='../S/143.html#L146' title='Defined at 146 in src/sched.c.'>schedule_exit2</a>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>, <a href='../Y/610.html' title='Multiple used in 9 places.'>status</a>);
+<a name='L161'> 161 <font color='red'>}</font>
+<a name='L162'> 162 
+<a name='L163'> 163 <a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../S/131.html#L14' title='Refered from 14 in src/syscall/getpid.c.'>schedule_getpid</a>() <font color='red'>{</font>
+<a name='L164'> 164         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L165'> 165                 <b>return</b> -1;
+<a name='L166'> 166                 
+<a name='L167'> 167         <b>return</b> <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>;
+<a name='L168'> 168 <font color='red'>}</font>
+<a name='L169'> 169 
+<a name='L170'> 170 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../S/125.html#L11' title='Refered from 11 in src/syscall/kill.c.'>schedule_getbypid</a>(<a href='../Y/469.html' title='Multiple used in 16 places.'>pid_t</a> <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>) <font color='red'>{</font>
+<a name='L171'> 171         <b>if</b>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> == <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>)
+<a name='L172'> 172                 <b>return</b> <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L173'> 173                 
+<a name='L174'> 174         <a href='../S/96.html#L175' title='Defined at 175 in src/include/aplus/list.h.'>list_foreach</a>(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>) <font color='red'>{</font>
+<a name='L175'> 175                 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L176'> 176                 
+<a name='L177'> 177                 <b>if</b>(<a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a> == <a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>)
+<a name='L178'> 178                         <b>return</b> <a href='../Y/659.html' title='Multiple used in 27 places.'>t</a>;
+<a name='L179'> 179         <font color='red'>}</font>
+<a name='L180'> 180         
+<a name='L181'> 181         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L182'> 182 <font color='red'>}</font>
+<a name='L183'> 183 
+<a name='L184'> 184 <b>void</b>* <a href='../S/117.html#L7' title='Refered from 7 in src/syscall/sbrk.c.'>schedule_sbrk</a>(<a href='../Y/491.html' title='Multiple used in 2 places.'>ptrdiff_t</a> <a href='../Y/313.html' title='Multiple used in 5 places.'>increment</a>) <font color='red'>{</font>
+<a name='L185'> 185         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L186'> 186                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L187'> 187                 
+<a name='L188'> 188         <b>if</b>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a> == 0)
+<a name='L189'> 189                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L190'> 190                 
+<a name='L191'> 191         <b>if</b>(<a href='../Y/313.html' title='Multiple used in 5 places.'>increment</a> == 0)
+<a name='L192'> 192                 <b>return</b> (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a> + <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L193'> 193 
+<a name='L194'> 194         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> += <a href='../Y/313.html' title='Multiple used in 5 places.'>increment</a>;
+<a name='L195'> 195         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a> = (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/151.html#L84' title='Defined at 84 in src/mm/mm.c.'>krealloc</a>((<b>void</b>*) <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L196'> 196         <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a> = <a href='../S/150.html#L72' title='Defined at 72 in src/mm/paging.c.'>vmm_map</a>(<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/168.html' title='Multiple used in 21 places.'>context</a>.<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>, <a href='../S/87.html#L71' title='Defined at 71 in src/include/aplus/mm.h.'>mm_paddr</a>((<b>void</b>*) <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>), <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a>, <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <a href='../S/87.html#L52' title='Defined at 52 in src/include/aplus/mm.h.'>VMM_FLAGS_DEFAULT</a>);
+<a name='L197'> 197         
+<a name='L198'> 198         <b>return</b> (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/736.html' title='Multiple used in 21 places.'>vaddr</a> + <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/309.html' title='Multiple used in 28 places.'>image</a>.<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L199'> 199 <font color='red'>}</font>
+<a name='L200'> 200 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L41'>[^]</a><a href='#L184'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

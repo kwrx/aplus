@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>ent</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/146.html#L35'>ent</a>                35 src/fs/fs.c    		struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
+<a href='../S/146.html#L36'>ent</a>                36 src/fs/fs.c    		strcpy(ent-&gt;d_name, map-&gt;name);
+<a href='../S/146.html#L37'>ent</a>                37 src/fs/fs.c    		ent-&gt;d_ino = map-&gt;ino;
+<a href='../S/146.html#L39'>ent</a>                39 src/fs/fs.c    		return ent;
+<a href='../S/32.html#L57'>ent</a>                57 usr/src/libposix/src/getcwd.c 		struct dirent* ent;
+<a href='../S/32.html#L58'>ent</a>                58 usr/src/libposix/src/getcwd.c 		while((ent = readdir(dir))) {
+<a href='../S/32.html#L59'>ent</a>                59 usr/src/libposix/src/getcwd.c 			if(ent-&gt;d_ino == curr_ino) {
+<a href='../S/32.html#L60'>ent</a>                60 usr/src/libposix/src/getcwd.c 				strcat_inv(buf, ent-&gt;d_name);
+<a href='../S/32.html#L64'>ent</a>                64 usr/src/libposix/src/getcwd.c 			free(ent);
+<a href='../S/18.html#L23'>ent</a>                23 usr/src/libposix/src/scandir.c 	const struct dirent* ent = NULL;
+<a href='../S/18.html#L29'>ent</a>                29 usr/src/libposix/src/scandir.c 	while((ent = readdir(d))) {
+<a href='../S/18.html#L31'>ent</a>                31 usr/src/libposix/src/scandir.c 			if(select(ent) != 0)
+<a href='../S/18.html#L35'>ent</a>                35 usr/src/libposix/src/scandir.c 		if((index &gt; 0) &amp;&amp; (compar) &amp;&amp; (compar(&amp;lst[index - 1], &amp;ent) &gt; 0)) {
+<a href='../S/18.html#L37'>ent</a>                37 usr/src/libposix/src/scandir.c 			lst[index - 1] = ent;
+<a href='../S/18.html#L39'>ent</a>                39 usr/src/libposix/src/scandir.c 			lst[index] = ent;
+</pre>
+</body>
+</html>

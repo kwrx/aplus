@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>pipe</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/145.html#L28'>pipe</a>               28 src/fs/pipe.c  	pipeinfo_t* pipe = inode-&gt;userdata;
+<a href='../S/145.html#L30'>pipe</a>               30 src/fs/pipe.c  	spinlock_waiton(pipe-&gt;read_offset + len &gt; pipe-&gt;write_offset);
+<a href='../S/145.html#L32'>pipe</a>               32 src/fs/pipe.c  	bufio_seek(pipe-&gt;stream, pipe-&gt;read_offset % pipe-&gt;stream-&gt;size, SEEK_SET);
+<a href='../S/145.html#L35'>pipe</a>               35 src/fs/pipe.c  	while((tolen = bufio_read(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/145.html#L36'>pipe</a>               36 src/fs/pipe.c  		bufio_seek(pipe-&gt;stream, 0, SEEK_SET);
+<a href='../S/145.html#L38'>pipe</a>               38 src/fs/pipe.c  	pipe-&gt;write_offset = bufio_tell(pipe-&gt;stream);
+<a href='../S/145.html#L43'>pipe</a>               43 src/fs/pipe.c  	pipeinfo_t* pipe = inode-&gt;userdata;
+<a href='../S/145.html#L44'>pipe</a>               44 src/fs/pipe.c  	bufio_seek(pipe-&gt;stream, pipe-&gt;write_offset % pipe-&gt;stream-&gt;size, SEEK_SET);
+<a href='../S/145.html#L47'>pipe</a>               47 src/fs/pipe.c  	while((tolen = bufio_write(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/145.html#L48'>pipe</a>               48 src/fs/pipe.c  		bufio_seek(pipe-&gt;stream, 0, SEEK_SET);
+<a href='../S/145.html#L50'>pipe</a>               50 src/fs/pipe.c  	pipe-&gt;write_offset = bufio_tell(pipe-&gt;stream);
+<a href='../S/145.html#L55'>pipe</a>               55 src/fs/pipe.c  	pipeinfo_t* pipe = inode-&gt;userdata;
+<a href='../S/145.html#L57'>pipe</a>               57 src/fs/pipe.c  	bufio_free(pipe-&gt;stream);
+<a href='../S/145.html#L58'>pipe</a>               58 src/fs/pipe.c  	kfree(pipe);
+<a href='../S/145.html#L65'>pipe</a>               65 src/fs/pipe.c  	pipeinfo_t* pipe = (pipeinfo_t*) kmalloc(sizeof(pipeinfo_t));
+<a href='../S/145.html#L66'>pipe</a>               66 src/fs/pipe.c  	pipe-&gt;stream = (bufio_t*) bufio_alloc(BUFSIZ);
+<a href='../S/145.html#L67'>pipe</a>               67 src/fs/pipe.c  	pipe-&gt;read_offset = 0;
+<a href='../S/145.html#L68'>pipe</a>               68 src/fs/pipe.c  	pipe-&gt;write_offset = 0;
+<a href='../S/145.html#L81'>pipe</a>               81 src/fs/pipe.c  		inodes[i].userdata = (void*) pipe;
+</pre>
+</body>
+</html>

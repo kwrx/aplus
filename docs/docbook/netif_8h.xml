@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="netif_8h">
+    <title>netif.h File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/pci.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structnetif">netif</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structnetif__packet">netif_packet</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structnetif__socket">netif_socket</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a92b354424f46fe25b001e3cf311fb951">NETIF_RAW</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a00e0d33542bf01395718b7c5047921d1">NETIF_INET</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a9bd90d73c2b516907768b552d6bbaa56">NETIF_INET6</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1ae9935405723cb9caabff3f18b66446ca">NETIF_ARP</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a1b5ab571fbbee0edabe0bbf9029663cf">NETIF_ETH</link> 4</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a4da4a42cc7d9462ce613d54d0393f8d1">NETIF_UDP</link> 5</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a572091993e27c5d0b0b1786b05a9d233">NETIF_TCP</link> 6</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1aaca7f6ff0ebc3b44543507ad70e9685f">NETIF_ICMP</link> 7</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a63655cdcdbc2051668addaa61d30386c">NETIF_TELNET</link> 8</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b">NETIF_FLAGS_ENABLE</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1a7fa8be0d28d77b4ab4f44d924d4d69e2">ARP_DEBUG</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="netif_8h_1afb47e3cd6431190b167127036fd827eb">RTL8139_DEBUG</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link>  <link linkend="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a">ipv4_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link>  <link linkend="netif_8h_1a0a195da7affbedb767969c3a02c9a82d">ipv6_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link>  <link linkend="netif_8h_1a95d524a06a1ff12a314f88bac04db658">macaddr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structnetif">netif</link>  <link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structnetif__packet">netif_packet</link>  <link linkend="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c">netif_packet_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structnetif__socket">netif_socket</link>  <link linkend="netif_8h_1a202e437372fb57cace51d5724ce46fa2">netif_socket_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/netif.h</para>
+    </simplesect>
+</section>

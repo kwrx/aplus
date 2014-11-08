@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structbufio" kind="struct" prot="public">
+    <compoundname>bufio</compoundname>
+    <includes refid="bufio_8h" local="no">bufio.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* bufio::raw</definition>
+        <argsstring></argsstring>
+        <name>raw</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="33" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/bufio.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbufio_1a233f5f8090a3f39d9471333db439e2bb" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t bufio::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="34" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/bufio.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" prot="public" static="no" mutable="no">
+        <type>off_t</type>
+        <definition>off_t bufio::offset</definition>
+        <argsstring></argsstring>
+        <name>offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="35" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/bufio.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t bufio::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="36" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/bufio.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" prot="public" static="no" mutable="no">
+        <type><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref></type>
+        <definition>spinlock_t bufio::lock</definition>
+        <argsstring></argsstring>
+        <name>lock</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="37" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/bufio.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbufio_1a27683bf934579d5f42529dcea191db50" prot="public" static="no" mutable="no">
+        <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+        <definition>task_t* bufio::task</definition>
+        <argsstring></argsstring>
+        <name>task</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="38" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/bufio.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="20">
+        <label>inode</label>
+        <link refid="structinode"/>
+        <childnode refid="20" relation="usage">
+          <edgelabel>+finddir</edgelabel>
+          <edgelabel>+link</edgelabel>
+          <edgelabel>+parent</edgelabel>
+          <edgelabel>+creat</edgelabel>
+        </childnode>
+        <childnode refid="21" relation="usage">
+          <edgelabel>+readdir</edgelabel>
+        </childnode>
+      </node>
+      <node id="19">
+        <label>task</label>
+        <link refid="structtask"/>
+        <childnode refid="20" relation="usage">
+          <edgelabel>+cwd</edgelabel>
+          <edgelabel>+exe</edgelabel>
+          <edgelabel>+fd</edgelabel>
+        </childnode>
+        <childnode refid="19" relation="usage">
+          <edgelabel>+parent</edgelabel>
+        </childnode>
+      </node>
+      <node id="21">
+        <label>dirent</label>
+        <link refid="structdirent"/>
+      </node>
+      <node id="18">
+        <label>bufio</label>
+        <link refid="structbufio"/>
+        <childnode refid="19" relation="usage">
+          <edgelabel>+task</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="32" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/bufio.h" bodystart="32" bodyend="39"/>
+    <listofallmembers>
+      <member refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" prot="public" virt="non-virtual"><scope>bufio</scope><name>lock</name></member>
+      <member refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" prot="public" virt="non-virtual"><scope>bufio</scope><name>offset</name></member>
+      <member refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" prot="public" virt="non-virtual"><scope>bufio</scope><name>raw</name></member>
+      <member refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" prot="public" virt="non-virtual"><scope>bufio</scope><name>size</name></member>
+      <member refid="structbufio_1a27683bf934579d5f42529dcea191db50" prot="public" virt="non-virtual"><scope>bufio</scope><name>task</name></member>
+      <member refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" prot="public" virt="non-virtual"><scope>bufio</scope><name>type</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

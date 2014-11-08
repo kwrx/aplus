@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_c23ec9db109baf02f825a52e3d8bd742" kind="dir">
+    <compoundname>usr/src/libpthread</compoundname>
+    <innerdir refid="dir_39561b3906d9a8cbcf72cf816afeadc0">usr/src/libpthread/include</innerdir>
+    <innerdir refid="dir_93ec8f7d0ab70c6b2c55924b01761aab">usr/src/libpthread/src</innerdir>
+    <innerdir refid="dir_eb4dfad62f0a0a8df67c574974c63be3">usr/src/libpthread/test</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/"/>
+  </compounddef>
+</doxygen>

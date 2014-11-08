@@ -1,0 +1,117 @@
+.TH "usr/src/libpthread/src/pthread_barrierattr.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_barrierattr.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_barrierattr_init\fP (\fBpthread_barrierattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_barrierattr_destroy\fP (\fBpthread_barrierattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_barrierattr_getpshared\fP (const \fBpthread_barrierattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_barrierattr_setpshared\fP (\fBpthread_barrierattr_t\fP *attr, int pshared)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_barrierattr_destroy (\fBpthread_barrierattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 20 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+20                                                                     {
+21     if(attr == NULL) {
+22         errno = EINVAL;
+23         return 1;
+24     }
+25 
+26     attr->pshared = 0;
+27     return 0;
+28 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_barrierattr_getpshared (const \fBpthread_barrierattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 31 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+31                                                                                            {
+32     if(attr == NULL) {
+33         errno = EINVAL;
+34         return 1;
+35     }
+36 
+37     if(pshared == NULL) {
+38         errno = EINVAL;
+39         return 1;
+40     }
+41     
+42     *pshared = attr->pshared;
+43     return 0;
+44 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_barrierattr_init (\fBpthread_barrierattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 9 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+9                                                                  {
+10     if(attr == NULL) {
+11         errno = EINVAL;
+12         return 1;
+13     }
+14 
+15     attr->pshared = 0;
+16     return 0;
+17 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_barrierattr_setpshared (\fBpthread_barrierattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 47 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+47                                                                                     {
+48     if(attr == NULL) {
+49         errno = EINVAL;
+50         return 1;
+51     }
+52 
+53     attr->pshared = pshared;
+54     return 0;
+55 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

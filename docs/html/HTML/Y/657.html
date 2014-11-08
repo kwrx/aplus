@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>syscall_handlers</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/163.html#L9'>syscall_handlers</a>    9 src/arch/syscall.c static void** syscall_handlers = NULL;
+<a href='../S/163.html#L14'>syscall_handlers</a>   14 src/arch/syscall.c 	syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist-&gt;size);
+<a href='../S/163.html#L15'>syscall_handlers</a>   15 src/arch/syscall.c 	memset(syscall_handlers, 0, sizeof(void*) * syslist-&gt;size);
+<a href='../S/163.html#L20'>syscall_handlers</a>   20 src/arch/syscall.c 		syscall_handlers[sys-&gt;number] = sys-&gt;handler;
+<a href='../S/163.html#L54'>syscall_handlers</a>   54 src/arch/syscall.c 	return syscall_invoke(syscall_handlers[r-&gt;eax], r-&gt;ebx, r-&gt;ecx, r-&gt;edx, r-&gt;esi, r-&gt;edi);
+</pre>
+</body>
+</html>

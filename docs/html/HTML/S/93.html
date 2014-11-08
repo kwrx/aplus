@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>src/include/aplus/net/eth.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/<a href='../files/169.html'>net</a>/eth.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/22.html' title='Multiple included from 8 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/93.html#L2' title='Defined at 2 in src/include/aplus/net/eth.h.'>_ETH_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/93.html#L1' title='Refered from 1 in src/include/aplus/net/eth.h.'>_ETH_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <i><font color='green'>/* ETH:</font></i>
+<a name='L8'>   8 <i><font color='green'> *      [dest] [source] [type] [data...] [crc32] </font></i>
+<a name='L9'>   9 <i><font color='green'>*/</font></i>
+<a name='L10'>  10 
+<a name='L11'>  11 
+<a name='L12'>  12 <font color='darkred'>#define</font> <a href='../R/37.html' title='Multiple refered from 3 places.'>ETH_TYPE_IPV4</a>                   0x0800
+<a name='L13'>  13 <font color='darkred'>#define</font> <a href='../R/36.html' title='Multiple refered from 2 places.'>ETH_TYPE_ARP</a>                    0x0806
+<a name='L14'>  14 <font color='darkred'>#define</font> <a href='../R/38.html' title='Multiple refered from 2 places.'>ETH_TYPE_IPV6</a>                   0x86DD
+<a name='L15'>  15 <font color='darkred'>#define</font> ETH_TYPE_WAKEONLAN              0x0842
+<a name='L16'>  16 <font color='darkred'>#define</font> ETH_TYPE_RARP                   0x8035
+<a name='L17'>  17 <font color='darkred'>#define</font> <a href='../S/112.html#L66' title='Refered from 66 in src/net/eth.c.'>ETH_TYPE_RAW</a>                    0xFFFF
+<a name='L18'>  18 
+<a name='L19'>  19 
+<a name='L20'>  20 <b>typedef</b> <b>struct</b> eth_header <font color='red'>{</font>
+<a name='L21'>  21         <a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a> <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>;
+<a name='L22'>  22         <a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a> <a href='../Y/582.html' title='Multiple used in 6 places.'>source</a>;
+<a name='L23'>  23         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>;
+<a name='L24'>  24 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../R/240.html' title='Multiple refered from 8 places.'>eth_header_t</a>;
+<a name='L25'>  25 
+<a name='L26'>  26 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

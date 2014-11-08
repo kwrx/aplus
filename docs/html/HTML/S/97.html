@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>src/include/aplus/fs.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/fs.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/18.html' title='Multiple included from 24 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  fs.h</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#ifndef</font> <a href='../S/97.html#L23' title='Defined at 23 in src/include/aplus/fs.h.'>_FS_H</a>
+<a name='L23'>  23 <font color='darkred'>#define</font> <a href='../S/97.html#L22' title='Refered from 22 in src/include/aplus/fs.h.'>_FS_H</a>
+<a name='L24'>  24 
+<a name='L25'>  25 
+<a name='L26'>  26 <font color='darkred'>#define</font> <a href='../R/145.html' title='Multiple refered from 2 places.'>UID_ROOT</a>                0
+<a name='L27'>  27 <font color='darkred'>#define</font> <a href='../R/46.html' title='Multiple refered from 2 places.'>GID_ROOT</a>                0
+<a name='L28'>  28 
+<a name='L29'>  29 
+<a name='L30'>  30 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L31'>  31 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L32'>  32 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L33'>  33 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L34'>  34 <font color='darkred'>#include</font> &lt;<a href='10.html'>sys/dirent.h</a>&gt;
+<a name='L35'>  35 
+<a name='L36'>  36 <b>typedef</b> <b>struct</b> <a href='../R/266.html' title='Multiple refered from 47 places.'>inode</a> <font color='red'>{</font>
+<a name='L37'>  37         <b>char</b> <a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>[255];
+<a name='L38'>  38 
+<a name='L39'>  39         <a href='../Y/196.html' title='Multiple used in 6 places.'>dev_t</a> <a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>;
+<a name='L40'>  40         <a href='../Y/322.html' title='Multiple used in 4 places.'>ino_t</a> <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>;
+<a name='L41'>  41         <a href='../Y/389.html' title='Multiple used in 6 places.'>mode_t</a> <a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>;
+<a name='L42'>  42         nlink_t <a href='../Y/414.html' title='Multiple used in 5 places.'>nlink</a>;
+<a name='L43'>  43         <a href='../Y/717.html' title='Multiple used in 8 places.'>uid_t</a> <a href='../Y/716.html' title='Multiple used in 11 places.'>uid</a>;
+<a name='L44'>  44         <a href='../Y/287.html' title='Multiple used in 12 places.'>gid_t</a> <a href='../Y/286.html' title='Multiple used in 11 places.'>gid</a>;
+<a name='L45'>  45         <a href='../Y/196.html' title='Multiple used in 6 places.'>dev_t</a> <a href='../Y/498.html' title='Multiple used in 5 places.'>rdev</a>;
+<a name='L46'>  46         <a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>;
+<a name='L47'>  47         <a href='../Y/428.html' title='Multiple used in 18 places.'>off_t</a> <a href='../Y/480.html' title='Multiple used in 14 places.'>position</a>;
+<a name='L48'>  48         
+<a name='L49'>  49         <a href='../Y/672.html' title='Multiple used in 4 places.'>time_t</a> <a href='../Y/111.html' title='Multiple used in 2 places.'>atime</a>;
+<a name='L50'>  50         <a href='../Y/672.html' title='Multiple used in 4 places.'>time_t</a> <a href='../Y/393.html' title='Multiple used in 2 places.'>mtime</a>;
+<a name='L51'>  51         <a href='../Y/672.html' title='Multiple used in 4 places.'>time_t</a> <a href='../Y/178.html' title='Multiple used in 2 places.'>ctime</a>;
+<a name='L52'>  52         
+<a name='L53'>  53         <b>void</b>* <a href='../Y/727.html' title='Multiple used in 5 places.'>userdata</a>;
+<a name='L54'>  54 
+<a name='L55'>  55         <b>int</b> (*<a href='../Y/501.html' title='Multiple used in 8 places.'>read</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>char</b>* <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <b>int</b> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>);
+<a name='L56'>  56         <b>int</b> (*<a href='../Y/763.html' title='Multiple used in 8 places.'>write</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>char</b>* <a href='../Y/490.html' title='Multiple used in 55 places.'>ptr</a>, <b>int</b> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>);
+<a name='L57'>  57         
+<a name='L58'>  58         <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>* (*<a href='../S/35.html#L15' title='Defined at 15 in usr/src/libposix/src/readdir.c.'>readdir</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>int</b> <a href='../Y/314.html' title='Multiple used in 23 places.'>index</a>);
+<a name='L59'>  59         <b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* (*<a href='../Y/264.html' title='Multiple used in 6 places.'>finddir</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>char</b>* <a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>);
+<a name='L60'>  60         <b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* (*<a href='../Y/176.html' title='Multiple used in 6 places.'>creat</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>char</b>* <a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>, <a href='../Y/389.html' title='Multiple used in 6 places.'>mode_t</a> <a href='../Y/388.html' title='Multiple used in 16 places.'>mode</a>);
+<a name='L61'>  61         
+<a name='L62'>  62         <b>int</b> (*<a href='../Y/516.html' title='Multiple used in 6 places.'>rename</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>char</b>* <a href='../Y/432.html' title='Multiple used in 3 places.'>oldname</a>, <b>char</b>* <a href='../Y/407.html' title='Multiple used in 3 places.'>newname</a>);
+<a name='L63'>  63         <b>int</b> (*<a href='../Y/722.html' title='Multiple used in 7 places.'>unlink</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>char</b>* <a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>);
+<a name='L64'>  64         <b>int</b> (*<a href='../Y/154.html' title='Multiple used in 7 places.'>chown</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <a href='../Y/717.html' title='Multiple used in 8 places.'>uid_t</a> <a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a>, <a href='../Y/287.html' title='Multiple used in 12 places.'>gid_t</a> <a href='../Y/291.html' title='Multiple used in 5 places.'>group</a>);
+<a name='L65'>  65         <b>void</b> (*<a href='../Y/267.html' title='Multiple used in 7 places.'>flush</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>);
+<a name='L66'>  66         
+<a name='L67'>  67         <b>int</b> (*<a href='../Y/335.html' title='Multiple used in 7 places.'>ioctl</a>) (<b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>, <b>int</b> <a href='../Y/517.html' title='Multiple used in 9 places.'>req</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>);
+<a name='L68'>  68 
+<a name='L69'>  69 
+<a name='L70'>  70         <b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../Y/460.html' title='Multiple used in 16 places.'>parent</a>;
+<a name='L71'>  71         <b>struct</b> <a href='../S/97.html#L36' title='Defined at 36 in src/include/aplus/fs.h.'>inode</a>* <a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>;
+<a name='L72'>  72 <font color='red'>}</font> <a href='../R/267.html' title='Multiple refered from 51 places.'>inode_t</a>;
+<a name='L73'>  73 
+<a name='L74'>  74 
+<a name='L75'>  75 
+<a name='L76'>  76 
+<a name='L77'>  77 
+<a name='L78'>  78 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

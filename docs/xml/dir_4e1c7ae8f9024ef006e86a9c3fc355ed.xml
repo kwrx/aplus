@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_4e1c7ae8f9024ef006e86a9c3fc355ed" kind="dir">
+    <compoundname>usr/src/libposix</compoundname>
+    <innerdir refid="dir_4237061708ad6a8e4cb7b704e77c9736">usr/src/libposix/include</innerdir>
+    <innerdir refid="dir_f434c0cea4b0f002ce018129171d40a3">usr/src/libposix/src</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libposix/"/>
+  </compounddef>
+</doxygen>

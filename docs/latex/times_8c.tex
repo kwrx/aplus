@@ -1,0 +1,82 @@
+\hypertarget{times_8c}{\section{Riferimenti per il file src/syscall/times.c}
+\label{times_8c}\index{src/syscall/times.\+c@{src/syscall/times.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/times.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+clock\+\_\+t \hyperlink{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}{sys\+\_\+times} (struct tms $\ast$tm)
+\item 
+\hyperlink{times_8c_a8ecba6a43b15155c404aef0b811ca805}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}{sys\+\_\+times}, 14)
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}{\index{times.\+c@{times.\+c}!sys\+\_\+times@{sys\+\_\+times}}
+\index{sys\+\_\+times@{sys\+\_\+times}!times.\+c@{times.\+c}}
+\subsubsection[{sys\+\_\+times}]{\setlength{\rightskip}{0pt plus 5cm}clock\+\_\+t sys\+\_\+times (
+\begin{DoxyParamCaption}
+\item[{struct tms $\ast$}]{tm}
+\end{DoxyParamCaption}
+)}}\label{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}
+
+
+Definizione alla linea 15 del file times.\+c.
+
+
+
+Referenzia task\+::clock, pit\+\_\+getticks(), e schedule\+\_\+child().
+
+
+\begin{DoxyCode}
+15                                   \{
+16     \textcolor{keywordflow}{if}(tm == NULL) 
+17         \textcolor{keywordflow}{return} (clock\_t) \hyperlink{desc_8c_affef3cc40072321b8d54e4c00aa4de85}{pit\_getticks}();
+18     
+19 
+20     tm->tms\_utime = \hyperlink{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock};
+21     tm->tms\_stime = 0;
+22     tm->tms\_cstime = 0;
+23 
+24     
+25     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{src_2sched_8c_a96793377662f91213568fe44bf4eccad}{schedule\_child}();
+26     \textcolor{keywordflow}{if}(child)
+27         tm->tms\_cutime = \hyperlink{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} + child->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock};
+28      \textcolor{keywordflow}{else} 
+29         tm->tms\_cutime = 0;
+30 
+31 
+32     \textcolor{keywordflow}{return} (clock\_t) \hyperlink{desc_8c_affef3cc40072321b8d54e4c00aa4de85}{pit\_getticks}();
+33 \}
+\end{DoxyCode}
+\hypertarget{times_8c_a8ecba6a43b15155c404aef0b811ca805}{\index{times.\+c@{times.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!times.\+c@{times.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+times}}]{, }
+\item[{14}]{}
+\end{DoxyParamCaption}
+)}}\label{times_8c_a8ecba6a43b15155c404aef0b811ca805}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{times.\+c@{times.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!times.\+c@{times.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Definizione alla linea 33 del file sched.\+c.
+

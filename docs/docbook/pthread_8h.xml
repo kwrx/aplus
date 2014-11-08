@@ -1,0 +1,1038 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread_8h">
+    <title>pthread.h File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/time.h&gt;</programlisting>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__attr">pthread_attr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__once">pthread_once</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__mutexattr">pthread_mutexattr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__mutex">pthread_mutex</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__condattr">pthread_condattr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__cond">pthread_cond</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__barrierattr">pthread_barrierattr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__barrier">pthread_barrier</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__rwlockattr">pthread_rwlockattr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__rwlock">pthread_rwlock</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structpthread__spinlock">pthread_spinlock</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a5e89527a7c4b94907d559a975d5850ce">_POSIX_THREADS</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1afb10d234d831c7b57768d62786748bc7">PTHREAD_CREATE_JOINABLE</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a391c5eb0f6b5febc48710d0be3f62394">PTHREAD_CREATE_DETACHED</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a470fccc57c4d7c3846e446a17cd23573">PTHREAD_INHERIT_SCHED</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1ad45abe03c8232518b6995e73172fe053">PTHREAD_EXPLICIT_SCHED</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1aeab18be4f4ee13db4b0b65c6768fb539">PTHREAD_SCOPE_PROCESS</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1ab754f4339f76c46b8f57413c03e8ec65">PTHREAD_SCOPE_SYSTEM</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1aaf18882a8a6b82c7b7849a645f4445ef">PTHREAD_CANCEL_ENABLE</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a6c661332f782dcebc87b878990424b4c">PTHREAD_CANCEL_DISABLE</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a443f2f512de9324bf77625041ecb04f4">PTHREAD_PROCESS_PRIVATE</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a07f3670a510cdb93233e84e1a0b50e89">PTHREAD_PROCESS_SHARED</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a59e22497b65fc305ddb5cea8b4990b51">PTHREAD_ONCE_INIT</link> { 0, -1 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1aae4b650085c2599674938f503d6253cf">PTHREAD_MUTEX_NORMAL</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645">PTHREAD_MUTEX_RECURSIVE</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1aaf502496651f95b06be861af7902cb23">PTHREAD_MUTEX_ERRORCHECK</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a2a9b96c0491ae490c17d0b400bc427b0">PTHREAD_MUTEX_DEFAULT</link> <link linkend="pthread_8h_1aae4b650085c2599674938f503d6253cf">PTHREAD_MUTEX_NORMAL</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a84e55100366a6a8338a2af3b3f279686">PTHREAD_MUTEX_INITIALIZER</link> { 0, 0, -1, -1, -1 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1acff148607c8534833336adb03d3f7b5b">PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP</link> { 0, 0, -1, -1, -1 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1aa7b867fe46f3660283fcb356c4fcbbf0">PTHREAD_COND_INITIALIZER</link> ((<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link>) -1)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a822c63bc662ad86cfb2dcec50edbb42b">PTHREAD_BARRIER_SERIAL_THREAD</link> ~0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1aa92fd7b492a8a5b31b2f8b3b6039c622">PTHREAD_RWLOCK_INITIALIZER</link> { <link linkend="pthread_8h_1a84e55100366a6a8338a2af3b3f279686">PTHREAD_MUTEX_INITIALIZER</link>, 0, 0, 0, 0, 0, 0 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1aabe0fad730afb8dd41f42bdda6f6ae81">SPINLOCK_UNLOCKED</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a1521727499f19b6459d150df04a2e445">SPINLOCK_LOCKED</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1a5e10ca049cf7b35f19b7cf24805f604a">SPINLOCK_USEMUTEX</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="pthread_8h_1ad4620a03c26b4119bf642a7f53df4fb2">PTHREAD_SPINLOCK_INITIALIZER</link> { 0, 0 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>  <link linkend="pthread_8h_1afab214cf0e27a8f9c17c5412d0a7c88d">tls_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>  <link linkend="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34">handle_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34">handle_t</link>  <link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef <link linkend="pthread_8h_1afab214cf0e27a8f9c17c5412d0a7c88d">tls_t</link>  <link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__attr">pthread_attr</link>  <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__once">pthread_once</link>  <link linkend="pthread_8h_1a18773caa8d79a98514e4291b855c3d80">pthread_once_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__mutexattr">pthread_mutexattr</link>  <link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__mutex">pthread_mutex</link>  <link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__condattr">pthread_condattr</link>  <link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__cond">pthread_cond</link>  <link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__barrierattr">pthread_barrierattr</link>  <link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__barrier">pthread_barrier</link>  <link linkend="pthread_8h_1a0af030d8520cb3271d895b21a5ecca34">pthread_barrier_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__rwlockattr">pthread_rwlockattr</link>  <link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__rwlock">pthread_rwlock</link>  <link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structpthread__spinlock">pthread_spinlock</link>  <link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a0b85ebb1e3aac081a4c0a5e85ae3cbe9">pthread_attr_init</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a4bcdbf47c17c7dcc51e9f05f5cb56d81">pthread_attr_destroy</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a391c34da42e68ddd24f5ee0c070d5c4f">pthread_attr_getdetachstate</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * detachstate)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ae6ee78c307d8467b34a9b0c330993a54">pthread_attr_setdetachstate</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int detachstate)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1add78bd0e6395c9fbd8ed170a67da0b87">pthread_attr_getstackaddr</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, void ** stackaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a298a51c79184546ef78800ea6d4463b9">pthread_attr_setstackaddr</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, void * stackaddr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ae23600d4670359ab12bfba20db2c9a37">pthread_attr_getstacksize</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, size_t * stacksize)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a812a9a455ae2ef2bb0dca4fff201a281">pthread_attr_setstacksize</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, size_t stacksize)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1afd3d272d702481044f8a8cd253fd9b47">pthread_attr_getschedparam</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a579e6529f0ce482312a5e77ac61cb4d5">pthread_attr_setschedparam</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, const struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a176ad27074237a3eea7bf8fccb911479">pthread_attr_getschedpolicy</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * policy)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a79b4c9e71486a87ef3014f1c660b33eb">pthread_attr_setschedpolicy</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int policy)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ae83dac484200d8cdb85e59cb8a59ca92">pthread_attr_getinheritsched</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * inheritsched)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ad437fe8caa3ef9f0cb7d69f6f6479df9">pthread_attr_setinheritsched</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int inheritsched)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ad3fe01698c4fad85bb5cc3f9a2e82ea3">pthread_attr_getscope</link> (
+const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int * contentionscope)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a6d8d320a882ba044a064975dddcf9ced">pthread_attr_setscope</link> (
+<link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, int contentionscope)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a6933a96c86c4fbebef09c9cbc0625e81">pthread_create</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> * thread, const <link linkend="pthread_8h_1ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</link> * attr, void *(*)(void *) start, void * arg)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a7c275c509c26566b6dd95a2de1668a2f">pthread_detach</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> thread)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a98ec817164a6641eda2341de473b659d">pthread_equal</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> t1, <link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> t2)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="pthread_8h_1a090bdc13141e76205fab4cb3c5fab0e4">pthread_exit</link> (
+void * value_ptr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aa79c99cc7b194918a2def257246f11c6">pthread_join</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> thread, void ** value_ptr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> <link linkend="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</link> (
+void )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a9e77a80c073787bf9a593e9c619dce27">pthread_cancel</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> thread)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a37075410fbbaad7ee93c95375fc86e0e">pthread_setcancelstate</link> (
+int state, int * oldstate)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aab579bcfcf0662a0c1e35fd82162e61d">pthread_setcanceltype</link> (
+int type, int * oldtype)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="pthread_8h_1af1c95282ab2bea25f0888a19652cd41f">pthread_testcancel</link> (
+void )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a196103ac97710dad7a93fd6c188cc999">pthread_once</link> (
+<link linkend="pthread_8h_1a18773caa8d79a98514e4291b855c3d80">pthread_once_t</link> * once_control, void(*)(void) init_routine)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a14f50e1f5d815c90f1f4225eca5d3a8c">pthread_setschedparam</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> thread, int policy, const struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aae9850b3759769c748727e171c4c6e61">pthread_getschedparam</link> (
+<link linkend="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</link> thread, int * policy, struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aee776aa5481b87ca7e7f959a01b50bea">pthread_setconcurrency</link> (
+int level)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1afb4344ea91774ba279ea5df3cb656ebc">pthread_getconcurrency</link> (
+void )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1af4b7ced8ecff505380fe8216244a3764">pthread_key_create</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> * key, void(*)(void *) destructor)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aee96306dc79294927ee840bb4de2244b">pthread_key_delete</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> key)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a2187333dd46ce08d9d2e044f79fad705">pthread_setspecific</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> key, const void * value)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="pthread_8h_1a31469375891078185bda93f0e4411a2c">pthread_getspecific</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> key)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1af98f6b6c483077a39d1400b1de1577b8">pthread_mutexattr_init</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a2321aabf58224b06021185708d0f9658">pthread_mutexattr_destroy</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1af8d7f85a0d52d3560db6d36cf9b44ac0">pthread_mutexattr_getpshared</link> (
+const <link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a73bd8697b91e0ee9a63c30052ac9f72f">pthread_mutexattr_setpshared</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ab006d856e7ec59dc82d2e4a69d49f5dc">pthread_mutexattr_gettype</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int * kind)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a4676cf36cad3bde781928419735e6fb7">pthread_mutexattr_settype</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int kind)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a7454d249ed94ad5d5e57ba1529d7a7f2">pthread_mutex_init</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex, const <link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a3cf620ff3a40af11d79cf28901dc55e2">pthread_mutex_destroy</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a12809c44718c21544ceb280dc1a53573">pthread_mutex_lock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a5f197c3d769dee7a09d911241a7b6766">pthread_mutex_timedlock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a27da386211db1a7e9a3b2a0db4d22144">pthread_mutex_trylock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a96184290ffb60e04c53a52869cf960a2">pthread_mutex_unlock</link> (
+<link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a34083fe1cd54d5d67599b4cca593ffa4">pthread_condattr_init</link> (
+<link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a066f082e4a085641043714e3bc4d70d7">pthread_condattr_destroy</link> (
+<link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aff70de20d7bdac1310aa2cdcada218d4">pthread_condattr_getpshared</link> (
+const <link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a1a026d48926e804fed515bb01b0cbb45">pthread_condattr_setpshared</link> (
+<link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ad5b6c558bcd5260289981207b9ca9687">pthread_cond_init</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond, const <link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aa1587e01856a579b78effd0a1a284a47">pthread_cond_destroy</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a907ae104b6dfd8fc12e23e84952aa7ca">pthread_cond_wait</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond, <link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ab03e3ab6546f661d2b2f83bc12559e40">pthread_cond_timedwait</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond, <link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a20f98235b024efb10e5c76a64f0d94e5">pthread_cond_signal</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1afc4b19aa8ea2dce0956579ce878b4998">pthread_cond_broadcast</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a9f357dc609e57f516cbbbf845f92727d">pthread_barrierattr_init</link> (
+<link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1abde7f3bdc7510a89b5ebe7ef70bb0f80">pthread_barrierattr_destroy</link> (
+<link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ac39928db5b4e7c041e69ecfa1973e579">pthread_barrierattr_getpshared</link> (
+const <link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aa9c3c335f5bcf702fe85a1c12dcdc70e">pthread_barrierattr_setpshared</link> (
+<link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a8ccfa0d7e4ed11ad58990e4bc88d6563">pthread_barrier_init</link> (
+<link linkend="pthread_8h_1a0af030d8520cb3271d895b21a5ecca34">pthread_barrier_t</link> * barrier, const <link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr, unsigned int count)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ae8ef9b4e2d7feaa1a28159991e7433ac">pthread_barrier_destroy</link> (
+<link linkend="pthread_8h_1a0af030d8520cb3271d895b21a5ecca34">pthread_barrier_t</link> * barrier)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a85f92053b4d12aa94927b364b5b757d9">pthread_barrier_wait</link> (
+<link linkend="pthread_8h_1a0af030d8520cb3271d895b21a5ecca34">pthread_barrier_t</link> * barrier)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a9d831af0179ed16d1b6cbeba0304810b">pthread_rwlockattr_init</link> (
+<link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a78a54e67f0afe2601dbda0a904fa0bdf">pthread_rwlockattr_destroy</link> (
+<link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a4a749019aadaa5443785ab81a9e11a86">pthread_rwlockattr_getpshared</link> (
+const <link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ae6550aa6aede71f618bb7457f3e50524">pthread_rwlockattr_setpshared</link> (
+<link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a5ee98536e18644a68d1e5fa377ba827b">pthread_rwlock_init</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock, const <link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a1166bfb9159f43886513740ffcf52100">pthread_rwlock_destroy</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a22beda5fdbe327286232d6fa3072d0be">pthread_rwlock_tryrdlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1af876ea2a1537ebb147ca1ac773d341ea">pthread_rwlock_trywrlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a41d0ae7d642f9e869275a1e35c7e7345">pthread_rwlock_rdlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a75e229e656ee4048da890bff45eb056b">pthread_rwlock_timedrdlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a2bce91a7ca8b6a86d5ad896a7f4353ae">pthread_rwlock_wrlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1ac316d4073ca8a30c8b0b47d3c6cf6e8b">pthread_rwlock_timedwrlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a294df74b6a0613e5b0b18850ee24f2a6">pthread_rwlock_unlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1aa35638e0561b356d978095ebb3ca6401">pthread_spin_init</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a87f8f1b6530c064af125525668de7573">pthread_spin_destroy</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a5a807aedbbb69d36163c9fd6fa661f69">pthread_spin_lock</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1acc1bbcf93cbba8a8f5a8dec2d2db9318">pthread_spin_trylock</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="pthread_8h_1a3aff65ef8d5fb28a7be0403661724eee">pthread_spin_unlock</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/include/pthread.h</para>
+    </simplesect>
+</section>

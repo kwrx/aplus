@@ -1,0 +1,264 @@
+\hypertarget{ipv4_8c}{\section{Riferimenti per il file src/net/ipv4.c}
+\label{ipv4_8c}\index{src/net/ipv4.\+c@{src/net/ipv4.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/ipv4.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{ipv4_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\+\_\+\+\_\+params}~\hyperlink{structnetif}{netif}, (void$\ast$) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t}) ip + \hyperlink{ipv4_8h_ac2a02acc2c7e7b4a4503969db99e9020}{I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}(ip)), \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} -\/ \hyperlink{ipv4_8h_ac2a02acc2c7e7b4a4503969db99e9020}{I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}(ip)
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{ipv4_8c_a8d6cc3bdb61e35f619dfebc28fd4085d}{ipv4\+\_\+checksum} (ipv4\+\_\+header\+\_\+t $\ast$pkt)
+\item 
+void $\ast$ \hyperlink{ipv4_8c_a695ec6caf08c3272bf42002c51877741}{ipv4\+\_\+create\+\_\+packet} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}, \hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} \hyperlink{ipv6_8h_ab4bf83701631abccacef4ebedf8db65e}{dest}, int fragment, int \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset})
+\item 
+int \hyperlink{ipv4_8c_aef7e4d9aa0ca33ce3ed3d39d613ebf64}{ipv4\+\_\+recv} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length})
+\item 
+int \hyperlink{ipv4_8c_a48d431009aba8ad4088be8a394838690}{ipv4\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}, \hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} \hyperlink{ipv6_8h_ab4bf83701631abccacef4ebedf8db65e}{dest})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{ipv4_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\index{ipv4.\+c@{ipv4.\+c}!\+\_\+\+\_\+params@{\+\_\+\+\_\+params}}
+\index{\+\_\+\+\_\+params@{\+\_\+\+\_\+params}!ipv4.\+c@{ipv4.\+c}}
+\subsubsection[{\+\_\+\+\_\+params}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+params~{\bf netif}, (void$\ast$) (({\bf uint32\+\_\+t}) ip + {\bf I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}(ip)), {\bf length} -\/ {\bf I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H}(ip)}}\label{ipv4_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{ipv4_8c_a8d6cc3bdb61e35f619dfebc28fd4085d}{\index{ipv4.\+c@{ipv4.\+c}!ipv4\+\_\+checksum@{ipv4\+\_\+checksum}}
+\index{ipv4\+\_\+checksum@{ipv4\+\_\+checksum}!ipv4.\+c@{ipv4.\+c}}
+\subsubsection[{ipv4\+\_\+checksum}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} ipv4\+\_\+checksum (
+\begin{DoxyParamCaption}
+\item[{ipv4\+\_\+header\+\_\+t $\ast$}]{pkt}
+\end{DoxyParamCaption}
+)}}\label{ipv4_8c_a8d6cc3bdb61e35f619dfebc28fd4085d}
+
+
+Definizione alla linea 13 del file ipv4.\+c.
+
+
+
+Referenzia length, uint16\+\_\+t, e uint8\+\_\+t.
+
+
+\begin{DoxyCode}
+13                                            \{
+14     \textcolor{keywordtype}{int} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} = \textcolor{keyword}{sizeof}(ipv4\_header\_t);
+15     \textcolor{keywordtype}{int} sum = 0;
+16     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}* buf = (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}*) pkt;
+17 
+18     \textcolor{keywordflow}{while}(length > 1) \{
+19         sum += 0xFFFF & *((\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t}*) buf);
+20         buf += \textcolor{keyword}{sizeof}(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t});
+21         length -= \textcolor{keyword}{sizeof}(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t});
+22     \}
+23 
+24     \textcolor{keywordflow}{if}(length)
+25         sum += (0xFF & *buf) << 8;
+26 
+27     \textcolor{keywordflow}{while}(sum >> 16)
+28         sum = (sum & 0xFFFF) + (sum >> 16);
+29 
+30     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} cksum = ((\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t}) sum ^ 0xFFFF);
+31     \textcolor{keywordflow}{return} (((cksum & 0x00FF) << 8) | ((cksum & 0xFF00) >> 8)) & 0xFFFF;
+32 \}
+\end{DoxyCode}
+\hypertarget{ipv4_8c_a695ec6caf08c3272bf42002c51877741}{\index{ipv4.\+c@{ipv4.\+c}!ipv4\+\_\+create\+\_\+packet@{ipv4\+\_\+create\+\_\+packet}}
+\index{ipv4\+\_\+create\+\_\+packet@{ipv4\+\_\+create\+\_\+packet}!ipv4.\+c@{ipv4.\+c}}
+\subsubsection[{ipv4\+\_\+create\+\_\+packet}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ ipv4\+\_\+create\+\_\+packet (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length, }
+\item[{int}]{type, }
+\item[{{\bf ipv4\+\_\+t}}]{dest, }
+\item[{int}]{fragment, }
+\item[{int}]{offset}
+\end{DoxyParamCaption}
+)}}\label{ipv4_8c_a695ec6caf08c3272bf42002c51877741}
+
+
+Definizione alla linea 34 del file ipv4.\+c.
+
+
+
+Referenzia netif\+::ipv4, ipv4\+\_\+checksum(), I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F, I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H, I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P, I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W, I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P, I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P, kmalloc(), N\+E\+T\+I\+F\+\_\+\+I\+C\+M\+P, N\+E\+T\+I\+F\+\_\+\+T\+C\+P, N\+E\+T\+I\+F\+\_\+\+U\+D\+P, offset, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+34                                                                                                            
+               \{
+35 
+36     ipv4\_header\_t* ip = (ipv4\_header\_t*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} + \textcolor{keyword}{sizeof}(ipv4\_header\_t));
+37     ip->info = (((\textcolor{keyword}{sizeof}(ipv4\_header\_t) >> 2) & 0xF) << 4) | 4; \textcolor{comment}{/* length: 20 byte; Version: ipv4; */}
+38     ip->tos = 0;
+39     ip->length = \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} + \textcolor{keyword}{sizeof}(ipv4\_header\_t);
+40     ip->id = 0;
+41     ip->ttl = 0xFF;
+42 
+43     \textcolor{keywordflow}{if}(fragment == -1)
+44         ip->offset = \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
+45     \textcolor{keywordflow}{else}
+46         ip->offset = \hyperlink{ipv4_8h_a41977e1a3755af1ec6de3b8e67c0feae}{IPV4\_FLAGS\_MF} | (\hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset} * 
+      \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{IPV4\_MAX\_LENGTH});
+47 
+48     \textcolor{keywordflow}{switch}(\hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}) \{
+49         \textcolor{keywordflow}{case} \hyperlink{netif_8h_a4da4a42cc7d9462ce613d54d0393f8d1}{NETIF\_UDP}:
+50             ip->protocol = \hyperlink{ipv4_8h_a1ee065c0b162a088813ad6ee277cb571}{IPV4\_PROTO\_UDP};
+51             \textcolor{keywordflow}{break};
+52         \textcolor{keywordflow}{case} \hyperlink{netif_8h_a572091993e27c5d0b0b1786b05a9d233}{NETIF\_TCP}:
+53             ip->protocol = \hyperlink{ipv4_8h_a65b17e757e3d1e3404e10bdf2eccd228}{IPV4\_PROTO\_TCP};
+54             \textcolor{keywordflow}{break};
+55         \textcolor{keywordflow}{case} \hyperlink{netif_8h_aaca7f6ff0ebc3b44543507ad70e9685f}{NETIF\_ICMP}:
+56             ip->protocol = \hyperlink{ipv4_8h_a56f6b815cc9ea10fd0469800263b2a00}{IPV4\_PROTO\_ICMP};
+57             \textcolor{keywordflow}{break};
+58         \textcolor{keywordflow}{default}:
+59             ip->protocol = \hyperlink{ipv4_8h_a6874b2adc2b7870b8e17ce781c8c11b4}{IPV4\_PROTO\_RAW};
+60             \textcolor{keywordflow}{break};
+61     \}
+62 
+63     memcpy(ip->source, netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t}));
+64     memcpy(ip->dest, \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest}, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t}));
+65     memcpy((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) ip + \textcolor{keyword}{sizeof}(ipv4\_header\_t)), buf, \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length});
+66 
+67     ip->checksum = \hyperlink{ipv4_8c_a8d6cc3bdb61e35f619dfebc28fd4085d}{ipv4\_checksum}(ip);
+68     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ip;
+69 \}
+\end{DoxyCode}
+\hypertarget{ipv4_8c_aef7e4d9aa0ca33ce3ed3d39d613ebf64}{\index{ipv4.\+c@{ipv4.\+c}!ipv4\+\_\+recv@{ipv4\+\_\+recv}}
+\index{ipv4\+\_\+recv@{ipv4\+\_\+recv}!ipv4.\+c@{ipv4.\+c}}
+\subsubsection[{ipv4\+\_\+recv}]{\setlength{\rightskip}{0pt plus 5cm}int ipv4\+\_\+recv (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length}
+\end{DoxyParamCaption}
+)}}\label{ipv4_8c_aef7e4d9aa0ca33ce3ed3d39d613ebf64}
+
+
+Definizione alla linea 71 del file ipv4.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+params, I\+P\+V4\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N, I\+P\+V4\+\_\+\+F\+L\+A\+G\+S, I\+P\+V4\+\_\+\+F\+L\+A\+G\+S\+\_\+\+M\+F, I\+P\+V4\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+L\+E\+N\+G\+T\+H, I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P, I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P, I\+P\+V4\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P, kprintf, length, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T, netif\+\_\+packets\+\_\+add(), netif\+\_\+packets\+\_\+create(), panic(), e udp\+\_\+recv().
+
+
+\begin{DoxyCode}
+71                                                         \{
+72     ipv4\_header\_t* ip = (ipv4\_header\_t*) buf;
+73 
+74     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_a59c0d38a97217da8f5724ba7c8ee111a}{IPV4\_CHECK\_VERSION}(ip) == 0)
+75         \textcolor{keywordflow}{return} 0;
+76 
+77     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_a9ee4d424ec9987335719448cae6e8b81}{IPV4\_FLAGS}(ip) & \hyperlink{ipv4_8h_a41977e1a3755af1ec6de3b8e67c0feae}{IPV4\_FLAGS\_MF})
+78         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"ipv4: packet fragmentation not supported in recv mode"});
+79 
+80 
+81 \textcolor{preprocessor}{    #define \_\_params    \(\backslash\)}
+82 \textcolor{preprocessor}{        netif, (void*) ((uint32\_t) ip + IPV4\_HEADER\_LENGTH(ip)), length - IPV4\_HEADER\_LENGTH(ip)}
+83 
+84     \textcolor{keywordflow}{switch}(ip->protocol) \{
+85         \textcolor{keywordflow}{case} \hyperlink{ipv4_8h_a1ee065c0b162a088813ad6ee277cb571}{IPV4\_PROTO\_UDP}:
+86             \textcolor{keywordflow}{if}(\hyperlink{udp_8c_a9721c26507ac0169090b8934a33b1098}{udp\_recv}(\hyperlink{ipv4_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\_\_params}) == 0)
+87                 \textcolor{keywordflow}{return} 0;
+88             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+89         
+90         \textcolor{keywordflow}{case} \hyperlink{ipv4_8h_a65b17e757e3d1e3404e10bdf2eccd228}{IPV4\_PROTO\_TCP}:
+91             \textcolor{comment}{//if(tcp\_recv(\_\_params) == 0)       /* Support for TCP ?? -> pfff.. ù.ù */}
+92             \textcolor{comment}{//  return 0;}
+93             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+94 
+95         \textcolor{keywordflow}{case} \hyperlink{ipv4_8h_a56f6b815cc9ea10fd0469800263b2a00}{IPV4\_PROTO\_ICMP}:
+96             \textcolor{comment}{//if(icmp\_recv(\_\_params) == 0)}
+97             \textcolor{comment}{//  return 0;}
+98             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+99     \}
+100 
+101     \textcolor{comment}{/* IPV4\_PROTO\_RAW */}
+102     \hyperlink{netif_8c_a3edf21f1cc51e87714ea8911236d896c}{netif\_packets\_add} (
+103         \hyperlink{netif_8c_aa14a95992efbcac98c16a43724dc0942}{netif\_packets\_create} (
+104                             netif,
+105                             \hyperlink{netif_8h_a00e0d33542bf01395718b7c5047921d1}{NETIF\_INET}, 
+106                             \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, 
+107                             \hyperlink{ipv4_8h_ac2a02acc2c7e7b4a4503969db99e9020}{IPV4\_HEADER\_LENGTH}(ip), 
+108                             buf
+109         )
+110     );
+111 
+112     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"ok\(\backslash\)n"});
+113     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+114 \}
+\end{DoxyCode}
+\hypertarget{ipv4_8c_a48d431009aba8ad4088be8a394838690}{\index{ipv4.\+c@{ipv4.\+c}!ipv4\+\_\+send@{ipv4\+\_\+send}}
+\index{ipv4\+\_\+send@{ipv4\+\_\+send}!ipv4.\+c@{ipv4.\+c}}
+\subsubsection[{ipv4\+\_\+send}]{\setlength{\rightskip}{0pt plus 5cm}int ipv4\+\_\+send (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length, }
+\item[{int}]{type, }
+\item[{{\bf ipv4\+\_\+t}}]{dest}
+\end{DoxyParamCaption}
+)}}\label{ipv4_8c_a48d431009aba8ad4088be8a394838690}
+
+
+Definizione alla linea 116 del file ipv4.\+c.
+
+
+
+Referenzia eth\+\_\+send(), ipv4\+\_\+create\+\_\+packet(), I\+P\+V4\+\_\+\+M\+A\+X\+\_\+\+L\+E\+N\+G\+T\+H, kfree(), length, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+116                                                                                \{
+117     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} < \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{IPV4\_MAX\_LENGTH}) \{
+118         \textcolor{keywordtype}{void}* pkt = \hyperlink{ipv4_8c_a695ec6caf08c3272bf42002c51877741}{ipv4\_create\_packet}(netif, buf, \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, 
+      \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}, \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest}, -1, 0);
+119         \textcolor{keywordtype}{int} ret = \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\_send}(netif, pkt, \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} + \textcolor{keyword}{sizeof}(ipv4\_header\_t), 
+      \hyperlink{netif_8h_a00e0d33542bf01395718b7c5047921d1}{NETIF\_INET});
+120         \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(pkt);
+121 
+122         \textcolor{keywordflow}{if}(ret)
+123             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+124     
+125         \textcolor{keywordflow}{return} 0;
+126     \}
+127 
+128     \textcolor{keywordtype}{int} ret = 0;
+129     \textcolor{keywordtype}{int} i = 0;
+130     \textcolor{keywordtype}{int} max = \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} / \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{IPV4\_MAX\_LENGTH};
+131 
+132     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} % \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{IPV4\_MAX\_LENGTH} == 0)
+133         max -= 1;
+134 
+135     \textcolor{keywordflow}{for}(i = 0; i < max; i++) \{
+136         \textcolor{keywordtype}{void}* pkt = \hyperlink{ipv4_8c_a695ec6caf08c3272bf42002c51877741}{ipv4\_create\_packet}(netif, (\textcolor{keywordtype}{void}*) ((
+      \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) buf + (i * \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{IPV4\_MAX\_LENGTH})), IPV4\_MAX\_LENGTH, 
+      \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}, \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest}, 0, i);
+137         ret += \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\_send}(netif, pkt, \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{IPV4\_MAX\_LENGTH}, 
+      \hyperlink{netif_8h_a00e0d33542bf01395718b7c5047921d1}{NETIF\_INET});
+138         \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(pkt);
+139     \}
+140 
+141 
+142     \textcolor{keywordtype}{void}* pkt = \hyperlink{ipv4_8c_a695ec6caf08c3272bf42002c51877741}{ipv4\_create\_packet}(netif, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) buf + (i * 
+      \hyperlink{ipv4_8h_ae44050a483509e668aad57a5ead0ceb9}{IPV4\_MAX\_LENGTH})), \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} - ((i - 1) * IPV4\_MAX\_LENGTH), 
+      \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}, \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest}, -1, i);
+143     ret += \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\_send}(netif, pkt, IPV4\_MAX\_LENGTH, \hyperlink{netif_8h_a00e0d33542bf01395718b7c5047921d1}{NETIF\_INET});
+144     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(pkt);
+145 
+146     \textcolor{keywordflow}{if}(ret)
+147         \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+148     
+149     \textcolor{keywordflow}{return} 0;
+150 \}
+\end{DoxyCode}

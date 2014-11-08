@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>bit</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/153.html#L32'>bit</a>                32 src/mm/kheap.c #define BITMAP_SET(bmp, bit)	\
+<a href='../S/153.html#L33'>bit</a>                33 src/mm/kheap.c 	bmp[bit / 32] |= (1 &lt;&lt; (bit % 32))
+<a href='../S/153.html#L35'>bit</a>                35 src/mm/kheap.c #define BITMAP_CLR(bmp, bit)	\
+<a href='../S/153.html#L36'>bit</a>                36 src/mm/kheap.c 	bmp[bit / 32] &amp;= ~(1 &lt;&lt; (bit % 32))
+<a href='../S/153.html#L38'>bit</a>                38 src/mm/kheap.c #define BITMAP_TST(bmp, bit)	\
+<a href='../S/153.html#L39'>bit</a>                39 src/mm/kheap.c 	(bmp[bit / 32] &amp; (1 &lt;&lt; (bit % 32)))
+</pre>
+</body>
+</html>

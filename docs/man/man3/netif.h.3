@@ -1,0 +1,165 @@
+.TH "src/include/aplus/netif.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/netif.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/pci\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBnetif\fP"
+.br
+.ti -1c
+.RI "struct \fBnetif_packet\fP"
+.br
+.ti -1c
+.RI "struct \fBnetif_socket\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBNETIF_RAW\fP   0"
+.br
+.ti -1c
+.RI "#define \fBNETIF_INET\fP   1"
+.br
+.ti -1c
+.RI "#define \fBNETIF_INET6\fP   2"
+.br
+.ti -1c
+.RI "#define \fBNETIF_ARP\fP   3"
+.br
+.ti -1c
+.RI "#define \fBNETIF_ETH\fP   4"
+.br
+.ti -1c
+.RI "#define \fBNETIF_UDP\fP   5"
+.br
+.ti -1c
+.RI "#define \fBNETIF_TCP\fP   6"
+.br
+.ti -1c
+.RI "#define \fBNETIF_ICMP\fP   7"
+.br
+.ti -1c
+.RI "#define \fBNETIF_TELNET\fP   8"
+.br
+.ti -1c
+.RI "#define \fBNETIF_FLAGS_ENABLE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBARP_DEBUG\fP"
+.br
+.ti -1c
+.RI "#define \fBRTL8139_DEBUG\fP"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBuint8_t\fP \fBipv4_t\fP [4]"
+.br
+.ti -1c
+.RI "typedef \fBuint16_t\fP \fBipv6_t\fP [8]"
+.br
+.ti -1c
+.RI "typedef \fBuint8_t\fP \fBmacaddr_t\fP [6]"
+.br
+.ti -1c
+.RI "typedef struct \fBnetif\fP \fBnetif_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBnetif_packet\fP \fBnetif_packet_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBnetif_socket\fP \fBnetif_socket_t\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define ARP_DEBUG"
+
+.PP
+Definizione alla linea 29 del file netif\&.h\&.
+.SS "#define NETIF_ARP   3"
+
+.PP
+Definizione alla linea 18 del file netif\&.h\&.
+.SS "#define NETIF_ETH   4"
+
+.PP
+Definizione alla linea 19 del file netif\&.h\&.
+.SS "#define NETIF_FLAGS_ENABLE   1"
+
+.PP
+Definizione alla linea 26 del file netif\&.h\&.
+.SS "#define NETIF_ICMP   7"
+
+.PP
+Definizione alla linea 22 del file netif\&.h\&.
+.SS "#define NETIF_INET   1"
+
+.PP
+Definizione alla linea 16 del file netif\&.h\&.
+.SS "#define NETIF_INET6   2"
+
+.PP
+Definizione alla linea 17 del file netif\&.h\&.
+.SS "#define NETIF_RAW   0"
+
+.PP
+Definizione alla linea 15 del file netif\&.h\&.
+.SS "#define NETIF_TCP   6"
+
+.PP
+Definizione alla linea 21 del file netif\&.h\&.
+.SS "#define NETIF_TELNET   8"
+
+.PP
+Definizione alla linea 23 del file netif\&.h\&.
+.SS "#define NETIF_UDP   5"
+
+.PP
+Definizione alla linea 20 del file netif\&.h\&.
+.SS "#define RTL8139_DEBUG"
+
+.PP
+Definizione alla linea 30 del file netif\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef \fBuint8_t\fP ipv4_t[4]"
+
+.PP
+Definizione alla linea 10 del file netif\&.h\&.
+.SS "typedef \fBuint16_t\fP ipv6_t[8]"
+
+.PP
+Definizione alla linea 11 del file netif\&.h\&.
+.SS "typedef \fBuint8_t\fP macaddr_t[6]"
+
+.PP
+Definizione alla linea 12 del file netif\&.h\&.
+.SS "typedef struct \fBnetif_packet\fP  \fBnetif_packet_t\fP"
+
+.SS "typedef struct \fBnetif_socket\fP  \fBnetif_socket_t\fP"
+
+.SS "typedef struct \fBnetif\fP  \fBnetif_t\fP"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

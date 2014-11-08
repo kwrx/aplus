@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>src/net/loopback/loopback.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/<a href='../files/172.html'>loopback</a>/loopback.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L19'>[^]</a><a href='#L65'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L19' title='Defined at 19.'>loopback_ifup</a>
+<li><a href='#L24' title='Defined at 24.'>loopback_ifdown</a>
+<li><a href='#L31' title='Defined at 31.'>loopback_recv</a>
+<li><a href='#L46' title='Defined at 46.'>loopback_send</a>
+<li><a href='#L65' title='Defined at 65.'>loopback_init</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='98.html'>aplus/bufio.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;<a href='99.html'>aplus/attribute.h</a>&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L12'>  12 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 <font color='darkred'>#define</font> LOOPBACK_MAGIC                          0x127001FF
+<a name='L16'>  16 <font color='darkred'>#define</font> <a href='../R/64.html' title='Multiple refered from 2 places.'>LOOPBACK_MTU</a>                            65563
+<a name='L17'>  17 
+<a name='L18'>  18 
+<a name='L19'>  19 <b>int</b> <a href='../S/111.html#L96' title='Refered from 96 in src/net/loopback/loopback.c.'>loopback_ifup</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>) <font color='red'>{</font>
+<a name='L20'>  20         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> |= <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>;
+<a name='L21'>  21         <b>return</b> 0;
+<a name='L22'>  22 <font color='red'>}</font>
+<a name='L23'>  23 
+<a name='L24'>  24 <b>int</b> <a href='../S/111.html#L97' title='Refered from 97 in src/net/loopback/loopback.c.'>loopback_ifdown</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>) <font color='red'>{</font>
+<a name='L25'>  25         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp;= ~<a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>;
+<a name='L26'>  26         <b>return</b> 0;
+<a name='L27'>  27 <font color='red'>}</font>
+<a name='L28'>  28 
+<a name='L29'>  29 
+<a name='L30'>  30 
+<a name='L31'>  31 <b>int</b> <a href='../S/111.html#L60' title='Refered from 60 in src/net/loopback/loopback.c.'>loopback_recv</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>) <font color='red'>{</font>
+<a name='L32'>  32         <b>if</b>((<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>) == 0)
+<a name='L33'>  33                 <b>return</b> 0;
+<a name='L34'>  34 
+<a name='L35'>  35         <b>if</b>(<a href='../S/112.html#L11' title='Defined at 11 in src/net/eth.c.'>eth_recv</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>) &gt; 0) <font color='red'>{</font>
+<a name='L36'>  36                 <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/539.html' title='Multiple used in 4 places.'>rx_packets</a> += 1;
+<a name='L37'>  37                 <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/536.html' title='Multiple used in 4 places.'>rx_bytes</a> += <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L38'>  38 
+<a name='L39'>  39                 <b>return</b> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L40'>  40         <font color='red'>}</font>
+<a name='L41'>  41                 
+<a name='L42'>  42         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/538.html' title='Multiple used in 4 places.'>rx_errors</a> += 1;
+<a name='L43'>  43         <b>return</b> 0;
+<a name='L44'>  44 <font color='red'>}</font>
+<a name='L45'>  45 
+<a name='L46'>  46 <b>int</b> <a href='../S/111.html#L95' title='Refered from 95 in src/net/loopback/loopback.c.'>loopback_send</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L47'>  47         <b>if</b>((<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>) == 0)
+<a name='L48'>  48                 <b>return</b> 0;
+<a name='L49'>  49 
+<a name='L50'>  50         <b>if</b>(<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> &gt; <a href='../S/111.html#L16' title='Defined at 16 in src/net/loopback/loopback.c.'>LOOPBACK_MTU</a>) <font color='red'>{</font>
+<a name='L51'>  51                 <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/712.html' title='Multiple used in 3 places.'>tx_errors</a> += 1;
+<a name='L52'>  52                 <b>return</b> 0;
+<a name='L53'>  53         <font color='red'>}</font>
+<a name='L54'>  54 
+<a name='L55'>  55 
+<a name='L56'>  56         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/713.html' title='Multiple used in 3 places.'>tx_packets</a> += 1;
+<a name='L57'>  57         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/710.html' title='Multiple used in 3 places.'>tx_bytes</a> += <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L58'>  58 
+<a name='L59'>  59 
+<a name='L60'>  60         <a href='../S/111.html#L31' title='Defined at 31 in src/net/loopback/loopback.c.'>loopback_recv</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>); 
+<a name='L61'>  61         <b>return</b> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L62'>  62 <font color='red'>}</font>
+<a name='L63'>  63 
+<a name='L64'>  64 
+<a name='L65'>  65 <b>int</b> loopback_init() <font color='red'>{</font>
+<a name='L66'>  66 
+<a name='L67'>  67         <a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a> = (<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>));
+<a name='L68'>  68         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, 0, <b>sizeof</b>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>));
+<a name='L69'>  69 
+<a name='L70'>  70 
+<a name='L71'>  71         <a href='../Y/618.html' title='Multiple used in 10 places.'>strcpy</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>, "lo");
+<a name='L72'>  72         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, 0xFF, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>));
+<a name='L73'>  73 
+<a name='L74'>  74         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0] = 127;
+<a name='L75'>  75         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1] = 0;
+<a name='L76'>  76         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2] = 0;
+<a name='L77'>  77         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3] = 1;
+<a name='L78'>  78 
+<a name='L79'>  79         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[0] = 0;
+<a name='L80'>  80         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[1] = 0;
+<a name='L81'>  81         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[2] = 0;
+<a name='L82'>  82         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[3] = 0;
+<a name='L83'>  83         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[4] = 0;
+<a name='L84'>  84         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[5] = 0;
+<a name='L85'>  85         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[6] = 0;
+<a name='L86'>  86         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[7] = 1;
+<a name='L87'>  87 
+<a name='L88'>  88         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[0] = 255;
+<a name='L89'>  89         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[1] = 255;
+<a name='L90'>  90         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[2] = 255;
+<a name='L91'>  91         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[3] = 255;
+<a name='L92'>  92 
+<a name='L93'>  93 
+<a name='L94'>  94         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/394.html' title='Multiple used in 7 places.'>mtu</a> = <a href='../S/111.html#L16' title='Defined at 16 in src/net/loopback/loopback.c.'>LOOPBACK_MTU</a>;
+<a name='L95'>  95         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/557.html' title='Multiple used in 5 places.'>send</a> = <a href='../S/111.html#L46' title='Defined at 46 in src/net/loopback/loopback.c.'>loopback_send</a>;
+<a name='L96'>  96         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/308.html' title='Multiple used in 6 places.'>ifup</a> = <a href='../S/111.html#L19' title='Defined at 19 in src/net/loopback/loopback.c.'>loopback_ifup</a>;
+<a name='L97'>  97         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/307.html' title='Multiple used in 6 places.'>ifdown</a> = <a href='../S/111.html#L24' title='Defined at 24 in src/net/loopback/loopback.c.'>loopback_ifdown</a>;
+<a name='L98'>  98         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/190.html' title='Multiple used in 16 places.'>data</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L99'>  99 
+<a name='L100'> 100         <a href='../S/107.html#L124' title='Defined at 124 in src/net/netif.c.'>netif_add</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>);
+<a name='L101'> 101         <b>return</b> 0;
+<a name='L102'> 102 <font color='red'>}</font>
+<a name='L103'> 103 
+<a name='L104'> 104 <a href='../S/99.html#L18' title='Defined at 18 in src/include/aplus/attribute.h.'>ATTRIBUTE</a>("netif", loopback_init);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L19'>[^]</a><a href='#L65'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

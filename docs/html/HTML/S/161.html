@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>src/arch/serial.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/165.html'>arch</a>/serial.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L11'>[^]</a><a href='#L22'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L11' title='Defined at 11.'>serial_send</a>
+<li><a href='#L16' title='Defined at 16.'>serial_recv</a>
+<li><a href='#L22' title='Defined at 22.'>serial_init</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 
+<a name='L7'>   7 <b>static</b> <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[] = <font color='red'>{</font>
+<a name='L8'>   8         0x3F8, 0x2F8, 0x3E8, 0x2E8
+<a name='L9'>   9 <font color='red'>}</font>;
+<a name='L10'>  10 
+<a name='L11'>  11 <b>void</b> <a href='../R/480.html' title='Multiple refered from 8 places.'>serial_send</a>(<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>, <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>) <font color='red'>{</font>
+<a name='L12'>  12         <a href='../S/88.html#L51' title='Defined at 51 in src/include/aplus/spinlock.h.'>fastlock_waiton</a>(((<a href='../Y/312.html' title='Multiple used in 4 places.'>inb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>] + 5) &amp; 32) == 0));
+<a name='L13'>  13         <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>], <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>);
+<a name='L14'>  14 <font color='red'>}</font>
+<a name='L15'>  15 
+<a name='L16'>  16 <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../R/479.html' title='Multiple refered from 2 places.'>serial_recv</a>(<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>) <font color='red'>{</font>
+<a name='L17'>  17         <a href='../S/88.html#L51' title='Defined at 51 in src/include/aplus/spinlock.h.'>fastlock_waiton</a>((<a href='../Y/312.html' title='Multiple used in 4 places.'>inb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>] + 5) &amp; 1) == 0);
+<a name='L18'>  18         
+<a name='L19'>  19         <b>return</b> <a href='../Y/312.html' title='Multiple used in 4 places.'>inb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/478.html' title='Multiple used in 11 places.'>port</a>]);
+<a name='L20'>  20 <font color='red'>}</font>
+<a name='L21'>  21 
+<a name='L22'>  22 <b>int</b> <a href='../S/154.html#L55' title='Refered from 55 in src/main.c.'>serial_init</a>() <font color='red'>{</font>
+<a name='L23'>  23         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <b>sizeof</b>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>); <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++) <font color='red'>{</font>
+<a name='L24'>  24                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] + 1, 0x00);
+<a name='L25'>  25                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] + 3, 0x80);
+<a name='L26'>  26                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] + 0, 0x03);
+<a name='L27'>  27                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] + 1, 0x00);
+<a name='L28'>  28                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] + 3, 0x03);
+<a name='L29'>  29                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] + 2, 0xC7);
+<a name='L30'>  30                 <a href='../Y/440.html' title='Multiple used in 26 places.'>outb</a>(<a href='../Y/558.html' title='Multiple used in 13 places.'>serial</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] + 4, 0x0B);
+<a name='L31'>  31         <font color='red'>}</font>
+<a name='L32'>  32 
+<a name='L33'>  33         <b>return</b> 0;
+<a name='L34'>  34 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L11'>[^]</a><a href='#L22'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

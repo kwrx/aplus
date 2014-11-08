@@ -1,0 +1,115 @@
+<html>
+<head>
+<title>src/panic.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/panic.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L12'>[^]</a><a href='#L79'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L12' title='Defined at 12.'>dump_registers</a>
+<li><a href='#L52' title='Defined at 52.'>dump_stacktrace</a>
+<li><a href='#L57' title='Defined at 57.'>dump_task</a>
+<li><a href='#L79' title='Defined at 79.'>panic</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 
+<a name='L7'>   7 
+<a name='L8'>   8 <b>extern</b> <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>;
+<a name='L9'>   9 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L10'>  10 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/346.html' title='Multiple used in 5 places.'>kernel_task</a>;
+<a name='L11'>  11 
+<a name='L12'>  12 <b>static</b> <b>void</b> <a href='../S/148.html#L83' title='Refered from 83 in src/panic.c.'>dump_registers</a>() <font color='red'>{</font>
+<a name='L13'>  13 
+<a name='L14'>  14         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("Registers:\n");
+<a name='L15'>  15 
+<a name='L16'>  16 <font color='darkred'>        #define</font> <a href='../R/226.html' title='Multiple refered from 53 places.'>d</a>(<a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a>);                                                         \
+<a name='L17'>  17                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>(#<a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a> ": 0x%x\t\t", <a href='../Y/502.html' title='Multiple used in 2 places.'>read_</a>##<a href='../Y/512.html' title='Multiple used in 10 places.'>reg</a>());
+<a name='L18'>  18                 
+<a name='L19'>  19 <font color='darkred'>        #define</font> <a href='../R/195.html' title='Multiple refered from 5 places.'>_d</a>();                                                           \
+<a name='L20'>  20                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("\n");  
+<a name='L21'>  21                         
+<a name='L22'>  22         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/225.html' title='Multiple used in 11 places.'>eax</a>);
+<a name='L23'>  23         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/227.html' title='Multiple used in 6 places.'>ebx</a>);
+<a name='L24'>  24         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/228.html' title='Multiple used in 6 places.'>ecx</a>);
+<a name='L25'>  25         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/230.html' title='Multiple used in 6 places.'>edx</a>);
+<a name='L26'>  26         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/241.html' title='Multiple used in 6 places.'>esi</a>);
+<a name='L27'>  27         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/229.html' title='Multiple used in 6 places.'>edi</a>);
+<a name='L28'>  28         <a href='../D/303.html' title='Multiple defined in 2 places.'>_d</a>();
+<a name='L29'>  29         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/232.html' title='Multiple used in 4 places.'>eip</a>);
+<a name='L30'>  30         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/231.html' title='Multiple used in 3 places.'>eflags</a>);
+<a name='L31'>  31         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/242.html' title='Multiple used in 4 places.'>esp</a>);
+<a name='L32'>  32         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/226.html' title='Multiple used in 6 places.'>ebp</a>);
+<a name='L33'>  33         <a href='../D/303.html' title='Multiple defined in 2 places.'>_d</a>();
+<a name='L34'>  34         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/177.html' title='Multiple used in 4 places.'>cs</a>);
+<a name='L35'>  35         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/207.html' title='Multiple used in 4 places.'>ds</a>);
+<a name='L36'>  36         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/240.html' title='Multiple used in 4 places.'>es</a>);
+<a name='L37'>  37         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/276.html' title='Multiple used in 12 places.'>fs</a>);
+<a name='L38'>  38         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/292.html' title='Multiple used in 4 places.'>gs</a>);
+<a name='L39'>  39         <a href='../D/303.html' title='Multiple defined in 2 places.'>_d</a>();
+<a name='L40'>  40         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/171.html' title='Multiple used in 3 places.'>cr0</a>);
+<a name='L41'>  41         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/173.html' title='Multiple used in 3 places.'>cr2</a>);
+<a name='L42'>  42         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/174.html' title='Multiple used in 13 places.'>cr3</a>);
+<a name='L43'>  43         <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>(<a href='../Y/175.html' title='Multiple used in 3 places.'>cr4</a>);
+<a name='L44'>  44         <a href='../D/303.html' title='Multiple defined in 2 places.'>_d</a>();
+<a name='L45'>  45         <a href='../D/303.html' title='Multiple defined in 2 places.'>_d</a>();
+<a name='L46'>  46         
+<a name='L47'>  47 <font color='darkred'>        #undef</font> <a href='../R/226.html' title='Multiple refered from 53 places.'>d</a>
+<a name='L48'>  48 <font color='darkred'>        #undef</font> <a href='../R/195.html' title='Multiple refered from 5 places.'>_d</a>
+<a name='L49'>  49 <font color='red'>}</font>
+<a name='L50'>  50 
+<a name='L51'>  51 
+<a name='L52'>  52 <b>static</b> <b>void</b> <a href='../S/148.html#L84' title='Refered from 84 in src/panic.c.'>dump_stacktrace</a>(<b>int</b> <a href='../Y/169.html' title='Multiple used in 5 places.'>count</a>) <font color='red'>{</font>
+<a name='L53'>  53         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("Stack trace:\n");
+<a name='L54'>  54         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("TODO\n\n");
+<a name='L55'>  55 <font color='red'>}</font>
+<a name='L56'>  56 
+<a name='L57'>  57 <b>static</b> <b>void</b> <a href='../S/148.html#L85' title='Refered from 85 in src/panic.c.'>dump_task</a>() <font color='red'>{</font>
+<a name='L58'>  58         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("Task:\n");
+<a name='L59'>  59         
+<a name='L60'>  60         <a href='../S/96.html#L175' title='Defined at 175 in src/include/aplus/list.h.'>list_foreach</a>(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/666.html' title='Multiple used in 15 places.'>task_queue</a>) <font color='red'>{</font>
+<a name='L61'>  61                 <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a> = (<a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>*) <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L62'>  62                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>(" # %d: ", <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>-&gt;<a href='../Y/468.html' title='Multiple used in 27 places.'>pid</a>);
+<a name='L63'>  63                 
+<a name='L64'>  64                 <b>if</b>(<a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>-&gt;<a href='../Y/247.html' title='Multiple used in 6 places.'>exe</a>)
+<a name='L65'>  65                         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("%s ", <a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a>-&gt;<a href='../Y/247.html' title='Multiple used in 6 places.'>exe</a>-&gt;<a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>);
+<a name='L66'>  66                 <b>else</b>
+<a name='L67'>  67                         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("unknown ");
+<a name='L68'>  68                         
+<a name='L69'>  69                 <b>if</b>(<a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a> == <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L70'>  70                         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("(current) ");
+<a name='L71'>  71                         
+<a name='L72'>  72                 <b>if</b>(<a href='../S/90.html#L72' title='Defined at 72 in src/include/aplus/task.h.'>task</a> == <a href='../Y/346.html' title='Multiple used in 5 places.'>kernel_task</a>)
+<a name='L73'>  73                         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("(kernel) ");
+<a name='L74'>  74                         
+<a name='L75'>  75                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("\n");
+<a name='L76'>  76         <font color='red'>}</font>
+<a name='L77'>  77 <font color='red'>}</font>
+<a name='L78'>  78 
+<a name='L79'>  79 <b>void</b> <a href='../R/329.html' title='Multiple refered from 8 places.'>panic</a>(<b>char</b>* <a href='../Y/392.html' title='Multiple used in 2 places.'>msg</a>) <font color='red'>{</font>
+<a name='L80'>  80         <b>__asm__</b> ("cli");
+<a name='L81'>  81         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("panic: \"%s\"\n", <a href='../Y/392.html' title='Multiple used in 2 places.'>msg</a>);
+<a name='L82'>  82         
+<a name='L83'>  83         <a href='../S/148.html#L12' title='Defined at 12 in src/panic.c.'>dump_registers</a>();
+<a name='L84'>  84         <a href='../S/148.html#L52' title='Defined at 52 in src/panic.c.'>dump_stacktrace</a>(6);
+<a name='L85'>  85         <a href='../S/148.html#L57' title='Defined at 57 in src/panic.c.'>dump_task</a>();
+<a name='L86'>  86         
+<a name='L87'>  87         
+<a name='L88'>  88         <b>for</b>(;;);
+<a name='L89'>  89 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L12'>[^]</a><a href='#L79'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

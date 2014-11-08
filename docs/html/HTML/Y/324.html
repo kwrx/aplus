@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>inodes</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/145.html#L63'>inodes</a>             63 src/fs/pipe.c  int pipe_create(inode_t inodes[2]) {
+<a href='../S/145.html#L72'>inodes</a>             72 src/fs/pipe.c  		memset((void*) &amp;inodes[i], 0, sizeof(inode_t));
+<a href='../S/145.html#L75'>inodes</a>             75 src/fs/pipe.c  		inodes[i].read = pipe_read;
+<a href='../S/145.html#L76'>inodes</a>             76 src/fs/pipe.c  		inodes[i].write = pipe_write;
+<a href='../S/145.html#L77'>inodes</a>             77 src/fs/pipe.c  		inodes[i].flush = pipe_flush;
+<a href='../S/145.html#L78'>inodes</a>             78 src/fs/pipe.c  		inodes[i].uid = current_task-&gt;uid;
+<a href='../S/145.html#L79'>inodes</a>             79 src/fs/pipe.c  		inodes[i].gid = current_task-&gt;gid;
+<a href='../S/145.html#L80'>inodes</a>             80 src/fs/pipe.c  		inodes[i].mode = S_IFIFO;
+<a href='../S/145.html#L81'>inodes</a>             81 src/fs/pipe.c  		inodes[i].userdata = (void*) pipe;
+<a href='../S/145.html#L82'>inodes</a>             82 src/fs/pipe.c  		inodes[i].size = (size_t) BUFSIZ;
+<a href='../S/145.html#L86'>inodes</a>             86 src/fs/pipe.c  	strcpy(inodes[0].name, "[pipe:read]");
+<a href='../S/145.html#L87'>inodes</a>             87 src/fs/pipe.c  	strcpy(inodes[1].name, "[pipe:write]");
+</pre>
+</body>
+</html>

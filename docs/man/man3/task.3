@@ -1,0 +1,186 @@
+.TH "task" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+task \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <task\&.h>\fP
+.SS "Campi"
+
+.in +1c
+.ti -1c
+.RI "pid_t \fBpid\fP"
+.br
+.ti -1c
+.RI "struct {"
+.br
+.ti -1c
+.RI "   task_env_t * \fBenv\fP"
+.br
+.ti -1c
+.RI "   \fBuint32_t\fP \fBstack\fP"
+.br
+.ti -1c
+.RI "   \fBuint32_t\fP \fBcr3\fP"
+.br
+.ti -1c
+.RI "} \fBcontext\fP"
+.br
+.ti -1c
+.RI "uid_t \fBuid\fP"
+.br
+.ti -1c
+.RI "gid_t \fBgid\fP"
+.br
+.ti -1c
+.RI "\fBinode_t\fP * \fBcwd\fP"
+.br
+.ti -1c
+.RI "\fBinode_t\fP * \fBexe\fP"
+.br
+.ti -1c
+.RI "\fBinode_t\fP * \fBfd\fP [\fBTASK_MAX_FD\fP]"
+.br
+.ti -1c
+.RI "struct {"
+.br
+.ti -1c
+.RI "   \fBuint32_t\fP \fBvaddr\fP"
+.br
+.ti -1c
+.RI "   \fBuint32_t\fP \fBptr\fP"
+.br
+.ti -1c
+.RI "   \fBuint32_t\fP \fBlength\fP"
+.br
+.ti -1c
+.RI "} \fBimage\fP"
+.br
+.ti -1c
+.RI "void(* \fBsignal_handler\fP )(int)"
+.br
+.ti -1c
+.RI "int \fBsignal_sig\fP"
+.br
+.ti -1c
+.RI "char ** \fBargv\fP"
+.br
+.ti -1c
+.RI "char ** \fBenvp\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBstate\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBpriority\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBclock\fP"
+.br
+.ti -1c
+.RI "int \fBexitcode\fP"
+.br
+.ti -1c
+.RI "struct \fBtask\fP * \fBparent\fP"
+.br
+.in -1c
+.SH "Descrizione dettagliata"
+.PP 
+Definizione alla linea 72 del file task\&.h\&.
+.SH "Documentazione dei campi"
+.PP 
+.SS "char** task::argv"
+
+.PP
+Definizione alla linea 99 del file task\&.h\&.
+.SS "\fBuint32_t\fP task::clock"
+
+.PP
+Definizione alla linea 104 del file task\&.h\&.
+.SS "struct { \&.\&.\&. }   task::context"
+
+.SS "\fBuint32_t\fP task::cr3"
+
+.PP
+Definizione alla linea 78 del file task\&.h\&.
+.SS "\fBinode_t\fP* task::cwd"
+
+.PP
+Definizione alla linea 85 del file task\&.h\&.
+.SS "task_env_t* task::env"
+
+.PP
+Definizione alla linea 76 del file task\&.h\&.
+.SS "char** task::envp"
+
+.PP
+Definizione alla linea 100 del file task\&.h\&.
+.SS "\fBinode_t\fP* task::exe"
+
+.PP
+Definizione alla linea 86 del file task\&.h\&.
+.SS "int task::exitcode"
+
+.PP
+Definizione alla linea 105 del file task\&.h\&.
+.SS "\fBinode_t\fP* task::fd[\fBTASK_MAX_FD\fP]"
+
+.PP
+Definizione alla linea 87 del file task\&.h\&.
+.SS "gid_t task::gid"
+
+.PP
+Definizione alla linea 83 del file task\&.h\&.
+.SS "struct { \&.\&.\&. }   task::image"
+
+.SS "\fBuint32_t\fP task::length"
+
+.PP
+Definizione alla linea 92 del file task\&.h\&.
+.SS "struct \fBtask\fP* task::parent"
+
+.PP
+Definizione alla linea 108 del file task\&.h\&.
+.SS "pid_t task::pid"
+
+.PP
+Definizione alla linea 73 del file task\&.h\&.
+.SS "\fBuint32_t\fP task::priority"
+
+.PP
+Definizione alla linea 103 del file task\&.h\&.
+.SS "\fBuint32_t\fP task::ptr"
+
+.PP
+Definizione alla linea 91 del file task\&.h\&.
+.SS "void(* task::signal_handler)(int)"
+
+.PP
+Definizione alla linea 95 del file task\&.h\&.
+.SS "int task::signal_sig"
+
+.PP
+Definizione alla linea 96 del file task\&.h\&.
+.SS "\fBuint32_t\fP task::stack"
+
+.PP
+Definizione alla linea 77 del file task\&.h\&.
+.SS "\fBuint32_t\fP task::state"
+
+.PP
+Definizione alla linea 102 del file task\&.h\&.
+.SS "uid_t task::uid"
+
+.PP
+Definizione alla linea 82 del file task\&.h\&.
+.SS "\fBuint32_t\fP task::vaddr"
+
+.PP
+Definizione alla linea 90 del file task\&.h\&.
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

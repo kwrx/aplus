@@ -1,0 +1,40 @@
+.TH "src/syscall/isatty.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/isatty.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_isatty\fP (int fd)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_isatty\fP, 6)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_isatty (intfd)"
+
+.PP
+Definizione alla linea 5 del file isatty\&.c\&.
+.PP
+.nf
+5                        {
+6     return (fd < 3);
+7 }
+.fi
+.SS "SYSCALL (\fBsys_isatty\fP, 6)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

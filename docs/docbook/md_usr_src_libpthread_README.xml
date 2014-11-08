@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Posix Thread library</title>
+
+<para>POSIX Threads, usually referred to as Pthreads, is a POSIX standard for threads. The standard, POSIX.1c, Threads extensions (IEEE Std 1003.1c-1995), defines an API for creating and manipulating threads.</para>
+
+<para><formalpara><title>Required function</title></formalpara>
+</para>
+
+<para><itemizedlist>
+<listitem>
+<para>Create a Thread;</para>
+</listitem><listitem>
+<para>Terminate a Thread;</para>
+</listitem><listitem>
+<para>Get Thread ID.</para>
+</listitem></itemizedlist>
+</para>
+
+<para>``` tid_t <link linkend="win32_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34">__os_thread_create(void* entrypoint, void* params, int priority)</link>; int <link linkend="win32_2hooks_8h_1ab48a49c5d6297d7b9023b8796a1c996e">__os_thread_kill(int killid, int exitcode)</link>; tid_t <link linkend="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d">__os_gettid()</link>;</para>
+
+<para>See &quot;/platform/win32/hooks.h&quot; as example. ```</para>
+
+<para><formalpara><title>Current status</title></formalpara>
+</para>
+
+<para><itemizedlist>
+<listitem>
+<para>[X] Thread functions</para>
+</listitem><listitem>
+<para>[X] Thread attribute functions</para>
+</listitem><listitem>
+<para>[X] Scheduling functions</para>
+</listitem><listitem>
+<para>[X] Thread specific data functions</para>
+</listitem><listitem>
+<para>[X] Mutex attribute functions</para>
+</listitem><listitem>
+<para>[X] Mutex functions</para>
+</listitem><listitem>
+<para>[X] Condition variable attribute functions</para>
+</listitem><listitem>
+<para>[X] Condition variable functions</para>
+</listitem><listitem>
+<para>[X] Barrier attribute functions</para>
+</listitem><listitem>
+<para>[X] Barrier functions</para>
+</listitem><listitem>
+<para>[X] Read-write lock attribute functions</para>
+</listitem><listitem>
+<para>[X] Read-write lock functions</para>
+</listitem><listitem>
+<para>[X] Spinlock functions </para>
+</listitem></itemizedlist>
+</para>
+
+</chapter>

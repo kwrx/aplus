@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_67dd5697b37f207f225bbd7a2e3631fb" kind="dir">
+    <compoundname>src/fs</compoundname>
+    <innerfile refid="devfs_8c">devfs.c</innerfile>
+    <innerfile refid="fs_8c">fs.c</innerfile>
+    <innerfile refid="pipe_8c">pipe.c</innerfile>
+    <innerfile refid="ramdev_8c">ramdev.c</innerfile>
+    <innerfile refid="vfs_8c">vfs.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/fs/"/>
+  </compounddef>
+</doxygen>

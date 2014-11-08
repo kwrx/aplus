@@ -1,0 +1,95 @@
+.TH "src/syscall/fstat.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/fstat.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_fstat\fP (int fd, struct stat *st)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_fstat\fP, 4)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_fstat (intfd, struct stat *st)"
+
+.PP
+Definizione alla linea 15 del file fstat\&.c\&.
+.PP
+Referenzia inode::atime, inode::ctime, inode::dev, errno, task::fd, inode::gid, inode::ino, kprintf, inode::mode, inode::mtime, inode::nlink, inode::rdev, inode::size, e inode::uid\&.
+.PP
+.nf
+15                                        {
+16     if(!st) {
+17         errno = EINVAL;
+18         return -1;
+19     }
+20 
+21     inode_t* ino = current_task->fd[fd];
+22     if(!ino) {
+23         kprintf("sys_fstat: %s\&.", strerror(errno));
+24         errno = EBADF;
+25         return -1;
+26     }
+27     
+28     st->st_mode = ino->mode;
+29     st->st_ino = ino->ino;
+30     st->st_dev = ino->dev;
+31     st->st_uid = ino->uid;
+32     st->st_gid = ino->gid;
+33     st->st_atime = ino->atime;
+34     st->st_ctime = ino->ctime;
+35     st->st_mtime = ino->mtime;
+36     st->st_nlink = ino->nlink;
+37     st->st_size = ino->size;
+38     st->st_rdev = ino->rdev;
+39     st->st_blksize = 512;
+40     st->st_blocks = st->st_size / st->st_blksize;
+41     
+42     return 0;
+43 }
+.fi
+.SS "SYSCALL (\fBsys_fstat\fP, 4)"
+
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

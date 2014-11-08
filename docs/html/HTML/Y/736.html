@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>vaddr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L79'>vaddr</a>              79 src/arch/task.c 	child-&gt;image.vaddr = current_task-&gt;image.vaddr;
+<a href='../S/159.html#L85'>vaddr</a>              85 src/arch/task.c 		memcpy(addr, (void*) child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L87'>vaddr</a>              87 src/arch/task.c 		vmm_map(child-&gt;context.cr3, mm_paddr(addr), child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L142'>vaddr</a>             142 src/arch/task.c 	child-&gt;image.vaddr = current_task-&gt;image.vaddr;
+<a href='../S/87.html#L71'>vaddr</a>              71 src/include/aplus/mm.h static inline void* mm_paddr(void* vaddr) {
+<a href='../S/87.html#L72'>vaddr</a>              72 src/include/aplus/mm.h 	if((uint32_t) vaddr &gt; MM_VBASE)
+<a href='../S/87.html#L73'>vaddr</a>              73 src/include/aplus/mm.h 		vaddr = (void*) ((uint32_t) vaddr - MM_VBASE);
+<a href='../S/87.html#L75'>vaddr</a>              75 src/include/aplus/mm.h 	return vaddr;
+<a href='../S/87.html#L85'>vaddr</a>              85 src/include/aplus/mm.h static inline void* mm_align(void* vaddr) {
+<a href='../S/87.html#L86'>vaddr</a>              86 src/include/aplus/mm.h 	return (void*) ((uint32_t) vaddr &amp; ~0xFFF);
+<a href='../S/90.html#L90'>vaddr</a>              90 src/include/aplus/task.h 		uint32_t vaddr;
+<a href='../S/150.html#L72'>vaddr</a>              72 src/mm/paging.c void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {	
+<a href='../S/150.html#L77'>vaddr</a>              77 src/mm/paging.c 	vaddr = mm_align(vaddr);
+<a href='../S/150.html#L81'>vaddr</a>              81 src/mm/paging.c 	uint32_t vframe = (uint32_t) vaddr;
+<a href='../S/150.html#L105'>vaddr</a>             105 src/mm/paging.c 	return vaddr;
+<a href='../S/150.html#L130'>vaddr</a>             130 src/mm/paging.c void* vmm_alloc(void* vaddr, size_t size, int flags) {
+<a href='../S/150.html#L133'>vaddr</a>             133 src/mm/paging.c 	vmm_map(current_vmm, paddr, vaddr, size, flags);
+<a href='../S/143.html#L188'>vaddr</a>             188 src/sched.c    	if(current_task-&gt;image.vaddr == 0)
+<a href='../S/143.html#L192'>vaddr</a>             192 src/sched.c    		return (void*) ((uint32_t) current_task-&gt;image.vaddr + current_task-&gt;image.length);
+<a href='../S/143.html#L196'>vaddr</a>             196 src/sched.c    	current_task-&gt;image.vaddr = vmm_map(current_task-&gt;context.cr3, mm_paddr((void*) current_task-&gt;image.ptr), current_task-&gt;image.vaddr, current_task-&gt;image.length, VMM_FLAGS_DEFAULT);
+<a href='../S/143.html#L198'>vaddr</a>             198 src/sched.c    	return (void*) ((uint32_t) current_task-&gt;image.vaddr + current_task-&gt;image.length);
+</pre>
+</body>
+</html>

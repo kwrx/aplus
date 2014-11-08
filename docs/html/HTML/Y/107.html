@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>arp</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/108.html#L24'>arp</a>                24 src/net/arp.c  		arp_cache_entry_t* arp = (arp_cache_entry_t*) value;
+<a href='../S/108.html#L26'>arp</a>                26 src/net/arp.c  		if(memcmp(arp-&gt;macaddr, macaddr, sizeof(macaddr_t)) == 0)
+<a href='../S/108.html#L27'>arp</a>                27 src/net/arp.c  			return arp;
+<a href='../S/108.html#L39'>arp</a>                39 src/net/arp.c  	arp_cache_entry_t* arp = arp_cache_find_by_macaddr(macaddr);
+<a href='../S/108.html#L40'>arp</a>                40 src/net/arp.c  	if(arp)
+<a href='../S/108.html#L41'>arp</a>                41 src/net/arp.c  		list_remove(arp_cache, (listval_t) arp);
+<a href='../S/108.html#L44'>arp</a>                44 src/net/arp.c  	arp = kmalloc(sizeof(arp_cache_entry_t));
+<a href='../S/108.html#L45'>arp</a>                45 src/net/arp.c  	memcpy(arp-&gt;macaddr, macaddr, sizeof(macaddr_t));
+<a href='../S/108.html#L46'>arp</a>                46 src/net/arp.c  	memcpy(arp-&gt;ipv4, ipv4, sizeof(ipv4_t));
+<a href='../S/108.html#L53'>arp</a>                53 src/net/arp.c  		arp-&gt;ipv4[0],
+<a href='../S/108.html#L54'>arp</a>                54 src/net/arp.c  		arp-&gt;ipv4[1],
+<a href='../S/108.html#L55'>arp</a>                55 src/net/arp.c  		arp-&gt;ipv4[2],
+<a href='../S/108.html#L56'>arp</a>                56 src/net/arp.c  		arp-&gt;ipv4[3]
+<a href='../S/108.html#L60'>arp</a>                60 src/net/arp.c  	netif_t* netif = (netif_t*) netif_find_by_macaddr(arp-&gt;macaddr);
+<a href='../S/108.html#L62'>arp</a>                62 src/net/arp.c  		memcpy(netif-&gt;ipv4, arp-&gt;ipv4, sizeof(ipv4_t));
+<a href='../S/108.html#L64'>arp</a>                64 src/net/arp.c  	return list_add(arp_cache, (listval_t) arp);
+<a href='../S/108.html#L68'>arp</a>                68 src/net/arp.c  	arp_header_t* arp = (arp_header_t*) buf;
+<a href='../S/108.html#L71'>arp</a>                71 src/net/arp.c  	if(arp-&gt;operation == ARP_OPERATION_REPLY)
+<a href='../S/108.html#L72'>arp</a>                72 src/net/arp.c  		if(memcmp(netif-&gt;macaddr, arp-&gt;tha, sizeof(macaddr_t)) == 0)
+<a href='../S/108.html#L73'>arp</a>                73 src/net/arp.c  			arp_cache_add(arp-&gt;tha, arp-&gt;tpa);
+<a href='../S/108.html#L80'>arp</a>                80 src/net/arp.c  	arp_header_t* arp = (arp_header_t*) kmalloc(sizeof(arp_header_t));
+<a href='../S/108.html#L81'>arp</a>                81 src/net/arp.c  	arp-&gt;hwtype = ARP_HWTYPE;
+<a href='../S/108.html#L82'>arp</a>                82 src/net/arp.c  	arp-&gt;prtype = ARP_PRTYPE;
+<a href='../S/108.html#L83'>arp</a>                83 src/net/arp.c  	arp-&gt;hwlen = ARP_HWLEN;
+<a href='../S/108.html#L84'>arp</a>                84 src/net/arp.c  	arp-&gt;prlen = ARP_PRLEN;
+<a href='../S/108.html#L85'>arp</a>                85 src/net/arp.c  	arp-&gt;operation = ARP_OPERATION_REQUEST;
+<a href='../S/108.html#L87'>arp</a>                87 src/net/arp.c  	memcpy(arp-&gt;sha, netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/108.html#L88'>arp</a>                88 src/net/arp.c  	memset(arp-&gt;tha, 0, sizeof(macaddr_t));
+<a href='../S/108.html#L89'>arp</a>                89 src/net/arp.c  	memset(arp-&gt;spa, 0, sizeof(ipv4_t));
+<a href='../S/108.html#L90'>arp</a>                90 src/net/arp.c  	memset(arp-&gt;tpa, 0, sizeof(ipv4_t));
+<a href='../S/108.html#L96'>arp</a>                96 src/net/arp.c  	int ret = eth_send(netif, arp, sizeof(arp_header_t), NETIF_ARP);
+<a href='../S/108.html#L97'>arp</a>                97 src/net/arp.c  	kfree(arp);
+</pre>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>src/syscall/gettimeofday.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/gettimeofday.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L15'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L15' title='Defined at 15.'>sys_gettimeofday</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L11'>  11 
+<a name='L12'>  12 <font color='darkred'>#include</font> &lt;sys/time.h&gt;
+<a name='L13'>  13 <font color='darkred'>#include</font> &lt;sys/times.h&gt;
+<a name='L14'>  14 
+<a name='L15'>  15 <b>int</b> sys_gettimeofday(<b>struct</b> <a href='../Y/675.html' title='Multiple used in 2 places.'>timeval</a>* <a href='../Y/704.html' title='Multiple used in 4 places.'>tv</a>, <b>struct</b> <a href='../Y/676.html' title='Multiple used in 2 places.'>timezone</a>* <a href='../Y/715.html' title='Multiple used in 6 places.'>tz</a>) <font color='red'>{</font>
+<a name='L16'>  16         <b>if</b>(!<a href='../Y/704.html' title='Multiple used in 4 places.'>tv</a>) <font color='red'>{</font>
+<a name='L17'>  17                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L18'>  18                 <b>return</b> -1;
+<a name='L19'>  19         <font color='red'>}</font>
+<a name='L20'>  20         
+<a name='L21'>  21         <a href='../Y/704.html' title='Multiple used in 4 places.'>tv</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a> = <a href='../S/158.html#L373' title='Defined at 373 in src/arch/desc.c.'>pit_gettime</a>();
+<a name='L22'>  22         <a href='../Y/704.html' title='Multiple used in 4 places.'>tv</a>-&gt;<a href='../Y/707.html' title='Multiple used in 4 places.'>tv_usec</a> = <a href='../S/158.html#L393' title='Defined at 393 in src/arch/desc.c.'>pit_getticks</a>() * 1000;
+<a name='L23'>  23         
+<a name='L24'>  24         <b>return</b> 0;
+<a name='L25'>  25 <font color='red'>}</font>
+<a name='L26'>  26 
+<a name='L27'>  27 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_gettimeofday, 18);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L15'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file usr/src/libpthread/src/pthread_rwlock.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('pthread__rwlock_8c.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Funzioni</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file pthread_rwlock.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;sched.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="pthread_8h_source.html">pthread.h</a>&gt;</code><br />
+<code>#include &quot;<a class="el" href="pthread__internal_8h_source.html">pthread_internal.h</a>&quot;</code><br />
+</div>
+<p><a href="pthread__rwlock_8c_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funzioni</h2></td></tr>
+<tr class="memitem:a46a12cdd6b615fbda17298ad5349acfc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#a46a12cdd6b615fbda17298ad5349acfc">pthread_rwlock_init</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>, const <a class="el" href="pthread_8h.html#a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</a> *attr)</td></tr>
+<tr class="separator:a46a12cdd6b615fbda17298ad5349acfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4def07157f4c8cd2ee99abfa6303f36b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#a4def07157f4c8cd2ee99abfa6303f36b">pthread_rwlock_destroy</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>)</td></tr>
+<tr class="separator:a4def07157f4c8cd2ee99abfa6303f36b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39bcc5a9100d140d2ab9f8e51d436392"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#a39bcc5a9100d140d2ab9f8e51d436392">pthread_rwlock_tryrdlock</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>)</td></tr>
+<tr class="separator:a39bcc5a9100d140d2ab9f8e51d436392"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a170136d12a1f5152fb5985a8d4cbd778"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#a170136d12a1f5152fb5985a8d4cbd778">pthread_rwlock_trywrlock</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>)</td></tr>
+<tr class="separator:a170136d12a1f5152fb5985a8d4cbd778"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60bfe75b2bd44e97c9d97bdc77575455"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#a60bfe75b2bd44e97c9d97bdc77575455">pthread_rwlock_rdlock</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>)</td></tr>
+<tr class="separator:a60bfe75b2bd44e97c9d97bdc77575455"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2063880b9dc62cd540110617c55ee87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#af2063880b9dc62cd540110617c55ee87">pthread_rwlock_timedrdlock</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>, const struct timespec *abstime)</td></tr>
+<tr class="separator:af2063880b9dc62cd540110617c55ee87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f51c39f16edb854db719ff6ac6281d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#a1f51c39f16edb854db719ff6ac6281d7">pthread_rwlock_wrlock</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>)</td></tr>
+<tr class="separator:a1f51c39f16edb854db719ff6ac6281d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae32d75b4219853faec2b39f5e76bea32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#ae32d75b4219853faec2b39f5e76bea32">pthread_rwlock_timedwrlock</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>, const struct timespec *abstime)</td></tr>
+<tr class="separator:ae32d75b4219853faec2b39f5e76bea32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac97fca37651ede06aa8229ba572b44b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__rwlock_8c.html#ac97fca37651ede06aa8229ba572b44b4">pthread_rwlock_unlock</a> (<a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *<a class="el" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>)</td></tr>
+<tr class="separator:ac97fca37651ede06aa8229ba572b44b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle funzioni</h2>
+<a class="anchor" id="a4def07157f4c8cd2ee99abfa6303f36b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_destroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00034">34</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread_8h_source.html#l00136">pthread_rwlock::exclusive_waiters</a>, <a class="el" href="pthread_8h_source.html#l00138">pthread_rwlock::num_exclusive_waiters</a>, <a class="el" href="pthread_8h_source.html#l00137">pthread_rwlock::num_shared_waiters</a>, <a class="el" href="pthread_8h_source.html#l00139">pthread_rwlock::owner</a>, <a class="el" href="pthread__mutex_8c_source.html#l00046">pthread_mutex_destroy()</a>, <a class="el" href="pthread__self_8c_source.html#l00010">pthread_self()</a>, <a class="el" href="pthread_8h_source.html#l00133">pthread_rwlock::rdmutex</a>, <a class="el" href="pthread_8h_source.html#l00135">pthread_rwlock::shared_waiters</a>, e <a class="el" href="pthread_8h_source.html#l00134">pthread_rwlock::wrmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                                          {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="pthread_8h.html#a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</a> thread = <a class="code" href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a>();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span>(!thread) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EFAULT;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">if</span>(thread != lock-&gt;<a class="code" href="structpthread__rwlock.html#a7918a35d8e929df9c7f1fd9f12e9efcf">owner</a>) {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EPERM;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="pthread_8h.html#a3cf620ff3a40af11d79cf28901dc55e2">pthread_mutex_destroy</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">rdmutex</a>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="pthread_8h.html#a3cf620ff3a40af11d79cf28901dc55e2">pthread_mutex_destroy</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">wrmutex</a>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#a513e968cb2dea01c044a3304c26b1d07">shared_waiters</a> = (<a class="code" href="pthread_8h.html#aea4188cfb1472f9bb606fd2566133e34">handle_t</a>) 0;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#ae49a53d46712b0d4af191e85a622da1d">exclusive_waiters</a> = (<a class="code" href="pthread_8h.html#aea4188cfb1472f9bb606fd2566133e34">handle_t</a>) 0;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#af637581bd0ea0328763d041937160fff">num_shared_waiters</a> = 0;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#a5d8b56e7998376aa9f5908a560daadb7">num_exclusive_waiters</a> = 0;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#a7918a35d8e929df9c7f1fd9f12e9efcf">owner</a> = 0;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
+<div class="ttc" id="pthread_8h_html_aea4188cfb1472f9bb606fd2566133e34"><div class="ttname"><a href="pthread_8h.html#aea4188cfb1472f9bb606fd2566133e34">handle_t</a></div><div class="ttdeci">uint32_t handle_t</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00036">pthread.h:36</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_a513e968cb2dea01c044a3304c26b1d07"><div class="ttname"><a href="structpthread__rwlock.html#a513e968cb2dea01c044a3304c26b1d07">pthread_rwlock::shared_waiters</a></div><div class="ttdeci">handle_t shared_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00135">pthread.h:135</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_a5d8b56e7998376aa9f5908a560daadb7"><div class="ttname"><a href="structpthread__rwlock.html#a5d8b56e7998376aa9f5908a560daadb7">pthread_rwlock::num_exclusive_waiters</a></div><div class="ttdeci">int num_exclusive_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00138">pthread.h:138</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_ae49a53d46712b0d4af191e85a622da1d"><div class="ttname"><a href="structpthread__rwlock.html#ae49a53d46712b0d4af191e85a622da1d">pthread_rwlock::exclusive_waiters</a></div><div class="ttdeci">handle_t exclusive_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00136">pthread.h:136</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_af637581bd0ea0328763d041937160fff"><div class="ttname"><a href="structpthread__rwlock.html#af637581bd0ea0328763d041937160fff">pthread_rwlock::num_shared_waiters</a></div><div class="ttdeci">int num_shared_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00137">pthread.h:137</a></div></div>
+<div class="ttc" id="pthread_8h_html_a6766c2345d5c6fe6407d9f6b844e584a"><div class="ttname"><a href="pthread_8h.html#a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</a></div><div class="ttdeci">handle_t pthread_t</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00037">pthread.h:37</a></div></div>
+<div class="ttc" id="pthread_8h_html_a4c4f5f3b4f8f45d9d897847d53b11aaa"><div class="ttname"><a href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a></div><div class="ttdeci">pthread_t pthread_self(void)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__self_8c_source.html#l00010">pthread_self.c:10</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_aa525fa5ae59171418ede7d1894bf21fe"><div class="ttname"><a href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">pthread_rwlock::rdmutex</a></div><div class="ttdeci">pthread_mutex_t rdmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00133">pthread.h:133</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_a7918a35d8e929df9c7f1fd9f12e9efcf"><div class="ttname"><a href="structpthread__rwlock.html#a7918a35d8e929df9c7f1fd9f12e9efcf">pthread_rwlock::owner</a></div><div class="ttdeci">pthread_t owner</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00139">pthread.h:139</a></div></div>
+<div class="ttc" id="pthread_8h_html_a3cf620ff3a40af11d79cf28901dc55e2"><div class="ttname"><a href="pthread_8h.html#a3cf620ff3a40af11d79cf28901dc55e2">pthread_mutex_destroy</a></div><div class="ttdeci">int pthread_mutex_destroy(pthread_mutex_t *mutex)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00046">pthread_mutex.c:46</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_acebaf123f0d451e8aa6e7734c6bcca5b"><div class="ttname"><a href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">pthread_rwlock::wrmutex</a></div><div class="ttdeci">pthread_mutex_t wrmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00134">pthread.h:134</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a46a12cdd6b615fbda17298ad5349acfc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="pthread_8h.html#a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00010">10</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread_8h_source.html#l00136">pthread_rwlock::exclusive_waiters</a>, <a class="el" href="pthread_8h_source.html#l00138">pthread_rwlock::num_exclusive_waiters</a>, <a class="el" href="pthread_8h_source.html#l00137">pthread_rwlock::num_shared_waiters</a>, <a class="el" href="pthread_8h_source.html#l00139">pthread_rwlock::owner</a>, <a class="el" href="pthread__mutex_8c_source.html#l00026">pthread_mutex_init()</a>, <a class="el" href="pthread__self_8c_source.html#l00010">pthread_self()</a>, <a class="el" href="pthread_8h_source.html#l00133">pthread_rwlock::rdmutex</a>, <a class="el" href="pthread_8h_source.html#l00135">pthread_rwlock::shared_waiters</a>, e <a class="el" href="pthread_8h_source.html#l00134">pthread_rwlock::wrmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;                                                                                         {</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    }</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="pthread_8h.html#a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</a> thread = <a class="code" href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a>();</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(!thread) {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EFAULT;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="pthread_8h.html#a7454d249ed94ad5d5e57ba1529d7a7f2">pthread_mutex_init</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">rdmutex</a>, NULL);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="pthread_8h.html#a7454d249ed94ad5d5e57ba1529d7a7f2">pthread_mutex_init</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">wrmutex</a>, NULL);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#a513e968cb2dea01c044a3304c26b1d07">shared_waiters</a> = (<a class="code" href="pthread_8h.html#aea4188cfb1472f9bb606fd2566133e34">handle_t</a>) 0;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#ae49a53d46712b0d4af191e85a622da1d">exclusive_waiters</a> = (<a class="code" href="pthread_8h.html#aea4188cfb1472f9bb606fd2566133e34">handle_t</a>) 0;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#af637581bd0ea0328763d041937160fff">num_shared_waiters</a> = 0;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#a5d8b56e7998376aa9f5908a560daadb7">num_exclusive_waiters</a> = 0;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    lock-&gt;<a class="code" href="structpthread__rwlock.html#a7918a35d8e929df9c7f1fd9f12e9efcf">owner</a> = thread;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
+<div class="ttc" id="pthread_8h_html_aea4188cfb1472f9bb606fd2566133e34"><div class="ttname"><a href="pthread_8h.html#aea4188cfb1472f9bb606fd2566133e34">handle_t</a></div><div class="ttdeci">uint32_t handle_t</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00036">pthread.h:36</a></div></div>
+<div class="ttc" id="pthread_8h_html_a7454d249ed94ad5d5e57ba1529d7a7f2"><div class="ttname"><a href="pthread_8h.html#a7454d249ed94ad5d5e57ba1529d7a7f2">pthread_mutex_init</a></div><div class="ttdeci">int pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00026">pthread_mutex.c:26</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_a513e968cb2dea01c044a3304c26b1d07"><div class="ttname"><a href="structpthread__rwlock.html#a513e968cb2dea01c044a3304c26b1d07">pthread_rwlock::shared_waiters</a></div><div class="ttdeci">handle_t shared_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00135">pthread.h:135</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_a5d8b56e7998376aa9f5908a560daadb7"><div class="ttname"><a href="structpthread__rwlock.html#a5d8b56e7998376aa9f5908a560daadb7">pthread_rwlock::num_exclusive_waiters</a></div><div class="ttdeci">int num_exclusive_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00138">pthread.h:138</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_ae49a53d46712b0d4af191e85a622da1d"><div class="ttname"><a href="structpthread__rwlock.html#ae49a53d46712b0d4af191e85a622da1d">pthread_rwlock::exclusive_waiters</a></div><div class="ttdeci">handle_t exclusive_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00136">pthread.h:136</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_af637581bd0ea0328763d041937160fff"><div class="ttname"><a href="structpthread__rwlock.html#af637581bd0ea0328763d041937160fff">pthread_rwlock::num_shared_waiters</a></div><div class="ttdeci">int num_shared_waiters</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00137">pthread.h:137</a></div></div>
+<div class="ttc" id="pthread_8h_html_a6766c2345d5c6fe6407d9f6b844e584a"><div class="ttname"><a href="pthread_8h.html#a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</a></div><div class="ttdeci">handle_t pthread_t</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00037">pthread.h:37</a></div></div>
+<div class="ttc" id="pthread_8h_html_a4c4f5f3b4f8f45d9d897847d53b11aaa"><div class="ttname"><a href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a></div><div class="ttdeci">pthread_t pthread_self(void)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__self_8c_source.html#l00010">pthread_self.c:10</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_aa525fa5ae59171418ede7d1894bf21fe"><div class="ttname"><a href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">pthread_rwlock::rdmutex</a></div><div class="ttdeci">pthread_mutex_t rdmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00133">pthread.h:133</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_a7918a35d8e929df9c7f1fd9f12e9efcf"><div class="ttname"><a href="structpthread__rwlock.html#a7918a35d8e929df9c7f1fd9f12e9efcf">pthread_rwlock::owner</a></div><div class="ttdeci">pthread_t owner</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00139">pthread.h:139</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_acebaf123f0d451e8aa6e7734c6bcca5b"><div class="ttname"><a href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">pthread_rwlock::wrmutex</a></div><div class="ttdeci">pthread_mutex_t wrmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00134">pthread.h:134</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a60bfe75b2bd44e97c9d97bdc77575455"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_rdlock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00081">81</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread__mutex_8c_source.html#l00067">pthread_mutex_lock()</a>, e <a class="el" href="pthread_8h_source.html#l00133">pthread_rwlock::rdmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                                                         {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="pthread_8h.html#a12809c44718c21544ceb280dc1a53573">pthread_mutex_lock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">rdmutex</a>);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="pthread_8h_html_a12809c44718c21544ceb280dc1a53573"><div class="ttname"><a href="pthread_8h.html#a12809c44718c21544ceb280dc1a53573">pthread_mutex_lock</a></div><div class="ttdeci">int pthread_mutex_lock(pthread_mutex_t *mutex)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00067">pthread_mutex.c:67</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_aa525fa5ae59171418ede7d1894bf21fe"><div class="ttname"><a href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">pthread_rwlock::rdmutex</a></div><div class="ttdeci">pthread_mutex_t rdmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00133">pthread.h:133</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="af2063880b9dc62cd540110617c55ee87"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_timedrdlock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const struct timespec *&#160;</td>
+          <td class="paramname"><em>abstime</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00090">90</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread__mutex_8c_source.html#l00092">pthread_mutex_timedlock()</a>, e <a class="el" href="pthread_8h_source.html#l00133">pthread_rwlock::rdmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                                                                                              {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="pthread_8h.html#a5f197c3d769dee7a09d911241a7b6766">pthread_mutex_timedlock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">rdmutex</a>, abstime);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="pthread_8h_html_a5f197c3d769dee7a09d911241a7b6766"><div class="ttname"><a href="pthread_8h.html#a5f197c3d769dee7a09d911241a7b6766">pthread_mutex_timedlock</a></div><div class="ttdeci">int pthread_mutex_timedlock(pthread_mutex_t *mutex, const struct timespec *abstime)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00092">pthread_mutex.c:92</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_aa525fa5ae59171418ede7d1894bf21fe"><div class="ttname"><a href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">pthread_rwlock::rdmutex</a></div><div class="ttdeci">pthread_mutex_t rdmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00133">pthread.h:133</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ae32d75b4219853faec2b39f5e76bea32"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_timedwrlock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const struct timespec *&#160;</td>
+          <td class="paramname"><em>abstime</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00108">108</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread__mutex_8c_source.html#l00092">pthread_mutex_timedlock()</a>, e <a class="el" href="pthread_8h_source.html#l00134">pthread_rwlock::wrmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                                                                                              {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="pthread_8h.html#a5f197c3d769dee7a09d911241a7b6766">pthread_mutex_timedlock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">wrmutex</a>, abstime);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="pthread_8h_html_a5f197c3d769dee7a09d911241a7b6766"><div class="ttname"><a href="pthread_8h.html#a5f197c3d769dee7a09d911241a7b6766">pthread_mutex_timedlock</a></div><div class="ttdeci">int pthread_mutex_timedlock(pthread_mutex_t *mutex, const struct timespec *abstime)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00092">pthread_mutex.c:92</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_acebaf123f0d451e8aa6e7734c6bcca5b"><div class="ttname"><a href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">pthread_rwlock::wrmutex</a></div><div class="ttdeci">pthread_mutex_t wrmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00134">pthread.h:134</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a39bcc5a9100d140d2ab9f8e51d436392"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_tryrdlock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00063">63</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread__mutex_8c_source.html#l00107">pthread_mutex_trylock()</a>, e <a class="el" href="pthread_8h_source.html#l00133">pthread_rwlock::rdmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                                                            {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="pthread_8h.html#a27da386211db1a7e9a3b2a0db4d22144">pthread_mutex_trylock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">rdmutex</a>);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<div class="ttc" id="pthread_8h_html_a27da386211db1a7e9a3b2a0db4d22144"><div class="ttname"><a href="pthread_8h.html#a27da386211db1a7e9a3b2a0db4d22144">pthread_mutex_trylock</a></div><div class="ttdeci">int pthread_mutex_trylock(pthread_mutex_t *mutex)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00107">pthread_mutex.c:107</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_aa525fa5ae59171418ede7d1894bf21fe"><div class="ttname"><a href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">pthread_rwlock::rdmutex</a></div><div class="ttdeci">pthread_mutex_t rdmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00133">pthread.h:133</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a170136d12a1f5152fb5985a8d4cbd778"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_trywrlock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00072">72</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread__mutex_8c_source.html#l00107">pthread_mutex_trylock()</a>, e <a class="el" href="pthread_8h_source.html#l00134">pthread_rwlock::wrmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                                                            {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="pthread_8h.html#a27da386211db1a7e9a3b2a0db4d22144">pthread_mutex_trylock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">wrmutex</a>);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
+<div class="ttc" id="pthread_8h_html_a27da386211db1a7e9a3b2a0db4d22144"><div class="ttname"><a href="pthread_8h.html#a27da386211db1a7e9a3b2a0db4d22144">pthread_mutex_trylock</a></div><div class="ttdeci">int pthread_mutex_trylock(pthread_mutex_t *mutex)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00107">pthread_mutex.c:107</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_acebaf123f0d451e8aa6e7734c6bcca5b"><div class="ttname"><a href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">pthread_rwlock::wrmutex</a></div><div class="ttdeci">pthread_mutex_t wrmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00134">pthread.h:134</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ac97fca37651ede06aa8229ba572b44b4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_unlock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00117">117</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread__mutex_8c_source.html#l00133">pthread_mutex_unlock()</a>, <a class="el" href="pthread_8h_source.html#l00133">pthread_rwlock::rdmutex</a>, e <a class="el" href="pthread_8h_source.html#l00134">pthread_rwlock::wrmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                                                         {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="pthread_8h.html#a96184290ffb60e04c53a52869cf960a2">pthread_mutex_unlock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">rdmutex</a>) != 0)</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="pthread_8h.html#a96184290ffb60e04c53a52869cf960a2">pthread_mutex_unlock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">wrmutex</a>) != 0)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}</div>
+<div class="ttc" id="pthread_8h_html_a96184290ffb60e04c53a52869cf960a2"><div class="ttname"><a href="pthread_8h.html#a96184290ffb60e04c53a52869cf960a2">pthread_mutex_unlock</a></div><div class="ttdeci">int pthread_mutex_unlock(pthread_mutex_t *mutex)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00133">pthread_mutex.c:133</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_aa525fa5ae59171418ede7d1894bf21fe"><div class="ttname"><a href="structpthread__rwlock.html#aa525fa5ae59171418ede7d1894bf21fe">pthread_rwlock::rdmutex</a></div><div class="ttdeci">pthread_mutex_t rdmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00133">pthread.h:133</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_acebaf123f0d451e8aa6e7734c6bcca5b"><div class="ttname"><a href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">pthread_rwlock::wrmutex</a></div><div class="ttdeci">pthread_mutex_t wrmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00134">pthread.h:134</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a1f51c39f16edb854db719ff6ac6281d7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_rwlock_wrlock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</a> *&#160;</td>
+          <td class="paramname"><em>lock</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__rwlock_8c_source.html#l00099">99</a> del file <a class="el" href="pthread__rwlock_8c_source.html">pthread_rwlock.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread__mutex_8c_source.html#l00067">pthread_mutex_lock()</a>, e <a class="el" href="pthread_8h_source.html#l00134">pthread_rwlock::wrmutex</a>.</p>
+<div class="fragment"><div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                                                         {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span>(lock == NULL) {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="pthread_8h.html#a12809c44718c21544ceb280dc1a53573">pthread_mutex_lock</a>(&amp;lock-&gt;<a class="code" href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">wrmutex</a>);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="pthread_8h_html_a12809c44718c21544ceb280dc1a53573"><div class="ttname"><a href="pthread_8h.html#a12809c44718c21544ceb280dc1a53573">pthread_mutex_lock</a></div><div class="ttdeci">int pthread_mutex_lock(pthread_mutex_t *mutex)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__mutex_8c_source.html#l00067">pthread_mutex.c:67</a></div></div>
+<div class="ttc" id="structpthread__rwlock_html_acebaf123f0d451e8aa6e7734c6bcca5b"><div class="ttname"><a href="structpthread__rwlock.html#acebaf123f0d451e8aa6e7734c6bcca5b">pthread_rwlock::wrmutex</a></div><div class="ttdeci">pthread_mutex_t wrmutex</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00134">pthread.h:134</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_c23ec9db109baf02f825a52e3d8bd742.html">libpthread</a></li><li class="navelem"><a class="el" href="dir_93ec8f7d0ab70c6b2c55924b01761aab.html">src</a></li><li class="navelem"><a class="el" href="pthread__rwlock_8c.html">pthread_rwlock.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:05 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

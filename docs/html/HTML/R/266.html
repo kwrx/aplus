@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>inode</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/147.html#L24'>inode</a>              24 src/fs/devfs.c struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
+<a href='../S/147.html#L25'>inode</a>              25 src/fs/devfs.c 	if((void*) vfs_mapped(inode, name) != NULL)
+<a href='../S/147.html#L31'>inode</a>              31 src/fs/devfs.c 	ino-&gt;dev = inode-&gt;dev;
+<a href='../S/147.html#L40'>inode</a>              40 src/fs/devfs.c 	ino-&gt;parent = inode;
+<a href='../S/146.html#L17'>inode</a>              17 src/fs/fs.c    	if(inode-&gt;read)
+<a href='../S/146.html#L18'>inode</a>              18 src/fs/fs.c    		return inode-&gt;read(inode, ptr, len);
+<a href='../S/146.html#L25'>inode</a>              25 src/fs/fs.c    	if(inode-&gt;write)
+<a href='../S/146.html#L26'>inode</a>              26 src/fs/fs.c    		return inode-&gt;write(inode, ptr, len);
+<a href='../S/146.html#L34'>inode</a>              34 src/fs/fs.c    	if((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL) {
+<a href='../S/146.html#L42'>inode</a>              42 src/fs/fs.c    	if(inode-&gt;readdir)
+<a href='../S/146.html#L43'>inode</a>              43 src/fs/fs.c    		return inode-&gt;readdir(inode, index - vfs_mapped_count(inode));
+<a href='../S/146.html#L49'>inode</a>              49 src/fs/fs.c    struct inode* fs_finddir (struct inode* inode, char* name) {
+<a href='../S/146.html#L52'>inode</a>              52 src/fs/fs.c    	if((map = (inode_t*) vfs_mapped(inode, name)) != NULL)
+<a href='../S/146.html#L55'>inode</a>              55 src/fs/fs.c    	if(inode-&gt;finddir)
+<a href='../S/146.html#L56'>inode</a>              56 src/fs/fs.c    		return inode-&gt;finddir(inode, name);
+<a href='../S/146.html#L62'>inode</a>              62 src/fs/fs.c    struct inode* fs_creat (struct inode* inode, char* name, mode_t mode) {
+<a href='../S/146.html#L63'>inode</a>              63 src/fs/fs.c    	if(inode-&gt;creat)
+<a href='../S/146.html#L64'>inode</a>              64 src/fs/fs.c    		return inode-&gt;creat(inode, name, mode);
+<a href='../S/146.html#L71'>inode</a>              71 src/fs/fs.c    	if(inode-&gt;rename)
+<a href='../S/146.html#L72'>inode</a>              72 src/fs/fs.c    		return inode-&gt;rename(inode, oldname, newname);
+<a href='../S/146.html#L79'>inode</a>              79 src/fs/fs.c    	if(inode-&gt;unlink)
+<a href='../S/146.html#L80'>inode</a>              80 src/fs/fs.c    		return inode-&gt;unlink(inode, name);
+<a href='../S/146.html#L87'>inode</a>              87 src/fs/fs.c    	if(inode-&gt;chown)
+<a href='../S/146.html#L88'>inode</a>              88 src/fs/fs.c    		return inode-&gt;chown(inode, owner, group);
+<a href='../S/146.html#L95'>inode</a>              95 src/fs/fs.c    	if(inode-&gt;flush)
+<a href='../S/146.html#L96'>inode</a>              96 src/fs/fs.c    		inode-&gt;flush(inode);
+<a href='../S/146.html#L103'>inode</a>             103 src/fs/fs.c    	if(inode-&gt;ioctl)
+<a href='../S/146.html#L104'>inode</a>             104 src/fs/fs.c    		return inode-&gt;ioctl(inode, req, buf);
+<a href='../S/145.html#L28'>inode</a>              28 src/fs/pipe.c  	pipeinfo_t* pipe = inode-&gt;userdata;
+<a href='../S/145.html#L43'>inode</a>              43 src/fs/pipe.c  	pipeinfo_t* pipe = inode-&gt;userdata;
+<a href='../S/145.html#L55'>inode</a>              55 src/fs/pipe.c  	pipeinfo_t* pipe = inode-&gt;userdata;
+<a href='../S/144.html#L23'>inode</a>              23 src/fs/vfs.c   	inode-&gt;ino = (ino_t) nextinode++;
+<a href='../S/144.html#L24'>inode</a>              24 src/fs/vfs.c   	list_add(list_inodes, (listval_t) inode);
+<a href='../S/144.html#L28'>inode</a>              28 src/fs/vfs.c   	list_remove(list_inodes, (listval_t) inode);
+<a href='../S/144.html#L29'>inode</a>              29 src/fs/vfs.c   	kfree(inode);
+<a href='../S/97.html#L55'>inode</a>              55 src/include/aplus/fs.h 	int (*read) (struct inode* inode, char* ptr, int len);
+<a href='../S/97.html#L56'>inode</a>              56 src/include/aplus/fs.h 	int (*write) (struct inode* inode, char* ptr, int len);
+<a href='../S/97.html#L58'>inode</a>              58 src/include/aplus/fs.h 	struct dirent* (*readdir) (struct inode* inode, int index);
+<a href='../S/97.html#L59'>inode</a>              59 src/include/aplus/fs.h 	struct inode* (*finddir) (struct inode* inode, char* name);
+<a href='../S/97.html#L60'>inode</a>              60 src/include/aplus/fs.h 	struct inode* (*creat) (struct inode* inode, char* name, mode_t mode);
+<a href='../S/97.html#L62'>inode</a>              62 src/include/aplus/fs.h 	int (*rename) (struct inode* inode, char* oldname, char* newname);
+<a href='../S/97.html#L63'>inode</a>              63 src/include/aplus/fs.h 	int (*unlink) (struct inode* inode, char* name);
+<a href='../S/97.html#L64'>inode</a>              64 src/include/aplus/fs.h 	int (*chown) (struct inode* inode, uid_t owner, gid_t group);
+<a href='../S/97.html#L65'>inode</a>              65 src/include/aplus/fs.h 	void (*flush) (struct inode* inode);
+<a href='../S/97.html#L67'>inode</a>              67 src/include/aplus/fs.h 	int (*ioctl) (struct inode* inode, int req, void* buf);
+<a href='../S/97.html#L70'>inode</a>              70 src/include/aplus/fs.h 	struct inode* parent;
+<a href='../S/97.html#L71'>inode</a>              71 src/include/aplus/fs.h 	struct inode* link;
+</pre>
+</body>
+</html>

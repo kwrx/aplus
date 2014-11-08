@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>task_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L38'>task_t</a>             38 src/arch/task.c extern task_t* current_task;
+<a href='../S/159.html#L39'>task_t</a>             39 src/arch/task.c extern task_t* kernel_task;
+<a href='../S/159.html#L49'>task_t</a>             49 src/arch/task.c task_t* task_fork() {
+<a href='../S/159.html#L53'>task_t</a>             53 src/arch/task.c 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/159.html#L54'>task_t</a>             54 src/arch/task.c 	memset(child, 0, sizeof(task_t));
+<a href='../S/159.html#L115'>task_t</a>            115 src/arch/task.c task_t* task_clone(void* entry, void* arg, void* stack) {
+<a href='../S/159.html#L125'>task_t</a>            125 src/arch/task.c 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/159.html#L126'>task_t</a>            126 src/arch/task.c 	memset(child, 0, sizeof(task_t));
+<a href='../S/159.html#L165'>task_t</a>            165 src/arch/task.c void task_switch(task_t* newtask) {
+<a href='../S/159.html#L167'>task_t</a>            167 src/arch/task.c 	task_t* old = current_task;
+<a href='../S/159.html#L183'>task_t</a>            183 src/arch/task.c 	kernel_task = current_task = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/159.html#L184'>task_t</a>            184 src/arch/task.c 	memset(current_task, 0, sizeof(task_t));
+<a href='../S/156.html#L18'>task_t</a>             18 src/bufio.c    extern task_t* current_task;
+<a href='../S/147.html#L17'>task_t</a>             17 src/fs/devfs.c extern task_t* current_task;
+<a href='../S/145.html#L17'>task_t</a>             17 src/fs/pipe.c  extern task_t* current_task;
+<a href='../S/98.html#L38'>task_t</a>             38 src/include/aplus/bufio.h 	task_t* task;
+<a href='../S/154.html#L42'>task_t</a>             42 src/main.c     extern task_t* current_task;
+<a href='../S/148.html#L9'>task_t</a>              9 src/panic.c    extern task_t* current_task;
+<a href='../S/148.html#L10'>task_t</a>             10 src/panic.c    extern task_t* kernel_task;
+<a href='../S/148.html#L61'>task_t</a>             61 src/panic.c    		task_t* task = (task_t*) value;
+<a href='../S/143.html#L33'>task_t</a>             33 src/sched.c    task_t* current_task;
+<a href='../S/143.html#L34'>task_t</a>             34 src/sched.c    task_t* kernel_task;
+<a href='../S/143.html#L75'>task_t</a>             75 src/sched.c    static task_t* schedule_next() {
+<a href='../S/143.html#L77'>task_t</a>             77 src/sched.c    	task_t* newtask = current_task;
+<a href='../S/143.html#L80'>task_t</a>             80 src/sched.c    		newtask = (task_t*) list_next(task_queue, (listval_t) newtask);
+<a href='../S/143.html#L82'>task_t</a>             82 src/sched.c    			newtask = (task_t*) list_head(task_queue);
+<a href='../S/143.html#L123'>task_t</a>            123 src/sched.c    int schedule_wait(task_t* child) {
+<a href='../S/143.html#L131'>task_t</a>            131 src/sched.c    task_t* schedule_child() {
+<a href='../S/143.html#L137'>task_t</a>            137 src/sched.c    		task_t* child = (task_t*) value;
+<a href='../S/143.html#L146'>task_t</a>            146 src/sched.c    void schedule_exit2(task_t* task, int status) {
+<a href='../S/143.html#L170'>task_t</a>            170 src/sched.c    task_t* schedule_getbypid(pid_t pid) {
+<a href='../S/143.html#L175'>task_t</a>            175 src/sched.c    		task_t* t = (task_t*) value;
+<a href='../S/133.html#L11'>task_t</a>             11 src/syscall/chown.c extern task_t* current_task;
+<a href='../S/126.html#L6'>task_t</a>              6 src/syscall/clone.c extern task_t* current_task;
+<a href='../S/126.html#L18'>task_t</a>             18 src/syscall/clone.c 	task_t* child = (task_t*) task_clone(fn, arg, child_stack);
+<a href='../S/119.html#L13'>task_t</a>             13 src/syscall/close.c extern task_t* current_task;
+<a href='../S/141.html#L10'>task_t</a>             10 src/syscall/execve.c extern task_t* current_task;
+<a href='../S/138.html#L15'>task_t</a>             15 src/syscall/fcntl.c extern task_t* current_task;
+<a href='../S/122.html#L10'>task_t</a>             10 src/syscall/fork.c 	task_t* child = (task_t*) task_fork();
+<a href='../S/120.html#L13'>task_t</a>             13 src/syscall/fstat.c extern task_t* current_task;
+<a href='../S/142.html#L13'>task_t</a>             13 src/syscall/getgroups.c extern task_t* current_task;
+<a href='../S/136.html#L13'>task_t</a>             13 src/syscall/ioctl.c extern task_t* current_task;
+<a href='../S/125.html#L11'>task_t</a>             11 src/syscall/kill.c 	task_t* task = (task_t*) schedule_getbypid(pid);
+<a href='../S/132.html#L15'>task_t</a>             15 src/syscall/lseek.c extern task_t* current_task;
+<a href='../S/139.html#L15'>task_t</a>             15 src/syscall/open.c extern task_t* current_task;
+<a href='../S/127.html#L15'>task_t</a>             15 src/syscall/read.c extern task_t* current_task;
+<a href='../S/140.html#L7'>task_t</a>              7 src/syscall/readdir.c extern task_t* current_task;
+<a href='../S/124.html#L13'>task_t</a>             13 src/syscall/stat.c extern task_t* current_task;
+<a href='../S/116.html#L13'>task_t</a>             13 src/syscall/times.c extern task_t* current_task;
+<a href='../S/116.html#L25'>task_t</a>             25 src/syscall/times.c 	task_t* child = (task_t*) schedule_child();
+<a href='../S/137.html#L10'>task_t</a>             10 src/syscall/wait.c extern task_t* current_task;
+<a href='../S/137.html#L18'>task_t</a>             18 src/syscall/wait.c 	task_t* child = (task_t*) schedule_child();
+<a href='../S/128.html#L15'>task_t</a>             15 src/syscall/write.c extern task_t* current_task;
+</pre>
+</body>
+</html>

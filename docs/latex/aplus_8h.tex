@@ -1,0 +1,488 @@
+\hypertarget{aplus_8h}{\section{Riferimenti per il file src/include/aplus.h}
+\label{aplus_8h}\index{src/include/aplus.\+h@{src/include/aplus.\+h}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$stdarg.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structregs}{regs}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{aplus_8h_a3985fc195070baeddf8705121a144336}{read\+\_\+reg}(n)
+\item 
+\#define \hyperlink{aplus_8h_a2bfd697ad0983255c5b058a73bfc90af}{write\+\_\+reg}(n)
+\item 
+\#define \hyperlink{aplus_8h_a2e07ad24c72c7025ebed7cf2a16da243}{outx}(n, t, reg)
+\item 
+\#define \hyperlink{aplus_8h_a0064aeaa3ca77c798b56695f34181b11}{inx}(n, t, reg)
+\item 
+\#define \hyperlink{aplus_8h_ad022c8e4176cee8f4f46671ef4072333}{outsx}(n, t, reg)
+\item 
+\#define \hyperlink{aplus_8h_aafaa888797872e143fecc4f28469fde4}{insx}(n, t, reg)
+\item 
+\#define \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(a, b...)~;
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_a582397538b7cbe449bad4cf35f2437d9}{read\+\_\+reg} (\hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}) read\+\_\+reg(\hyperlink{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx}) read\+\_\+reg(\hyperlink{aplus_8h_af2b16bef95c844028dd145264d1d3875}{ecx}) read\+\_\+reg(\hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}) read\+\_\+reg(\hyperlink{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi}) read\+\_\+reg(\hyperlink{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}) read\+\_\+reg(\hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}) read\+\_\+reg(\hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}) read\+\_\+reg(cr0) read\+\_\+reg(cr1) read\+\_\+reg(cr2) read\+\_\+reg(cr3) read\+\_\+reg(cr4) read\+\_\+reg(\hyperlink{aplus_8h_a8519dc239502dfcbac171b3128dc7054}{cs}) read\+\_\+reg(\hyperlink{aplus_8h_a6fe20edd854a1a653ae71ccf541a6b8b}{ds}) read\+\_\+reg(\hyperlink{aplus_8h_a0dacdc927bbcc6457b629ad88119cdc2}{es}) read\+\_\+reg(\hyperlink{structfs}{fs}) read\+\_\+reg(\hyperlink{aplus_8h_a85904ecbf7b717abe738645b4ff2f4ff}{gs}) static inline \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} read\+\_\+eflags()
+\item 
+\hyperlink{aplus_8h_ab5b66852551342ea96fdb63ded9b4dfb}{write\+\_\+reg} (\hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}) write\+\_\+reg(\hyperlink{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx}) write\+\_\+reg(\hyperlink{aplus_8h_af2b16bef95c844028dd145264d1d3875}{ecx}) write\+\_\+reg(\hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}) write\+\_\+reg(\hyperlink{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi}) write\+\_\+reg(\hyperlink{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}) write\+\_\+reg(\hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}) write\+\_\+reg(\hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}) write\+\_\+reg(cr0) write\+\_\+reg(cr1) write\+\_\+reg(cr2) write\+\_\+reg(cr3) write\+\_\+reg(cr4) write\+\_\+reg(\hyperlink{aplus_8h_a8519dc239502dfcbac171b3128dc7054}{cs}) write\+\_\+reg(\hyperlink{aplus_8h_a6fe20edd854a1a653ae71ccf541a6b8b}{ds}) write\+\_\+reg(\hyperlink{aplus_8h_a0dacdc927bbcc6457b629ad88119cdc2}{es}) write\+\_\+reg(\hyperlink{structfs}{fs}) write\+\_\+reg(\hyperlink{aplus_8h_a85904ecbf7b717abe738645b4ff2f4ff}{gs}) static inline void write\+\_\+eflags(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} val)
+\item 
+\hyperlink{aplus_8h_accb3d6bfbf013023378c6a267ffb8673}{outx} (b, \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t}, al) outx(w
+\item 
+ax \hyperlink{aplus_8h_af66ec042fbe759ee18b355c79d71da49}{outx} (l, \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t}, \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}) \hyperlink{aplus_8h_a00ba011d4d453998ac3d97349541357b}{inx}(b
+\item 
+ax al \hyperlink{aplus_8h_a00ba011d4d453998ac3d97349541357b}{inx} (w, \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t}, ax) inx(l
+\item 
+\hyperlink{aplus_8h_a02a4d4758e5eba60d5e23c28bb13a169}{outsx} (b, \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t}, al) outsx(w
+\item 
+ax \hyperlink{aplus_8h_abcecb037b3c7e732c79357cb49a12edd}{outsx} (l, \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t}, \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}) \hyperlink{aplus_8h_a2909bcf2b714fa2ffe34d438c8aca706}{insx}(b
+\item 
+ax al \hyperlink{aplus_8h_a2909bcf2b714fa2ffe34d438c8aca706}{insx} (w, \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t}, ax) insx(l
+\item 
+ax al \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax} struct \hyperlink{structregs}{regs} \hyperlink{aplus_8h_a828ca35a80f14c0f9432022c5f3823a4}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) regs\+\_\+t
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t}
+\item 
+ax \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t}
+\item 
+ax al \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a85904ecbf7b717abe738645b4ff2f4ff}{gs}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a2ffb5cf275c124e8f8ff30e1d4449f80}{fs}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a0dacdc927bbcc6457b629ad88119cdc2}{es}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a6fe20edd854a1a653ae71ccf541a6b8b}{ds}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_af2b16bef95c844028dd145264d1d3875}{ecx}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a35ae7486c6a3ba231714c72cec36e556}{int\+\_\+no}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a20d3d7867d5207a846cf598532ca353f}{err\+\_\+code}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a1588906901fc3015e0865574669a56a6}{eip}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a8519dc239502dfcbac171b3128dc7054}{cs}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_aeedfc39703ec8e0a1f052a832e74acd3}{eflags}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{aplus_8h_a095c7922f83bb52b2fcfc787e4b24d5a}{useresp}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{aplus_8h_aafaa888797872e143fecc4f28469fde4}{\index{aplus.\+h@{aplus.\+h}!insx@{insx}}
+\index{insx@{insx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{insx}]{\setlength{\rightskip}{0pt plus 5cm}\#define insx(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{t, }
+\item[{}]{reg}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_aafaa888797872e143fecc4f28469fde4}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keyword}{inline} t* ins##n(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} p, t* v, \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} len) \{       \(\backslash\)
+        for(\textcolor{keywordtype}{int} i = 0; i < len; i++)                                \(\backslash\)
+            v[i] = in##n(p);                                        \(\backslash\)
+                                                                    \(\backslash\)
+        return v;                                                   \(\backslash\)
+    \}
+\end{DoxyCode}
+\hypertarget{aplus_8h_a0064aeaa3ca77c798b56695f34181b11}{\index{aplus.\+h@{aplus.\+h}!inx@{inx}}
+\index{inx@{inx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{inx}]{\setlength{\rightskip}{0pt plus 5cm}\#define inx(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{t, }
+\item[{}]{reg}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a0064aeaa3ca77c798b56695f34181b11}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keyword}{inline} t in##n(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} p) \{                             \(\backslash\)
+        t r;                                                        \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (\textcolor{stringliteral}{"in "} #reg \textcolor{stringliteral}{", dx"} : \textcolor{stringliteral}{"=a"}(r) : \textcolor{stringliteral}{"d"}(p));\(\backslash\)
+        return r;                                                   \(\backslash\)
+    \}
+\end{DoxyCode}
+\hypertarget{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{\index{aplus.\+h@{aplus.\+h}!kprintf@{kprintf}}
+\index{kprintf@{kprintf}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{kprintf}]{\setlength{\rightskip}{0pt plus 5cm}\#define kprintf(
+\begin{DoxyParamCaption}
+\item[{}]{a, }
+\item[{}]{b...}
+\end{DoxyParamCaption}
+)~;}}\label{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}
+
+
+Definizione alla linea 147 del file aplus.\+h.
+
+\hypertarget{aplus_8h_ad022c8e4176cee8f4f46671ef4072333}{\index{aplus.\+h@{aplus.\+h}!outsx@{outsx}}
+\index{outsx@{outsx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{outsx}]{\setlength{\rightskip}{0pt plus 5cm}\#define outsx(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{t, }
+\item[{}]{reg}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_ad022c8e4176cee8f4f46671ef4072333}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} outs##n(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} p, t* v, \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} len) \{    \(\backslash\)
+        for(\textcolor{keywordtype}{int} i = 0; i < len; i++)                                \(\backslash\)
+            out##n(p, v[i]);                                        \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 117 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a2e07ad24c72c7025ebed7cf2a16da243}{\index{aplus.\+h@{aplus.\+h}!outx@{outx}}
+\index{outx@{outx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{outx}]{\setlength{\rightskip}{0pt plus 5cm}\#define outx(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{t, }
+\item[{}]{reg}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a2e07ad24c72c7025ebed7cf2a16da243}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} out##n(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} p, t v) \{                    \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (\textcolor{stringliteral}{"out dx, "} #reg : : \textcolor{stringliteral}{"a"}(v), \textcolor{stringliteral}{"d"}(p)); \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 96 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a3985fc195070baeddf8705121a144336}{\index{aplus.\+h@{aplus.\+h}!read\+\_\+reg@{read\+\_\+reg}}
+\index{read\+\_\+reg@{read\+\_\+reg}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{read\+\_\+reg}]{\setlength{\rightskip}{0pt plus 5cm}\#define read\+\_\+reg(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a3985fc195070baeddf8705121a144336}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} read\_##n() \{                         \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{\(\backslash\)}
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{        uint32\_t} ret;                                         \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (\textcolor{stringliteral}{"mov %0, "} #n : \textcolor{stringliteral}{"=r"}(ret));      \(\backslash\)
+        return ret;                                             \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 32 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a2bfd697ad0983255c5b058a73bfc90af}{\index{aplus.\+h@{aplus.\+h}!write\+\_\+reg@{write\+\_\+reg}}
+\index{write\+\_\+reg@{write\+\_\+reg}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{write\+\_\+reg}]{\setlength{\rightskip}{0pt plus 5cm}\#define write\+\_\+reg(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a2bfd697ad0983255c5b058a73bfc90af}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} write\_##n(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} val) \{                \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (\textcolor{stringliteral}{"mov "} #n \textcolor{stringliteral}{", %0"} : : \textcolor{stringliteral}{"r"}(val));  \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 66 del file aplus.\+h.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{aplus_8h_a828ca35a80f14c0f9432022c5f3823a4}{\index{aplus.\+h@{aplus.\+h}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}ax al {\bf eax} struct {\bf regs} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(packed)}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a828ca35a80f14c0f9432022c5f3823a4}
+
+
+Definizione alla linea 44 del file desc.\+c.
+
+
+\begin{DoxyCode}
+46                        \{
+47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
+48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
+49 \} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+\end{DoxyCode}
+\hypertarget{aplus_8h_a2909bcf2b714fa2ffe34d438c8aca706}{\index{aplus.\+h@{aplus.\+h}!insx@{insx}}
+\index{insx@{insx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{insx}]{\setlength{\rightskip}{0pt plus 5cm}ax al insx (
+\begin{DoxyParamCaption}
+\item[{w}]{, }
+\item[{{\bf uint16\+\_\+t}}]{, }
+\item[{ax}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a2909bcf2b714fa2ffe34d438c8aca706}
+\hypertarget{aplus_8h_a00ba011d4d453998ac3d97349541357b}{\index{aplus.\+h@{aplus.\+h}!inx@{inx}}
+\index{inx@{inx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{inx}]{\setlength{\rightskip}{0pt plus 5cm}ax al inx (
+\begin{DoxyParamCaption}
+\item[{w}]{, }
+\item[{{\bf uint16\+\_\+t}}]{, }
+\item[{ax}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a00ba011d4d453998ac3d97349541357b}
+\hypertarget{aplus_8h_a02a4d4758e5eba60d5e23c28bb13a169}{\index{aplus.\+h@{aplus.\+h}!outsx@{outsx}}
+\index{outsx@{outsx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{outsx}]{\setlength{\rightskip}{0pt plus 5cm}outsx (
+\begin{DoxyParamCaption}
+\item[{b}]{, }
+\item[{{\bf uint8\+\_\+t}}]{, }
+\item[{al}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a02a4d4758e5eba60d5e23c28bb13a169}
+\hypertarget{aplus_8h_abcecb037b3c7e732c79357cb49a12edd}{\index{aplus.\+h@{aplus.\+h}!outsx@{outsx}}
+\index{outsx@{outsx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{outsx}]{\setlength{\rightskip}{0pt plus 5cm}ax outsx (
+\begin{DoxyParamCaption}
+\item[{l}]{, }
+\item[{{\bf uint32\+\_\+t}}]{, }
+\item[{{\bf eax}}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_abcecb037b3c7e732c79357cb49a12edd}
+\hypertarget{aplus_8h_accb3d6bfbf013023378c6a267ffb8673}{\index{aplus.\+h@{aplus.\+h}!outx@{outx}}
+\index{outx@{outx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{outx}]{\setlength{\rightskip}{0pt plus 5cm}outx (
+\begin{DoxyParamCaption}
+\item[{b}]{, }
+\item[{{\bf uint8\+\_\+t}}]{, }
+\item[{al}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_accb3d6bfbf013023378c6a267ffb8673}
+\hypertarget{aplus_8h_af66ec042fbe759ee18b355c79d71da49}{\index{aplus.\+h@{aplus.\+h}!outx@{outx}}
+\index{outx@{outx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{outx}]{\setlength{\rightskip}{0pt plus 5cm}ax outx (
+\begin{DoxyParamCaption}
+\item[{l}]{, }
+\item[{{\bf uint32\+\_\+t}}]{, }
+\item[{{\bf eax}}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_af66ec042fbe759ee18b355c79d71da49}
+\hypertarget{aplus_8h_a582397538b7cbe449bad4cf35f2437d9}{\index{aplus.\+h@{aplus.\+h}!read\+\_\+reg@{read\+\_\+reg}}
+\index{read\+\_\+reg@{read\+\_\+reg}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{read\+\_\+reg}]{\setlength{\rightskip}{0pt plus 5cm}read\+\_\+reg (
+\begin{DoxyParamCaption}
+\item[{{\bf eax}}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_a582397538b7cbe449bad4cf35f2437d9}
+
+
+Definizione alla linea 39 del file aplus.\+h.
+
+
+
+Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+59                                      \{
+60     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} ret;
+61     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} \_\_volatile\_\_(\textcolor{stringliteral}{"pushfd; pop eax"} : \textcolor{stringliteral}{"=a"}(ret));
+62     \textcolor{keywordflow}{return} ret;
+63 \}
+\end{DoxyCode}
+\hypertarget{aplus_8h_ab5b66852551342ea96fdb63ded9b4dfb}{\index{aplus.\+h@{aplus.\+h}!write\+\_\+reg@{write\+\_\+reg}}
+\index{write\+\_\+reg@{write\+\_\+reg}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{write\+\_\+reg}]{\setlength{\rightskip}{0pt plus 5cm}write\+\_\+reg (
+\begin{DoxyParamCaption}
+\item[{{\bf eax}}]{}
+\end{DoxyParamCaption}
+)}}\label{aplus_8h_ab5b66852551342ea96fdb63ded9b4dfb}
+
+
+Definizione alla linea 72 del file aplus.\+h.
+
+
+
+Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+().
+
+
+\begin{DoxyCode}
+92                                               \{
+93     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} \_\_volatile\_\_(\textcolor{stringliteral}{"push eax; popfd"} : : \textcolor{stringliteral}{"a"}(val));
+94 \}   
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{aplus_8h_a8519dc239502dfcbac171b3128dc7054}{\index{aplus.\+h@{aplus.\+h}!cs@{cs}}
+\index{cs@{cs}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{cs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} cs}}\label{aplus_8h_a8519dc239502dfcbac171b3128dc7054}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a6fe20edd854a1a653ae71ccf541a6b8b}{\index{aplus.\+h@{aplus.\+h}!ds@{ds}}
+\index{ds@{ds}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{ds}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} ds}}\label{aplus_8h_a6fe20edd854a1a653ae71ccf541a6b8b}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{\index{aplus.\+h@{aplus.\+h}!eax@{eax}}
+\index{eax@{eax}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{eax}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} eax}}\label{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{\index{aplus.\+h@{aplus.\+h}!ebp@{ebp}}
+\index{ebp@{ebp}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{ebp}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} ebp}}\label{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{\index{aplus.\+h@{aplus.\+h}!ebx@{ebx}}
+\index{ebx@{ebx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{ebx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} ebx}}\label{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_af2b16bef95c844028dd145264d1d3875}{\index{aplus.\+h@{aplus.\+h}!ecx@{ecx}}
+\index{ecx@{ecx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{ecx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} ecx}}\label{aplus_8h_af2b16bef95c844028dd145264d1d3875}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{\index{aplus.\+h@{aplus.\+h}!edi@{edi}}
+\index{edi@{edi}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{edi}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} edi}}\label{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{\index{aplus.\+h@{aplus.\+h}!edx@{edx}}
+\index{edx@{edx}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{edx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} edx}}\label{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_aeedfc39703ec8e0a1f052a832e74acd3}{\index{aplus.\+h@{aplus.\+h}!eflags@{eflags}}
+\index{eflags@{eflags}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{eflags}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} eflags}}\label{aplus_8h_aeedfc39703ec8e0a1f052a832e74acd3}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a1588906901fc3015e0865574669a56a6}{\index{aplus.\+h@{aplus.\+h}!eip@{eip}}
+\index{eip@{eip}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{eip}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} eip}}\label{aplus_8h_a1588906901fc3015e0865574669a56a6}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a20d3d7867d5207a846cf598532ca353f}{\index{aplus.\+h@{aplus.\+h}!err\+\_\+code@{err\+\_\+code}}
+\index{err\+\_\+code@{err\+\_\+code}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{err\+\_\+code}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} err\+\_\+code}}\label{aplus_8h_a20d3d7867d5207a846cf598532ca353f}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a0dacdc927bbcc6457b629ad88119cdc2}{\index{aplus.\+h@{aplus.\+h}!es@{es}}
+\index{es@{es}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{es}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} es}}\label{aplus_8h_a0dacdc927bbcc6457b629ad88119cdc2}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{\index{aplus.\+h@{aplus.\+h}!esi@{esi}}
+\index{esi@{esi}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{esi}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} esi}}\label{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{\index{aplus.\+h@{aplus.\+h}!esp@{esp}}
+\index{esp@{esp}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{esp}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} esp}}\label{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a2ffb5cf275c124e8f8ff30e1d4449f80}{\index{aplus.\+h@{aplus.\+h}!fs@{fs}}
+\index{fs@{fs}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{fs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} {\bf fs}}}\label{aplus_8h_a2ffb5cf275c124e8f8ff30e1d4449f80}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a85904ecbf7b717abe738645b4ff2f4ff}{\index{aplus.\+h@{aplus.\+h}!gs@{gs}}
+\index{gs@{gs}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{gs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} gs}}\label{aplus_8h_a85904ecbf7b717abe738645b4ff2f4ff}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a35ae7486c6a3ba231714c72cec36e556}{\index{aplus.\+h@{aplus.\+h}!int\+\_\+no@{int\+\_\+no}}
+\index{int\+\_\+no@{int\+\_\+no}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{int\+\_\+no}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} int\+\_\+no}}\label{aplus_8h_a35ae7486c6a3ba231714c72cec36e556}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{\index{aplus.\+h@{aplus.\+h}!uint16\+\_\+t@{uint16\+\_\+t}}
+\index{uint16\+\_\+t@{uint16\+\_\+t}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{uint16\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t}}\label{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}
+
+
+Definizione alla linea 102 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{\index{aplus.\+h@{aplus.\+h}!uint32\+\_\+t@{uint32\+\_\+t}}
+\index{uint32\+\_\+t@{uint32\+\_\+t}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{uint32\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}ax al uint32\+\_\+t}}\label{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}
+
+
+Definizione alla linea 115 del file aplus.\+h.
+
+\hypertarget{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{\index{aplus.\+h@{aplus.\+h}!uint8\+\_\+t@{uint8\+\_\+t}}
+\index{uint8\+\_\+t@{uint8\+\_\+t}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{uint8\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}ax uint8\+\_\+t}}\label{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}
+
+
+Definizione alla linea 113 del file aplus.\+h.
+
+\hypertarget{aplus_8h_a095c7922f83bb52b2fcfc787e4b24d5a}{\index{aplus.\+h@{aplus.\+h}!useresp@{useresp}}
+\index{useresp@{useresp}!aplus.\+h@{aplus.\+h}}
+\subsubsection[{useresp}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} useresp}}\label{aplus_8h_a095c7922f83bb52b2fcfc787e4b24d5a}
+
+
+Definizione alla linea 139 del file aplus.\+h.
+

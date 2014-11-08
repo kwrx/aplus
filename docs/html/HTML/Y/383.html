@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>memset</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L210'>memset</a>            210 src/arch/desc.c 	memset(&amp;gdt_e, 0, sizeof(gdt_entry_t) * 5);
+<a href='../S/158.html#L229'>memset</a>            229 src/arch/desc.c 	memset(idt_e, 0, sizeof(idt_entry_t) * 256);
+<a href='../S/160.html#L146'>memset</a>            146 src/arch/pci.c 	memset(pci_devices, 0xFF, PCI_MAX_DEVICES * sizeof(pci_device_t));
+<a href='../S/163.html#L15'>memset</a>             15 src/arch/syscall.c 	memset(syscall_handlers, 0, sizeof(void*) * syslist-&gt;size);
+<a href='../S/159.html#L54'>memset</a>             54 src/arch/task.c 	memset(child, 0, sizeof(task_t));
+<a href='../S/159.html#L122'>memset</a>            122 src/arch/task.c 	memset(stack, 0, TASK_STACKSIZE);
+<a href='../S/159.html#L126'>memset</a>            126 src/arch/task.c 	memset(child, 0, sizeof(task_t));
+<a href='../S/159.html#L184'>memset</a>            184 src/arch/task.c 	memset(current_task, 0, sizeof(task_t));
+<a href='../S/156.html#L137'>memset</a>            137 src/bufio.c    	memset(buf-&gt;raw, 0, buf-&gt;size);
+<a href='../S/155.html#L128'>memset</a>            128 src/debug.c    	memset(__kprintf_buf, 0, 1024);
+<a href='../S/145.html#L72'>memset</a>             72 src/fs/pipe.c  		memset((void*) &amp;inodes[i], 0, sizeof(inode_t));
+<a href='../S/153.html#L137'>memset</a>            137 src/mm/kheap.c 	memset(kheap.bitmap, 0, kheap.size);
+<a href='../S/150.html#L94'>memset</a>             94 src/mm/paging.c 			memset(table, 0, PTSIZE * sizeof(uint32_t));
+<a href='../S/150.html#L157'>memset</a>            157 src/mm/paging.c 	memset(addr, 0, PDSIZE * sizeof(uint32_t));
+<a href='../S/150.html#L162'>memset</a>            162 src/mm/paging.c 	memset(vmm, 0, PDSIZE * sizeof(uint32_t));
+<a href='../S/150.html#L172'>memset</a>            172 src/mm/paging.c 	memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
+<a href='../S/108.html#L88'>memset</a>             88 src/net/arp.c  	memset(arp-&gt;tha, 0, sizeof(macaddr_t));
+<a href='../S/108.html#L89'>memset</a>             89 src/net/arp.c  	memset(arp-&gt;spa, 0, sizeof(ipv4_t));
+<a href='../S/108.html#L90'>memset</a>             90 src/net/arp.c  	memset(arp-&gt;tpa, 0, sizeof(ipv4_t));
+<a href='../S/112.html#L51'>memset</a>             51 src/net/eth.c  	memset((void*) ethpkt-&gt;dest, 0xFF, sizeof(macaddr_t));
+<a href='../S/111.html#L68'>memset</a>             68 src/net/loopback/loopback.c 	memset(netif, 0, sizeof(netif_t));
+<a href='../S/111.html#L72'>memset</a>             72 src/net/loopback/loopback.c 	memset(netif-&gt;macaddr, 0xFF, sizeof(macaddr_t));
+<a href='../S/104.html#L71'>memset</a>             71 src/net/rtl8139/rtl8139.c 		memset((void*) ((uint32_t) card-&gt;txBuffer + len), 0, 60 - len);
+<a href='../S/104.html#L184'>memset</a>            184 src/net/rtl8139/rtl8139.c 	memset(card-&gt;macaddr, 0, 6);
+<a href='../S/104.html#L217'>memset</a>            217 src/net/rtl8139/rtl8139.c 	memset(card-&gt;rxBuffer, 0, RX_BUFFER_SIZE + 16);
+<a href='../S/104.html#L218'>memset</a>            218 src/net/rtl8139/rtl8139.c 	memset(card-&gt;txBuffer, 0, TX_BUFFER_SIZE * 4 + 16);
+<a href='../S/104.html#L240'>memset</a>            240 src/net/rtl8139/rtl8139.c 	memset(card-&gt;netif, 0, sizeof(netif_t));
+<a href='../S/104.html#L304'>memset</a>            304 src/net/rtl8139/rtl8139.c 	memset(tmpbuf, 0xFF, 512);
+<a href='../S/110.html#L139'>memset</a>            139 src/net/slirp/slirp.c 	memset(netif, 0, sizeof(netif_t));
+<a href='../S/32.html#L33'>memset</a>             33 usr/src/libposix/src/getcwd.c 	memset(buf, 0, size);
+<a href='../S/32.html#L34'>memset</a>             34 usr/src/libposix/src/getcwd.c 	memset(tmpbuf, 0, 1024);
+<a href='../S/65.html#L34'>memset</a>             34 usr/src/libpthread/src/pthread_attr.c 	memset(attr, 0, sizeof(pthread_attr_t));
+<a href='../S/64.html#L52'>memset</a>             52 usr/src/libpthread/src/pthread_create.c 	memset(ctx, 0, sizeof(pthread_context_t));
+<a href='../S/61.html#L25'>memset</a>             25 usr/src/libpthread/src/pthread_queue.c 	memset(&amp;__current_thread.attr, 0, sizeof(pthread_attr_t));
+</pre>
+</body>
+</html>

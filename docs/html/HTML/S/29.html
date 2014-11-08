@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>usr/src/libposix/src/execvp.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/execvp.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L24'>[^]</a><a href='#L39'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L24' title='Defined at 24.'>_DEFUN</a>
+<li><a href='#L39' title='Defined at 39.'>_DEFUN</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>/* execvp.c */</font></i>
+<a name='L2'>   2 
+<a name='L3'>   3 <i><font color='green'>/* This and the other exec*.c files in this directory require </font></i>
+<a name='L4'>   4 <i><font color='green'>   the target to provide the _execve syscall.  */</font></i>
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;_ansi.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L12'>  12 <font color='darkred'>#include</font> &lt;ctype.h&gt;
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 
+<a name='L16'>  16 <font color='darkred'>#define</font> <a href='../R/81.html' title='Multiple refered from 3 places.'>PATH_DELIM</a> ':'
+<a name='L17'>  17 
+<a name='L18'>  18 <i><font color='green'>/*</font></i>
+<a name='L19'>  19 <i><font color='green'> * Copy string, until c or &lt;nul&gt; is encountered.</font></i>
+<a name='L20'>  20 <i><font color='green'> * NUL-terminate the destination string (s1).</font></i>
+<a name='L21'>  21 <i><font color='green'> */</font></i>
+<a name='L22'>  22 
+<a name='L23'>  23 <b>static</b> <b>char</b> *
+<a name='L24'>  24 <a href='../R/157.html' title='Multiple refered from 3 places.'>_DEFUN</a> (<a href='../Y/614.html' title='Multiple used in 2 places.'>strccpy</a>, (<a href='../Y/541.html' title='Multiple used in 5 places.'>s1</a>, <a href='../Y/542.html' title='Multiple used in 4 places.'>s2</a>, <a href='../Y/145.html' title='Multiple used in 3 places.'>c</a>),
+<a name='L25'>  25         <b>char</b> *<a href='../Y/541.html' title='Multiple used in 5 places.'>s1</a> <a href='../Y/58.html' title='Multiple used in 13 places.'>_AND</a>
+<a name='L26'>  26         <b>char</b> *<a href='../Y/542.html' title='Multiple used in 4 places.'>s2</a> <a href='../Y/58.html' title='Multiple used in 13 places.'>_AND</a>
+<a name='L27'>  27         <b>char</b> <a href='../Y/145.html' title='Multiple used in 3 places.'>c</a>)
+<a name='L28'>  28 <font color='red'>{</font>
+<a name='L29'>  29   <b>char</b> *<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a> = <a href='../Y/541.html' title='Multiple used in 5 places.'>s1</a>;
+<a name='L30'>  30 
+<a name='L31'>  31   <b>while</b> (*<a href='../Y/542.html' title='Multiple used in 4 places.'>s2</a> &amp;&amp; *<a href='../Y/542.html' title='Multiple used in 4 places.'>s2</a> != <a href='../Y/145.html' title='Multiple used in 3 places.'>c</a>)
+<a name='L32'>  32     *<a href='../Y/541.html' title='Multiple used in 5 places.'>s1</a>++ = *<a href='../Y/542.html' title='Multiple used in 4 places.'>s2</a>++;
+<a name='L33'>  33   *<a href='../Y/541.html' title='Multiple used in 5 places.'>s1</a> = 0;
+<a name='L34'>  34 
+<a name='L35'>  35   <b>return</b> <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>;
+<a name='L36'>  36 <font color='red'>}</font>
+<a name='L37'>  37 
+<a name='L38'>  38 <b>int</b>
+<a name='L39'>  39 <a href='../R/157.html' title='Multiple refered from 3 places.'>_DEFUN</a> (<a href='../Y/253.html' title='Multiple used in 2 places.'>execvp</a>, (<a href='../Y/262.html' title='Multiple used in 6 places.'>file</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>),
+<a name='L40'>  40         <a href='../Y/59.html' title='Multiple used in 26 places.'>_CONST</a> <b>char</b> *<a href='../Y/262.html' title='Multiple used in 6 places.'>file</a> <a href='../Y/58.html' title='Multiple used in 13 places.'>_AND</a>
+<a name='L41'>  41         <b>char</b> * <a href='../Y/59.html' title='Multiple used in 26 places.'>_CONST</a> <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>[])
+<a name='L42'>  42 <font color='red'>{</font>
+<a name='L43'>  43   <b>char</b> *<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a> = getenv ("PATH");
+<a name='L44'>  44   <b>char</b> <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>[MAXNAMLEN];
+<a name='L45'>  45 
+<a name='L46'>  46   <i><font color='green'>/* If $PATH doesn't exist, just pass FILE on unchanged.  */</font></i>
+<a name='L47'>  47   <b>if</b> (!<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>)
+<a name='L48'>  48     <b>return</b> <a href='../Y/251.html' title='Multiple used in 4 places.'>execv</a> (<a href='../Y/262.html' title='Multiple used in 6 places.'>file</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>);
+<a name='L49'>  49 
+<a name='L50'>  50   <i><font color='green'>/* If FILE contains a directory, don't search $PATH.  */</font></i>
+<a name='L51'>  51   <b>if</b> (<a href='../Y/615.html' title='Multiple used in 2 places.'>strchr</a> (<a href='../Y/262.html' title='Multiple used in 6 places.'>file</a>, '/')
+<a name='L52'>  52       )
+<a name='L53'>  53     <b>return</b> <a href='../Y/251.html' title='Multiple used in 4 places.'>execv</a> (<a href='../Y/262.html' title='Multiple used in 6 places.'>file</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>);
+<a name='L54'>  54 
+<a name='L55'>  55   <b>while</b> (*<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>)
+<a name='L56'>  56     <font color='red'>{</font>
+<a name='L57'>  57       <a href='../Y/614.html' title='Multiple used in 2 places.'>strccpy</a> (<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>, <a href='../S/29.html#L16' title='Defined at 16 in usr/src/libposix/src/execvp.c.'>PATH_DELIM</a>);
+<a name='L58'>  58       <i><font color='green'>/* An empty entry means the current directory.  */</font></i>
+<a name='L59'>  59       <b>if</b> (*<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> != 0 &amp;&amp; <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>[<a href='../Y/621.html' title='Multiple used in 3 places.'>strlen</a>(<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>) - 1] != '/')
+<a name='L60'>  60         <a href='../Y/613.html' title='Multiple used in 5 places.'>strcat</a> (<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, "/");
+<a name='L61'>  61       <a href='../Y/613.html' title='Multiple used in 5 places.'>strcat</a> (<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/262.html' title='Multiple used in 6 places.'>file</a>);
+<a name='L62'>  62       <b>if</b>(<a href='../Y/251.html' title='Multiple used in 4 places.'>execv</a> (<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>) == 0)
+<a name='L63'>  63                 <b>return</b> 0;               
+<a name='L64'>  64 
+<a name='L65'>  65       <b>while</b> (*<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a> &amp;&amp; *<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a> != <a href='../S/29.html#L16' title='Defined at 16 in usr/src/libposix/src/execvp.c.'>PATH_DELIM</a>)
+<a name='L66'>  66         <a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>++;
+<a name='L67'>  67       <b>if</b> (*<a href='../Y/461.html' title='Multiple used in 29 places.'>path</a> == <a href='../S/29.html#L16' title='Defined at 16 in usr/src/libposix/src/execvp.c.'>PATH_DELIM</a>)
+<a name='L68'>  68         <a href='../Y/461.html' title='Multiple used in 29 places.'>path</a>++;                 <i><font color='green'>/* skip over delim */</font></i>
+<a name='L69'>  69     <font color='red'>}</font>
+<a name='L70'>  70 
+<a name='L71'>  71   <b>return</b> -1;
+<a name='L72'>  72 <font color='red'>}</font>
+<a name='L73'>  73 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L24'>[^]</a><a href='#L39'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

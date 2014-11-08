@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>usr/src/libposix/src/_execve.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/_execve.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L8'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L8' title='Defined at 8.'>_execve</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L3'>   3 
+<a name='L4'>   4 
+<a name='L5'>   5 <i><font color='green'>/* syscalls.c */</font></i>
+<a name='L6'>   6 <b>extern</b> <b>int</b> execve(<b>const</b> <b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <b>char</b>* <b>const</b> <a href='../Y/105.html' title='Multiple used in 25 places.'>args</a>[], <b>char</b>* <b>const</b> <a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>[]);
+<a name='L7'>   7 
+<a name='L8'>   8 <b>int</b> <a href='../R/196.html' title='Multiple refered from 7 places.'>_execve</a>(<b>const</b> <b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <b>char</b>* <b>const</b> <a href='../Y/105.html' title='Multiple used in 25 places.'>args</a>[], <b>char</b>* <b>const</b> <a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>[]) <font color='red'>{</font>
+<a name='L9'>   9         <b>return</b> <a href='../Y/252.html' title='Multiple used in 2 places.'>execve</a>(<a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <a href='../Y/105.html' title='Multiple used in 25 places.'>args</a>, <a href='../Y/236.html' title='Multiple used in 15 places.'>env</a>);
+<a name='L10'>  10 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L8'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

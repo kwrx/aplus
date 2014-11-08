@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>TASK_STACKSIZE</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L96'>TASK_STACKSIZE</a>     96 src/arch/task.c 	void* stack = (void*) mm_align(kmalloc(TASK_STACKSIZE * 2));
+<a href='../S/159.html#L97'>TASK_STACKSIZE</a>     97 src/arch/task.c 	memcpy(stack, (void*) child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L99'>TASK_STACKSIZE</a>     99 src/arch/task.c 	vmm_umap(child-&gt;context.cr3, child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L100'>TASK_STACKSIZE</a>    100 src/arch/task.c 	vmm_map(child-&gt;context.cr3, mm_paddr(stack), child-&gt;context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+<a href='../S/159.html#L120'>TASK_STACKSIZE</a>    120 src/arch/task.c 		stack = (void*) ((int) mm_align(kmalloc(TASK_STACKSIZE * 2)) + TASK_STACKSIZE);
+<a href='../S/159.html#L122'>TASK_STACKSIZE</a>    122 src/arch/task.c 	memset(stack, 0, TASK_STACKSIZE);
+<a href='../S/159.html#L148'>TASK_STACKSIZE</a>    148 src/arch/task.c 	child-&gt;context.stack = (uint32_t) stack - TASK_STACKSIZE;
+</pre>
+</body>
+</html>

@@ -1,0 +1,109 @@
+.TH "usr/src/libpthread/src/pthread_condattr.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_condattr.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_condattr_init\fP (\fBpthread_condattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_condattr_destroy\fP (\fBpthread_condattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_condattr_getpshared\fP (const \fBpthread_condattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_condattr_setpshared\fP (\fBpthread_condattr_t\fP *attr, int pshared)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_condattr_destroy (\fBpthread_condattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 18 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+18                                                               {
+19     if(!attr) {
+20         errno = EINVAL;
+21         return 1;
+22     }
+23 
+24     attr->pshared = 0;
+25     return 0;
+26 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_condattr_getpshared (const \fBpthread_condattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 29 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+29                                                                                      {
+30     if(!attr) {
+31         errno = EINVAL;
+32         return 1;
+33     }
+34 
+35     
+36     *pshared = attr->pshared;
+37     return 0;
+38 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_condattr_init (\fBpthread_condattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 7 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+7                                                            {
+8     if(!attr) {
+9         errno = EINVAL;
+10         return 1;
+11     }
+12 
+13     attr->pshared = 0;
+14     return 0;
+15 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_condattr_setpshared (\fBpthread_condattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 41 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+41                                                                               {
+42     if(!attr) {
+43         errno = EINVAL;
+44         return 1;
+45     }
+46 
+47     attr->pshared = pshared;
+48     return 0;
+49 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

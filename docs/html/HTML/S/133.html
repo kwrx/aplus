@@ -1,0 +1,56 @@
+<html>
+<head>
+<title>src/syscall/chown.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/chown.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L13'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L13' title='Defined at 13.'>sys_chown</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 
+<a name='L11'>  11 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L12'>  12 
+<a name='L13'>  13 <b>int</b> sys_chown(<b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <a href='../Y/717.html' title='Multiple used in 8 places.'>uid_t</a> <a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a>, <a href='../Y/287.html' title='Multiple used in 12 places.'>gid_t</a> <a href='../Y/291.html' title='Multiple used in 5 places.'>group</a>) <font color='red'>{</font>
+<a name='L14'>  14         <b>if</b>(!<a href='../S/143.html#L41' title='Defined at 41 in src/sched.c.'>im_superuser</a>()) <font color='red'>{</font>
+<a name='L15'>  15                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("sys_chown: only superuser allow to use this function.");
+<a name='L16'>  16                 
+<a name='L17'>  17                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = EACCES;
+<a name='L18'>  18                 <b>return</b> -1;
+<a name='L19'>  19         <font color='red'>}</font>
+<a name='L20'>  20         
+<a name='L21'>  21         
+<a name='L22'>  22         <b>int</b> <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> = <a href='../S/139.html#L107' title='Defined at 107 in src/syscall/open.c.'>sys_open</a>(<a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <a href='../Y/30.html' title='Multiple used in 5 places.'>O_RDONLY</a>, 0644);
+<a name='L23'>  23         <b>if</b>(<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a> &lt; 0) <font color='red'>{</font>
+<a name='L24'>  24                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("sys_chown: %s.", <a href='../Y/620.html' title='Multiple used in 3 places.'>strerror</a>(<a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a>));
+<a name='L25'>  25                 <b>return</b> -1;
+<a name='L26'>  26         <font color='red'>}</font>
+<a name='L27'>  27         
+<a name='L28'>  28         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>];
+<a name='L29'>  29         <b>return</b> <a href='../S/146.html#L86' title='Defined at 86 in src/fs/fs.c.'>fs_chown</a>(<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>, <a href='../Y/446.html' title='Multiple used in 19 places.'>owner</a>, <a href='../Y/291.html' title='Multiple used in 5 places.'>group</a>);
+<a name='L30'>  30 <font color='red'>}</font>
+<a name='L31'>  31 
+<a name='L32'>  32 
+<a name='L33'>  33 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_chown, 21);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L13'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

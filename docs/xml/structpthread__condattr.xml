@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__condattr" kind="struct" prot="public">
+    <compoundname>pthread_condattr</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__condattr_1a2cf7aea8228b9cee52cc0eccc4492fd7" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_condattr::pshared</definition>
+        <argsstring></argsstring>
+        <name>pshared</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="102" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="78">
+        <label>pthread_condattr</label>
+        <link refid="structpthread__condattr"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="101" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="101" bodyend="103"/>
+    <listofallmembers>
+      <member refid="structpthread__condattr_1a2cf7aea8228b9cee52cc0eccc4492fd7" prot="public" virt="non-virtual"><scope>pthread_condattr</scope><name>pshared</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

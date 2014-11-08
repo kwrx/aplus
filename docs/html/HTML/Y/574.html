@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>signal</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/125.html#L10'>signal</a>             10 src/syscall/kill.c int sys_kill(pid_t pid, int signal) {
+<a href='../S/125.html#L17'>signal</a>             17 src/syscall/kill.c 	task-&gt;signal_sig = signal;
+<a href='../S/84.html#L18'>signal</a>             18 usr/src/libcrt0/src/crt0.c 	signal(sig, __default_sighandler__);
+<a href='../S/84.html#L52'>signal</a>             52 usr/src/libcrt0/src/crt0.c 	signal(SIGABRT, __default_sighandler__);
+<a href='../S/84.html#L53'>signal</a>             53 usr/src/libcrt0/src/crt0.c 	signal(SIGFPE, __default_sighandler__);
+<a href='../S/84.html#L54'>signal</a>             54 usr/src/libcrt0/src/crt0.c 	signal(SIGILL, __default_sighandler__);
+<a href='../S/84.html#L55'>signal</a>             55 usr/src/libcrt0/src/crt0.c 	signal(SIGINT, __default_sighandler__);
+<a href='../S/84.html#L56'>signal</a>             56 usr/src/libcrt0/src/crt0.c 	signal(SIGSEGV, __default_sighandler__);
+<a href='../S/84.html#L57'>signal</a>             57 usr/src/libcrt0/src/crt0.c 	signal(SIGTERM, __default_sighandler__);
+<a href='../S/79.html#L29'>signal</a>             29 usr/src/libcrt0/test/main.c 	assert(signal(SIGUSR1, __test_signals__) != SIG_ERR);
+</pre>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__key_8c">
+    <title>pthread_key.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8">PRIVATE</link> <link linkend="pthread__internal_8h_1af2e45523b401a6101f50c6f7be0d66a8">__pthread_key_t</link> <link linkend="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703">__pthread_keys</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__key_8c_1ab931277f4deb7cb12e24a862b2af7333">pthread_key_create</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> * key, void(*)(void *) destructor)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__key_8c_1ab28319aea4b1565728829629b0467fa6">pthread_key_delete</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> key)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__key_8c_1ad73e5af1b85b9f874408816bfc2b223c">pthread_setspecific</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> key, const void * value)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> void * <link linkend="pthread__key_8c_1aef660e97ead1e5c0be8c3ad125797b6a">pthread_getspecific</link> (
+<link linkend="pthread_8h_1a965dffa696273f72e4b513905c63a3ad">pthread_key_t</link> key)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_key.c</para>
+    </simplesect>
+</section>

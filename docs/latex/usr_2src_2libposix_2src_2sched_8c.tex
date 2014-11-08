@@ -1,0 +1,293 @@
+\hypertarget{usr_2src_2libposix_2src_2sched_8c}{\section{Riferimenti per il file usr/src/libposix/src/sched.c}
+\label{usr_2src_2libposix_2src_2sched_8c}\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+}
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\\*
+{\ttfamily \#include $<$sched.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/times.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+\subsection*{Ridefinizioni di tipo (typedef)}
+\begin{DoxyCompactItemize}
+\item 
+typedef int \hyperlink{usr_2src_2libposix_2src_2sched_8c_acd49b6ab6b9adcb42cdf2f6a0db877e1}{cpu\+\_\+set\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_a84ad29a6f2ad27370df09c664ac65eac}{sched\+\_\+setscheduler} (pid\+\_\+t pid, int policy, const struct sched\+\_\+param $\ast$param)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_a99fcb2532b1482d236dc04495a3f194d}{sched\+\_\+getscheduler} (pid\+\_\+t pid)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_a06b497c4ea6bbabd2b62ba1a8a848a1b}{sched\+\_\+setparam} (pid\+\_\+t pid, const struct sched\+\_\+param $\ast$param)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_a563c7ac53bac2c1b51379147e66c44ec}{sched\+\_\+getparam} (pid\+\_\+t pid, struct sched\+\_\+param $\ast$param)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_afaebd1698caeb9b9b9e614ad84edd609}{sched\+\_\+get\+\_\+priority\+\_\+max} (int policy)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_af1f370fc36ea6b22ed42b5ee3cf82a81}{sched\+\_\+get\+\_\+priority\+\_\+min} (int policy)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_a761d3ef9e8d86918e92b2b5c0d3e60e0}{sched\+\_\+rr\+\_\+get\+\_\+interval} (pid\+\_\+t pid, struct timespec $\ast$tp)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_ac5dd89aac453a882679e3651fc2aefe8}{sched\+\_\+setaffinity} (pid\+\_\+t pid, size\+\_\+t cpusetsize, const \hyperlink{usr_2src_2libposix_2src_2sched_8c_acd49b6ab6b9adcb42cdf2f6a0db877e1}{cpu\+\_\+set\+\_\+t} $\ast$mask)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2sched_8c_a4b7ccb0eb4ad49973d9c54d7b7bc1ace}{sched\+\_\+getaffinity} (pid\+\_\+t pid, size\+\_\+t cpusetsize, \hyperlink{usr_2src_2libposix_2src_2sched_8c_acd49b6ab6b9adcb42cdf2f6a0db877e1}{cpu\+\_\+set\+\_\+t} $\ast$mask)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_acd49b6ab6b9adcb42cdf2f6a0db877e1}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!cpu\+\_\+set\+\_\+t@{cpu\+\_\+set\+\_\+t}}
+\index{cpu\+\_\+set\+\_\+t@{cpu\+\_\+set\+\_\+t}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{cpu\+\_\+set\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef int {\bf cpu\+\_\+set\+\_\+t}}}\label{usr_2src_2libposix_2src_2sched_8c_acd49b6ab6b9adcb42cdf2f6a0db877e1}
+
+
+Definizione alla linea 11 del file sched.\+c.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_afaebd1698caeb9b9b9e614ad84edd609}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+get\+\_\+priority\+\_\+max@{sched\+\_\+get\+\_\+priority\+\_\+max}}
+\index{sched\+\_\+get\+\_\+priority\+\_\+max@{sched\+\_\+get\+\_\+priority\+\_\+max}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+get\+\_\+priority\+\_\+max}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+get\+\_\+priority\+\_\+max (
+\begin{DoxyParamCaption}
+\item[{int}]{policy}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_afaebd1698caeb9b9b9e614ad84edd609}
+
+
+Definizione alla linea 60 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+60                                        \{
+61     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+62     \textcolor{keywordflow}{return} -1;
+63 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_af1f370fc36ea6b22ed42b5ee3cf82a81}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+get\+\_\+priority\+\_\+min@{sched\+\_\+get\+\_\+priority\+\_\+min}}
+\index{sched\+\_\+get\+\_\+priority\+\_\+min@{sched\+\_\+get\+\_\+priority\+\_\+min}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+get\+\_\+priority\+\_\+min}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+get\+\_\+priority\+\_\+min (
+\begin{DoxyParamCaption}
+\item[{int}]{policy}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_af1f370fc36ea6b22ed42b5ee3cf82a81}
+
+
+Definizione alla linea 65 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+65                                        \{
+66     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+67     \textcolor{keywordflow}{return} -1;
+68 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_a4b7ccb0eb4ad49973d9c54d7b7bc1ace}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+getaffinity@{sched\+\_\+getaffinity}}
+\index{sched\+\_\+getaffinity@{sched\+\_\+getaffinity}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+getaffinity}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+getaffinity (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{size\+\_\+t}]{cpusetsize, }
+\item[{{\bf cpu\+\_\+set\+\_\+t} $\ast$}]{mask}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_a4b7ccb0eb4ad49973d9c54d7b7bc1ace}
+
+
+Definizione alla linea 93 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+93                                                                      \{
+94     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+95     \textcolor{keywordflow}{return} -1;
+96 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_a563c7ac53bac2c1b51379147e66c44ec}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+getparam@{sched\+\_\+getparam}}
+\index{sched\+\_\+getparam@{sched\+\_\+getparam}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+getparam}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+getparam (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{struct sched\+\_\+param $\ast$}]{param}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_a563c7ac53bac2c1b51379147e66c44ec}
+
+
+Definizione alla linea 50 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+50                                                          \{
+51     \textcolor{keywordflow}{if}(pid < 0) \{
+52         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+53         \textcolor{keywordflow}{return} -1;
+54     \}
+55 
+56     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+57     \textcolor{keywordflow}{return} -1;
+58 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_a99fcb2532b1482d236dc04495a3f194d}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+getscheduler@{sched\+\_\+getscheduler}}
+\index{sched\+\_\+getscheduler@{sched\+\_\+getscheduler}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+getscheduler}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+getscheduler (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_a99fcb2532b1482d236dc04495a3f194d}
+
+
+Definizione alla linea 29 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+29                                   \{
+30     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+31     \textcolor{keywordflow}{return} -1;
+32 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_a761d3ef9e8d86918e92b2b5c0d3e60e0}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+rr\+\_\+get\+\_\+interval@{sched\+\_\+rr\+\_\+get\+\_\+interval}}
+\index{sched\+\_\+rr\+\_\+get\+\_\+interval@{sched\+\_\+rr\+\_\+get\+\_\+interval}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+rr\+\_\+get\+\_\+interval}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+rr\+\_\+get\+\_\+interval (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{struct timespec $\ast$}]{tp}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_a761d3ef9e8d86918e92b2b5c0d3e60e0}
+
+
+Definizione alla linea 70 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+70                                                           \{
+71     \textcolor{keywordflow}{if}(pid < 0) \{
+72         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+73         \textcolor{keywordflow}{return} -1;
+74     \}
+75 
+76     \textcolor{keywordflow}{if}(tp == NULL) \{
+77         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+78         \textcolor{keywordflow}{return} -1;
+79     \}
+80 
+81     tp->tv\_sec = 0;
+82     tp->tv\_nsec = CLOCKS\_PER\_SEC / 1000000000;
+83 
+84     \textcolor{keywordflow}{return} 0;
+85 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_ac5dd89aac453a882679e3651fc2aefe8}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+setaffinity@{sched\+\_\+setaffinity}}
+\index{sched\+\_\+setaffinity@{sched\+\_\+setaffinity}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+setaffinity}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+setaffinity (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{size\+\_\+t}]{cpusetsize, }
+\item[{const {\bf cpu\+\_\+set\+\_\+t} $\ast$}]{mask}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_ac5dd89aac453a882679e3651fc2aefe8}
+
+
+Definizione alla linea 88 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+88                                                                            \{
+89     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+90     \textcolor{keywordflow}{return} -1;
+91 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_a06b497c4ea6bbabd2b62ba1a8a848a1b}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+setparam@{sched\+\_\+setparam}}
+\index{sched\+\_\+setparam@{sched\+\_\+setparam}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+setparam}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+setparam (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{const struct sched\+\_\+param $\ast$}]{param}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_a06b497c4ea6bbabd2b62ba1a8a848a1b}
+
+
+Definizione alla linea 35 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+35                                                                \{
+36     \textcolor{keywordflow}{if}(param == NULL) \{
+37         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+38         \textcolor{keywordflow}{return} -1;
+39     \}
+40 
+41     \textcolor{keywordflow}{if}(pid < 0) \{
+42         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+43         \textcolor{keywordflow}{return} -1;
+44     \}
+45 
+46     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+47     \textcolor{keywordflow}{return} -1;
+48 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2sched_8c_a84ad29a6f2ad27370df09c664ac65eac}{\index{usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}!sched\+\_\+setscheduler@{sched\+\_\+setscheduler}}
+\index{sched\+\_\+setscheduler@{sched\+\_\+setscheduler}!usr/src/libposix/src/sched.\+c@{usr/src/libposix/src/sched.\+c}}
+\subsubsection[{sched\+\_\+setscheduler}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+setscheduler (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{int}]{policy, }
+\item[{const struct sched\+\_\+param $\ast$}]{param}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2sched_8c_a84ad29a6f2ad27370df09c664ac65eac}
+
+
+Definizione alla linea 14 del file sched.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+14                                                                                \{
+15     \textcolor{keywordflow}{if}(param == NULL) \{
+16         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+17         \textcolor{keywordflow}{return} -1;
+18     \}
+19 
+20     \textcolor{keywordflow}{if}(pid < 0) \{
+21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+22         \textcolor{keywordflow}{return} -1;
+23     \}
+24 
+25     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+26     \textcolor{keywordflow}{return} -1;
+27 \}
+\end{DoxyCode}

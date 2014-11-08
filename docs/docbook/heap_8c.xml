@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="heap_8c">
+    <title>heap.c File Reference</title>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339">halloc</link> (
+<link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link> * heap, size_t size)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851">hfree</link> (
+<link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link> * heap, void * addr, size_t size)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/mm/heap.c</para>
+    </simplesect>
+</section>

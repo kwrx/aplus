@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="environ_8c" kind="file">
+    <compoundname>environ.c</compoundname>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="environ_8c_1ad96f10121a8a5c2d5d642d9aad140684" prot="public" static="yes" mutable="no">
+        <type>char *</type>
+        <definition>char* p_environ[]</definition>
+        <argsstring>[]</argsstring>
+        <name>p_environ</name>
+        <initializer>= { 0 }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/environ.c" line="2" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/environ.c" bodystart="2" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="environ_8c_1aa006daaf11f1e2e45a6ababaf463212b" prot="public" static="no" mutable="no">
+        <type>char **</type>
+        <definition>char** environ</definition>
+        <argsstring></argsstring>
+        <name>environ</name>
+        <initializer>= <ref refid="execv_8c_1a8facdfc3e966886a03275b03efb78576" kindref="member">p_environ</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/environ.c" line="3" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/environ.c" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2" refid="environ_8c_1ad96f10121a8a5c2d5d642d9aad140684" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="environ_8c_1ad96f10121a8a5c2d5d642d9aad140684" kindref="member">p_environ</ref>[]<sp/>=<sp/>{<sp/>0<sp/>};</highlight></codeline>
+<codeline lineno="3" refid="environ_8c_1aa006daaf11f1e2e45a6ababaf463212b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/><ref refid="environ_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref><sp/>=<sp/><ref refid="environ_8c_1ad96f10121a8a5c2d5d642d9aad140684" kindref="member">p_environ</ref>;</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/environ.c"/>
+  </compounddef>
+</doxygen>

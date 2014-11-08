@@ -1,0 +1,66 @@
+\hypertarget{execlp_8c}{\section{Riferimenti per il file usr/src/libposix/src/execlp.c}
+\label{execlp_8c}\index{usr/src/libposix/src/execlp.\+c@{usr/src/libposix/src/execlp.\+c}}
+}
+{\ttfamily \#include $<$\+\_\+ansi.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$varargs.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{execlp_8c_accd0d84615f4b84367796ea088af9d72}{\+\_\+execve} (const char $\ast$filename, char $\ast$const args\mbox{[}$\,$\mbox{]}, char $\ast$const env\mbox{[}$\,$\mbox{]})
+\item 
+int \hyperlink{execlp_8c_aab09774ec2290c965f64151463f38eee}{\+\_\+\+D\+E\+F\+U\+N} (execlp,(path, arg0, va\+\_\+alist), \+\_\+\+C\+O\+N\+S\+T char $\ast$path \+\_\+\+A\+N\+D \+\_\+\+C\+O\+N\+S\+T char $\ast$arg0 \+\_\+\+A\+N\+D va\+\_\+dcl)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{execlp_8c_aab09774ec2290c965f64151463f38eee}{\index{execlp.\+c@{execlp.\+c}!\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}}
+\index{\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}!execlp.\+c@{execlp.\+c}}
+\subsubsection[{\+\_\+\+D\+E\+F\+U\+N}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+\+D\+E\+F\+U\+N (
+\begin{DoxyParamCaption}
+\item[{execlp}]{, }
+\item[{(path, arg0, va\+\_\+alist)}]{, }
+\item[{\+\_\+\+C\+O\+N\+S\+T char $\ast$path \+\_\+\+A\+N\+D \+\_\+\+C\+O\+N\+S\+T char $\ast$arg0 \+\_\+\+A\+N\+D}]{va\+\_\+dcl}
+\end{DoxyParamCaption}
+)}}\label{execlp_8c_aab09774ec2290c965f64151463f38eee}
+
+
+Definizione alla linea 25 del file execlp.\+c.
+
+
+\begin{DoxyCode}
+32 \{
+33   \textcolor{keywordtype}{int} i;
+34   va\_list args;
+35   \_CONST \textcolor{keywordtype}{char} *argv[256];
+36 
+37   va\_start (args, arg0);
+38   argv[0] = arg0;
+39   i = 1;
+40   \textcolor{keywordflow}{do}
+41       argv[i] = va\_arg (args, \_CONST \textcolor{keywordtype}{char} *);
+42   \textcolor{keywordflow}{while} (argv[i++] != NULL);
+43   va\_end (args);
+44 
+45   \textcolor{keywordflow}{return} execvp (path, (\textcolor{keywordtype}{char} * \_CONST *) argv);
+46 \}
+\end{DoxyCode}
+\hypertarget{execlp_8c_accd0d84615f4b84367796ea088af9d72}{\index{execlp.\+c@{execlp.\+c}!\+\_\+execve@{\+\_\+execve}}
+\index{\+\_\+execve@{\+\_\+execve}!execlp.\+c@{execlp.\+c}}
+\subsubsection[{\+\_\+execve}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+execve (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{filename, }
+\item[{char $\ast$const}]{args\mbox{[}$\,$\mbox{]}, }
+\item[{char $\ast$const}]{env\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{execlp_8c_accd0d84615f4b84367796ea088af9d72}
+
+
+Definizione alla linea 8 del file \+\_\+execve.\+c.
+
+
+\begin{DoxyCode}
+8                                                                          \{
+9     \textcolor{keywordflow}{return} \hyperlink{__execve_8c_a69afa95020be08ad581031bc33921680}{execve}(filename, args, env);
+10 \}
+\end{DoxyCode}

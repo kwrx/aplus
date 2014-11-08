@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__rwlock_8c">
+    <title>pthread_rwlock.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1a46a12cdd6b615fbda17298ad5349acfc">pthread_rwlock_init</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock, const <link linkend="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a">pthread_rwlockattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1a4def07157f4c8cd2ee99abfa6303f36b">pthread_rwlock_destroy</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1a39bcc5a9100d140d2ab9f8e51d436392">pthread_rwlock_tryrdlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1a170136d12a1f5152fb5985a8d4cbd778">pthread_rwlock_trywrlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1a60bfe75b2bd44e97c9d97bdc77575455">pthread_rwlock_rdlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1af2063880b9dc62cd540110617c55ee87">pthread_rwlock_timedrdlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1a1f51c39f16edb854db719ff6ac6281d7">pthread_rwlock_wrlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1ae32d75b4219853faec2b39f5e76bea32">pthread_rwlock_timedwrlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__rwlock_8c_1ac97fca37651ede06aa8229ba572b44b4">pthread_rwlock_unlock</link> (
+<link linkend="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7">pthread_rwlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c</para>
+    </simplesect>
+</section>

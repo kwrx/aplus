@@ -1,0 +1,185 @@
+.TH "src/include/aplus/net/arp.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/net/arp.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <aplus/net/eth\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBarp_header\fP"
+.br
+.ti -1c
+.RI "struct \fBarp_cache_entry\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBARP_PRTYPE\fP   \fBETH_TYPE_IPV4\fP"
+.br
+.ti -1c
+.RI "#define \fBARP_PRLEN\fP   4"
+.br
+.ti -1c
+.RI "#define \fBARP_HWTYPE\fP   0x0001"
+.br
+.ti -1c
+.RI "#define \fBARP_HWLEN\fP   6"
+.br
+.ti -1c
+.RI "#define \fBARP_OPERATION_REQUEST\fP   1"
+.br
+.ti -1c
+.RI "#define \fBARP_OPERATION_REPLY\fP   2"
+.br
+.ti -1c
+.RI "#define \fBARP_TTL\fP   600		/* 10min */"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBarp_cache_entry\fP \fBarp_cache_entry_t\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "struct \fBarp_header\fP \fB__attribute__\fP ((packed)) arp_header_t"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBuint16_t\fP \fBhwtype\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBprtype\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBhwlen\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBprlen\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBoperation\fP"
+.br
+.ti -1c
+.RI "\fBmacaddr_t\fP \fBsha\fP"
+.br
+.ti -1c
+.RI "\fBipv4_t\fP \fBspa\fP"
+.br
+.ti -1c
+.RI "\fBmacaddr_t\fP \fBtha\fP"
+.br
+.ti -1c
+.RI "\fBipv4_t\fP \fBtpa\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define ARP_HWLEN   6"
+
+.PP
+Definizione alla linea 16 del file arp\&.h\&.
+.SS "#define ARP_HWTYPE   0x0001"
+
+.PP
+Definizione alla linea 15 del file arp\&.h\&.
+.SS "#define ARP_OPERATION_REPLY   2"
+
+.PP
+Definizione alla linea 19 del file arp\&.h\&.
+.SS "#define ARP_OPERATION_REQUEST   1"
+
+.PP
+Definizione alla linea 18 del file arp\&.h\&.
+.SS "#define ARP_PRLEN   4"
+
+.PP
+Definizione alla linea 13 del file arp\&.h\&.
+.SS "#define ARP_PRTYPE   \fBETH_TYPE_IPV4\fP"
+
+.PP
+Definizione alla linea 12 del file arp\&.h\&.
+.SS "#define ARP_TTL   600		/* 10min */"
+
+.PP
+Definizione alla linea 21 del file arp\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef struct \fBarp_cache_entry\fP  \fBarp_cache_entry_t\fP"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "struct \fBarp_header\fP __attribute__ ((packed))"
+
+.PP
+Definizione alla linea 44 del file desc\&.c\&.
+.PP
+.nf
+46                        {
+47     uint16_t limit;
+48     uint32_t base;
+49 } __attribute__((packed)) gdt_ptr_t;
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBuint8_t\fP hwlen"
+
+.PP
+Definizione alla linea 71 del file arp\&.h\&.
+.SS "\fBuint16_t\fP hwtype"
+
+.PP
+Definizione alla linea 69 del file arp\&.h\&.
+.SS "\fBuint16_t\fP operation"
+
+.PP
+Definizione alla linea 73 del file arp\&.h\&.
+.SS "\fBuint8_t\fP prlen"
+
+.PP
+Definizione alla linea 72 del file arp\&.h\&.
+.SS "\fBuint16_t\fP prtype"
+
+.PP
+Definizione alla linea 70 del file arp\&.h\&.
+.SS "\fBmacaddr_t\fP sha"
+
+.PP
+Definizione alla linea 74 del file arp\&.h\&.
+.SS "\fBipv4_t\fP spa"
+
+.PP
+Definizione alla linea 75 del file arp\&.h\&.
+.SS "\fBmacaddr_t\fP tha"
+
+.PP
+Definizione alla linea 76 del file arp\&.h\&.
+.SS "\fBipv4_t\fP tpa"
+
+.PP
+Definizione alla linea 77 del file arp\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

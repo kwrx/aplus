@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus:  File sorgente src/net/rtl8139/rtl8139.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('rtl8139_8h_source.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">rtl8139.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="rtl8139_8h.html">Vai alla documentazione di questo file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _RTL8139_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define _RTL8139_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="netif_8h.html">aplus/netif.h</a>&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a1dcdf537152ab9cc49e4a26bd9d2f47d">    6</a></span>&#160;<span class="preprocessor">#define REG_ID0                                 0x00</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#ac5dc5d6d71f71dcdf3ff2a7e911c7248">    7</a></span>&#160;<span class="preprocessor">#define REG_ID4                                 0x04</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a15e2164bee77a940134b3c0618e207d3">    9</a></span>&#160;<span class="preprocessor">#define REG_TRANSMIT_STATUS0                    0x10</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a42f10cfb594910b5a1e2bcfad9086271">   10</a></span>&#160;<span class="preprocessor">#define REG_TRANSMIT_ADDR0                      0x20</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a988a4299b417f298b34e9ae012fb3829">   11</a></span>&#160;<span class="preprocessor">#define REG_RECEIVE_BUFFER                      0x30</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a3b2613e7a11853fee7b0164d592b477a">   12</a></span>&#160;<span class="preprocessor">#define REG_COMMAND                             0x37</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a9690a77264be5910191756632842b04d">   13</a></span>&#160;<span class="preprocessor">#define REG_CUR_READ_ADDR                       0x38</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#ab4c18def6442e5a12813bff4707a95f4">   14</a></span>&#160;<span class="preprocessor">#define REG_INTERRUPT_MASK                      0x3C</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#ae643783aefff2e6a891b5fa59bfcd344">   15</a></span>&#160;<span class="preprocessor">#define REG_INTERRUPT_STATUS                    0x3E</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#ae71202863cf99afcc3eab3865699dcf9">   16</a></span>&#160;<span class="preprocessor">#define REG_TRANSMIT_CONFIGURATION              0x40</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a66a6f3026d2e079b8fc7056dcd00fe91">   17</a></span>&#160;<span class="preprocessor">#define REG_RECEIVE_CONFIGURATION               0x44</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a5b93ab1d3172cbf4cbddb358cd790dec">   18</a></span>&#160;<span class="preprocessor">#define REG_CONFIG1                             0x52</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#ab2a1fddf4be3a5b61bc6136a759d2450">   20</a></span>&#160;<span class="preprocessor">#define CR_RESET                                (1 &lt;&lt; 4)</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#afbe4a2ad282a15a449afe27c8477d7a4">   21</a></span>&#160;<span class="preprocessor">#define CR_RECEIVER_ENABLE                      (1 &lt;&lt; 3)</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a724cc791aabf32482dca4be45cc5d160">   22</a></span>&#160;<span class="preprocessor">#define CR_TRANSMITTER_ENABLE                   (1 &lt;&lt; 2)</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a57ac94bdc04f48c7a66ced30aa060624">   23</a></span>&#160;<span class="preprocessor">#define CR_BUFFER_IS_EMPTY                      (1 &lt;&lt; 0)</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#aae6b5a7b3905eadb0f15a8ffa647b520">   25</a></span>&#160;<span class="preprocessor">#define TCR_IFG_STANDARD                        (3 &lt;&lt; 24)</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a878054e18cfb85ec78fbc6a3f8c60f42">   26</a></span>&#160;<span class="preprocessor">#define TCR_MXDMA_256                           (4 &lt;&lt; 8)</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a4807a51726d5b1cbee7a7f53661f97ef">   27</a></span>&#160;<span class="preprocessor">#define TCR_MXDMA_512                           (5 &lt;&lt; 8)</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#aaa0a851076ddddbd82e92d328cb2644a">   28</a></span>&#160;<span class="preprocessor">#define TCR_MXDMA_1024                          (6 &lt;&lt; 8)</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#af8057a0fe6148f3c91254f0fa0e615e5">   29</a></span>&#160;<span class="preprocessor">#define TCR_MXDMA_2048                          (7 &lt;&lt; 8)</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a4427f16eaabc39f54c76ccf043f0937b">   31</a></span>&#160;<span class="preprocessor">#define RCR_MXDMA_512                           (5 &lt;&lt; 8)</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a1e9de544d0767a77182daf17beb30f86">   32</a></span>&#160;<span class="preprocessor">#define RCR_MXDMA_1024                          (6 &lt;&lt; 8)</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a160445e9a8cb8827d32d5cc6417b3fda">   33</a></span>&#160;<span class="preprocessor">#define RCR_MXDMA_UNLIMITED                     (7 &lt;&lt; 8)</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a14d20c8a78d65ef7542b5c59e695d4fa">   34</a></span>&#160;<span class="preprocessor">#define RCR_ACCEPT_BROADCAST                    (1 &lt;&lt; 3)</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a92d4aa960780ad69ee5ec28ab2776705">   35</a></span>&#160;<span class="preprocessor">#define RCR_ACCEPT_MULTICAST                    (1 &lt;&lt; 2)</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a40752262c4c0d282513c5ad5f1449ffa">   36</a></span>&#160;<span class="preprocessor">#define RCR_ACCEPT_PHYS_MATCH                   (1 &lt;&lt; 1)</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a6097974b84e7d2fd54f26877ce8980a9">   38</a></span>&#160;<span class="preprocessor">#define ISR_RECEIVE_BUFFER_OVERFLOW             (1 &lt;&lt; 4)</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#afcba7a5ffbbdce80f9b4d8038a2900c4">   39</a></span>&#160;<span class="preprocessor">#define ISR_TRANSMIT_OK                         (1 &lt;&lt; 2)</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#aacce0c98835613c89c957d571340a176">   40</a></span>&#160;<span class="preprocessor">#define ISR_RECEIVE_OK                          (1 &lt;&lt; 0)</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a739a2a1a0047c98ac1b18ecd25dac092">   42</a></span>&#160;<span class="preprocessor">#define RX_BUFFER_SIZE                          8192</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a9ab33647617098646990fe263600b650">   43</a></span>&#160;<span class="preprocessor">#define TX_BUFFER_SIZE                          4096</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a9d09a7af406abb667672c750d24cda0b">   46</a></span>&#160;<span class="preprocessor">#define int_out8(card, port, value)             outb(card-&gt;device-&gt;iobase + port, value)</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a1bce2233ee943a85ae84648382e64826">   47</a></span>&#160;<span class="preprocessor">#define int_out16(card, port, value)            outw(card-&gt;device-&gt;iobase + port, value)</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#aee35c32a8d730227f65850dfc577c232">   48</a></span>&#160;<span class="preprocessor">#define int_out32(card, port, value)            outl(card-&gt;device-&gt;iobase + port, value)</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a7d11540c9ed834d78c06a0f58bc2861d">   50</a></span>&#160;<span class="preprocessor">#define int_in8(card, port)                     inb(card-&gt;device-&gt;iobase + port)</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#ab4126d6287621dc529d43e6fc5cd2f27">   51</a></span>&#160;<span class="preprocessor">#define int_in16(card, port)                    inw(card-&gt;device-&gt;iobase + port)</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="rtl8139_8h.html#a3f0fc1302723b502d1f2c6b8eddcbf4f">   53</a></span>&#160;<span class="preprocessor">#define RTL8139_MAGIC                           0x8139FFFF</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="netif_8h_html"><div class="ttname"><a href="netif_8h.html">netif.h</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_de1174607f3963ac728b77de3c75e290.html">net</a></li><li class="navelem"><a class="el" href="dir_3b00e76e95dba8fb13b4447d70390fb1.html">rtl8139</a></li><li class="navelem"><a class="el" href="rtl8139_8h.html">rtl8139.h</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

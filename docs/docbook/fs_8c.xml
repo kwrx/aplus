@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="fs_8c">
+    <title>fs.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/stat.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;fcntl.h&gt;</programlisting>
+    <programlisting>#include &lt;dirent.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="fs_8c_1a8e53a98b93e6b136196b2ebd99e43dcd">fs_read</link> (
+struct <link linkend="structinode">inode</link> * inode, char * ptr, int len)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="fs_8c_1a7d87cba454ac1212bfc2277b5792bf95">fs_write</link> (
+struct <link linkend="structinode">inode</link> * inode, char * ptr, int len)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structdirent">dirent</link> * <link linkend="fs_8c_1af6320f9253c5bd1f298876fdbe41b9de">fs_readdir</link> (
+struct <link linkend="structinode">inode</link> * inode, int index)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structinode">inode</link> * <link linkend="fs_8c_1ad8edcff785980ccbc26c887c19ac8989">fs_finddir</link> (
+struct <link linkend="structinode">inode</link> * inode, char * name)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structinode">inode</link> * <link linkend="fs_8c_1a8973117250569528548e2c2ff3f6e44e">fs_creat</link> (
+struct <link linkend="structinode">inode</link> * inode, char * name, mode_t mode)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="fs_8c_1a23db0b0dd4f66cd2cc34a9116164cfc4">fs_rename</link> (
+struct <link linkend="structinode">inode</link> * inode, char * oldname, char * newname)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="fs_8c_1ab0e4dd01b14f5ba2495318b840acdfff">fs_unlink</link> (
+struct <link linkend="structinode">inode</link> * inode, char * name)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="fs_8c_1a2928203c42eba392963b57bfed7b65c4">fs_chown</link> (
+struct <link linkend="structinode">inode</link> * inode, uid_t owner, gid_t group)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="fs_8c_1a37ebdb2a9963f0f89d938fa2cc5d78df">fs_flush</link> (
+struct <link linkend="structinode">inode</link> * inode)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="fs_8c_1afb548bce2f916933a7c7d95a48b57cdb">fs_ioctl</link> (
+struct <link linkend="structinode">inode</link> * inode, int req, void * buf)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/fs/fs.c</para>
+    </simplesect>
+</section>

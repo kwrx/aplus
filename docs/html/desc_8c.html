@@ -1,0 +1,1440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file src/arch/desc.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('desc_8c.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Strutture dati</a> &#124;
+<a href="#define-members">Definizioni</a> &#124;
+<a href="#func-members">Funzioni</a> &#124;
+<a href="#var-members">Variabili</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file desc.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="aplus_8h_source.html">aplus.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="spinlock_8h_source.html">aplus/spinlock.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="mm_8h_source.html">aplus/mm.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="grub_8h_source.html">grub.h</a>&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+<code>#include &lt;time.h&gt;</code><br />
+<code>#include &lt;sys/times.h&gt;</code><br />
+</div>
+<p><a href="desc_8c_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Strutture dati</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgdt__entry.html">gdt_entry</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Definizioni</h2></td></tr>
+<tr class="memitem:aeef7411226f7c2a6d1328386a2b3832d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#aeef7411226f7c2a6d1328386a2b3832d">FAULT_MASK</a>&#160;&#160;&#160;0x3FFFFFE3</td></tr>
+<tr class="separator:aeef7411226f7c2a6d1328386a2b3832d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaad9208d1f30cc40267fdeb44f593a35"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#aaad9208d1f30cc40267fdeb44f593a35">PIT_FREQ</a>&#160;&#160;&#160;(CLOCKS_PER_SEC)</td></tr>
+<tr class="separator:aaad9208d1f30cc40267fdeb44f593a35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac84b9fa6258a307e74ee3e6b8019d6c2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a>(n, b, l, a, g)</td></tr>
+<tr class="separator:ac84b9fa6258a307e74ee3e6b8019d6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57d9d99abdf93e1b7d838f47efc6af1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c">idt_set</a>(i, b, s, f)</td></tr>
+<tr class="separator:a57d9d99abdf93e1b7d838f47efc6af1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7baf6caa9795e4df7fb416e88b75c296"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(n)</td></tr>
+<tr class="separator:a7baf6caa9795e4df7fb416e88b75c296"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7baf6caa9795e4df7fb416e88b75c296"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(n)</td></tr>
+<tr class="separator:a7baf6caa9795e4df7fb416e88b75c296"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1344dbe0eeb67abcd3640a64a07a91a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a>(bcd)&#160;&#160;&#160;((((bcd) &amp; 0x0F) + ((bcd) / 16) * 10))</td></tr>
+<tr class="separator:ac1344dbe0eeb67abcd3640a64a07a91a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33200b25f91bf4cf6a4ec73ef292b207"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</a>(bcd)&#160;&#160;&#160;(((((bcd) &amp; 0x0F) + ((bcd &amp; 0x70) / 16) * 10)) | (bcd &amp; 0x80))</td></tr>
+<tr class="separator:a33200b25f91bf4cf6a4ec73ef292b207"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funzioni</h2></td></tr>
+<tr class="memitem:a88d6351e81fa254cec37b8a9a1353401"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structgdt__entry.html">gdt_entry</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a88d6351e81fa254cec37b8a9a1353401">__attribute__</a> ((packed))</td></tr>
+<tr class="separator:a88d6351e81fa254cec37b8a9a1353401"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d06701ac073c331c83519e3909b7fce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a7d06701ac073c331c83519e3909b7fce">schedule</a> ()</td></tr>
+<tr class="separator:a7d06701ac073c331c83519e3909b7fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab36b30e25787b3f4887160064ba2f43a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#ab36b30e25787b3f4887160064ba2f43a">syscall_handler</a> (regs_t *)</td></tr>
+<tr class="separator:ab36b30e25787b3f4887160064ba2f43a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad365b1ba0a341f9a84551327fe0dac7b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [<a class="el" href="desc_8c.html#af67a6154264e775ccf3c976fefe43618">gdt_p</a>]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</td></tr>
+<tr class="separator:ad365b1ba0a341f9a84551327fe0dac7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ec693d5682a18cbeb87ae5c5ea25c03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a5ec693d5682a18cbeb87ae5c5ea25c03">isr_handler</a> (regs_t *r)</td></tr>
+<tr class="separator:a5ec693d5682a18cbeb87ae5c5ea25c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16eb17da95d62143431a37e9381af3ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a16eb17da95d62143431a37e9381af3ee">irq_handler</a> (regs_t *r)</td></tr>
+<tr class="separator:a16eb17da95d62143431a37e9381af3ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28c9747160a8526a5272ea44e68f45b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a28c9747160a8526a5272ea44e68f45b6">pit_handler</a> (regs_t *r)</td></tr>
+<tr class="separator:a28c9747160a8526a5272ea44e68f45b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f2dd94350b058e8e8ba473a2822cf7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a4f2dd94350b058e8e8ba473a2822cf7a">pagefault_handler</a> (regs_t *r)</td></tr>
+<tr class="separator:a4f2dd94350b058e8e8ba473a2822cf7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a369f578313199f231869f97e16802d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a6a369f578313199f231869f97e16802d">desc_init</a> ()</td></tr>
+<tr class="separator:a6a369f578313199f231869f97e16802d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47adfd20d4b7265f3e5c95c08d6bdace"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a47adfd20d4b7265f3e5c95c08d6bdace">irq_set</a> (int n, void *handler)</td></tr>
+<tr class="separator:a47adfd20d4b7265f3e5c95c08d6bdace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4992b098d3d233475016a0288e6cc918"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a4992b098d3d233475016a0288e6cc918">irq_unset</a> (int n)</td></tr>
+<tr class="separator:a4992b098d3d233475016a0288e6cc918"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5e75d23e9ca091bdf2f1c5007481202"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#ae5e75d23e9ca091bdf2f1c5007481202">irq_get</a> (int n)</td></tr>
+<tr class="separator:ae5e75d23e9ca091bdf2f1c5007481202"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d44575d1f90766872fc87b63171102b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a> (<a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> addr)</td></tr>
+<tr class="separator:a1d44575d1f90766872fc87b63171102b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c9b7a41bf04c15de2b484df54fcb62b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a0c9b7a41bf04c15de2b484df54fcb62b">pit_gettime</a> ()</td></tr>
+<tr class="separator:a0c9b7a41bf04c15de2b484df54fcb62b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affef3cc40072321b8d54e4c00aa4de85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#affef3cc40072321b8d54e4c00aa4de85">pit_getticks</a> ()</td></tr>
+<tr class="separator:affef3cc40072321b8d54e4c00aa4de85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variabili</h2></td></tr>
+<tr class="memitem:aea6d44db9dbbcd64642fcb7904f41d9a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#aea6d44db9dbbcd64642fcb7904f41d9a">limit_l</a></td></tr>
+<tr class="separator:aea6d44db9dbbcd64642fcb7904f41d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2ca1e64dc7ef22ee1082a58403166ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#af2ca1e64dc7ef22ee1082a58403166ec">base_l</a></td></tr>
+<tr class="separator:af2ca1e64dc7ef22ee1082a58403166ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98fb2af33fad804398328d56ccf01ec2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a98fb2af33fad804398328d56ccf01ec2">base_m</a></td></tr>
+<tr class="separator:a98fb2af33fad804398328d56ccf01ec2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b0d6200bc639dd37ff68847a0adde5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a8b0d6200bc639dd37ff68847a0adde5f">access</a></td></tr>
+<tr class="separator:a8b0d6200bc639dd37ff68847a0adde5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acfea365f69e71368a2db03333d4afd6f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#acfea365f69e71368a2db03333d4afd6f">granularity</a></td></tr>
+<tr class="separator:acfea365f69e71368a2db03333d4afd6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fef9c987f038778feaf85edfcc9c060"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a8fef9c987f038778feaf85edfcc9c060">base_h</a></td></tr>
+<tr class="separator:a8fef9c987f038778feaf85edfcc9c060"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e2066f75678ef3cb314db1e33fe5e4d"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a> [16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }</td></tr>
+<tr class="separator:a8e2066f75678ef3cb314db1e33fe5e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a243b9f88d2a68b2d2daff1dd77773e08"><td class="memItemLeft" align="right" valign="top">static gdt_entry_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</a> [5]</td></tr>
+<tr class="separator:a243b9f88d2a68b2d2daff1dd77773e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af67a6154264e775ccf3c976fefe43618"><td class="memItemLeft" align="right" valign="top">static gdt_ptr_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#af67a6154264e775ccf3c976fefe43618">gdt_p</a></td></tr>
+<tr class="separator:af67a6154264e775ccf3c976fefe43618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a248e57c601e50474a60c9d42c6ac8fb3"><td class="memItemLeft" align="right" valign="top">static idt_entry_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">idt_e</a> [256]</td></tr>
+<tr class="separator:a248e57c601e50474a60c9d42c6ac8fb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd81c3f56ebae00c0f2af978d2b48d42"><td class="memItemLeft" align="right" valign="top">static idt_ptr_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#acd81c3f56ebae00c0f2af978d2b48d42">idt_p</a></td></tr>
+<tr class="separator:acd81c3f56ebae00c0f2af978d2b48d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41bc65b4bc7d5a5211de47d1f5c2758a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</a></td></tr>
+<tr class="separator:a41bc65b4bc7d5a5211de47d1f5c2758a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa40e578d683608caf3c7cd5c43ed9499"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</a></td></tr>
+<tr class="separator:aa40e578d683608caf3c7cd5c43ed9499"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf6021113d80f4e06464449823d18ca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#adbf6021113d80f4e06464449823d18ca">pit_days</a></td></tr>
+<tr class="separator:adbf6021113d80f4e06464449823d18ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab391065c3b916fa1704b6bfb7b099d04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="desc_8c.html#ab391065c3b916fa1704b6bfb7b099d04">keyboard_ready</a> = 0</td></tr>
+<tr class="separator:ab391065c3b916fa1704b6bfb7b099d04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle definizioni</h2>
+<a class="anchor" id="a7baf6caa9795e4df7fb416e88b75c296"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _i</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Valore:</b><div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> isr##n();                       <a class="code" href="desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c">		idt_set</a>(n, (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>)isr##n, 0x08, 0x8E)</div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="desc_8c_html_a57d9d99abdf93e1b7d838f47efc6af1c"><div class="ttname"><a href="desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c">idt_set</a></div><div class="ttdeci">#define idt_set(i, b, s, f)</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a7baf6caa9795e4df7fb416e88b75c296"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _i</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Valore:</b><div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="keywordtype">void</span> irq##n();                           <a class="code" href="desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c">		idt_set</a>(n + 32, (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>)irq##n, 0x08, 0x8E)</div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="desc_8c_html_a57d9d99abdf93e1b7d838f47efc6af1c"><div class="ttname"><a href="desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c">idt_set</a></div><div class="ttdeci">#define idt_set(i, b, s, f)</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ac1344dbe0eeb67abcd3640a64a07a91a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BCD2BIN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">bcd</td><td>)</td>
+          <td>&#160;&#160;&#160;((((bcd) &amp; 0x0F) + ((bcd) / 16) * 10))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a33200b25f91bf4cf6a4ec73ef292b207"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BCD2BIN2</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">bcd</td><td>)</td>
+          <td>&#160;&#160;&#160;(((((bcd) &amp; 0x0F) + ((bcd &amp; 0x70) / 16) * 10)) | (bcd &amp; 0x80))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aeef7411226f7c2a6d1328386a2b3832d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAULT_MASK&#160;&#160;&#160;0x3FFFFFE3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00037">37</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac84b9fa6258a307e74ee3e6b8019d6c2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define gdt_set</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">n, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">b, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">l, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">a, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">g&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Valore:</b><div class="fragment"><div class="line"><a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</a>[n].base_l = (b &amp; 0xFFFF);             <a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">		gdt_e</a>[n].base_m = (b &gt;&gt; 16) &amp; 0xFF;           <a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">		gdt_e</a>[n].base_h = (b &gt;&gt; 24) &amp; 0xFF;           <a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">		gdt_e</a>[n].limit_l = (l &amp; 0xFFFF);          <a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">		gdt_e</a>[n].granularity = (l &gt;&gt; 16) &amp; 0x0F;  <a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">		gdt_e</a>[n].granularity |= g &amp; 0xF0;         <a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">		gdt_e</a>[n].access = a</div>
+<div class="ttc" id="desc_8c_html_a243b9f88d2a68b2d2daff1dd77773e08"><div class="ttname"><a href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</a></div><div class="ttdeci">static gdt_entry_t gdt_e[5]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00104">desc.c:104</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a57d9d99abdf93e1b7d838f47efc6af1c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define idt_set</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">i, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">b, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">s, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">f&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Valore:</b><div class="fragment"><div class="line"><a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">idt_e</a>[i].base_l = b &amp; 0xFFFF;               <a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">		idt_e</a>[i].base_h = (b &gt;&gt; 16) &amp; 0xFFFF;     <a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">		idt_e</a>[i].sel = s;                         <a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">		idt_e</a>[i].null = 0;                            <a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">\</a></div>
+<div class="line"><a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">		idt_e</a>[i].flags = f</div>
+<div class="ttc" id="desc_8c_html_a248e57c601e50474a60c9d42c6ac8fb3"><div class="ttname"><a href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">idt_e</a></div><div class="ttdeci">static idt_entry_t idt_e[256]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00107">desc.c:107</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="aaad9208d1f30cc40267fdeb44f593a35"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PIT_FREQ&#160;&#160;&#160;(CLOCKS_PER_SEC)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00038">38</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle funzioni</h2>
+<a class="anchor" id="ad365b1ba0a341f9a84551327fe0dac7b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__asm__ </td>
+          <td>(</td>
+          <td class="paramtype">&quot;.section .text \n\ .global gdt_load \n\ gdt_load: \n\ lgdt  \n\ \n\ mov&#160;</td>
+          <td class="paramname"><em>ax</em>[gdt_p], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">0x10\n\mov&#160;</td>
+          <td class="paramname"><em>ds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ax\n\mov&#160;</td>
+          <td class="paramname"><em>es</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ax\n\mov&#160;</td>
+          <td class="paramname"><em>fs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ax\n\mov&#160;</td>
+          <td class="paramname"><em>gs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ax\n\mov&#160;</td>
+          <td class="paramname"><em>ss</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ax\n\jmp 0x08:.done\n\\n\.done:\n\ret\n\\n\\n\\n\\n\.global idt_load\n\idt_load:\n\lidt\n\ret\n\\n\\n&quot;&#160;</td>
+          <td class="paramname">[idt_p]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a88d6351e81fa254cec37b8a9a1353401"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__attribute__ </td>
+          <td>(</td>
+          <td class="paramtype">(packed)&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00044">44</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                       {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a> limit;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> base;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <a class="code" href="desc_8c.html#a88d6351e81fa254cec37b8a9a1353401">__attribute__</a>((packed)) gdt_ptr_t;</div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="desc_8c_html_a88d6351e81fa254cec37b8a9a1353401"><div class="ttname"><a href="desc_8c.html#a88d6351e81fa254cec37b8a9a1353401">__attribute__</a></div><div class="ttdeci">struct gdt_entry __attribute__((packed))</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
+<div class="ttc" id="aplus_8h_html_a5a8b2dc9e45a9ee81a94ef304fb62505"><div class="ttname"><a href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a></div><div class="ttdeci">uint16_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00102">aplus.h:102</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a6a369f578313199f231869f97e16802d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int desc_init </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00195">195</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>, <a class="el" href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a>, <a class="el" href="desc_8c_source.html#l00334">irq_set()</a>, <a class="el" href="desc_8c_source.html#l00038">PIT_FREQ</a>, <a class="el" href="desc_8c_source.html#l00166">pit_handler()</a>, <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>, e <a class="el" href="aplus_8h_source.html#l00113">uint8_t</a>.</p>
+<div class="fragment"><div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                {</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (<span class="stringliteral">&quot;cli&quot;</span>);</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    </div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="preprocessor">    #define gdt_set(n, b, l, a, g)                  \</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">        gdt_e[n].base_l = (b &amp; 0xFFFF);             \</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">        gdt_e[n].base_m = (b &gt;&gt; 16) &amp; 0xFF;         \</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor">        gdt_e[n].base_h = (b &gt;&gt; 24) &amp; 0xFF;         \</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="preprocessor">        gdt_e[n].limit_l = (l &amp; 0xFFFF);            \</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="preprocessor">        gdt_e[n].granularity = (l &gt;&gt; 16) &amp; 0x0F;    \</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">        gdt_e[n].granularity |= g &amp; 0xF0;           \</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">        gdt_e[n].access = a</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;                </div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    memset(&amp;<a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</a>, 0, <span class="keyword">sizeof</span>(gdt_entry_t) * 5);</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <a class="code" href="desc_8c.html#af67a6154264e775ccf3c976fefe43618">gdt_p</a>.limit = <span class="keyword">sizeof</span>(gdt_entry_t) * 5 - 1;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <a class="code" href="desc_8c.html#af67a6154264e775ccf3c976fefe43618">gdt_p</a>.base = (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) <a class="code" href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</a>;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        </div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <a class="code" href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a>(0, 0, 0, 0, 0);</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <a class="code" href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a>(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <a class="code" href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a>(2, 0, 0xFFFFFFFF, 0x92, 0xCF);</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <a class="code" href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a>(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <a class="code" href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a>(4, 0, 0xFFFFFFFF, 0XF2, 0xCF);</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    </div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    gdt_load();</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    </div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    </div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <a class="code" href="desc_8c.html#acd81c3f56ebae00c0f2af978d2b48d42">idt_p</a>.limit = <span class="keyword">sizeof</span>(idt_entry_t) * 256 - 1;</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <a class="code" href="desc_8c.html#acd81c3f56ebae00c0f2af978d2b48d42">idt_p</a>.base = (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) <a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">idt_e</a>;</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    </div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    memset(<a class="code" href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">idt_e</a>, 0, <span class="keyword">sizeof</span>(idt_entry_t) * 256);</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    </div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="preprocessor">    #define idt_set(i, b, s, f)                     \</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="preprocessor">        idt_e[i].base_l = b &amp; 0xFFFF;               \</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="preprocessor">        idt_e[i].base_h = (b &gt;&gt; 16) &amp; 0xFFFF;       \</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="preprocessor">        idt_e[i].sel = s;                           \</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="preprocessor">        idt_e[i].null = 0;                          \</span></div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="preprocessor">        idt_e[i].flags = f</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;    </div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    </div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="preprocessor">    #define _i(n)                                   \</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="preprocessor">        extern void isr##n();                       \</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="preprocessor">        idt_set(n, (uint32_t)isr##n, 0x08, 0x8E)</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(0);</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(1);</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(2);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(3);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(4);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(5);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(6);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(7);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(8);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(9);</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(10);</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(11);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(12);</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(13);</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(14);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(15);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(16);</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(17);</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(18);</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(19);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(20);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(21);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(22);</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(23);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(24);</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(25);</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(26);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(27);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(28);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(29);</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(30);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(31);</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(0x80);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    </div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    idt_load();</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    </div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="preprocessor">    #ifdef _i</span></div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="preprocessor">    #undef _i</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="preprocessor">    #endif</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    </div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="preprocessor">    #define _i(n)                                       \</span></div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="preprocessor">        extern void irq##n();                           \</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="preprocessor">        idt_set(n + 32, (uint32_t)irq##n, 0x08, 0x8E)</span></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    outb(0x20, 0x11);</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    outb(0xA0, 0x11);</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    outb(0x21, 0x20);</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    outb(0xA1, 0x28);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    outb(0x21, 0x04);</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    outb(0xA1, 0x02);</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;    outb(0x21, 0x01);</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    outb(0xA1, 0x01);</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    outb(0x21, 0x00);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    outb(0xA1, 0x00);</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    </div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(0);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(1);</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(2);</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(3);</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(4);</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(5);</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(6);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(7);</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(8);</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(9);</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(10);</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(11);</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(12);</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(13);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(14);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <a class="code" href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a>(15);</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    </div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    </div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> freq = 1193180 / <a class="code" href="desc_8c.html#aaad9208d1f30cc40267fdeb44f593a35">PIT_FREQ</a>;</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    outb(0x43, 0x36);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    outb(0x40, (<a class="code" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>) (freq &amp; 0xFF));</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    outb(0x40, (<a class="code" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>) ((freq &gt;&gt; 8) &amp; 0xFF));</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    </div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <a class="code" href="desc_8c.html#a47adfd20d4b7265f3e5c95c08d6bdace">irq_set</a>(0, (<span class="keywordtype">void</span>*) <a class="code" href="desc_8c.html#a28c9747160a8526a5272ea44e68f45b6">pit_handler</a>);</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    </div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (<span class="stringliteral">&quot;sti&quot;</span>);</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;}</div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="desc_8c_html_aaad9208d1f30cc40267fdeb44f593a35"><div class="ttname"><a href="desc_8c.html#aaad9208d1f30cc40267fdeb44f593a35">PIT_FREQ</a></div><div class="ttdeci">#define PIT_FREQ</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00038">desc.c:38</a></div></div>
+<div class="ttc" id="desc_8c_html_a47adfd20d4b7265f3e5c95c08d6bdace"><div class="ttname"><a href="desc_8c.html#a47adfd20d4b7265f3e5c95c08d6bdace">irq_set</a></div><div class="ttdeci">int irq_set(int n, void *handler)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00334">desc.c:334</a></div></div>
+<div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [gdt_p]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</div></div>
+<div class="ttc" id="desc_8c_html_a248e57c601e50474a60c9d42c6ac8fb3"><div class="ttname"><a href="desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3">idt_e</a></div><div class="ttdeci">static idt_entry_t idt_e[256]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00107">desc.c:107</a></div></div>
+<div class="ttc" id="desc_8c_html_a7baf6caa9795e4df7fb416e88b75c296"><div class="ttname"><a href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a></div><div class="ttdeci">#define _i(n)</div></div>
+<div class="ttc" id="aplus_8h_html_ae0430369c5a35dcdbc0bc19dcbb33a03"><div class="ttname"><a href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a></div><div class="ttdeci">ax uint8_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00113">aplus.h:113</a></div></div>
+<div class="ttc" id="desc_8c_html_a28c9747160a8526a5272ea44e68f45b6"><div class="ttname"><a href="desc_8c.html#a28c9747160a8526a5272ea44e68f45b6">pit_handler</a></div><div class="ttdeci">void pit_handler(regs_t *r)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00166">desc.c:166</a></div></div>
+<div class="ttc" id="desc_8c_html_acd81c3f56ebae00c0f2af978d2b48d42"><div class="ttname"><a href="desc_8c.html#acd81c3f56ebae00c0f2af978d2b48d42">idt_p</a></div><div class="ttdeci">static idt_ptr_t idt_p</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00108">desc.c:108</a></div></div>
+<div class="ttc" id="desc_8c_html_ac84b9fa6258a307e74ee3e6b8019d6c2"><div class="ttname"><a href="desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</a></div><div class="ttdeci">#define gdt_set(n, b, l, a, g)</div></div>
+<div class="ttc" id="desc_8c_html_af67a6154264e775ccf3c976fefe43618"><div class="ttname"><a href="desc_8c.html#af67a6154264e775ccf3c976fefe43618">gdt_p</a></div><div class="ttdeci">static gdt_ptr_t gdt_p</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00105">desc.c:105</a></div></div>
+<div class="ttc" id="desc_8c_html_a243b9f88d2a68b2d2daff1dd77773e08"><div class="ttname"><a href="desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08">gdt_e</a></div><div class="ttdeci">static gdt_entry_t gdt_e[5]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00104">desc.c:104</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ae5e75d23e9ca091bdf2f1c5007481202"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* irq_get </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00354">354</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;                     {</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="keywordflow">if</span>(n &gt; 16) {</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    }</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    </div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a>[n];</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="desc_8c_html_a8e2066f75678ef3cb314db1e33fe5e4d"><div class="ttname"><a href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a></div><div class="ttdeci">static void * irqs[16]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00102">desc.c:102</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a16eb17da95d62143431a37e9381af3ee"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void irq_handler </td>
+          <td>(</td>
+          <td class="paramtype">regs_t *&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00155">155</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                            {</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a>[r-&gt;int_no - 32])</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        ((void (*)(regs_t*)) <a class="code" href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a>[r-&gt;int_no - 32]) (r);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">if</span>(r-&gt;int_no &gt;= 40)</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        outb(0xA0, 0x20);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    outb(0x20, 0x20);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}</div>
+<div class="ttc" id="desc_8c_html_a8e2066f75678ef3cb314db1e33fe5e4d"><div class="ttname"><a href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a></div><div class="ttdeci">static void * irqs[16]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00102">desc.c:102</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a47adfd20d4b7265f3e5c95c08d6bdace"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int irq_set </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>handler</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00334">334</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;                                  {</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <span class="keywordflow">if</span>(n &gt; 16) {</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    }</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    </div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <a class="code" href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a>[n] = handler;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="desc_8c_html_a8e2066f75678ef3cb314db1e33fe5e4d"><div class="ttname"><a href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a></div><div class="ttdeci">static void * irqs[16]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00102">desc.c:102</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a4992b098d3d233475016a0288e6cc918"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int irq_unset </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00344">344</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;                     {</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keywordflow">if</span>(n &gt; 16) {</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    }</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    </div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <a class="code" href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a>[n] = 0;</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="desc_8c_html_a8e2066f75678ef3cb314db1e33fe5e4d"><div class="ttname"><a href="desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d">irqs</a></div><div class="ttdeci">static void * irqs[16]</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00102">desc.c:102</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a5ec693d5682a18cbeb87ae5c5ea25c03"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void isr_handler </td>
+          <td>(</td>
+          <td class="paramtype">regs_t *&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00151">151</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="panic_8c_source.html#l00084">panic()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                            {</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(exception_messages[r-&gt;int_no]);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;}</div>
+<div class="ttc" id="panic_8c_html_a92ad17d19a46880dd5e6c99143666b4a"><div class="ttname"><a href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a></div><div class="ttdeci">void panic(char *msg)</div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00084">panic.c:84</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a4f2dd94350b058e8e8ba473a2822cf7a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pagefault_handler </td>
+          <td>(</td>
+          <td class="paramtype">regs_t *&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00183">183</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="aplus_8h_source.html#l00147">kprintf</a>, <a class="el" href="panic_8c_source.html#l00084">panic()</a>, e <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>.</p>
+<div class="fragment"><div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;                                  {</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> faultaddr;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> __volatile__(<span class="stringliteral">&quot;mov eax, cr2&quot;</span> : <span class="stringliteral">&quot;=a&quot;</span>(faultaddr));</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <a class="code" href="aplus_8h.html#af0b53ac0b8d6868da6396b11b30519c1">kprintf</a>(<span class="stringliteral">&quot;Page fault at address: 0x%x\n&quot;</span>, faultaddr);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;Page Fault&quot;</span>);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;}</div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="panic_8c_html_a92ad17d19a46880dd5e6c99143666b4a"><div class="ttname"><a href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a></div><div class="ttdeci">void panic(char *msg)</div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00084">panic.c:84</a></div></div>
+<div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [gdt_p]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</div></div>
+<div class="ttc" id="aplus_8h_html_af0b53ac0b8d6868da6396b11b30519c1"><div class="ttname"><a href="aplus_8h.html#af0b53ac0b8d6868da6396b11b30519c1">kprintf</a></div><div class="ttdeci">#define kprintf(a, b...)</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00147">aplus.h:147</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="affef3cc40072321b8d54e4c00aa4de85"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> pit_getticks </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00393">393</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;                        {</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keywordflow">return</span> ((<a class="code" href="desc_8c.html#adbf6021113d80f4e06464449823d18ca">pit_days</a> * 86400) * 1000) + (<a class="code" href="desc_8c.html#aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</a> * 1000) + <a class="code" href="desc_8c.html#a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</a>;</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;}</div>
+<div class="ttc" id="desc_8c_html_aa40e578d683608caf3c7cd5c43ed9499"><div class="ttname"><a href="desc_8c.html#aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</a></div><div class="ttdeci">static uint32_t pit_seconds</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00112">desc.c:112</a></div></div>
+<div class="ttc" id="desc_8c_html_a41bc65b4bc7d5a5211de47d1f5c2758a"><div class="ttname"><a href="desc_8c.html#a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</a></div><div class="ttdeci">static uint32_t pit_ticks</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00111">desc.c:111</a></div></div>
+<div class="ttc" id="desc_8c_html_adbf6021113d80f4e06464449823d18ca"><div class="ttname"><a href="desc_8c.html#adbf6021113d80f4e06464449823d18ca">pit_days</a></div><div class="ttdeci">static uint32_t pit_days</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00113">desc.c:113</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a0c9b7a41bf04c15de2b484df54fcb62b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> pit_gettime </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00373">373</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a>, <a class="el" href="desc_8c.html#a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</a>, <a class="el" href="desc_8c_source.html#l00365">rtc()</a>, e <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>.</p>
+<div class="fragment"><div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                       {</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="preprocessor">    #define BCD2BIN(bcd)    ((((bcd) &amp; 0x0F) + ((bcd) / 16) * 10))</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="preprocessor">    #define BCD2BIN2(bcd)   (((((bcd) &amp; 0x0F) + ((bcd &amp; 0x70) / 16) * 10)) | (bcd &amp; 0x80))</span></div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    </div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    <span class="keyword">static</span> <span class="keyword">struct </span>tm t;</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    t.tm_sec = <a class="code" href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a>(<a class="code" href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a>(0));</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    t.tm_min = <a class="code" href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a>(<a class="code" href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a>(2));</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    t.tm_hour = <a class="code" href="desc_8c.html#a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</a>(<a class="code" href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a>(4)) + 2;</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    t.tm_mday = <a class="code" href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a>(<a class="code" href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a>(7));</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    t.tm_mon = <a class="code" href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a>(<a class="code" href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a>(8)) - 1;</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    t.tm_year = (<a class="code" href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a>(<a class="code" href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a>(9)) + 100);</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    t.tm_wday = 0;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    t.tm_yday = 0;</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    t.tm_isdst = 0;</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    </div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="keywordflow">return</span> (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) mktime(&amp;t);</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;}</div>
+<div class="ttc" id="desc_8c_html_a33200b25f91bf4cf6a4ec73ef292b207"><div class="ttname"><a href="desc_8c.html#a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</a></div><div class="ttdeci">#define BCD2BIN2(bcd)</div></div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="desc_8c_html_a1d44575d1f90766872fc87b63171102b"><div class="ttname"><a href="desc_8c.html#a1d44575d1f90766872fc87b63171102b">rtc</a></div><div class="ttdeci">static uint8_t rtc(uint8_t addr)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00365">desc.c:365</a></div></div>
+<div class="ttc" id="desc_8c_html_ac1344dbe0eeb67abcd3640a64a07a91a"><div class="ttname"><a href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a></div><div class="ttdeci">#define BCD2BIN(bcd)</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a28c9747160a8526a5272ea44e68f45b6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pit_handler </td>
+          <td>(</td>
+          <td class="paramtype">regs_t *&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00166">166</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="desc_8c_source.html#l00038">PIT_FREQ</a>, e <a class="el" href="src_2sched_8c_source.html#l00093">schedule()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                            {</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <a class="code" href="desc_8c.html#a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</a> += (1000 / <a class="code" href="desc_8c.html#aaad9208d1f30cc40267fdeb44f593a35">PIT_FREQ</a>);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    </div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="desc_8c.html#a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</a> &gt;= 1000) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <a class="code" href="desc_8c.html#a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</a> = 0;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <a class="code" href="desc_8c.html#aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</a> += 1;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    }</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="desc_8c.html#aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</a> &gt;= 86400) {</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <a class="code" href="desc_8c.html#aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</a> = 0;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <a class="code" href="desc_8c.html#adbf6021113d80f4e06464449823d18ca">pit_days</a> += 1;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    }</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    </div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <a class="code" href="desc_8c.html#a7d06701ac073c331c83519e3909b7fce">schedule</a>();</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;}</div>
+<div class="ttc" id="desc_8c_html_a7d06701ac073c331c83519e3909b7fce"><div class="ttname"><a href="desc_8c.html#a7d06701ac073c331c83519e3909b7fce">schedule</a></div><div class="ttdeci">void schedule()</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00093">sched.c:93</a></div></div>
+<div class="ttc" id="desc_8c_html_aaad9208d1f30cc40267fdeb44f593a35"><div class="ttname"><a href="desc_8c.html#aaad9208d1f30cc40267fdeb44f593a35">PIT_FREQ</a></div><div class="ttdeci">#define PIT_FREQ</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00038">desc.c:38</a></div></div>
+<div class="ttc" id="desc_8c_html_aa40e578d683608caf3c7cd5c43ed9499"><div class="ttname"><a href="desc_8c.html#aa40e578d683608caf3c7cd5c43ed9499">pit_seconds</a></div><div class="ttdeci">static uint32_t pit_seconds</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00112">desc.c:112</a></div></div>
+<div class="ttc" id="desc_8c_html_a41bc65b4bc7d5a5211de47d1f5c2758a"><div class="ttname"><a href="desc_8c.html#a41bc65b4bc7d5a5211de47d1f5c2758a">pit_ticks</a></div><div class="ttdeci">static uint32_t pit_ticks</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00111">desc.c:111</a></div></div>
+<div class="ttc" id="desc_8c_html_adbf6021113d80f4e06464449823d18ca"><div class="ttname"><a href="desc_8c.html#adbf6021113d80f4e06464449823d18ca">pit_days</a></div><div class="ttdeci">static uint32_t pit_days</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00113">desc.c:113</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a1d44575d1f90766872fc87b63171102b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> rtc </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td>
+          <td class="paramname"><em>addr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00365">365</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+<p>Referenzia <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, e <a class="el" href="aplus_8h_source.html#l00113">uint8_t</a>.</p>
+<div class="fragment"><div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;                                 {</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    outb(0x70, addr);</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    </div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <a class="code" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> r = 0;</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a>(<span class="stringliteral">&quot;inb 0x71&quot;</span> : <span class="stringliteral">&quot;=a&quot;</span>(r));</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keywordflow">return</span> r;</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;}</div>
+<div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [gdt_p]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</div></div>
+<div class="ttc" id="aplus_8h_html_ae0430369c5a35dcdbc0bc19dcbb33a03"><div class="ttname"><a href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a></div><div class="ttdeci">ax uint8_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00113">aplus.h:113</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a7d06701ac073c331c83519e3909b7fce"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void schedule </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="src_2sched_8c_source.html#l00093">93</a> del file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+
+<p>Referenzia <a class="el" href="task_8h_source.html#l00104">task::clock</a>, <a class="el" href="list_8h_source.html#l00049">list_empty()</a>, <a class="el" href="task_8h_source.html#l00103">task::priority</a>, <a class="el" href="src_2sched_8c_source.html#l00038">sched_enabled</a>, <a class="el" href="src_2sched_8c_source.html#l00078">schedule_next()</a>, e <a class="el" href="task_8c_source.html#l00165">task_switch()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="src_2sched_8c.html#aeb00dca46bca400ba3512e70f9a1c55c">sched_enabled</a> == 0)</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="list_8h.html#a89e0fc8ca134e1dceb33c75b756e6754">list_empty</a>(<a class="code" href="src_2sched_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</a>))</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="src_2sched_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a8a31c6648c1b1869bfa069f4a969b0ad">clock</a> += 1;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="src_2sched_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a8a31c6648c1b1869bfa069f4a969b0ad">clock</a> % <a class="code" href="src_2sched_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a9ab46b5a6e7c471f1fe32db13e6636a2">priority</a>)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="task_8c.html#a1b2086f34fd20264fae9ed90c4bc2645">task_switch</a>(<a class="code" href="src_2sched_8c.html#a94a683ba0ad510a6d51f369bb4496147">schedule_next</a>());</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
+<div class="ttc" id="task_8c_html_a1b2086f34fd20264fae9ed90c4bc2645"><div class="ttname"><a href="task_8c.html#a1b2086f34fd20264fae9ed90c4bc2645">task_switch</a></div><div class="ttdeci">void task_switch(task_t *newtask)</div><div class="ttdef"><b>Definition:</b> <a href="task_8c_source.html#l00165">task.c:165</a></div></div>
+<div class="ttc" id="src_2sched_8c_html_acb74842176b48d2ab29b1a74b0ca4ef1"><div class="ttname"><a href="src_2sched_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</a></div><div class="ttdeci">list_t * task_queue</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00036">sched.c:36</a></div></div>
+<div class="ttc" id="list_8h_html_a89e0fc8ca134e1dceb33c75b756e6754"><div class="ttname"><a href="list_8h.html#a89e0fc8ca134e1dceb33c75b756e6754">list_empty</a></div><div class="ttdeci">static int list_empty(list_t *list)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00049">list.h:49</a></div></div>
+<div class="ttc" id="src_2sched_8c_html_aeb00dca46bca400ba3512e70f9a1c55c"><div class="ttname"><a href="src_2sched_8c.html#aeb00dca46bca400ba3512e70f9a1c55c">sched_enabled</a></div><div class="ttdeci">static int sched_enabled</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00038">sched.c:38</a></div></div>
+<div class="ttc" id="src_2sched_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="src_2sched_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00033">sched.c:33</a></div></div>
+<div class="ttc" id="structtask_html_a8a31c6648c1b1869bfa069f4a969b0ad"><div class="ttname"><a href="structtask.html#a8a31c6648c1b1869bfa069f4a969b0ad">task::clock</a></div><div class="ttdeci">uint32_t clock</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00104">task.h:104</a></div></div>
+<div class="ttc" id="src_2sched_8c_html_a94a683ba0ad510a6d51f369bb4496147"><div class="ttname"><a href="src_2sched_8c.html#a94a683ba0ad510a6d51f369bb4496147">schedule_next</a></div><div class="ttdeci">static task_t * schedule_next()</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00078">sched.c:78</a></div></div>
+<div class="ttc" id="structtask_html_a9ab46b5a6e7c471f1fe32db13e6636a2"><div class="ttname"><a href="structtask.html#a9ab46b5a6e7c471f1fe32db13e6636a2">task::priority</a></div><div class="ttdeci">uint32_t priority</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00103">task.h:103</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ab36b30e25787b3f4887160064ba2f43a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void syscall_handler </td>
+          <td>(</td>
+          <td class="paramtype">regs_t *&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="syscall_8c_source.html#l00053">53</a> del file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
+
+<p>Referenzia <a class="el" href="syscall_8c_source.html#l00009">syscall_handlers</a>, e <a class="el" href="syscall_8c_source.html#l00028">syscall_invoke()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                               {</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="syscall_8c.html#a271c3526b04dd2fe678f7f0d00cbf759">syscall_invoke</a>(<a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[r-&gt;eax], r-&gt;ebx, r-&gt;ecx, r-&gt;edx, r-&gt;esi, r-&gt;edi);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
+<div class="ttc" id="syscall_8c_html_afb85e77f03c9acf2f02687360c17dd91"><div class="ttname"><a href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a></div><div class="ttdeci">static void ** syscall_handlers</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00009">syscall.c:9</a></div></div>
+<div class="ttc" id="syscall_8c_html_a271c3526b04dd2fe678f7f0d00cbf759"><div class="ttname"><a href="syscall_8c.html#a271c3526b04dd2fe678f7f0d00cbf759">syscall_invoke</a></div><div class="ttdeci">int syscall_invoke(void *handler, int p0, int p1, int p2, int p3, int p4)</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00028">syscall.c:28</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle variabili</h2>
+<a class="anchor" id="a8b0d6200bc639dd37ff68847a0adde5f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> access</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00003">3</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8fef9c987f038778feaf85edfcc9c060"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> base_h</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00003">3</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af2ca1e64dc7ef22ee1082a58403166ec"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a> base_l</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00002">2</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a98fb2af33fad804398328d56ccf01ec2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> base_m</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00003">3</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a243b9f88d2a68b2d2daff1dd77773e08"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">gdt_entry_t gdt_e[5]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00104">104</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af67a6154264e775ccf3c976fefe43618"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">gdt_ptr_t gdt_p</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00105">105</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acfea365f69e71368a2db03333d4afd6f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> granularity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00003">3</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a248e57c601e50474a60c9d42c6ac8fb3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">idt_entry_t idt_e[256]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00107">107</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acd81c3f56ebae00c0f2af978d2b48d42"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">idt_ptr_t idt_p</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00108">108</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8e2066f75678ef3cb314db1e33fe5e4d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* irqs[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00102">102</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab391065c3b916fa1704b6bfb7b099d04"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> keyboard_ready = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00115">115</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aea6d44db9dbbcd64642fcb7904f41d9a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a> limit_l</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00002">2</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adbf6021113d80f4e06464449823d18ca"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> pit_days</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00113">113</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa40e578d683608caf3c7cd5c43ed9499"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> pit_seconds</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00112">112</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a41bc65b4bc7d5a5211de47d1f5c2758a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> pit_ticks</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="desc_8c_source.html#l00111">111</a> del file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_1a2db638ef6877e1d4473af5a81c9a08.html">arch</a></li><li class="navelem"><a class="el" href="desc_8c.html">desc.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

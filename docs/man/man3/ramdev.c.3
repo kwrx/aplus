@@ -1,0 +1,168 @@
+.TH "src/fs/ramdev.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/fs/ramdev.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/bufio\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBramdev_read\fP (\fBinode_t\fP *ino, char *buf, int \fBsize\fP)"
+.br
+.ti -1c
+.RI "int \fBramdev_write\fP (\fBinode_t\fP *ino, char *buf, int \fBsize\fP)"
+.br
+.ti -1c
+.RI "void \fBramdev_flush\fP (\fBinode_t\fP *ino)"
+.br
+.ti -1c
+.RI "\fBinode_t\fP * \fBmkramdev\fP (char *path, \fBuint32_t\fP addr, \fBuint32_t\fP \fBsize\fP)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBinode_t\fP* mkramdev (char *path, \fBuint32_t\fPaddr, \fBuint32_t\fPsize)"
+
+.PP
+Definizione alla linea 75 del file ramdev\&.c\&.
+.PP
+Referenzia bufio_alloc_raw(), task::fd, inode::flush, ramdev_flush(), ramdev_read(), ramdev_write(), inode::read, size, inode::size, sys_close(), sys_open(), inode::userdata, e inode::write\&.
+.PP
+.nf
+75                                                             {
+76     int fd = sys_open(path, O_CREAT | O_EXCL | O_TRUNC, S_IFCHR);
+77     if(fd < 0)
+78         return NULL;
+79 
+80     inode_t* ino = (inode_t*) current_task->fd[fd];
+81     sys_close(fd);
+82 
+83     ino->read = ramdev_read;
+84     ino->write = ramdev_write;
+85     ino->flush = ramdev_flush;
+86     ino->userdata = (void*) bufio_alloc_raw((void*) addr, size);
+87     ino->size = size;
+88 
+89 
+90     return ino;
+91 }
+.fi
+.SS "void ramdev_flush (\fBinode_t\fP *ino)"
+
+.PP
+Definizione alla linea 64 del file ramdev\&.c\&.
+.PP
+Referenzia bufio_free(), e inode::userdata\&.
+.PP
+.nf
+64                                 {
+65     if(!ino)
+66         return;
+67 
+68     if(!ino->userdata)
+69         return;
+70 
+71     bufio_free(ino->userdata);
+72 }
+.fi
+.SS "int ramdev_read (\fBinode_t\fP *ino, char *buf, intsize)"
+
+.PP
+Definizione alla linea 15 del file ramdev\&.c\&.
+.PP
+Referenzia bufio_read(), inode::position, size, inode::size, e inode::userdata\&.
+.PP
+.nf
+15                                                    {
+16     if(!ino)
+17         return 0;
+18 
+19     if(!buf)
+20         return 0;
+21 
+22     if(size > ino->size)
+23         size = ino->size;
+24 
+25     if(ino->position > ino->size)
+26         ino->position = ino->size;
+27 
+28     if(ino->position + size > ino->size)
+29         size = ino->size - ino->position;
+30 
+31     if(!size)
+32         return 0;
+33 
+34     size = bufio_read(ino->userdata, buf, size);
+35     ino->position += size;
+36     return size;
+37 }
+.fi
+.SS "int ramdev_write (\fBinode_t\fP *ino, char *buf, intsize)"
+
+.PP
+Definizione alla linea 39 del file ramdev\&.c\&.
+.PP
+Referenzia bufio_write(), inode::position, size, inode::size, e inode::userdata\&.
+.PP
+.nf
+39                                                     {
+40     if(!ino)
+41         return 0;
+42 
+43     if(!buf)
+44         return 0;
+45 
+46     if(size > ino->size)
+47         size = ino->size;
+48 
+49     if(ino->position > ino->size)
+50         ino->position = ino->size;
+51 
+52     if(ino->position + size > ino->size)
+53         size = ino->size - ino->position;
+54 
+55     if(!size)
+56         return 0;
+57 
+58     
+59     size = bufio_write(ino->userdata, buf, size);
+60     ino->position += size;
+61     return size;
+62 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

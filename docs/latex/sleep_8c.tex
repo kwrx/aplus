@@ -1,0 +1,51 @@
+\hypertarget{sleep_8c}{\section{Riferimenti per il file usr/src/libposix/src/sleep.c}
+\label{sleep_8c}\index{usr/src/libposix/src/sleep.\+c@{usr/src/libposix/src/sleep.\+c}}
+}
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{sleep_8c_a1beaecc28fb9396d30c206bde6aa4717}{nanosleep} (struct timespec $\ast$ts, struct timespec $\ast$tr)
+\item 
+unsigned \hyperlink{sleep_8c_ad4669b3813c3b4a616a738317fdc974f}{sleep} (unsigned seconds)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{sleep_8c_a1beaecc28fb9396d30c206bde6aa4717}{\index{sleep.\+c@{sleep.\+c}!nanosleep@{nanosleep}}
+\index{nanosleep@{nanosleep}!sleep.\+c@{sleep.\+c}}
+\subsubsection[{nanosleep}]{\setlength{\rightskip}{0pt plus 5cm}int nanosleep (
+\begin{DoxyParamCaption}
+\item[{struct timespec $\ast$}]{ts, }
+\item[{struct timespec $\ast$}]{tr}
+\end{DoxyParamCaption}
+)}}\label{sleep_8c_a1beaecc28fb9396d30c206bde6aa4717}
+\hypertarget{sleep_8c_ad4669b3813c3b4a616a738317fdc974f}{\index{sleep.\+c@{sleep.\+c}!sleep@{sleep}}
+\index{sleep@{sleep}!sleep.\+c@{sleep.\+c}}
+\subsubsection[{sleep}]{\setlength{\rightskip}{0pt plus 5cm}unsigned sleep (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{seconds}
+\end{DoxyParamCaption}
+)}}\label{sleep_8c_ad4669b3813c3b4a616a738317fdc974f}
+
+
+Definizione alla linea 8 del file sleep.\+c.
+
+
+
+Referenzia errno, e nanosleep().
+
+
+\begin{DoxyCode}
+8                                  \{
+9     \textcolor{keyword}{struct }timespec ts;
+10 
+11     ts.tv\_sec = seconds;
+12     ts.tv\_nsec = 0;
+13     \textcolor{keywordflow}{if} (!\hyperlink{sleep_8c_a1beaecc28fb9396d30c206bde6aa4717}{nanosleep}(&ts,&ts)) \textcolor{keywordflow}{return} 0;
+14     \textcolor{keywordflow}{if} (\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} == EINTR) \textcolor{keywordflow}{return} ts.tv\_sec;
+15     \textcolor{keywordflow}{return} -1;
+16 \}
+\end{DoxyCode}

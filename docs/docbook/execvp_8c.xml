@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="execvp_8c">
+    <title>execvp.c File Reference</title>
+    <programlisting>#include &lt;_ansi.h&gt;</programlisting>
+    <programlisting>#include &lt;stdlib.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;dirent.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &lt;ctype.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="execvp_8c_1a79a1771c654f4dd46398088f3e33701a">PATH_DELIM</link> &apos;:&apos;</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static char * <link linkend="execvp_8c_1a10efa145fdda589520d161cf247a568f">_DEFUN</link> (
+strccpy , (s1, s2, c) , char *s1 _AND char *s2 _AND char c)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="execvp_8c_1abd01b9e4dcf0b408353235fe59e17675">_DEFUN</link> (
+execvp , (file, argv) , _CONST char *file _AND char *_CONST argv)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libposix/src/execvp.c</para>
+    </simplesect>
+</section>

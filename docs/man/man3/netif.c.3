@@ -1,0 +1,514 @@
+.TH "src/net/netif.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/netif.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <aplus/attribute\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <aplus/net/arp\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBuint32_t\fP \fBnetif_htonl\fP (\fBuint32_t\fP h)"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBnetif_htons\fP (\fBuint16_t\fP h)"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBnetif_ntohl\fP (\fBuint32_t\fP h)"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBnetif_ntohs\fP (\fBuint32_t\fP h)"
+.br
+.ti -1c
+.RI "\fBnetif_t\fP * \fBnetif_find_by_ipv4\fP (\fBipv4_t\fP *ipv4)"
+.br
+.ti -1c
+.RI "\fBnetif_t\fP * \fBnetif_find_by_ipv6\fP (\fBipv6_t\fP *ipv6)"
+.br
+.ti -1c
+.RI "\fBnetif_t\fP * \fBnetif_find_by_macaddr\fP (\fBmacaddr_t\fP *macaddr)"
+.br
+.ti -1c
+.RI "\fBnetif_t\fP * \fBnetif_find_by_name\fP (char *\fBname\fP)"
+.br
+.ti -1c
+.RI "int \fBnetif_ifup\fP ()"
+.br
+.ti -1c
+.RI "int \fBnetif_ifdown\fP ()"
+.br
+.ti -1c
+.RI "int \fBnetif_add\fP (\fBnetif_t\fP *netdev)"
+.br
+.ti -1c
+.RI "int \fBnetif_remove\fP (\fBnetif_t\fP *netdev)"
+.br
+.ti -1c
+.RI "int \fBnetif_init\fP ()"
+.br
+.ti -1c
+.RI "int \fBnetif_packets_add\fP (\fBnetif_packet_t\fP *packet)"
+.br
+.ti -1c
+.RI "int \fBnetif_packets_remove\fP (\fBnetif_packet_t\fP *packet)"
+.br
+.ti -1c
+.RI "\fBnetif_packet_t\fP * \fBnetif_packets_find_by_id\fP (uint64_t \fBid\fP)"
+.br
+.ti -1c
+.RI "\fBlist_t\fP * \fBnetif_packets_find_by_protocol\fP (int \fBprotocol\fP)"
+.br
+.ti -1c
+.RI "\fBnetif_packet_t\fP * \fBnetif_packets_create\fP (\fBnetif_t\fP *\fBnetif\fP, int \fBprotocol\fP, int tot_length, int head_length, void *data)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "static \fBlist_t\fP * \fBlst_netif\fP = NULL"
+.br
+.ti -1c
+.RI "static \fBlist_t\fP * \fBlst_packets\fP = NULL"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int netif_add (\fBnetif_t\fP *netdev)"
+
+.PP
+Definizione alla linea 124 del file netif\&.c\&.
+.PP
+Referenzia netif::dns, netif::ipv4, netif::ipv6, kprintf, list_add(), list_init, netif::macaddr, netif::mtu, netif::name, netif_find_by_ipv4(), netif_find_by_ipv6(), netif_find_by_macaddr(), netif::netmask, netif::primary, e netif::secondary\&.
+.PP
+.nf
+124                                {
+125     if(lst_netif == NULL) {
+126         list_init(lst_netif);
+127     }
+128 
+129 
+130     if(netif_find_by_ipv4(&netdev->ipv4) != NULL) {
+131         kprintf("netif: conflitto di ipv4\n");
+132         return -1;
+133     }
+134 
+135     if(netif_find_by_ipv6(&netdev->ipv6) != NULL) {
+136         kprintf("netif: conflitto di ipv6\n");
+137         return -1;
+138     }
+139 
+140 
+141     if(netif_find_by_macaddr(&netdev->macaddr) != NULL) {
+142         kprintf("netif: conflitto di macaddr\n");
+143         return -1;
+144     }
+145 
+146 
+147 
+148     kprintf("\n%s:\tipv4\t%d\&.%d\&.%d\&.%d\n\tnetmask\t%d\&.%d\&.%d\&.%d\n",
+149             netdev->name,
+150             netdev->ipv4[0],
+151             netdev->ipv4[1],
+152             netdev->ipv4[2],
+153             netdev->ipv4[3],
+154             netdev->netmask[0],
+155             netdev->netmask[1],
+156             netdev->netmask[2],
+157             netdev->netmask[3]
+158     );
+159 
+160     kprintf("\tipv6\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
+161             netdev->ipv6[0],
+162             netdev->ipv6[1],
+163             netdev->ipv6[2],
+164             netdev->ipv6[3],
+165             netdev->ipv6[4],
+166             netdev->ipv6[5],
+167             netdev->ipv6[6],
+168             netdev->ipv6[7]
+169     );
+170 
+171     kprintf("\tmacaddr\t%02x:%02x:%02x:%02x:%02x:%02x\n\tmtu\t%d bytes\n",
+172             netdev->macaddr[0],
+173             netdev->macaddr[1],
+174             netdev->macaddr[2],
+175             netdev->macaddr[3],
+176             netdev->macaddr[4],
+177             netdev->macaddr[5],
+178             netdev->mtu
+179     );
+180 
+181     kprintf("\tdns\t%d\&.%d\&.%d\&.%d\n\t\t%d\&.%d\&.%d\&.%d\n",
+182             netdev->dns\&.primary\&.ipv4[0],
+183             netdev->dns\&.primary\&.ipv4[1],
+184             netdev->dns\&.primary\&.ipv4[2],
+185             netdev->dns\&.primary\&.ipv4[3],
+186             netdev->dns\&.secondary\&.ipv4[0],
+187             netdev->dns\&.secondary\&.ipv4[1],
+188             netdev->dns\&.secondary\&.ipv4[2],
+189             netdev->dns\&.secondary\&.ipv4[3]
+190     );
+191 
+192     kprintf("\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
+193             netdev->dns\&.primary\&.ipv6[0],
+194             netdev->dns\&.primary\&.ipv6[1],
+195             netdev->dns\&.primary\&.ipv6[2],
+196             netdev->dns\&.primary\&.ipv6[3],
+197             netdev->dns\&.primary\&.ipv6[4],
+198             netdev->dns\&.primary\&.ipv6[5],
+199             netdev->dns\&.primary\&.ipv6[6],
+200             netdev->dns\&.primary\&.ipv6[7],
+201             netdev->dns\&.secondary\&.ipv6[0],
+202             netdev->dns\&.secondary\&.ipv6[1],
+203             netdev->dns\&.secondary\&.ipv6[2],
+204             netdev->dns\&.secondary\&.ipv6[3],
+205             netdev->dns\&.secondary\&.ipv6[4],
+206             netdev->dns\&.secondary\&.ipv6[5],
+207             netdev->dns\&.secondary\&.ipv6[6],
+208             netdev->dns\&.secondary\&.ipv6[7]
+209     );
+210 
+211     return list_add(lst_netif, (listval_t) netdev);
+212 }
+.fi
+.SS "\fBnetif_t\fP* netif_find_by_ipv4 (\fBipv4_t\fP *ipv4)"
+
+.PP
+Definizione alla linea 36 del file netif\&.c\&.
+.PP
+Referenzia netif::ipv4, list_foreach, e value\&.
+.PP
+.nf
+36                                           {
+37     if(lst_netif == NULL)
+38         return NULL;
+39 
+40     list_foreach(value, lst_netif) {
+41         netif_t* netif = (netif_t*) value;
+42 
+43         if(memcmp(netif->ipv4, ipv4, sizeof(ipv4_t)) == 0)
+44             return netif;
+45     }
+46 
+47     return NULL;
+48 }
+.fi
+.SS "\fBnetif_t\fP* netif_find_by_ipv6 (\fBipv6_t\fP *ipv6)"
+
+.PP
+Definizione alla linea 50 del file netif\&.c\&.
+.PP
+Referenzia netif::ipv6, list_foreach, e value\&.
+.PP
+.nf
+50                                           {
+51     if(lst_netif == NULL)
+52         return NULL;
+53 
+54     list_foreach(value, lst_netif) {
+55         netif_t* netif = (netif_t*) value;
+56 
+57         if(memcmp(netif->ipv6, ipv6, sizeof(ipv6_t)) == 0)
+58             return netif;
+59     }
+60 
+61     return NULL;
+62 }
+.fi
+.SS "\fBnetif_t\fP* netif_find_by_macaddr (\fBmacaddr_t\fP *macaddr)"
+
+.PP
+Definizione alla linea 66 del file netif\&.c\&.
+.PP
+Referenzia list_foreach, netif::macaddr, e value\&.
+.PP
+.nf
+66                                                    {
+67     if(lst_netif == NULL)
+68         return NULL;
+69 
+70     list_foreach(value, lst_netif) {
+71         netif_t* netif = (netif_t*) value;
+72 
+73         if(memcmp(netif->macaddr, macaddr, sizeof(macaddr_t)) == 0)
+74             return netif;
+75     }
+76 
+77     return NULL;
+78 }
+.fi
+.SS "\fBnetif_t\fP* netif_find_by_name (char *name)"
+
+.PP
+Definizione alla linea 80 del file netif\&.c\&.
+.PP
+Referenzia list_foreach, netif::name, e value\&.
+.PP
+.nf
+80                                         {
+81     if(lst_netif == NULL)
+82         return NULL;
+83 
+84     list_foreach(value, lst_netif) {
+85         netif_t* netif = (netif_t*) value;
+86 
+87         if(strcmp(netif->name, name) == 0)
+88             return netif;
+89     }
+90 
+91     return NULL;
+92 }
+.fi
+.SS "\fBuint32_t\fP netif_htonl (\fBuint32_t\fPh)"
+
+.PP
+Definizione alla linea 18 del file netif\&.c\&.
+.PP
+.nf
+18                                  {
+19     return ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
+20             ((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
+21 }
+.fi
+.SS "\fBuint16_t\fP netif_htons (\fBuint16_t\fPh)"
+
+.PP
+Definizione alla linea 23 del file netif\&.c\&.
+.PP
+.nf
+23                                  {
+24     return ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
+25 }
+.fi
+.SS "int netif_ifdown ()"
+
+.PP
+Definizione alla linea 110 del file netif\&.c\&.
+.PP
+Referenzia netif::ifdown, list_foreach, e value\&.
+.PP
+.nf
+110                    {
+111     if(lst_netif == NULL)
+112         return -1;
+113 
+114     list_foreach(value, lst_netif) {
+115         netif_t* netif = (netif_t*) value;
+116 
+117         if(netif->ifdown)
+118             netif->ifdown(netif);
+119     }
+120 
+121     return -1;
+122 }
+.fi
+.SS "int netif_ifup ()"
+
+.PP
+Definizione alla linea 94 del file netif\&.c\&.
+.PP
+Referenzia arp_send(), netif::ifup, list_foreach, e value\&.
+.PP
+.nf
+94                  {
+95     if(lst_netif == NULL)
+96         return -1;
+97 
+98     list_foreach(value, lst_netif) {
+99         netif_t* netif = (netif_t*) value;
+100 
+101         if(netif->ifup)
+102             netif->ifup(netif);
+103 
+104         arp_send(netif);
+105     }
+106 
+107     return -1;
+108 }
+.fi
+.SS "int netif_init ()"
+
+.PP
+Definizione alla linea 221 del file netif\&.c\&.
+.PP
+Referenzia attribute(), list_destroy, list_empty(), list_foreach, list_init, netif_ifup(), e value\&.
+.PP
+.nf
+221                  {
+222     list_init(lst_packets);
+223 
+224     list_t* lst_netif = attribute("netif");
+225     if(list_empty(lst_netif))
+226         return -1;
+227 
+228     list_foreach(value, lst_netif) {
+229         int (*handler) () = (int (*) ()) value;
+230 
+231         if(handler)
+232             handler();
+233     }
+234     
+235     list_destroy(lst_netif);
+236 
+237     netif_ifup();
+238     return 0;
+239 }
+.fi
+.SS "\fBuint32_t\fP netif_ntohl (\fBuint32_t\fPh)"
+
+.PP
+Definizione alla linea 27 del file netif\&.c\&.
+.PP
+.nf
+27                                  {
+28     return ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
+29             ((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
+30 }
+.fi
+.SS "\fBuint32_t\fP netif_ntohs (\fBuint32_t\fPh)"
+
+.PP
+Definizione alla linea 32 del file netif\&.c\&.
+.PP
+.nf
+32                                  {
+33     return ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
+34 }
+.fi
+.SS "int netif_packets_add (\fBnetif_packet_t\fP *packet)"
+
+.PP
+Definizione alla linea 242 del file netif\&.c\&.
+.PP
+Referenzia netif_packet::id, e list_add()\&.
+.PP
+.nf
+242                                               {
+243     static uint64_t nextid = 0;
+244     
+245     packet->id = nextid++;
+246     return list_add(lst_packets, (listval_t) packet);
+247 }
+.fi
+.SS "\fBnetif_packet_t\fP* netif_packets_create (\fBnetif_t\fP *netif, intprotocol, inttot_length, inthead_length, void *data)"
+
+.PP
+Definizione alla linea 279 del file netif\&.c\&.
+.PP
+Referenzia netif_packet::data, netif_packet::header, kmalloc(), netif_packet::length, netif_packet::netif, protocol, netif_packet::protocol, e uint32_t\&.
+.PP
+.nf
+279                                                                                                                 {
+280     netif_packet_t* pkt = (netif_packet_t*) kmalloc(sizeof(netif_packet_t) + tot_length);
+281     pkt->netif = netif;
+282     pkt->protocol = protocol;
+283     pkt->length = tot_length - head_length;
+284     
+285     memcpy(pkt->header, data, head_length);
+286     memcpy(pkt->data, (void*) ((uint32_t) data + head_length), pkt->length);
+287 
+288     return pkt;
+289 }
+.fi
+.SS "\fBnetif_packet_t\fP* netif_packets_find_by_id (uint64_tid)"
+
+.PP
+Definizione alla linea 253 del file netif\&.c\&.
+.PP
+Referenzia netif_packet::id, list_foreach, e value\&.
+.PP
+.nf
+253                                                       {
+254     list_foreach(value, lst_packets) {
+255         netif_packet_t* pkt = (netif_packet_t*) value;
+256 
+257         if(pkt->id == id)
+258             return pkt;
+259     }
+260 
+261     return NULL;
+262 }
+.fi
+.SS "\fBlist_t\fP* netif_packets_find_by_protocol (intprotocol)"
+
+.PP
+Definizione alla linea 264 del file netif\&.c\&.
+.PP
+Referenzia list_add(), list_foreach, list_init, netif_packet::protocol, e value\&.
+.PP
+.nf
+264                                                      {
+265     list_t* tmp = NULL;
+266     list_init(tmp);
+267 
+268 
+269     list_foreach(value, lst_packets) {
+270         netif_packet_t* pkt = (netif_packet_t*) value;
+271 
+272         if(pkt->protocol == protocol)
+273             list_add(tmp, (listval_t) pkt);
+274     }
+275 
+276     return tmp;
+277 }
+.fi
+.SS "int netif_packets_remove (\fBnetif_packet_t\fP *packet)"
+
+.PP
+Definizione alla linea 249 del file netif\&.c\&.
+.PP
+Referenzia list_remove()\&.
+.PP
+.nf
+249                                                  {
+250     return list_remove(lst_packets, (listval_t) packet);
+251 }
+.fi
+.SS "int netif_remove (\fBnetif_t\fP *netdev)"
+
+.PP
+Definizione alla linea 214 del file netif\&.c\&.
+.PP
+Referenzia list_remove()\&.
+.PP
+.nf
+214                                   {
+215     if(lst_netif == NULL)
+216         return -1;
+217 
+218     return list_remove(lst_netif, (listval_t) netdev);
+219 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBlist_t\fP* lst_netif = NULL\fC [static]\fP"
+
+.PP
+Definizione alla linea 13 del file netif\&.c\&.
+.SS "\fBlist_t\fP* lst_packets = NULL\fC [static]\fP"
+
+.PP
+Definizione alla linea 14 del file netif\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

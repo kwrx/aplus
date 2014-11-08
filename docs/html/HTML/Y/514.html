@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>regs_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L119'>regs_t</a>            119 src/arch/desc.c extern void syscall_handler(regs_t*);
+<a href='../S/158.html#L151'>regs_t</a>            151 src/arch/desc.c void isr_handler(regs_t* r) {
+<a href='../S/158.html#L155'>regs_t</a>            155 src/arch/desc.c void irq_handler(regs_t* r) {
+<a href='../S/158.html#L158'>regs_t</a>            158 src/arch/desc.c 		((void (*)(regs_t*)) irqs[r-&gt;int_no - 32]) (r);
+<a href='../S/158.html#L166'>regs_t</a>            166 src/arch/desc.c void pit_handler(regs_t* r) {
+<a href='../S/158.html#L183'>regs_t</a>            183 src/arch/desc.c void pagefault_handler(regs_t* r) {
+<a href='../S/163.html#L53'>regs_t</a>             53 src/arch/syscall.c int syscall_handler(regs_t* r) {
+<a href='../S/102.html#L143'>regs_t</a>            143 src/include/aplus.h } __attribute__((packed)) regs_t;
+</pre>
+</body>
+</html>

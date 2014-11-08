@@ -1,0 +1,468 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="ipv4_8h" kind="file">
+    <compoundname>ipv4.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
+    <includedby refid="ipv4_8c" local="no">src/net/ipv4.c</includedby>
+    <incdepgraph>
+      <node id="617">
+        <label>stdarg.h</label>
+      </node>
+      <node id="614">
+        <label>stdint.h</label>
+      </node>
+      <node id="619">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="616" relation="include">
+        </childnode>
+        <childnode refid="614" relation="include">
+        </childnode>
+      </node>
+      <node id="620">
+        <label>stddef.h</label>
+      </node>
+      <node id="616">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="614" relation="include">
+        </childnode>
+        <childnode refid="617" relation="include">
+        </childnode>
+        <childnode refid="618" relation="include">
+        </childnode>
+      </node>
+      <node id="618">
+        <label>string.h</label>
+      </node>
+      <node id="615">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="616" relation="include">
+        </childnode>
+        <childnode refid="619" relation="include">
+        </childnode>
+        <childnode refid="614" relation="include">
+        </childnode>
+        <childnode refid="620" relation="include">
+        </childnode>
+      </node>
+      <node id="613">
+        <label>src/include/aplus/net/ipv4.h</label>
+        <link refid="ipv4.h"/>
+        <childnode refid="614" relation="include">
+        </childnode>
+        <childnode refid="615" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="622">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="623">
+        <label>src/net/ipv4.c</label>
+        <link refid="ipv4_8c"/>
+      </node>
+      <node id="621">
+        <label>src/include/aplus/net/ipv4.h</label>
+        <link refid="ipv4.h"/>
+        <childnode refid="622" relation="include">
+        </childnode>
+        <childnode refid="623" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structipv4__header" prot="public">ipv4_header</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="ipv4_8h_1a50bcca0d0dd2ebc5380ebc78f288b5dd" prot="public" static="no">
+        <name>_IPV4_h</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="2" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="2" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a42321de534b24a284cfb2d1f95d9f379" prot="public" static="no">
+        <name>IPV4_FLAGS_DF</name>
+        <initializer>0x01	/* Don&apos;t fragment */</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="8" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a41977e1a3755af1ec6de3b8e67c0feae" prot="public" static="no">
+        <name>IPV4_FLAGS_MF</name>
+        <initializer>0x02	/* More fragment */</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="9" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a59c0d38a97217da8f5724ba7c8ee111a" prot="public" static="no">
+        <name>IPV4_CHECK_VERSION</name>
+        <param><defname>head</defname></param>
+        <initializer>((head-&gt;<ref refid="ipv4_8h_1a3b5693c71298b922c6188573f2474227" kindref="member">info</ref> &amp; 0x0F) == 4)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="11" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1ac2a02acc2c7e7b4a4503969db99e9020" prot="public" static="no">
+        <name>IPV4_HEADER_LENGTH</name>
+        <param><defname>head</defname></param>
+        <initializer>(((head-&gt;<ref refid="ipv4_8h_1a3b5693c71298b922c6188573f2474227" kindref="member">info</ref> &amp; 0xF0) &gt;&gt; 4) * 4)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="12" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a9ee4d424ec9987335719448cae6e8b81" prot="public" static="no">
+        <name>IPV4_FLAGS</name>
+        <param><defname>head</defname></param>
+        <initializer>(head-&gt;<ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref> &amp; 3)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="13" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a22499ee9877ed00277df76a340b82739" prot="public" static="no">
+        <name>IPV4_OFFSET</name>
+        <param><defname>head</defname></param>
+        <initializer>((head-&gt;<ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref> &gt;&gt; 2) * 8)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="14" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a40c19b8c3b66748b0636b8483b1793de" prot="public" static="no">
+        <name>IPV4_TOS_PRIORITY</name>
+        <param><defname>tos</defname></param>
+        <initializer>(<ref refid="ipv4_8h_1a3bdbe295d838b7f44e47ad5f4c3fac27" kindref="member">tos</ref> &amp; 3)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="16" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a2538c1165f857303e4b83f60f0cdd389" prot="public" static="no">
+        <name>IPV4_TOS_LATENCY</name>
+        <param><defname>tos</defname></param>
+        <initializer>((<ref refid="ipv4_8h_1a3bdbe295d838b7f44e47ad5f4c3fac27" kindref="member">tos</ref> &gt;&gt; 2) &amp; 1)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="17" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a510281d41bad02d3d3fe8650567072a1" prot="public" static="no">
+        <name>IPV4_TOS_TROUGHPUT</name>
+        <param><defname>tos</defname></param>
+        <initializer>((<ref refid="ipv4_8h_1a3bdbe295d838b7f44e47ad5f4c3fac27" kindref="member">tos</ref> &gt;&gt; 3) &amp; 1)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="18" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1ade48bcf8af18a3bdaa1a0694f064ee04" prot="public" static="no">
+        <name>IPV4_TOS_RELIABILITY</name>
+        <param><defname>tos</defname></param>
+        <initializer>((<ref refid="ipv4_8h_1a3bdbe295d838b7f44e47ad5f4c3fac27" kindref="member">tos</ref> &gt;&gt; 4) &amp; 1)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="19" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a6874b2adc2b7870b8e17ce781c8c11b4" prot="public" static="no">
+        <name>IPV4_PROTO_RAW</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="22" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a56f6b815cc9ea10fd0469800263b2a00" prot="public" static="no">
+        <name>IPV4_PROTO_ICMP</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="23" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a65b17e757e3d1e3404e10bdf2eccd228" prot="public" static="no">
+        <name>IPV4_PROTO_TCP</name>
+        <initializer>6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="24" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1a1ee065c0b162a088813ad6ee277cb571" prot="public" static="no">
+        <name>IPV4_PROTO_UDP</name>
+        <initializer>17</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="25" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="ipv4_8h_1ae44050a483509e668aad57a5ead0ceb9" prot="public" static="no">
+        <name>IPV4_MAX_LENGTH</name>
+        <initializer>65536</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="27" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="ipv4_8h_1a3b5693c71298b922c6188573f2474227" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t info</definition>
+        <argsstring></argsstring>
+        <name>info</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="47" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1a3bdbe295d838b7f44e47ad5f4c3fac27" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t tos</definition>
+        <argsstring></argsstring>
+        <name>tos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="48" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t length</definition>
+        <argsstring></argsstring>
+        <name>length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="49" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1a4fc3a0c58dfbd1e68224521185cb9384" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t id</definition>
+        <argsstring></argsstring>
+        <name>id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="50" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1ac681806181c80437cfab37335f62ff39" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t offset</definition>
+        <argsstring></argsstring>
+        <name>offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="51" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1a4d402503271315376ddf4e47674d4965" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t ttl</definition>
+        <argsstring></argsstring>
+        <name>ttl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="52" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1ad124d3d2e02c729afa303c775295278e" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t protocol</definition>
+        <argsstring></argsstring>
+        <name>protocol</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="53" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1a6796c847bbd16253ce2538754c250bd6" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t checksum</definition>
+        <argsstring></argsstring>
+        <name>checksum</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="54" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1a60fd0a2d96e0bd3eaada00c98c0e121f" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref></type>
+        <definition>ipv4_t source</definition>
+        <argsstring></argsstring>
+        <name>source</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="ipv4_8h_1af6f6370d40d60101052050b5a6f3766b" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref></type>
+        <definition>ipv4_t dest</definition>
+        <argsstring></argsstring>
+        <name>dest</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="57" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="ipv4_8h_1aedc8b3a56af6d6fa02c12255c4176f30" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structipv4__header" kindref="compound">ipv4_header</ref></type>
+        <definition>struct ipv4_header __attribute__</definition>
+        <argsstring>((packed)) ipv4_header_t</argsstring>
+        <name>__attribute__</name>
+        <param>
+          <type>(packed)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="46" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_IPV4_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2" refid="ipv4_8h_1a50bcca0d0dd2ebc5380ebc78f288b5dd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_IPV4_h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="ipv4_8h_1a42321de534b24a284cfb2d1f95d9f379" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_FLAGS_DF<sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x01<sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>Don&apos;t<sp/>fragment<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="ipv4_8h_1a41977e1a3755af1ec6de3b8e67c0feae" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_FLAGS_MF<sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x02<sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>More<sp/>fragment<sp/>*/</highlight><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="ipv4_8h_1a59c0d38a97217da8f5724ba7c8ee111a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_CHECK_VERSION(head)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((head-&gt;info<sp/>&amp;<sp/>0x0F)<sp/>==<sp/>4)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="ipv4_8h_1ac2a02acc2c7e7b4a4503969db99e9020" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_HEADER_LENGTH(head)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(((head-&gt;info<sp/>&amp;<sp/>0xF0)<sp/>&gt;&gt;<sp/>4)<sp/>*<sp/>4)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="ipv4_8h_1a9ee4d424ec9987335719448cae6e8b81" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_FLAGS(head)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(head-&gt;offset<sp/>&amp;<sp/>3)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="ipv4_8h_1a22499ee9877ed00277df76a340b82739" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_OFFSET(head)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((head-&gt;offset<sp/>&gt;&gt;<sp/>2)<sp/>*<sp/>8)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="ipv4_8h_1a40c19b8c3b66748b0636b8483b1793de" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_TOS_PRIORITY(tos)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(tos<sp/>&amp;<sp/>3)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="ipv4_8h_1a2538c1165f857303e4b83f60f0cdd389" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_TOS_LATENCY(tos)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((tos<sp/>&gt;&gt;<sp/>2)<sp/>&amp;<sp/>1)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="ipv4_8h_1a510281d41bad02d3d3fe8650567072a1" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_TOS_TROUGHPUT(tos)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((tos<sp/>&gt;&gt;<sp/>3)<sp/>&amp;<sp/>1)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="ipv4_8h_1ade48bcf8af18a3bdaa1a0694f064ee04" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_TOS_RELIABILITY(tos)<sp/><sp/><sp/><sp/><sp/><sp/><sp/>((tos<sp/>&gt;&gt;<sp/>4)<sp/>&amp;<sp/>1)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="ipv4_8h_1a6874b2adc2b7870b8e17ce781c8c11b4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_PROTO_RAW<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="ipv4_8h_1a56f6b815cc9ea10fd0469800263b2a00" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_PROTO_ICMP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="ipv4_8h_1a65b17e757e3d1e3404e10bdf2eccd228" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_PROTO_TCP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="ipv4_8h_1a1ee065c0b162a088813ad6ee277cb571" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_PROTO_UDP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>17</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="ipv4_8h_1ae44050a483509e668aad57a5ead0ceb9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>IPV4_MAX_LENGTH<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>65536</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="structipv4__header" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structipv4__header" kindref="compound">ipv4_header</ref><sp/>{</highlight></codeline>
+<codeline lineno="31" refid="structipv4__header_1a40af269fc2efcdd3a4b85b550a376023" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structipv4__header_1a40af269fc2efcdd3a4b85b550a376023" kindref="member">info</ref>;</highlight></codeline>
+<codeline lineno="32" refid="structipv4__header_1abd794754c36bf40eec3845d1b4a30715" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structipv4__header_1abd794754c36bf40eec3845d1b4a30715" kindref="member">tos</ref>;</highlight></codeline>
+<codeline lineno="33" refid="structipv4__header_1a369155b66b339effb565ee713000d695" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structipv4__header_1a369155b66b339effb565ee713000d695" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="34" refid="structipv4__header_1a1b3ce4e0d6313af76d19bace542513a3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structipv4__header_1a1b3ce4e0d6313af76d19bace542513a3" kindref="member">id</ref>;</highlight></codeline>
+<codeline lineno="35" refid="structipv4__header_1a6bae0493fa3323330e7c06c2d4ad0e4c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structipv4__header_1a6bae0493fa3323330e7c06c2d4ad0e4c" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="36" refid="structipv4__header_1a847be1c747cb3282ac66c766a176ecfd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structipv4__header_1a847be1c747cb3282ac66c766a176ecfd" kindref="member">ttl</ref>;</highlight></codeline>
+<codeline lineno="37" refid="structipv4__header_1ad08e98e98c2ccf2472f9740b68071979" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structipv4__header_1ad08e98e98c2ccf2472f9740b68071979" kindref="member">protocol</ref>;</highlight></codeline>
+<codeline lineno="38" refid="structipv4__header_1ac6447b538451342a6f016aedd17eb9fa" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structipv4__header_1ac6447b538451342a6f016aedd17eb9fa" kindref="member">checksum</ref>;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="40" refid="structipv4__header_1a87399a8dd7eb153478e63ce26450fe9c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref><sp/><ref refid="structipv4__header_1a87399a8dd7eb153478e63ce26450fe9c" kindref="member">source</ref>;</highlight></codeline>
+<codeline lineno="41" refid="structipv4__header_1ad678f7696656cd04188dd3442294a793" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref><sp/><ref refid="structipv4__header_1ad678f7696656cd04188dd3442294a793" kindref="member">dest</ref>;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="43"><highlight class="normal">}<sp/><ref refid="ipv4_8h_1aedc8b3a56af6d6fa02c12255c4176f30" kindref="member">__attribute__</ref>((packed))<sp/>ipv4_header_t;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,42 @@
+.TH "usr/src/libposix/src/_execve.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/_execve.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBexecve\fP (const char *filename, char *const args[], char *const env[])"
+.br
+.ti -1c
+.RI "int \fB_execve\fP (const char *filename, char *const args[], char *const env[])"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int _execve (const char *filename, char *constargs[], char *constenv[])"
+
+.PP
+Definizione alla linea 8 del file _execve\&.c\&.
+.PP
+Referenzia execve()\&.
+.PP
+.nf
+8                                                                          {
+9     return execve(filename, args, env);
+10 }
+.fi
+.SS "int execve (const char *filename, char *constargs[], char *constenv[])"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

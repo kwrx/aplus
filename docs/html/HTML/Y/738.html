@@ -1,0 +1,96 @@
+<html>
+<head>
+<title>value</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/161.html#L11'>value</a>              11 src/arch/serial.c void serial_send(uint8_t port, uint8_t value) {
+<a href='../S/161.html#L13'>value</a>              13 src/arch/serial.c 	outb(serial[port], value);
+<a href='../S/163.html#L17'>value</a>              17 src/arch/syscall.c 	list_foreach(value, syslist) {
+<a href='../S/163.html#L18'>value</a>              18 src/arch/syscall.c 		syscall_t* sys = (syscall_t*) value;
+<a href='../S/156.html#L34'>value</a>              34 src/bufio.c    	list_foreach(value, tmp) {
+<a href='../S/156.html#L172'>value</a>             172 src/bufio.c    	list_foreach(value, list_buffers) {
+<a href='../S/156.html#L173'>value</a>             173 src/bufio.c    		bufio_t* buf = (bufio_t*) value;
+<a href='../S/155.html#L19'>value</a>              19 src/debug.c    static void print_dec(unsigned int value, unsigned int width, char * buf, int * ptr ) {
+<a href='../S/155.html#L22'>value</a>              22 src/debug.c    	while (value &gt; i &amp;&amp; i &lt; UINT32_MAX) {
+<a href='../S/155.html#L37'>value</a>              37 src/debug.c    		unsigned int n = value / 10;
+<a href='../S/155.html#L38'>value</a>              38 src/debug.c    		int r = value % 10;
+<a href='../S/155.html#L41'>value</a>              41 src/debug.c    		value = n;
+<a href='../S/155.html#L47'>value</a>              47 src/debug.c    static void print_hex(unsigned int value, unsigned int width, char * buf, int * ptr) {
+<a href='../S/155.html#L54'>value</a>              54 src/debug.c    	while (value &gt; j &amp;&amp; j &lt; UINT32_MAX) {
+<a href='../S/155.html#L68'>value</a>              68 src/debug.c    		buf[*ptr] = "0123456789abcdef"[(value&gt;&gt;(i*4))&amp;0xF];
+<a href='../S/144.html#L34'>value</a>              34 src/fs/vfs.c   		inode_t* value = (inode_t*) tmp;
+<a href='../S/144.html#L36'>value</a>              36 src/fs/vfs.c   		if(value-&gt;parent == parent)
+<a href='../S/144.html#L37'>value</a>              37 src/fs/vfs.c   			if(strcmp(value-&gt;name, name) == 0)
+<a href='../S/144.html#L38'>value</a>              38 src/fs/vfs.c   				return value;
+<a href='../S/144.html#L46'>value</a>              46 src/fs/vfs.c   		inode_t* value = (inode_t*) tmp;
+<a href='../S/144.html#L48'>value</a>              48 src/fs/vfs.c   		if(value-&gt;parent == parent)
+<a href='../S/144.html#L52'>value</a>              52 src/fs/vfs.c   			return value;
+<a href='../S/144.html#L62'>value</a>              62 src/fs/vfs.c   		inode_t* value = (inode_t*) tmp;
+<a href='../S/144.html#L64'>value</a>              64 src/fs/vfs.c   		if(value-&gt;parent == parent)
+<a href='../S/99.html#L18'>value</a>              18 src/include/aplus/attribute.h #define ATTRIBUTE(name, value)																		\
+<a href='../S/99.html#L19'>value</a>              19 src/include/aplus/attribute.h 	attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section(".attribute"))) = {	\
+<a href='../S/99.html#L20'>value</a>              20 src/include/aplus/attribute.h 		name, (uint32_t) &amp;value																		\
+<a href='../S/99.html#L27'>value</a>              27 src/include/aplus/attribute.h 	uint32_t value;
+<a href='../S/99.html#L45'>value</a>              45 src/include/aplus/attribute.h 			list_add(tmp, (listval_t) attr-&gt;value);
+<a href='../S/96.html#L36'>value</a>              36 src/include/aplus/list.h 	listval_t value;
+<a href='../S/96.html#L63'>value</a>              63 src/include/aplus/list.h 	val-&gt;value = v;
+<a href='../S/96.html#L80'>value</a>              80 src/include/aplus/list.h 		if(body-&gt;value == v) {
+<a href='../S/96.html#L86'>value</a>              86 src/include/aplus/list.h 			body-&gt;value = 0;
+<a href='../S/96.html#L123'>value</a>             123 src/include/aplus/list.h 		list_add(dest, i-&gt;value);
+<a href='../S/96.html#L131'>value</a>             131 src/include/aplus/list.h 		if(i-&gt;value == val)
+<a href='../S/96.html#L133'>value</a>             133 src/include/aplus/list.h 				return i-&gt;next-&gt;value;
+<a href='../S/96.html#L142'>value</a>             142 src/include/aplus/list.h 			if(i-&gt;next-&gt;value == val)
+<a href='../S/96.html#L143'>value</a>             143 src/include/aplus/list.h 				return i-&gt;value;
+<a href='../S/96.html#L151'>value</a>             151 src/include/aplus/list.h 		return list-&gt;body-&gt;value;
+<a href='../S/96.html#L165'>value</a>             165 src/include/aplus/list.h 	return (listval_t) tmp-&gt;value;
+<a href='../S/96.html#L175'>value</a>             175 src/include/aplus/list.h #define list_foreach(value, list)							\
+<a href='../S/96.html#L176'>value</a>             176 src/include/aplus/list.h 	for(listval_t value = list_head(list); 					\
+<a href='../S/96.html#L177'>value</a>             177 src/include/aplus/list.h 		value; 												\
+<a href='../S/96.html#L178'>value</a>             178 src/include/aplus/list.h 		value = list_next(list, value)						\
+<a href='../S/96.html#L181'>value</a>             181 src/include/aplus/list.h #define list_foreach_inverse(value, list)					\
+<a href='../S/96.html#L182'>value</a>             182 src/include/aplus/list.h 	for(listval_t value = list_tail(list); 					\
+<a href='../S/96.html#L183'>value</a>             183 src/include/aplus/list.h 		value; 												\
+<a href='../S/96.html#L184'>value</a>             184 src/include/aplus/list.h 		value = list_prev(list, value)						\
+<a href='../S/108.html#L23'>value</a>              23 src/net/arp.c  	list_foreach(value, arp_cache) {
+<a href='../S/108.html#L24'>value</a>              24 src/net/arp.c  		arp_cache_entry_t* arp = (arp_cache_entry_t*) value;
+<a href='../S/107.html#L40'>value</a>              40 src/net/netif.c 	list_foreach(value, lst_netif) {
+<a href='../S/107.html#L41'>value</a>              41 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L54'>value</a>              54 src/net/netif.c 	list_foreach(value, lst_netif) {
+<a href='../S/107.html#L55'>value</a>              55 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L70'>value</a>              70 src/net/netif.c 	list_foreach(value, lst_netif) {
+<a href='../S/107.html#L71'>value</a>              71 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L84'>value</a>              84 src/net/netif.c 	list_foreach(value, lst_netif) {
+<a href='../S/107.html#L85'>value</a>              85 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L98'>value</a>              98 src/net/netif.c 	list_foreach(value, lst_netif) {
+<a href='../S/107.html#L99'>value</a>              99 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L114'>value</a>             114 src/net/netif.c 	list_foreach(value, lst_netif) {
+<a href='../S/107.html#L115'>value</a>             115 src/net/netif.c 		netif_t* netif = (netif_t*) value;
+<a href='../S/107.html#L228'>value</a>             228 src/net/netif.c 	list_foreach(value, lst_netif) {
+<a href='../S/107.html#L229'>value</a>             229 src/net/netif.c 		int (*handler) () = (int (*) ()) value;
+<a href='../S/107.html#L254'>value</a>             254 src/net/netif.c 	list_foreach(value, lst_packets) {
+<a href='../S/107.html#L255'>value</a>             255 src/net/netif.c 		netif_packet_t* pkt = (netif_packet_t*) value;
+<a href='../S/107.html#L269'>value</a>             269 src/net/netif.c 	list_foreach(value, lst_packets) {
+<a href='../S/107.html#L270'>value</a>             270 src/net/netif.c 		netif_packet_t* pkt = (netif_packet_t*) value;
+<a href='../S/105.html#L46'>value</a>              46 src/net/rtl8139/rtl8139.h #define int_out8(card, port, value) 			outb(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L47'>value</a>              47 src/net/rtl8139/rtl8139.h #define int_out16(card, port, value) 			outw(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L48'>value</a>              48 src/net/rtl8139/rtl8139.h #define int_out32(card, port, value) 			outl(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/148.html#L60'>value</a>              60 src/panic.c    	list_foreach(value, task_queue) {
+<a href='../S/148.html#L61'>value</a>              61 src/panic.c    		task_t* task = (task_t*) value;
+<a href='../S/143.html#L136'>value</a>             136 src/sched.c    	list_foreach(value, task_queue) {
+<a href='../S/143.html#L137'>value</a>             137 src/sched.c    		task_t* child = (task_t*) value;
+<a href='../S/143.html#L174'>value</a>             174 src/sched.c    	list_foreach(value, task_queue) {
+<a href='../S/143.html#L175'>value</a>             175 src/sched.c    		task_t* t = (task_t*) value;
+<a href='../S/43.html#L213'>value</a>             213 usr/src/libpthread/include/pthread.h int pthread_setspecific(pthread_key_t key, const void *value);
+<a href='../S/50.html#L34'>value</a>              34 usr/src/libpthread/src/pthread_internal.h 	void* value;
+<a href='../S/70.html#L20'>value</a>              20 usr/src/libpthread/src/pthread_key.c 			__pthread_keys[i].value = NULL;
+<a href='../S/70.html#L39'>value</a>              39 usr/src/libpthread/src/pthread_key.c 		__pthread_keys[key].dtor(__pthread_keys[key].value);
+<a href='../S/70.html#L43'>value</a>              43 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].value = NULL;
+<a href='../S/70.html#L49'>value</a>              49 usr/src/libpthread/src/pthread_key.c PUBLIC int pthread_setspecific(pthread_key_t key, const void *value) {
+<a href='../S/70.html#L60'>value</a>              60 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].value = (void*) value;
+<a href='../S/70.html#L76'>value</a>              76 usr/src/libpthread/src/pthread_key.c 	return __pthread_keys[key].value;
+</pre>
+</body>
+</html>

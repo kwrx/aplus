@@ -1,0 +1,467 @@
+\hypertarget{rtl8139_8c}{\section{Riferimenti per il file src/net/rtl8139/rtl8139.c}
+\label{rtl8139_8c}\index{src/net/rtl8139/rtl8139.\+c@{src/net/rtl8139/rtl8139.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/bufio.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}rtl8139.\+h\char`\"{}}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structcard}{card}
+\end{DoxyCompactItemize}
+\subsection*{Ridefinizioni di tipo (typedef)}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structcard}{card} \hyperlink{rtl8139_8c_a7e6e6d124063a40473b1f33abf41448a}{card\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{rtl8139_8c_af88d9433833650f4c4ff826564aa87d2}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((align(0x1000)))
+\item 
+int \hyperlink{rtl8139_8c_a4320ac409c8d37bf1452e4bae38a1bb5}{rtl8139\+\_\+ifdown} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif})
+\item 
+int \hyperlink{rtl8139_8c_aa7f42bc6b6e362957934c268a98e1396}{rtl8139\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t len, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type})
+\item 
+static void \hyperlink{rtl8139_8c_a819dd51ffb70dad1dcb15bace2135e4d}{recvdata} (\hyperlink{rtl8139_8c_a7e6e6d124063a40473b1f33abf41448a}{card\+\_\+t} $\ast$\hyperlink{structcard}{card})
+\item 
+static void \hyperlink{rtl8139_8c_aa5ce80a5e67e896eb7a7799c5d21d542}{rtl8139\+\_\+handler} (void $\ast$unused)
+\item 
+int \hyperlink{rtl8139_8c_a9fc900b0fe44c386645d1c211187c0ad}{rtl8139\+\_\+init} ()
+\item 
+\hyperlink{rtl8139_8c_a99eafb39dc3c4d9f91fce547ad519f1d}{A\+T\+T\+R\+I\+B\+U\+T\+E} (\char`\"{}netif\char`\"{}, rtl8139\+\_\+init)
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{rtl8139_8c_a7e6e6d124063a40473b1f33abf41448a}{card\+\_\+t} $\ast$ \hyperlink{rtl8139_8c_a457f6197ba2a5b8c30f24394fcabd0f7}{card} = N\+U\+L\+L
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\hypertarget{rtl8139_8c_a7e6e6d124063a40473b1f33abf41448a}{\index{rtl8139.\+c@{rtl8139.\+c}!card\+\_\+t@{card\+\_\+t}}
+\index{card\+\_\+t@{card\+\_\+t}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{card\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf card}  {\bf card\+\_\+t}}}\label{rtl8139_8c_a7e6e6d124063a40473b1f33abf41448a}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{rtl8139_8c_af88d9433833650f4c4ff826564aa87d2}{\index{rtl8139.\+c@{rtl8139.\+c}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(align(0x1000))}]{}
+\end{DoxyParamCaption}
+)}}\label{rtl8139_8c_af88d9433833650f4c4ff826564aa87d2}
+
+
+Definizione alla linea 37 del file rtl8139.\+c.
+
+
+
+Referenzia N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+
+
+\begin{DoxyCode}
+44                                  \{
+45     \hyperlink{structnetif}{netif}->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} |= \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE};
+46     \textcolor{keywordflow}{return} 0;
+47 \}
+\end{DoxyCode}
+\hypertarget{rtl8139_8c_a99eafb39dc3c4d9f91fce547ad519f1d}{\index{rtl8139.\+c@{rtl8139.\+c}!A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}}
+\index{A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{A\+T\+T\+R\+I\+B\+U\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}A\+T\+T\+R\+I\+B\+U\+T\+E (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}netif\char`\"{}}]{, }
+\item[{{\bf rtl8139\+\_\+init}}]{}
+\end{DoxyParamCaption}
+)}}\label{rtl8139_8c_a99eafb39dc3c4d9f91fce547ad519f1d}
+\hypertarget{rtl8139_8c_a819dd51ffb70dad1dcb15bace2135e4d}{\index{rtl8139.\+c@{rtl8139.\+c}!recvdata@{recvdata}}
+\index{recvdata@{recvdata}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{recvdata}]{\setlength{\rightskip}{0pt plus 5cm}static void recvdata (
+\begin{DoxyParamCaption}
+\item[{{\bf card\+\_\+t} $\ast$}]{card}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{rtl8139_8c_a819dd51ffb70dad1dcb15bace2135e4d}
+
+
+Definizione alla linea 89 del file rtl8139.\+c.
+
+
+
+Referenzia C\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+I\+S\+\_\+\+E\+M\+P\+T\+Y, eth\+\_\+recv(), netif\+::flags, int\+\_\+in8, int\+\_\+out16, kmalloc(), kprintf, length, card\+::netif, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D, R\+E\+G\+\_\+\+C\+U\+R\+\_\+\+R\+E\+A\+D\+\_\+\+A\+D\+D\+R, R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E, netif\+::rx\+\_\+bytes, netif\+::rx\+\_\+errors, netif\+::rx\+\_\+packets, card\+::rx\+Buffer, card\+::rx\+Buffer\+Offset, netif\+::state, udp\+\_\+recv(), uint16\+\_\+t, uint32\+\_\+t, e uint8\+\_\+t.
+
+
+\begin{DoxyCode}
+89                                    \{
+90     \textcolor{keywordflow}{if}((card->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} & \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE}) == 0)
+91         \textcolor{keywordflow}{return};
+92 
+93     \textcolor{keywordflow}{while}(1) \{
+94         \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t} cmd = \hyperlink{rtl8139_8h_a7d11540c9ed834d78c06a0f58bc2861d}{int\_in8}(card, \hyperlink{rtl8139_8h_a3b2613e7a11853fee7b0164d592b477a}{REG\_COMMAND});
+95     
+96         \textcolor{keywordflow}{if}(cmd & \hyperlink{rtl8139_8h_a57ac94bdc04f48c7a66ced30aa060624}{CR\_BUFFER\_IS\_EMPTY})
+97             \textcolor{keywordflow}{break};
+98 
+99         \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t}* rxBuffer = (\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) card->
+      \hyperlink{structcard_a5cd3278f0e24fb6942e726b61bb032a6}{rxBuffer} + card->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset});
+100         \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} head = *rxBuffer++;
+101 
+102         \textcolor{keywordflow}{if}((head & 1) == 0)
+103             \textcolor{keywordflow}{break};
+104 
+105         \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} = *rxBuffer++;
+106         length -= 4;
+107 
+108         card->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} += 4;
+109 
+110 
+111         \textcolor{keywordtype}{void}* data = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(length);
+112         \textcolor{keywordflow}{if}((card->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} + length) >= \hyperlink{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{RX\_BUFFER\_SIZE}) \{
+113             memcpy(data, rxBuffer, \hyperlink{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{RX\_BUFFER\_SIZE} - card->
+      \hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset});
+114             memcpy((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) data + \hyperlink{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{RX\_BUFFER\_SIZE} - card->
+      \hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset}), card->\hyperlink{structcard_a5cd3278f0e24fb6942e726b61bb032a6}{rxBuffer}, length - (\hyperlink{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{RX\_BUFFER\_SIZE} - card->
+      \hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset}));
+115         \} \textcolor{keywordflow}{else}
+116             memcpy(data, rxBuffer, length);
+117 
+118 \textcolor{preprocessor}{#ifdef RTL8139\_DEBUG}
+119         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"rtl8139: receveid %d bytes\(\backslash\)n"}, length);
+120 \textcolor{preprocessor}{#endif}
+121 
+122 \textcolor{preprocessor}{#ifdef USERNET}
+123         \textcolor{keywordflow}{if}(\hyperlink{udp_8c_a9721c26507ac0169090b8934a33b1098}{udp\_recv}(card->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}, data, length) > 0) \{
+124 \textcolor{preprocessor}{#else}
+125         \textcolor{keywordflow}{if}(\hyperlink{eth_8c_af8e21540e459402877e8e7143d17f47c}{eth\_recv}(card->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}, data, length) > 0) \{
+126 \textcolor{preprocessor}{#endif}
+127             card->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_a80040f58867713ff1b5ec982a450221e}{rx\_packets} += 1;
+128             card->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_a5a078449e22bb6f4d3d0068345d8dabc}{rx\_bytes} += \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+129         \} \textcolor{keywordflow}{else}
+130             card->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_adb3c694759403e67d539a5e81a552c92}{rx\_errors} += 1;
+131         
+132 
+133         card->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} += length + 4;
+134         card->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} = (card->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} + 3) & ~3;
+135         card->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} %= \hyperlink{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{RX\_BUFFER\_SIZE};
+136 
+137         \hyperlink{rtl8139_8h_a1bce2233ee943a85ae84648382e64826}{int\_out16}(card, \hyperlink{rtl8139_8h_a9690a77264be5910191756632842b04d}{REG\_CUR\_READ\_ADDR}, card->
+      \hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} - 0x10);
+138     \}
+139 \}
+\end{DoxyCode}
+\hypertarget{rtl8139_8c_aa5ce80a5e67e896eb7a7799c5d21d542}{\index{rtl8139.\+c@{rtl8139.\+c}!rtl8139\+\_\+handler@{rtl8139\+\_\+handler}}
+\index{rtl8139\+\_\+handler@{rtl8139\+\_\+handler}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{rtl8139\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}static void rtl8139\+\_\+handler (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{unused}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{rtl8139_8c_aa5ce80a5e67e896eb7a7799c5d21d542}
+
+
+Definizione alla linea 141 del file rtl8139.\+c.
+
+
+
+Referenzia int\+\_\+in16, int\+\_\+out16, I\+S\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+O\+K, I\+S\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+O\+K, kprintf, recvdata(), R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S, card\+::tx\+Buffer\+Used, e uint16\+\_\+t.
+
+
+\begin{DoxyCode}
+141                                           \{
+142     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} isr = \hyperlink{rtl8139_8h_ab4126d6287621dc529d43e6fc5cd2f27}{int\_in16}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_ae643783aefff2e6a891b5fa59bfcd344}{REG\_INTERRUPT\_STATUS});
+143     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} nsr = 0;
+144 
+145     \textcolor{keywordflow}{if}(isr & \hyperlink{rtl8139_8h_afcba7a5ffbbdce80f9b4d8038a2900c4}{ISR\_TRANSMIT\_OK}) \{
+146 \textcolor{preprocessor}{#ifdef RTL8139\_DEBUG}
+147         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"rtl8139: Transmitted data successfully\(\backslash\)n"});
+148 \textcolor{preprocessor}{#endif}
+149 
+150         \hyperlink{structcard}{card}->\hyperlink{structcard_a2294d3601ad6be7638b30f68496d589e}{txBufferUsed} = 0;
+151         nsr |= \hyperlink{rtl8139_8h_afcba7a5ffbbdce80f9b4d8038a2900c4}{ISR\_TRANSMIT\_OK};
+152     \}
+153 
+154     \textcolor{keywordflow}{if}(isr & \hyperlink{rtl8139_8h_aacce0c98835613c89c957d571340a176}{ISR\_RECEIVE\_OK}) \{
+155 \textcolor{preprocessor}{#ifdef RTL8139\_DEBUG}
+156         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"rtl8139: Received data\(\backslash\)n"});
+157 \textcolor{preprocessor}{#endif}
+158         \hyperlink{rtl8139_8c_a819dd51ffb70dad1dcb15bace2135e4d}{recvdata}(\hyperlink{structcard}{card});
+159         nsr |= \hyperlink{rtl8139_8h_aacce0c98835613c89c957d571340a176}{ISR\_RECEIVE\_OK};
+160     \}
+161 
+162     \hyperlink{rtl8139_8h_a1bce2233ee943a85ae84648382e64826}{int\_out16}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_ae643783aefff2e6a891b5fa59bfcd344}{REG\_INTERRUPT\_STATUS}, nsr);
+163 \}
+\end{DoxyCode}
+\hypertarget{rtl8139_8c_a4320ac409c8d37bf1452e4bae38a1bb5}{\index{rtl8139.\+c@{rtl8139.\+c}!rtl8139\+\_\+ifdown@{rtl8139\+\_\+ifdown}}
+\index{rtl8139\+\_\+ifdown@{rtl8139\+\_\+ifdown}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{rtl8139\+\_\+ifdown}]{\setlength{\rightskip}{0pt plus 5cm}int rtl8139\+\_\+ifdown (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif}
+\end{DoxyParamCaption}
+)}}\label{rtl8139_8c_a4320ac409c8d37bf1452e4bae38a1bb5}
+
+
+Definizione alla linea 49 del file rtl8139.\+c.
+
+
+
+Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+
+
+\begin{DoxyCode}
+49                                    \{
+50     netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} &= ~\hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE};
+51     \textcolor{keywordflow}{return} 0;
+52 \}
+\end{DoxyCode}
+\hypertarget{rtl8139_8c_a9fc900b0fe44c386645d1c211187c0ad}{\index{rtl8139.\+c@{rtl8139.\+c}!rtl8139\+\_\+init@{rtl8139\+\_\+init}}
+\index{rtl8139\+\_\+init@{rtl8139\+\_\+init}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{rtl8139\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int rtl8139\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{rtl8139_8c_a9fc900b0fe44c386645d1c211187c0ad}
+
+
+Definizione alla linea 166 del file rtl8139.\+c.
+
+
+
+Referenzia pci\+\_\+device\+::bus, C\+R\+\_\+\+R\+E\+C\+E\+I\+V\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E, C\+R\+\_\+\+R\+E\+S\+E\+T, C\+R\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+T\+E\+R\+\_\+\+E\+N\+A\+B\+L\+E, card\+::cur\+Buffer, netif\+::data, pci\+\_\+device\+::dev, card\+::device, netif\+::dns, eth\+\_\+send(), pci\+\_\+device\+::func, netif\+::ifdown, netif\+::ifup, int\+\_\+in8, int\+\_\+out16, int\+\_\+out32, int\+\_\+out8, pci\+\_\+device\+::intr\+\_\+line, pci\+\_\+device\+::iobase, netif\+::ipv4, netif\+::ipv6, irq\+\_\+set(), kmalloc(), kprintf, card\+::macaddr, netif\+::macaddr, card\+::magic, netif\+::mtu, netif\+::name, card\+::netif, netif\+\_\+add(), N\+E\+T\+I\+F\+\_\+\+R\+A\+W, netif\+::netmask, pci\+\_\+find\+\_\+by\+\_\+id(), netif\+::primary, R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+B\+R\+O\+A\+D\+C\+A\+S\+T, R\+C\+R\+\_\+\+A\+C\+C\+E\+P\+T\+\_\+\+P\+H\+Y\+S\+\_\+\+M\+A\+T\+C\+H, R\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+\+U\+N\+L\+I\+M\+I\+T\+E\+D, R\+E\+G\+\_\+\+C\+O\+M\+M\+A\+N\+D, R\+E\+G\+\_\+\+C\+O\+N\+F\+I\+G1, R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+M\+A\+S\+K, R\+E\+G\+\_\+\+I\+N\+T\+E\+R\+R\+U\+P\+T\+\_\+\+S\+T\+A\+T\+U\+S, R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+B\+U\+F\+F\+E\+R, R\+E\+G\+\_\+\+R\+E\+C\+E\+I\+V\+E\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N, R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0, R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+C\+O\+N\+F\+I\+G\+U\+R\+A\+T\+I\+O\+N, rtl8139\+\_\+handler(), rtl8139\+\_\+ifdown(), R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C, rtl8139\+\_\+send(), R\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E, card\+::rx\+Buffer, card\+::rx\+Buffer\+Offset, netif\+::secondary, netif\+::send, T\+C\+R\+\_\+\+I\+F\+G\+\_\+\+S\+T\+A\+N\+D\+A\+R\+D, T\+C\+R\+\_\+\+M\+X\+D\+M\+A\+\_\+256, T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E, card\+::tx\+Buffer, card\+::tx\+Buffer\+Used, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+166                    \{
+167     \hyperlink{structpci__device}{pci\_device\_t}* device = (\hyperlink{structpci__device}{pci\_device\_t}*) 
+      \hyperlink{pci_8c_abca1ff85a7e4d518a83cc17348aa39cb}{pci\_find\_by\_id}(0x10EC, 0x8139);
+168     \textcolor{keywordflow}{if}(device == NULL) \{
+169 \textcolor{preprocessor}{#ifdef RTL8139\_DEBUG}
+170         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"rtl8139: no device found\(\backslash\)n"});
+171 \textcolor{preprocessor}{#endif}
+172         \textcolor{keywordflow}{return} -1;
+173     \}
+174     
+175     \hyperlink{structcard}{card} = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structcard}{card\_t}));
+176     \hyperlink{structcard}{card}->\hyperlink{structcard_a63721f311b12c89790089bbcacc0060b}{magic} = \hyperlink{rtl8139_8h_a3f0fc1302723b502d1f2c6b8eddcbf4f}{RTL8139\_MAGIC};
+177     \hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device} = device;
+178 
+179     \hyperlink{rtl8139_8h_a9d09a7af406abb667672c750d24cda0b}{int\_out8}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_a5b93ab1d3172cbf4cbddb358cd790dec}{REG\_CONFIG1}, 0);
+180     \hyperlink{rtl8139_8h_a9d09a7af406abb667672c750d24cda0b}{int\_out8}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_a3b2613e7a11853fee7b0164d592b477a}{REG\_COMMAND}, \hyperlink{rtl8139_8h_ab2a1fddf4be3a5b61bc6136a759d2450}{CR\_RESET});
+181 
+182     \textcolor{keywordflow}{while}((\hyperlink{rtl8139_8h_a7d11540c9ed834d78c06a0f58bc2861d}{int\_in8}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_a3b2613e7a11853fee7b0164d592b477a}{REG\_COMMAND}) & \hyperlink{rtl8139_8h_a3b2613e7a11853fee7b0164d592b477a}{REG\_COMMAND}) == 
+      \hyperlink{rtl8139_8h_ab2a1fddf4be3a5b61bc6136a759d2450}{CR\_RESET});
+183 
+184     memset(\hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}, 0, 6);
+185     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 6; i++)
+186         \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}[i] = \hyperlink{rtl8139_8h_a7d11540c9ed834d78c06a0f58bc2861d}{int\_in8}(\hyperlink{structcard}{card}, i);
+187     
+188 
+189 \textcolor{preprocessor}{#ifdef RTL8139\_DEBUG}
+190     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"rtl8139: %d:%d.%d, iobase 0x%x, irq %d, MAC Address %02x:%02x:%02x:%02x:%02x:%02x\(\backslash\)n"},
+191         \hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device}->\hyperlink{structpci__device_a832940e219d52a08725a39fc97663d07}{bus},
+192         \hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device}->\hyperlink{structpci__device_ae456e0d5fb85c5d367b1a4e27f996b96}{dev},
+193         \hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device}->\hyperlink{structpci__device_ac292358b1097064cb388125a45740aff}{func},
+194         \hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device}->\hyperlink{structpci__device_a5b15ddf1741aaae55aa9933f53876d11}{iobase},
+195         \hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device}->\hyperlink{structpci__device_a6d2298c5255e65c908f6dfdb29e4fcaf}{intr\_line},
+196         \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}[0],
+197         \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}[1],
+198         \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}[2],
+199         \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}[3],
+200         \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}[4],
+201         \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}[5]
+202     );
+203 \textcolor{preprocessor}{#endif}
+204 
+205     \textcolor{keywordflow}{if}(\hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device}->\hyperlink{structpci__device_a6d2298c5255e65c908f6dfdb29e4fcaf}{intr\_line} == 0xFF) \{
+206         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"rtl8139: network card isn't connected to the PIC\(\backslash\)n"});
+207         \textcolor{keywordflow}{return} -1;
+208     \}
+209 
+210     \hyperlink{structcard}{card}->\hyperlink{structcard_a5cd3278f0e24fb6942e726b61bb032a6}{rxBuffer} = (\textcolor{keywordtype}{char}*) rtl8139\_rxbuffer;
+211     \hyperlink{structcard}{card}->\hyperlink{structcard_a733cf5ffa3a9d2bf6cf28473817915b6}{txBuffer} = (\textcolor{keywordtype}{char}*) rtl8139\_txbuffer;
+212 
+213     \hyperlink{structcard}{card}->\hyperlink{structcard_a9492d8053fa4c304877e1f9959b48731}{rxBufferOffset} = 0;
+214     \hyperlink{structcard}{card}->\hyperlink{structcard_adc7cfe07c57eb29b36d674ce0312c7ac}{curBuffer} = 0;
+215     \hyperlink{structcard}{card}->\hyperlink{structcard_a2294d3601ad6be7638b30f68496d589e}{txBufferUsed} = 0;
+216 
+217     memset(\hyperlink{structcard}{card}->\hyperlink{structcard_a5cd3278f0e24fb6942e726b61bb032a6}{rxBuffer}, 0, \hyperlink{rtl8139_8h_a739a2a1a0047c98ac1b18ecd25dac092}{RX\_BUFFER\_SIZE} + 16);
+218     memset(\hyperlink{structcard}{card}->\hyperlink{structcard_a733cf5ffa3a9d2bf6cf28473817915b6}{txBuffer}, 0, \hyperlink{rtl8139_8h_a9ab33647617098646990fe263600b650}{TX\_BUFFER\_SIZE} * 4 + 16);
+219 
+220 
+221     \hyperlink{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}{irq\_set}(\hyperlink{structcard}{card}->\hyperlink{structcard_ac4d735012434df4c445edaffce28bd73}{device}->\hyperlink{structpci__device_a6d2298c5255e65c908f6dfdb29e4fcaf}{intr\_line}, \hyperlink{rtl8139_8c_aa5ce80a5e67e896eb7a7799c5d21d542}{rtl8139\_handler});
+222 
+223     \hyperlink{rtl8139_8h_a1bce2233ee943a85ae84648382e64826}{int\_out16}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_ab4c18def6442e5a12813bff4707a95f4}{REG\_INTERRUPT\_MASK}, 0x0005);
+224     \hyperlink{rtl8139_8h_a1bce2233ee943a85ae84648382e64826}{int\_out16}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_ae643783aefff2e6a891b5fa59bfcd344}{REG\_INTERRUPT\_STATUS}, 0);
+225 
+226     \hyperlink{rtl8139_8h_a9d09a7af406abb667672c750d24cda0b}{int\_out8}(\hyperlink{structcard}{card}, REG\_COMMAND, \hyperlink{rtl8139_8h_afbe4a2ad282a15a449afe27c8477d7a4}{CR\_RECEIVER\_ENABLE} | 
+      \hyperlink{rtl8139_8h_a724cc791aabf32482dca4be45cc5d160}{CR\_TRANSMITTER\_ENABLE});
+227 
+228     \hyperlink{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{int\_out32}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_a988a4299b417f298b34e9ae012fb3829}{REG\_RECEIVE\_BUFFER}, (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) 
+      \hyperlink{structcard}{card}->\hyperlink{structcard_a5cd3278f0e24fb6942e726b61bb032a6}{rxBuffer});
+229 
+230     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 4; i++)
+231         \hyperlink{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{int\_out32}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_a42f10cfb594910b5a1e2bcfad9086271}{REG\_TRANSMIT\_ADDR0} + (4 * i), (
+      \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{structcard}{card}->\hyperlink{structcard_a733cf5ffa3a9d2bf6cf28473817915b6}{txBuffer} + (\hyperlink{rtl8139_8h_a9ab33647617098646990fe263600b650}{TX\_BUFFER\_SIZE} * i));
+232 
+233     \hyperlink{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{int\_out32}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_a66a6f3026d2e079b8fc7056dcd00fe91}{REG\_RECEIVE\_CONFIGURATION}, 
+      \hyperlink{rtl8139_8h_a160445e9a8cb8827d32d5cc6417b3fda}{RCR\_MXDMA\_UNLIMITED} | \hyperlink{rtl8139_8h_a14d20c8a78d65ef7542b5c59e695d4fa}{RCR\_ACCEPT\_BROADCAST} | 
+      \hyperlink{rtl8139_8h_a40752262c4c0d282513c5ad5f1449ffa}{RCR\_ACCEPT\_PHYS\_MATCH});
+234     \hyperlink{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{int\_out32}(\hyperlink{structcard}{card}, \hyperlink{rtl8139_8h_ae71202863cf99afcc3eab3865699dcf9}{REG\_TRANSMIT\_CONFIGURATION}, 
+      \hyperlink{rtl8139_8h_aae6b5a7b3905eadb0f15a8ffa647b520}{TCR\_IFG\_STANDARD} | \hyperlink{rtl8139_8h_a878054e18cfb85ec78fbc6a3f8c60f42}{TCR\_MXDMA\_256});
+235 
+236     \hyperlink{rtl8139_8h_a9d09a7af406abb667672c750d24cda0b}{int\_out8}(\hyperlink{structcard}{card}, REG\_COMMAND, \hyperlink{rtl8139_8h_afbe4a2ad282a15a449afe27c8477d7a4}{CR\_RECEIVER\_ENABLE} | 
+      \hyperlink{rtl8139_8h_a724cc791aabf32482dca4be45cc5d160}{CR\_TRANSMITTER\_ENABLE});
+237 
+238 
+239     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structnetif}{netif\_t}));
+240     memset(\hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}, 0, \textcolor{keyword}{sizeof}(\hyperlink{structnetif}{netif\_t}));
+241 
+242 
+243     strcpy(\hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name}, \textcolor{stringliteral}{"eth0"});
+244     memcpy(\hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}, \hyperlink{structcard}{card}->\hyperlink{structcard_abe96f3126aa0a28b86a1748ad1f83f81}{macaddr}, \textcolor{keyword}{sizeof}(
+      \hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t}));
+245 
+246     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[0] = 192;
+247     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[1] = 168;
+248     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[2] = 1;
+249     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[3] = 80;
+250 
+251     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[0] = 255;
+252     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[1] = 255;
+253     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[2] = 255;
+254     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[3] = 0;
+255 
+256     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[0] = 0xfe80;
+257     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[1] = 0x0000;
+258     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[2] = 0x0000;
+259     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[3] = 0x0000;
+260     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[4] = 0x021d;
+261     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[5] = 0x72ff;
+262     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[6] = 0xfef9;
+263     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[7] = 0x9b71;
+264 
+265     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[0] = 8;
+266     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[1] = 8;
+267     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[2] = 8;
+268     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[3] = 8;
+269 
+270     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[0] = 8;
+271     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[1] = 8;
+272     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[2] = 4;
+273     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[3] = 4;
+274     
+275 
+276     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[0] = 0x2001;
+277     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[1] = 0x4860;
+278     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[2] = 0x4860;
+279     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[3] = 0x0000;
+280     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[4] = 0x0000;
+281     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[5] = 0x0000;
+282     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[6] = 0x0000;
+283     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[7] = 0x8888;
+284     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[0] = 0x2001;
+285     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[1] = 0x4860;
+286     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[2] = 0x4860;
+287     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[3] = 0x0000;
+288     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[4] = 0x0000;
+289     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[5] = 0x0000;
+290     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[6] = 0x0000;
+291     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[7] = 0x8844;
+292 
+293 
+294     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu} = 1500;
+295     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_ac0505ae55088f68c2cefa77dc6871208}{send} = \hyperlink{rtl8139_8c_aa7f42bc6b6e362957934c268a98e1396}{rtl8139\_send};
+296     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a70984b0d611d5a941aecabbc98f62467}{ifup} = rtl8139\_ifup;
+297     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}{ifdown} = \hyperlink{rtl8139_8c_a4320ac409c8d37bf1452e4bae38a1bb5}{rtl8139\_ifdown};
+298     \hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}->\hyperlink{structnetif_af45fb467da3492eb4473cb9208044ac8}{data} = (\textcolor{keywordtype}{void}*) \hyperlink{structcard}{card};
+299 
+300 \textcolor{preprocessor}{#ifdef RTL8139\_DEBUG}
+301     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"rtl8139: sending data for test (512 Bytes)\(\backslash\)n"});
+302     
+303     \textcolor{keywordtype}{void}* tmpbuf = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(512);
+304     memset(tmpbuf, 0xFF, 512);
+305 
+306     rtl8139\_ifup(\hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif});
+307     \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\_send}(\hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif}, tmpbuf, 512, \hyperlink{netif_8h_a92b354424f46fe25b001e3cf311fb951}{NETIF\_RAW}); 
+308     \hyperlink{rtl8139_8c_a4320ac409c8d37bf1452e4bae38a1bb5}{rtl8139\_ifdown}(\hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif});
+309 
+310 \textcolor{preprocessor}{#endif}
+311 
+312     \hyperlink{netif_8c_a01bed7c80274b7830923cdde25b1d48a}{netif\_add}(\hyperlink{structcard}{card}->\hyperlink{structcard_ab3123a3dbb6dc38d86488ab37f7759ae}{netif});
+313     \textcolor{keywordflow}{return} 0;
+314 \}
+\end{DoxyCode}
+\hypertarget{rtl8139_8c_aa7f42bc6b6e362957934c268a98e1396}{\index{rtl8139.\+c@{rtl8139.\+c}!rtl8139\+\_\+send@{rtl8139\+\_\+send}}
+\index{rtl8139\+\_\+send@{rtl8139\+\_\+send}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{rtl8139\+\_\+send}]{\setlength{\rightskip}{0pt plus 5cm}int rtl8139\+\_\+send (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{len, }
+\item[{int}]{type}
+\end{DoxyParamCaption}
+)}}\label{rtl8139_8c_aa7f42bc6b6e362957934c268a98e1396}
+
+
+Definizione alla linea 54 del file rtl8139.\+c.
+
+
+
+Referenzia card\+::cur\+Buffer, netif\+::data, fastlock\+\_\+waiton, netif\+::flags, int\+\_\+out32, card\+::magic, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+A\+D\+D\+R0, R\+E\+G\+\_\+\+T\+R\+A\+N\+S\+M\+I\+T\+\_\+\+S\+T\+A\+T\+U\+S0, R\+T\+L8139\+\_\+\+M\+A\+G\+I\+C, netif\+::state, T\+X\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E, netif\+::tx\+\_\+bytes, netif\+::tx\+\_\+errors, netif\+::tx\+\_\+packets, card\+::tx\+Buffer, card\+::tx\+Buffer\+Used, uint32\+\_\+t, e uint8\+\_\+t.
+
+
+\begin{DoxyCode}
+54                                                                   \{
+55     \textcolor{keywordflow}{if}((netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} & \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE}) == 0)
+56         \textcolor{keywordflow}{return} 0;
+57 
+58     \hyperlink{structcard}{card\_t}* \hyperlink{structcard}{card} = (\hyperlink{structcard}{card\_t}*) netif->\hyperlink{structnetif_af45fb467da3492eb4473cb9208044ac8}{data};
+59     \textcolor{keywordflow}{if}(card->\hyperlink{structcard_a63721f311b12c89790089bbcacc0060b}{magic} != \hyperlink{rtl8139_8h_a3f0fc1302723b502d1f2c6b8eddcbf4f}{RTL8139\_MAGIC})
+60         \textcolor{keywordflow}{return} 0;
+61 
+62     \textcolor{keywordflow}{if}(len > 1500) \{
+63         netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_adac4c9e26ac4c17089eaf3a0e060f601}{tx\_errors} += 1;
+64         \textcolor{keywordflow}{return} 0;
+65     \}
+66 
+67     \hyperlink{spinlock_8h_a34b538b8c053bec1d149f9a4258aca89}{fastlock\_waiton}(card->\hyperlink{structcard_a2294d3601ad6be7638b30f68496d589e}{txBufferUsed});
+68 
+69     memcpy(card->\hyperlink{structcard_a733cf5ffa3a9d2bf6cf28473817915b6}{txBuffer}, buf, len);
+70     \textcolor{keywordflow}{if}(len < 60) \{
+71         memset((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) card->\hyperlink{structcard_a733cf5ffa3a9d2bf6cf28473817915b6}{txBuffer} + len), 0, 60 - len);
+72         len = 60;
+73     \}
+74 
+75     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t} curBuffer = card->\hyperlink{structcard_adc7cfe07c57eb29b36d674ce0312c7ac}{curBuffer}++;
+76     card->\hyperlink{structcard_adc7cfe07c57eb29b36d674ce0312c7ac}{curBuffer} %= 4;
+77 
+78 
+79     \hyperlink{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{int\_out32}(card, \hyperlink{rtl8139_8h_a42f10cfb594910b5a1e2bcfad9086271}{REG\_TRANSMIT\_ADDR0} + (4 * curBuffer), (
+      \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) card->\hyperlink{structcard_a733cf5ffa3a9d2bf6cf28473817915b6}{txBuffer} + (\hyperlink{rtl8139_8h_a9ab33647617098646990fe263600b650}{TX\_BUFFER\_SIZE} * curBuffer));
+80     \hyperlink{rtl8139_8h_aee35c32a8d730227f65850dfc577c232}{int\_out32}(card, \hyperlink{rtl8139_8h_a15e2164bee77a940134b3c0618e207d3}{REG\_TRANSMIT\_STATUS0} + (4 * curBuffer), ((256 << 11) & 0
+      x003F0000) | len);
+81 
+82     netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_aabafd7c28253a190863f673bd5e4320a}{tx\_packets} += 1;
+83     netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_ac340647ad948b8103aa9a4e3c7b3fd0f}{tx\_bytes} += len;
+84 
+85     \textcolor{keywordflow}{return} len;
+86 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{rtl8139_8c_a457f6197ba2a5b8c30f24394fcabd0f7}{\index{rtl8139.\+c@{rtl8139.\+c}!card@{card}}
+\index{card@{card}!rtl8139.\+c@{rtl8139.\+c}}
+\subsubsection[{card}]{\setlength{\rightskip}{0pt plus 5cm}{\bf card\+\_\+t}$\ast$ {\bf card} = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{rtl8139_8c_a457f6197ba2a5b8c30f24394fcabd0f7}
+
+
+Definizione alla linea 35 del file rtl8139.\+c.
+

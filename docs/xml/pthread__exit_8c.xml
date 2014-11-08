@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="pthread__exit_8c" kind="file">
+    <compoundname>pthread_exit.c</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+    <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
+    <incdepgraph>
+      <node id="2312">
+        <label>stdint.h</label>
+      </node>
+      <node id="2313">
+        <label>stdlib.h</label>
+      </node>
+      <node id="2320">
+        <label>errno.h</label>
+      </node>
+      <node id="2319">
+        <label>pthread_internal.h</label>
+        <link refid="pthread__internal_8h"/>
+        <childnode refid="2320" relation="include">
+        </childnode>
+        <childnode refid="2312" relation="include">
+        </childnode>
+        <childnode refid="2314" relation="include">
+        </childnode>
+      </node>
+      <node id="2314">
+        <label>pthread.h</label>
+        <link refid="pthread_8h"/>
+        <childnode refid="2312" relation="include">
+        </childnode>
+        <childnode refid="2315" relation="include">
+        </childnode>
+        <childnode refid="2316" relation="include">
+        </childnode>
+        <childnode refid="2317" relation="include">
+        </childnode>
+        <childnode refid="2318" relation="include">
+        </childnode>
+      </node>
+      <node id="2315">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2318">
+        <label>unistd.h</label>
+      </node>
+      <node id="2316">
+        <label>sys/time.h</label>
+      </node>
+      <node id="2311">
+        <label>usr/src/libpthread/src/pthread_exit.c</label>
+        <link refid="pthread_exit.c"/>
+        <childnode refid="2312" relation="include">
+        </childnode>
+        <childnode refid="2313" relation="include">
+        </childnode>
+        <childnode refid="2314" relation="include">
+        </childnode>
+        <childnode refid="2319" relation="include">
+        </childnode>
+      </node>
+      <node id="2317">
+        <label>sched.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pthread__exit_8c_1a3a51b7ef885351f98fab56947a39c523" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> void</type>
+        <definition>PUBLIC void pthread_exit</definition>
+        <argsstring>(void *value_ptr)</argsstring>
+        <name>pthread_exit</name>
+        <param>
+          <type>void *</type>
+          <declname>value_ptr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_exit.c" line="8" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_exit.c" bodystart="8" bodyend="19"/>
+        <references refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" compoundref="pthread__internal_8h" startline="41">pthread_context::exitval</references>
+        <references refid="pthread_8h_1a7c275c509c26566b6dd95a2de1668a2f" compoundref="pthread__detach_8c" startline="12" endline="49">pthread_detach</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="pthread_8h" kindref="compound">pthread.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pthread__internal_8h" kindref="compound">pthread_internal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="pthread__exit_8c_1a3a51b7ef885351f98fab56947a39c523" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pthread__exit_8c_1a3a51b7ef885351f98fab56947a39c523" kindref="member">pthread_exit</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>value_ptr)<sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/>ptx<sp/>=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>();</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*<sp/>ctx<sp/>=<sp/>(<ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*)<sp/>ptx;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ptx)<sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ctx-&gt;<ref refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" kindref="member">exitval</ref><sp/>=<sp/>value_ptr;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a7c275c509c26566b6dd95a2de1668a2f" kindref="member">pthread_detach</ref>(ptx);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>abort();</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_exit.c"/>
+  </compounddef>
+</doxygen>

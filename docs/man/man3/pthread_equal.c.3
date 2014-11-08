@@ -1,0 +1,42 @@
+.TH "usr/src/libpthread/src/pthread_equal.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_equal.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_equal\fP (\fBpthread_t\fP t1, \fBpthread_t\fP t2)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_equal (\fBpthread_t\fPt1, \fBpthread_t\fPt2)"
+
+.PP
+Definizione alla linea 7 del file pthread_equal\&.c\&.
+.PP
+Referenzia pthread_context::tid\&.
+.PP
+.nf
+7                                                      {
+8     pthread_context_t* c1 = (pthread_context_t*) t1;
+9     pthread_context_t* c2 = (pthread_context_t*) t2;
+10 
+11     return (c1->tid == c2->tid);
+12 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

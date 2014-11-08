@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>src/net/eth.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/eth.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L11'>[^]</a><a href='#L79'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L11' title='Defined at 11.'>eth_recv</a>
+<li><a href='#L49' title='Defined at 49.'>eth_send_packet</a>
+<li><a href='#L79' title='Defined at 79.'>eth_send</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;<a href='93.html'>aplus/net/eth.h</a>&gt;
+<a name='L10'>  10 
+<a name='L11'>  11 <b>int</b> <a href='../R/241.html' title='Multiple refered from 2 places.'>eth_recv</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) <font color='red'>{</font>
+<a name='L12'>  12         <a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>* <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a> = (<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>*) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L13'>  13 
+<a name='L14'>  14 <font color='darkred'>        #define</font> <a href='../R/187.html' title='Multiple refered from 4 places.'>__params</a>        \
+<a name='L15'>  15                 <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> + <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>)), <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> - <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>)
+<a name='L16'>  16 
+<a name='L17'>  17         <b>switch</b>(<a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L18'>  18                 <b>case</b> <a href='../S/93.html#L12' title='Defined at 12 in src/include/aplus/net/eth.h.'>ETH_TYPE_IPV4</a>:
+<a name='L19'>  19                         <b>if</b>(<a href='../S/113.html#L71' title='Defined at 71 in src/net/ipv4.c.'>ipv4_recv</a>(<a href='../D/292.html' title='Multiple defined in 3 places.'>__params</a>) == 0)
+<a name='L20'>  20                                 <b>return</b> 0;
+<a name='L21'>  21                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L22'>  22 
+<a name='L23'>  23                 <b>case</b> <a href='../S/93.html#L14' title='Defined at 14 in src/include/aplus/net/eth.h.'>ETH_TYPE_IPV6</a>:
+<a name='L24'>  24                         <b>if</b>(<a href='../S/106.html#L14' title='Defined at 14 in src/net/ipv6.c.'>ipv6_recv</a>(<a href='../D/292.html' title='Multiple defined in 3 places.'>__params</a>) == 0)
+<a name='L25'>  25                                 <b>return</b> 0;
+<a name='L26'>  26                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L27'>  27 
+<a name='L28'>  28                 <b>case</b> <a href='../S/93.html#L13' title='Defined at 13 in src/include/aplus/net/eth.h.'>ETH_TYPE_ARP</a>:
+<a name='L29'>  29                         <b>if</b>(<a href='../S/108.html#L67' title='Defined at 67 in src/net/arp.c.'>arp_recv</a>(<a href='../D/292.html' title='Multiple defined in 3 places.'>__params</a>) == 0)
+<a name='L30'>  30                                 <b>return</b> 0;
+<a name='L31'>  31                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L32'>  32         <font color='red'>}</font>
+<a name='L33'>  33 
+<a name='L34'>  34 
+<a name='L35'>  35         <i><font color='green'>/* ETH_TYPE_RAW */</font></i>
+<a name='L36'>  36         <a href='../S/107.html#L242' title='Defined at 242 in src/net/netif.c.'>netif_packets_add</a> (
+<a name='L37'>  37                 <a href='../S/107.html#L279' title='Defined at 279 in src/net/netif.c.'>netif_packets_create</a> (
+<a name='L38'>  38                                                         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>,
+<a name='L39'>  39                                                         <a href='../S/89.html#L19' title='Defined at 19 in src/include/aplus/netif.h.'>NETIF_ETH</a>, 
+<a name='L40'>  40                                                         <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, 
+<a name='L41'>  41                                                         <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>), 
+<a name='L42'>  42                                                         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>
+<a name='L43'>  43                 )
+<a name='L44'>  44         );
+<a name='L45'>  45         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L46'>  46 <font color='red'>}</font>
+<a name='L47'>  47 
+<a name='L48'>  48 
+<a name='L49'>  49 <b>static</b> <b>int</b> <a href='../R/243.html' title='Multiple refered from 3 places.'>eth_send_packet</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L50'>  50         <a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>* <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a> = <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>));
+<a name='L51'>  51         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>((<b>void</b>*) <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>-&gt;<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, 0xFF, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>));
+<a name='L52'>  52         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>((<b>void</b>*) <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>-&gt;<a href='../Y/582.html' title='Multiple used in 6 places.'>source</a>, (<b>void</b>*) <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>));
+<a name='L53'>  53         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>((<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a> + <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>)), <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L54'>  54 
+<a name='L55'>  55         <b>switch</b>(<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L56'>  56                 <b>case</b> <a href='../S/89.html#L16' title='Defined at 16 in src/include/aplus/netif.h.'>NETIF_INET</a>:
+<a name='L57'>  57                         <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a> = <a href='../S/93.html#L12' title='Defined at 12 in src/include/aplus/net/eth.h.'>ETH_TYPE_IPV4</a>;
+<a name='L58'>  58                         <b>break</b>;
+<a name='L59'>  59                 <b>case</b> <a href='../S/89.html#L17' title='Defined at 17 in src/include/aplus/netif.h.'>NETIF_INET6</a>:
+<a name='L60'>  60                         <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a> = <a href='../S/93.html#L14' title='Defined at 14 in src/include/aplus/net/eth.h.'>ETH_TYPE_IPV6</a>;
+<a name='L61'>  61                         <b>break</b>;
+<a name='L62'>  62                 <b>case</b> <a href='../S/89.html#L18' title='Defined at 18 in src/include/aplus/netif.h.'>NETIF_ARP</a>:
+<a name='L63'>  63                         <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a> = <a href='../S/93.html#L13' title='Defined at 13 in src/include/aplus/net/eth.h.'>ETH_TYPE_ARP</a>;
+<a name='L64'>  64                         <b>break</b>;
+<a name='L65'>  65                 <b>default</b>:
+<a name='L66'>  66                         <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>-&gt;<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a> = <a href='../S/93.html#L17' title='Defined at 17 in src/include/aplus/net/eth.h.'>ETH_TYPE_RAW</a>;
+<a name='L67'>  67                         <b>break</b>;
+<a name='L68'>  68         <font color='red'>}</font>
+<a name='L69'>  69 
+<a name='L70'>  70         
+<a name='L71'>  71         <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> += <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>);
+<a name='L72'>  72         
+<a name='L73'>  73         <b>int</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> = <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/557.html' title='Multiple used in 5 places.'>send</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <a href='../S/89.html#L19' title='Defined at 19 in src/include/aplus/netif.h.'>NETIF_ETH</a>);
+<a name='L74'>  74         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/243.html' title='Multiple used in 12 places.'>ethpkt</a>);
+<a name='L75'>  75         
+<a name='L76'>  76         <b>return</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>;
+<a name='L77'>  77 <font color='red'>}</font>
+<a name='L78'>  78 
+<a name='L79'>  79 <b>int</b> <a href='../R/242.html' title='Multiple refered from 6 places.'>eth_send</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L80'>  80 
+<a name='L81'>  81         <b>if</b>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>) &lt; <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/394.html' title='Multiple used in 7 places.'>mtu</a>) <font color='red'>{</font>
+<a name='L82'>  82                 <b>if</b>(<a href='../S/112.html#L49' title='Defined at 49 in src/net/eth.c.'>eth_send_packet</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) &gt; 0)
+<a name='L83'>  83                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L84'>  84                 <b>else</b>
+<a name='L85'>  85                         <b>return</b> 0;
+<a name='L86'>  86         <font color='red'>}</font>
+<a name='L87'>  87 
+<a name='L88'>  88         <b>int</b> <a href='../Y/191.html' title='Multiple used in 5 places.'>delta</a> = <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/394.html' title='Multiple used in 7 places.'>mtu</a> - <b>sizeof</b>(<a href='../S/93.html#L24' title='Defined at 24 in src/include/aplus/net/eth.h.'>eth_header_t</a>);
+<a name='L89'>  89         <b>int</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> = 0;
+<a name='L90'>  90 
+<a name='L91'>  91 
+<a name='L92'>  92         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> += <a href='../Y/191.html' title='Multiple used in 5 places.'>delta</a>)
+<a name='L93'>  93                 <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> += <a href='../S/112.html#L49' title='Defined at 49 in src/net/eth.c.'>eth_send_packet</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> + <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>), <a href='../Y/191.html' title='Multiple used in 5 places.'>delta</a>, <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>);
+<a name='L94'>  94 
+<a name='L95'>  95         <b>if</b>((<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> % <a href='../Y/191.html' title='Multiple used in 5 places.'>delta</a>) != 0)
+<a name='L96'>  96                 <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> += <a href='../S/112.html#L49' title='Defined at 49 in src/net/eth.c.'>eth_send_packet</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> + <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> - (<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> % <a href='../Y/191.html' title='Multiple used in 5 places.'>delta</a>)), <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> % <a href='../Y/191.html' title='Multiple used in 5 places.'>delta</a>, <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>);
+<a name='L97'>  97         
+<a name='L98'>  98         
+<a name='L99'>  99         <b>if</b>(<a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>)
+<a name='L100'> 100                 <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L101'> 101         
+<a name='L102'> 102         <b>return</b> 0;
+<a name='L103'> 103 <font color='red'>}</font>
+<a name='L104'> 104 
+<a name='L105'> 105 
+<a name='L106'> 106 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L11'>[^]</a><a href='#L79'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

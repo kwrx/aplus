@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>kmalloc</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L145'>kmalloc</a>           145 src/arch/pci.c 	pci_devices = (pci_device_t*) kmalloc(PCI_MAX_DEVICES * sizeof(pci_device_t));
+<a href='../S/163.html#L14'>kmalloc</a>            14 src/arch/syscall.c 	syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist-&gt;size);
+<a href='../S/159.html#L53'>kmalloc</a>            53 src/arch/task.c 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/159.html#L84'>kmalloc</a>            84 src/arch/task.c 		void* addr = (void*) kmalloc(child-&gt;image.length);
+<a href='../S/159.html#L96'>kmalloc</a>            96 src/arch/task.c 	void* stack = (void*) mm_align(kmalloc(TASK_STACKSIZE * 2));
+<a href='../S/159.html#L120'>kmalloc</a>           120 src/arch/task.c 		stack = (void*) ((int) mm_align(kmalloc(TASK_STACKSIZE * 2)) + TASK_STACKSIZE);
+<a href='../S/159.html#L125'>kmalloc</a>           125 src/arch/task.c 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/159.html#L183'>kmalloc</a>           183 src/arch/task.c 	kernel_task = current_task = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/156.html#L46'>kmalloc</a>            46 src/bufio.c    	void* addr = (void*) kmalloc(size);
+<a href='../S/156.html#L54'>kmalloc</a>            54 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/156.html#L76'>kmalloc</a>            76 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/147.html#L28'>kmalloc</a>            28 src/fs/devfs.c 	inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/147.html#L62'>kmalloc</a>            62 src/fs/devfs.c 	devfs = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/146.html#L35'>kmalloc</a>            35 src/fs/fs.c    		struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
+<a href='../S/145.html#L65'>kmalloc</a>            65 src/fs/pipe.c  	pipeinfo_t* pipe = (pipeinfo_t*) kmalloc(sizeof(pipeinfo_t));
+<a href='../S/144.html#L85'>kmalloc</a>            85 src/fs/vfs.c   	vfs_root = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/96.html#L57'>kmalloc</a>            57 src/include/aplus/list.h 	list_body_t* val = (list_body_t*) kmalloc(sizeof(list_body_t));
+<a href='../S/96.html#L188'>kmalloc</a>           188 src/include/aplus/list.h 	list = (list_t*) kmalloc(sizeof(list_t));				\
+<a href='../S/87.html#L90'>kmalloc</a>            90 src/include/aplus/mm.h void* kmalloc(size_t);
+<a href='../S/151.html#L86'>kmalloc</a>            86 src/mm/mm.c    		return kmalloc(size);
+<a href='../S/151.html#L97'>kmalloc</a>            97 src/mm/mm.c    	void* newptr = kmalloc(size);
+<a href='../S/150.html#L152'>kmalloc</a>           152 src/mm/paging.c 	uint32_t* addr = (uint32_t*) mm_align((void*) kmalloc(PDSIZE * sizeof(uint32_t)));
+<a href='../S/108.html#L44'>kmalloc</a>            44 src/net/arp.c  	arp = kmalloc(sizeof(arp_cache_entry_t));
+<a href='../S/108.html#L80'>kmalloc</a>            80 src/net/arp.c  	arp_header_t* arp = (arp_header_t*) kmalloc(sizeof(arp_header_t));
+<a href='../S/112.html#L50'>kmalloc</a>            50 src/net/eth.c  	eth_header_t* ethpkt = kmalloc(length + sizeof(eth_header_t));
+<a href='../S/113.html#L36'>kmalloc</a>            36 src/net/ipv4.c 	ipv4_header_t* ip = (ipv4_header_t*) kmalloc(length + sizeof(ipv4_header_t));
+<a href='../S/106.html#L56'>kmalloc</a>            56 src/net/ipv6.c 	ipv6_header_t* ip = (ipv6_header_t*) kmalloc(length + sizeof(ipv6_header_t));
+<a href='../S/111.html#L67'>kmalloc</a>            67 src/net/loopback/loopback.c 	netif_t* netif = (netif_t*) kmalloc(sizeof(netif_t));
+<a href='../S/107.html#L280'>kmalloc</a>           280 src/net/netif.c 	netif_packet_t* pkt = (netif_packet_t*) kmalloc(sizeof(netif_packet_t) + tot_length);
+<a href='../S/104.html#L111'>kmalloc</a>           111 src/net/rtl8139/rtl8139.c 		void* data = kmalloc(length);
+<a href='../S/104.html#L175'>kmalloc</a>           175 src/net/rtl8139/rtl8139.c 	card = kmalloc(sizeof(card_t));
+<a href='../S/104.html#L239'>kmalloc</a>           239 src/net/rtl8139/rtl8139.c 	card-&gt;netif = (netif_t*) kmalloc(sizeof(netif_t));
+<a href='../S/104.html#L303'>kmalloc</a>           303 src/net/rtl8139/rtl8139.c 	void* tmpbuf = kmalloc(512);
+<a href='../S/110.html#L47'>kmalloc</a>            47 src/net/slirp/slirp.c 		slirpcard-&gt;buffer = (uint8_t*) kmalloc(sizeof(uint8_t) * SLIRP_BUFSIZ);
+<a href='../S/110.html#L131'>kmalloc</a>           131 src/net/slirp/slirp.c 	slirpcard = (slirpcard_t*) kmalloc(sizeof(slirpcard_t));
+<a href='../S/110.html#L138'>kmalloc</a>           138 src/net/slirp/slirp.c 	netif_t* netif = (netif_t*) kmalloc(sizeof(netif_t));
+<a href='../S/141.html#L24'>kmalloc</a>            24 src/syscall/execve.c 	void* image = kmalloc(size);
+</pre>
+</body>
+</html>

@@ -1,0 +1,169 @@
+.TH "src/net/eth.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/eth.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <aplus/net/eth\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fB__params\fP   \fBnetif\fP, (void*) ((\fBuint32_t\fP) buf + sizeof(eth_header_t)), \fBlength\fP - sizeof(eth_header_t)"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBeth_recv\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP)"
+.br
+.ti -1c
+.RI "static int \fBeth_send_packet\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP)"
+.br
+.ti -1c
+.RI "int \fBeth_send\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define __params   \fBnetif\fP, (void*) ((\fBuint32_t\fP) buf + sizeof(eth_header_t)), \fBlength\fP - sizeof(eth_header_t)"
+
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int eth_recv (\fBnetif_t\fP *netif, void *buf, size_tlength)"
+
+.PP
+Definizione alla linea 11 del file eth\&.c\&.
+.PP
+Referenzia __params, arp_recv(), ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ipv4_recv(), ipv6_recv(), length, NETIF_ETH, netif_packets_add(), e netif_packets_create()\&.
+.PP
+.nf
+11                                                        {
+12     eth_header_t* ethpkt = (eth_header_t*) buf;
+13 
+14     #define __params    \
+15         netif, (void*) ((uint32_t) buf + sizeof(eth_header_t)), length - sizeof(eth_header_t)
+16 
+17     switch(ethpkt->type) {
+18         case ETH_TYPE_IPV4:
+19             if(ipv4_recv(__params) == 0)
+20                 return 0;
+21             return length;
+22 
+23         case ETH_TYPE_IPV6:
+24             if(ipv6_recv(__params) == 0)
+25                 return 0;
+26             return length;
+27 
+28         case ETH_TYPE_ARP:
+29             if(arp_recv(__params) == 0)
+30                 return 0;
+31             return length;
+32     }
+33 
+34 
+35     /* ETH_TYPE_RAW */
+36     netif_packets_add (
+37         netif_packets_create (
+38                             netif,
+39                             NETIF_ETH, 
+40                             length, 
+41                             sizeof(eth_header_t), 
+42                             buf
+43         )
+44     );
+45     return length;
+46 }
+.fi
+.SS "int eth_send (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype)"
+
+.PP
+Definizione alla linea 79 del file eth\&.c\&.
+.PP
+Referenzia eth_send_packet(), length, netif::mtu, type, e uint32_t\&.
+.PP
+.nf
+79                                                                  {
+80 
+81     if(length + sizeof(eth_header_t) < netif->mtu) {
+82         if(eth_send_packet(netif, buf, length, type) > 0)
+83             return length;
+84         else
+85             return 0;
+86     }
+87 
+88     int delta = netif->mtu - sizeof(eth_header_t);
+89     int ret = 0;
+90 
+91 
+92     for(int i = 0; i < length; i += delta)
+93         ret += eth_send_packet(netif, (void*) ((uint32_t) buf + i), delta, type);
+94 
+95     if((length % delta) != 0)
+96         ret += eth_send_packet(netif, (void*) ((uint32_t) buf + length - (length % delta)), length % delta, type);
+97     
+98     
+99     if(ret)
+100         return length;
+101     
+102     return 0;
+103 }
+.fi
+.SS "static int eth_send_packet (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype)\fC [static]\fP"
+
+.PP
+Definizione alla linea 49 del file eth\&.c\&.
+.PP
+Referenzia ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ETH_TYPE_RAW, kfree(), kmalloc(), netif::macaddr, NETIF_ARP, NETIF_ETH, NETIF_INET, NETIF_INET6, netif::send, e uint32_t\&.
+.PP
+.nf
+49                                                                                {
+50     eth_header_t* ethpkt = kmalloc(length + sizeof(eth_header_t));
+51     memset((void*) ethpkt->dest, 0xFF, sizeof(macaddr_t));
+52     memcpy((void*) ethpkt->source, (void*) netif->macaddr, sizeof(macaddr_t));
+53     memcpy((void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), buf, length);
+54 
+55     switch(type) {
+56         case NETIF_INET:
+57             ethpkt->type = ETH_TYPE_IPV4;
+58             break;
+59         case NETIF_INET6:
+60             ethpkt->type = ETH_TYPE_IPV6;
+61             break;
+62         case NETIF_ARP:
+63             ethpkt->type = ETH_TYPE_ARP;
+64             break;
+65         default:
+66             ethpkt->type = ETH_TYPE_RAW;
+67             break;
+68     }
+69 
+70     
+71     length += sizeof(eth_header_t);
+72     
+73     int ret = netif->send(netif, ethpkt, length, NETIF_ETH);
+74     kfree(ethpkt);
+75     
+76     return ret;
+77 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

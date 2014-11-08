@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/pthread_create.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/pthread_create.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L18'>[^]</a><a href='#L37'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L18' title='Defined at 18.'>__pthread_handler__</a>
+<li><a href='#L24' title='Defined at 24.'>__pthread_handler__</a>
+<li><a href='#L37' title='Defined at 37.'>pthread_create</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='43.html'>pthread.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#include</font> "<a href='50.html'>pthread_internal.h</a>"
+<a name='L8'>   8 
+<a name='L9'>   9 
+<a name='L10'>  10 <a href='../D/49.html' title='Multiple defined in 2 places.'>EXTERN</a> <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/77.html' title='Multiple used in 6 places.'>__pthread_counts</a>;
+<a name='L11'>  11 <a href='../D/49.html' title='Multiple defined in 2 places.'>EXTERN</a> <a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>* <a href='../Y/79.html' title='Multiple used in 17 places.'>__pthread_queue</a>;
+<a name='L12'>  12 
+<a name='L13'>  13 <a href='../D/49.html' title='Multiple defined in 2 places.'>EXTERN</a> <b>void</b> <a href='../S/61.html#L12' title='Defined at 12 in usr/src/libpthread/src/pthread_queue.c.'>__pthread_init_queue</a>(<b>void</b>);
+<a name='L14'>  14 
+<a name='L15'>  15 
+<a name='L16'>  16 
+<a name='L17'>  17 <font color='darkred'>#ifdef</font> <a href='../Y/65.html' title='Multiple used in 3 places.'>__aplus__</a>
+<a name='L18'>  18 <a href='../D/143.html' title='Multiple defined in 2 places.'>PRIVATE</a> <b>void</b> <a href='../S/64.html#L81' title='Refered from 81 in usr/src/libpthread/src/pthread_create.c.'>__pthread_handler__</a>() <font color='red'>{</font>
+<a name='L19'>  19         <a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>* <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a> = 0;
+<a name='L20'>  20         <b>__asm__</b> <b>__volatile__</b> ("" : "=a"(<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>));
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#else</font>
+<a name='L23'>  23 
+<a name='L24'>  24 <a href='../D/143.html' title='Multiple defined in 2 places.'>PRIVATE</a> <b>void</b> <a href='../S/64.html#L81' title='Refered from 81 in usr/src/libpthread/src/pthread_create.c.'>__pthread_handler__</a>(<a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>* <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>) <font color='red'>{</font>
+<a name='L25'>  25 <font color='darkred'>#endif</font>
+<a name='L26'>  26 
+<a name='L27'>  27         <b>if</b>(<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>)
+<a name='L28'>  28                 <a href='../Y/83.html' title='Multiple used in 3 places.'>_exit</a>(-1);
+<a name='L29'>  29 
+<a name='L30'>  30         <b>if</b>(<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/235.html' title='Multiple used in 11 places.'>entry</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>)
+<a name='L31'>  31                 <a href='../Y/83.html' title='Multiple used in 3 places.'>_exit</a>(-1);
+<a name='L32'>  32 
+<a name='L33'>  33         <a href='../S/55.html#L8' title='Defined at 8 in usr/src/libpthread/src/pthread_exit.c.'>pthread_exit</a>(<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/235.html' title='Multiple used in 11 places.'>entry</a>(<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>));
+<a name='L34'>  34 <font color='red'>}</font>
+<a name='L35'>  35 
+<a name='L36'>  36 
+<a name='L37'>  37 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../R/396.html' title='Multiple refered from 3 places.'>pthread_create</a>(<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a>* <a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>, <b>const</b> <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a>* <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>void</b> *(*<a href='../Y/606.html' title='Multiple used in 3 places.'>start</a>)(<b>void</b>*), <b>void</b>* <a href='../Y/101.html' title='Multiple used in 7 places.'>arg</a>) <font color='red'>{</font>
+<a name='L38'>  38 
+<a name='L39'>  39         <a href='../S/61.html#L12' title='Defined at 12 in usr/src/libpthread/src/pthread_queue.c.'>__pthread_init_queue</a>();
+<a name='L40'>  40 
+<a name='L41'>  41         <b>if</b>(!<a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a>) <font color='red'>{</font>
+<a name='L42'>  42                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L43'>  43                 <b>return</b> 1;
+<a name='L44'>  44         <font color='red'>}</font>
+<a name='L45'>  45 
+<a name='L46'>  46         <b>if</b>(<a href='../Y/77.html' title='Multiple used in 6 places.'>__pthread_counts</a> &gt; <a href='../S/50.html#L27' title='Defined at 27 in usr/src/libpthread/src/pthread_internal.h.'>PTHREAD_THREADS_MAX</a>) <font color='red'>{</font>
+<a name='L47'>  47                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/6.html' title='Multiple used in 2 places.'>EAGAIN</a>;
+<a name='L48'>  48                 <b>return</b> 1;
+<a name='L49'>  49         <font color='red'>}</font>
+<a name='L50'>  50 
+<a name='L51'>  51         <a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>* <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a> = <a href='../Y/372.html' title='Multiple used in 5 places.'>malloc</a>(<b>sizeof</b>(<a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>));
+<a name='L52'>  52         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>, 0, <b>sizeof</b>(<a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>));
+<a name='L53'>  53 
+<a name='L54'>  54         <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/235.html' title='Multiple used in 11 places.'>entry</a> = <a href='../Y/606.html' title='Multiple used in 3 places.'>start</a>;
+<a name='L55'>  55         <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a> = <a href='../Y/101.html' title='Multiple used in 7 places.'>arg</a>;
+<a name='L56'>  56         <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/435.html' title='Multiple used in 7 places.'>once</a>.<a href='../Y/204.html' title='Multiple used in 5 places.'>done</a> = 0;
+<a name='L57'>  57         <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/435.html' title='Multiple used in 7 places.'>once</a>.<a href='../Y/607.html' title='Multiple used in 3 places.'>started</a> = -1;
+<a name='L58'>  58         <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a> = 0;
+<a name='L59'>  59 
+<a name='L60'>  60         <b>if</b>(<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>)
+<a name='L61'>  61                 <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(&amp;<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>sizeof</b>(<a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a>));
+<a name='L62'>  62 
+<a name='L63'>  63         <b>if</b>(<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>.<a href='../Y/317.html' title='Multiple used in 9 places.'>inheritsched</a> == <a href='../S/43.html#L43' title='Defined at 43 in usr/src/libpthread/include/pthread.h.'>PTHREAD_INHERIT_SCHED</a>) <font color='red'>{</font>
+<a name='L64'>  64                 <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/494.html' title='Multiple used in 3 places.'>px</a> = <a href='../S/69.html#L10' title='Defined at 10 in usr/src/libpthread/src/pthread_self.c.'>pthread_self</a>();
+<a name='L65'>  65                 <b>if</b>(<a href='../Y/494.html' title='Multiple used in 3 places.'>px</a>) <font color='red'>{</font>
+<a name='L66'>  66                         <a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>* <a href='../Y/316.html' title='Multiple used in 2 places.'>inh</a> = (<a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>*) <a href='../Y/494.html' title='Multiple used in 3 places.'>px</a>;
+<a name='L67'>  67                         <a href='../S/65.html#L112' title='Defined at 112 in usr/src/libpthread/src/pthread_attr.c.'>pthread_attr_setschedparam</a>(&amp;<a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, &amp;<a href='../Y/316.html' title='Multiple used in 2 places.'>inh</a>-&gt;<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>.<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>);
+<a name='L68'>  68                 <font color='red'>}</font>
+<a name='L69'>  69         <font color='red'>}</font>
+<a name='L70'>  70 
+<a name='L71'>  71 
+<a name='L72'>  72         <a href='../Y/77.html' title='Multiple used in 6 places.'>__pthread_counts</a> += 1;
+<a name='L73'>  73         *<a href='../Y/669.html' title='Multiple used in 35 places.'>thread</a> = (<a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a>) <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>;
+<a name='L74'>  74         
+<a name='L75'>  75         
+<a name='L76'>  76         <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/410.html' title='Multiple used in 27 places.'>next</a> = <a href='../Y/79.html' title='Multiple used in 17 places.'>__pthread_queue</a>;
+<a name='L77'>  77         <a href='../Y/79.html' title='Multiple used in 17 places.'>__pthread_queue</a> = <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>;
+<a name='L78'>  78                 
+<a name='L79'>  79 
+<a name='L80'>  80 
+<a name='L81'>  81         <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/670.html' title='Multiple used in 10 places.'>tid</a> = <a href='../D/290.html' title='Multiple defined in 2 places.'>__os_thread_create</a>(<a href='../D/293.html' title='Multiple defined in 2 places.'>__pthread_handler__</a>, <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>, <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>.<a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>.<a href='../Y/546.html' title='Multiple used in 4 places.'>sched_priority</a>);
+<a name='L82'>  82         <b>return</b> 0;
+<a name='L83'>  83 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L18'>[^]</a><a href='#L37'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

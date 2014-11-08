@@ -1,0 +1,53 @@
+\hypertarget{udp_8c}{\section{Riferimenti per il file src/net/udp.c}
+\label{udp_8c}\index{src/net/udp.\+c@{src/net/udp.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/udp.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{udp_8c_a9721c26507ac0169090b8934a33b1098}{udp\+\_\+recv} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{udp_8c_a9721c26507ac0169090b8934a33b1098}{\index{udp.\+c@{udp.\+c}!udp\+\_\+recv@{udp\+\_\+recv}}
+\index{udp\+\_\+recv@{udp\+\_\+recv}!udp.\+c@{udp.\+c}}
+\subsubsection[{udp\+\_\+recv}]{\setlength{\rightskip}{0pt plus 5cm}int udp\+\_\+recv (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length}
+\end{DoxyParamCaption}
+)}}\label{udp_8c_a9721c26507ac0169090b8934a33b1098}
+
+
+Definizione alla linea 12 del file udp.\+c.
+
+
+
+Referenzia length, netif\+\_\+packets\+\_\+add(), netif\+\_\+packets\+\_\+create(), e N\+E\+T\+I\+F\+\_\+\+U\+D\+P.
+
+
+\begin{DoxyCode}
+12                                                        \{
+13     
+14     \hyperlink{netif_8c_a3edf21f1cc51e87714ea8911236d896c}{netif\_packets\_add} (
+15         \hyperlink{netif_8c_aa14a95992efbcac98c16a43724dc0942}{netif\_packets\_create} (
+16                             netif,
+17                             \hyperlink{netif_8h_a4da4a42cc7d9462ce613d54d0393f8d1}{NETIF\_UDP}, 
+18                             \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, 
+19                             \textcolor{keyword}{sizeof}(udp\_header\_t), 
+20                             buf
+21         )
+22     );
+23 
+24     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+25 \}
+\end{DoxyCode}

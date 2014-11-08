@@ -1,0 +1,134 @@
+<html>
+<head>
+<title>buf</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/156.html#L54'>buf</a>                54 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/156.html#L55'>buf</a>                55 src/bufio.c    	buf-&gt;raw = addr;
+<a href='../S/156.html#L56'>buf</a>                56 src/bufio.c    	buf-&gt;size = size;
+<a href='../S/156.html#L57'>buf</a>                57 src/bufio.c    	buf-&gt;type = 0;
+<a href='../S/156.html#L58'>buf</a>                58 src/bufio.c    	buf-&gt;offset = (off_t) 0;
+<a href='../S/156.html#L59'>buf</a>                59 src/bufio.c    	buf-&gt;task = current_task;
+<a href='../S/156.html#L62'>buf</a>                62 src/bufio.c    	list_add(list_buffers, (listval_t) buf);
+<a href='../S/156.html#L65'>buf</a>                65 src/bufio.c    	return buf;
+<a href='../S/156.html#L76'>buf</a>                76 src/bufio.c    	bufio_t* buf = (bufio_t*) kmalloc(size);
+<a href='../S/156.html#L77'>buf</a>                77 src/bufio.c    	buf-&gt;raw = raw;
+<a href='../S/156.html#L78'>buf</a>                78 src/bufio.c    	buf-&gt;size = size;
+<a href='../S/156.html#L79'>buf</a>                79 src/bufio.c    	buf-&gt;type = 0;
+<a href='../S/156.html#L80'>buf</a>                80 src/bufio.c    	buf-&gt;offset = (off_t) 0;
+<a href='../S/156.html#L81'>buf</a>                81 src/bufio.c    	buf-&gt;task = current_task;
+<a href='../S/156.html#L83'>buf</a>                83 src/bufio.c    	list_add(list_buffers, (listval_t) buf);
+<a href='../S/156.html#L87'>buf</a>                87 src/bufio.c    	return buf;
+<a href='../S/156.html#L90'>buf</a>                90 src/bufio.c    void bufio_free(bufio_t* buf) {
+<a href='../S/156.html#L92'>buf</a>                92 src/bufio.c    	buffers_length -= buf-&gt;size;
+<a href='../S/156.html#L94'>buf</a>                94 src/bufio.c    	kfree(buf-&gt;raw);
+<a href='../S/156.html#L95'>buf</a>                95 src/bufio.c    	kfree(buf);
+<a href='../S/156.html#L97'>buf</a>                97 src/bufio.c    	list_remove(list_buffers, (listval_t) buf);
+<a href='../S/156.html#L103'>buf</a>               103 src/bufio.c    int bufio_seek(bufio_t* buf, off_t offset, int dir) {
+<a href='../S/156.html#L105'>buf</a>               105 src/bufio.c    	if(offset &gt; buf-&gt;size)
+<a href='../S/156.html#L108'>buf</a>               108 src/bufio.c    	if(dir == SEEK_CUR &amp;&amp; (offset + buf-&gt;offset) &gt; buf-&gt;size)
+<a href='../S/156.html#L113'>buf</a>               113 src/bufio.c    			buf-&gt;offset = offset;
+<a href='../S/156.html#L117'>buf</a>               117 src/bufio.c    			buf-&gt;offset = buf-&gt;offset - offset;
+<a href='../S/156.html#L121'>buf</a>               121 src/bufio.c    			buf-&gt;offset += offset;
+<a href='../S/156.html#L128'>buf</a>               128 src/bufio.c    	return buf-&gt;offset;
+<a href='../S/156.html#L131'>buf</a>               131 src/bufio.c    int bufio_tell(bufio_t* buf) {
+<a href='../S/156.html#L132'>buf</a>               132 src/bufio.c    	return bufio_seek(buf, 0, SEEK_CUR);
+<a href='../S/156.html#L135'>buf</a>               135 src/bufio.c    void bufio_clear(bufio_t* buf) {
+<a href='../S/156.html#L136'>buf</a>               136 src/bufio.c    	spinlock_lock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L137'>buf</a>               137 src/bufio.c    	memset(buf-&gt;raw, 0, buf-&gt;size);
+<a href='../S/156.html#L138'>buf</a>               138 src/bufio.c    	spinlock_unlock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L141'>buf</a>               141 src/bufio.c    int bufio_read(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L142'>buf</a>               142 src/bufio.c    	spinlock_lock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L144'>buf</a>               144 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/156.html#L145'>buf</a>               145 src/bufio.c    	memcpy(ptr, (void*) ((off_t) buf-&gt;raw + buf-&gt;offset), len);
+<a href='../S/156.html#L147'>buf</a>               147 src/bufio.c    	buf-&gt;offset += (off_t) len;
+<a href='../S/156.html#L149'>buf</a>               149 src/bufio.c    	spinlock_unlock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L154'>buf</a>               154 src/bufio.c    int bufio_write(bufio_t* buf, void* ptr, size_t len) {		
+<a href='../S/156.html#L156'>buf</a>               156 src/bufio.c    	spinlock_lock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L158'>buf</a>               158 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/156.html#L159'>buf</a>               159 src/bufio.c    	memcpy((void*) ((off_t) buf-&gt;raw + buf-&gt;offset), ptr, len);
+<a href='../S/156.html#L161'>buf</a>               161 src/bufio.c    	buf-&gt;offset += (off_t) len;
+<a href='../S/156.html#L163'>buf</a>               163 src/bufio.c    	spinlock_unlock(&amp;buf-&gt;lock);
+<a href='../S/156.html#L173'>buf</a>               173 src/bufio.c    		bufio_t* buf = (bufio_t*) value;
+<a href='../S/156.html#L175'>buf</a>               175 src/bufio.c    		if(buf-&gt;type == type)
+<a href='../S/156.html#L176'>buf</a>               176 src/bufio.c    			list_add(tmp, (listval_t) buf);
+<a href='../S/155.html#L19'>buf</a>                19 src/debug.c    static void print_dec(unsigned int value, unsigned int width, char * buf, int * ptr ) {
+<a href='../S/155.html#L30'>buf</a>                30 src/debug.c    		buf[*ptr] = '0';
+<a href='../S/155.html#L39'>buf</a>                39 src/debug.c    		buf[*ptr + i - 1] = r + '0';
+<a href='../S/155.html#L47'>buf</a>                47 src/debug.c    static void print_hex(unsigned int value, unsigned int width, char * buf, int * ptr) {
+<a href='../S/155.html#L61'>buf</a>                61 src/debug.c    		buf[*ptr] = '0';
+<a href='../S/155.html#L68'>buf</a>                68 src/debug.c    		buf[*ptr] = "0123456789abcdef"[(value&gt;&gt;(i*4))&amp;0xF];
+<a href='../S/155.html#L74'>buf</a>                74 src/debug.c    size_t vasprintf(char * buf, const char *fmt, va_list args) {
+<a href='../S/155.html#L81'>buf</a>                81 src/debug.c    			buf[ptr++] = fmt[i];
+<a href='../S/155.html#L99'>buf</a>                99 src/debug.c    					buf[ptr++] = *s++;
+<a href='../S/155.html#L103'>buf</a>               103 src/debug.c    				buf[ptr++] = (char)va_arg(args, int);
+<a href='../S/155.html#L106'>buf</a>               106 src/debug.c    				print_hex((unsigned long)va_arg(args, unsigned long), arg_width, buf, &amp;ptr);
+<a href='../S/155.html#L109'>buf</a>               109 src/debug.c    				print_dec((unsigned long)va_arg(args, unsigned long), arg_width, buf, &amp;ptr);
+<a href='../S/155.html#L112'>buf</a>               112 src/debug.c    				buf[ptr++] = '%';
+<a href='../S/155.html#L115'>buf</a>               115 src/debug.c    				buf[ptr++] = fmt[i];
+<a href='../S/155.html#L120'>buf</a>               120 src/debug.c    	buf[ptr] = '\0';
+<a href='../S/146.html#L102'>buf</a>               102 src/fs/fs.c    int fs_ioctl(struct inode* inode, int req, void* buf) {
+<a href='../S/146.html#L104'>buf</a>               104 src/fs/fs.c    		return inode-&gt;ioctl(inode, req, buf);
+<a href='../S/97.html#L67'>buf</a>                67 src/include/aplus/fs.h 	int (*ioctl) (struct inode* inode, int req, void* buf);
+<a href='../S/108.html#L67'>buf</a>                67 src/net/arp.c  int arp_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/108.html#L68'>buf</a>                68 src/net/arp.c  	arp_header_t* arp = (arp_header_t*) buf;
+<a href='../S/112.html#L11'>buf</a>                11 src/net/eth.c  int eth_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/112.html#L12'>buf</a>                12 src/net/eth.c  	eth_header_t* ethpkt = (eth_header_t*) buf;
+<a href='../S/112.html#L15'>buf</a>                15 src/net/eth.c  		netif, (void*) ((uint32_t) buf + sizeof(eth_header_t)), length - sizeof(eth_header_t)
+<a href='../S/112.html#L42'>buf</a>                42 src/net/eth.c  							buf
+<a href='../S/112.html#L49'>buf</a>                49 src/net/eth.c  static int eth_send_packet(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/112.html#L53'>buf</a>                53 src/net/eth.c  	memcpy((void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), buf, length);
+<a href='../S/112.html#L79'>buf</a>                79 src/net/eth.c  int eth_send(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/112.html#L82'>buf</a>                82 src/net/eth.c  		if(eth_send_packet(netif, buf, length, type) &gt; 0)
+<a href='../S/112.html#L93'>buf</a>                93 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + i), delta, type);
+<a href='../S/112.html#L96'>buf</a>                96 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + length - (length % delta)), length % delta, type);
+<a href='../S/113.html#L16'>buf</a>                16 src/net/ipv4.c 	uint8_t* buf = (uint8_t*) pkt;
+<a href='../S/113.html#L19'>buf</a>                19 src/net/ipv4.c 		sum += 0xFFFF &amp; *((uint16_t*) buf);
+<a href='../S/113.html#L20'>buf</a>                20 src/net/ipv4.c 		buf += sizeof(uint16_t);
+<a href='../S/113.html#L25'>buf</a>                25 src/net/ipv4.c 		sum += (0xFF &amp; *buf) &lt;&lt; 8;
+<a href='../S/113.html#L34'>buf</a>                34 src/net/ipv4.c void* ipv4_create_packet(netif_t* netif, void* buf, size_t length, int type, ipv4_t dest, int fragment, int offset) {
+<a href='../S/113.html#L65'>buf</a>                65 src/net/ipv4.c 	memcpy((void*) ((uint32_t) ip + sizeof(ipv4_header_t)), buf, length);
+<a href='../S/113.html#L71'>buf</a>                71 src/net/ipv4.c int ipv4_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/113.html#L72'>buf</a>                72 src/net/ipv4.c 	ipv4_header_t* ip = (ipv4_header_t*) buf;
+<a href='../S/113.html#L108'>buf</a>               108 src/net/ipv4.c 							buf
+<a href='../S/113.html#L116'>buf</a>               116 src/net/ipv4.c int ipv4_send(netif_t* netif, void* buf, size_t length, int type, ipv4_t dest) {
+<a href='../S/113.html#L118'>buf</a>               118 src/net/ipv4.c 		void* pkt = ipv4_create_packet(netif, buf, length, type, dest, -1, 0);
+<a href='../S/113.html#L136'>buf</a>               136 src/net/ipv4.c 		void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), IPV4_MAX_LENGTH, type, dest, 0, i);
+<a href='../S/113.html#L142'>buf</a>               142 src/net/ipv4.c 	void* pkt = ipv4_create_packet(netif, (void*) ((uint32_t) buf + (i * IPV4_MAX_LENGTH)), length - ((i - 1) * IPV4_MAX_LENGTH), type, dest, -1, i);
+<a href='../S/106.html#L14'>buf</a>                14 src/net/ipv6.c int ipv6_recv(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/106.html#L15'>buf</a>                15 src/net/ipv6.c 	ipv6_header_t* ip = (ipv6_header_t*) buf;
+<a href='../S/106.html#L48'>buf</a>                48 src/net/ipv6.c 							buf
+<a href='../S/106.html#L55'>buf</a>                55 src/net/ipv6.c int ipv6_send(netif_t* netif, void* buf, size_t length, int type, ipv6_t dest) {
+<a href='../S/106.html#L80'>buf</a>                80 src/net/ipv6.c 	memcpy((void*) ((uint32_t) ip + sizeof(ipv6_header_t)), buf, length);
+<a href='../S/111.html#L31'>buf</a>                31 src/net/loopback/loopback.c int loopback_recv(netif_t* netif, void* buf, size_t len) {
+<a href='../S/111.html#L35'>buf</a>                35 src/net/loopback/loopback.c 	if(eth_recv(netif, buf, len) &gt; 0) {
+<a href='../S/111.html#L46'>buf</a>                46 src/net/loopback/loopback.c int loopback_send(netif_t* netif, void* buf, size_t len, int type) {
+<a href='../S/111.html#L60'>buf</a>                60 src/net/loopback/loopback.c 	loopback_recv(netif, buf, len);	
+<a href='../S/104.html#L54'>buf</a>                54 src/net/rtl8139/rtl8139.c int rtl8139_send(netif_t* netif, void* buf, size_t len, int type) {
+<a href='../S/104.html#L69'>buf</a>                69 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;txBuffer, buf, len);
+<a href='../S/110.html#L85'>buf</a>                85 src/net/slirp/slirp.c int slirp_send(netif_t* netif, void* buf, size_t length, int type) {
+<a href='../S/110.html#L96'>buf</a>                96 src/net/slirp/slirp.c 	uint8_t* b = (uint8_t*) buf;
+<a href='../S/114.html#L12'>buf</a>                12 src/net/udp.c  int udp_recv(netif_t* netif, void* buf, size_t length) {
+<a href='../S/114.html#L20'>buf</a>                20 src/net/udp.c  							buf
+<a href='../S/138.html#L19'>buf</a>                19 src/syscall/fcntl.c int sys_fcntl(int fd, int request, void* buf) {
+<a href='../S/136.html#L15'>buf</a>                15 src/syscall/ioctl.c int sys_ioctl(int fd, int req, void* buf) {
+<a href='../S/136.html#L24'>buf</a>                24 src/syscall/ioctl.c 	return fs_ioctl(ino, req, buf);
+<a href='../S/29.html#L44'>buf</a>                44 usr/src/libposix/src/execvp.c   char buf[MAXNAMLEN];
+<a href='../S/29.html#L57'>buf</a>                57 usr/src/libposix/src/execvp.c       strccpy (buf, path, PATH_DELIM);
+<a href='../S/29.html#L59'>buf</a>                59 usr/src/libposix/src/execvp.c       if (*buf != 0 &amp;&amp; buf[strlen(buf) - 1] != '/')
+<a href='../S/29.html#L60'>buf</a>                60 usr/src/libposix/src/execvp.c 	strcat (buf, "/");
+<a href='../S/29.html#L61'>buf</a>                61 usr/src/libposix/src/execvp.c       strcat (buf, file);
+<a href='../S/29.html#L62'>buf</a>                62 usr/src/libposix/src/execvp.c       if(execv (buf, argv) == 0)
+<a href='../S/32.html#L17'>buf</a>                17 usr/src/libposix/src/getcwd.c char* getcwd(char* buf, size_t size) {
+<a href='../S/32.html#L33'>buf</a>                33 usr/src/libposix/src/getcwd.c 	memset(buf, 0, size);
+<a href='../S/32.html#L38'>buf</a>                38 usr/src/libposix/src/getcwd.c 		strcat_inv(buf, "/");
+<a href='../S/32.html#L39'>buf</a>                39 usr/src/libposix/src/getcwd.c 		return buf;
+<a href='../S/32.html#L60'>buf</a>                60 usr/src/libposix/src/getcwd.c 				strcat_inv(buf, ent-&gt;d_name);
+<a href='../S/32.html#L61'>buf</a>                61 usr/src/libposix/src/getcwd.c 				strcat_inv(buf, "/");			
+<a href='../S/32.html#L70'>buf</a>                70 usr/src/libposix/src/getcwd.c 	return buf;
+</pre>
+</body>
+</html>

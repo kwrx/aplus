@@ -1,0 +1,316 @@
+\hypertarget{mm_8h}{\section{Riferimenti per il file src/include/aplus/mm.h}
+\label{mm_8h}\index{src/include/aplus/mm.\+h@{src/include/aplus/mm.\+h}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structheap}{heap}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{M\+M\+\_\+\+V\+B\+A\+S\+E}~0x40000000
+\item 
+\#define \hyperlink{mm_8h_afbad6879737307d726ae456844b05320}{M\+M\+\_\+\+V\+S\+I\+Z\+E}~(0x\+F\+F\+F\+F\+F\+F\+F\+F -\/ M\+M\+\_\+\+V\+B\+A\+S\+E)
+\item 
+\#define \hyperlink{mm_8h_a1b54983be7272f850a1eef88a78db6f8}{M\+M\+\_\+\+L\+B\+A\+S\+E}~0x00000000
+\item 
+\#define \hyperlink{mm_8h_a4b54a4ab7755c6c4dfebb91b75d9d956}{M\+M\+\_\+\+L\+S\+I\+Z\+E}~0x00800000
+\item 
+\#define \hyperlink{mm_8h_a61d9fae3cb95715f92171f153d9ff018}{M\+M\+\_\+\+U\+B\+A\+S\+E}~0x00\+A00000
+\item 
+\#define \hyperlink{mm_8h_a600b21bbb74401132349a1325dadfdbe}{M\+M\+\_\+\+U\+S\+I\+Z\+E}~(\hyperlink{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{M\+M\+\_\+\+V\+B\+A\+S\+E} -\/ \hyperlink{mm_8h_a61d9fae3cb95715f92171f153d9ff018}{M\+M\+\_\+\+U\+B\+A\+S\+E})
+\item 
+\#define \hyperlink{mm_8h_a9da196e1c5da9da3454cbcfa6d56c96e}{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T}~0x01
+\item 
+\#define \hyperlink{mm_8h_a39ac3cb44ab9c4695214a59a3d199557}{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R}~0x02
+\item 
+\#define \hyperlink{mm_8h_a4f995b267ef97c4638c27370badecb21}{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R}~0x04
+\item 
+\#define \hyperlink{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T}~(\hyperlink{mm_8h_a9da196e1c5da9da3454cbcfa6d56c96e}{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T} $\vert$ \hyperlink{mm_8h_a39ac3cb44ab9c4695214a59a3d199557}{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R})
+\item 
+\#define \hyperlink{mm_8h_a17f8a27ab3548000488ca27d70785240}{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y}~(0x\+F\+F\+F\+F\+F\+F\+F\+F -\/ M\+M\+\_\+\+V\+B\+A\+S\+E)
+\item 
+\#define \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{B\+L\+K\+S\+I\+Z\+E}~0x1000
+\item 
+\#define \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{B\+L\+K\+M\+A\+G\+I\+C}~0x1234
+\end{DoxyCompactItemize}
+\subsection*{Ridefinizioni di tipo (typedef)}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structheap}{heap} \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+static void $\ast$ \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\+\_\+paddr} (void $\ast$vaddr)
+\item 
+static void $\ast$ \hyperlink{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}{mm\+\_\+vaddr} (void $\ast$paddr)
+\item 
+static void $\ast$ \hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\+\_\+align} (void $\ast$vaddr)
+\item 
+void $\ast$ \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc} (size\+\_\+t)
+\item 
+void \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree} (void $\ast$)
+\item 
+void $\ast$ \hyperlink{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}{krealloc} (void $\ast$, size\+\_\+t)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{\index{mm.\+h@{mm.\+h}!B\+L\+K\+M\+A\+G\+I\+C@{B\+L\+K\+M\+A\+G\+I\+C}}
+\index{B\+L\+K\+M\+A\+G\+I\+C@{B\+L\+K\+M\+A\+G\+I\+C}!mm.\+h@{mm.\+h}}
+\subsubsection[{B\+L\+K\+M\+A\+G\+I\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+L\+K\+M\+A\+G\+I\+C~0x1234}}\label{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}
+
+
+Definizione alla linea 58 del file mm.\+h.
+
+\hypertarget{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{\index{mm.\+h@{mm.\+h}!B\+L\+K\+S\+I\+Z\+E@{B\+L\+K\+S\+I\+Z\+E}}
+\index{B\+L\+K\+S\+I\+Z\+E@{B\+L\+K\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
+\subsubsection[{B\+L\+K\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+L\+K\+S\+I\+Z\+E~0x1000}}\label{mm_8h_ac4551bbc9efabf8378f35498f80b4679}
+
+
+Definizione alla linea 57 del file mm.\+h.
+
+\hypertarget{mm_8h_a1b54983be7272f850a1eef88a78db6f8}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+L\+B\+A\+S\+E@{M\+M\+\_\+\+L\+B\+A\+S\+E}}
+\index{M\+M\+\_\+\+L\+B\+A\+S\+E@{M\+M\+\_\+\+L\+B\+A\+S\+E}!mm.\+h@{mm.\+h}}
+\subsubsection[{M\+M\+\_\+\+L\+B\+A\+S\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+L\+B\+A\+S\+E~0x00000000}}\label{mm_8h_a1b54983be7272f850a1eef88a78db6f8}
+
+
+Definizione alla linea 41 del file mm.\+h.
+
+\hypertarget{mm_8h_a4b54a4ab7755c6c4dfebb91b75d9d956}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+L\+S\+I\+Z\+E@{M\+M\+\_\+\+L\+S\+I\+Z\+E}}
+\index{M\+M\+\_\+\+L\+S\+I\+Z\+E@{M\+M\+\_\+\+L\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
+\subsubsection[{M\+M\+\_\+\+L\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+L\+S\+I\+Z\+E~0x00800000}}\label{mm_8h_a4b54a4ab7755c6c4dfebb91b75d9d956}
+
+
+Definizione alla linea 42 del file mm.\+h.
+
+\hypertarget{mm_8h_a61d9fae3cb95715f92171f153d9ff018}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+U\+B\+A\+S\+E@{M\+M\+\_\+\+U\+B\+A\+S\+E}}
+\index{M\+M\+\_\+\+U\+B\+A\+S\+E@{M\+M\+\_\+\+U\+B\+A\+S\+E}!mm.\+h@{mm.\+h}}
+\subsubsection[{M\+M\+\_\+\+U\+B\+A\+S\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+U\+B\+A\+S\+E~0x00\+A00000}}\label{mm_8h_a61d9fae3cb95715f92171f153d9ff018}
+
+
+Definizione alla linea 44 del file mm.\+h.
+
+\hypertarget{mm_8h_a600b21bbb74401132349a1325dadfdbe}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+U\+S\+I\+Z\+E@{M\+M\+\_\+\+U\+S\+I\+Z\+E}}
+\index{M\+M\+\_\+\+U\+S\+I\+Z\+E@{M\+M\+\_\+\+U\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
+\subsubsection[{M\+M\+\_\+\+U\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+U\+S\+I\+Z\+E~({\bf M\+M\+\_\+\+V\+B\+A\+S\+E} -\/ {\bf M\+M\+\_\+\+U\+B\+A\+S\+E})}}\label{mm_8h_a600b21bbb74401132349a1325dadfdbe}
+
+
+Definizione alla linea 45 del file mm.\+h.
+
+\hypertarget{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+V\+B\+A\+S\+E@{M\+M\+\_\+\+V\+B\+A\+S\+E}}
+\index{M\+M\+\_\+\+V\+B\+A\+S\+E@{M\+M\+\_\+\+V\+B\+A\+S\+E}!mm.\+h@{mm.\+h}}
+\subsubsection[{M\+M\+\_\+\+V\+B\+A\+S\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+V\+B\+A\+S\+E~0x40000000}}\label{mm_8h_ae874c5b00fa6293a175b988b647afcc9}
+
+
+Definizione alla linea 38 del file mm.\+h.
+
+\hypertarget{mm_8h_afbad6879737307d726ae456844b05320}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+V\+S\+I\+Z\+E@{M\+M\+\_\+\+V\+S\+I\+Z\+E}}
+\index{M\+M\+\_\+\+V\+S\+I\+Z\+E@{M\+M\+\_\+\+V\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
+\subsubsection[{M\+M\+\_\+\+V\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+V\+S\+I\+Z\+E~(0x\+F\+F\+F\+F\+F\+F\+F\+F -\/ M\+M\+\_\+\+V\+B\+A\+S\+E)}}\label{mm_8h_afbad6879737307d726ae456844b05320}
+
+
+Definizione alla linea 39 del file mm.\+h.
+
+\hypertarget{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T}}
+\index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T}!mm.\+h@{mm.\+h}}
+\subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T~({\bf V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T} $\vert$ {\bf V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R})}}\label{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}
+
+
+Definizione alla linea 52 del file mm.\+h.
+
+\hypertarget{mm_8h_a9da196e1c5da9da3454cbcfa6d56c96e}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T}}
+\index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T}!mm.\+h@{mm.\+h}}
+\subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T~0x01}}\label{mm_8h_a9da196e1c5da9da3454cbcfa6d56c96e}
+
+
+Definizione alla linea 49 del file mm.\+h.
+
+\hypertarget{mm_8h_a39ac3cb44ab9c4695214a59a3d199557}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R}}
+\index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R}!mm.\+h@{mm.\+h}}
+\subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R~0x02}}\label{mm_8h_a39ac3cb44ab9c4695214a59a3d199557}
+
+
+Definizione alla linea 50 del file mm.\+h.
+
+\hypertarget{mm_8h_a4f995b267ef97c4638c27370badecb21}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R}}
+\index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R}!mm.\+h@{mm.\+h}}
+\subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R~0x04}}\label{mm_8h_a4f995b267ef97c4638c27370badecb21}
+
+
+Definizione alla linea 51 del file mm.\+h.
+
+\hypertarget{mm_8h_a17f8a27ab3548000488ca27d70785240}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y@{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y}}
+\index{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y@{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y}!mm.\+h@{mm.\+h}}
+\subsubsection[{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y~(0x\+F\+F\+F\+F\+F\+F\+F\+F -\/ M\+M\+\_\+\+V\+B\+A\+S\+E)}}\label{mm_8h_a17f8a27ab3548000488ca27d70785240}
+
+
+Definizione alla linea 54 del file mm.\+h.
+
+
+
+\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\hypertarget{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{\index{mm.\+h@{mm.\+h}!heap\+\_\+t@{heap\+\_\+t}}
+\index{heap\+\_\+t@{heap\+\_\+t}!mm.\+h@{mm.\+h}}
+\subsubsection[{heap\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf heap}  {\bf heap\+\_\+t}}}\label{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{mm_8h_acee1960bdb3a19cb495341ec725cafef}{\index{mm.\+h@{mm.\+h}!kfree@{kfree}}
+\index{kfree@{kfree}!mm.\+h@{mm.\+h}}
+\subsubsection[{kfree}]{\setlength{\rightskip}{0pt plus 5cm}void kfree (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{}
+\end{DoxyParamCaption}
+)}}\label{mm_8h_acee1960bdb3a19cb495341ec725cafef}
+
+
+Definizione alla linea 66 del file mm.\+c.
+
+
+
+Referenzia B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), e size.
+
+
+\begin{DoxyCode}
+66                       \{
+67     \textcolor{keywordflow}{if}(!ptr)
+68         \textcolor{keywordflow}{return};
+69         
+70     
+71     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+72     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+73         \textcolor{keywordflow}{return};
+74         
+75     \textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+76     block->size = 0;
+77     block->magic = 0;
+78     
+79     
+80     \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree}(\hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(\hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(ptr)), size);
+81 \}
+\end{DoxyCode}
+\hypertarget{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{\index{mm.\+h@{mm.\+h}!kmalloc@{kmalloc}}
+\index{kmalloc@{kmalloc}!mm.\+h@{mm.\+h}}
+\subsubsection[{kmalloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ kmalloc (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{}
+\end{DoxyParamCaption}
+)}}\label{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}
+\hypertarget{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}{\index{mm.\+h@{mm.\+h}!krealloc@{krealloc}}
+\index{krealloc@{krealloc}!mm.\+h@{mm.\+h}}
+\subsubsection[{krealloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ krealloc (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{, }
+\item[{size\+\_\+t}]{}
+\end{DoxyParamCaption}
+)}}\label{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}
+
+
+Definizione alla linea 84 del file mm.\+c.
+
+
+
+Referenzia B\+L\+K\+M\+A\+G\+I\+C, kfree(), e kmalloc().
+
+
+\begin{DoxyCode}
+84                                        \{
+85     \textcolor{keywordflow}{if}(ptr == NULL)
+86         \textcolor{keywordflow}{return} \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+87         
+88     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} == 0) \{
+89         \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+90         \textcolor{keywordflow}{return} NULL;
+91     \}   
+92 
+93     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+94     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+95         \textcolor{keywordflow}{return} NULL;
+96         
+97     \textcolor{keywordtype}{void}* newptr = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+98     \textcolor{keywordflow}{if}(!newptr)
+99         \textcolor{keywordflow}{return} NULL;
+100         
+101     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > block->size)
+102         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+103         
+104     memcpy(newptr, ptr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+105     \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+106     
+107     \textcolor{keywordflow}{return} newptr;
+108 \}
+\end{DoxyCode}
+\hypertarget{mm_8h_acb964323e95c799eb3896dce8c61d329}{\index{mm.\+h@{mm.\+h}!mm\+\_\+align@{mm\+\_\+align}}
+\index{mm\+\_\+align@{mm\+\_\+align}!mm.\+h@{mm.\+h}}
+\subsubsection[{mm\+\_\+align}]{\setlength{\rightskip}{0pt plus 5cm}static void$\ast$ mm\+\_\+align (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{vaddr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{mm_8h_acb964323e95c799eb3896dce8c61d329}
+
+
+Definizione alla linea 85 del file mm.\+h.
+
+
+
+Referenzia uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+85                                           \{
+86     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) vaddr & ~0xFFF);
+87 \}
+\end{DoxyCode}
+\hypertarget{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{\index{mm.\+h@{mm.\+h}!mm\+\_\+paddr@{mm\+\_\+paddr}}
+\index{mm\+\_\+paddr@{mm\+\_\+paddr}!mm.\+h@{mm.\+h}}
+\subsubsection[{mm\+\_\+paddr}]{\setlength{\rightskip}{0pt plus 5cm}static void$\ast$ mm\+\_\+paddr (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{vaddr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}
+
+
+Definizione alla linea 71 del file mm.\+h.
+
+
+
+Referenzia M\+M\+\_\+\+V\+B\+A\+S\+E, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+71                                           \{
+72     \textcolor{keywordflow}{if}((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) vaddr > \hyperlink{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{MM\_VBASE})
+73         vaddr = (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) vaddr - \hyperlink{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{MM\_VBASE});
+74         
+75     \textcolor{keywordflow}{return} vaddr;
+76 \}
+\end{DoxyCode}
+\hypertarget{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}{\index{mm.\+h@{mm.\+h}!mm\+\_\+vaddr@{mm\+\_\+vaddr}}
+\index{mm\+\_\+vaddr@{mm\+\_\+vaddr}!mm.\+h@{mm.\+h}}
+\subsubsection[{mm\+\_\+vaddr}]{\setlength{\rightskip}{0pt plus 5cm}static void$\ast$ mm\+\_\+vaddr (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{paddr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}
+
+
+Definizione alla linea 78 del file mm.\+h.
+
+
+
+Referenzia M\+M\+\_\+\+V\+B\+A\+S\+E, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+78                                           \{
+79     \textcolor{keywordflow}{if}((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) paddr < \hyperlink{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{MM\_VBASE})
+80         paddr = (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) paddr + \hyperlink{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{MM\_VBASE});
+81         
+82     \textcolor{keywordflow}{return} paddr;
+83 \}
+\end{DoxyCode}

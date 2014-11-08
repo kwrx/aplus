@@ -1,0 +1,834 @@
+\hypertarget{desc_8c}{\section{Riferimenti per il file src/arch/desc.c}
+\label{desc_8c}\index{src/arch/desc.\+c@{src/arch/desc.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
+{\ttfamily \#include $<$grub.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$sys/times.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structgdt__entry}{gdt\+\_\+entry}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{desc_8c_aeef7411226f7c2a6d1328386a2b3832d}{F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K}~0x3\+F\+F\+F\+F\+F\+E3
+\item 
+\#define \hyperlink{desc_8c_aaad9208d1f30cc40267fdeb44f593a35}{P\+I\+T\+\_\+\+F\+R\+E\+Q}~(C\+L\+O\+C\+K\+S\+\_\+\+P\+E\+R\+\_\+\+S\+E\+C)
+\item 
+\#define \hyperlink{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{gdt\+\_\+set}(n, b, l, a, g)
+\item 
+\#define \hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{idt\+\_\+set}(i, b, s, f)
+\item 
+\#define \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\+\_\+i}(n)
+\item 
+\#define \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\+\_\+i}(n)
+\item 
+\#define \hyperlink{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}{B\+C\+D2\+B\+I\+N}(bcd)~((((bcd) \& 0x0\+F) + ((bcd) / 16) $\ast$ 10))
+\item 
+\#define \hyperlink{desc_8c_a33200b25f91bf4cf6a4ec73ef292b207}{B\+C\+D2\+B\+I\+N2}(bcd)~(((((bcd) \& 0x0\+F) + ((bcd \& 0x70) / 16) $\ast$ 10)) $\vert$ (bcd \& 0x80))
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structgdt__entry}{gdt\+\_\+entry} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed))
+\item 
+void \hyperlink{desc_8c_a7d06701ac073c331c83519e3909b7fce}{schedule} ()
+\item 
+void \hyperlink{desc_8c_ab36b30e25787b3f4887160064ba2f43a}{syscall\+\_\+handler} (regs\+\_\+t $\ast$)
+\item 
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\+\_\+\+\_\+asm\+\_\+\+\_\+} (\char`\"{}.section .text		\textbackslash{}n\textbackslash{}
+	.global gdt\+\_\+load	\textbackslash{}n\textbackslash{}
+	gdt\+\_\+load\+:			\textbackslash{}n\textbackslash{}
+	lgdt \mbox{[}\hyperlink{desc_8c_af67a6154264e775ccf3c976fefe43618}{gdt\+\_\+p}\mbox{]}		\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\textbackslash{}
+	mov ax, 0x10		\textbackslash{}n\textbackslash{}
+	mov ds, ax			\textbackslash{}n\textbackslash{}
+	mov es, ax			\textbackslash{}n\textbackslash{}
+	mov fs, ax			\textbackslash{}n\textbackslash{}
+	mov gs, ax			\textbackslash{}n\textbackslash{}
+	mov ss, ax			\textbackslash{}n\textbackslash{}
+	jmp 0x08\+:.\+done		\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\textbackslash{}
+	.\+done\+:				\textbackslash{}n\textbackslash{}
+	ret					\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\textbackslash{}
+	.\+global idt\+\_\+load	\textbackslash{}n\textbackslash{}
+	idt\+\_\+load\+:			\textbackslash{}n\textbackslash{}
+	lidt \mbox{[}idt\+\_\+p\mbox{]}		\textbackslash{}n\textbackslash{}
+	ret					\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\textbackslash{}
+						\textbackslash{}n\char`\"{})
+\item 
+void \hyperlink{desc_8c_a5ec693d5682a18cbeb87ae5c5ea25c03}{isr\+\_\+handler} (regs\+\_\+t $\ast$r)
+\item 
+void \hyperlink{desc_8c_a16eb17da95d62143431a37e9381af3ee}{irq\+\_\+handler} (regs\+\_\+t $\ast$r)
+\item 
+void \hyperlink{desc_8c_a28c9747160a8526a5272ea44e68f45b6}{pit\+\_\+handler} (regs\+\_\+t $\ast$r)
+\item 
+void \hyperlink{desc_8c_a4f2dd94350b058e8e8ba473a2822cf7a}{pagefault\+\_\+handler} (regs\+\_\+t $\ast$r)
+\item 
+int \hyperlink{desc_8c_a6a369f578313199f231869f97e16802d}{desc\+\_\+init} ()
+\item 
+int \hyperlink{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}{irq\+\_\+set} (int n, void $\ast$handler)
+\item 
+int \hyperlink{desc_8c_a4992b098d3d233475016a0288e6cc918}{irq\+\_\+unset} (int n)
+\item 
+void $\ast$ \hyperlink{desc_8c_ae5e75d23e9ca091bdf2f1c5007481202}{irq\+\_\+get} (int n)
+\item 
+static \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{desc_8c_a1d44575d1f90766872fc87b63171102b}{rtc} (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} addr)
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{desc_8c_a0c9b7a41bf04c15de2b484df54fcb62b}{pit\+\_\+gettime} ()
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{desc_8c_affef3cc40072321b8d54e4c00aa4de85}{pit\+\_\+getticks} ()
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{desc_8c_aea6d44db9dbbcd64642fcb7904f41d9a}{limit\+\_\+l}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{desc_8c_af2ca1e64dc7ef22ee1082a58403166ec}{base\+\_\+l}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{desc_8c_a98fb2af33fad804398328d56ccf01ec2}{base\+\_\+m}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{desc_8c_a8b0d6200bc639dd37ff68847a0adde5f}{access}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{desc_8c_acfea365f69e71368a2db03333d4afd6f}{granularity}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{desc_8c_a8fef9c987f038778feaf85edfcc9c060}{base\+\_\+h}
+\item 
+static void $\ast$ \hyperlink{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{irqs} \mbox{[}16\mbox{]} = \{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \}
+\item 
+static gdt\+\_\+entry\+\_\+t \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{gdt\+\_\+e} \mbox{[}5\mbox{]}
+\item 
+static gdt\+\_\+ptr\+\_\+t \hyperlink{desc_8c_af67a6154264e775ccf3c976fefe43618}{gdt\+\_\+p}
+\item 
+static idt\+\_\+entry\+\_\+t \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{idt\+\_\+e} \mbox{[}256\mbox{]}
+\item 
+static idt\+\_\+ptr\+\_\+t \hyperlink{desc_8c_acd81c3f56ebae00c0f2af978d2b48d42}{idt\+\_\+p}
+\item 
+static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}{pit\+\_\+ticks}
+\item 
+static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}{pit\+\_\+seconds}
+\item 
+static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{desc_8c_adbf6021113d80f4e06464449823d18ca}{pit\+\_\+days}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{desc_8c_ab391065c3b916fa1704b6bfb7b099d04}{keyboard\+\_\+ready} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\index{desc.\+c@{desc.\+c}!\+\_\+i@{\+\_\+i}}
+\index{\+\_\+i@{\+\_\+i}!desc.\+c@{desc.\+c}}
+\subsubsection[{\+\_\+i}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+i(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{extern} \textcolor{keywordtype}{void} isr##n();                       \hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{\(\backslash\)}
+\hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{        idt\_set}(n, (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t})isr##n, 0x08, 0x8E)
+\end{DoxyCode}
+\hypertarget{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\index{desc.\+c@{desc.\+c}!\+\_\+i@{\+\_\+i}}
+\index{\+\_\+i@{\+\_\+i}!desc.\+c@{desc.\+c}}
+\subsubsection[{\+\_\+i}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+i(
+\begin{DoxyParamCaption}
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{extern} \textcolor{keywordtype}{void} irq##n();                           \hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{\(\backslash\)}
+\hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{        idt\_set}(n + 32, (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t})irq##n, 0x08, 0x8E)
+\end{DoxyCode}
+\hypertarget{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}{\index{desc.\+c@{desc.\+c}!B\+C\+D2\+B\+I\+N@{B\+C\+D2\+B\+I\+N}}
+\index{B\+C\+D2\+B\+I\+N@{B\+C\+D2\+B\+I\+N}!desc.\+c@{desc.\+c}}
+\subsubsection[{B\+C\+D2\+B\+I\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+C\+D2\+B\+I\+N(
+\begin{DoxyParamCaption}
+\item[{}]{bcd}
+\end{DoxyParamCaption}
+)~((((bcd) \& 0x0\+F) + ((bcd) / 16) $\ast$ 10))}}\label{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}
+\hypertarget{desc_8c_a33200b25f91bf4cf6a4ec73ef292b207}{\index{desc.\+c@{desc.\+c}!B\+C\+D2\+B\+I\+N2@{B\+C\+D2\+B\+I\+N2}}
+\index{B\+C\+D2\+B\+I\+N2@{B\+C\+D2\+B\+I\+N2}!desc.\+c@{desc.\+c}}
+\subsubsection[{B\+C\+D2\+B\+I\+N2}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+C\+D2\+B\+I\+N2(
+\begin{DoxyParamCaption}
+\item[{}]{bcd}
+\end{DoxyParamCaption}
+)~(((((bcd) \& 0x0\+F) + ((bcd \& 0x70) / 16) $\ast$ 10)) $\vert$ (bcd \& 0x80))}}\label{desc_8c_a33200b25f91bf4cf6a4ec73ef292b207}
+\hypertarget{desc_8c_aeef7411226f7c2a6d1328386a2b3832d}{\index{desc.\+c@{desc.\+c}!F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K@{F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K}}
+\index{F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K@{F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K}!desc.\+c@{desc.\+c}}
+\subsubsection[{F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K~0x3\+F\+F\+F\+F\+F\+E3}}\label{desc_8c_aeef7411226f7c2a6d1328386a2b3832d}
+
+
+Definizione alla linea 37 del file desc.\+c.
+
+\hypertarget{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{\index{desc.\+c@{desc.\+c}!gdt\+\_\+set@{gdt\+\_\+set}}
+\index{gdt\+\_\+set@{gdt\+\_\+set}!desc.\+c@{desc.\+c}}
+\subsubsection[{gdt\+\_\+set}]{\setlength{\rightskip}{0pt plus 5cm}\#define gdt\+\_\+set(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{b, }
+\item[{}]{l, }
+\item[{}]{a, }
+\item[{}]{g}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{gdt\_e}[n].base\_l = (b & 0xFFFF);                \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
+\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{        gdt\_e}[n].base\_m = (b >> 16) & 0xFF;          \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
+\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{        gdt\_e}[n].base\_h = (b >> 24) & 0xFF;          \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
+\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{        gdt\_e}[n].limit\_l = (l & 0xFFFF);         \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
+\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{        gdt\_e}[n].granularity = (l >> 16) & 0x0F; \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
+\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{        gdt\_e}[n].granularity |= g & 0xF0;            \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
+\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{        gdt\_e}[n].access = a
+\end{DoxyCode}
+\hypertarget{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{\index{desc.\+c@{desc.\+c}!idt\+\_\+set@{idt\+\_\+set}}
+\index{idt\+\_\+set@{idt\+\_\+set}!desc.\+c@{desc.\+c}}
+\subsubsection[{idt\+\_\+set}]{\setlength{\rightskip}{0pt plus 5cm}\#define idt\+\_\+set(
+\begin{DoxyParamCaption}
+\item[{}]{i, }
+\item[{}]{b, }
+\item[{}]{s, }
+\item[{}]{f}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{idt\_e}[i].base\_l = b & 0xFFFF;              \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\(\backslash\)}
+\hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{        idt\_e}[i].base\_h = (b >> 16) & 0xFFFF;        \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\(\backslash\)}
+\hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{        idt\_e}[i].sel = s;                            \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\(\backslash\)}
+\hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{        idt\_e}[i].null = 0;                           \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\(\backslash\)}
+\hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{        idt\_e}[i].flags = f
+\end{DoxyCode}
+\hypertarget{desc_8c_aaad9208d1f30cc40267fdeb44f593a35}{\index{desc.\+c@{desc.\+c}!P\+I\+T\+\_\+\+F\+R\+E\+Q@{P\+I\+T\+\_\+\+F\+R\+E\+Q}}
+\index{P\+I\+T\+\_\+\+F\+R\+E\+Q@{P\+I\+T\+\_\+\+F\+R\+E\+Q}!desc.\+c@{desc.\+c}}
+\subsubsection[{P\+I\+T\+\_\+\+F\+R\+E\+Q}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+I\+T\+\_\+\+F\+R\+E\+Q~(C\+L\+O\+C\+K\+S\+\_\+\+P\+E\+R\+\_\+\+S\+E\+C)}}\label{desc_8c_aaad9208d1f30cc40267fdeb44f593a35}
+
+
+Definizione alla linea 38 del file desc.\+c.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\index{desc.\+c@{desc.\+c}!\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}!desc.\+c@{desc.\+c}}
+\subsubsection[{\+\_\+\+\_\+asm\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+asm\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}.section .text \textbackslash{}n\textbackslash{} .global gdt\+\_\+load \textbackslash{}n\textbackslash{} gdt\+\_\+load\+: \textbackslash{}n\textbackslash{} lgdt  \textbackslash{}n\textbackslash{} \textbackslash{}n\textbackslash{} mov}]{ax\mbox{[}gdt\+\_\+p\mbox{]}, }
+\item[{0x10\textbackslash{}n\textbackslash{}mov}]{ds, }
+\item[{ax\textbackslash{}n\textbackslash{}mov}]{es, }
+\item[{ax\textbackslash{}n\textbackslash{}mov}]{fs, }
+\item[{ax\textbackslash{}n\textbackslash{}mov}]{gs, }
+\item[{ax\textbackslash{}n\textbackslash{}mov}]{ss, }
+\item[{ax\textbackslash{}n\textbackslash{}jmp 0x08\+:.\+done\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}.\+done\+:\textbackslash{}n\textbackslash{}ret\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}.\+global idt\+\_\+load\textbackslash{}n\textbackslash{}idt\+\_\+load\+:\textbackslash{}n\textbackslash{}lidt\textbackslash{}n\textbackslash{}ret\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\char`\"{}}]{\mbox{[}idt\+\_\+p\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}
+\hypertarget{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\index{desc.\+c@{desc.\+c}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!desc.\+c@{desc.\+c}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(packed)}]{}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a88d6351e81fa254cec37b8a9a1353401}
+
+
+Definizione alla linea 44 del file desc.\+c.
+
+
+\begin{DoxyCode}
+46                        \{
+47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
+48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
+49 \} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+\end{DoxyCode}
+\hypertarget{desc_8c_a6a369f578313199f231869f97e16802d}{\index{desc.\+c@{desc.\+c}!desc\+\_\+init@{desc\+\_\+init}}
+\index{desc\+\_\+init@{desc\+\_\+init}!desc.\+c@{desc.\+c}}
+\subsubsection[{desc\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int desc\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a6a369f578313199f231869f97e16802d}
+
+
+Definizione alla linea 195 del file desc.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), \+\_\+i, gdt\+\_\+set, irq\+\_\+set(), P\+I\+T\+\_\+\+F\+R\+E\+Q, pit\+\_\+handler(), uint32\+\_\+t, e uint8\+\_\+t.
+
+
+\begin{DoxyCode}
+195                 \{
+196 
+197     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"cli"});
+198     
+199 
+200 \textcolor{preprocessor}{    #define gdt\_set(n, b, l, a, g)                  \(\backslash\)}
+201 \textcolor{preprocessor}{        gdt\_e[n].base\_l = (b & 0xFFFF);             \(\backslash\)}
+202 \textcolor{preprocessor}{        gdt\_e[n].base\_m = (b >> 16) & 0xFF;         \(\backslash\)}
+203 \textcolor{preprocessor}{        gdt\_e[n].base\_h = (b >> 24) & 0xFF;         \(\backslash\)}
+204 \textcolor{preprocessor}{        gdt\_e[n].limit\_l = (l & 0xFFFF);            \(\backslash\)}
+205 \textcolor{preprocessor}{        gdt\_e[n].granularity = (l >> 16) & 0x0F;    \(\backslash\)}
+206 \textcolor{preprocessor}{        gdt\_e[n].granularity |= g & 0xF0;           \(\backslash\)}
+207 \textcolor{preprocessor}{        gdt\_e[n].access = a}
+208                 
+209     
+210     memset(&\hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{gdt\_e}, 0, \textcolor{keyword}{sizeof}(gdt\_entry\_t) * 5);
+211         
+212     \hyperlink{desc_8c_af67a6154264e775ccf3c976fefe43618}{gdt\_p}.limit = \textcolor{keyword}{sizeof}(gdt\_entry\_t) * 5 - 1;
+213     \hyperlink{desc_8c_af67a6154264e775ccf3c976fefe43618}{gdt\_p}.base = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{gdt\_e};
+214         
+215     \hyperlink{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{gdt\_set}(0, 0, 0, 0, 0);
+216     \hyperlink{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{gdt\_set}(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
+217     \hyperlink{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{gdt\_set}(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+218     \hyperlink{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{gdt\_set}(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
+219     \hyperlink{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{gdt\_set}(4, 0, 0xFFFFFFFF, 0XF2, 0xCF);
+220 
+221     
+222 
+223     gdt\_load();
+224     
+225     
+226     \hyperlink{desc_8c_acd81c3f56ebae00c0f2af978d2b48d42}{idt\_p}.limit = \textcolor{keyword}{sizeof}(idt\_entry\_t) * 256 - 1;
+227     \hyperlink{desc_8c_acd81c3f56ebae00c0f2af978d2b48d42}{idt\_p}.base = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{idt\_e};
+228     
+229     memset(\hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{idt\_e}, 0, \textcolor{keyword}{sizeof}(idt\_entry\_t) * 256);
+230     
+231     
+232 \textcolor{preprocessor}{    #define idt\_set(i, b, s, f)                     \(\backslash\)}
+233 \textcolor{preprocessor}{        idt\_e[i].base\_l = b & 0xFFFF;               \(\backslash\)}
+234 \textcolor{preprocessor}{        idt\_e[i].base\_h = (b >> 16) & 0xFFFF;       \(\backslash\)}
+235 \textcolor{preprocessor}{        idt\_e[i].sel = s;                           \(\backslash\)}
+236 \textcolor{preprocessor}{        idt\_e[i].null = 0;                          \(\backslash\)}
+237 \textcolor{preprocessor}{        idt\_e[i].flags = f}
+238     
+239     
+240 \textcolor{preprocessor}{    #define \_i(n)                                   \(\backslash\)}
+241 \textcolor{preprocessor}{        extern void isr##n();                       \(\backslash\)}
+242 \textcolor{preprocessor}{        idt\_set(n, (uint32\_t)isr##n, 0x08, 0x8E)}
+243         
+244     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(0);
+245     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(1);
+246     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(2);
+247     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(3);
+248     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(4);
+249     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(5);
+250     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(6);
+251     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(7);
+252     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(8);
+253     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(9);
+254     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(10);
+255     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(11);
+256     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(12);
+257     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(13);
+258     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(14);
+259     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(15);
+260     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(16);
+261     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(17);
+262     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(18);
+263     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(19);
+264     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(20);
+265     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(21);
+266     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(22);
+267     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(23);
+268     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(24);
+269     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(25);
+270     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(26);
+271     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(27);
+272     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(28);
+273     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(29);
+274     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(30);
+275     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(31);
+276     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(0x80);
+277 
+278     
+279     idt\_load();
+280 
+281     
+282 \textcolor{preprocessor}{    #ifdef \_i}
+283 \textcolor{preprocessor}{    #undef \_i}
+284 \textcolor{preprocessor}{    #endif}
+285     
+286 \textcolor{preprocessor}{    #define \_i(n)                                       \(\backslash\)}
+287 \textcolor{preprocessor}{        extern void irq##n();                           \(\backslash\)}
+288 \textcolor{preprocessor}{        idt\_set(n + 32, (uint32\_t)irq##n, 0x08, 0x8E)}
+289         
+290     
+291     outb(0x20, 0x11);
+292     outb(0xA0, 0x11);
+293     outb(0x21, 0x20);
+294     outb(0xA1, 0x28);
+295     outb(0x21, 0x04);
+296     outb(0xA1, 0x02);
+297     outb(0x21, 0x01);
+298     outb(0xA1, 0x01);
+299     outb(0x21, 0x00);
+300     outb(0xA1, 0x00);
+301     
+302     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(0);
+303     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(1);
+304     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(2);
+305     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(3);
+306     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(4);
+307     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(5);
+308     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(6);
+309     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(7);
+310     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(8);
+311     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(9);
+312     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(10);
+313     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(11);
+314     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(12);
+315     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(13);
+316     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(14);
+317     \hyperlink{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\_i}(15);
+318     
+319     
+320     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} freq = 1193180 / \hyperlink{desc_8c_aaad9208d1f30cc40267fdeb44f593a35}{PIT\_FREQ};
+321     outb(0x43, 0x36);
+322     outb(0x40, (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}) (freq & 0xFF));
+323     outb(0x40, (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}) ((freq >> 8) & 0xFF));
+324     
+325     \hyperlink{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}{irq\_set}(0, (\textcolor{keywordtype}{void}*) \hyperlink{desc_8c_a28c9747160a8526a5272ea44e68f45b6}{pit\_handler});
+326     
+327     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"sti"});
+328 
+329     \textcolor{keywordflow}{return} 0;
+330 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_ae5e75d23e9ca091bdf2f1c5007481202}{\index{desc.\+c@{desc.\+c}!irq\+\_\+get@{irq\+\_\+get}}
+\index{irq\+\_\+get@{irq\+\_\+get}!desc.\+c@{desc.\+c}}
+\subsubsection[{irq\+\_\+get}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ irq\+\_\+get (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_ae5e75d23e9ca091bdf2f1c5007481202}
+
+
+Definizione alla linea 354 del file desc.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+354                      \{
+355     \textcolor{keywordflow}{if}(n > 16) \{
+356         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+357         \textcolor{keywordflow}{return} NULL;
+358     \}
+359     
+360     \textcolor{keywordflow}{return} \hyperlink{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{irqs}[n];
+361 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a16eb17da95d62143431a37e9381af3ee}{\index{desc.\+c@{desc.\+c}!irq\+\_\+handler@{irq\+\_\+handler}}
+\index{irq\+\_\+handler@{irq\+\_\+handler}!desc.\+c@{desc.\+c}}
+\subsubsection[{irq\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}void irq\+\_\+handler (
+\begin{DoxyParamCaption}
+\item[{regs\+\_\+t $\ast$}]{r}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a16eb17da95d62143431a37e9381af3ee}
+
+
+Definizione alla linea 155 del file desc.\+c.
+
+
+\begin{DoxyCode}
+155                             \{
+156 
+157     \textcolor{keywordflow}{if}(\hyperlink{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{irqs}[r->int\_no - 32])
+158         ((void (*)(regs\_t*)) \hyperlink{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{irqs}[r->int\_no - 32]) (r);
+159 
+160     \textcolor{keywordflow}{if}(r->int\_no >= 40)
+161         outb(0xA0, 0x20);
+162         
+163     outb(0x20, 0x20);
+164 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}{\index{desc.\+c@{desc.\+c}!irq\+\_\+set@{irq\+\_\+set}}
+\index{irq\+\_\+set@{irq\+\_\+set}!desc.\+c@{desc.\+c}}
+\subsubsection[{irq\+\_\+set}]{\setlength{\rightskip}{0pt plus 5cm}int irq\+\_\+set (
+\begin{DoxyParamCaption}
+\item[{int}]{n, }
+\item[{void $\ast$}]{handler}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}
+
+
+Definizione alla linea 334 del file desc.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+334                                   \{
+335     \textcolor{keywordflow}{if}(n > 16) \{
+336         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+337         \textcolor{keywordflow}{return} -1;
+338     \}
+339     
+340     \hyperlink{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{irqs}[n] = handler;
+341     \textcolor{keywordflow}{return} 0;
+342 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a4992b098d3d233475016a0288e6cc918}{\index{desc.\+c@{desc.\+c}!irq\+\_\+unset@{irq\+\_\+unset}}
+\index{irq\+\_\+unset@{irq\+\_\+unset}!desc.\+c@{desc.\+c}}
+\subsubsection[{irq\+\_\+unset}]{\setlength{\rightskip}{0pt plus 5cm}int irq\+\_\+unset (
+\begin{DoxyParamCaption}
+\item[{int}]{n}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a4992b098d3d233475016a0288e6cc918}
+
+
+Definizione alla linea 344 del file desc.\+c.
+
+
+
+Referenzia errno.
+
+
+\begin{DoxyCode}
+344                      \{
+345     \textcolor{keywordflow}{if}(n > 16) \{
+346         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+347         \textcolor{keywordflow}{return} -1;
+348     \}
+349     
+350     \hyperlink{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{irqs}[n] = 0;
+351     \textcolor{keywordflow}{return} 0;
+352 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a5ec693d5682a18cbeb87ae5c5ea25c03}{\index{desc.\+c@{desc.\+c}!isr\+\_\+handler@{isr\+\_\+handler}}
+\index{isr\+\_\+handler@{isr\+\_\+handler}!desc.\+c@{desc.\+c}}
+\subsubsection[{isr\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}void isr\+\_\+handler (
+\begin{DoxyParamCaption}
+\item[{regs\+\_\+t $\ast$}]{r}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a5ec693d5682a18cbeb87ae5c5ea25c03}
+
+
+Definizione alla linea 151 del file desc.\+c.
+
+
+
+Referenzia panic().
+
+
+\begin{DoxyCode}
+151                             \{
+152     \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(exception\_messages[r->int\_no]);
+153 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a4f2dd94350b058e8e8ba473a2822cf7a}{\index{desc.\+c@{desc.\+c}!pagefault\+\_\+handler@{pagefault\+\_\+handler}}
+\index{pagefault\+\_\+handler@{pagefault\+\_\+handler}!desc.\+c@{desc.\+c}}
+\subsubsection[{pagefault\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}void pagefault\+\_\+handler (
+\begin{DoxyParamCaption}
+\item[{regs\+\_\+t $\ast$}]{r}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a4f2dd94350b058e8e8ba473a2822cf7a}
+
+
+Definizione alla linea 183 del file desc.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf, panic(), e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+183                                   \{
+184     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} faultaddr;
+185     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} \_\_volatile\_\_(\textcolor{stringliteral}{"mov eax, cr2"} : \textcolor{stringliteral}{"=a"}(faultaddr));
+186 
+187     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"Page fault at address: 0x%x\(\backslash\)n"}, faultaddr);
+188     \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"Page Fault"});
+189 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_affef3cc40072321b8d54e4c00aa4de85}{\index{desc.\+c@{desc.\+c}!pit\+\_\+getticks@{pit\+\_\+getticks}}
+\index{pit\+\_\+getticks@{pit\+\_\+getticks}!desc.\+c@{desc.\+c}}
+\subsubsection[{pit\+\_\+getticks}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+getticks (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_affef3cc40072321b8d54e4c00aa4de85}
+
+
+Definizione alla linea 393 del file desc.\+c.
+
+
+\begin{DoxyCode}
+393                         \{
+394     \textcolor{keywordflow}{return} ((\hyperlink{desc_8c_adbf6021113d80f4e06464449823d18ca}{pit\_days} * 86400) * 1000) + (\hyperlink{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}{pit\_seconds} * 1000) + 
+      \hyperlink{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}{pit\_ticks};
+395 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a0c9b7a41bf04c15de2b484df54fcb62b}{\index{desc.\+c@{desc.\+c}!pit\+\_\+gettime@{pit\+\_\+gettime}}
+\index{pit\+\_\+gettime@{pit\+\_\+gettime}!desc.\+c@{desc.\+c}}
+\subsubsection[{pit\+\_\+gettime}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+gettime (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a0c9b7a41bf04c15de2b484df54fcb62b}
+
+
+Definizione alla linea 373 del file desc.\+c.
+
+
+
+Referenzia B\+C\+D2\+B\+I\+N, B\+C\+D2\+B\+I\+N2, rtc(), e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+373                        \{
+374 
+375 \textcolor{preprocessor}{    #define BCD2BIN(bcd)    ((((bcd) & 0x0F) + ((bcd) / 16) * 10))}
+376 \textcolor{preprocessor}{    #define BCD2BIN2(bcd)   (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))}
+377 
+378     
+379     \textcolor{keyword}{static} \textcolor{keyword}{struct }tm t;
+380     t.tm\_sec = \hyperlink{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}{BCD2BIN}(\hyperlink{desc_8c_a1d44575d1f90766872fc87b63171102b}{rtc}(0));
+381     t.tm\_min = \hyperlink{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}{BCD2BIN}(\hyperlink{desc_8c_a1d44575d1f90766872fc87b63171102b}{rtc}(2));
+382     t.tm\_hour = \hyperlink{desc_8c_a33200b25f91bf4cf6a4ec73ef292b207}{BCD2BIN2}(\hyperlink{desc_8c_a1d44575d1f90766872fc87b63171102b}{rtc}(4)) + 2;
+383     t.tm\_mday = \hyperlink{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}{BCD2BIN}(\hyperlink{desc_8c_a1d44575d1f90766872fc87b63171102b}{rtc}(7));
+384     t.tm\_mon = \hyperlink{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}{BCD2BIN}(\hyperlink{desc_8c_a1d44575d1f90766872fc87b63171102b}{rtc}(8)) - 1;
+385     t.tm\_year = (\hyperlink{desc_8c_ac1344dbe0eeb67abcd3640a64a07a91a}{BCD2BIN}(\hyperlink{desc_8c_a1d44575d1f90766872fc87b63171102b}{rtc}(9)) + 100);
+386     t.tm\_wday = 0;
+387     t.tm\_yday = 0;
+388     t.tm\_isdst = 0;
+389     
+390     \textcolor{keywordflow}{return} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) mktime(&t);
+391 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a28c9747160a8526a5272ea44e68f45b6}{\index{desc.\+c@{desc.\+c}!pit\+\_\+handler@{pit\+\_\+handler}}
+\index{pit\+\_\+handler@{pit\+\_\+handler}!desc.\+c@{desc.\+c}}
+\subsubsection[{pit\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}void pit\+\_\+handler (
+\begin{DoxyParamCaption}
+\item[{regs\+\_\+t $\ast$}]{r}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a28c9747160a8526a5272ea44e68f45b6}
+
+
+Definizione alla linea 166 del file desc.\+c.
+
+
+
+Referenzia P\+I\+T\+\_\+\+F\+R\+E\+Q, e schedule().
+
+
+\begin{DoxyCode}
+166                             \{
+167     \hyperlink{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}{pit\_ticks} += (1000 / \hyperlink{desc_8c_aaad9208d1f30cc40267fdeb44f593a35}{PIT\_FREQ});
+168     
+169     \textcolor{keywordflow}{if}(\hyperlink{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}{pit\_ticks} >= 1000) \{
+170         \hyperlink{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}{pit\_ticks} = 0;
+171         \hyperlink{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}{pit\_seconds} += 1;
+172     \}
+173     
+174     \textcolor{keywordflow}{if}(\hyperlink{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}{pit\_seconds} >= 86400) \{
+175         \hyperlink{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}{pit\_seconds} = 0;
+176         \hyperlink{desc_8c_adbf6021113d80f4e06464449823d18ca}{pit\_days} += 1;
+177     \}
+178     
+179     \hyperlink{desc_8c_a7d06701ac073c331c83519e3909b7fce}{schedule}();
+180 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a1d44575d1f90766872fc87b63171102b}{\index{desc.\+c@{desc.\+c}!rtc@{rtc}}
+\index{rtc@{rtc}!desc.\+c@{desc.\+c}}
+\subsubsection[{rtc}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf uint8\+\_\+t} rtc (
+\begin{DoxyParamCaption}
+\item[{{\bf uint8\+\_\+t}}]{addr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a1d44575d1f90766872fc87b63171102b}
+
+
+Definizione alla linea 365 del file desc.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), e uint8\+\_\+t.
+
+
+\begin{DoxyCode}
+365                                  \{
+366     outb(0x70, addr);
+367     
+368     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t} r = 0;
+369     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_}(\textcolor{stringliteral}{"inb 0x71"} : \textcolor{stringliteral}{"=a"}(r));
+370     \textcolor{keywordflow}{return} r;
+371 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_a7d06701ac073c331c83519e3909b7fce}{\index{desc.\+c@{desc.\+c}!schedule@{schedule}}
+\index{schedule@{schedule}!desc.\+c@{desc.\+c}}
+\subsubsection[{schedule}]{\setlength{\rightskip}{0pt plus 5cm}void schedule (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_a7d06701ac073c331c83519e3909b7fce}
+
+
+Definizione alla linea 93 del file sched.\+c.
+
+
+
+Referenzia task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enabled, schedule\+\_\+next(), e task\+\_\+switch().
+
+
+\begin{DoxyCode}
+93                 \{
+94     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
+95         \textcolor{keywordflow}{return};
+96         
+97     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
+98         \textcolor{keywordflow}{return};
+99 
+100         
+101     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} += 1;
+102     
+103     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} % \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority})
+104         \textcolor{keywordflow}{return};
+105         
+106     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
+107 \}
+\end{DoxyCode}
+\hypertarget{desc_8c_ab36b30e25787b3f4887160064ba2f43a}{\index{desc.\+c@{desc.\+c}!syscall\+\_\+handler@{syscall\+\_\+handler}}
+\index{syscall\+\_\+handler@{syscall\+\_\+handler}!desc.\+c@{desc.\+c}}
+\subsubsection[{syscall\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}void syscall\+\_\+handler (
+\begin{DoxyParamCaption}
+\item[{regs\+\_\+t $\ast$}]{}
+\end{DoxyParamCaption}
+)}}\label{desc_8c_ab36b30e25787b3f4887160064ba2f43a}
+
+
+Definizione alla linea 53 del file syscall.\+c.
+
+
+
+Referenzia syscall\+\_\+handlers, e syscall\+\_\+invoke().
+
+
+\begin{DoxyCode}
+53                                \{
+54     \textcolor{keywordflow}{return} \hyperlink{syscall_8c_a271c3526b04dd2fe678f7f0d00cbf759}{syscall\_invoke}(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[r->eax], r->ebx, r->ecx, r->edx, r
+      ->esi, r->edi);
+55 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{desc_8c_a8b0d6200bc639dd37ff68847a0adde5f}{\index{desc.\+c@{desc.\+c}!access@{access}}
+\index{access@{access}!desc.\+c@{desc.\+c}}
+\subsubsection[{access}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} access}}\label{desc_8c_a8b0d6200bc639dd37ff68847a0adde5f}
+
+
+Definizione alla linea 3 del file desc.\+c.
+
+\hypertarget{desc_8c_a8fef9c987f038778feaf85edfcc9c060}{\index{desc.\+c@{desc.\+c}!base\+\_\+h@{base\+\_\+h}}
+\index{base\+\_\+h@{base\+\_\+h}!desc.\+c@{desc.\+c}}
+\subsubsection[{base\+\_\+h}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} base\+\_\+h}}\label{desc_8c_a8fef9c987f038778feaf85edfcc9c060}
+
+
+Definizione alla linea 3 del file desc.\+c.
+
+\hypertarget{desc_8c_af2ca1e64dc7ef22ee1082a58403166ec}{\index{desc.\+c@{desc.\+c}!base\+\_\+l@{base\+\_\+l}}
+\index{base\+\_\+l@{base\+\_\+l}!desc.\+c@{desc.\+c}}
+\subsubsection[{base\+\_\+l}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} base\+\_\+l}}\label{desc_8c_af2ca1e64dc7ef22ee1082a58403166ec}
+
+
+Definizione alla linea 2 del file desc.\+c.
+
+\hypertarget{desc_8c_a98fb2af33fad804398328d56ccf01ec2}{\index{desc.\+c@{desc.\+c}!base\+\_\+m@{base\+\_\+m}}
+\index{base\+\_\+m@{base\+\_\+m}!desc.\+c@{desc.\+c}}
+\subsubsection[{base\+\_\+m}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} base\+\_\+m}}\label{desc_8c_a98fb2af33fad804398328d56ccf01ec2}
+
+
+Definizione alla linea 3 del file desc.\+c.
+
+\hypertarget{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\index{desc.\+c@{desc.\+c}!gdt\+\_\+e@{gdt\+\_\+e}}
+\index{gdt\+\_\+e@{gdt\+\_\+e}!desc.\+c@{desc.\+c}}
+\subsubsection[{gdt\+\_\+e}]{\setlength{\rightskip}{0pt plus 5cm}gdt\+\_\+entry\+\_\+t gdt\+\_\+e\mbox{[}5\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}
+
+
+Definizione alla linea 104 del file desc.\+c.
+
+\hypertarget{desc_8c_af67a6154264e775ccf3c976fefe43618}{\index{desc.\+c@{desc.\+c}!gdt\+\_\+p@{gdt\+\_\+p}}
+\index{gdt\+\_\+p@{gdt\+\_\+p}!desc.\+c@{desc.\+c}}
+\subsubsection[{gdt\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}gdt\+\_\+ptr\+\_\+t gdt\+\_\+p\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_af67a6154264e775ccf3c976fefe43618}
+
+
+Definizione alla linea 105 del file desc.\+c.
+
+\hypertarget{desc_8c_acfea365f69e71368a2db03333d4afd6f}{\index{desc.\+c@{desc.\+c}!granularity@{granularity}}
+\index{granularity@{granularity}!desc.\+c@{desc.\+c}}
+\subsubsection[{granularity}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} granularity}}\label{desc_8c_acfea365f69e71368a2db03333d4afd6f}
+
+
+Definizione alla linea 3 del file desc.\+c.
+
+\hypertarget{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\index{desc.\+c@{desc.\+c}!idt\+\_\+e@{idt\+\_\+e}}
+\index{idt\+\_\+e@{idt\+\_\+e}!desc.\+c@{desc.\+c}}
+\subsubsection[{idt\+\_\+e}]{\setlength{\rightskip}{0pt plus 5cm}idt\+\_\+entry\+\_\+t idt\+\_\+e\mbox{[}256\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}
+
+
+Definizione alla linea 107 del file desc.\+c.
+
+\hypertarget{desc_8c_acd81c3f56ebae00c0f2af978d2b48d42}{\index{desc.\+c@{desc.\+c}!idt\+\_\+p@{idt\+\_\+p}}
+\index{idt\+\_\+p@{idt\+\_\+p}!desc.\+c@{desc.\+c}}
+\subsubsection[{idt\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}idt\+\_\+ptr\+\_\+t idt\+\_\+p\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_acd81c3f56ebae00c0f2af978d2b48d42}
+
+
+Definizione alla linea 108 del file desc.\+c.
+
+\hypertarget{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{\index{desc.\+c@{desc.\+c}!irqs@{irqs}}
+\index{irqs@{irqs}!desc.\+c@{desc.\+c}}
+\subsubsection[{irqs}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ irqs\mbox{[}16\mbox{]} = \{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \}\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}
+
+
+Definizione alla linea 102 del file desc.\+c.
+
+\hypertarget{desc_8c_ab391065c3b916fa1704b6bfb7b099d04}{\index{desc.\+c@{desc.\+c}!keyboard\+\_\+ready@{keyboard\+\_\+ready}}
+\index{keyboard\+\_\+ready@{keyboard\+\_\+ready}!desc.\+c@{desc.\+c}}
+\subsubsection[{keyboard\+\_\+ready}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} keyboard\+\_\+ready = 0}}\label{desc_8c_ab391065c3b916fa1704b6bfb7b099d04}
+
+
+Definizione alla linea 115 del file desc.\+c.
+
+\hypertarget{desc_8c_aea6d44db9dbbcd64642fcb7904f41d9a}{\index{desc.\+c@{desc.\+c}!limit\+\_\+l@{limit\+\_\+l}}
+\index{limit\+\_\+l@{limit\+\_\+l}!desc.\+c@{desc.\+c}}
+\subsubsection[{limit\+\_\+l}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} limit\+\_\+l}}\label{desc_8c_aea6d44db9dbbcd64642fcb7904f41d9a}
+
+
+Definizione alla linea 2 del file desc.\+c.
+
+\hypertarget{desc_8c_adbf6021113d80f4e06464449823d18ca}{\index{desc.\+c@{desc.\+c}!pit\+\_\+days@{pit\+\_\+days}}
+\index{pit\+\_\+days@{pit\+\_\+days}!desc.\+c@{desc.\+c}}
+\subsubsection[{pit\+\_\+days}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+days\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_adbf6021113d80f4e06464449823d18ca}
+
+
+Definizione alla linea 113 del file desc.\+c.
+
+\hypertarget{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}{\index{desc.\+c@{desc.\+c}!pit\+\_\+seconds@{pit\+\_\+seconds}}
+\index{pit\+\_\+seconds@{pit\+\_\+seconds}!desc.\+c@{desc.\+c}}
+\subsubsection[{pit\+\_\+seconds}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+seconds\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}
+
+
+Definizione alla linea 112 del file desc.\+c.
+
+\hypertarget{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}{\index{desc.\+c@{desc.\+c}!pit\+\_\+ticks@{pit\+\_\+ticks}}
+\index{pit\+\_\+ticks@{pit\+\_\+ticks}!desc.\+c@{desc.\+c}}
+\subsubsection[{pit\+\_\+ticks}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+ticks\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}
+
+
+Definizione alla linea 111 del file desc.\+c.
+

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structarp__cache__entry" kind="struct" prot="public">
+    <compoundname>arp_cache_entry</compoundname>
+    <includes refid="arp_8h" local="no">arp.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structarp__cache__entry_1a0347c9b0b7ec01ff4b5a2fb258ffc9d5" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref></type>
+        <definition>ipv4_t arp_cache_entry::ipv4</definition>
+        <argsstring></argsstring>
+        <name>ipv4</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="40" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structarp__cache__entry_1abc5be464b787fc7c71a45330c9b979af" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
+        <definition>macaddr_t arp_cache_entry::macaddr</definition>
+        <argsstring></argsstring>
+        <name>macaddr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="41" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structarp__cache__entry_1a9e7f6ce0108939a15edffff4aa0fdb5a" prot="public" static="no" mutable="no">
+        <type>time_t</type>
+        <definition>time_t arp_cache_entry::ttl</definition>
+        <argsstring></argsstring>
+        <name>ttl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="43" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="7">
+        <label>arp_cache_entry</label>
+        <link refid="structarp__cache__entry"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="39" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="39" bodyend="44"/>
+    <listofallmembers>
+      <member refid="structarp__cache__entry_1a0347c9b0b7ec01ff4b5a2fb258ffc9d5" prot="public" virt="non-virtual"><scope>arp_cache_entry</scope><name>ipv4</name></member>
+      <member refid="structarp__cache__entry_1abc5be464b787fc7c71a45330c9b979af" prot="public" virt="non-virtual"><scope>arp_cache_entry</scope><name>macaddr</name></member>
+      <member refid="structarp__cache__entry_1a9e7f6ce0108939a15edffff4aa0fdb5a" prot="public" virt="non-virtual"><scope>arp_cache_entry</scope><name>ttl</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

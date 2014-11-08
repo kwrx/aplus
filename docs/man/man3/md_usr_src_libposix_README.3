@@ -1,0 +1,20 @@
+.TH "md_usr_src_libposix_README" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+md_usr_src_libposix_README \- C Posix library 
+The C POSIX library is a specification of a C standard library for POSIX systems\&. It was developed at the same time as the ANSI C standard\&. Some effort was made to make POSIX compatible with standard C; POSIX includes additional functions to those introduced in standard C\&.
+.PP
+.SS "Required function"
+.PP
+.IP "\(bu" 2
+Read directory entries
+.IP "\(bu" 2
+Get groups;
+.IP "\(bu" 2
+Schedule Yield\&.
+.PP
+.PP
+``` struct dirent* __os_readdir(DIR* d); int __os_getgroups(int length, gid_t* list); void __os_yield(void);
+.PP
+See '/config\&.h'\&. ``` 

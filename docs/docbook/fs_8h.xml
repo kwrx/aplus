@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="fs_8h">
+    <title>fs.h File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/stat.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/dirent.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structinode">inode</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structfs">fs</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="fs_8h_1a9cf90243a3f4070f29ff12e5740e4ae4">UID_ROOT</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="fs_8h_1a2a5a81b6a48db264d1ec6048268ea154">GID_ROOT</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="fs_8h_1a1f93d1e1e772c41d588e69bde2005bbc">FS</link> <link linkend="fs_8h_1a1f12a61da64f0ab5c73e2be2066e5a0c">fs_t</link> fs_##<link linkend="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27">name</link> = {														\
+		#<link linkend="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27">name</link>, mount														\
+	}; <link linkend="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae">ATTRIBUTE</link>(&quot;fs&quot;, fs_##<link linkend="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27">name</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structinode">inode</link>  <link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structfs">fs</link>  <link linkend="fs_8h_1a1f12a61da64f0ab5c73e2be2066e5a0c">fs_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/fs.h</para>
+    </simplesect>
+</section>

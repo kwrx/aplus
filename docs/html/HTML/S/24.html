@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>usr/src/libposix/src/nanosleep.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/nanosleep.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L10'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L10' title='Defined at 10.'>nanosleep</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;sys/times.h&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;sys/time.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;sched.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 
+<a name='L8'>   8 <b>extern</b> <b>int</b> sched_yield(<b>void</b>);
+<a name='L9'>   9 
+<a name='L10'>  10 <b>int</b> <a href='../R/316.html' title='Multiple refered from 4 places.'>nanosleep</a>(<b>const</b> <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a>* <a href='../Y/517.html' title='Multiple used in 9 places.'>req</a>, <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a>* <a href='../Y/515.html' title='Multiple used in 4 places.'>rem</a>) <font color='red'>{</font>
+<a name='L11'>  11         <b>if</b>(<a href='../Y/517.html' title='Multiple used in 9 places.'>req</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a> &gt; 999999999) <font color='red'>{</font>
+<a name='L12'>  12                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L13'>  13                 <b>return</b> -1;
+<a name='L14'>  14         <font color='red'>}</font>
+<a name='L15'>  15 
+<a name='L16'>  16         <b>struct</b> <a href='../Y/675.html' title='Multiple used in 2 places.'>timeval</a>* <a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a> = <a href='../Y/372.html' title='Multiple used in 5 places.'>malloc</a>(<b>sizeof</b>(<b>struct</b> <a href='../Y/675.html' title='Multiple used in 2 places.'>timeval</a>));
+<a name='L17'>  17         <b>struct</b> <a href='../Y/676.html' title='Multiple used in 2 places.'>timezone</a>* <a href='../Y/715.html' title='Multiple used in 6 places.'>tz</a> = <a href='../Y/372.html' title='Multiple used in 5 places.'>malloc</a>(<b>sizeof</b>(<b>struct</b> <a href='../Y/676.html' title='Multiple used in 2 places.'>timezone</a>));
+<a name='L18'>  18 
+<a name='L19'>  19         <b>if</b>(!<a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a> &amp;&amp; !<a href='../Y/715.html' title='Multiple used in 6 places.'>tz</a>) <font color='red'>{</font>
+<a name='L20'>  20                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/20.html' title='Multiple used in 2 places.'>ENOMEM</a>;
+<a name='L21'>  21                 <b>return</b> -1;
+<a name='L22'>  22         <font color='red'>}</font>
+<a name='L23'>  23 
+<a name='L24'>  24         <b>if</b>(<a href='../Y/285.html' title='Multiple used in 3 places.'>gettimeofday</a>(<a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>, <a href='../Y/715.html' title='Multiple used in 6 places.'>tz</a>) != 0)
+<a name='L25'>  25                         <b>return</b> -1;
+<a name='L26'>  26 
+<a name='L27'>  27         <b>int</b> <a href='../Y/660.html' title='Multiple used in 7 places.'>t0</a> = <a href='../Y/517.html' title='Multiple used in 9 places.'>req</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a> + <a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a>;
+<a name='L28'>  28         <b>int</b> <a href='../Y/661.html' title='Multiple used in 6 places.'>t1</a> = <a href='../Y/517.html' title='Multiple used in 9 places.'>req</a>-&gt;<a href='../Y/705.html' title='Multiple used in 5 places.'>tv_nsec</a> + <a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>-&gt;<a href='../Y/707.html' title='Multiple used in 4 places.'>tv_usec</a>;
+<a name='L29'>  29 
+<a name='L30'>  30 
+<a name='L31'>  31         <b>while</b>(1) <font color='red'>{</font>
+<a name='L32'>  32                 <b>if</b>(<a href='../Y/285.html' title='Multiple used in 3 places.'>gettimeofday</a>(<a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>, <a href='../Y/715.html' title='Multiple used in 6 places.'>tz</a>) != 0)
+<a name='L33'>  33                         <b>return</b> -1;
+<a name='L34'>  34 
+<a name='L35'>  35                 <b>if</b>(<a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a> &gt; <a href='../Y/660.html' title='Multiple used in 7 places.'>t0</a> &amp;&amp; <a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>-&gt;<a href='../Y/707.html' title='Multiple used in 4 places.'>tv_usec</a> &gt; <a href='../Y/661.html' title='Multiple used in 6 places.'>t1</a>)
+<a name='L36'>  36                         <b>break</b>;
+<a name='L37'>  37 
+<a name='L38'>  38                 <b>if</b>(<a href='../Y/515.html' title='Multiple used in 4 places.'>rem</a>) <font color='red'>{</font>
+<a name='L39'>  39                         <a href='../Y/515.html' title='Multiple used in 4 places.'>rem</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a> = <a href='../Y/660.html' title='Multiple used in 7 places.'>t0</a> - <a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>-&gt;<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a>;
+<a name='L40'>  40                         <a href='../Y/515.html' title='Multiple used in 4 places.'>rem</a>-&gt;<a href='../Y/705.html' title='Multiple used in 5 places.'>tv_nsec</a> = <a href='../Y/661.html' title='Multiple used in 6 places.'>t1</a> - <a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>-&gt;<a href='../Y/707.html' title='Multiple used in 4 places.'>tv_usec</a>;
+<a name='L41'>  41                 <font color='red'>}</font>
+<a name='L42'>  42 
+<a name='L43'>  43                 <a href='../Y/547.html' title='Multiple used in 6 places.'>sched_yield</a>();
+<a name='L44'>  44         <font color='red'>}</font>
+<a name='L45'>  45 
+<a name='L46'>  46 
+<a name='L47'>  47         <a href='../Y/274.html' title='Multiple used in 8 places.'>free</a>(<a href='../Y/677.html' title='Multiple used in 18 places.'>tm</a>);
+<a name='L48'>  48         <a href='../Y/274.html' title='Multiple used in 8 places.'>free</a>(<a href='../Y/715.html' title='Multiple used in 6 places.'>tz</a>);
+<a name='L49'>  49 
+<a name='L50'>  50         <b>return</b> 0;
+<a name='L51'>  51 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L10'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

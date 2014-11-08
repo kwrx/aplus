@@ -1,0 +1,135 @@
+<html>
+<head>
+<title>card</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/104.html#L35'>card</a>               35 src/net/rtl8139/rtl8139.c static card_t* card = NULL;
+<a href='../S/104.html#L58'>card</a>               58 src/net/rtl8139/rtl8139.c 	card_t* card = (card_t*) netif-&gt;data;
+<a href='../S/104.html#L59'>card</a>               59 src/net/rtl8139/rtl8139.c 	if(card-&gt;magic != RTL8139_MAGIC)
+<a href='../S/104.html#L67'>card</a>               67 src/net/rtl8139/rtl8139.c 	fastlock_waiton(card-&gt;txBufferUsed);
+<a href='../S/104.html#L69'>card</a>               69 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;txBuffer, buf, len);
+<a href='../S/104.html#L71'>card</a>               71 src/net/rtl8139/rtl8139.c 		memset((void*) ((uint32_t) card-&gt;txBuffer + len), 0, 60 - len);
+<a href='../S/104.html#L75'>card</a>               75 src/net/rtl8139/rtl8139.c 	uint8_t curBuffer = card-&gt;curBuffer++;
+<a href='../S/104.html#L76'>card</a>               76 src/net/rtl8139/rtl8139.c 	card-&gt;curBuffer %= 4;
+<a href='../S/104.html#L79'>card</a>               79 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * curBuffer));
+<a href='../S/104.html#L80'>card</a>               80 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), ((256 &lt;&lt; 11) &amp; 0x003F0000) | len);
+<a href='../S/104.html#L90'>card</a>               90 src/net/rtl8139/rtl8139.c 	if((card-&gt;netif-&gt;flags &amp; NETIF_FLAGS_ENABLE) == 0)
+<a href='../S/104.html#L94'>card</a>               94 src/net/rtl8139/rtl8139.c 		uint8_t cmd = int_in8(card, REG_COMMAND);
+<a href='../S/104.html#L99'>card</a>               99 src/net/rtl8139/rtl8139.c 		uint16_t* rxBuffer = (uint16_t*) ((uint32_t) card-&gt;rxBuffer + card-&gt;rxBufferOffset);
+<a href='../S/104.html#L108'>card</a>              108 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset += 4;
+<a href='../S/104.html#L112'>card</a>              112 src/net/rtl8139/rtl8139.c 		if((card-&gt;rxBufferOffset + length) &gt;= RX_BUFFER_SIZE) {
+<a href='../S/104.html#L113'>card</a>              113 src/net/rtl8139/rtl8139.c 			memcpy(data, rxBuffer, RX_BUFFER_SIZE - card-&gt;rxBufferOffset);
+<a href='../S/104.html#L114'>card</a>              114 src/net/rtl8139/rtl8139.c 			memcpy((void*) ((uint32_t) data + RX_BUFFER_SIZE - card-&gt;rxBufferOffset), card-&gt;rxBuffer, length - (RX_BUFFER_SIZE - card-&gt;rxBufferOffset));
+<a href='../S/104.html#L123'>card</a>              123 src/net/rtl8139/rtl8139.c 		if(udp_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L125'>card</a>              125 src/net/rtl8139/rtl8139.c 		if(eth_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L127'>card</a>              127 src/net/rtl8139/rtl8139.c 			card-&gt;netif-&gt;state.rx_packets += 1;
+<a href='../S/104.html#L128'>card</a>              128 src/net/rtl8139/rtl8139.c 			card-&gt;netif-&gt;state.rx_bytes += length;
+<a href='../S/104.html#L130'>card</a>              130 src/net/rtl8139/rtl8139.c 			card-&gt;netif-&gt;state.rx_errors += 1;
+<a href='../S/104.html#L133'>card</a>              133 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset += length + 4;
+<a href='../S/104.html#L134'>card</a>              134 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset = (card-&gt;rxBufferOffset + 3) &amp; ~3;
+<a href='../S/104.html#L135'>card</a>              135 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset %= RX_BUFFER_SIZE;
+<a href='../S/104.html#L137'>card</a>              137 src/net/rtl8139/rtl8139.c 		int_out16(card, REG_CUR_READ_ADDR, card-&gt;rxBufferOffset - 0x10);
+<a href='../S/104.html#L142'>card</a>              142 src/net/rtl8139/rtl8139.c 	uint16_t isr = int_in16(card, REG_INTERRUPT_STATUS);
+<a href='../S/104.html#L150'>card</a>              150 src/net/rtl8139/rtl8139.c 		card-&gt;txBufferUsed = 0;
+<a href='../S/104.html#L158'>card</a>              158 src/net/rtl8139/rtl8139.c 		recvdata(card);
+<a href='../S/104.html#L162'>card</a>              162 src/net/rtl8139/rtl8139.c 	int_out16(card, REG_INTERRUPT_STATUS, nsr);
+<a href='../S/104.html#L175'>card</a>              175 src/net/rtl8139/rtl8139.c 	card = kmalloc(sizeof(card_t));
+<a href='../S/104.html#L176'>card</a>              176 src/net/rtl8139/rtl8139.c 	card-&gt;magic = RTL8139_MAGIC;
+<a href='../S/104.html#L177'>card</a>              177 src/net/rtl8139/rtl8139.c 	card-&gt;device = device;
+<a href='../S/104.html#L179'>card</a>              179 src/net/rtl8139/rtl8139.c 	int_out8(card, REG_CONFIG1, 0);
+<a href='../S/104.html#L180'>card</a>              180 src/net/rtl8139/rtl8139.c 	int_out8(card, REG_COMMAND, CR_RESET);
+<a href='../S/104.html#L182'>card</a>              182 src/net/rtl8139/rtl8139.c 	while((int_in8(card, REG_COMMAND) &amp; REG_COMMAND) == CR_RESET);
+<a href='../S/104.html#L184'>card</a>              184 src/net/rtl8139/rtl8139.c 	memset(card-&gt;macaddr, 0, 6);
+<a href='../S/104.html#L186'>card</a>              186 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[i] = int_in8(card, i);
+<a href='../S/104.html#L191'>card</a>              191 src/net/rtl8139/rtl8139.c 		card-&gt;device-&gt;bus,
+<a href='../S/104.html#L192'>card</a>              192 src/net/rtl8139/rtl8139.c 		card-&gt;device-&gt;dev,
+<a href='../S/104.html#L193'>card</a>              193 src/net/rtl8139/rtl8139.c 		card-&gt;device-&gt;func,
+<a href='../S/104.html#L194'>card</a>              194 src/net/rtl8139/rtl8139.c 		card-&gt;device-&gt;iobase,
+<a href='../S/104.html#L195'>card</a>              195 src/net/rtl8139/rtl8139.c 		card-&gt;device-&gt;intr_line,
+<a href='../S/104.html#L196'>card</a>              196 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[0],
+<a href='../S/104.html#L197'>card</a>              197 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[1],
+<a href='../S/104.html#L198'>card</a>              198 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[2],
+<a href='../S/104.html#L199'>card</a>              199 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[3],
+<a href='../S/104.html#L200'>card</a>              200 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[4],
+<a href='../S/104.html#L201'>card</a>              201 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[5]
+<a href='../S/104.html#L205'>card</a>              205 src/net/rtl8139/rtl8139.c 	if(card-&gt;device-&gt;intr_line == 0xFF) {
+<a href='../S/104.html#L210'>card</a>              210 src/net/rtl8139/rtl8139.c 	card-&gt;rxBuffer = (char*) rtl8139_rxbuffer;
+<a href='../S/104.html#L211'>card</a>              211 src/net/rtl8139/rtl8139.c 	card-&gt;txBuffer = (char*) rtl8139_txbuffer;
+<a href='../S/104.html#L213'>card</a>              213 src/net/rtl8139/rtl8139.c 	card-&gt;rxBufferOffset = 0;
+<a href='../S/104.html#L214'>card</a>              214 src/net/rtl8139/rtl8139.c 	card-&gt;curBuffer = 0;
+<a href='../S/104.html#L215'>card</a>              215 src/net/rtl8139/rtl8139.c 	card-&gt;txBufferUsed = 0;
+<a href='../S/104.html#L217'>card</a>              217 src/net/rtl8139/rtl8139.c 	memset(card-&gt;rxBuffer, 0, RX_BUFFER_SIZE + 16);
+<a href='../S/104.html#L218'>card</a>              218 src/net/rtl8139/rtl8139.c 	memset(card-&gt;txBuffer, 0, TX_BUFFER_SIZE * 4 + 16);
+<a href='../S/104.html#L221'>card</a>              221 src/net/rtl8139/rtl8139.c 	irq_set(card-&gt;device-&gt;intr_line, rtl8139_handler);
+<a href='../S/104.html#L223'>card</a>              223 src/net/rtl8139/rtl8139.c 	int_out16(card, REG_INTERRUPT_MASK, 0x0005);
+<a href='../S/104.html#L224'>card</a>              224 src/net/rtl8139/rtl8139.c 	int_out16(card, REG_INTERRUPT_STATUS, 0);
+<a href='../S/104.html#L226'>card</a>              226 src/net/rtl8139/rtl8139.c 	int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
+<a href='../S/104.html#L228'>card</a>              228 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_RECEIVE_BUFFER, (uint32_t) card-&gt;rxBuffer);
+<a href='../S/104.html#L231'>card</a>              231 src/net/rtl8139/rtl8139.c 		int_out32(card, REG_TRANSMIT_ADDR0 + (4 * i), (uint32_t) card-&gt;txBuffer + (TX_BUFFER_SIZE * i));
+<a href='../S/104.html#L233'>card</a>              233 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_RECEIVE_CONFIGURATION, RCR_MXDMA_UNLIMITED | RCR_ACCEPT_BROADCAST | RCR_ACCEPT_PHYS_MATCH);
+<a href='../S/104.html#L234'>card</a>              234 src/net/rtl8139/rtl8139.c 	int_out32(card, REG_TRANSMIT_CONFIGURATION, TCR_IFG_STANDARD | TCR_MXDMA_256);
+<a href='../S/104.html#L236'>card</a>              236 src/net/rtl8139/rtl8139.c 	int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
+<a href='../S/104.html#L239'>card</a>              239 src/net/rtl8139/rtl8139.c 	card-&gt;netif = (netif_t*) kmalloc(sizeof(netif_t));
+<a href='../S/104.html#L240'>card</a>              240 src/net/rtl8139/rtl8139.c 	memset(card-&gt;netif, 0, sizeof(netif_t));
+<a href='../S/104.html#L243'>card</a>              243 src/net/rtl8139/rtl8139.c 	strcpy(card-&gt;netif-&gt;name, "eth0");
+<a href='../S/104.html#L244'>card</a>              244 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;netif-&gt;macaddr, card-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/104.html#L246'>card</a>              246 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[0] = 192;
+<a href='../S/104.html#L247'>card</a>              247 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[1] = 168;
+<a href='../S/104.html#L248'>card</a>              248 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[2] = 1;
+<a href='../S/104.html#L249'>card</a>              249 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[3] = 80;
+<a href='../S/104.html#L251'>card</a>              251 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[0] = 255;
+<a href='../S/104.html#L252'>card</a>              252 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[1] = 255;
+<a href='../S/104.html#L253'>card</a>              253 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[2] = 255;
+<a href='../S/104.html#L254'>card</a>              254 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;netmask[3] = 0;
+<a href='../S/104.html#L256'>card</a>              256 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[0] = 0xfe80;
+<a href='../S/104.html#L257'>card</a>              257 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[1] = 0x0000;
+<a href='../S/104.html#L258'>card</a>              258 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[2] = 0x0000;
+<a href='../S/104.html#L259'>card</a>              259 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[3] = 0x0000;
+<a href='../S/104.html#L260'>card</a>              260 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[4] = 0x021d;
+<a href='../S/104.html#L261'>card</a>              261 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[5] = 0x72ff;
+<a href='../S/104.html#L262'>card</a>              262 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[6] = 0xfef9;
+<a href='../S/104.html#L263'>card</a>              263 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv6[7] = 0x9b71;
+<a href='../S/104.html#L265'>card</a>              265 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[0] = 8;
+<a href='../S/104.html#L266'>card</a>              266 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[1] = 8;
+<a href='../S/104.html#L267'>card</a>              267 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[2] = 8;
+<a href='../S/104.html#L268'>card</a>              268 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[3] = 8;
+<a href='../S/104.html#L270'>card</a>              270 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[0] = 8;
+<a href='../S/104.html#L271'>card</a>              271 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[1] = 8;
+<a href='../S/104.html#L272'>card</a>              272 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[2] = 4;
+<a href='../S/104.html#L273'>card</a>              273 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[3] = 4;
+<a href='../S/104.html#L276'>card</a>              276 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[0] = 0x2001;
+<a href='../S/104.html#L277'>card</a>              277 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[1] = 0x4860;
+<a href='../S/104.html#L278'>card</a>              278 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[2] = 0x4860;
+<a href='../S/104.html#L279'>card</a>              279 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[3] = 0x0000;
+<a href='../S/104.html#L280'>card</a>              280 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[4] = 0x0000;
+<a href='../S/104.html#L281'>card</a>              281 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[5] = 0x0000;
+<a href='../S/104.html#L282'>card</a>              282 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[6] = 0x0000;
+<a href='../S/104.html#L283'>card</a>              283 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv6[7] = 0x8888;
+<a href='../S/104.html#L284'>card</a>              284 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[0] = 0x2001;
+<a href='../S/104.html#L285'>card</a>              285 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[1] = 0x4860;
+<a href='../S/104.html#L286'>card</a>              286 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[2] = 0x4860;
+<a href='../S/104.html#L287'>card</a>              287 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[3] = 0x0000;
+<a href='../S/104.html#L288'>card</a>              288 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[4] = 0x0000;
+<a href='../S/104.html#L289'>card</a>              289 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[5] = 0x0000;
+<a href='../S/104.html#L290'>card</a>              290 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[6] = 0x0000;
+<a href='../S/104.html#L291'>card</a>              291 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv6[7] = 0x8844;
+<a href='../S/104.html#L294'>card</a>              294 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;mtu = 1500;
+<a href='../S/104.html#L295'>card</a>              295 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;send = rtl8139_send;
+<a href='../S/104.html#L296'>card</a>              296 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ifup = rtl8139_ifup;
+<a href='../S/104.html#L297'>card</a>              297 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ifdown = rtl8139_ifdown;
+<a href='../S/104.html#L298'>card</a>              298 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;data = (void*) card;
+<a href='../S/104.html#L306'>card</a>              306 src/net/rtl8139/rtl8139.c 	rtl8139_ifup(card-&gt;netif);
+<a href='../S/104.html#L307'>card</a>              307 src/net/rtl8139/rtl8139.c 	eth_send(card-&gt;netif, tmpbuf, 512, NETIF_RAW); 
+<a href='../S/104.html#L308'>card</a>              308 src/net/rtl8139/rtl8139.c 	rtl8139_ifdown(card-&gt;netif);
+<a href='../S/104.html#L312'>card</a>              312 src/net/rtl8139/rtl8139.c 	netif_add(card-&gt;netif);
+<a href='../S/105.html#L46'>card</a>               46 src/net/rtl8139/rtl8139.h #define int_out8(card, port, value) 			outb(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L47'>card</a>               47 src/net/rtl8139/rtl8139.h #define int_out16(card, port, value) 			outw(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L48'>card</a>               48 src/net/rtl8139/rtl8139.h #define int_out32(card, port, value) 			outl(card-&gt;device-&gt;iobase + port, value)
+<a href='../S/105.html#L50'>card</a>               50 src/net/rtl8139/rtl8139.h #define int_in8(card, port) 					inb(card-&gt;device-&gt;iobase + port)
+<a href='../S/105.html#L51'>card</a>               51 src/net/rtl8139/rtl8139.h #define int_in16(card, port) 					inw(card-&gt;device-&gt;iobase + port)
+</pre>
+</body>
+</html>

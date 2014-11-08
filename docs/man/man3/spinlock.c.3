@@ -1,0 +1,108 @@
+.TH "src/spinlock.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/spinlock.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "void \fBspinlock_lock\fP (\fBspinlock_t\fP *spin)"
+.br
+.ti -1c
+.RI "void \fBspinlock_unlock\fP (\fBspinlock_t\fP *spin)"
+.br
+.ti -1c
+.RI "int \fBspinlock_trylock\fP (\fBspinlock_t\fP *spin)"
+.br
+.ti -1c
+.RI "void \fB__spinlock_waiton\fP ()"
+.br
+.ti -1c
+.RI "void \fB__fastlock_waiton\fP ()"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "void __fastlock_waiton ()"
+
+.PP
+Definizione alla linea 53 del file spinlock\&.c\&.
+.PP
+Referenzia __asm__()\&.
+.PP
+.nf
+53                          {
+54     __asm__ __volatile__("pause");
+55 }
+.fi
+.SS "void __spinlock_waiton ()"
+
+.PP
+Definizione alla linea 49 del file spinlock\&.c\&.
+.PP
+Referenzia schedule_yield()\&.
+.PP
+.nf
+49                          {
+50     schedule_yield();
+51 }
+.fi
+.SS "void spinlock_lock (\fBspinlock_t\fP *spin)"
+
+.PP
+Definizione alla linea 27 del file spinlock\&.c\&.
+.PP
+Referenzia fastlock_waiton, SPINLOCK_FLAGS_FASTLOCK, SPINLOCK_FLAGS_LOCKED, e spinlock_waiton\&.
+.PP
+.nf
+27                                      {
+28     if((*spin & SPINLOCK_FLAGS_FASTLOCK) == 0)
+29         spinlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
+30     else
+31         fastlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
+32 
+33     *spin |= SPINLOCK_FLAGS_LOCKED;
+34 }
+.fi
+.SS "int spinlock_trylock (\fBspinlock_t\fP *spin)"
+
+.PP
+Definizione alla linea 41 del file spinlock\&.c\&.
+.PP
+Referenzia SPINLOCK_FLAGS_LOCKED\&.
+.PP
+.nf
+41                                        {
+42     if(*spin & SPINLOCK_FLAGS_LOCKED)
+43         return -1;
+44         
+45     *spin |= SPINLOCK_FLAGS_LOCKED;
+46     return 0;
+47 }
+.fi
+.SS "void spinlock_unlock (\fBspinlock_t\fP *spin)"
+
+.PP
+Definizione alla linea 37 del file spinlock\&.c\&.
+.PP
+Referenzia SPINLOCK_FLAGS_LOCKED\&.
+.PP
+.nf
+37                                        {
+38     *spin &= ~SPINLOCK_FLAGS_LOCKED;
+39 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

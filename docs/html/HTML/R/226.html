@@ -1,0 +1,64 @@
+<html>
+<head>
+<title>d</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/110.html#L39'>d</a>                  39 src/net/slirp/slirp.c 	uint8_t d = serial_recv(slirpcard-&gt;ioport);
+<a href='../S/110.html#L41'>d</a>                  41 src/net/slirp/slirp.c 		if(d != SLIRP_PACKET_END)
+<a href='../S/110.html#L53'>d</a>                  53 src/net/slirp/slirp.c 	if((d == SLIRP_PACKET_END &amp;&amp; slirpcard-&gt;used) || slirpcard-&gt;offset &gt;= SLIRP_BUFSIZ) {
+<a href='../S/110.html#L65'>d</a>                  65 src/net/slirp/slirp.c 	switch(d) {
+<a href='../S/110.html#L67'>d</a>                  67 src/net/slirp/slirp.c 			d = serial_recv(slirpcard-&gt;ioport);
+<a href='../S/110.html#L68'>d</a>                  68 src/net/slirp/slirp.c 			switch(d) {
+<a href='../S/110.html#L70'>d</a>                  70 src/net/slirp/slirp.c 					d = SLIRP_PACKET_END;
+<a href='../S/110.html#L73'>d</a>                  73 src/net/slirp/slirp.c 					d = SLIRP_PACKET_ESC;
+<a href='../S/110.html#L79'>d</a>                  79 src/net/slirp/slirp.c 			slirpcard-&gt;buffer[slirpcard-&gt;offset++] = d;
+<a href='../S/148.html#L22'>d</a>                  22 src/panic.c    	d(eax);
+<a href='../S/148.html#L23'>d</a>                  23 src/panic.c    	d(ebx);
+<a href='../S/148.html#L24'>d</a>                  24 src/panic.c    	d(ecx);
+<a href='../S/148.html#L25'>d</a>                  25 src/panic.c    	d(edx);
+<a href='../S/148.html#L26'>d</a>                  26 src/panic.c    	d(esi);
+<a href='../S/148.html#L27'>d</a>                  27 src/panic.c    	d(edi);
+<a href='../S/148.html#L29'>d</a>                  29 src/panic.c    	d(eip);
+<a href='../S/148.html#L30'>d</a>                  30 src/panic.c    	d(eflags);
+<a href='../S/148.html#L31'>d</a>                  31 src/panic.c    	d(esp);
+<a href='../S/148.html#L32'>d</a>                  32 src/panic.c    	d(ebp);
+<a href='../S/148.html#L34'>d</a>                  34 src/panic.c    	d(cs);
+<a href='../S/148.html#L35'>d</a>                  35 src/panic.c    	d(ds);
+<a href='../S/148.html#L36'>d</a>                  36 src/panic.c    	d(es);
+<a href='../S/148.html#L37'>d</a>                  37 src/panic.c    	d(fs);
+<a href='../S/148.html#L38'>d</a>                  38 src/panic.c    	d(gs);
+<a href='../S/148.html#L40'>d</a>                  40 src/panic.c    	d(cr0);
+<a href='../S/148.html#L41'>d</a>                  41 src/panic.c    	d(cr2);
+<a href='../S/148.html#L42'>d</a>                  42 src/panic.c    	d(cr3);
+<a href='../S/148.html#L43'>d</a>                  43 src/panic.c    	d(cr4);
+<a href='../S/10.html#L55'>d</a>                  55 usr/src/libposix/include/sys/dirent.h int closedir(DIR* d);
+<a href='../S/10.html#L57'>d</a>                  57 usr/src/libposix/include/sys/dirent.h struct dirent* readdir(DIR* d);
+<a href='../S/10.html#L58'>d</a>                  58 usr/src/libposix/include/sys/dirent.h void rewinddir(DIR* d);
+<a href='../S/10.html#L60'>d</a>                  60 usr/src/libposix/include/sys/dirent.h void seekdir(DIR* d, off_t offset);
+<a href='../S/10.html#L61'>d</a>                  61 usr/src/libposix/include/sys/dirent.h off_t telldir(DIR* d);
+<a href='../S/21.html#L12'>d</a>                  12 usr/src/libposix/src/closedir.c 	if(d == NULL) {
+<a href='../S/21.html#L17'>d</a>                  17 usr/src/libposix/src/closedir.c 	close(d-&gt;fd);
+<a href='../S/21.html#L19'>d</a>                  19 usr/src/libposix/src/closedir.c 	d-&gt;fd = -1;
+<a href='../S/21.html#L20'>d</a>                  20 usr/src/libposix/src/closedir.c 	d-&gt;position = -1;
+<a href='../S/20.html#L11'>d</a>                  11 usr/src/libposix/src/config.h #define __os_readdir(d)						aplus_readdir(d-&gt;fd, d-&gt;position)
+<a href='../S/42.html#L20'>d</a>                  20 usr/src/libposix/src/opendir.c 	DIR* d = (DIR*) malloc(sizeof(DIR));
+<a href='../S/42.html#L21'>d</a>                  21 usr/src/libposix/src/opendir.c 	d-&gt;fd = fd;
+<a href='../S/42.html#L22'>d</a>                  22 usr/src/libposix/src/opendir.c 	d-&gt;position = 0;
+<a href='../S/42.html#L24'>d</a>                  24 usr/src/libposix/src/opendir.c 	return d;
+<a href='../S/35.html#L16'>d</a>                  16 usr/src/libposix/src/readdir.c 	if(d == NULL) {
+<a href='../S/35.html#L21'>d</a>                  21 usr/src/libposix/src/readdir.c 	return __os_readdir(d);
+<a href='../S/27.html#L12'>d</a>                  12 usr/src/libposix/src/rewinddir.c 	if(d)
+<a href='../S/27.html#L13'>d</a>                  13 usr/src/libposix/src/rewinddir.c 		d-&gt;position = 0;
+<a href='../S/18.html#L12'>d</a>                  12 usr/src/libposix/src/scandir.c 	DIR* d = opendir(pathname);
+<a href='../S/18.html#L13'>d</a>                  13 usr/src/libposix/src/scandir.c 	if(d == NULL) {
+<a href='../S/18.html#L29'>d</a>                  29 usr/src/libposix/src/scandir.c 	while((ent = readdir(d))) {
+<a href='../S/25.html#L14'>d</a>                  14 usr/src/libposix/src/seekdir.c 	if(d)
+<a href='../S/25.html#L15'>d</a>                  15 usr/src/libposix/src/seekdir.c 		d-&gt;position = offset;
+<a href='../S/41.html#L12'>d</a>                  12 usr/src/libposix/src/telldir.c 	if(d == NULL) {
+<a href='../S/41.html#L17'>d</a>                  17 usr/src/libposix/src/telldir.c 	return d-&gt;position;
+</pre>
+</body>
+</html>

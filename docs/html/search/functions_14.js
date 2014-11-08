@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['vfs_5fchroot',['vfs_chroot',['../vfs_8c.html#ac571ec2fcf268f322214b46a0a8c7e74',1,'vfs.c']]],
+  ['vfs_5finit',['vfs_init',['../vfs_8c.html#aca585ca14c08d6c1a07e1b886fc9749a',1,'vfs.c']]],
+  ['vfs_5fmap',['vfs_map',['../vfs_8c.html#acb87c78588a46c5526e933c495b69c2a',1,'vfs.c']]],
+  ['vfs_5fmapped',['vfs_mapped',['../vfs_8c.html#a99334446cfc1dfc32088d838b4f2895c',1,'vfs.c']]],
+  ['vfs_5fmapped_5fat_5findex',['vfs_mapped_at_index',['../vfs_8c.html#a4f7b5f17ac7c4b3a0a574d9620e0512d',1,'vfs.c']]],
+  ['vfs_5fmapped_5fcount',['vfs_mapped_count',['../vfs_8c.html#a829e1c063db610c46554db0e28cb2bcb',1,'vfs.c']]],
+  ['vfs_5fumap',['vfs_umap',['../vfs_8c.html#a13a7520e2fe9380c3ed93472d0c800bc',1,'vfs.c']]],
+  ['vmm_5falloc',['vmm_alloc',['../paging_8c.html#aebed4a90dd887506ed125f9efb953c93',1,'paging.c']]],
+  ['vmm_5fcreate',['vmm_create',['../paging_8c.html#a200ca682c57c6acaa05f2f56c9f6f6de',1,'paging.c']]],
+  ['vmm_5fdestroy',['vmm_destroy',['../paging_8c.html#a22fcc252d0f4746924875b97d803b18b',1,'paging.c']]],
+  ['vmm_5fdisable',['vmm_disable',['../paging_8c.html#ae6c3d7080850f24c974dc0c53b653110',1,'paging.c']]],
+  ['vmm_5fenable',['vmm_enable',['../paging_8c.html#aa760eb29c4563f9ab05cc3d9331944ac',1,'paging.c']]],
+  ['vmm_5finit',['vmm_init',['../paging_8c.html#aac183f585641487a954ca46c0d7bde31',1,'paging.c']]],
+  ['vmm_5fmap',['vmm_map',['../paging_8c.html#ae969f54f1646d5d8a871bef828a24239',1,'paging.c']]],
+  ['vmm_5fmapkernel',['vmm_mapkernel',['../paging_8c.html#a8828597ede1b2c5bcc5ea1a4ca7919a9',1,'paging.c']]],
+  ['vmm_5fswitch',['vmm_switch',['../paging_8c.html#aa525b2cea53b39f8fdd94edd4730cff2',1,'paging.c']]],
+  ['vmm_5fumap',['vmm_umap',['../paging_8c.html#ab6841aac2bf44152a7c0c12293a97440',1,'paging.c']]]
+];

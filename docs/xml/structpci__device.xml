@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpci__device" kind="struct" prot="public">
+    <compoundname>pci_device</compoundname>
+    <includes refid="pci_8h" local="no">pci.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpci__device_1ac9682451216985995a3601f14239dc26" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t pci_device::vendorID</definition>
+        <argsstring></argsstring>
+        <name>vendorID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="24" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1a86ce8ddd306b0395037ec7eee789a929" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t pci_device::deviceID</definition>
+        <argsstring></argsstring>
+        <name>deviceID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="25" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1a832940e219d52a08725a39fc97663d07" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t pci_device::bus</definition>
+        <argsstring></argsstring>
+        <name>bus</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="27" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t pci_device::dev</definition>
+        <argsstring></argsstring>
+        <name>dev</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="28" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1ac292358b1097064cb388125a45740aff" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t pci_device::func</definition>
+        <argsstring></argsstring>
+        <name>func</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="29" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1ad6450a83a220d2015cb94a9698580668" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t pci_device::revision</definition>
+        <argsstring></argsstring>
+        <name>revision</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="30" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1ae1867eca43c8f867951963a1753649ea" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pci_device::pci_class</definition>
+        <argsstring></argsstring>
+        <name>pci_class</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="32" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1a5b15ddf1741aaae55aa9933f53876d11" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pci_device::iobase</definition>
+        <argsstring></argsstring>
+        <name>iobase</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="33" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1a795ff4e1dc77af09805c41d96766b64b" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t pci_device::membase</definition>
+        <argsstring></argsstring>
+        <name>membase</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="34" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1ad68a4bddbd8fa989a866dccdd5035842" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t pci_device::header</definition>
+        <argsstring></argsstring>
+        <name>header</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="36" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1a3645d371b3c45455414e4f8414e9eed8" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t pci_device::intr_pin</definition>
+        <argsstring></argsstring>
+        <name>intr_pin</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="37" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t pci_device::intr_line</definition>
+        <argsstring></argsstring>
+        <name>intr_line</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="38" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="62">
+        <label>pci_device</label>
+        <link refid="structpci__device"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/pci.h" line="23" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/pci.h" bodystart="23" bodyend="39"/>
+    <listofallmembers>
+      <member refid="structpci__device_1a832940e219d52a08725a39fc97663d07" prot="public" virt="non-virtual"><scope>pci_device</scope><name>bus</name></member>
+      <member refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" prot="public" virt="non-virtual"><scope>pci_device</scope><name>dev</name></member>
+      <member refid="structpci__device_1a86ce8ddd306b0395037ec7eee789a929" prot="public" virt="non-virtual"><scope>pci_device</scope><name>deviceID</name></member>
+      <member refid="structpci__device_1ac292358b1097064cb388125a45740aff" prot="public" virt="non-virtual"><scope>pci_device</scope><name>func</name></member>
+      <member refid="structpci__device_1ad68a4bddbd8fa989a866dccdd5035842" prot="public" virt="non-virtual"><scope>pci_device</scope><name>header</name></member>
+      <member refid="structpci__device_1a6d2298c5255e65c908f6dfdb29e4fcaf" prot="public" virt="non-virtual"><scope>pci_device</scope><name>intr_line</name></member>
+      <member refid="structpci__device_1a3645d371b3c45455414e4f8414e9eed8" prot="public" virt="non-virtual"><scope>pci_device</scope><name>intr_pin</name></member>
+      <member refid="structpci__device_1a5b15ddf1741aaae55aa9933f53876d11" prot="public" virt="non-virtual"><scope>pci_device</scope><name>iobase</name></member>
+      <member refid="structpci__device_1a795ff4e1dc77af09805c41d96766b64b" prot="public" virt="non-virtual"><scope>pci_device</scope><name>membase</name></member>
+      <member refid="structpci__device_1ae1867eca43c8f867951963a1753649ea" prot="public" virt="non-virtual"><scope>pci_device</scope><name>pci_class</name></member>
+      <member refid="structpci__device_1ad6450a83a220d2015cb94a9698580668" prot="public" virt="non-virtual"><scope>pci_device</scope><name>revision</name></member>
+      <member refid="structpci__device_1ac9682451216985995a3601f14239dc26" prot="public" virt="non-virtual"><scope>pci_device</scope><name>vendorID</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>src/mm/heap.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/170.html'>mm</a>/heap.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L28'>[^]</a><a href='#L36'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L28' title='Defined at 28.'>halloc</a>
+<li><a href='#L36' title='Defined at 36.'>hfree</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <i><font color='green'>//</font></i>
+<a name='L2'>   2 <i><font color='green'>//  heap.c</font></i>
+<a name='L3'>   3 <i><font color='green'>//</font></i>
+<a name='L4'>   4 <i><font color='green'>//  Author:</font></i>
+<a name='L5'>   5 <i><font color='green'>//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</font></i>
+<a name='L6'>   6 <i><font color='green'>//</font></i>
+<a name='L7'>   7 <i><font color='green'>//  Copyright (c) 2014 WareX</font></i>
+<a name='L8'>   8 <i><font color='green'>//</font></i>
+<a name='L9'>   9 <i><font color='green'>//  This program is free software: you can redistribute it and/or modify</font></i>
+<a name='L10'>  10 <i><font color='green'>//  it under the terms of the GNU General Public License as published by</font></i>
+<a name='L11'>  11 <i><font color='green'>//  the Free Software Foundation, either version 3 of the License, or</font></i>
+<a name='L12'>  12 <i><font color='green'>//  (at your option) any later version.</font></i>
+<a name='L13'>  13 <i><font color='green'>//</font></i>
+<a name='L14'>  14 <i><font color='green'>//  This program is distributed in the hope that it will be useful,</font></i>
+<a name='L15'>  15 <i><font color='green'>//  but WITHOUT ANY WARRANTY; without even the implied warranty of</font></i>
+<a name='L16'>  16 <i><font color='green'>//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</font></i>
+<a name='L17'>  17 <i><font color='green'>//  GNU General Public License for more details.</font></i>
+<a name='L18'>  18 <i><font color='green'>//</font></i>
+<a name='L19'>  19 <i><font color='green'>//  You should have received a copy of the GNU General Public License</font></i>
+<a name='L20'>  20 <i><font color='green'>//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</font></i>
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L23'>  23 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L24'>  24 
+<a name='L25'>  25 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L26'>  26 
+<a name='L27'>  27 
+<a name='L28'>  28 <b>void</b>* <a href='../R/256.html' title='Multiple refered from 5 places.'>halloc</a>(<a href='../S/87.html#L69' title='Defined at 69 in src/include/aplus/mm.h.'>heap_t</a>* <a href='../Y/299.html' title='Multiple used in 6 places.'>heap</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) <font color='red'>{</font>
+<a name='L29'>  29         <b>if</b>(<a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>)
+<a name='L30'>  30                 <b>if</b>(<a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>-&gt;<a href='../Y/94.html' title='Multiple used in 4 places.'>alloc</a>)
+<a name='L31'>  31                         <b>return</b> <a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>-&gt;<a href='../Y/94.html' title='Multiple used in 4 places.'>alloc</a>(<a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>, <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L32'>  32                         
+<a name='L33'>  33         <b>return</b> 0;
+<a name='L34'>  34 <font color='red'>}</font>
+<a name='L35'>  35 
+<a name='L36'>  36 <b>void</b> <a href='../S/151.html#L80' title='Refered from 80 in src/mm/mm.c.'>hfree</a>(<a href='../S/87.html#L69' title='Defined at 69 in src/include/aplus/mm.h.'>heap_t</a>* <a href='../Y/299.html' title='Multiple used in 6 places.'>heap</a>, <b>void</b>* <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>) <font color='red'>{</font>
+<a name='L37'>  37         <b>if</b>(<a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>)
+<a name='L38'>  38                 <b>if</b>(<a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>-&gt;<a href='../Y/274.html' title='Multiple used in 8 places.'>free</a>)
+<a name='L39'>  39                         <a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>-&gt;<a href='../Y/274.html' title='Multiple used in 8 places.'>free</a>(<a href='../S/87.html#L62' title='Defined at 62 in src/include/aplus/mm.h.'>heap</a>, <a href='../Y/90.html' title='Multiple used in 30 places.'>addr</a>, <a href='../Y/578.html' title='Multiple used in 91 places.'>size</a>);
+<a name='L40'>  40 <font color='red'>}</font>
+<a name='L41'>  41 
+<a name='L42'>  42 
+<a name='L43'>  43 
+<a name='L44'>  44 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L28'>[^]</a><a href='#L36'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

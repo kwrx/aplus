@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_92536dcde3bc48f846a0fdba98dd2e5e" kind="dir">
+    <compoundname>usr/src/libposix/include/sys</compoundname>
+    <innerfile refid="dirent_8h">dirent.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libposix/include/sys/"/>
+  </compounddef>
+</doxygen>

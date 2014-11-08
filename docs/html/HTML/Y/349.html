@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>key_7</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/47.html#L75'>key_7</a>              75 usr/src/libpthread/test/main.c 	pthread_key_t key_7;
+<a href='../S/47.html#L77'>key_7</a>              77 usr/src/libpthread/test/main.c 	assert(pthread_key_create(&amp;key_7, NULL) == 0);
+<a href='../S/47.html#L78'>key_7</a>              78 usr/src/libpthread/test/main.c 	assert(pthread_setspecific(key_7, (const void*) 200) == 0);
+<a href='../S/47.html#L79'>key_7</a>              79 usr/src/libpthread/test/main.c 	assert((int) pthread_getspecific(key_7) == 200 &amp;&amp; "bad returned value");
+<a href='../S/47.html#L80'>key_7</a>              80 usr/src/libpthread/test/main.c 	assert(pthread_key_delete(key_7) == 0);
+</pre>
+</body>
+</html>

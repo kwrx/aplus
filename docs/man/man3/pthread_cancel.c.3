@@ -1,0 +1,84 @@
+.TH "usr/src/libpthread/src/pthread_cancel.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_cancel.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_cancel\fP (\fBpthread_t\fP thread)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_setcancelstate\fP (int state, int *oldstate)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_setcanceltype\fP (int \fBtype\fP, int *oldtype)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP void \fBpthread_testcancel\fP (void)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_cancel (\fBpthread_t\fPthread)"
+
+.PP
+Definizione alla linea 7 del file pthread_cancel\&.c\&.
+.PP
+Referenzia pthread_detach()\&.
+.PP
+.nf
+7                                             {
+8     return pthread_detach(thread);
+9 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_setcancelstate (intstate, int *oldstate)"
+
+.PP
+Definizione alla linea 12 del file pthread_cancel\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+12                                                             {
+13     errno = ENOSYS;
+14     return 1;
+15 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_setcanceltype (inttype, int *oldtype)"
+
+.PP
+Definizione alla linea 18 del file pthread_cancel\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+18                                                          {
+19     errno = ENOSYS;
+20     return 1;
+21 }
+.fi
+.SS "\fBPUBLIC\fP void pthread_testcancel (void)"
+
+.PP
+Definizione alla linea 23 del file pthread_cancel\&.c\&.
+.PP
+.nf
+23                                      {
+24     /* Boh ?? */
+25 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

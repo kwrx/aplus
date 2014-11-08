@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>src/syscall/test.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/test.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L4'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L4' title='Defined at 4.'>sys_test</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L3'>   3 
+<a name='L4'>   4 <b>int</b> sys_test(<b>int</b> <a href='../Y/448.html' title='Multiple used in 4 places.'>p0</a>, <b>int</b> <a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>) <font color='red'>{</font>
+<a name='L5'>   5         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("sys_test called with (p0: %d; p1: %d)\n", <a href='../Y/448.html' title='Multiple used in 4 places.'>p0</a>, <a href='../Y/449.html' title='Multiple used in 14 places.'>p1</a>);
+<a name='L6'>   6 
+<a name='L7'>   7         <b>return</b> 255;
+<a name='L8'>   8 <font color='red'>}</font>
+<a name='L9'>   9 
+<a name='L10'>  10 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_test, 1000);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L4'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

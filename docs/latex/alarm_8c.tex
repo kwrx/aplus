@@ -1,0 +1,51 @@
+\hypertarget{alarm_8c}{\section{Riferimenti per il file usr/src/libposix/src/alarm.c}
+\label{alarm_8c}\index{usr/src/libposix/src/alarm.\+c@{usr/src/libposix/src/alarm.\+c}}
+}
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$signal.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+unsigned \hyperlink{alarm_8c_ad9f1d631b3277247769f9afc1bcee0ad}{alarm} (unsigned seconds)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{alarm_8c_ad9f1d631b3277247769f9afc1bcee0ad}{\index{alarm.\+c@{alarm.\+c}!alarm@{alarm}}
+\index{alarm@{alarm}!alarm.\+c@{alarm.\+c}}
+\subsubsection[{alarm}]{\setlength{\rightskip}{0pt plus 5cm}unsigned alarm (
+\begin{DoxyParamCaption}
+\item[{unsigned}]{seconds}
+\end{DoxyParamCaption}
+)}}\label{alarm_8c_ad9f1d631b3277247769f9afc1bcee0ad}
+
+
+Definizione alla linea 20 del file alarm.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+create(), e pthread\+\_\+detach().
+
+
+\begin{DoxyCode}
+20                                  \{
+21 \textcolor{preprocessor}{#ifdef USE\_PTHREAD}
+22     \textcolor{keyword}{static} \hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\_t} thr = -1;
+23 
+24     \textcolor{keywordflow}{if}(thr != -1)
+25         \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a7c275c509c26566b6dd95a2de1668a2f}{pthread\_detach}(thr) != 0)
+26             \textcolor{keywordflow}{return} -1;
+27 
+28     \textcolor{keywordflow}{if}(seconds > 0)
+29         \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a6933a96c86c4fbebef09c9cbc0625e81}{pthread\_create}(&thr, NULL, alarm\_thread, seconds) != 0)
+30             \textcolor{keywordflow}{return} -1;
+31     \textcolor{keywordflow}{return} 0;
+32 
+33 \textcolor{preprocessor}{#else}
+34     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+35     \textcolor{keywordflow}{return} -1;
+36 \textcolor{preprocessor}{#endif}
+37 \}
+\end{DoxyCode}

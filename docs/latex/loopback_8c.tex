@@ -1,0 +1,236 @@
+\hypertarget{loopback_8c}{\section{Riferimenti per il file src/net/loopback/loopback.c}
+\label{loopback_8c}\index{src/net/loopback/loopback.\+c@{src/net/loopback/loopback.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/bufio.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{loopback_8c_ae1416e18db11d1fd3fa1c16179a90340}{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+A\+G\+I\+C}~0x127001\+F\+F
+\item 
+\#define \hyperlink{loopback_8c_af2441285c13d8589c663eadabf9692c3}{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U}~65563
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{loopback_8c_a43c5c1321b505bd06d640a4a2c96c952}{loopback\+\_\+ifup} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif})
+\item 
+int \hyperlink{loopback_8c_a809e6e981d793a1e3f7da278d1907f12}{loopback\+\_\+ifdown} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif})
+\item 
+int \hyperlink{loopback_8c_ab344e1536772b476906fc74d19dd227b}{loopback\+\_\+recv} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t len)
+\item 
+int \hyperlink{loopback_8c_a3b46747a2291cdd314ab6a3ff852d62e}{loopback\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t len, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type})
+\item 
+int \hyperlink{loopback_8c_af6c52d7c04d8e11a5e006195ce72c61d}{loopback\+\_\+init} ()
+\item 
+\hyperlink{loopback_8c_a262ebd0904685b89cfc2dca397f1c693}{A\+T\+T\+R\+I\+B\+U\+T\+E} (\char`\"{}netif\char`\"{}, loopback\+\_\+init)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{loopback_8c_ae1416e18db11d1fd3fa1c16179a90340}{\index{loopback.\+c@{loopback.\+c}!L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+A\+G\+I\+C@{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+A\+G\+I\+C}}
+\index{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+A\+G\+I\+C@{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+A\+G\+I\+C}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+A\+G\+I\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+A\+G\+I\+C~0x127001\+F\+F}}\label{loopback_8c_ae1416e18db11d1fd3fa1c16179a90340}
+
+
+Definizione alla linea 15 del file loopback.\+c.
+
+\hypertarget{loopback_8c_af2441285c13d8589c663eadabf9692c3}{\index{loopback.\+c@{loopback.\+c}!L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U@{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U}}
+\index{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U@{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U}]{\setlength{\rightskip}{0pt plus 5cm}\#define L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U~65563}}\label{loopback_8c_af2441285c13d8589c663eadabf9692c3}
+
+
+Definizione alla linea 16 del file loopback.\+c.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{loopback_8c_a262ebd0904685b89cfc2dca397f1c693}{\index{loopback.\+c@{loopback.\+c}!A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}}
+\index{A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{A\+T\+T\+R\+I\+B\+U\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}A\+T\+T\+R\+I\+B\+U\+T\+E (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}netif\char`\"{}}]{, }
+\item[{{\bf loopback\+\_\+init}}]{}
+\end{DoxyParamCaption}
+)}}\label{loopback_8c_a262ebd0904685b89cfc2dca397f1c693}
+\hypertarget{loopback_8c_a809e6e981d793a1e3f7da278d1907f12}{\index{loopback.\+c@{loopback.\+c}!loopback\+\_\+ifdown@{loopback\+\_\+ifdown}}
+\index{loopback\+\_\+ifdown@{loopback\+\_\+ifdown}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{loopback\+\_\+ifdown}]{\setlength{\rightskip}{0pt plus 5cm}int loopback\+\_\+ifdown (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif}
+\end{DoxyParamCaption}
+)}}\label{loopback_8c_a809e6e981d793a1e3f7da278d1907f12}
+
+
+Definizione alla linea 24 del file loopback.\+c.
+
+
+
+Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+
+
+\begin{DoxyCode}
+24                                     \{
+25     netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} &= ~\hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE};
+26     \textcolor{keywordflow}{return} 0;
+27 \}
+\end{DoxyCode}
+\hypertarget{loopback_8c_a43c5c1321b505bd06d640a4a2c96c952}{\index{loopback.\+c@{loopback.\+c}!loopback\+\_\+ifup@{loopback\+\_\+ifup}}
+\index{loopback\+\_\+ifup@{loopback\+\_\+ifup}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{loopback\+\_\+ifup}]{\setlength{\rightskip}{0pt plus 5cm}int loopback\+\_\+ifup (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif}
+\end{DoxyParamCaption}
+)}}\label{loopback_8c_a43c5c1321b505bd06d640a4a2c96c952}
+
+
+Definizione alla linea 19 del file loopback.\+c.
+
+
+
+Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+
+
+\begin{DoxyCode}
+19                                   \{
+20     netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} |= \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE};
+21     \textcolor{keywordflow}{return} 0;
+22 \}
+\end{DoxyCode}
+\hypertarget{loopback_8c_af6c52d7c04d8e11a5e006195ce72c61d}{\index{loopback.\+c@{loopback.\+c}!loopback\+\_\+init@{loopback\+\_\+init}}
+\index{loopback\+\_\+init@{loopback\+\_\+init}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{loopback\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int loopback\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{loopback_8c_af6c52d7c04d8e11a5e006195ce72c61d}
+
+
+Definizione alla linea 65 del file loopback.\+c.
+
+
+
+Referenzia netif\+::data, netif\+::ifdown, netif\+::ifup, netif\+::ipv4, netif\+::ipv6, kmalloc(), loopback\+\_\+ifdown(), loopback\+\_\+ifup(), L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U, loopback\+\_\+send(), netif\+::macaddr, netif\+::mtu, netif\+::name, netif\+\_\+add(), netif\+::netmask, e netif\+::send.
+
+
+\begin{DoxyCode}
+65                     \{
+66 
+67     \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structnetif}{netif\_t}));
+68     memset(netif, 0, \textcolor{keyword}{sizeof}(\hyperlink{structnetif}{netif\_t}));
+69 
+70 
+71     strcpy(netif->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name}, \textcolor{stringliteral}{"lo"});
+72     memset(netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}, 0xFF, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t}));
+73 
+74     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[0] = 127;
+75     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[1] = 0;
+76     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[2] = 0;
+77     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[3] = 1;
+78 
+79     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[0] = 0;
+80     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[1] = 0;
+81     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[2] = 0;
+82     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[3] = 0;
+83     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[4] = 0;
+84     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[5] = 0;
+85     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[6] = 0;
+86     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[7] = 1;
+87 
+88     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[0] = 255;
+89     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[1] = 255;
+90     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[2] = 255;
+91     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[3] = 255;
+92 
+93 
+94     netif->\hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu} = \hyperlink{loopback_8c_af2441285c13d8589c663eadabf9692c3}{LOOPBACK\_MTU};
+95     netif->\hyperlink{structnetif_ac0505ae55088f68c2cefa77dc6871208}{send} = \hyperlink{loopback_8c_a3b46747a2291cdd314ab6a3ff852d62e}{loopback\_send};
+96     netif->\hyperlink{structnetif_a70984b0d611d5a941aecabbc98f62467}{ifup} = \hyperlink{loopback_8c_a43c5c1321b505bd06d640a4a2c96c952}{loopback\_ifup};
+97     netif->\hyperlink{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}{ifdown} = \hyperlink{loopback_8c_a809e6e981d793a1e3f7da278d1907f12}{loopback\_ifdown};
+98     netif->\hyperlink{structnetif_af45fb467da3492eb4473cb9208044ac8}{data} = NULL;
+99 
+100     \hyperlink{netif_8c_a01bed7c80274b7830923cdde25b1d48a}{netif\_add}(netif);
+101     \textcolor{keywordflow}{return} 0;
+102 \}
+\end{DoxyCode}
+\hypertarget{loopback_8c_ab344e1536772b476906fc74d19dd227b}{\index{loopback.\+c@{loopback.\+c}!loopback\+\_\+recv@{loopback\+\_\+recv}}
+\index{loopback\+\_\+recv@{loopback\+\_\+recv}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{loopback\+\_\+recv}]{\setlength{\rightskip}{0pt plus 5cm}int loopback\+\_\+recv (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{len}
+\end{DoxyParamCaption}
+)}}\label{loopback_8c_ab344e1536772b476906fc74d19dd227b}
+
+
+Definizione alla linea 31 del file loopback.\+c.
+
+
+
+Referenzia eth\+\_\+recv(), netif\+::flags, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, netif\+::rx\+\_\+bytes, netif\+::rx\+\_\+errors, netif\+::rx\+\_\+packets, e netif\+::state.
+
+
+\begin{DoxyCode}
+31                                                          \{
+32     \textcolor{keywordflow}{if}((netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} & \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE}) == 0)
+33         \textcolor{keywordflow}{return} 0;
+34 
+35     \textcolor{keywordflow}{if}(\hyperlink{eth_8c_af8e21540e459402877e8e7143d17f47c}{eth\_recv}(netif, buf, len) > 0) \{
+36         netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_a80040f58867713ff1b5ec982a450221e}{rx\_packets} += 1;
+37         netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_a5a078449e22bb6f4d3d0068345d8dabc}{rx\_bytes} += len;
+38 
+39         \textcolor{keywordflow}{return} len;
+40     \}
+41         
+42     netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_adb3c694759403e67d539a5e81a552c92}{rx\_errors} += 1;
+43     \textcolor{keywordflow}{return} 0;
+44 \}
+\end{DoxyCode}
+\hypertarget{loopback_8c_a3b46747a2291cdd314ab6a3ff852d62e}{\index{loopback.\+c@{loopback.\+c}!loopback\+\_\+send@{loopback\+\_\+send}}
+\index{loopback\+\_\+send@{loopback\+\_\+send}!loopback.\+c@{loopback.\+c}}
+\subsubsection[{loopback\+\_\+send}]{\setlength{\rightskip}{0pt plus 5cm}int loopback\+\_\+send (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{len, }
+\item[{int}]{type}
+\end{DoxyParamCaption}
+)}}\label{loopback_8c_a3b46747a2291cdd314ab6a3ff852d62e}
+
+
+Definizione alla linea 46 del file loopback.\+c.
+
+
+
+Referenzia netif\+::flags, L\+O\+O\+P\+B\+A\+C\+K\+\_\+\+M\+T\+U, loopback\+\_\+recv(), N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, netif\+::state, netif\+::tx\+\_\+bytes, netif\+::tx\+\_\+errors, e netif\+::tx\+\_\+packets.
+
+
+\begin{DoxyCode}
+46                                                                    \{
+47     \textcolor{keywordflow}{if}((netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} & \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE}) == 0)
+48         \textcolor{keywordflow}{return} 0;
+49 
+50     \textcolor{keywordflow}{if}(len > \hyperlink{loopback_8c_af2441285c13d8589c663eadabf9692c3}{LOOPBACK\_MTU}) \{
+51         netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_adac4c9e26ac4c17089eaf3a0e060f601}{tx\_errors} += 1;
+52         \textcolor{keywordflow}{return} 0;
+53     \}
+54 
+55 
+56     netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_aabafd7c28253a190863f673bd5e4320a}{tx\_packets} += 1;
+57     netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_ac340647ad948b8103aa9a4e3c7b3fd0f}{tx\_bytes} += len;
+58 
+59 
+60     \hyperlink{loopback_8c_ab344e1536772b476906fc74d19dd227b}{loopback\_recv}(netif, buf, len);    
+61     \textcolor{keywordflow}{return} len;
+62 \}
+\end{DoxyCode}

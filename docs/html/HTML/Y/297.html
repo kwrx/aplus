@@ -1,0 +1,15 @@
+<html>
+<head>
+<title>head_length</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/107.html#L279'>head_length</a>       279 src/net/netif.c netif_packet_t* netif_packets_create(netif_t* netif, int protocol, int tot_length, int head_length, void* data) {
+<a href='../S/107.html#L283'>head_length</a>       283 src/net/netif.c 	pkt-&gt;length = tot_length - head_length;
+<a href='../S/107.html#L285'>head_length</a>       285 src/net/netif.c 	memcpy(pkt-&gt;header, data, head_length);
+<a href='../S/107.html#L286'>head_length</a>       286 src/net/netif.c 	memcpy(pkt-&gt;data, (void*) ((uint32_t) data + head_length), pkt-&gt;length);
+</pre>
+</body>
+</html>

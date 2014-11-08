@@ -1,0 +1,154 @@
+.TH "usr/src/libpthread/src/pthread_mutexattr.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_mutexattr.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_mutexattr_init\fP (\fBpthread_mutexattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_mutexattr_destroy\fP (\fBpthread_mutexattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_mutexattr_getpshared\fP (const \fBpthread_mutexattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_mutexattr_setpshared\fP (\fBpthread_mutexattr_t\fP *attr, int pshared)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_mutexattr_gettype\fP (\fBpthread_mutexattr_t\fP *attr, int *kind)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_mutexattr_settype\fP (\fBpthread_mutexattr_t\fP *attr, int kind)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPUBLIC\fP int pthread_mutexattr_destroy (\fBpthread_mutexattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 20 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, pthread_mutexattr::kind, e pthread_mutexattr::pshared\&.
+.PP
+.nf
+20                                                                 {
+21     if(!attr) {
+22         errno = EINVAL;
+23         return 1;
+24     }
+25 
+26     attr->pshared = 0;
+27     attr->kind = 0;
+28     
+29     return 0;
+30 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_mutexattr_getpshared (const \fBpthread_mutexattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 32 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::pshared\&.
+.PP
+.nf
+32                                                                                        {
+33     if(!attr) {
+34         errno = EINVAL;
+35         return 1;
+36     }
+37 
+38     *pshared = attr->pshared;
+39     return 0;
+40 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_mutexattr_gettype (\fBpthread_mutexattr_t\fP *attr, int *kind)"
+
+.PP
+Definizione alla linea 52 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::kind\&.
+.PP
+.nf
+52                                                                            {
+53     if(!attr) {
+54         errno = EINVAL;
+55         return 1;
+56     }
+57 
+58     *kind = attr->kind;
+59     return 0;
+60 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_mutexattr_init (\fBpthread_mutexattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 8 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, pthread_mutexattr::kind, pthread_mutexattr::pshared, e PTHREAD_MUTEX_DEFAULT\&.
+.PP
+.nf
+8                                                              {
+9     if(!attr) {
+10         errno = EINVAL;
+11         return 1;
+12     }
+13 
+14     attr->pshared = 0;
+15     attr->kind = PTHREAD_MUTEX_DEFAULT;
+16     
+17     return 0;
+18 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_mutexattr_setpshared (\fBpthread_mutexattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 42 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::pshared\&.
+.PP
+.nf
+42                                                                                 {
+43     if(!attr) {
+44         errno = EINVAL;
+45         return 1;
+46     }
+47 
+48     attr->pshared = pshared;
+49     return 0;
+50 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_mutexattr_settype (\fBpthread_mutexattr_t\fP *attr, intkind)"
+
+.PP
+Definizione alla linea 62 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::kind\&.
+.PP
+.nf
+62                                                                           {
+63     if(!attr) {
+64         errno = EINVAL;
+65         return 1;
+66     }
+67 
+68     attr->kind = kind;
+69     return 0;
+70 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

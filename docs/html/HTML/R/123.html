@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>RX_BUFFER_SIZE</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/104.html#L38'>RX_BUFFER_SIZE</a>     38 src/net/rtl8139/rtl8139.c uint8_t rtl8139_rxbuffer[RX_BUFFER_SIZE + 16];
+<a href='../S/104.html#L112'>RX_BUFFER_SIZE</a>    112 src/net/rtl8139/rtl8139.c 		if((card-&gt;rxBufferOffset + length) &gt;= RX_BUFFER_SIZE) {
+<a href='../S/104.html#L113'>RX_BUFFER_SIZE</a>    113 src/net/rtl8139/rtl8139.c 			memcpy(data, rxBuffer, RX_BUFFER_SIZE - card-&gt;rxBufferOffset);
+<a href='../S/104.html#L114'>RX_BUFFER_SIZE</a>    114 src/net/rtl8139/rtl8139.c 			memcpy((void*) ((uint32_t) data + RX_BUFFER_SIZE - card-&gt;rxBufferOffset), card-&gt;rxBuffer, length - (RX_BUFFER_SIZE - card-&gt;rxBufferOffset));
+<a href='../S/104.html#L135'>RX_BUFFER_SIZE</a>    135 src/net/rtl8139/rtl8139.c 		card-&gt;rxBufferOffset %= RX_BUFFER_SIZE;
+<a href='../S/104.html#L217'>RX_BUFFER_SIZE</a>    217 src/net/rtl8139/rtl8139.c 	memset(card-&gt;rxBuffer, 0, RX_BUFFER_SIZE + 16);
+</pre>
+</body>
+</html>

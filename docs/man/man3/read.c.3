@@ -1,0 +1,89 @@
+.TH "src/syscall/read.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/read.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_read\fP (int fd, void *ptr, size_t \fBsize\fP)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_read\fP, 11)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.ti -1c
+.RI "\fBinode_t\fP * \fBvfs_root\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_read (intfd, void *ptr, size_tsize)"
+
+.PP
+Definizione alla linea 19 del file read\&.c\&.
+.PP
+Referenzia errno, task::fd, e fs_read()\&.
+.PP
+.nf
+19                                              {
+20     if(!current_task)
+21         return -1;
+22         
+23     
+24     inode_t* ino = current_task->fd[fd];
+25     if(!ino) {
+26         errno = EBADF;
+27         return -1;
+28     }
+29 
+30 
+31     return fs_read(ino, ptr, size);
+32 }
+.fi
+.SS "SYSCALL (\fBsys_read\fP, 11)"
+
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SS "\fBinode_t\fP* vfs_root"
+
+.PP
+Definizione alla linea 19 del file vfs\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,229 @@
+\hypertarget{structnetif}{\section{Riferimenti per la struct netif}
+\label{structnetif}\index{netif@{netif}}
+}
+
+
+{\ttfamily \#include $<$netif.\+h$>$}
+
+\subsection*{Campi}
+\begin{DoxyCompactItemize}
+\item 
+char \hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name} \mbox{[}32\mbox{]}
+\item 
+void $\ast$ \hyperlink{structnetif_af45fb467da3492eb4473cb9208044ac8}{data}
+\item 
+\hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\+\_\+t} \hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}
+\item 
+\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} \hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}
+\item 
+\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} \hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}
+\item 
+\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\+\_\+t} \hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}
+\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+struct \{\\
+\>struct \{\\
+\>\>\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t} \hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}\\
+\>\>\hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\_t} \hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}\\
+\>\} \hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}\\
+\>struct \{\\
+\>\>\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t} \hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}\\
+\>\>\hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\_t} \hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}\\
+\>\} \hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}\\
+\} \hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}\\
+
+\end{tabbing}\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+struct \{\\
+\>uint64\_t \hyperlink{structnetif_a80040f58867713ff1b5ec982a450221e}{rx\_packets}\\
+\>uint64\_t \hyperlink{structnetif_a5a078449e22bb6f4d3d0068345d8dabc}{rx\_bytes}\\
+\>uint64\_t \hyperlink{structnetif_adb3c694759403e67d539a5e81a552c92}{rx\_errors}\\
+\>uint64\_t \hyperlink{structnetif_a1fc7320d2883ee21c7fe0fd954a70887}{rx\_dropped}\\
+\>uint64\_t \hyperlink{structnetif_aabafd7c28253a190863f673bd5e4320a}{tx\_packets}\\
+\>uint64\_t \hyperlink{structnetif_ac340647ad948b8103aa9a4e3c7b3fd0f}{tx\_bytes}\\
+\>uint64\_t \hyperlink{structnetif_adac4c9e26ac4c17089eaf3a0e060f601}{tx\_errors}\\
+\>uint64\_t \hyperlink{structnetif_a7793287254eb992df0174122a81654d0}{tx\_dropped}\\
+\} \hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}\\
+
+\end{tabbing}\item 
+int($\ast$ \hyperlink{structnetif_ac0505ae55088f68c2cefa77dc6871208}{send} )(struct \hyperlink{structnetif}{netif} $\ast$, void $\ast$, size\+\_\+t, int)
+\item 
+int($\ast$ \hyperlink{structnetif_a70984b0d611d5a941aecabbc98f62467}{ifup} )(struct \hyperlink{structnetif}{netif} $\ast$)
+\item 
+int($\ast$ \hyperlink{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}{ifdown} )(struct \hyperlink{structnetif}{netif} $\ast$)
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags}
+\item 
+\hyperlink{pci_8h_ab3c98ba0de1f963ef2f46200b090815b}{pci\+\_\+device\+\_\+t} $\ast$ \hyperlink{structnetif_a8d0c9464b5010487798a5ea8adce5a39}{device}
+\end{DoxyCompactItemize}
+
+
+\subsection{Descrizione dettagliata}
+
+
+Definizione alla linea 33 del file netif.\+h.
+
+
+
+\subsection{Documentazione dei campi}
+\hypertarget{structnetif_af45fb467da3492eb4473cb9208044ac8}{\index{netif@{netif}!data@{data}}
+\index{data@{data}!netif@{netif}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ netif\+::data}}\label{structnetif_af45fb467da3492eb4473cb9208044ac8}
+
+
+Definizione alla linea 35 del file netif.\+h.
+
+\hypertarget{structnetif_a8d0c9464b5010487798a5ea8adce5a39}{\index{netif@{netif}!device@{device}}
+\index{device@{device}!netif@{netif}}
+\subsubsection[{device}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pci\+\_\+device\+\_\+t}$\ast$ netif\+::device}}\label{structnetif_a8d0c9464b5010487798a5ea8adce5a39}
+
+
+Definizione alla linea 73 del file netif.\+h.
+
+\hypertarget{structnetif_a30f1247e8e2ef8ac954833c81873608e}{\index{netif@{netif}!dns@{dns}}
+\index{dns@{dns}!netif@{netif}}
+\subsubsection[{dns}]{\setlength{\rightskip}{0pt plus 5cm}struct \{ ... \}   netif\+::dns}}\label{structnetif_a30f1247e8e2ef8ac954833c81873608e}
+\hypertarget{structnetif_a07586ae7a31c1231781af7394ce41659}{\index{netif@{netif}!flags@{flags}}
+\index{flags@{flags}!netif@{netif}}
+\subsubsection[{flags}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} netif\+::flags}}\label{structnetif_a07586ae7a31c1231781af7394ce41659}
+
+
+Definizione alla linea 71 del file netif.\+h.
+
+\hypertarget{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}{\index{netif@{netif}!ifdown@{ifdown}}
+\index{ifdown@{ifdown}!netif@{netif}}
+\subsubsection[{ifdown}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ netif\+::ifdown)(struct {\bf netif} $\ast$)}}\label{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}
+
+
+Definizione alla linea 68 del file netif.\+h.
+
+\hypertarget{structnetif_a70984b0d611d5a941aecabbc98f62467}{\index{netif@{netif}!ifup@{ifup}}
+\index{ifup@{ifup}!netif@{netif}}
+\subsubsection[{ifup}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ netif\+::ifup)(struct {\bf netif} $\ast$)}}\label{structnetif_a70984b0d611d5a941aecabbc98f62467}
+
+
+Definizione alla linea 67 del file netif.\+h.
+
+\hypertarget{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{\index{netif@{netif}!ipv4@{ipv4}}
+\index{ipv4@{ipv4}!netif@{netif}}
+\subsubsection[{ipv4}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ipv4\+\_\+t} netif\+::ipv4}}\label{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}
+
+
+Definizione alla linea 38 del file netif.\+h.
+
+\hypertarget{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{\index{netif@{netif}!ipv6@{ipv6}}
+\index{ipv6@{ipv6}!netif@{netif}}
+\subsubsection[{ipv6}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ipv6\+\_\+t} netif\+::ipv6}}\label{structnetif_aced1ed63f6f33dd3987a06deee6a2292}
+
+
+Definizione alla linea 37 del file netif.\+h.
+
+\hypertarget{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{\index{netif@{netif}!macaddr@{macaddr}}
+\index{macaddr@{macaddr}!netif@{netif}}
+\subsubsection[{macaddr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf macaddr\+\_\+t} netif\+::macaddr}}\label{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}
+
+
+Definizione alla linea 40 del file netif.\+h.
+
+\hypertarget{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{\index{netif@{netif}!mtu@{mtu}}
+\index{mtu@{mtu}!netif@{netif}}
+\subsubsection[{mtu}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} netif\+::mtu}}\label{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}
+
+
+Definizione alla linea 70 del file netif.\+h.
+
+\hypertarget{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{\index{netif@{netif}!name@{name}}
+\index{name@{name}!netif@{netif}}
+\subsubsection[{name}]{\setlength{\rightskip}{0pt plus 5cm}char netif\+::name\mbox{[}32\mbox{]}}}\label{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}
+
+
+Definizione alla linea 34 del file netif.\+h.
+
+\hypertarget{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{\index{netif@{netif}!netmask@{netmask}}
+\index{netmask@{netmask}!netif@{netif}}
+\subsubsection[{netmask}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ipv4\+\_\+t} netif\+::netmask}}\label{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}
+
+
+Definizione alla linea 39 del file netif.\+h.
+
+\hypertarget{structnetif_a367e7d85725497d7703bfc0424f472cf}{\index{netif@{netif}!primary@{primary}}
+\index{primary@{primary}!netif@{netif}}
+\subsubsection[{primary}]{\setlength{\rightskip}{0pt plus 5cm}struct \{ ... \}   netif\+::primary}}\label{structnetif_a367e7d85725497d7703bfc0424f472cf}
+\hypertarget{structnetif_a5a078449e22bb6f4d3d0068345d8dabc}{\index{netif@{netif}!rx\+\_\+bytes@{rx\+\_\+bytes}}
+\index{rx\+\_\+bytes@{rx\+\_\+bytes}!netif@{netif}}
+\subsubsection[{rx\+\_\+bytes}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::rx\+\_\+bytes}}\label{structnetif_a5a078449e22bb6f4d3d0068345d8dabc}
+
+
+Definizione alla linea 56 del file netif.\+h.
+
+\hypertarget{structnetif_a1fc7320d2883ee21c7fe0fd954a70887}{\index{netif@{netif}!rx\+\_\+dropped@{rx\+\_\+dropped}}
+\index{rx\+\_\+dropped@{rx\+\_\+dropped}!netif@{netif}}
+\subsubsection[{rx\+\_\+dropped}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::rx\+\_\+dropped}}\label{structnetif_a1fc7320d2883ee21c7fe0fd954a70887}
+
+
+Definizione alla linea 58 del file netif.\+h.
+
+\hypertarget{structnetif_adb3c694759403e67d539a5e81a552c92}{\index{netif@{netif}!rx\+\_\+errors@{rx\+\_\+errors}}
+\index{rx\+\_\+errors@{rx\+\_\+errors}!netif@{netif}}
+\subsubsection[{rx\+\_\+errors}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::rx\+\_\+errors}}\label{structnetif_adb3c694759403e67d539a5e81a552c92}
+
+
+Definizione alla linea 57 del file netif.\+h.
+
+\hypertarget{structnetif_a80040f58867713ff1b5ec982a450221e}{\index{netif@{netif}!rx\+\_\+packets@{rx\+\_\+packets}}
+\index{rx\+\_\+packets@{rx\+\_\+packets}!netif@{netif}}
+\subsubsection[{rx\+\_\+packets}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::rx\+\_\+packets}}\label{structnetif_a80040f58867713ff1b5ec982a450221e}
+
+
+Definizione alla linea 55 del file netif.\+h.
+
+\hypertarget{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{\index{netif@{netif}!secondary@{secondary}}
+\index{secondary@{secondary}!netif@{netif}}
+\subsubsection[{secondary}]{\setlength{\rightskip}{0pt plus 5cm}struct \{ ... \}   netif\+::secondary}}\label{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}
+\hypertarget{structnetif_ac0505ae55088f68c2cefa77dc6871208}{\index{netif@{netif}!send@{send}}
+\index{send@{send}!netif@{netif}}
+\subsubsection[{send}]{\setlength{\rightskip}{0pt plus 5cm}int($\ast$ netif\+::send)(struct {\bf netif} $\ast$, void $\ast$, size\+\_\+t, int)}}\label{structnetif_ac0505ae55088f68c2cefa77dc6871208}
+
+
+Definizione alla linea 66 del file netif.\+h.
+
+\hypertarget{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{\index{netif@{netif}!state@{state}}
+\index{state@{state}!netif@{netif}}
+\subsubsection[{state}]{\setlength{\rightskip}{0pt plus 5cm}struct \{ ... \}   netif\+::state}}\label{structnetif_a5ae2198374cbfd44de7e41e646aaae64}
+\hypertarget{structnetif_ac340647ad948b8103aa9a4e3c7b3fd0f}{\index{netif@{netif}!tx\+\_\+bytes@{tx\+\_\+bytes}}
+\index{tx\+\_\+bytes@{tx\+\_\+bytes}!netif@{netif}}
+\subsubsection[{tx\+\_\+bytes}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::tx\+\_\+bytes}}\label{structnetif_ac340647ad948b8103aa9a4e3c7b3fd0f}
+
+
+Definizione alla linea 61 del file netif.\+h.
+
+\hypertarget{structnetif_a7793287254eb992df0174122a81654d0}{\index{netif@{netif}!tx\+\_\+dropped@{tx\+\_\+dropped}}
+\index{tx\+\_\+dropped@{tx\+\_\+dropped}!netif@{netif}}
+\subsubsection[{tx\+\_\+dropped}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::tx\+\_\+dropped}}\label{structnetif_a7793287254eb992df0174122a81654d0}
+
+
+Definizione alla linea 63 del file netif.\+h.
+
+\hypertarget{structnetif_adac4c9e26ac4c17089eaf3a0e060f601}{\index{netif@{netif}!tx\+\_\+errors@{tx\+\_\+errors}}
+\index{tx\+\_\+errors@{tx\+\_\+errors}!netif@{netif}}
+\subsubsection[{tx\+\_\+errors}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::tx\+\_\+errors}}\label{structnetif_adac4c9e26ac4c17089eaf3a0e060f601}
+
+
+Definizione alla linea 62 del file netif.\+h.
+
+\hypertarget{structnetif_aabafd7c28253a190863f673bd5e4320a}{\index{netif@{netif}!tx\+\_\+packets@{tx\+\_\+packets}}
+\index{tx\+\_\+packets@{tx\+\_\+packets}!netif@{netif}}
+\subsubsection[{tx\+\_\+packets}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t netif\+::tx\+\_\+packets}}\label{structnetif_aabafd7c28253a190863f673bd5e4320a}
+
+
+Definizione alla linea 60 del file netif.\+h.
+
+
+
+La documentazione per questa struct è stata generata a partire dal seguente file\+:\begin{DoxyCompactItemize}
+\item 
+src/include/aplus/\hyperlink{netif_8h}{netif.\+h}\end{DoxyCompactItemize}

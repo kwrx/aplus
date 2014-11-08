@@ -1,0 +1,119 @@
+.TH "src/arch/syscall.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/arch/syscall.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/attribute\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsyscall_init\fP ()"
+.br
+.ti -1c
+.RI "int \fBsyscall_invoke\fP (void *handler, int p0, int p1, int p2, int p3, int p4)"
+.br
+.ti -1c
+.RI "int \fBsyscall_handler\fP (regs_t *r)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "static void ** \fBsyscall_handlers\fP = NULL"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int syscall_handler (regs_t *r)"
+
+.PP
+Definizione alla linea 53 del file syscall\&.c\&.
+.PP
+Referenzia syscall_handlers, e syscall_invoke()\&.
+.PP
+.nf
+53                                {
+54     return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
+55 }
+.fi
+.SS "int syscall_init ()"
+
+.PP
+Definizione alla linea 11 del file syscall\&.c\&.
+.PP
+Referenzia attribute(), __syscall::handler, kmalloc(), kprintf, list_destroy, list_foreach, __syscall::number, list::size, syscall_handlers, e value\&.
+.PP
+.nf
+11                    {
+12     list_t* syslist = attribute("syscall");
+13 
+14     syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist->size);
+15     memset(syscall_handlers, 0, sizeof(void*) * syslist->size);
+16 
+17     list_foreach(value, syslist) {
+18         syscall_t* sys = (syscall_t*) value;
+19 
+20         syscall_handlers[sys->number] = sys->handler;
+21     }
+22 
+23     kprintf("syscall: loaded %d handlers\n", syslist->size);
+24     list_destroy(syslist);
+25     return 0;
+26 }
+.fi
+.SS "int syscall_invoke (void *handler, intp0, intp1, intp2, intp3, intp4)"
+
+.PP
+Definizione alla linea 28 del file syscall\&.c\&.
+.PP
+Referenzia __asm__(), e errno\&.
+.PP
+.nf
+28                                                                           {
+29     if(handler == NULL) {
+30         errno = ENOSYS;
+31         return -1;
+32     }
+33 
+34 
+35     int r = 0;
+36 
+37     __asm__ (
+38         "push ebx           \n"
+39         "push ecx           \n"
+40         "push edx           \n"
+41         "push esi           \n"
+42         "push edi           \n"
+43         "call eax           \n"
+44         "add esp, 20        \n"
+45         : "=a"(r) 
+46         : "a"(handler), "b"(p4), "c"(p3), "d"(p2), "S"(p1), "D"(p0)
+47     );
+48 
+49     return r;
+50 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "void** syscall_handlers = NULL\fC [static]\fP"
+
+.PP
+Definizione alla linea 9 del file syscall\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,49 @@
+\hypertarget{syscall_8h}{\section{Riferimenti per il file src/include/aplus/syscall.h}
+\label{syscall_8h}\index{src/include/aplus/syscall.\+h@{src/include/aplus/syscall.\+h}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct____syscall}{\+\_\+\+\_\+syscall}
+\end{DoxyCompactItemize}
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{syscall_8h_a66a9851e5871109859df72962d80c3a6}{S\+Y\+S\+C\+A\+L\+L}(h, n)
+\end{DoxyCompactItemize}
+\subsection*{Ridefinizioni di tipo (typedef)}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{struct____syscall}{\+\_\+\+\_\+syscall} \hyperlink{syscall_8h_ae65b9b33e5689e1897162dab3777e62f}{syscall\+\_\+t}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{syscall_8h_a66a9851e5871109859df72962d80c3a6}{\index{syscall.\+h@{syscall.\+h}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!syscall.\+h@{syscall.\+h}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+Y\+S\+C\+A\+L\+L(
+\begin{DoxyParamCaption}
+\item[{}]{h, }
+\item[{}]{n}
+\end{DoxyParamCaption}
+)}}\label{syscall_8h_a66a9851e5871109859df72962d80c3a6}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \hyperlink{struct____syscall}{syscall\_t} syscall\_##n = \{                                       \(\backslash\)
+        (\textcolor{keywordtype}{void}*) h, (\textcolor{keywordtype}{int}) n                                                  \(\backslash\)
+    \};                                                                      \hyperlink{attribute_8h_a672da6e381bbc58f66bf3f332d6fbb97}{\(\backslash\)}
+\hyperlink{attribute_8h_a672da6e381bbc58f66bf3f332d6fbb97}{    ATTRIBUTE}(\textcolor{stringliteral}{"syscall"}, syscall\_##n)
+\end{DoxyCode}
+
+
+Definizione alla linea 15 del file syscall.\+h.
+
+
+
+\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\hypertarget{syscall_8h_ae65b9b33e5689e1897162dab3777e62f}{\index{syscall.\+h@{syscall.\+h}!syscall\+\_\+t@{syscall\+\_\+t}}
+\index{syscall\+\_\+t@{syscall\+\_\+t}!syscall.\+h@{syscall.\+h}}
+\subsubsection[{syscall\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf \+\_\+\+\_\+syscall}  {\bf syscall\+\_\+t}}}\label{syscall_8h_ae65b9b33e5689e1897162dab3777e62f}

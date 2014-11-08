@@ -1,0 +1,825 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file usr/src/libpthread/src/pthread_attr.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('pthread__attr_8c.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#define-members">Definizioni</a> &#124;
+<a href="#func-members">Funzioni</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file pthread_attr.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="pthread_8h_source.html">pthread.h</a>&gt;</code><br />
+<code>#include &quot;<a class="el" href="pthread__internal_8h_source.html">pthread_internal.h</a>&quot;</code><br />
+</div>
+<p><a href="pthread__attr_8c_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Definizioni</h2></td></tr>
+<tr class="memitem:a0a650187b2651a3c274ee6ca75d87089"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a0a650187b2651a3c274ee6ca75d87089">STACK_DEFAULT_SIZE</a>&#160;&#160;&#160;<a class="el" href="pthread__internal_8h.html#a8b3dc1c5c1a165d6143b1dce950e8266">PTHREAD_STACK_MIN</a></td></tr>
+<tr class="separator:a0a650187b2651a3c274ee6ca75d87089"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funzioni</h2></td></tr>
+<tr class="memitem:af03ef0e46750b54105e8ed916bb70155"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#af03ef0e46750b54105e8ed916bb70155">pthread_attr_init</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr)</td></tr>
+<tr class="separator:af03ef0e46750b54105e8ed916bb70155"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaccee3f8e8dbb83b8e1d18b4405c728c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#aaccee3f8e8dbb83b8e1d18b4405c728c">pthread_attr_destroy</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr)</td></tr>
+<tr class="separator:aaccee3f8e8dbb83b8e1d18b4405c728c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a385e4dce7a25168d155d4bdab3fa269b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a385e4dce7a25168d155d4bdab3fa269b">pthread_attr_getdetachstate</a> (const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int *detachstate)</td></tr>
+<tr class="separator:a385e4dce7a25168d155d4bdab3fa269b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94a485fc9d97f9f5e47c9c1ac994376c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a94a485fc9d97f9f5e47c9c1ac994376c">pthread_attr_setdetachstate</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int detachstate)</td></tr>
+<tr class="separator:a94a485fc9d97f9f5e47c9c1ac994376c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45442f9eeecd4a5039494fd873ddfc58"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a45442f9eeecd4a5039494fd873ddfc58">pthread_attr_getstackaddr</a> (const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, void **stackaddr)</td></tr>
+<tr class="separator:a45442f9eeecd4a5039494fd873ddfc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3eca20d0a4629dff6321451c7b2f917"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#af3eca20d0a4629dff6321451c7b2f917">pthread_attr_setstackaddr</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, void *stackaddr)</td></tr>
+<tr class="separator:af3eca20d0a4629dff6321451c7b2f917"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a368a4252fc0d17110db0de3397a2f403"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a368a4252fc0d17110db0de3397a2f403">pthread_attr_getstacksize</a> (const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, size_t *stacksize)</td></tr>
+<tr class="separator:a368a4252fc0d17110db0de3397a2f403"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7121cb17b007178c7e771502cf4c532"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#ab7121cb17b007178c7e771502cf4c532">pthread_attr_setstacksize</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, size_t stacksize)</td></tr>
+<tr class="separator:ab7121cb17b007178c7e771502cf4c532"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cff04eb377101c2c4575b80abc8f267"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a8cff04eb377101c2c4575b80abc8f267">pthread_attr_getschedparam</a> (const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, struct sched_param *param)</td></tr>
+<tr class="separator:a8cff04eb377101c2c4575b80abc8f267"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc92c074e629b699bd9c89e8b67e9da9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#abc92c074e629b699bd9c89e8b67e9da9">pthread_attr_setschedparam</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, const struct sched_param *param)</td></tr>
+<tr class="separator:abc92c074e629b699bd9c89e8b67e9da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4da85194679065e47445ae1461797574"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a4da85194679065e47445ae1461797574">pthread_attr_getschedpolicy</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int *policy)</td></tr>
+<tr class="separator:a4da85194679065e47445ae1461797574"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f9da295a78b61a6f1b0a76860558f91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a5f9da295a78b61a6f1b0a76860558f91">pthread_attr_setschedpolicy</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int policy)</td></tr>
+<tr class="separator:a5f9da295a78b61a6f1b0a76860558f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a595dae2ff76e400f791025affc3295cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a595dae2ff76e400f791025affc3295cb">pthread_attr_getinheritsched</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int *inheritsched)</td></tr>
+<tr class="separator:a595dae2ff76e400f791025affc3295cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60d0fdc89742cedc8b5ac4cdbc9a1eed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a60d0fdc89742cedc8b5ac4cdbc9a1eed">pthread_attr_setinheritsched</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int inheritsched)</td></tr>
+<tr class="separator:a60d0fdc89742cedc8b5ac4cdbc9a1eed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af45a1519538d33ebe6440688ddd2dfbb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#af45a1519538d33ebe6440688ddd2dfbb">pthread_attr_getscope</a> (const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int *contentionscope)</td></tr>
+<tr class="separator:af45a1519538d33ebe6440688ddd2dfbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d33b3c0846822f99a8b62e72612702b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pthread__attr_8c.html#a9d33b3c0846822f99a8b62e72612702b">pthread_attr_setscope</a> (<a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *attr, int contentionscope)</td></tr>
+<tr class="separator:a9d33b3c0846822f99a8b62e72612702b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle definizioni</h2>
+<a class="anchor" id="a0a650187b2651a3c274ee6ca75d87089"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STACK_DEFAULT_SIZE&#160;&#160;&#160;<a class="el" href="pthread__internal_8h.html#a8b3dc1c5c1a165d6143b1dce950e8266">PTHREAD_STACK_MIN</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00010">10</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle funzioni</h2>
+<a class="anchor" id="aaccee3f8e8dbb83b8e1d18b4405c728c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_destroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00028">28</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                                      {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    memset(attr, 0, <span class="keyword">sizeof</span>(<a class="code" href="structpthread__attr.html">pthread_attr_t</a>));</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__attr_html"><div class="ttname"><a href="structpthread__attr.html">pthread_attr</a></div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00057">pthread.h:57</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a385e4dce7a25168d155d4bdab3fa269b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_getdetachstate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>detachstate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00038">38</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="pthread_8h_source.html#l00060">pthread_attr::detachstate</a>, e <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                                                                                     {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    *detachstate = attr-&gt;<a class="code" href="structpthread__attr.html#a2ac0f3f9d4513024bbafc7db17c25a46">detachstate</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a2ac0f3f9d4513024bbafc7db17c25a46"><div class="ttname"><a href="structpthread__attr.html#a2ac0f3f9d4513024bbafc7db17c25a46">pthread_attr::detachstate</a></div><div class="ttdeci">int detachstate</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00060">pthread.h:60</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a595dae2ff76e400f791025affc3295cb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_getinheritsched </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>inheritsched</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00133">133</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00062">pthread_attr::inheritsched</a>.</p>
+<div class="fragment"><div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                                                                                 {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    *inheritsched = attr-&gt;<a class="code" href="structpthread__attr.html#ab6bef83bc858c0ffb3c8d0b461ba4396">inheritsched</a>;</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_ab6bef83bc858c0ffb3c8d0b461ba4396"><div class="ttname"><a href="structpthread__attr.html#ab6bef83bc858c0ffb3c8d0b461ba4396">pthread_attr::inheritsched</a></div><div class="ttdeci">int inheritsched</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00062">pthread.h:62</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a8cff04eb377101c2c4575b80abc8f267"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_getschedparam </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct sched_param *&#160;</td>
+          <td class="paramname"><em>param</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00100">100</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00061">pthread_attr::param</a>.</p>
+<div class="fragment"><div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                                                                                             {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    memcpy(param, &amp;attr-&gt;<a class="code" href="structpthread__attr.html#a371c70c9e51a2444860395f7045bbd3e">param</a>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sched_param));</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">return</span> 0; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_a371c70c9e51a2444860395f7045bbd3e"><div class="ttname"><a href="structpthread__attr.html#a371c70c9e51a2444860395f7045bbd3e">pthread_attr::param</a></div><div class="ttdeci">struct sched_param param</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00061">pthread.h:61</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a4da85194679065e47445ae1461797574"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_getschedpolicy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>policy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00123">123</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                                                                          {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="af45a1519538d33ebe6440688ddd2dfbb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_getscope </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>contentionscope</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00153">153</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="pthread_8h_source.html#l00063">pthread_attr::contentionscope</a>, e <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                                                                                   {</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    }</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    *contentionscope = attr-&gt;<a class="code" href="structpthread__attr.html#a1d5ca4923f6814d754208080896a360a">contentionscope</a>;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_a1d5ca4923f6814d754208080896a360a"><div class="ttname"><a href="structpthread__attr.html#a1d5ca4923f6814d754208080896a360a">pthread_attr::contentionscope</a></div><div class="ttdeci">int contentionscope</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00063">pthread.h:63</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a45442f9eeecd4a5039494fd873ddfc58"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_getstackaddr </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>stackaddr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00058">58</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00058">pthread_attr::stackaddr</a>.</p>
+<div class="fragment"><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                                                                                   {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    }</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    *stackaddr = attr-&gt;<a class="code" href="structpthread__attr.html#a004b9c2b7c75177f4de0262277f48333">stackaddr</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a004b9c2b7c75177f4de0262277f48333"><div class="ttname"><a href="structpthread__attr.html#a004b9c2b7c75177f4de0262277f48333">pthread_attr::stackaddr</a></div><div class="ttdeci">void * stackaddr</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00058">pthread.h:58</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a368a4252fc0d17110db0de3397a2f403"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_getstacksize </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>stacksize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00079">79</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00059">pthread_attr::stacksize</a>.</p>
+<div class="fragment"><div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                                                                                    {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    *stacksize = attr-&gt;<a class="code" href="structpthread__attr.html#a8b8eaabf2bc9b4cec33d7764bbb115d9">stacksize</a>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_a8b8eaabf2bc9b4cec33d7764bbb115d9"><div class="ttname"><a href="structpthread__attr.html#a8b8eaabf2bc9b4cec33d7764bbb115d9">pthread_attr::stacksize</a></div><div class="ttdeci">size_t stacksize</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00059">pthread.h:59</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="af03ef0e46750b54105e8ed916bb70155"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00012">12</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="pthread_8h_source.html#l00063">pthread_attr::contentionscope</a>, <a class="el" href="pthread_8h_source.html#l00060">pthread_attr::detachstate</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread_8h_source.html#l00062">pthread_attr::inheritsched</a>, <a class="el" href="pthread_8h_source.html#l00061">pthread_attr::param</a>, <a class="el" href="pthread__internal_8h_source.html#l00026">PTHREAD_STACK_MIN</a>, <a class="el" href="pthread_8h_source.html#l00058">pthread_attr::stackaddr</a>, e <a class="el" href="pthread_8h_source.html#l00059">pthread_attr::stacksize</a>.</p>
+<div class="fragment"><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;                                                   {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    }</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a004b9c2b7c75177f4de0262277f48333">stackaddr</a> = 0;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a8b8eaabf2bc9b4cec33d7764bbb115d9">stacksize</a> = <a class="code" href="pthread__internal_8h.html#a8b3dc1c5c1a165d6143b1dce950e8266">PTHREAD_STACK_MIN</a>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a2ac0f3f9d4513024bbafc7db17c25a46">detachstate</a> = 0;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a371c70c9e51a2444860395f7045bbd3e">param</a>.sched_priority = 0;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#ab6bef83bc858c0ffb3c8d0b461ba4396">inheritsched</a> = 0;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a1d5ca4923f6814d754208080896a360a">contentionscope</a> = 0;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_a1d5ca4923f6814d754208080896a360a"><div class="ttname"><a href="structpthread__attr.html#a1d5ca4923f6814d754208080896a360a">pthread_attr::contentionscope</a></div><div class="ttdeci">int contentionscope</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00063">pthread.h:63</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a8b8eaabf2bc9b4cec33d7764bbb115d9"><div class="ttname"><a href="structpthread__attr.html#a8b8eaabf2bc9b4cec33d7764bbb115d9">pthread_attr::stacksize</a></div><div class="ttdeci">size_t stacksize</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00059">pthread.h:59</a></div></div>
+<div class="ttc" id="structpthread__attr_html_ab6bef83bc858c0ffb3c8d0b461ba4396"><div class="ttname"><a href="structpthread__attr.html#ab6bef83bc858c0ffb3c8d0b461ba4396">pthread_attr::inheritsched</a></div><div class="ttdeci">int inheritsched</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00062">pthread.h:62</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a371c70c9e51a2444860395f7045bbd3e"><div class="ttname"><a href="structpthread__attr.html#a371c70c9e51a2444860395f7045bbd3e">pthread_attr::param</a></div><div class="ttdeci">struct sched_param param</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00061">pthread.h:61</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a004b9c2b7c75177f4de0262277f48333"><div class="ttname"><a href="structpthread__attr.html#a004b9c2b7c75177f4de0262277f48333">pthread_attr::stackaddr</a></div><div class="ttdeci">void * stackaddr</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00058">pthread.h:58</a></div></div>
+<div class="ttc" id="pthread__internal_8h_html_a8b3dc1c5c1a165d6143b1dce950e8266"><div class="ttname"><a href="pthread__internal_8h.html#a8b3dc1c5c1a165d6143b1dce950e8266">PTHREAD_STACK_MIN</a></div><div class="ttdeci">#define PTHREAD_STACK_MIN</div><div class="ttdef"><b>Definition:</b> <a href="pthread__internal_8h_source.html#l00026">pthread_internal.h:26</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a2ac0f3f9d4513024bbafc7db17c25a46"><div class="ttname"><a href="structpthread__attr.html#a2ac0f3f9d4513024bbafc7db17c25a46">pthread_attr::detachstate</a></div><div class="ttdeci">int detachstate</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00060">pthread.h:60</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a94a485fc9d97f9f5e47c9c1ac994376c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_setdetachstate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>detachstate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00048">48</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="pthread_8h_source.html#l00060">pthread_attr::detachstate</a>, e <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                                                              {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a2ac0f3f9d4513024bbafc7db17c25a46">detachstate</a> = detachstate;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a2ac0f3f9d4513024bbafc7db17c25a46"><div class="ttname"><a href="structpthread__attr.html#a2ac0f3f9d4513024bbafc7db17c25a46">pthread_attr::detachstate</a></div><div class="ttdeci">int detachstate</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00060">pthread.h:60</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a60d0fdc89742cedc8b5ac4cdbc9a1eed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_setinheritsched </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>inheritsched</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00143">143</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00062">pthread_attr::inheritsched</a>.</p>
+<div class="fragment"><div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;                                                                                {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    }</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#ab6bef83bc858c0ffb3c8d0b461ba4396">inheritsched</a> = inheritsched;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_ab6bef83bc858c0ffb3c8d0b461ba4396"><div class="ttname"><a href="structpthread__attr.html#ab6bef83bc858c0ffb3c8d0b461ba4396">pthread_attr::inheritsched</a></div><div class="ttdeci">int inheritsched</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00062">pthread.h:62</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="abc92c074e629b699bd9c89e8b67e9da9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_setschedparam </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const struct sched_param *&#160;</td>
+          <td class="paramname"><em>param</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00112">112</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00061">pthread_attr::param</a>.</p>
+<div class="fragment"><div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                                                                                             {</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    memcpy(&amp;attr-&gt;<a class="code" href="structpthread__attr.html#a371c70c9e51a2444860395f7045bbd3e">param</a>, param, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sched_param));</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">return</span> 0; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_a371c70c9e51a2444860395f7045bbd3e"><div class="ttname"><a href="structpthread__attr.html#a371c70c9e51a2444860395f7045bbd3e">pthread_attr::param</a></div><div class="ttdeci">struct sched_param param</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00061">pthread.h:61</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a5f9da295a78b61a6f1b0a76860558f91"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_setschedpolicy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>policy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00128">128</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;                                                                         {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a9d33b3c0846822f99a8b62e72612702b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_setscope </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>contentionscope</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00163">163</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="pthread_8h_source.html#l00063">pthread_attr::contentionscope</a>, e <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                                                                            {</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a1d5ca4923f6814d754208080896a360a">contentionscope</a> = contentionscope;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_a1d5ca4923f6814d754208080896a360a"><div class="ttname"><a href="structpthread__attr.html#a1d5ca4923f6814d754208080896a360a">pthread_attr::contentionscope</a></div><div class="ttdeci">int contentionscope</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00063">pthread.h:63</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="af3eca20d0a4629dff6321451c7b2f917"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_setstackaddr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>stackaddr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00068">68</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00058">pthread_attr::stackaddr</a>.</p>
+<div class="fragment"><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                                                            {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a004b9c2b7c75177f4de0262277f48333">stackaddr</a> = stackaddr;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__attr_html_a004b9c2b7c75177f4de0262277f48333"><div class="ttname"><a href="structpthread__attr.html#a004b9c2b7c75177f4de0262277f48333">pthread_attr::stackaddr</a></div><div class="ttdeci">void * stackaddr</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00058">pthread.h:58</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ab7121cb17b007178c7e771502cf4c532"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> int pthread_attr_setstacksize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7">pthread_attr_t</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>stacksize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pthread__attr_8c_source.html#l00089">89</a> del file <a class="el" href="pthread__attr_8c_source.html">pthread_attr.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="pthread_8h_source.html#l00059">pthread_attr::stacksize</a>.</p>
+<div class="fragment"><div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                                                                             {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">if</span>(!attr) {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    attr-&gt;<a class="code" href="structpthread__attr.html#a8b8eaabf2bc9b4cec33d7764bbb115d9">stacksize</a> = stacksize;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="ttc" id="structpthread__attr_html_a8b8eaabf2bc9b4cec33d7764bbb115d9"><div class="ttname"><a href="structpthread__attr.html#a8b8eaabf2bc9b4cec33d7764bbb115d9">pthread_attr::stacksize</a></div><div class="ttdeci">size_t stacksize</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00059">pthread.h:59</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_c23ec9db109baf02f825a52e3d8bd742.html">libpthread</a></li><li class="navelem"><a class="el" href="dir_93ec8f7d0ab70c6b2c55924b01761aab.html">src</a></li><li class="navelem"><a class="el" href="pthread__attr_8c.html">pthread_attr.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:05 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

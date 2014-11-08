@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structvesaInfo__t" kind="struct" prot="public">
+    <compoundname>vesaInfo_t</compoundname>
+    <includes refid="grub_8h" local="no">grub.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structvesaInfo__t_1a48deedd69aeb2ce0d1c27e77f9da23c5" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char vesaInfo_t::signature[4]</definition>
+        <argsstring>[4]</argsstring>
+        <name>signature</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="27" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1a6c1001f337933e02a68640cfc7abdfb6" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short vesaInfo_t::version</definition>
+        <argsstring></argsstring>
+        <name>version</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="28" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1aee5b0eb81a986dc3adadc287dd6809c4" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int vesaInfo_t::oem_string_ptr</definition>
+        <argsstring></argsstring>
+        <name>oem_string_ptr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="29" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1a1f4453c48c6629e27fd2e97948deb62b" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int vesaInfo_t::capabilities</definition>
+        <argsstring></argsstring>
+        <name>capabilities</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="30" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1af4342c2c5c65c802e4a042d324572b9d" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int vesaInfo_t::video_mode_ptr</definition>
+        <argsstring></argsstring>
+        <name>video_mode_ptr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="31" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1ab94cc102e07cdfbf3cb53690bf205321" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short vesaInfo_t::total_memory</definition>
+        <argsstring></argsstring>
+        <name>total_memory</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="32" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1af0e5f50889726f62d961141ee8fa06f3" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int vesaInfo_t::oem_software_rev</definition>
+        <argsstring></argsstring>
+        <name>oem_software_rev</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="33" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1a35b0e91dc1f97ab1f05b8c9a6fe8988f" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* vesaInfo_t::oem_vendor_name</definition>
+        <argsstring></argsstring>
+        <name>oem_vendor_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="34" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1a532306633838e6bc58a9e91f69835302" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* vesaInfo_t::oem_product_name</definition>
+        <argsstring></argsstring>
+        <name>oem_product_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="35" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structvesaInfo__t_1a4df6ee9c56e2171999b8346550e2273f" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* vesaInfo_t::oem_product_rev</definition>
+        <argsstring></argsstring>
+        <name>oem_product_rev</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="36" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="113">
+        <label>vesaInfo_t</label>
+        <link refid="structvesaInfo__t"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/grub.h" line="26" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="26" bodyend="37"/>
+    <listofallmembers>
+      <member refid="structvesaInfo__t_1a1f4453c48c6629e27fd2e97948deb62b" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>capabilities</name></member>
+      <member refid="structvesaInfo__t_1a532306633838e6bc58a9e91f69835302" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>oem_product_name</name></member>
+      <member refid="structvesaInfo__t_1a4df6ee9c56e2171999b8346550e2273f" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>oem_product_rev</name></member>
+      <member refid="structvesaInfo__t_1af0e5f50889726f62d961141ee8fa06f3" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>oem_software_rev</name></member>
+      <member refid="structvesaInfo__t_1aee5b0eb81a986dc3adadc287dd6809c4" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>oem_string_ptr</name></member>
+      <member refid="structvesaInfo__t_1a35b0e91dc1f97ab1f05b8c9a6fe8988f" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>oem_vendor_name</name></member>
+      <member refid="structvesaInfo__t_1a48deedd69aeb2ce0d1c27e77f9da23c5" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>signature</name></member>
+      <member refid="structvesaInfo__t_1ab94cc102e07cdfbf3cb53690bf205321" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>total_memory</name></member>
+      <member refid="structvesaInfo__t_1a6c1001f337933e02a68640cfc7abdfb6" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>version</name></member>
+      <member refid="structvesaInfo__t_1af4342c2c5c65c802e4a042d324572b9d" prot="public" virt="non-virtual"><scope>vesaInfo_t</scope><name>video_mode_ptr</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

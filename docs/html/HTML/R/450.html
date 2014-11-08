@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>pthread_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/17.html#L22'>pthread_t</a>          22 usr/src/libposix/src/alarm.c 	static pthread_t thr = -1;
+<a href='../S/43.html#L91'>pthread_t</a>          91 usr/src/libpthread/include/pthread.h 	pthread_t owner;
+<a href='../S/43.html#L139'>pthread_t</a>         139 usr/src/libpthread/include/pthread.h 	pthread_t owner;
+<a href='../S/43.html#L186'>pthread_t</a>         186 usr/src/libpthread/include/pthread.h int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start)(void *), void *arg);
+<a href='../S/43.html#L187'>pthread_t</a>         187 usr/src/libpthread/include/pthread.h int pthread_detach(pthread_t thread);
+<a href='../S/43.html#L188'>pthread_t</a>         188 usr/src/libpthread/include/pthread.h int pthread_equal(pthread_t t1, pthread_t t2);
+<a href='../S/43.html#L190'>pthread_t</a>         190 usr/src/libpthread/include/pthread.h int pthread_join(pthread_t thread, void **value_ptr);
+<a href='../S/43.html#L191'>pthread_t</a>         191 usr/src/libpthread/include/pthread.h pthread_t pthread_self(void);
+<a href='../S/43.html#L192'>pthread_t</a>         192 usr/src/libpthread/include/pthread.h int pthread_cancel(pthread_t thread);
+<a href='../S/43.html#L202'>pthread_t</a>         202 usr/src/libpthread/include/pthread.h int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param);
+<a href='../S/43.html#L203'>pthread_t</a>         203 usr/src/libpthread/include/pthread.h int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param);
+<a href='../S/58.html#L7'>pthread_t</a>           7 usr/src/libpthread/src/pthread_cancel.c PUBLIC int pthread_cancel(pthread_t thread) {
+<a href='../S/64.html#L37'>pthread_t</a>          37 usr/src/libpthread/src/pthread_create.c PUBLIC int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void *(*start)(void*), void* arg) {
+<a href='../S/64.html#L64'>pthread_t</a>          64 usr/src/libpthread/src/pthread_create.c 		pthread_t px = pthread_self();
+<a href='../S/64.html#L73'>pthread_t</a>          73 usr/src/libpthread/src/pthread_create.c 	*thread = (pthread_t) ctx;
+<a href='../S/56.html#L12'>pthread_t</a>          12 usr/src/libpthread/src/pthread_detach.c PUBLIC int pthread_detach(pthread_t thread) {
+<a href='../S/52.html#L7'>pthread_t</a>           7 usr/src/libpthread/src/pthread_equal.c PUBLIC int pthread_equal(pthread_t t1, pthread_t t2) {
+<a href='../S/55.html#L9'>pthread_t</a>           9 usr/src/libpthread/src/pthread_exit.c 	pthread_t ptx = pthread_self();
+<a href='../S/73.html#L8'>pthread_t</a>           8 usr/src/libpthread/src/pthread_join.c PUBLIC int pthread_join(pthread_t thread, void **value_ptr) {
+<a href='../S/72.html#L16'>pthread_t</a>          16 usr/src/libpthread/src/pthread_rwlock.c 	pthread_t thread = pthread_self();
+<a href='../S/72.html#L40'>pthread_t</a>          40 usr/src/libpthread/src/pthread_rwlock.c 	pthread_t thread = pthread_self();
+<a href='../S/51.html#L11'>pthread_t</a>          11 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param) {
+<a href='../S/51.html#L26'>pthread_t</a>          26 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param) {
+<a href='../S/51.html#L45'>pthread_t</a>          45 usr/src/libpthread/src/pthread_sched.c 	pthread_t thread = pthread_self();
+<a href='../S/51.html#L58'>pthread_t</a>          58 usr/src/libpthread/src/pthread_sched.c 	pthread_t thread = pthread_self();
+<a href='../S/69.html#L10'>pthread_t</a>          10 usr/src/libpthread/src/pthread_self.c PUBLIC pthread_t pthread_self(void) {
+<a href='../S/69.html#L20'>pthread_t</a>          20 usr/src/libpthread/src/pthread_self.c 			return (pthread_t) tmp;
+<a href='../S/47.html#L16'>pthread_t</a>          16 usr/src/libpthread/test/main.c 	pthread_t ptx_1;
+</pre>
+</body>
+</html>

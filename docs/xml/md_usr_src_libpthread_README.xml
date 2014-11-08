@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="md_usr_src_libpthread_README" kind="page">
+    <compoundname>md_usr_src_libpthread_README</compoundname>
+    <title>Posix Thread library</title>
+    <detaileddescription>
+<para>POSIX Threads, usually referred to as Pthreads, is a POSIX standard for threads. The standard, POSIX.1c, Threads extensions (IEEE Std 1003.1c-1995), defines an API for creating and manipulating threads.</para><para><heading level="4">Required function</heading>
+</para><para><itemizedlist>
+<listitem><para>Create a Thread;</para></listitem><listitem><para>Terminate a Thread;</para></listitem><listitem><para>Get Thread ID.</para></listitem></itemizedlist>
+</para><para>``` tid_t <ref refid="win32_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34" kindref="member">__os_thread_create(void* entrypoint, void* params, int priority)</ref>; int <ref refid="win32_2hooks_8h_1ab48a49c5d6297d7b9023b8796a1c996e" kindref="member">__os_thread_kill(int killid, int exitcode)</ref>; tid_t <ref refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" kindref="member">__os_gettid()</ref>;</para><para>See &quot;/platform/win32/hooks.h&quot; as example. ```</para><para><heading level="4">Current status</heading>
+</para><para><itemizedlist>
+<listitem><para>[X] Thread functions</para></listitem><listitem><para>[X] Thread attribute functions</para></listitem><listitem><para>[X] Scheduling functions</para></listitem><listitem><para>[X] Thread specific data functions</para></listitem><listitem><para>[X] Mutex attribute functions</para></listitem><listitem><para>[X] Mutex functions</para></listitem><listitem><para>[X] Condition variable attribute functions</para></listitem><listitem><para>[X] Condition variable functions</para></listitem><listitem><para>[X] Barrier attribute functions</para></listitem><listitem><para>[X] Barrier functions</para></listitem><listitem><para>[X] Read-write lock attribute functions</para></listitem><listitem><para>[X] Read-write lock functions</para></listitem><listitem><para>[X] Spinlock functions </para></listitem></itemizedlist>
+</para>    </detaileddescription>
+  </compounddef>
+</doxygen>

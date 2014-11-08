@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>sched_param</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/26.html#L14'>sched_param</a>        14 usr/src/libposix/src/sched.c int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param) {
+<a href='../S/26.html#L35'>sched_param</a>        35 usr/src/libposix/src/sched.c int sched_setparam(pid_t pid, const struct sched_param *param) {
+<a href='../S/26.html#L50'>sched_param</a>        50 usr/src/libposix/src/sched.c int sched_getparam(pid_t pid, struct sched_param *param) {
+<a href='../S/43.html#L61'>sched_param</a>        61 usr/src/libpthread/include/pthread.h 	struct sched_param param;
+<a href='../S/43.html#L173'>sched_param</a>       173 usr/src/libpthread/include/pthread.h int pthread_attr_getschedparam(const pthread_attr_t *attr, struct sched_param *param);
+<a href='../S/43.html#L174'>sched_param</a>       174 usr/src/libpthread/include/pthread.h int pthread_attr_setschedparam(pthread_attr_t *attr, const struct sched_param *param);
+<a href='../S/43.html#L202'>sched_param</a>       202 usr/src/libpthread/include/pthread.h int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param);
+<a href='../S/43.html#L203'>sched_param</a>       203 usr/src/libpthread/include/pthread.h int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param);
+<a href='../S/65.html#L100'>sched_param</a>       100 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getschedparam(const pthread_attr_t *attr, struct sched_param *param) {
+<a href='../S/65.html#L106'>sched_param</a>       106 usr/src/libpthread/src/pthread_attr.c 	memcpy(param, &amp;attr-&gt;param, sizeof(struct sched_param));
+<a href='../S/65.html#L112'>sched_param</a>       112 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setschedparam(pthread_attr_t *attr, const struct sched_param *param) {
+<a href='../S/65.html#L118'>sched_param</a>       118 usr/src/libpthread/src/pthread_attr.c 	memcpy(&amp;attr-&gt;param, param, sizeof(struct sched_param));
+<a href='../S/51.html#L8'>sched_param</a>         8 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_setparam(pid_t pid, const struct sched_param *param);
+<a href='../S/51.html#L9'>sched_param</a>         9 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_getparam(pid_t pid, const struct sched_param *param);
+<a href='../S/51.html#L11'>sched_param</a>        11 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param) {
+<a href='../S/51.html#L26'>sched_param</a>        26 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param) {
+</pre>
+</body>
+</html>

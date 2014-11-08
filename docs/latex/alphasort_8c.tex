@@ -1,0 +1,36 @@
+\hypertarget{alphasort_8c}{\section{Riferimenti per il file usr/src/libposix/src/alphasort.c}
+\label{alphasort_8c}\index{usr/src/libposix/src/alphasort.\+c@{usr/src/libposix/src/alphasort.\+c}}
+}
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{alphasort_8c_a8a52fd9a3ded793b8200ac0a5a1f10d2}{alphasort} (const struct \hyperlink{structdirent}{dirent} $\ast$$\ast$a, const struct \hyperlink{structdirent}{dirent} $\ast$$\ast$b)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{alphasort_8c_a8a52fd9a3ded793b8200ac0a5a1f10d2}{\index{alphasort.\+c@{alphasort.\+c}!alphasort@{alphasort}}
+\index{alphasort@{alphasort}!alphasort.\+c@{alphasort.\+c}}
+\subsubsection[{alphasort}]{\setlength{\rightskip}{0pt plus 5cm}int alphasort (
+\begin{DoxyParamCaption}
+\item[{const struct {\bf dirent} $\ast$$\ast$}]{a, }
+\item[{const struct {\bf dirent} $\ast$$\ast$}]{b}
+\end{DoxyParamCaption}
+)}}\label{alphasort_8c_a8a52fd9a3ded793b8200ac0a5a1f10d2}
+
+
+Definizione alla linea 12 del file alphasort.\+c.
+
+
+\begin{DoxyCode}
+12                                                                 \{
+13     \textcolor{keywordflow}{return} strcoll((*a)->d\_name, (*b)->d\_name);
+14 \}
+\end{DoxyCode}

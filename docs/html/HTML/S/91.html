@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>src/include/aplus/net/udp.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/<a href='../files/169.html'>net</a>/udp.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='114.html#L10' title='Included from 10 in src/net/udp.c.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/91.html#L2' title='Defined at 2 in src/include/aplus/net/udp.h.'>_UDP_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/91.html#L1' title='Refered from 1 in src/include/aplus/net/udp.h.'>_UDP_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <b>typedef</b> <b>struct</b> udp_header <font color='red'>{</font>
+<a name='L8'>   8         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> src_port;
+<a name='L9'>   9         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> dst_port;
+<a name='L10'>  10         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L11'>  11         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/151.html' title='Multiple used in 3 places.'>checksum</a>;
+<a name='L12'>  12 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../S/114.html#L19' title='Refered from 19 in src/net/udp.c.'>udp_header_t</a>;
+<a name='L13'>  13 
+<a name='L14'>  14 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

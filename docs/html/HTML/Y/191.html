@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>delta</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/112.html#L88'>delta</a>              88 src/net/eth.c  	int delta = netif-&gt;mtu - sizeof(eth_header_t);
+<a href='../S/112.html#L92'>delta</a>              92 src/net/eth.c  	for(int i = 0; i &lt; length; i += delta)
+<a href='../S/112.html#L93'>delta</a>              93 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + i), delta, type);
+<a href='../S/112.html#L95'>delta</a>              95 src/net/eth.c  	if((length % delta) != 0)
+<a href='../S/112.html#L96'>delta</a>              96 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + length - (length % delta)), length % delta, type);
+</pre>
+</body>
+</html>

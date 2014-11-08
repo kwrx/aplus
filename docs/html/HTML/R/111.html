@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>REG_COMMAND</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/104.html#L94'>REG_COMMAND</a>        94 src/net/rtl8139/rtl8139.c 		uint8_t cmd = int_in8(card, REG_COMMAND);
+<a href='../S/104.html#L180'>REG_COMMAND</a>       180 src/net/rtl8139/rtl8139.c 	int_out8(card, REG_COMMAND, CR_RESET);
+<a href='../S/104.html#L182'>REG_COMMAND</a>       182 src/net/rtl8139/rtl8139.c 	while((int_in8(card, REG_COMMAND) &amp; REG_COMMAND) == CR_RESET);
+<a href='../S/104.html#L226'>REG_COMMAND</a>       226 src/net/rtl8139/rtl8139.c 	int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
+<a href='../S/104.html#L236'>REG_COMMAND</a>       236 src/net/rtl8139/rtl8139.c 	int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
+</pre>
+</body>
+</html>

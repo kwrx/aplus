@@ -1,0 +1,77 @@
+.TH "src/syscall/stat.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/stat.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_stat\fP (const char *filename, struct stat *st)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_stat\fP, 13)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_stat (const char *filename, struct stat *st)"
+
+.PP
+Definizione alla linea 15 del file stat\&.c\&.
+.PP
+Referenzia errno, kprintf, sys_close(), sys_fstat(), e sys_open()\&.
+.PP
+.nf
+15                                                     {
+16     int fd = sys_open(filename, O_RDONLY, 0644);
+17     if(fd < 0) {
+18         kprintf("sys_stat: %s\&.", strerror(errno));       
+19         return -1;
+20     }
+21     int ret = sys_fstat(fd, st);
+22     sys_close(fd);
+23 
+24     return ret;
+25 }
+.fi
+.SS "SYSCALL (\fBsys_stat\fP, 13)"
+
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

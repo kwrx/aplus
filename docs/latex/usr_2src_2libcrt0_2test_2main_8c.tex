@@ -1,0 +1,133 @@
+\hypertarget{usr_2src_2libcrt0_2test_2main_8c}{\section{Riferimenti per il file usr/src/libcrt0/test/main.c}
+\label{usr_2src_2libcrt0_2test_2main_8c}\index{usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}}
+}
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$signal.\+h$>$}\\*
+{\ttfamily \#include $<$assert.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+static int \hyperlink{usr_2src_2libcrt0_2test_2main_8c_afd4f7f3e83f5ccc17a12c629a407c900}{\+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+} (int sig)
+\item 
+static int \hyperlink{usr_2src_2libcrt0_2test_2main_8c_afe4dfd5e49215955311250c669123180}{test\+\_\+stdio} ()
+\item 
+static int \hyperlink{usr_2src_2libcrt0_2test_2main_8c_a72b40b42ede33a5df17620eb3ebfbcb7}{test\+\_\+args} (int argc, char $\ast$$\ast$argv)
+\item 
+static int \hyperlink{usr_2src_2libcrt0_2test_2main_8c_a1bc601ec27d4ef9c2b6ee94175fe3439}{test\+\_\+signals} ()
+\item 
+int \hyperlink{usr_2src_2libcrt0_2test_2main_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{usr_2src_2libcrt0_2test_2main_8c_afd4f7f3e83f5ccc17a12c629a407c900}{\index{usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}!\+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+@{\+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+@{\+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+}!usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}}
+\subsubsection[{\+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}static int \+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{int}]{sig}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{usr_2src_2libcrt0_2test_2main_8c_afd4f7f3e83f5ccc17a12c629a407c900}
+
+
+Definizione alla linea 6 del file main.\+c.
+
+
+\begin{DoxyCode}
+6                                      \{
+7     printf(\textcolor{stringliteral}{"received signal %d\(\backslash\)n"}, sig);
+8 
+9     \textcolor{keywordflow}{return} 0;
+10 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libcrt0_2test_2main_8c_a3c04138a5bfe5d72780bb7e82a18e627}{\index{usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}!main@{main}}
+\index{main@{main}!usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$$\ast$}]{argv}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libcrt0_2test_2main_8c_a3c04138a5bfe5d72780bb7e82a18e627}
+
+
+Definizione alla linea 34 del file main.\+c.
+
+
+
+Referenzia test\+\_\+args(), test\+\_\+signals(), e test\+\_\+stdio().
+
+
+\begin{DoxyCode}
+34                                 \{
+35     
+36     assert(\hyperlink{usr_2src_2libcrt0_2test_2main_8c_afe4dfd5e49215955311250c669123180}{test\_stdio}() && \textcolor{stringliteral}{"Test stdio failed"});
+37     assert(\hyperlink{usr_2src_2libcrt0_2test_2main_8c_a72b40b42ede33a5df17620eb3ebfbcb7}{test\_args}(argc, argv) && \textcolor{stringliteral}{"Test arguments failed"});
+38     assert(\hyperlink{usr_2src_2libcrt0_2test_2main_8c_a1bc601ec27d4ef9c2b6ee94175fe3439}{test\_signals}() >= 0 && \textcolor{stringliteral}{"Test signals failed"});
+39     
+40     printf(\textcolor{stringliteral}{"Test OK\(\backslash\)n"});
+41     \textcolor{keywordflow}{return} 0;
+42 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libcrt0_2test_2main_8c_a72b40b42ede33a5df17620eb3ebfbcb7}{\index{usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}!test\+\_\+args@{test\+\_\+args}}
+\index{test\+\_\+args@{test\+\_\+args}!usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}}
+\subsubsection[{test\+\_\+args}]{\setlength{\rightskip}{0pt plus 5cm}static int test\+\_\+args (
+\begin{DoxyParamCaption}
+\item[{int}]{argc, }
+\item[{char $\ast$$\ast$}]{argv}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{usr_2src_2libcrt0_2test_2main_8c_a72b40b42ede33a5df17620eb3ebfbcb7}
+
+
+Definizione alla linea 16 del file main.\+c.
+
+
+\begin{DoxyCode}
+16                                             \{
+17     \textcolor{keywordflow}{if}(argc == 0)
+18         \textcolor{keywordflow}{return} 0;
+19 
+20     \textcolor{keywordtype}{int} i;
+21     \textcolor{keywordflow}{for}(i = 0; i < argc; i++)
+22         printf(\textcolor{stringliteral}{"argv[%d] => \(\backslash\)"%s\(\backslash\)"\(\backslash\)n"}, i, argv[i]);
+23 
+24     \textcolor{keywordflow}{return} 1;
+25 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libcrt0_2test_2main_8c_a1bc601ec27d4ef9c2b6ee94175fe3439}{\index{usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}!test\+\_\+signals@{test\+\_\+signals}}
+\index{test\+\_\+signals@{test\+\_\+signals}!usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}}
+\subsubsection[{test\+\_\+signals}]{\setlength{\rightskip}{0pt plus 5cm}static int test\+\_\+signals (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{usr_2src_2libcrt0_2test_2main_8c_a1bc601ec27d4ef9c2b6ee94175fe3439}
+
+
+Definizione alla linea 28 del file main.\+c.
+
+
+
+Referenzia \+\_\+\+\_\+test\+\_\+signals\+\_\+\+\_\+().
+
+
+\begin{DoxyCode}
+28                           \{
+29     assert(signal(SIGUSR1, \hyperlink{usr_2src_2libcrt0_2test_2main_8c_afd4f7f3e83f5ccc17a12c629a407c900}{\_\_test\_signals\_\_}) != SIG\_ERR);
+30     \textcolor{keywordflow}{return} \textcolor{keyword}{raise}(SIGUSR1);
+31 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libcrt0_2test_2main_8c_afe4dfd5e49215955311250c669123180}{\index{usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}!test\+\_\+stdio@{test\+\_\+stdio}}
+\index{test\+\_\+stdio@{test\+\_\+stdio}!usr/src/libcrt0/test/main.\+c@{usr/src/libcrt0/test/main.\+c}}
+\subsubsection[{test\+\_\+stdio}]{\setlength{\rightskip}{0pt plus 5cm}static int test\+\_\+stdio (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{usr_2src_2libcrt0_2test_2main_8c_afe4dfd5e49215955311250c669123180}
+
+
+Definizione alla linea 12 del file main.\+c.
+
+
+\begin{DoxyCode}
+12                         \{
+13     \textcolor{keywordflow}{return} printf(\textcolor{stringliteral}{"Bla bla bla\(\backslash\)n"});
+14 \}
+\end{DoxyCode}

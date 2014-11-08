@@ -1,0 +1,407 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="pthread__mutex_8c" kind="file">
+    <compoundname>pthread_mutex.c</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">time.h</includes>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+    <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
+    <incdepgraph>
+      <node id="2373">
+        <label>stdint.h</label>
+      </node>
+      <node id="2381">
+        <label>errno.h</label>
+      </node>
+      <node id="2380">
+        <label>pthread_internal.h</label>
+        <link refid="pthread__internal_8h"/>
+        <childnode refid="2381" relation="include">
+        </childnode>
+        <childnode refid="2373" relation="include">
+        </childnode>
+        <childnode refid="2375" relation="include">
+        </childnode>
+      </node>
+      <node id="2372">
+        <label>usr/src/libpthread/src/pthread_mutex.c</label>
+        <link refid="pthread_mutex.c"/>
+        <childnode refid="2373" relation="include">
+        </childnode>
+        <childnode refid="2374" relation="include">
+        </childnode>
+        <childnode refid="2375" relation="include">
+        </childnode>
+        <childnode refid="2380" relation="include">
+        </childnode>
+      </node>
+      <node id="2375">
+        <label>pthread.h</label>
+        <link refid="pthread_8h"/>
+        <childnode refid="2373" relation="include">
+        </childnode>
+        <childnode refid="2376" relation="include">
+        </childnode>
+        <childnode refid="2377" relation="include">
+        </childnode>
+        <childnode refid="2378" relation="include">
+        </childnode>
+        <childnode refid="2379" relation="include">
+        </childnode>
+      </node>
+      <node id="2376">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2379">
+        <label>unistd.h</label>
+      </node>
+      <node id="2374">
+        <label>time.h</label>
+      </node>
+      <node id="2377">
+        <label>sys/time.h</label>
+      </node>
+      <node id="2378">
+        <label>sched.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref> int</type>
+        <definition>PRIVATE int __locked_mtx</definition>
+        <argsstring>(pthread_mutex_t *mutex)</argsstring>
+        <name>__locked_mtx</name>
+        <param>
+          <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref> *</type>
+          <declname>mutex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" bodystart="9" bodyend="24"/>
+        <references refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" compoundref="pthread_8h" startline="88">pthread_mutex::lock</references>
+        <references refid="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" compoundref="pthread__mutex_8c" startline="133" endline="153">pthread_mutex_unlock</references>
+        <references refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" compoundref="pthread_8h" startline="93">pthread_mutex::time</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__mutex_8c_1a8033a9fb4c16036471e20a33cb7361bd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_mutex_init</definition>
+        <argsstring>(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr)</argsstring>
+        <name>pthread_mutex_init</name>
+        <param>
+          <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref> *</type>
+          <declname>mutex</declname>
+        </param>
+        <param>
+          <type>const <ref refid="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a" kindref="member">pthread_mutexattr_t</ref> *</type>
+          <declname>attr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" line="26" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" bodystart="26" bodyend="43"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__mutex_1a3fdfabe67e940844d49b5f98809907f3" compoundref="pthread_8h" startline="92">pthread_mutex::event</references>
+        <references refid="structpthread__mutexattr_1a8f33b94daf83faf08982414db0b16a0c" compoundref="pthread_8h" startline="83">pthread_mutexattr::kind</references>
+        <references refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" compoundref="pthread_8h" startline="90">pthread_mutex::kind</references>
+        <references refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" compoundref="pthread_8h" startline="88">pthread_mutex::lock</references>
+        <references refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" compoundref="pthread_8h" startline="91">pthread_mutex::owner</references>
+        <references refid="pthread_8h_1a2a9b96c0491ae490c17d0b400bc427b0" compoundref="pthread_8h" startline="79">PTHREAD_MUTEX_DEFAULT</references>
+        <references refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" compoundref="pthread_8h" startline="89">pthread_mutex::recursion</references>
+        <references refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" compoundref="pthread_8h" startline="93">pthread_mutex::time</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__mutex_8c_1a1de946179f5a8b0d08dd8a14c19775fe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_mutex_destroy</definition>
+        <argsstring>(pthread_mutex_t *mutex)</argsstring>
+        <name>pthread_mutex_destroy</name>
+        <param>
+          <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref> *</type>
+          <declname>mutex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" line="46" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" bodystart="46" bodyend="65"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__mutex_1a3fdfabe67e940844d49b5f98809907f3" compoundref="pthread_8h" startline="92">pthread_mutex::event</references>
+        <references refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" compoundref="pthread_8h" startline="90">pthread_mutex::kind</references>
+        <references refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" compoundref="pthread_8h" startline="88">pthread_mutex::lock</references>
+        <references refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" compoundref="pthread_8h" startline="91">pthread_mutex::owner</references>
+        <references refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" compoundref="pthread_8h" startline="89">pthread_mutex::recursion</references>
+        <references refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" compoundref="pthread_8h" startline="93">pthread_mutex::time</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_mutex_lock</definition>
+        <argsstring>(pthread_mutex_t *mutex)</argsstring>
+        <name>pthread_mutex_lock</name>
+        <param>
+          <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref> *</type>
+          <declname>mutex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" line="67" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" bodystart="67" bodyend="89"/>
+        <references refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" compoundref="pthread__mutex_8c" startline="9" endline="24">__locked_mtx</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" compoundref="pthread_8h" startline="90">pthread_mutex::kind</references>
+        <references refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" compoundref="pthread_8h" startline="88">pthread_mutex::lock</references>
+        <references refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" compoundref="pthread_8h" startline="91">pthread_mutex::owner</references>
+        <references refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" compoundref="pthread_8h" startline="78">PTHREAD_MUTEX_ERRORCHECK</references>
+        <references refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" compoundref="pthread_8h" startline="77">PTHREAD_MUTEX_RECURSIVE</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
+        <references refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" compoundref="pthread_8h" startline="89">pthread_mutex::recursion</references>
+        <references refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09">sched_yield</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__mutex_8c_1a2e14cfabd118a24af57bea058285e7b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_mutex_timedlock</definition>
+        <argsstring>(pthread_mutex_t *mutex, const struct timespec *abstime)</argsstring>
+        <name>pthread_mutex_timedlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref> *</type>
+          <declname>mutex</declname>
+        </param>
+        <param>
+          <type>const struct timespec *</type>
+          <declname>abstime</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" line="92" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" bodystart="92" bodyend="104"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" compoundref="pthread__mutex_8c" startline="67" endline="89">pthread_mutex_lock</references>
+        <references refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" compoundref="pthread_8h" startline="93">pthread_mutex::time</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__mutex_8c_1a53c032e9b0fe998bcded3c3c381b4418" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_mutex_trylock</definition>
+        <argsstring>(pthread_mutex_t *mutex)</argsstring>
+        <name>pthread_mutex_trylock</name>
+        <param>
+          <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref> *</type>
+          <declname>mutex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" line="107" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" bodystart="107" bodyend="131"/>
+        <references refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" compoundref="pthread__mutex_8c" startline="9" endline="24">__locked_mtx</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" compoundref="pthread_8h" startline="90">pthread_mutex::kind</references>
+        <references refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" compoundref="pthread_8h" startline="88">pthread_mutex::lock</references>
+        <references refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" compoundref="pthread_8h" startline="91">pthread_mutex::owner</references>
+        <references refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" compoundref="pthread_8h" startline="78">PTHREAD_MUTEX_ERRORCHECK</references>
+        <references refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" compoundref="pthread_8h" startline="77">PTHREAD_MUTEX_RECURSIVE</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
+        <references refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" compoundref="pthread_8h" startline="89">pthread_mutex::recursion</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_mutex_unlock</definition>
+        <argsstring>(pthread_mutex_t *mutex)</argsstring>
+        <name>pthread_mutex_unlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref> *</type>
+          <declname>mutex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" line="133" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c" bodystart="133" bodyend="153"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" compoundref="pthread_8h" startline="90">pthread_mutex::kind</references>
+        <references refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" compoundref="pthread_8h" startline="88">pthread_mutex::lock</references>
+        <references refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" compoundref="pthread_8h" startline="91">pthread_mutex::owner</references>
+        <references refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" compoundref="pthread_8h" startline="78">PTHREAD_MUTEX_ERRORCHECK</references>
+        <references refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" compoundref="pthread_8h" startline="77">PTHREAD_MUTEX_RECURSIVE</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
+        <references refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" compoundref="pthread_8h" startline="89">pthread_mutex::recursion</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="pthread_8h" kindref="compound">pthread.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pthread__internal_8h" kindref="compound">pthread_internal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" kindref="member">__locked_mtx</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref>*<sp/>mutex)<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(time(NULL)<sp/>&lt;<sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref>)</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" kindref="member">pthread_mutex_unlock</ref>(mutex);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>==<sp/>1)</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="pthread__mutex_8c_1a8033a9fb4c16036471e20a33cb7361bd" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a8033a9fb4c16036471e20a33cb7361bd" kindref="member">pthread_mutex_init</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__mutexattr" kindref="compound">pthread_mutexattr_t</ref><sp/>*<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" kindref="member">recursion</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>=<sp/><ref refid="pthread_8h_1a2a9b96c0491ae490c17d0b400bc427b0" kindref="member">PTHREAD_MUTEX_DEFAULT</ref>;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3fdfabe67e940844d49b5f98809907f3" kindref="member">event</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(attr)</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>=<sp/>attr-&gt;<ref refid="structpthread__mutexattr_1a8f33b94daf83faf08982414db0b16a0c" kindref="member">kind</ref>;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="pthread__mutex_8c_1a1de946179f5a8b0d08dd8a14c19775fe" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a1de946179f5a8b0d08dd8a14c19775fe" kindref="member">pthread_mutex_destroy</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>==<sp/>1)<sp/>{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBUSY;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" kindref="member">recursion</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3fdfabe67e940844d49b5f98809907f3" kindref="member">event</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" kindref="member">pthread_mutex_lock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>!=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>())<sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(<ref refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" kindref="member">__locked_mtx</ref>(mutex))</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09" kindref="member">sched_yield</ref>();</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>();</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" kindref="member">recursion</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" kindref="member">PTHREAD_MUTEX_ERRORCHECK</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EDEADLK;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" kindref="member">PTHREAD_MUTEX_RECURSIVE</ref>)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" kindref="member">recursion</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="pthread__mutex_8c_1a2e14cfabd118a24af57bea058285e7b1" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a2e14cfabd118a24af57bea058285e7b1" kindref="member">pthread_mutex_timedlock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>timespec<sp/>*abstime)<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(abstime<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" kindref="member">pthread_mutex_lock</ref>(mutex)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>=<sp/>time(NULL)<sp/>+<sp/>abstime-&gt;tv_sec;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107" refid="pthread__mutex_8c_1a53c032e9b0fe998bcded3c3c381b4418" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a53c032e9b0fe998bcded3c3c381b4418" kindref="member">pthread_mutex_trylock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>!=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>())<sp/>{</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" kindref="member">__locked_mtx</ref>(mutex))<sp/>{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBUSY;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>();</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" kindref="member">recursion</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" kindref="member">PTHREAD_MUTEX_ERRORCHECK</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EDEADLK;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" kindref="member">PTHREAD_MUTEX_RECURSIVE</ref>)</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" kindref="member">recursion</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133" refid="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" kindref="member">pthread_mutex_unlock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>==<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>())<sp/>{</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" kindref="member">PTHREAD_MUTEX_RECURSIVE</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(--(mutex-&gt;<ref refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" kindref="member">recursion</ref>))</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" kindref="member">PTHREAD_MUTEX_ERRORCHECK</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EPERM;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="153"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_mutex.c"/>
+  </compounddef>
+</doxygen>

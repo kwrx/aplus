@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>list</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/96.html#L50'>list</a>               50 src/include/aplus/list.h 	if(list)
+<a href='../S/96.html#L51'>list</a>               51 src/include/aplus/list.h 		return list-&gt;size == 0;
+<a href='../S/96.html#L61'>list</a>               61 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock);
+<a href='../S/96.html#L64'>list</a>               64 src/include/aplus/list.h 	val-&gt;next = list-&gt;body;
+<a href='../S/96.html#L66'>list</a>               66 src/include/aplus/list.h 	list-&gt;body = val;
+<a href='../S/96.html#L67'>list</a>               67 src/include/aplus/list.h 	list-&gt;size += 1;
+<a href='../S/96.html#L69'>list</a>               69 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock);
+<a href='../S/96.html#L74'>list</a>               74 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock);
+<a href='../S/96.html#L76'>list</a>               76 src/include/aplus/list.h 	list_body_t* body = list-&gt;body;
+<a href='../S/96.html#L84'>list</a>               84 src/include/aplus/list.h 				list-&gt;body = body-&gt;next;
+<a href='../S/96.html#L95'>list</a>               95 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock);
+<a href='../S/96.html#L100'>list</a>              100 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock);
+<a href='../S/96.html#L102'>list</a>              102 src/include/aplus/list.h 	list_body_t* body = list-&gt;body;
+<a href='../S/96.html#L103'>list</a>              103 src/include/aplus/list.h 	list_body_t* tmp = list-&gt;body;
+<a href='../S/96.html#L111'>list</a>              111 src/include/aplus/list.h 	list-&gt;body = 0;
+<a href='../S/96.html#L112'>list</a>              112 src/include/aplus/list.h 	list-&gt;size = 0;
+<a href='../S/96.html#L114'>list</a>              114 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock);
+<a href='../S/96.html#L130'>list</a>              130 src/include/aplus/list.h 	for(list_body_t* i = list-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L140'>list</a>              140 src/include/aplus/list.h 	for(list_body_t* i = list-&gt;body; i; i = i-&gt;next) {
+<a href='../S/96.html#L150'>list</a>              150 src/include/aplus/list.h 	if(list-&gt;body)
+<a href='../S/96.html#L151'>list</a>              151 src/include/aplus/list.h 		return list-&gt;body-&gt;value;
+<a href='../S/96.html#L158'>list</a>              158 src/include/aplus/list.h 	if(!list-&gt;body)
+<a href='../S/96.html#L161'>list</a>              161 src/include/aplus/list.h 	list_body_t* tmp = list-&gt;body;
+<a href='../S/96.html#L170'>list</a>              170 src/include/aplus/list.h 	spinlock_lock(&amp;list-&gt;lock)
+<a href='../S/96.html#L173'>list</a>              173 src/include/aplus/list.h 	spinlock_unlock(&amp;list-&gt;lock)
+<a href='../S/96.html#L176'>list</a>              176 src/include/aplus/list.h 	for(listval_t value = list_head(list); 					\
+<a href='../S/96.html#L178'>list</a>              178 src/include/aplus/list.h 		value = list_next(list, value)						\
+<a href='../S/96.html#L182'>list</a>              182 src/include/aplus/list.h 	for(listval_t value = list_tail(list); 					\
+<a href='../S/96.html#L184'>list</a>              184 src/include/aplus/list.h 		value = list_prev(list, value)						\
+<a href='../S/96.html#L188'>list</a>              188 src/include/aplus/list.h 	list = (list_t*) kmalloc(sizeof(list_t));				\
+<a href='../S/96.html#L189'>list</a>              189 src/include/aplus/list.h 	list-&gt;body = 0;											\
+<a href='../S/96.html#L190'>list</a>              190 src/include/aplus/list.h 	list-&gt;size = 0;											\
+<a href='../S/96.html#L191'>list</a>              191 src/include/aplus/list.h 	list-&gt;lock = 0
+<a href='../S/96.html#L194'>list</a>              194 src/include/aplus/list.h 	list_clear(list);										\
+<a href='../S/96.html#L195'>list</a>              195 src/include/aplus/list.h 	kfree(list)
+<a href='../S/142.html#L24'>list</a>               24 src/syscall/getgroups.c 	if(list == NULL) {
+<a href='../S/142.html#L37'>list</a>               37 src/syscall/getgroups.c 		list[i] = __groups[i];
+<a href='../S/16.html#L19'>list</a>               19 usr/src/libposix/src/gid.c 	return __os_getgroups(len, list);
+</pre>
+</body>
+</html>

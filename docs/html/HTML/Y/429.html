@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>offset</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L22'>offset</a>             22 src/arch/pci.c static int pci_get_address(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset) {
+<a href='../S/160.html#L23'>offset</a>             23 src/arch/pci.c 	return 0x80000000 | (bus &lt;&lt; 16) | (dev &lt;&lt; 11) | (func &lt;&lt; 8) | (offset &amp; 0xFC);
+<a href='../S/160.html#L26'>offset</a>             26 src/arch/pci.c static uint32_t pci_config_read(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset) {
+<a href='../S/160.html#L27'>offset</a>             27 src/arch/pci.c 	outl(PCI_CONFIG_ADDRESS, pci_get_address(bus, dev, func, offset));
+<a href='../S/160.html#L29'>offset</a>             29 src/arch/pci.c 	if(offset % 4 == 0)
+<a href='../S/160.html#L32'>offset</a>             32 src/arch/pci.c 	return (inl(PCI_CONFIG_DATA) &gt;&gt; ((offset % 4) * 8));
+<a href='../S/156.html#L58'>offset</a>             58 src/bufio.c    	buf-&gt;offset = (off_t) 0;
+<a href='../S/156.html#L80'>offset</a>             80 src/bufio.c    	buf-&gt;offset = (off_t) 0;
+<a href='../S/156.html#L103'>offset</a>            103 src/bufio.c    int bufio_seek(bufio_t* buf, off_t offset, int dir) {
+<a href='../S/156.html#L105'>offset</a>            105 src/bufio.c    	if(offset &gt; buf-&gt;size)
+<a href='../S/156.html#L108'>offset</a>            108 src/bufio.c    	if(dir == SEEK_CUR &amp;&amp; (offset + buf-&gt;offset) &gt; buf-&gt;size)
+<a href='../S/156.html#L113'>offset</a>            113 src/bufio.c    			buf-&gt;offset = offset;
+<a href='../S/156.html#L117'>offset</a>            117 src/bufio.c    			buf-&gt;offset = buf-&gt;offset - offset;
+<a href='../S/156.html#L121'>offset</a>            121 src/bufio.c    			buf-&gt;offset += offset;
+<a href='../S/156.html#L128'>offset</a>            128 src/bufio.c    	return buf-&gt;offset;
+<a href='../S/156.html#L144'>offset</a>            144 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/156.html#L145'>offset</a>            145 src/bufio.c    	memcpy(ptr, (void*) ((off_t) buf-&gt;raw + buf-&gt;offset), len);
+<a href='../S/156.html#L147'>offset</a>            147 src/bufio.c    	buf-&gt;offset += (off_t) len;
+<a href='../S/156.html#L158'>offset</a>            158 src/bufio.c    	len = (len + buf-&gt;offset &gt; buf-&gt;size) ? (buf-&gt;size - buf-&gt;offset) : len;
+<a href='../S/156.html#L159'>offset</a>            159 src/bufio.c    	memcpy((void*) ((off_t) buf-&gt;raw + buf-&gt;offset), ptr, len);
+<a href='../S/156.html#L161'>offset</a>            161 src/bufio.c    	buf-&gt;offset += (off_t) len;
+<a href='../S/98.html#L35'>offset</a>             35 src/include/aplus/bufio.h 	off_t offset;
+<a href='../S/95.html#L13'>offset</a>             13 src/include/aplus/net/ipv4.h #define IPV4_FLAGS(head)				(head-&gt;offset &amp; 3)
+<a href='../S/95.html#L14'>offset</a>             14 src/include/aplus/net/ipv4.h #define IPV4_OFFSET(head)				((head-&gt;offset &gt;&gt; 2) * 8)
+<a href='../S/95.html#L35'>offset</a>             35 src/include/aplus/net/ipv4.h 	uint16_t offset;
+<a href='../S/113.html#L34'>offset</a>             34 src/net/ipv4.c void* ipv4_create_packet(netif_t* netif, void* buf, size_t length, int type, ipv4_t dest, int fragment, int offset) {
+<a href='../S/113.html#L44'>offset</a>             44 src/net/ipv4.c 		ip-&gt;offset = offset;
+<a href='../S/113.html#L46'>offset</a>             46 src/net/ipv4.c 		ip-&gt;offset = IPV4_FLAGS_MF | (offset * IPV4_MAX_LENGTH);
+<a href='../S/110.html#L21'>offset</a>             21 src/net/slirp/slirp.c 	int offset;
+<a href='../S/110.html#L48'>offset</a>             48 src/net/slirp/slirp.c 		slirpcard-&gt;offset = 0;
+<a href='../S/110.html#L53'>offset</a>             53 src/net/slirp/slirp.c 	if((d == SLIRP_PACKET_END &amp;&amp; slirpcard-&gt;used) || slirpcard-&gt;offset &gt;= SLIRP_BUFSIZ) {
+<a href='../S/110.html#L56'>offset</a>             56 src/net/slirp/slirp.c 		if(ipv4_recv(netif, slirpcard-&gt;buffer, slirpcard-&gt;offset) &gt; 0) {
+<a href='../S/110.html#L58'>offset</a>             58 src/net/slirp/slirp.c 			netif-&gt;state.rx_bytes += slirpcard-&gt;offset;
+<a href='../S/110.html#L62'>offset</a>             62 src/net/slirp/slirp.c 		slirpcard-&gt;offset = 0;
+<a href='../S/110.html#L79'>offset</a>             79 src/net/slirp/slirp.c 			slirpcard-&gt;buffer[slirpcard-&gt;offset++] = d;
+<a href='../S/110.html#L134'>offset</a>            134 src/net/slirp/slirp.c 	slirpcard-&gt;offset = 0;
+<a href='../S/10.html#L60'>offset</a>             60 usr/src/libposix/include/sys/dirent.h void seekdir(DIR* d, off_t offset);
+<a href='../S/25.html#L13'>offset</a>             13 usr/src/libposix/src/seekdir.c void seekdir(DIR* d, off_t offset) {
+<a href='../S/25.html#L15'>offset</a>             15 usr/src/libposix/src/seekdir.c 		d-&gt;position = offset;
+</pre>
+</body>
+</html>

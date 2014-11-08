@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>VMM_FLAGS_DEFAULT</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L100'>VMM_FLAGS_DEFAULT</a>  100 src/arch/task.c 	vmm_map(child-&gt;context.cr3, mm_paddr(stack), child-&gt;context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+<a href='../S/115.html#L136'>VMM_FLAGS_DEFAULT</a>  136 src/exec.c     			if(vmm_alloc((void*) sec-&gt;sh_addr, sec-&gt;sh_size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER))
+<a href='../S/150.html#L92'>VMM_FLAGS_DEFAULT</a>   92 src/mm/paging.c 				vmm_map(current_vmm, table, table, PTSIZE * sizeof(uint32_t), VMM_FLAGS_DEFAULT);
+<a href='../S/150.html#L140'>VMM_FLAGS_DEFAULT</a>  140 src/mm/paging.c 	vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);
+<a href='../S/150.html#L143'>VMM_FLAGS_DEFAULT</a>  143 src/mm/paging.c 	vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT);
+<a href='../S/150.html#L146'>VMM_FLAGS_DEFAULT</a>  146 src/mm/paging.c 	vmm_map(dest, (void*) 0xE0000000, (void*) 0xE0000000, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+<a href='../S/143.html#L196'>VMM_FLAGS_DEFAULT</a>  196 src/sched.c    	current_task-&gt;image.vaddr = vmm_map(current_task-&gt;context.cr3, mm_paddr((void*) current_task-&gt;image.ptr), current_task-&gt;image.vaddr, current_task-&gt;image.length, VMM_FLAGS_DEFAULT);
+</pre>
+</body>
+</html>

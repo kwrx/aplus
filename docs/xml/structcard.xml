@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structcard" kind="struct" prot="public">
+    <compoundname>card</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcard_1ac4d735012434df4c445edaffce28bd73" prot="public" static="no" mutable="no">
+        <type><ref refid="pci_8h_1ab3c98ba0de1f963ef2f46200b090815b" kindref="member">pci_device_t</ref> *</type>
+        <definition>pci_device_t* card::device</definition>
+        <argsstring></argsstring>
+        <name>device</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+        <definition>netif_t* card::netif</definition>
+        <argsstring></argsstring>
+        <name>netif</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="20" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char card::macaddr[6]</definition>
+        <argsstring>[6]</argsstring>
+        <name>macaddr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* card::rxBuffer</definition>
+        <argsstring></argsstring>
+        <name>rxBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="24" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1a9492d8053fa4c304877e1f9959b48731" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int card::rxBufferOffset</definition>
+        <argsstring></argsstring>
+        <name>rxBufferOffset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="25" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" prot="public" static="no" mutable="no">
+        <type>char *</type>
+        <definition>char* card::txBuffer</definition>
+        <argsstring></argsstring>
+        <name>txBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1a2294d3601ad6be7638b30f68496d589e" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char card::txBufferUsed</definition>
+        <argsstring></argsstring>
+        <name>txBufferUsed</name>
+        <bitfield>1</bitfield>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="28" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char card::curBuffer</definition>
+        <argsstring></argsstring>
+        <name>curBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="29" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcard_1a63721f311b12c89790089bbcacc0060b" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int card::magic</definition>
+        <argsstring></argsstring>
+        <name>magic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="31" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="23">
+        <label>card</label>
+        <link refid="structcard"/>
+        <childnode refid="24" relation="usage">
+          <edgelabel>+device</edgelabel>
+        </childnode>
+        <childnode refid="25" relation="usage">
+          <edgelabel>+netif</edgelabel>
+        </childnode>
+      </node>
+      <node id="24">
+        <label>pci_device</label>
+        <link refid="structpci__device"/>
+      </node>
+      <node id="25">
+        <label>netif</label>
+        <link refid="structnetif"/>
+        <childnode refid="24" relation="usage">
+          <edgelabel>+device</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" line="18" column="1" bodyfile="/opt/prj/aPlus/src/net/rtl8139/rtl8139.c" bodystart="18" bodyend="32"/>
+    <listofallmembers>
+      <member refid="structcard_1adc7cfe07c57eb29b36d674ce0312c7ac" prot="public" virt="non-virtual"><scope>card</scope><name>curBuffer</name></member>
+      <member refid="structcard_1ac4d735012434df4c445edaffce28bd73" prot="public" virt="non-virtual"><scope>card</scope><name>device</name></member>
+      <member refid="structcard_1abe96f3126aa0a28b86a1748ad1f83f81" prot="public" virt="non-virtual"><scope>card</scope><name>macaddr</name></member>
+      <member refid="structcard_1a63721f311b12c89790089bbcacc0060b" prot="public" virt="non-virtual"><scope>card</scope><name>magic</name></member>
+      <member refid="structcard_1ab3123a3dbb6dc38d86488ab37f7759ae" prot="public" virt="non-virtual"><scope>card</scope><name>netif</name></member>
+      <member refid="structcard_1a5cd3278f0e24fb6942e726b61bb032a6" prot="public" virt="non-virtual"><scope>card</scope><name>rxBuffer</name></member>
+      <member refid="structcard_1a9492d8053fa4c304877e1f9959b48731" prot="public" virt="non-virtual"><scope>card</scope><name>rxBufferOffset</name></member>
+      <member refid="structcard_1a733cf5ffa3a9d2bf6cf28473817915b6" prot="public" virt="non-virtual"><scope>card</scope><name>txBuffer</name></member>
+      <member refid="structcard_1a2294d3601ad6be7638b30f68496d589e" prot="public" virt="non-virtual"><scope>card</scope><name>txBufferUsed</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

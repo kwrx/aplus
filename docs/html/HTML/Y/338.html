@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>ipv4</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/94.html#L40'>ipv4</a>               40 src/include/aplus/net/arp.h 	ipv4_t ipv4;
+<a href='../S/89.html#L38'>ipv4</a>               38 src/include/aplus/netif.h 	ipv4_t ipv4;
+<a href='../S/89.html#L44'>ipv4</a>               44 src/include/aplus/netif.h 			ipv4_t ipv4;
+<a href='../S/89.html#L49'>ipv4</a>               49 src/include/aplus/netif.h 			ipv4_t ipv4;
+<a href='../S/108.html#L33'>ipv4</a>               33 src/net/arp.c  int arp_cache_add(macaddr_t macaddr, ipv4_t ipv4) {
+<a href='../S/108.html#L46'>ipv4</a>               46 src/net/arp.c  	memcpy(arp-&gt;ipv4, ipv4, sizeof(ipv4_t));
+<a href='../S/108.html#L53'>ipv4</a>               53 src/net/arp.c  		arp-&gt;ipv4[0],
+<a href='../S/108.html#L54'>ipv4</a>               54 src/net/arp.c  		arp-&gt;ipv4[1],
+<a href='../S/108.html#L55'>ipv4</a>               55 src/net/arp.c  		arp-&gt;ipv4[2],
+<a href='../S/108.html#L56'>ipv4</a>               56 src/net/arp.c  		arp-&gt;ipv4[3]
+<a href='../S/108.html#L62'>ipv4</a>               62 src/net/arp.c  		memcpy(netif-&gt;ipv4, arp-&gt;ipv4, sizeof(ipv4_t));
+<a href='../S/113.html#L63'>ipv4</a>               63 src/net/ipv4.c 	memcpy(ip-&gt;source, netif-&gt;ipv4, sizeof(ipv4_t));
+<a href='../S/111.html#L74'>ipv4</a>               74 src/net/loopback/loopback.c 	netif-&gt;ipv4[0] = 127;
+<a href='../S/111.html#L75'>ipv4</a>               75 src/net/loopback/loopback.c 	netif-&gt;ipv4[1] = 0;
+<a href='../S/111.html#L76'>ipv4</a>               76 src/net/loopback/loopback.c 	netif-&gt;ipv4[2] = 0;
+<a href='../S/111.html#L77'>ipv4</a>               77 src/net/loopback/loopback.c 	netif-&gt;ipv4[3] = 1;
+<a href='../S/107.html#L36'>ipv4</a>               36 src/net/netif.c netif_t* netif_find_by_ipv4(ipv4_t* ipv4) {
+<a href='../S/107.html#L43'>ipv4</a>               43 src/net/netif.c 		if(memcmp(netif-&gt;ipv4, ipv4, sizeof(ipv4_t)) == 0)
+<a href='../S/107.html#L130'>ipv4</a>              130 src/net/netif.c 	if(netif_find_by_ipv4(&amp;netdev-&gt;ipv4) != NULL) {
+<a href='../S/107.html#L150'>ipv4</a>              150 src/net/netif.c 			netdev-&gt;ipv4[0],
+<a href='../S/107.html#L151'>ipv4</a>              151 src/net/netif.c 			netdev-&gt;ipv4[1],
+<a href='../S/107.html#L152'>ipv4</a>              152 src/net/netif.c 			netdev-&gt;ipv4[2],
+<a href='../S/107.html#L153'>ipv4</a>              153 src/net/netif.c 			netdev-&gt;ipv4[3],
+<a href='../S/107.html#L182'>ipv4</a>              182 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[0],
+<a href='../S/107.html#L183'>ipv4</a>              183 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[1],
+<a href='../S/107.html#L184'>ipv4</a>              184 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[2],
+<a href='../S/107.html#L185'>ipv4</a>              185 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[3],
+<a href='../S/107.html#L186'>ipv4</a>              186 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[0],
+<a href='../S/107.html#L187'>ipv4</a>              187 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[1],
+<a href='../S/107.html#L188'>ipv4</a>              188 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[2],
+<a href='../S/107.html#L189'>ipv4</a>              189 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[3]
+<a href='../S/104.html#L246'>ipv4</a>              246 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[0] = 192;
+<a href='../S/104.html#L247'>ipv4</a>              247 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[1] = 168;
+<a href='../S/104.html#L248'>ipv4</a>              248 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[2] = 1;
+<a href='../S/104.html#L249'>ipv4</a>              249 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;ipv4[3] = 80;
+<a href='../S/104.html#L265'>ipv4</a>              265 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[0] = 8;
+<a href='../S/104.html#L266'>ipv4</a>              266 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[1] = 8;
+<a href='../S/104.html#L267'>ipv4</a>              267 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[2] = 8;
+<a href='../S/104.html#L268'>ipv4</a>              268 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.primary.ipv4[3] = 8;
+<a href='../S/104.html#L270'>ipv4</a>              270 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[0] = 8;
+<a href='../S/104.html#L271'>ipv4</a>              271 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[1] = 8;
+<a href='../S/104.html#L272'>ipv4</a>              272 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[2] = 4;
+<a href='../S/104.html#L273'>ipv4</a>              273 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;dns.secondary.ipv4[3] = 4;
+<a href='../S/110.html#L152'>ipv4</a>              152 src/net/slirp/slirp.c 	netif-&gt;ipv4[0] = 10;
+<a href='../S/110.html#L153'>ipv4</a>              153 src/net/slirp/slirp.c 	netif-&gt;ipv4[1] = 0;
+<a href='../S/110.html#L154'>ipv4</a>              154 src/net/slirp/slirp.c 	netif-&gt;ipv4[2] = 2;
+<a href='../S/110.html#L155'>ipv4</a>              155 src/net/slirp/slirp.c 	netif-&gt;ipv4[3] = 0;
+<a href='../S/110.html#L171'>ipv4</a>              171 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[0] = 8;
+<a href='../S/110.html#L172'>ipv4</a>              172 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[1] = 8;
+<a href='../S/110.html#L173'>ipv4</a>              173 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[2] = 8;
+<a href='../S/110.html#L174'>ipv4</a>              174 src/net/slirp/slirp.c 	netif-&gt;dns.primary.ipv4[3] = 8;
+<a href='../S/110.html#L176'>ipv4</a>              176 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[0] = 8;
+<a href='../S/110.html#L177'>ipv4</a>              177 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[1] = 8;
+<a href='../S/110.html#L178'>ipv4</a>              178 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[2] = 4;
+<a href='../S/110.html#L179'>ipv4</a>              179 src/net/slirp/slirp.c 	netif-&gt;dns.secondary.ipv4[3] = 4;
+</pre>
+</body>
+</html>

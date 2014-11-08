@@ -1,0 +1,300 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="syscalls_8c" kind="file">
+    <compoundname>syscalls.c</compoundname>
+    <includes local="no">errno.h</includes>
+    <includedby refid="crt0_8c" local="yes">usr/src/libcrt0/src/crt0.c</includedby>
+    <incdepgraph>
+      <node id="1927">
+        <label>errno.h</label>
+      </node>
+      <node id="1926">
+        <label>usr/src/libcrt0/src/syscalls.c</label>
+        <link refid="syscalls.c"/>
+        <childnode refid="1927" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1928">
+        <label>usr/src/libcrt0/src/syscalls.c</label>
+        <link refid="syscalls.c"/>
+        <childnode refid="1929" relation="include">
+        </childnode>
+      </node>
+      <node id="1929">
+        <label>usr/src/libcrt0/src/crt0.c</label>
+        <link refid="crt0_8c"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" prot="public" static="no">
+        <name>SYSCODE</name>
+        <initializer>&quot;int $0x80&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" line="3" column="9" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="syscalls_8c_1a24015b2a2ab097b62202f166ddd904ac" prot="public" static="no">
+        <name>syscall0</name>
+        <param><defname>n</defname></param>
+        <param><defname>h</defname></param>
+        <initializer>h() {								\
+		int r, e;							\
+		<ref refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kindref="member">__asm__</ref> __volatile__ (			\
+			<ref refid="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" kindref="member">SYSCODE</ref>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n)					\
+		);								\
+		<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref> = e;						\
+		return r;						\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" line="5" column="9" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="syscalls_8c_1a05bd8f431f2ebc917a20387c229f43dd" prot="public" static="no">
+        <name>syscall1</name>
+        <param><defname>n</defname></param>
+        <param><defname>h</defname></param>
+        <initializer>h(p1) {								\
+		int r, e;							\
+		<ref refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kindref="member">__asm__</ref> __volatile__ (			\
+			<ref refid="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" kindref="member">SYSCODE</ref>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1)			\
+		);								\
+		<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref> = e;						\
+		return r;						\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" line="17" column="9" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="syscalls_8c_1a1ea836cfb65e3b32b607af3e81e144f1" prot="public" static="no">
+        <name>syscall2</name>
+        <param><defname>n</defname></param>
+        <param><defname>h</defname></param>
+        <initializer>h(p1, p2) {							\
+		int r, e;							\
+		<ref refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kindref="member">__asm__</ref> __volatile__ (			\
+			<ref refid="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" kindref="member">SYSCODE</ref>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2)	\
+		);								\
+		<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref> = e;						\
+		return r;						\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" line="29" column="9" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="syscalls_8c_1a6ebd56a469ce4c96b73134cc1e63b69e" prot="public" static="no">
+        <name>syscall3</name>
+        <param><defname>n</defname></param>
+        <param><defname>h</defname></param>
+        <initializer>h(p1, p2, p3) {						\
+		int r, e;							\
+		<ref refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kindref="member">__asm__</ref> __volatile__ (			\
+			<ref refid="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" kindref="member">SYSCODE</ref>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2),	\
+			  &quot;d&quot;(p3)					\
+		);								\
+		<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref> = e;						\
+		return r;						\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" line="41" column="9" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="syscalls_8c_1a67af7b4caa02d0e160fe462b03d3320f" prot="public" static="no">
+        <name>syscall4</name>
+        <param><defname>n</defname></param>
+        <param><defname>h</defname></param>
+        <initializer>h(p1, p2, p3, p4) {					\
+		int r, e;							\
+		<ref refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kindref="member">__asm__</ref> __volatile__ (			\
+			<ref refid="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" kindref="member">SYSCODE</ref>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2),	\
+			  &quot;d&quot;(p3), &quot;S&quot;(p4)			\
+		);								\
+		<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref> = e;						\
+		return r;						\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" line="54" column="9" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="syscalls_8c_1a68e3cd45619716c1f58001c8cf79f1c3" prot="public" static="no">
+        <name>syscall5</name>
+        <param><defname>n</defname></param>
+        <param><defname>h</defname></param>
+        <initializer>h(p1, p2, p3, p4, p5) {				\
+		int r, e;							\
+		<ref refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kindref="member">__asm__</ref> __volatile__ (			\
+			<ref refid="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" kindref="member">SYSCODE</ref>						\
+			: &quot;=a&quot;(r), &quot;=b&quot;(e)	\
+			: &quot;a&quot;(n), &quot;b&quot;(p1), &quot;c&quot;(p2),	\
+			  &quot;d&quot;(p3), &quot;S&quot;(p4), &quot;D&quot;(p5)	\
+		);								\
+		<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref> = e;						\
+		return r;						\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" line="67" column="9" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3" refid="syscalls_8c_1af6da46e3404bff9a08b470ccab480d38" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SYSCODE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;int<sp/>$0x80&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5" refid="syscalls_8c_1a24015b2a2ab097b62202f166ddd904ac" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>syscall0(n,<sp/>h)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="6"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>h()<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="7"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int<sp/>r,<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="8"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__asm__<sp/>__volatile__<sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="9"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SYSCODE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="10"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;=a&quot;(r),<sp/>&quot;=b&quot;(e)<sp/><sp/>\</highlight></codeline>
+<codeline lineno="11"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;a&quot;(n)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="12"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="13"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="14"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>r;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="syscalls_8c_1a05bd8f431f2ebc917a20387c229f43dd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>syscall1(n,<sp/>h)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>h(p1)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="19"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int<sp/>r,<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="20"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__asm__<sp/>__volatile__<sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="21"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SYSCODE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="22"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;=a&quot;(r),<sp/>&quot;=b&quot;(e)<sp/><sp/>\</highlight></codeline>
+<codeline lineno="23"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;a&quot;(n),<sp/>&quot;b&quot;(p1)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="24"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="25"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="26"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>r;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="27"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="syscalls_8c_1a1ea836cfb65e3b32b607af3e81e144f1" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>syscall2(n,<sp/>h)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="30"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>h(p1,<sp/>p2)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="31"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int<sp/>r,<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="32"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__asm__<sp/>__volatile__<sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="33"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SYSCODE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="34"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;=a&quot;(r),<sp/>&quot;=b&quot;(e)<sp/><sp/>\</highlight></codeline>
+<codeline lineno="35"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;a&quot;(n),<sp/>&quot;b&quot;(p1),<sp/>&quot;c&quot;(p2)<sp/><sp/>\</highlight></codeline>
+<codeline lineno="36"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="37"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="38"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>r;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="39"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="syscalls_8c_1a6ebd56a469ce4c96b73134cc1e63b69e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>syscall3(n,<sp/>h)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="42"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>h(p1,<sp/>p2,<sp/>p3)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="43"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int<sp/>r,<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="44"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__asm__<sp/>__volatile__<sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="45"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SYSCODE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="46"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;=a&quot;(r),<sp/>&quot;=b&quot;(e)<sp/><sp/>\</highlight></codeline>
+<codeline lineno="47"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;a&quot;(n),<sp/>&quot;b&quot;(p1),<sp/>&quot;c&quot;(p2),<sp/>\</highlight></codeline>
+<codeline lineno="48"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;d&quot;(p3)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="49"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="50"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="51"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>r;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="52"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="syscalls_8c_1a67af7b4caa02d0e160fe462b03d3320f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>syscall4(n,<sp/>h)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="55"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>h(p1,<sp/>p2,<sp/>p3,<sp/>p4)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="56"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int<sp/>r,<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="57"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__asm__<sp/>__volatile__<sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="58"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SYSCODE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="59"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;=a&quot;(r),<sp/>&quot;=b&quot;(e)<sp/><sp/>\</highlight></codeline>
+<codeline lineno="60"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;a&quot;(n),<sp/>&quot;b&quot;(p1),<sp/>&quot;c&quot;(p2),<sp/>\</highlight></codeline>
+<codeline lineno="61"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;d&quot;(p3),<sp/>&quot;S&quot;(p4)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="62"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="63"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="64"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>r;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="65"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="syscalls_8c_1a68e3cd45619716c1f58001c8cf79f1c3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>syscall5(n,<sp/>h)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="68"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>h(p1,<sp/>p2,<sp/>p3,<sp/>p4,<sp/>p5)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="69"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int<sp/>r,<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="70"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__asm__<sp/>__volatile__<sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="71"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SYSCODE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="72"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;=a&quot;(r),<sp/>&quot;=b&quot;(e)<sp/><sp/>\</highlight></codeline>
+<codeline lineno="73"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>&quot;a&quot;(n),<sp/>&quot;b&quot;(p1),<sp/>&quot;c&quot;(p2),<sp/>\</highlight></codeline>
+<codeline lineno="74"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;d&quot;(p3),<sp/>&quot;S&quot;(p4),<sp/>&quot;D&quot;(p5)<sp/>\</highlight></codeline>
+<codeline lineno="75"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="76"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>e;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="77"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>r;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="78"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><ref refid="syscalls_8c_1a05bd8f431f2ebc917a20387c229f43dd" kindref="member">syscall1</ref>(0,<sp/>_exit)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><ref refid="syscalls_8c_1a05bd8f431f2ebc917a20387c229f43dd" kindref="member">syscall1</ref>(1,<sp/>close)</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><ref refid="syscalls_8c_1a6ebd56a469ce4c96b73134cc1e63b69e" kindref="member">syscall3</ref>(2,<sp/><ref refid="__execve_8c_1a69afa95020be08ad581031bc33921680" kindref="member">execve</ref>)</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><ref refid="syscalls_8c_1a24015b2a2ab097b62202f166ddd904ac" kindref="member">syscall0</ref>(3,<sp/>fork)</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><ref refid="syscalls_8c_1a1ea836cfb65e3b32b607af3e81e144f1" kindref="member">syscall2</ref>(4,<sp/>fstat)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">syscall0(5,<sp/><ref refid="posix_2hooks_8h_1a2ccdeb931b6cfcf884ca5ad73e0ba11c" kindref="member">getpid</ref>)</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">syscall1(6,<sp/>isatty)</highlight></codeline>
+<codeline lineno="88"><highlight class="normal">syscall2(7,<sp/><ref refid="posix_2hooks_8h_1a6edea8ed9aecaef5fc4762da7ec641ff" kindref="member">kill</ref>)</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">syscall2(8,<sp/>link)</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">syscall3(9,<sp/>lseek)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal">syscall3(10,<sp/>open)</highlight></codeline>
+<codeline lineno="92"><highlight class="normal">syscall3(11,<sp/>read)</highlight></codeline>
+<codeline lineno="93"><highlight class="normal">syscall1(12,<sp/>sbrk)</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">syscall2(13,<sp/>stat)</highlight></codeline>
+<codeline lineno="95"><highlight class="normal">syscall1(14,<sp/>times)</highlight></codeline>
+<codeline lineno="96"><highlight class="normal">syscall1(15,<sp/>unlink)</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">syscall1(16,<sp/>wait)</highlight></codeline>
+<codeline lineno="98"><highlight class="normal">syscall3(17,<sp/>write)</highlight></codeline>
+<codeline lineno="99"><highlight class="normal">syscall2(18,<sp/>gettimeofday)</highlight></codeline>
+<codeline lineno="100"><highlight class="normal">syscall3(19,<sp/>fcntl)</highlight></codeline>
+<codeline lineno="101"><highlight class="normal">syscall3(20,<sp/>ioctl)</highlight></codeline>
+<codeline lineno="102"><highlight class="normal">syscall3(21,<sp/>chown)</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><ref refid="syscalls_8c_1a67af7b4caa02d0e160fe462b03d3320f" kindref="member">syscall4</ref>(22,<sp/><ref refid="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe" kindref="member">clone</ref>)</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">syscall0(23,<sp/><ref refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09" kindref="member">sched_yield</ref>)</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__aplus__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><ref refid="syscalls_8c_1a1ea836cfb65e3b32b607af3e81e144f1" kindref="member">syscall2</ref>(80,<sp/>aplus_readdir)</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">syscall2(81,<sp/>aplus_getgroups)</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">syscall0(100,<sp/>aplus_argv)</highlight></codeline>
+<codeline lineno="110"><highlight class="normal">syscall0(101,<sp/>aplus_envp)</highlight></codeline>
+<codeline lineno="111"><highlight class="normal">syscall1(102,<sp/>aplus_install_sighandler);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libcrt0/src/syscalls.c"/>
+  </compounddef>
+</doxygen>

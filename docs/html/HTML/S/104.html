@@ -1,0 +1,351 @@
+<html>
+<head>
+<title>src/net/rtl8139/rtl8139.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/<a href='../files/173.html'>rtl8139</a>/rtl8139.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L44'>[^]</a><a href='#L166'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L44' title='Defined at 44.'>rtl8139_ifup</a>
+<li><a href='#L49' title='Defined at 49.'>rtl8139_ifdown</a>
+<li><a href='#L54' title='Defined at 54.'>rtl8139_send</a>
+<li><a href='#L89' title='Defined at 89.'>recvdata</a>
+<li><a href='#L141' title='Defined at 141.'>rtl8139_handler</a>
+<li><a href='#L166' title='Defined at 166.'>rtl8139_init</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='98.html'>aplus/bufio.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='87.html'>aplus/mm.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;<a href='88.html'>aplus/spinlock.h</a>&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;<a href='99.html'>aplus/attribute.h</a>&gt;
+<a name='L9'>   9 
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L12'>  12 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L13'>  13 
+<a name='L14'>  14 <font color='darkred'>#include</font> &lt;<a href='93.html'>aplus/net/eth.h</a>&gt;
+<a name='L15'>  15 
+<a name='L16'>  16 <font color='darkred'>#include</font> "<a href='105.html'>rtl8139.h</a>"
+<a name='L17'>  17 
+<a name='L18'>  18 <b>typedef</b> <b>struct</b> <a href='../R/221.html' title='Multiple refered from 124 places.'>card</a> <font color='red'>{</font>
+<a name='L19'>  19         <a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>;
+<a name='L20'>  20         <a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>;
+<a name='L21'>  21         
+<a name='L22'>  22         <b>char</b> <a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[6];
+<a name='L23'>  23         
+<a name='L24'>  24         <b>char</b>* <a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>;
+<a name='L25'>  25         <b>int</b> <a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a>;
+<a name='L26'>  26 
+<a name='L27'>  27         <b>char</b>* <a href='../Y/708.html' title='Multiple used in 7 places.'>txBuffer</a>;
+<a name='L28'>  28         <b>char</b> <a href='../Y/709.html' title='Multiple used in 4 places.'>txBufferUsed</a>:1;
+<a name='L29'>  29         <b>char</b> <a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a>; 
+<a name='L30'>  30 
+<a name='L31'>  31         <b>int</b> <a href='../Y/371.html' title='Multiple used in 12 places.'>magic</a>;
+<a name='L32'>  32 <font color='red'>}</font> <a href='../R/222.html' title='Multiple refered from 4 places.'>card_t</a>;
+<a name='L33'>  33 
+<a name='L34'>  34 
+<a name='L35'>  35 <b>static</b> <a href='../S/104.html#L32' title='Defined at 32 in src/net/rtl8139/rtl8139.c.'>card_t</a>* <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L36'>  36 
+<a name='L37'>  37 <b>__attribute__</b> ((<a href='../Y/92.html' title='Multiple used in 2 places.'>align</a>(0x1000)))
+<a name='L38'>  38 <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/531.html' title='Multiple used in 2 places.'>rtl8139_rxbuffer</a>[<a href='../S/105.html#L42' title='Defined at 42 in src/net/rtl8139/rtl8139.h.'>RX_BUFFER_SIZE</a> + 16];
+<a name='L39'>  39 
+<a name='L40'>  40 <b>__attribute__</b> ((<a href='../Y/92.html' title='Multiple used in 2 places.'>align</a>(0x1000)))
+<a name='L41'>  41 <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/532.html' title='Multiple used in 2 places.'>rtl8139_txbuffer</a>[<a href='../S/105.html#L43' title='Defined at 43 in src/net/rtl8139/rtl8139.h.'>TX_BUFFER_SIZE</a> * 4 + 16]; 
+<a name='L42'>  42 
+<a name='L43'>  43 
+<a name='L44'>  44 <b>int</b> <a href='../R/458.html' title='Multiple refered from 2 places.'>rtl8139_ifup</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>) <font color='red'>{</font>
+<a name='L45'>  45         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> |= <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>;
+<a name='L46'>  46         <b>return</b> 0;
+<a name='L47'>  47 <font color='red'>}</font>
+<a name='L48'>  48 
+<a name='L49'>  49 <b>int</b> <a href='../R/457.html' title='Multiple refered from 2 places.'>rtl8139_ifdown</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>) <font color='red'>{</font>
+<a name='L50'>  50         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp;= ~<a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>;
+<a name='L51'>  51         <b>return</b> 0;
+<a name='L52'>  52 <font color='red'>}</font>
+<a name='L53'>  53 
+<a name='L54'>  54 <b>int</b> <a href='../S/104.html#L295' title='Refered from 295 in src/net/rtl8139/rtl8139.c.'>rtl8139_send</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L55'>  55         <b>if</b>((<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>) == 0)
+<a name='L56'>  56                 <b>return</b> 0;
+<a name='L57'>  57 
+<a name='L58'>  58         <a href='../S/104.html#L32' title='Defined at 32 in src/net/rtl8139/rtl8139.c.'>card_t</a>* <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a> = (<a href='../S/104.html#L32' title='Defined at 32 in src/net/rtl8139/rtl8139.c.'>card_t</a>*) <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>;
+<a name='L59'>  59         <b>if</b>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/371.html' title='Multiple used in 12 places.'>magic</a> != <a href='../S/105.html#L53' title='Defined at 53 in src/net/rtl8139/rtl8139.h.'>RTL8139_MAGIC</a>)
+<a name='L60'>  60                 <b>return</b> 0;
+<a name='L61'>  61 
+<a name='L62'>  62         <b>if</b>(<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> &gt; 1500) <font color='red'>{</font>
+<a name='L63'>  63                 <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/712.html' title='Multiple used in 3 places.'>tx_errors</a> += 1;
+<a name='L64'>  64                 <b>return</b> 0;
+<a name='L65'>  65         <font color='red'>}</font>
+<a name='L66'>  66 
+<a name='L67'>  67         <a href='../S/88.html#L51' title='Defined at 51 in src/include/aplus/spinlock.h.'>fastlock_waiton</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/709.html' title='Multiple used in 4 places.'>txBufferUsed</a>);
+<a name='L68'>  68 
+<a name='L69'>  69         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/708.html' title='Multiple used in 7 places.'>txBuffer</a>, <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>);
+<a name='L70'>  70         <b>if</b>(<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> &lt; 60) <font color='red'>{</font>
+<a name='L71'>  71                 <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>((<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/708.html' title='Multiple used in 7 places.'>txBuffer</a> + <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>), 0, 60 - <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>);
+<a name='L72'>  72                 <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a> = 60;
+<a name='L73'>  73         <font color='red'>}</font>
+<a name='L74'>  74 
+<a name='L75'>  75         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a> = <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a>++;
+<a name='L76'>  76         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a> %= 4;
+<a name='L77'>  77 
+<a name='L78'>  78 
+<a name='L79'>  79         <a href='../S/105.html#L48' title='Defined at 48 in src/net/rtl8139/rtl8139.h.'>int_out32</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L10' title='Defined at 10 in src/net/rtl8139/rtl8139.h.'>REG_TRANSMIT_ADDR0</a> + (4 * <a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a>), (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/708.html' title='Multiple used in 7 places.'>txBuffer</a> + (<a href='../S/105.html#L43' title='Defined at 43 in src/net/rtl8139/rtl8139.h.'>TX_BUFFER_SIZE</a> * <a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a>));
+<a name='L80'>  80         <a href='../S/105.html#L48' title='Defined at 48 in src/net/rtl8139/rtl8139.h.'>int_out32</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L9' title='Defined at 9 in src/net/rtl8139/rtl8139.h.'>REG_TRANSMIT_STATUS0</a> + (4 * <a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a>), ((256 &lt;&lt; 11) &amp; 0x003F0000) | <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>);
+<a name='L81'>  81 
+<a name='L82'>  82         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/713.html' title='Multiple used in 3 places.'>tx_packets</a> += 1;
+<a name='L83'>  83         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/710.html' title='Multiple used in 3 places.'>tx_bytes</a> += <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L84'>  84 
+<a name='L85'>  85         <b>return</b> <a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>;
+<a name='L86'>  86 <font color='red'>}</font>
+<a name='L87'>  87 
+<a name='L88'>  88 
+<a name='L89'>  89 <b>static</b> <b>void</b> <a href='../S/104.html#L158' title='Refered from 158 in src/net/rtl8139/rtl8139.c.'>recvdata</a>(<a href='../S/104.html#L32' title='Defined at 32 in src/net/rtl8139/rtl8139.c.'>card_t</a>* <a href='../Y/149.html' title='Multiple used in 6 places.'>card</a>) <font color='red'>{</font>
+<a name='L90'>  90         <b>if</b>((<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/265.html' title='Multiple used in 29 places.'>flags</a> &amp; <a href='../S/89.html#L26' title='Defined at 26 in src/include/aplus/netif.h.'>NETIF_FLAGS_ENABLE</a>) == 0)
+<a name='L91'>  91                 <b>return</b>;
+<a name='L92'>  92 
+<a name='L93'>  93         <b>while</b>(1) <font color='red'>{</font>
+<a name='L94'>  94                 <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/161.html' title='Multiple used in 2 places.'>cmd</a> = <a href='../S/105.html#L50' title='Defined at 50 in src/net/rtl8139/rtl8139.h.'>int_in8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L12' title='Defined at 12 in src/net/rtl8139/rtl8139.h.'>REG_COMMAND</a>);
+<a name='L95'>  95         
+<a name='L96'>  96                 <b>if</b>(<a href='../Y/161.html' title='Multiple used in 2 places.'>cmd</a> &amp; <a href='../S/105.html#L23' title='Defined at 23 in src/net/rtl8139/rtl8139.h.'>CR_BUFFER_IS_EMPTY</a>)
+<a name='L97'>  97                         <b>break</b>;
+<a name='L98'>  98 
+<a name='L99'>  99                 <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>* <a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a> = (<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a> + <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a>);
+<a name='L100'> 100                 <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/296.html' title='Multiple used in 7 places.'>head</a> = *<a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>++;
+<a name='L101'> 101 
+<a name='L102'> 102                 <b>if</b>((<a href='../Y/296.html' title='Multiple used in 7 places.'>head</a> &amp; 1) == 0)
+<a name='L103'> 103                         <b>break</b>;
+<a name='L104'> 104 
+<a name='L105'> 105                 <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> = *<a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>++;
+<a name='L106'> 106                 <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> -= 4;
+<a name='L107'> 107 
+<a name='L108'> 108                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> += 4;
+<a name='L109'> 109 
+<a name='L110'> 110 
+<a name='L111'> 111                 <b>void</b>* <a href='../Y/190.html' title='Multiple used in 16 places.'>data</a> = <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L112'> 112                 <b>if</b>((<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> + <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) &gt;= <a href='../S/105.html#L42' title='Defined at 42 in src/net/rtl8139/rtl8139.h.'>RX_BUFFER_SIZE</a>) <font color='red'>{</font>
+<a name='L113'> 113                         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>, <a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>, <a href='../S/105.html#L42' title='Defined at 42 in src/net/rtl8139/rtl8139.h.'>RX_BUFFER_SIZE</a> - <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a>);
+<a name='L114'> 114                         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>((<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/190.html' title='Multiple used in 16 places.'>data</a> + <a href='../S/105.html#L42' title='Defined at 42 in src/net/rtl8139/rtl8139.h.'>RX_BUFFER_SIZE</a> - <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a>), <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> - (<a href='../S/105.html#L42' title='Defined at 42 in src/net/rtl8139/rtl8139.h.'>RX_BUFFER_SIZE</a> - <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a>));
+<a name='L115'> 115                 <font color='red'>}</font> <b>else</b>
+<a name='L116'> 116                         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>, <a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L117'> 117 
+<a name='L118'> 118 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L30' title='Defined at 30 in src/include/aplus/netif.h.'>RTL8139_DEBUG</a>
+<a name='L119'> 119                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("rtl8139: receveid %d bytes\n", <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L120'> 120 <font color='darkred'>#endif</font>
+<a name='L121'> 121 
+<a name='L122'> 122 <font color='darkred'>#ifdef</font> USERNET
+<a name='L123'> 123                 <b>if</b>(<a href='../S/114.html#L12' title='Defined at 12 in src/net/udp.c.'>udp_recv</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) &gt; 0) <font color='red'>{</font>
+<a name='L124'> 124 <font color='darkred'>#else</font>
+<a name='L125'> 125                 <b>if</b>(<a href='../S/112.html#L11' title='Defined at 11 in src/net/eth.c.'>eth_recv</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/190.html' title='Multiple used in 16 places.'>data</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) &gt; 0) <font color='red'>{</font>
+<a name='L126'> 126 <font color='darkred'>#endif</font>
+<a name='L127'> 127                         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/539.html' title='Multiple used in 4 places.'>rx_packets</a> += 1;
+<a name='L128'> 128                         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/536.html' title='Multiple used in 4 places.'>rx_bytes</a> += <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L129'> 129                 <font color='red'>}</font> <b>else</b>
+<a name='L130'> 130                         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/609.html' title='Multiple used in 25 places.'>state</a>.<a href='../Y/538.html' title='Multiple used in 4 places.'>rx_errors</a> += 1;
+<a name='L131'> 131                 
+<a name='L132'> 132 
+<a name='L133'> 133                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> += <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + 4;
+<a name='L134'> 134                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> = (<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> + 3) &amp; ~3;
+<a name='L135'> 135                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> %= <a href='../S/105.html#L42' title='Defined at 42 in src/net/rtl8139/rtl8139.h.'>RX_BUFFER_SIZE</a>;
+<a name='L136'> 136 
+<a name='L137'> 137                 <a href='../S/105.html#L47' title='Defined at 47 in src/net/rtl8139/rtl8139.h.'>int_out16</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L13' title='Defined at 13 in src/net/rtl8139/rtl8139.h.'>REG_CUR_READ_ADDR</a>, <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> - 0x10);
+<a name='L138'> 138         <font color='red'>}</font>
+<a name='L139'> 139 <font color='red'>}</font>
+<a name='L140'> 140 
+<a name='L141'> 141 <b>static</b> <b>void</b> <a href='../S/104.html#L221' title='Refered from 221 in src/net/rtl8139/rtl8139.c.'>rtl8139_handler</a>(<b>void</b>* <a href='../Y/723.html' title='Multiple used in 2 places.'>unused</a>) <font color='red'>{</font>
+<a name='L142'> 142         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/343.html' title='Multiple used in 5 places.'>isr</a> = <a href='../S/105.html#L51' title='Defined at 51 in src/net/rtl8139/rtl8139.h.'>int_in16</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L15' title='Defined at 15 in src/net/rtl8139/rtl8139.h.'>REG_INTERRUPT_STATUS</a>);
+<a name='L143'> 143         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/417.html' title='Multiple used in 4 places.'>nsr</a> = 0;
+<a name='L144'> 144 
+<a name='L145'> 145         <b>if</b>(<a href='../Y/343.html' title='Multiple used in 5 places.'>isr</a> &amp; <a href='../S/105.html#L39' title='Defined at 39 in src/net/rtl8139/rtl8139.h.'>ISR_TRANSMIT_OK</a>) <font color='red'>{</font>
+<a name='L146'> 146 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L30' title='Defined at 30 in src/include/aplus/netif.h.'>RTL8139_DEBUG</a>
+<a name='L147'> 147                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("rtl8139: Transmitted data successfully\n");
+<a name='L148'> 148 <font color='darkred'>#endif</font>
+<a name='L149'> 149 
+<a name='L150'> 150                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/709.html' title='Multiple used in 4 places.'>txBufferUsed</a> = 0;
+<a name='L151'> 151                 <a href='../Y/417.html' title='Multiple used in 4 places.'>nsr</a> |= <a href='../S/105.html#L39' title='Defined at 39 in src/net/rtl8139/rtl8139.h.'>ISR_TRANSMIT_OK</a>;
+<a name='L152'> 152         <font color='red'>}</font>
+<a name='L153'> 153 
+<a name='L154'> 154         <b>if</b>(<a href='../Y/343.html' title='Multiple used in 5 places.'>isr</a> &amp; <a href='../S/105.html#L40' title='Defined at 40 in src/net/rtl8139/rtl8139.h.'>ISR_RECEIVE_OK</a>) <font color='red'>{</font>
+<a name='L155'> 155 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L30' title='Defined at 30 in src/include/aplus/netif.h.'>RTL8139_DEBUG</a>
+<a name='L156'> 156                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("rtl8139: Received data\n");
+<a name='L157'> 157 <font color='darkred'>#endif</font>
+<a name='L158'> 158                 <a href='../S/104.html#L89' title='Defined at 89 in src/net/rtl8139/rtl8139.c.'>recvdata</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>);
+<a name='L159'> 159                 <a href='../Y/417.html' title='Multiple used in 4 places.'>nsr</a> |= <a href='../S/105.html#L40' title='Defined at 40 in src/net/rtl8139/rtl8139.h.'>ISR_RECEIVE_OK</a>;
+<a name='L160'> 160         <font color='red'>}</font>
+<a name='L161'> 161 
+<a name='L162'> 162         <a href='../S/105.html#L47' title='Defined at 47 in src/net/rtl8139/rtl8139.h.'>int_out16</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L15' title='Defined at 15 in src/net/rtl8139/rtl8139.h.'>REG_INTERRUPT_STATUS</a>, <a href='../Y/417.html' title='Multiple used in 4 places.'>nsr</a>);
+<a name='L163'> 163 <font color='red'>}</font>
+<a name='L164'> 164 
+<a name='L165'> 165 
+<a name='L166'> 166 <b>int</b> rtl8139_init() <font color='red'>{</font>
+<a name='L167'> 167         <a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>* <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a> = (<a href='../S/100.html#L39' title='Defined at 39 in src/include/aplus/pci.h.'>pci_device_t</a>*) <a href='../S/160.html#L120' title='Defined at 120 in src/arch/pci.c.'>pci_find_by_id</a>(0x10EC, 0x8139);
+<a name='L168'> 168         <b>if</b>(<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L169'> 169 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L30' title='Defined at 30 in src/include/aplus/netif.h.'>RTL8139_DEBUG</a>
+<a name='L170'> 170                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("rtl8139: no device found\n");
+<a name='L171'> 171 <font color='darkred'>#endif</font>
+<a name='L172'> 172                 <b>return</b> -1;
+<a name='L173'> 173         <font color='red'>}</font>
+<a name='L174'> 174         
+<a name='L175'> 175         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a> = <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/104.html#L32' title='Defined at 32 in src/net/rtl8139/rtl8139.c.'>card_t</a>));
+<a name='L176'> 176         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/371.html' title='Multiple used in 12 places.'>magic</a> = <a href='../S/105.html#L53' title='Defined at 53 in src/net/rtl8139/rtl8139.h.'>RTL8139_MAGIC</a>;
+<a name='L177'> 177         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a> = <a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>;
+<a name='L178'> 178 
+<a name='L179'> 179         <a href='../S/105.html#L46' title='Defined at 46 in src/net/rtl8139/rtl8139.h.'>int_out8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.h.'>REG_CONFIG1</a>, 0);
+<a name='L180'> 180         <a href='../S/105.html#L46' title='Defined at 46 in src/net/rtl8139/rtl8139.h.'>int_out8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L12' title='Defined at 12 in src/net/rtl8139/rtl8139.h.'>REG_COMMAND</a>, <a href='../S/105.html#L20' title='Defined at 20 in src/net/rtl8139/rtl8139.h.'>CR_RESET</a>);
+<a name='L181'> 181 
+<a name='L182'> 182         <b>while</b>((<a href='../S/105.html#L50' title='Defined at 50 in src/net/rtl8139/rtl8139.h.'>int_in8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L12' title='Defined at 12 in src/net/rtl8139/rtl8139.h.'>REG_COMMAND</a>) &amp; <a href='../S/105.html#L12' title='Defined at 12 in src/net/rtl8139/rtl8139.h.'>REG_COMMAND</a>) == <a href='../S/105.html#L20' title='Defined at 20 in src/net/rtl8139/rtl8139.h.'>CR_RESET</a>);
+<a name='L183'> 183 
+<a name='L184'> 184         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, 0, 6);
+<a name='L185'> 185         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; 6; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)
+<a name='L186'> 186                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>] = <a href='../S/105.html#L50' title='Defined at 50 in src/net/rtl8139/rtl8139.h.'>int_in8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>);
+<a name='L187'> 187         
+<a name='L188'> 188 
+<a name='L189'> 189 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L30' title='Defined at 30 in src/include/aplus/netif.h.'>RTL8139_DEBUG</a>
+<a name='L190'> 190         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("rtl8139: %d:%d.%d, iobase 0x%x, irq %d, MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n",
+<a name='L191'> 191                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/144.html' title='Multiple used in 20 places.'>bus</a>,
+<a name='L192'> 192                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/195.html' title='Multiple used in 25 places.'>dev</a>,
+<a name='L193'> 193                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/278.html' title='Multiple used in 20 places.'>func</a>,
+<a name='L194'> 194                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/334.html' title='Multiple used in 9 places.'>iobase</a>,
+<a name='L195'> 195                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/330.html' title='Multiple used in 6 places.'>intr_line</a>,
+<a name='L196'> 196                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[0],
+<a name='L197'> 197                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[1],
+<a name='L198'> 198                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[2],
+<a name='L199'> 199                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[3],
+<a name='L200'> 200                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[4],
+<a name='L201'> 201                 <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>[5]
+<a name='L202'> 202         );
+<a name='L203'> 203 <font color='darkred'>#endif</font>
+<a name='L204'> 204 
+<a name='L205'> 205         <b>if</b>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/330.html' title='Multiple used in 6 places.'>intr_line</a> == 0xFF) <font color='red'>{</font>
+<a name='L206'> 206                 <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("rtl8139: network card isn't connected to the PIC\n");
+<a name='L207'> 207                 <b>return</b> -1;
+<a name='L208'> 208         <font color='red'>}</font>
+<a name='L209'> 209 
+<a name='L210'> 210         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a> = (<b>char</b>*) <a href='../Y/531.html' title='Multiple used in 2 places.'>rtl8139_rxbuffer</a>;
+<a name='L211'> 211         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/708.html' title='Multiple used in 7 places.'>txBuffer</a> = (<b>char</b>*) <a href='../Y/532.html' title='Multiple used in 2 places.'>rtl8139_txbuffer</a>;
+<a name='L212'> 212 
+<a name='L213'> 213         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/535.html' title='Multiple used in 11 places.'>rxBufferOffset</a> = 0;
+<a name='L214'> 214         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/180.html' title='Multiple used in 6 places.'>curBuffer</a> = 0;
+<a name='L215'> 215         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/709.html' title='Multiple used in 4 places.'>txBufferUsed</a> = 0;
+<a name='L216'> 216 
+<a name='L217'> 217         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>, 0, <a href='../S/105.html#L42' title='Defined at 42 in src/net/rtl8139/rtl8139.h.'>RX_BUFFER_SIZE</a> + 16);
+<a name='L218'> 218         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/708.html' title='Multiple used in 7 places.'>txBuffer</a>, 0, <a href='../S/105.html#L43' title='Defined at 43 in src/net/rtl8139/rtl8139.h.'>TX_BUFFER_SIZE</a> * 4 + 16);
+<a name='L219'> 219 
+<a name='L220'> 220 
+<a name='L221'> 221         <a href='../S/158.html#L334' title='Defined at 334 in src/arch/desc.c.'>irq_set</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/198.html' title='Multiple used in 53 places.'>device</a>-&gt;<a href='../Y/330.html' title='Multiple used in 6 places.'>intr_line</a>, <a href='../S/104.html#L141' title='Defined at 141 in src/net/rtl8139/rtl8139.c.'>rtl8139_handler</a>);
+<a name='L222'> 222 
+<a name='L223'> 223         <a href='../S/105.html#L47' title='Defined at 47 in src/net/rtl8139/rtl8139.h.'>int_out16</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L14' title='Defined at 14 in src/net/rtl8139/rtl8139.h.'>REG_INTERRUPT_MASK</a>, 0x0005);
+<a name='L224'> 224         <a href='../S/105.html#L47' title='Defined at 47 in src/net/rtl8139/rtl8139.h.'>int_out16</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L15' title='Defined at 15 in src/net/rtl8139/rtl8139.h.'>REG_INTERRUPT_STATUS</a>, 0);
+<a name='L225'> 225 
+<a name='L226'> 226         <a href='../S/105.html#L46' title='Defined at 46 in src/net/rtl8139/rtl8139.h.'>int_out8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L12' title='Defined at 12 in src/net/rtl8139/rtl8139.h.'>REG_COMMAND</a>, <a href='../S/105.html#L21' title='Defined at 21 in src/net/rtl8139/rtl8139.h.'>CR_RECEIVER_ENABLE</a> | <a href='../S/105.html#L22' title='Defined at 22 in src/net/rtl8139/rtl8139.h.'>CR_TRANSMITTER_ENABLE</a>);
+<a name='L227'> 227 
+<a name='L228'> 228         <a href='../S/105.html#L48' title='Defined at 48 in src/net/rtl8139/rtl8139.h.'>int_out32</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L11' title='Defined at 11 in src/net/rtl8139/rtl8139.h.'>REG_RECEIVE_BUFFER</a>, (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/534.html' title='Multiple used in 10 places.'>rxBuffer</a>);
+<a name='L229'> 229 
+<a name='L230'> 230         <b>for</b>(<b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; 4; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)
+<a name='L231'> 231                 <a href='../S/105.html#L48' title='Defined at 48 in src/net/rtl8139/rtl8139.h.'>int_out32</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L10' title='Defined at 10 in src/net/rtl8139/rtl8139.h.'>REG_TRANSMIT_ADDR0</a> + (4 * <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>), (<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/708.html' title='Multiple used in 7 places.'>txBuffer</a> + (<a href='../S/105.html#L43' title='Defined at 43 in src/net/rtl8139/rtl8139.h.'>TX_BUFFER_SIZE</a> * <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>));
+<a name='L232'> 232 
+<a name='L233'> 233         <a href='../S/105.html#L48' title='Defined at 48 in src/net/rtl8139/rtl8139.h.'>int_out32</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L17' title='Defined at 17 in src/net/rtl8139/rtl8139.h.'>REG_RECEIVE_CONFIGURATION</a>, <a href='../S/105.html#L33' title='Defined at 33 in src/net/rtl8139/rtl8139.h.'>RCR_MXDMA_UNLIMITED</a> | <a href='../S/105.html#L34' title='Defined at 34 in src/net/rtl8139/rtl8139.h.'>RCR_ACCEPT_BROADCAST</a> | <a href='../S/105.html#L36' title='Defined at 36 in src/net/rtl8139/rtl8139.h.'>RCR_ACCEPT_PHYS_MATCH</a>);
+<a name='L234'> 234         <a href='../S/105.html#L48' title='Defined at 48 in src/net/rtl8139/rtl8139.h.'>int_out32</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L16' title='Defined at 16 in src/net/rtl8139/rtl8139.h.'>REG_TRANSMIT_CONFIGURATION</a>, <a href='../S/105.html#L25' title='Defined at 25 in src/net/rtl8139/rtl8139.h.'>TCR_IFG_STANDARD</a> | <a href='../S/105.html#L26' title='Defined at 26 in src/net/rtl8139/rtl8139.h.'>TCR_MXDMA_256</a>);
+<a name='L235'> 235 
+<a name='L236'> 236         <a href='../S/105.html#L46' title='Defined at 46 in src/net/rtl8139/rtl8139.h.'>int_out8</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>, <a href='../S/105.html#L12' title='Defined at 12 in src/net/rtl8139/rtl8139.h.'>REG_COMMAND</a>, <a href='../S/105.html#L21' title='Defined at 21 in src/net/rtl8139/rtl8139.h.'>CR_RECEIVER_ENABLE</a> | <a href='../S/105.html#L22' title='Defined at 22 in src/net/rtl8139/rtl8139.h.'>CR_TRANSMITTER_ENABLE</a>);
+<a name='L237'> 237 
+<a name='L238'> 238 
+<a name='L239'> 239         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a> = (<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>));
+<a name='L240'> 240         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, 0, <b>sizeof</b>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>));
+<a name='L241'> 241 
+<a name='L242'> 242 
+<a name='L243'> 243         <a href='../Y/618.html' title='Multiple used in 10 places.'>strcpy</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>, "eth0");
+<a name='L244'> 244         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>));
+<a name='L245'> 245 
+<a name='L246'> 246         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0] = 192;
+<a name='L247'> 247         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1] = 168;
+<a name='L248'> 248         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2] = 1;
+<a name='L249'> 249         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3] = 80;
+<a name='L250'> 250 
+<a name='L251'> 251         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[0] = 255;
+<a name='L252'> 252         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[1] = 255;
+<a name='L253'> 253         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[2] = 255;
+<a name='L254'> 254         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/404.html' title='Multiple used in 17 places.'>netmask</a>[3] = 0;
+<a name='L255'> 255 
+<a name='L256'> 256         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[0] = 0xfe80;
+<a name='L257'> 257         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[1] = 0x0000;
+<a name='L258'> 258         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[2] = 0x0000;
+<a name='L259'> 259         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[3] = 0x0000;
+<a name='L260'> 260         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[4] = 0x021d;
+<a name='L261'> 261         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[5] = 0x72ff;
+<a name='L262'> 262         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[6] = 0xfef9;
+<a name='L263'> 263         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[7] = 0x9b71;
+<a name='L264'> 264 
+<a name='L265'> 265         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0] = 8;
+<a name='L266'> 266         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1] = 8;
+<a name='L267'> 267         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2] = 8;
+<a name='L268'> 268         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3] = 8;
+<a name='L269'> 269 
+<a name='L270'> 270         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0] = 8;
+<a name='L271'> 271         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1] = 8;
+<a name='L272'> 272         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2] = 4;
+<a name='L273'> 273         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3] = 4;
+<a name='L274'> 274         
+<a name='L275'> 275 
+<a name='L276'> 276         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[0] = 0x2001;
+<a name='L277'> 277         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[1] = 0x4860;
+<a name='L278'> 278         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[2] = 0x4860;
+<a name='L279'> 279         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[3] = 0x0000;
+<a name='L280'> 280         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[4] = 0x0000;
+<a name='L281'> 281         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[5] = 0x0000;
+<a name='L282'> 282         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[6] = 0x0000;
+<a name='L283'> 283         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/482.html' title='Multiple used in 37 places.'>primary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[7] = 0x8888;
+<a name='L284'> 284         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[0] = 0x2001;
+<a name='L285'> 285         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[1] = 0x4860;
+<a name='L286'> 286         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[2] = 0x4860;
+<a name='L287'> 287         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[3] = 0x0000;
+<a name='L288'> 288         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[4] = 0x0000;
+<a name='L289'> 289         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[5] = 0x0000;
+<a name='L290'> 290         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[6] = 0x0000;
+<a name='L291'> 291         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/203.html' title='Multiple used in 73 places.'>dns</a>.<a href='../Y/549.html' title='Multiple used in 37 places.'>secondary</a>.<a href='../Y/339.html' title='Multiple used in 87 places.'>ipv6</a>[7] = 0x8844;
+<a name='L292'> 292 
+<a name='L293'> 293 
+<a name='L294'> 294         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/394.html' title='Multiple used in 7 places.'>mtu</a> = 1500;
+<a name='L295'> 295         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/557.html' title='Multiple used in 5 places.'>send</a> = <a href='../S/104.html#L54' title='Defined at 54 in src/net/rtl8139/rtl8139.c.'>rtl8139_send</a>;
+<a name='L296'> 296         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/308.html' title='Multiple used in 6 places.'>ifup</a> = <a href='../S/104.html#L44' title='Defined at 44 in src/net/rtl8139/rtl8139.c.'>rtl8139_ifup</a>;
+<a name='L297'> 297         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/307.html' title='Multiple used in 6 places.'>ifdown</a> = <a href='../S/104.html#L49' title='Defined at 49 in src/net/rtl8139/rtl8139.c.'>rtl8139_ifdown</a>;
+<a name='L298'> 298         <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/190.html' title='Multiple used in 16 places.'>data</a> = (<b>void</b>*) <a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>;
+<a name='L299'> 299 
+<a name='L300'> 300 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L30' title='Defined at 30 in src/include/aplus/netif.h.'>RTL8139_DEBUG</a>
+<a name='L301'> 301         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("rtl8139: sending data for test (512 Bytes)\n");
+<a name='L302'> 302         
+<a name='L303'> 303         <b>void</b>* <a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a> = <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(512);
+<a name='L304'> 304         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>, 0xFF, 512);
+<a name='L305'> 305 
+<a name='L306'> 306         <a href='../S/104.html#L44' title='Defined at 44 in src/net/rtl8139/rtl8139.c.'>rtl8139_ifup</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>);
+<a name='L307'> 307         <a href='../S/112.html#L79' title='Defined at 79 in src/net/eth.c.'>eth_send</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/688.html' title='Multiple used in 9 places.'>tmpbuf</a>, 512, <a href='../S/89.html#L15' title='Defined at 15 in src/include/aplus/netif.h.'>NETIF_RAW</a>); 
+<a name='L308'> 308         <a href='../S/104.html#L49' title='Defined at 49 in src/net/rtl8139/rtl8139.c.'>rtl8139_ifdown</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>);
+<a name='L309'> 309 
+<a name='L310'> 310 <font color='darkred'>#endif</font>
+<a name='L311'> 311 
+<a name='L312'> 312         <a href='../S/107.html#L124' title='Defined at 124 in src/net/netif.c.'>netif_add</a>(<a href='../S/104.html#L18' title='Defined at 18 in src/net/rtl8139/rtl8139.c.'>card</a>-&gt;<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>);
+<a name='L313'> 313         <b>return</b> 0;
+<a name='L314'> 314 <font color='red'>}</font>
+<a name='L315'> 315 
+<a name='L316'> 316 
+<a name='L317'> 317 
+<a name='L318'> 318 <a href='../S/99.html#L18' title='Defined at 18 in src/include/aplus/attribute.h.'>ATTRIBUTE</a>("netif", rtl8139_init);
+<a name='L319'> 319 
+<a name='L320'> 320 
+<a name='L321'> 321 
+<a name='L322'> 322 
+<a name='L323'> 323 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L44'>[^]</a><a href='#L166'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

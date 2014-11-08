@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>gdt_e</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L104'>gdt_e</a>             104 src/arch/desc.c static gdt_entry_t gdt_e[5];
+<a href='../S/158.html#L201'>gdt_e</a>             201 src/arch/desc.c 		gdt_e[n].base_l = (b &amp; 0xFFFF);				\
+<a href='../S/158.html#L202'>gdt_e</a>             202 src/arch/desc.c 		gdt_e[n].base_m = (b &gt;&gt; 16) &amp; 0xFF;			\
+<a href='../S/158.html#L203'>gdt_e</a>             203 src/arch/desc.c 		gdt_e[n].base_h = (b &gt;&gt; 24) &amp; 0xFF;			\
+<a href='../S/158.html#L204'>gdt_e</a>             204 src/arch/desc.c 		gdt_e[n].limit_l = (l &amp; 0xFFFF);			\
+<a href='../S/158.html#L205'>gdt_e</a>             205 src/arch/desc.c 		gdt_e[n].granularity = (l &gt;&gt; 16) &amp; 0x0F;	\
+<a href='../S/158.html#L206'>gdt_e</a>             206 src/arch/desc.c 		gdt_e[n].granularity |= g &amp; 0xF0;			\
+<a href='../S/158.html#L207'>gdt_e</a>             207 src/arch/desc.c 		gdt_e[n].access = a
+<a href='../S/158.html#L210'>gdt_e</a>             210 src/arch/desc.c 	memset(&amp;gdt_e, 0, sizeof(gdt_entry_t) * 5);
+<a href='../S/158.html#L213'>gdt_e</a>             213 src/arch/desc.c 	gdt_p.base = (uint32_t) gdt_e;
+</pre>
+</body>
+</html>

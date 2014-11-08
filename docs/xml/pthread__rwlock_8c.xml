@@ -1,0 +1,418 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="pthread__rwlock_8c" kind="file">
+    <compoundname>pthread_rwlock.c</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">sched.h</includes>
+    <includes local="no">time.h</includes>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+    <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
+    <incdepgraph>
+      <node id="2415">
+        <label>stdint.h</label>
+      </node>
+      <node id="2423">
+        <label>errno.h</label>
+      </node>
+      <node id="2422">
+        <label>pthread_internal.h</label>
+        <link refid="pthread__internal_8h"/>
+        <childnode refid="2423" relation="include">
+        </childnode>
+        <childnode refid="2415" relation="include">
+        </childnode>
+        <childnode refid="2418" relation="include">
+        </childnode>
+      </node>
+      <node id="2418">
+        <label>pthread.h</label>
+        <link refid="pthread_8h"/>
+        <childnode refid="2415" relation="include">
+        </childnode>
+        <childnode refid="2419" relation="include">
+        </childnode>
+        <childnode refid="2420" relation="include">
+        </childnode>
+        <childnode refid="2416" relation="include">
+        </childnode>
+        <childnode refid="2421" relation="include">
+        </childnode>
+      </node>
+      <node id="2419">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2421">
+        <label>unistd.h</label>
+      </node>
+      <node id="2417">
+        <label>time.h</label>
+      </node>
+      <node id="2420">
+        <label>sys/time.h</label>
+      </node>
+      <node id="2416">
+        <label>sched.h</label>
+      </node>
+      <node id="2414">
+        <label>usr/src/libpthread/src/pthread_rwlock.c</label>
+        <link refid="pthread_rwlock.c"/>
+        <childnode refid="2415" relation="include">
+        </childnode>
+        <childnode refid="2416" relation="include">
+        </childnode>
+        <childnode refid="2417" relation="include">
+        </childnode>
+        <childnode refid="2418" relation="include">
+        </childnode>
+        <childnode refid="2422" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="pthread__rwlock_8c_1a46a12cdd6b615fbda17298ad5349acfc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_init</definition>
+        <argsstring>(pthread_rwlock_t *lock, const pthread_rwlockattr_t *attr)</argsstring>
+        <name>pthread_rwlock_init</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <param>
+          <type>const <ref refid="pthread_8h_1a23f06ba3a10b2fba83fd75baa6e6c01a" kindref="member">pthread_rwlockattr_t</ref> *</type>
+          <declname>attr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="10" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="10" bodyend="32"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__rwlock_1ae49a53d46712b0d4af191e85a622da1d" compoundref="pthread_8h" startline="136">pthread_rwlock::exclusive_waiters</references>
+        <references refid="structpthread__rwlock_1a5d8b56e7998376aa9f5908a560daadb7" compoundref="pthread_8h" startline="138">pthread_rwlock::num_exclusive_waiters</references>
+        <references refid="structpthread__rwlock_1af637581bd0ea0328763d041937160fff" compoundref="pthread_8h" startline="137">pthread_rwlock::num_shared_waiters</references>
+        <references refid="structpthread__rwlock_1a7918a35d8e929df9c7f1fd9f12e9efcf" compoundref="pthread_8h" startline="139">pthread_rwlock::owner</references>
+        <references refid="pthread_8h_1a7454d249ed94ad5d5e57ba1529d7a7f2" compoundref="pthread__mutex_8c" startline="26" endline="43">pthread_mutex_init</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
+        <references refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" compoundref="pthread_8h" startline="133">pthread_rwlock::rdmutex</references>
+        <references refid="structpthread__rwlock_1a513e968cb2dea01c044a3304c26b1d07" compoundref="pthread_8h" startline="135">pthread_rwlock::shared_waiters</references>
+        <references refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" compoundref="pthread_8h" startline="134">pthread_rwlock::wrmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1a4def07157f4c8cd2ee99abfa6303f36b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_destroy</definition>
+        <argsstring>(pthread_rwlock_t *lock)</argsstring>
+        <name>pthread_rwlock_destroy</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="34" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="34" bodyend="61"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structpthread__rwlock_1ae49a53d46712b0d4af191e85a622da1d" compoundref="pthread_8h" startline="136">pthread_rwlock::exclusive_waiters</references>
+        <references refid="structpthread__rwlock_1a5d8b56e7998376aa9f5908a560daadb7" compoundref="pthread_8h" startline="138">pthread_rwlock::num_exclusive_waiters</references>
+        <references refid="structpthread__rwlock_1af637581bd0ea0328763d041937160fff" compoundref="pthread_8h" startline="137">pthread_rwlock::num_shared_waiters</references>
+        <references refid="structpthread__rwlock_1a7918a35d8e929df9c7f1fd9f12e9efcf" compoundref="pthread_8h" startline="139">pthread_rwlock::owner</references>
+        <references refid="pthread_8h_1a3cf620ff3a40af11d79cf28901dc55e2" compoundref="pthread__mutex_8c" startline="46" endline="65">pthread_mutex_destroy</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
+        <references refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" compoundref="pthread_8h" startline="133">pthread_rwlock::rdmutex</references>
+        <references refid="structpthread__rwlock_1a513e968cb2dea01c044a3304c26b1d07" compoundref="pthread_8h" startline="135">pthread_rwlock::shared_waiters</references>
+        <references refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" compoundref="pthread_8h" startline="134">pthread_rwlock::wrmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1a39bcc5a9100d140d2ab9f8e51d436392" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_tryrdlock</definition>
+        <argsstring>(pthread_rwlock_t *lock)</argsstring>
+        <name>pthread_rwlock_tryrdlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="63" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="63" bodyend="70"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread_8h_1a27da386211db1a7e9a3b2a0db4d22144" compoundref="pthread__mutex_8c" startline="107" endline="131">pthread_mutex_trylock</references>
+        <references refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" compoundref="pthread_8h" startline="133">pthread_rwlock::rdmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1a170136d12a1f5152fb5985a8d4cbd778" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_trywrlock</definition>
+        <argsstring>(pthread_rwlock_t *lock)</argsstring>
+        <name>pthread_rwlock_trywrlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="72" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="72" bodyend="79"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread_8h_1a27da386211db1a7e9a3b2a0db4d22144" compoundref="pthread__mutex_8c" startline="107" endline="131">pthread_mutex_trylock</references>
+        <references refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" compoundref="pthread_8h" startline="134">pthread_rwlock::wrmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1a60bfe75b2bd44e97c9d97bdc77575455" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_rdlock</definition>
+        <argsstring>(pthread_rwlock_t *lock)</argsstring>
+        <name>pthread_rwlock_rdlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="81" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="81" bodyend="88"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread_8h_1a12809c44718c21544ceb280dc1a53573" compoundref="pthread__mutex_8c" startline="67" endline="89">pthread_mutex_lock</references>
+        <references refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" compoundref="pthread_8h" startline="133">pthread_rwlock::rdmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1af2063880b9dc62cd540110617c55ee87" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_timedrdlock</definition>
+        <argsstring>(pthread_rwlock_t *lock, const struct timespec *abstime)</argsstring>
+        <name>pthread_rwlock_timedrdlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <param>
+          <type>const struct timespec *</type>
+          <declname>abstime</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="90" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="90" bodyend="97"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread_8h_1a5f197c3d769dee7a09d911241a7b6766" compoundref="pthread__mutex_8c" startline="92" endline="104">pthread_mutex_timedlock</references>
+        <references refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" compoundref="pthread_8h" startline="133">pthread_rwlock::rdmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1a1f51c39f16edb854db719ff6ac6281d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_wrlock</definition>
+        <argsstring>(pthread_rwlock_t *lock)</argsstring>
+        <name>pthread_rwlock_wrlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="99" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="99" bodyend="106"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread_8h_1a12809c44718c21544ceb280dc1a53573" compoundref="pthread__mutex_8c" startline="67" endline="89">pthread_mutex_lock</references>
+        <references refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" compoundref="pthread_8h" startline="134">pthread_rwlock::wrmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1ae32d75b4219853faec2b39f5e76bea32" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_timedwrlock</definition>
+        <argsstring>(pthread_rwlock_t *lock, const struct timespec *abstime)</argsstring>
+        <name>pthread_rwlock_timedwrlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <param>
+          <type>const struct timespec *</type>
+          <declname>abstime</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="108" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="108" bodyend="115"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread_8h_1a5f197c3d769dee7a09d911241a7b6766" compoundref="pthread__mutex_8c" startline="92" endline="104">pthread_mutex_timedlock</references>
+        <references refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" compoundref="pthread_8h" startline="134">pthread_rwlock::wrmutex</references>
+      </memberdef>
+      <memberdef kind="function" id="pthread__rwlock_8c_1ac97fca37651ede06aa8229ba572b44b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
+        <definition>PUBLIC int pthread_rwlock_unlock</definition>
+        <argsstring>(pthread_rwlock_t *lock)</argsstring>
+        <name>pthread_rwlock_unlock</name>
+        <param>
+          <type><ref refid="pthread_8h_1aadbc8ed314ebff885f0c70dcfccbdea7" kindref="member">pthread_rwlock_t</ref> *</type>
+          <declname>lock</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" line="117" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c" bodystart="117" bodyend="130"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="pthread_8h_1a96184290ffb60e04c53a52869cf960a2" compoundref="pthread__mutex_8c" startline="133" endline="153">pthread_mutex_unlock</references>
+        <references refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" compoundref="pthread_8h" startline="133">pthread_rwlock::rdmutex</references>
+        <references refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" compoundref="pthread_8h" startline="134">pthread_rwlock::wrmutex</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sched.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;time.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="pthread_8h" kindref="compound">pthread.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pthread__internal_8h" kindref="compound">pthread_internal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="pthread__rwlock_8c_1a46a12cdd6b615fbda17298ad5349acfc" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1a46a12cdd6b615fbda17298ad5349acfc" kindref="member">pthread_rwlock_init</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__rwlockattr" kindref="compound">pthread_rwlockattr_t</ref><sp/>*<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/>thread<sp/>=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>();</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!thread)<sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EFAULT;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a7454d249ed94ad5d5e57ba1529d7a7f2" kindref="member">pthread_mutex_init</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" kindref="member">rdmutex</ref>,<sp/>NULL);</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a7454d249ed94ad5d5e57ba1529d7a7f2" kindref="member">pthread_mutex_init</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" kindref="member">wrmutex</ref>,<sp/>NULL);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1a513e968cb2dea01c044a3304c26b1d07" kindref="member">shared_waiters</ref><sp/>=<sp/>(<ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref>)<sp/>0;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1ae49a53d46712b0d4af191e85a622da1d" kindref="member">exclusive_waiters</ref><sp/>=<sp/>(<ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref>)<sp/>0;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1af637581bd0ea0328763d041937160fff" kindref="member">num_shared_waiters</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1a5d8b56e7998376aa9f5908a560daadb7" kindref="member">num_exclusive_waiters</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1a7918a35d8e929df9c7f1fd9f12e9efcf" kindref="member">owner</ref><sp/>=<sp/>thread;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34" refid="pthread__rwlock_8c_1a4def07157f4c8cd2ee99abfa6303f36b" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1a4def07157f4c8cd2ee99abfa6303f36b" kindref="member">pthread_rwlock_destroy</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/>thread<sp/>=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>();</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!thread)<sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EFAULT;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(thread<sp/>!=<sp/>lock-&gt;<ref refid="structpthread__rwlock_1a7918a35d8e929df9c7f1fd9f12e9efcf" kindref="member">owner</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EPERM;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a3cf620ff3a40af11d79cf28901dc55e2" kindref="member">pthread_mutex_destroy</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" kindref="member">rdmutex</ref>);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a3cf620ff3a40af11d79cf28901dc55e2" kindref="member">pthread_mutex_destroy</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" kindref="member">wrmutex</ref>);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1a513e968cb2dea01c044a3304c26b1d07" kindref="member">shared_waiters</ref><sp/>=<sp/>(<ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref>)<sp/>0;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1ae49a53d46712b0d4af191e85a622da1d" kindref="member">exclusive_waiters</ref><sp/>=<sp/>(<ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref>)<sp/>0;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1af637581bd0ea0328763d041937160fff" kindref="member">num_shared_waiters</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1a5d8b56e7998376aa9f5908a560daadb7" kindref="member">num_exclusive_waiters</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__rwlock_1a7918a35d8e929df9c7f1fd9f12e9efcf" kindref="member">owner</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="pthread__rwlock_8c_1a39bcc5a9100d140d2ab9f8e51d436392" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1a39bcc5a9100d140d2ab9f8e51d436392" kindref="member">pthread_rwlock_tryrdlock</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a27da386211db1a7e9a3b2a0db4d22144" kindref="member">pthread_mutex_trylock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" kindref="member">rdmutex</ref>);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72" refid="pthread__rwlock_8c_1a170136d12a1f5152fb5985a8d4cbd778" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1a170136d12a1f5152fb5985a8d4cbd778" kindref="member">pthread_rwlock_trywrlock</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a27da386211db1a7e9a3b2a0db4d22144" kindref="member">pthread_mutex_trylock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" kindref="member">wrmutex</ref>);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81" refid="pthread__rwlock_8c_1a60bfe75b2bd44e97c9d97bdc77575455" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1a60bfe75b2bd44e97c9d97bdc77575455" kindref="member">pthread_rwlock_rdlock</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a12809c44718c21544ceb280dc1a53573" kindref="member">pthread_mutex_lock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" kindref="member">rdmutex</ref>);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90" refid="pthread__rwlock_8c_1af2063880b9dc62cd540110617c55ee87" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1af2063880b9dc62cd540110617c55ee87" kindref="member">pthread_rwlock_timedrdlock</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>timespec<sp/>*abstime)<sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a5f197c3d769dee7a09d911241a7b6766" kindref="member">pthread_mutex_timedlock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" kindref="member">rdmutex</ref>,<sp/>abstime);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99" refid="pthread__rwlock_8c_1a1f51c39f16edb854db719ff6ac6281d7" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1a1f51c39f16edb854db719ff6ac6281d7" kindref="member">pthread_rwlock_wrlock</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a12809c44718c21544ceb280dc1a53573" kindref="member">pthread_mutex_lock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" kindref="member">wrmutex</ref>);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108" refid="pthread__rwlock_8c_1ae32d75b4219853faec2b39f5e76bea32" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1ae32d75b4219853faec2b39f5e76bea32" kindref="member">pthread_rwlock_timedwrlock</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>timespec<sp/>*abstime)<sp/>{</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a5f197c3d769dee7a09d911241a7b6766" kindref="member">pthread_mutex_timedlock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" kindref="member">wrmutex</ref>,<sp/>abstime);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117" refid="pthread__rwlock_8c_1ac97fca37651ede06aa8229ba572b44b4" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlock_8c_1ac97fca37651ede06aa8229ba572b44b4" kindref="member">pthread_rwlock_unlock</ref>(<ref refid="structpthread__rwlock" kindref="compound">pthread_rwlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lock<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread_8h_1a96184290ffb60e04c53a52869cf960a2" kindref="member">pthread_mutex_unlock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1aa525fa5ae59171418ede7d1894bf21fe" kindref="member">rdmutex</ref>)<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread_8h_1a96184290ffb60e04c53a52869cf960a2" kindref="member">pthread_mutex_unlock</ref>(&amp;lock-&gt;<ref refid="structpthread__rwlock_1acebaf123f0d451e8aa6e7734c6bcca5b" kindref="member">wrmutex</ref>)<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlock.c"/>
+  </compounddef>
+</doxygen>

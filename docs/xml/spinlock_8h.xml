@@ -1,0 +1,660 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="spinlock_8h" kind="file">
+    <compoundname>spinlock.h</compoundname>
+    <includedby refid="desc_8c" local="no">src/arch/desc.c</includedby>
+    <includedby refid="serial_8c" local="no">src/arch/serial.c</includedby>
+    <includedby refid="syscall_8c" local="no">src/arch/syscall.c</includedby>
+    <includedby refid="task_8c" local="no">src/arch/task.c</includedby>
+    <includedby refid="bufio_8c" local="no">src/bufio.c</includedby>
+    <includedby refid="pipe_8c" local="no">src/fs/pipe.c</includedby>
+    <includedby refid="bufio_8h" local="no">src/include/aplus/bufio.h</includedby>
+    <includedby refid="list_8h" local="no">src/include/aplus/list.h</includedby>
+    <includedby refid="loopback_8c" local="no">src/net/loopback/loopback.c</includedby>
+    <includedby refid="rtl8139_8c" local="no">src/net/rtl8139/rtl8139.c</includedby>
+    <includedby refid="slirp_8c" local="no">src/net/slirp/slirp.c</includedby>
+    <includedby refid="src_2sched_8c" local="no">src/sched.c</includedby>
+    <includedby refid="spinlock_8c" local="no">src/spinlock.c</includedby>
+    <invincdepgraph>
+      <node id="715">
+        <label>src/syscall/fcntl.c</label>
+        <link refid="fcntl_8c"/>
+      </node>
+      <node id="737">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="725">
+        <label>src/syscall/lseek.c</label>
+        <link refid="lseek_8c"/>
+      </node>
+      <node id="708">
+        <label>src/include/aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="697" relation="include">
+        </childnode>
+        <childnode refid="709" relation="include">
+        </childnode>
+        <childnode refid="737" relation="include">
+        </childnode>
+        <childnode refid="703" relation="include">
+        </childnode>
+        <childnode refid="738" relation="include">
+        </childnode>
+        <childnode refid="704" relation="include">
+        </childnode>
+        <childnode refid="705" relation="include">
+        </childnode>
+        <childnode refid="739" relation="include">
+        </childnode>
+        <childnode refid="740" relation="include">
+        </childnode>
+      </node>
+      <node id="739">
+        <label>src/syscall/mount.c</label>
+        <link refid="mount_8c"/>
+      </node>
+      <node id="704">
+        <label>src/net/rtl8139/rtl8139.c</label>
+        <link refid="rtl8139_8c"/>
+      </node>
+      <node id="695">
+        <label>src/arch/desc.c</label>
+        <link refid="desc_8c"/>
+      </node>
+      <node id="742">
+        <label>src/mm/paging.c</label>
+        <link refid="paging_8c"/>
+      </node>
+      <node id="713">
+        <label>src/syscall/close.c</label>
+        <link refid="close_8c"/>
+      </node>
+      <node id="722">
+        <label>src/syscall/isatty.c</label>
+        <link refid="isatty_8c"/>
+      </node>
+      <node id="750">
+        <label>src/spinlock.c</label>
+        <link refid="spinlock_8c"/>
+      </node>
+      <node id="705">
+        <label>src/net/slirp/slirp.c</label>
+        <link refid="slirp_8c"/>
+      </node>
+      <node id="738">
+        <label>src/net/netif.c</label>
+        <link refid="netif_8c"/>
+      </node>
+      <node id="721">
+        <label>src/syscall/ioctl.c</label>
+        <link refid="ioctl_8c"/>
+      </node>
+      <node id="729">
+        <label>src/syscall/sbrk.c</label>
+        <link refid="sbrk_8c"/>
+      </node>
+      <node id="709">
+        <label>src/include/aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="697" relation="include">
+        </childnode>
+        <childnode refid="710" relation="include">
+        </childnode>
+        <childnode refid="711" relation="include">
+        </childnode>
+        <childnode refid="712" relation="include">
+        </childnode>
+        <childnode refid="713" relation="include">
+        </childnode>
+        <childnode refid="714" relation="include">
+        </childnode>
+        <childnode refid="715" relation="include">
+        </childnode>
+        <childnode refid="716" relation="include">
+        </childnode>
+        <childnode refid="717" relation="include">
+        </childnode>
+        <childnode refid="718" relation="include">
+        </childnode>
+        <childnode refid="719" relation="include">
+        </childnode>
+        <childnode refid="720" relation="include">
+        </childnode>
+        <childnode refid="721" relation="include">
+        </childnode>
+        <childnode refid="722" relation="include">
+        </childnode>
+        <childnode refid="723" relation="include">
+        </childnode>
+        <childnode refid="724" relation="include">
+        </childnode>
+        <childnode refid="725" relation="include">
+        </childnode>
+        <childnode refid="726" relation="include">
+        </childnode>
+        <childnode refid="727" relation="include">
+        </childnode>
+        <childnode refid="728" relation="include">
+        </childnode>
+        <childnode refid="729" relation="include">
+        </childnode>
+        <childnode refid="730" relation="include">
+        </childnode>
+        <childnode refid="731" relation="include">
+        </childnode>
+        <childnode refid="732" relation="include">
+        </childnode>
+        <childnode refid="733" relation="include">
+        </childnode>
+        <childnode refid="734" relation="include">
+        </childnode>
+        <childnode refid="735" relation="include">
+        </childnode>
+        <childnode refid="736" relation="include">
+        </childnode>
+      </node>
+      <node id="718">
+        <label>src/syscall/getgroups.c</label>
+        <link refid="getgroups_8c"/>
+      </node>
+      <node id="735">
+        <label>src/syscall/write.c</label>
+        <link refid="write_8c"/>
+      </node>
+      <node id="703">
+        <label>src/net/loopback/loopback.c</label>
+        <link refid="loopback_8c"/>
+      </node>
+      <node id="698">
+        <label>src/arch/task.c</label>
+        <link refid="task_8c"/>
+      </node>
+      <node id="706">
+        <label>src/include/aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="698" relation="include">
+        </childnode>
+        <childnode refid="699" relation="include">
+        </childnode>
+        <childnode refid="707" relation="include">
+        </childnode>
+        <childnode refid="708" relation="include">
+        </childnode>
+        <childnode refid="737" relation="include">
+        </childnode>
+        <childnode refid="741" relation="include">
+        </childnode>
+        <childnode refid="742" relation="include">
+        </childnode>
+        <childnode refid="743" relation="include">
+        </childnode>
+        <childnode refid="744" relation="include">
+        </childnode>
+        <childnode refid="745" relation="include">
+        </childnode>
+        <childnode refid="746" relation="include">
+        </childnode>
+        <childnode refid="703" relation="include">
+        </childnode>
+        <childnode refid="738" relation="include">
+        </childnode>
+        <childnode refid="704" relation="include">
+        </childnode>
+        <childnode refid="705" relation="include">
+        </childnode>
+        <childnode refid="747" relation="include">
+        </childnode>
+        <childnode refid="748" relation="include">
+        </childnode>
+        <childnode refid="749" relation="include">
+        </childnode>
+        <childnode refid="750" relation="include">
+        </childnode>
+        <childnode refid="739" relation="include">
+        </childnode>
+        <childnode refid="740" relation="include">
+        </childnode>
+      </node>
+      <node id="736">
+        <label>src/syscall/yield.c</label>
+        <link refid="yield_8c"/>
+      </node>
+      <node id="745">
+        <label>src/net/ipv4.c</label>
+        <link refid="ipv4_8c"/>
+      </node>
+      <node id="748">
+        <label>src/panic.c</label>
+        <link refid="panic_8c"/>
+      </node>
+      <node id="727">
+        <label>src/syscall/read.c</label>
+        <link refid="read_8c"/>
+      </node>
+      <node id="712">
+        <label>src/syscall/clone.c</label>
+        <link refid="clone_8c"/>
+      </node>
+      <node id="740">
+        <label>src/syscall/umount.c</label>
+        <link refid="umount_8c"/>
+      </node>
+      <node id="707">
+        <label>src/fs/vfs.c</label>
+        <link refid="vfs_8c"/>
+      </node>
+      <node id="700">
+        <label>src/fs/pipe.c</label>
+        <link refid="pipe_8c"/>
+      </node>
+      <node id="719">
+        <label>src/syscall/getpid.c</label>
+        <link refid="getpid_8c"/>
+      </node>
+      <node id="710">
+        <label>src/syscall/_exit.c</label>
+        <link refid="__exit_8c"/>
+      </node>
+      <node id="726">
+        <label>src/syscall/open.c</label>
+        <link refid="open_8c"/>
+      </node>
+      <node id="699">
+        <label>src/bufio.c</label>
+        <link refid="bufio_8c"/>
+      </node>
+      <node id="716">
+        <label>src/syscall/fork.c</label>
+        <link refid="fork_8c"/>
+      </node>
+      <node id="730">
+        <label>src/syscall/stat.c</label>
+        <link refid="stat_8c"/>
+      </node>
+      <node id="724">
+        <label>src/syscall/link.c</label>
+        <link refid="link_8c"/>
+      </node>
+      <node id="731">
+        <label>src/syscall/test.c</label>
+        <link refid="test_8c"/>
+      </node>
+      <node id="749">
+        <label>src/sched.c</label>
+        <link refid="src_2sched_8c"/>
+      </node>
+      <node id="720">
+        <label>src/syscall/gettimeofday.c</label>
+        <link refid="gettimeofday_8c"/>
+      </node>
+      <node id="744">
+        <label>src/net/eth.c</label>
+        <link refid="eth_8c"/>
+      </node>
+      <node id="714">
+        <label>src/syscall/execve.c</label>
+        <link refid="execve_8c"/>
+      </node>
+      <node id="711">
+        <label>src/syscall/chown.c</label>
+        <link refid="chown_8c"/>
+      </node>
+      <node id="702">
+        <label>src/fs/ramdev.c</label>
+        <link refid="ramdev_8c"/>
+      </node>
+      <node id="728">
+        <label>src/syscall/readdir.c</label>
+        <link refid="src_2syscall_2readdir_8c"/>
+      </node>
+      <node id="732">
+        <label>src/syscall/times.c</label>
+        <link refid="times_8c"/>
+      </node>
+      <node id="747">
+        <label>src/net/udp.c</label>
+        <link refid="udp_8c"/>
+      </node>
+      <node id="697">
+        <label>src/arch/syscall.c</label>
+        <link refid="syscall_8c"/>
+      </node>
+      <node id="694">
+        <label>src/include/aplus/spinlock.h</label>
+        <link refid="spinlock.h"/>
+        <childnode refid="695" relation="include">
+        </childnode>
+        <childnode refid="696" relation="include">
+        </childnode>
+        <childnode refid="697" relation="include">
+        </childnode>
+        <childnode refid="698" relation="include">
+        </childnode>
+        <childnode refid="699" relation="include">
+        </childnode>
+        <childnode refid="700" relation="include">
+        </childnode>
+        <childnode refid="701" relation="include">
+        </childnode>
+        <childnode refid="706" relation="include">
+        </childnode>
+        <childnode refid="703" relation="include">
+        </childnode>
+        <childnode refid="704" relation="include">
+        </childnode>
+        <childnode refid="705" relation="include">
+        </childnode>
+        <childnode refid="749" relation="include">
+        </childnode>
+        <childnode refid="750" relation="include">
+        </childnode>
+      </node>
+      <node id="741">
+        <label>src/mm/mm.c</label>
+        <link refid="mm_8c"/>
+      </node>
+      <node id="734">
+        <label>src/syscall/wait.c</label>
+        <link refid="wait_8c"/>
+      </node>
+      <node id="746">
+        <label>src/net/ipv6.c</label>
+        <link refid="ipv6_8c"/>
+      </node>
+      <node id="701">
+        <label>src/include/aplus/bufio.h</label>
+        <link refid="bufio_8h"/>
+        <childnode refid="699" relation="include">
+        </childnode>
+        <childnode refid="700" relation="include">
+        </childnode>
+        <childnode refid="702" relation="include">
+        </childnode>
+        <childnode refid="703" relation="include">
+        </childnode>
+        <childnode refid="704" relation="include">
+        </childnode>
+        <childnode refid="705" relation="include">
+        </childnode>
+      </node>
+      <node id="743">
+        <label>src/net/arp.c</label>
+        <link refid="arp_8c"/>
+      </node>
+      <node id="696">
+        <label>src/arch/serial.c</label>
+        <link refid="serial_8c"/>
+      </node>
+      <node id="723">
+        <label>src/syscall/kill.c</label>
+        <link refid="kill_8c"/>
+      </node>
+      <node id="733">
+        <label>src/syscall/unlink.c</label>
+        <link refid="unlink_8c"/>
+      </node>
+      <node id="717">
+        <label>src/syscall/fstat.c</label>
+        <link refid="fstat_8c"/>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="spinlock_8h_1aad28f3f1b6783cd56871b611ca2bcd97" prot="public" static="no">
+        <name>SPINLOCK_FLAGS_LOCKED</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="26" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="spinlock_8h_1acf8c39cdbeaaab5ea8c011c77d5bca8b" prot="public" static="no">
+        <name>SPINLOCK_FLAGS_FASTLOCK</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="27" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" prot="public" static="no">
+        <name>lock</name>
+        <param></param>
+        <initializer>static <ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref> __func__##_lock = 0;			\
+	<ref refid="spinlock_8c_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;__func__##_lock)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="38" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" prot="public" static="no">
+        <name>unlock</name>
+        <param></param>
+        <initializer><ref refid="spinlock_8c_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;__func__##_lock)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="42" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" prot="public" static="no">
+        <name>spinlock_waiton</name>
+        <param><defname>cond</defname></param>
+        <initializer>while(cond)										\
+		<ref refid="spinlock_8c_1aa40e1417e8410d92c2ffc313e57560e8" kindref="member">__spinlock_waiton</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="47" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" prot="public" static="no">
+        <name>fastlock_waiton</name>
+        <param><defname>cond</defname></param>
+        <initializer>while(cond)										\
+		<ref refid="spinlock_8c_1a2bf717efcda7e5189e3192e09e49c249" kindref="member">__fastlock_waiton</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="51" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="spinlock_8h_1acd6ac4ef62853a9d5afdaf765d219ff6" prot="public" static="no">
+        <name>spinlock_init</name>
+        <param><defname>spin</defname></param>
+        <param><defname>flags</defname></param>
+        <initializer>*(spin) = flags</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="56" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" prot="public" static="no">
+        <type>int</type>
+        <definition>typedef volatile int spinlock_t</definition>
+        <argsstring></argsstring>
+        <name>spinlock_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="29" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/spinlock.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void spinlock_lock</definition>
+        <argsstring>(spinlock_t *spin)</argsstring>
+        <name>spinlock_lock</name>
+        <param>
+          <type><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref> *</type>
+          <declname>spin</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="31" column="1" bodyfile="/opt/prj/aPlus/src/spinlock.c" bodystart="27" bodyend="34"/>
+        <references refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" compoundref="spinlock_8h" startline="51">fastlock_waiton</references>
+        <references refid="spinlock_8h_1acf8c39cdbeaaab5ea8c011c77d5bca8b" compoundref="spinlock_8h" startline="27">SPINLOCK_FLAGS_FASTLOCK</references>
+        <references refid="spinlock_8h_1aad28f3f1b6783cd56871b611ca2bcd97" compoundref="spinlock_8h" startline="26">SPINLOCK_FLAGS_LOCKED</references>
+        <references refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" compoundref="spinlock_8h" startline="47">spinlock_waiton</references>
+      </memberdef>
+      <memberdef kind="function" id="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void spinlock_unlock</definition>
+        <argsstring>(spinlock_t *spin)</argsstring>
+        <name>spinlock_unlock</name>
+        <param>
+          <type><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref> *</type>
+          <declname>spin</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="32" column="1" bodyfile="/opt/prj/aPlus/src/spinlock.c" bodystart="37" bodyend="39"/>
+        <references refid="spinlock_8h_1aad28f3f1b6783cd56871b611ca2bcd97" compoundref="spinlock_8h" startline="26">SPINLOCK_FLAGS_LOCKED</references>
+      </memberdef>
+      <memberdef kind="function" id="spinlock_8h_1aef8280bb43eb7eecb8a7903f70af1906" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int spinlock_trylock</definition>
+        <argsstring>(spinlock_t *spin)</argsstring>
+        <name>spinlock_trylock</name>
+        <param>
+          <type><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref> *</type>
+          <declname>spin</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="33" column="1" bodyfile="/opt/prj/aPlus/src/spinlock.c" bodystart="41" bodyend="47"/>
+        <references refid="spinlock_8h_1aad28f3f1b6783cd56871b611ca2bcd97" compoundref="spinlock_8h" startline="26">SPINLOCK_FLAGS_LOCKED</references>
+      </memberdef>
+      <memberdef kind="function" id="spinlock_8h_1aa40e1417e8410d92c2ffc313e57560e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void __spinlock_waiton</definition>
+        <argsstring>()</argsstring>
+        <name>__spinlock_waiton</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="34" column="1" bodyfile="/opt/prj/aPlus/src/spinlock.c" bodystart="49" bodyend="51"/>
+        <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="109" endline="117">schedule_yield</references>
+      </memberdef>
+      <memberdef kind="function" id="spinlock_8h_1a2bf717efcda7e5189e3192e09e49c249" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void __fastlock_waiton</definition>
+        <argsstring>()</argsstring>
+        <name>__fastlock_waiton</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="35" column="1" bodyfile="/opt/prj/aPlus/src/spinlock.c" bodystart="53" bodyend="55"/>
+        <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>spinlock.h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Author:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Antonio<sp/>Natale<sp/>&lt;inferdevil97@gmail.com&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>2014<sp/>WareX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software:<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation,<sp/>either<sp/>version<sp/>3<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>along<sp/>with<sp/>this<sp/>program.<sp/><sp/>If<sp/>not,<sp/>see<sp/>&lt;http://www.gnu.org/licenses/&gt;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_SPINLOCK_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_SPINLOCK_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="spinlock_8h_1aad28f3f1b6783cd56871b611ca2bcd97" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SPINLOCK_FLAGS_LOCKED<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="spinlock_8h_1acf8c39cdbeaaab5ea8c011c77d5bca8b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SPINLOCK_FLAGS_FASTLOCK<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref>;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(<ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref>*<sp/>spin);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(<ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref>*<sp/>spin);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="spinlock_8h_1aef8280bb43eb7eecb8a7903f70af1906" kindref="member">spinlock_trylock</ref>(<ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref>*<sp/>spin);<sp/></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="spinlock_8h_1aa40e1417e8410d92c2ffc313e57560e8" kindref="member">__spinlock_waiton</ref>();</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="spinlock_8h_1a2bf717efcda7e5189e3192e09e49c249" kindref="member">__fastlock_waiton</ref>();</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>lock()<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="39"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>static<sp/>spinlock_t<sp/>__func__##_lock<sp/>=<sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="40"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>spinlock_lock(&amp;__func__##_lock)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="42" refid="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>unlock()<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="43"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>spinlock_unlock(&amp;__func__##_lock)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>spinlock_waiton(cond)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="48"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>while(cond)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="49"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__spinlock_waiton()</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51" refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>fastlock_waiton(cond)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="52"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>while(cond)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="53"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__fastlock_waiton()</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="spinlock_8h_1acd6ac4ef62853a9d5afdaf765d219ff6" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>spinlock_init(spin,<sp/>flags)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="57"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>*(spin)<sp/>=<sp/>flags</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,345 @@
+\hypertarget{task_8c}{\section{Riferimenti per il file src/arch/task.c}
+\label{task_8c}\index{src/arch/task.\+c@{src/arch/task.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8c_a30c5de54c48d098388d2048073a393a7}{\+\_\+\+\_\+asm\+\_\+\+\_\+} (\char`\"{}.global \hyperlink{task_8c_a82b2dfd3955cf0689cda053f3dc24481}{task\+\_\+context\+\_\+switch}		\textbackslash{}n\char`\"{}\char`\"{}task\+\_\+context\+\_\+switch\+:				\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}						\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}, \hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}					\textbackslash{}n\char`\"{}\char`\"{}	pushf							\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_af2b16bef95c844028dd145264d1d3875}{ecx}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}						\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}, \mbox{[}\hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp} + 8\mbox{]}				\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}, \mbox{[}\hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp} + 12\mbox{]}				\textbackslash{}n\char`\"{}\char`\"{}	mov \mbox{[}\hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}\mbox{]}, \hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}					\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}, \mbox{[}\hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}\mbox{]}					\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_af2b16bef95c844028dd145264d1d3875}{ecx}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}							\textbackslash{}n\char`\"{}\char`\"{}	popf							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}							\textbackslash{}n\char`\"{}\char`\"{}	sti								\textbackslash{}n\char`\"{}\char`\"{}ret								\textbackslash{}n\char`\"{})
+\item 
+void \hyperlink{task_8c_a82b2dfd3955cf0689cda053f3dc24481}{task\+\_\+context\+\_\+switch} (task\+\_\+env\+\_\+t $\ast$$\ast$old, task\+\_\+env\+\_\+t $\ast$$\ast$new)
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{task_8c_aa547121ba0907a969075a9d7530a98fb}{task\+\_\+fork} ()
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{task_8c_aa274b7334aace961395fdb788126712d}{task\+\_\+clone} (void $\ast$entry, void $\ast$arg, void $\ast$stack)
+\item 
+void \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\+\_\+switch} (\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$newtask)
+\item 
+int \hyperlink{task_8c_a30500c422833c90d6f42e44e2efb04a7}{task\+\_\+init} ()
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{task_8c_ac08620610e2419aca3878305400a96b7}{kernel\+\_\+task}
+\item 
+\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\+\_\+queue}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{task_8c_afac53891df03c313fc0b5b24e0acc8a9}{kernel\+\_\+vmm}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{task_8c_a9bed7071511863f81c2de43b3c3f7db9}{current\+\_\+vmm}
+\item 
+volatile \hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ \hyperlink{task_8c_a93cc6260faf18f2e31742272b38a534c}{vfs\+\_\+root}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{task_8c_a30c5de54c48d098388d2048073a393a7}{\index{task.\+c@{task.\+c}!\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}!task.\+c@{task.\+c}}
+\subsubsection[{\+\_\+\+\_\+asm\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+asm\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}.global {\bf task\+\_\+context\+\_\+switch} \textbackslash{}n\char`\"{}\char`\"{}task\+\_\+context\+\_\+switch\+: \textbackslash{}n\char`\"{}\char`\"{} push {\bf ebp} \textbackslash{}n\char`\"{}\char`\"{} mov}]{ebp, }
+\item[{esp\textbackslash{}n\char`\"{}\char`\"{}pushf\textbackslash{}n\char`\"{}\char`\"{}push edx\textbackslash{}n\char`\"{}\char`\"{}push eax\textbackslash{}n\char`\"{}\char`\"{}push ecx\textbackslash{}n\char`\"{}\char`\"{}push ebx\textbackslash{}n\char`\"{}\char`\"{}push esi\textbackslash{}n\char`\"{}\char`\"{}push edi\textbackslash{}n\char`\"{}\char`\"{}mov}]{eax, }
+\item[{\mbox{[}ebp + 8\mbox{]} \textbackslash{}n\char`\"{}\char`\"{}mov}]{edx, }
+\item[{\mbox{[}ebp + 12\mbox{]} \textbackslash{}n\char`\"{}\char`\"{}}]{mov\mbox{[}eax\mbox{]}, }
+\item[{esp\textbackslash{}n\char`\"{}\char`\"{}mov}]{esp, }
+\item[{\mbox{[}edx\mbox{]} \textbackslash{}n\char`\"{}\char`\"{}pop edi\textbackslash{}n\char`\"{}\char`\"{}pop esi\textbackslash{}n\char`\"{}\char`\"{}pop ebx\textbackslash{}n\char`\"{}\char`\"{}pop ecx\textbackslash{}n\char`\"{}\char`\"{}pop eax\textbackslash{}n\char`\"{}\char`\"{}pop edx\textbackslash{}n\char`\"{}\char`\"{}popf\textbackslash{}n\char`\"{}\char`\"{}pop ebp\textbackslash{}n\char`\"{}\char`\"{}sti\textbackslash{}n\char`\"{}\char`\"{}ret\textbackslash{}n\char`\"{}}]{}
+\end{DoxyParamCaption}
+)}}\label{task_8c_a30c5de54c48d098388d2048073a393a7}
+\hypertarget{task_8c_aa274b7334aace961395fdb788126712d}{\index{task.\+c@{task.\+c}!task\+\_\+clone@{task\+\_\+clone}}
+\index{task\+\_\+clone@{task\+\_\+clone}!task.\+c@{task.\+c}}
+\subsubsection[{task\+\_\+clone}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ task\+\_\+clone (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{entry, }
+\item[{void $\ast$}]{arg, }
+\item[{void $\ast$}]{stack}
+\end{DoxyParamCaption}
+)}}\label{task_8c_aa274b7334aace961395fdb788126712d}
+
+
+Definizione alla linea 115 del file task.\+c.
+
+
+
+Referenzia task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\+::cwd, task\+::env, task\+::exe, task\+::fd, task\+::gid, task\+::image, kmalloc(), task\+::length, list\+\_\+add(), mm\+\_\+align(), task\+::parent, task\+::pid, task\+::priority, task\+::ptr, schedule\+\_\+nextpid(), task\+::signal\+\_\+handler, task\+::signal\+\_\+sig, task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D, T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+::uid, uint32\+\_\+t, e task\+::vaddr.
+
+
+\begin{DoxyCode}
+115                                                         \{
+116     \textcolor{keywordflow}{if}(entry == NULL)
+117         \textcolor{keywordflow}{return} NULL;
+118 
+119     \textcolor{keywordflow}{if}(stack == NULL)
+120         stack = (\textcolor{keywordtype}{void}*) ((\textcolor{keywordtype}{int}) \hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(\hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE} * 2)) + 
+      \hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE});
+121 
+122     memset(stack, 0, \hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE});
+123 
+124 
+125     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structtask}{task\_t}));
+126     memset(child, 0, \textcolor{keyword}{sizeof}(\hyperlink{structtask}{task\_t}));
+127 
+128     child->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid} = \hyperlink{src_2sched_8c_a986fa43e945f396a2c722a1f766e03c8}{schedule\_nextpid}();
+129     child->\hyperlink{structtask_a7099e7ba6a4c94559edfb4d396803b15}{cwd} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7099e7ba6a4c94559edfb4d396803b15}{cwd};
+130     child->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe};
+131     child->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid};
+132     child->\hyperlink{structtask_aaf3b6e15445e766a5c4823b815bca630}{gid} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aaf3b6e15445e766a5c4823b815bca630}{gid};
+133     
+134     child->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} = \hyperlink{task_8h_a447252ba92918fc13f5b6fd120b2656f}{TASK\_STATE\_ALIVE};
+135     child->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority};
+136     child->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} = 0;
+137     child->\hyperlink{structtask_a34c6613744820a1e8127756fb6a5392c}{parent} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
+138 
+139     child->\hyperlink{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{signal\_handler} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->
+      \hyperlink{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{signal\_handler};
+140     child->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig};
+141 
+142     child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr};
+143     child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length};
+144     child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr};
+145         
+146     
+147     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3};
+148     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack} = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) stack - \hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE};
+149     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env} = (task\_env\_t*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) stack - \textcolor{keyword}{sizeof}(task\_env\_t));
+150 
+151     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env}->eax = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) arg;
+152     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env}->eip = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) entry;
+153     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env}->ebp = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.
+      \hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env}; 
+154 
+155     
+156     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}; i++)
+157         child->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i] = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i];
+158 
+159 
+160     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) child);
+161     \textcolor{keywordflow}{return} child;
+162 \}
+\end{DoxyCode}
+\hypertarget{task_8c_a82b2dfd3955cf0689cda053f3dc24481}{\index{task.\+c@{task.\+c}!task\+\_\+context\+\_\+switch@{task\+\_\+context\+\_\+switch}}
+\index{task\+\_\+context\+\_\+switch@{task\+\_\+context\+\_\+switch}!task.\+c@{task.\+c}}
+\subsubsection[{task\+\_\+context\+\_\+switch}]{\setlength{\rightskip}{0pt plus 5cm}void task\+\_\+context\+\_\+switch (
+\begin{DoxyParamCaption}
+\item[{task\+\_\+env\+\_\+t $\ast$$\ast$}]{old, }
+\item[{task\+\_\+env\+\_\+t $\ast$$\ast$}]{new}
+\end{DoxyParamCaption}
+)}}\label{task_8c_a82b2dfd3955cf0689cda053f3dc24481}
+\hypertarget{task_8c_aa547121ba0907a969075a9d7530a98fb}{\index{task.\+c@{task.\+c}!task\+\_\+fork@{task\+\_\+fork}}
+\index{task\+\_\+fork@{task\+\_\+fork}!task.\+c@{task.\+c}}
+\subsubsection[{task\+\_\+fork}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ task\+\_\+fork (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{task_8c_aa547121ba0907a969075a9d7530a98fb}
+
+
+Definizione alla linea 49 del file task.\+c.
+
+
+
+Referenzia task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\+::cwd, task\+::env, task\+::exe, task\+::fd, task\+::gid, task\+::image, kmalloc(), task\+::length, list\+\_\+add(), mm\+\_\+align(), mm\+\_\+paddr(), task\+::parent, task\+::pid, task\+::priority, task\+::ptr, schedule\+\_\+nextpid(), task\+::signal\+\_\+handler, task\+::signal\+\_\+sig, task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D, T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+::uid, uint32\+\_\+t, task\+::vaddr, vmm\+\_\+create(), V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T, V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R, vmm\+\_\+map(), vmm\+\_\+mapkernel(), e vmm\+\_\+umap().
+
+
+\begin{DoxyCode}
+49                     \{
+50     \textcolor{keywordflow}{if}(!\hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+51         \textcolor{keywordflow}{return} NULL;
+52 
+53     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structtask}{task\_t}));
+54     memset(child, 0, \textcolor{keyword}{sizeof}(\hyperlink{structtask}{task\_t}));
+55 
+56     child->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid} = \hyperlink{src_2sched_8c_a986fa43e945f396a2c722a1f766e03c8}{schedule\_nextpid}();
+57     child->\hyperlink{structtask_a7099e7ba6a4c94559edfb4d396803b15}{cwd} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7099e7ba6a4c94559edfb4d396803b15}{cwd};
+58     child->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe};
+59     child->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid};
+60     child->\hyperlink{structtask_aaf3b6e15445e766a5c4823b815bca630}{gid} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aaf3b6e15445e766a5c4823b815bca630}{gid};
+61     
+62     child->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} = \hyperlink{task_8h_a447252ba92918fc13f5b6fd120b2656f}{TASK\_STATE\_ALIVE};
+63     child->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority};
+64     child->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} = 0;
+65     child->\hyperlink{structtask_a34c6613744820a1e8127756fb6a5392c}{parent} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
+66 
+67     child->\hyperlink{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{signal\_handler} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->
+      \hyperlink{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{signal\_handler};
+68     child->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig};
+69 
+70     
+71     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}; i++)
+72         child->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i] = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i];
+73 
+74 
+75     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3} = \hyperlink{paging_8c_a200ca682c57c6acaa05f2f56c9f6f6de}{vmm\_create}();
+76     \hyperlink{paging_8c_a8828597ede1b2c5bcc5ea1a4ca7919a9}{vmm\_mapkernel}(child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3});
+77 
+78 
+79     child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr};
+80     child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length};
+81 
+82     
+83     \textcolor{keywordflow}{if}(\hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr}) \{
+84         \textcolor{keywordtype}{void}* addr = (\textcolor{keywordtype}{void}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length});
+85         memcpy(addr, (\textcolor{keywordtype}{void}*) child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr}, child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.
+      \hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length});
+86 
+87         \hyperlink{paging_8c_ae969f54f1646d5d8a871bef828a24239}{vmm\_map}(child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(addr), child->
+      \hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr}, child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length});
+88         child->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr} = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(addr);
+89     \}
+90 
+91     
+92     
+93     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.
+      \hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack};
+94     child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env};
+95 
+96     \textcolor{keywordtype}{void}* stack = (\textcolor{keywordtype}{void}*) \hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(\hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE} * 2));
+97     memcpy(stack, (\textcolor{keywordtype}{void}*) child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack}, \hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE});
+98 
+99     \hyperlink{paging_8c_ab6841aac2bf44152a7c0c12293a97440}{vmm\_umap}(child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3}, child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack}, 
+      \hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE});
+100     \hyperlink{paging_8c_ae969f54f1646d5d8a871bef828a24239}{vmm\_map}(child->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(stack), child->
+      \hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack}, \hyperlink{task_8h_a29d957dceca9653f89e5190113c09d38}{TASK\_STACKSIZE}, \hyperlink{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}{VMM\_FLAGS\_DEFAULT} | 
+      \hyperlink{mm_8h_a4f995b267ef97c4638c27370badecb21}{VMM\_FLAGS\_USER});
+101     
+102 
+103     \textcolor{comment}{/* TODO: Set EIP for child */}
+104     
+105     \textcolor{keywordflow}{if}(\hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task} == child)
+106         \textcolor{keywordflow}{return} 0;
+107     
+108 
+109     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) child);
+110     \textcolor{keywordflow}{return} child;
+111 \}
+\end{DoxyCode}
+\hypertarget{task_8c_a30500c422833c90d6f42e44e2efb04a7}{\index{task.\+c@{task.\+c}!task\+\_\+init@{task\+\_\+init}}
+\index{task\+\_\+init@{task\+\_\+init}!task.\+c@{task.\+c}}
+\subsubsection[{task\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int task\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{task_8c_a30500c422833c90d6f42e44e2efb04a7}
+
+
+Definizione alla linea 179 del file task.\+c.
+
+
+
+Referenzia task\+::context, task\+::cr3, task\+::cwd, task\+::env, task\+::gid, kernel\+\_\+vmm, kmalloc(), list\+\_\+add(), task\+::parent, task\+::pid, task\+::priority, schedule\+\_\+nextpid(), task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+\_\+switch(), task\+::uid, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+179                 \{
+180 
+181     \textcolor{keyword}{extern} \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} kernel\_stack;
+182     
+183     \hyperlink{task_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task} = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task} = (\hyperlink{structtask}{task\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(
+      \hyperlink{structtask}{task\_t}));
+184     memset(\hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}, 0, \textcolor{keyword}{sizeof}(\hyperlink{structtask}{task\_t}));
+185     
+186     
+187     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env} = (task\_env\_t*) 0;
+188     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3} = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) 
+      \hyperlink{task_8c_afac53891df03c313fc0b5b24e0acc8a9}{kernel\_vmm};
+189     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack} = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) &kernel\_stack;
+190     
+191     
+192     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid} = \hyperlink{src_2sched_8c_a986fa43e945f396a2c722a1f766e03c8}{schedule\_nextpid}();
+193     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7099e7ba6a4c94559edfb4d396803b15}{cwd} = (\hyperlink{structinode}{inode\_t}*) \hyperlink{task_8c_a93cc6260faf18f2e31742272b38a534c}{vfs\_root};
+194     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid} = (uid\_t) 0;
+195     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aaf3b6e15445e766a5c4823b815bca630}{gid} = (gid\_t) 0;
+196     
+197     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} = \hyperlink{task_8h_a447252ba92918fc13f5b6fd120b2656f}{TASK\_STATE\_ALIVE};
+198     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority} = \hyperlink{task_8h_a11aa236ab974b14186e8acc385470c13}{TASK\_PRIORITY\_REGULAR};
+199     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a34c6613744820a1e8127756fb6a5392c}{parent} = NULL;
+200 
+201 
+202     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task});
+203     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task});
+204 
+205 
+206     \textcolor{keywordflow}{return} 0;
+207 \}
+\end{DoxyCode}
+\hypertarget{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{\index{task.\+c@{task.\+c}!task\+\_\+switch@{task\+\_\+switch}}
+\index{task\+\_\+switch@{task\+\_\+switch}!task.\+c@{task.\+c}}
+\subsubsection[{task\+\_\+switch}]{\setlength{\rightskip}{0pt plus 5cm}void task\+\_\+switch (
+\begin{DoxyParamCaption}
+\item[{{\bf task\+\_\+t} $\ast$}]{newtask}
+\end{DoxyParamCaption}
+)}}\label{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}
+
+
+Definizione alla linea 165 del file task.\+c.
+
+
+
+Referenzia task\+::context, task\+::cr3, current\+\_\+task, task\+::env, task\+\_\+context\+\_\+switch(), e vmm\+\_\+switch().
+
+
+\begin{DoxyCode}
+165                                   \{
+166     
+167     \hyperlink{structtask}{task\_t}* old = \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
+168     \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task} = newtask;
+169 
+170 
+171     \hyperlink{paging_8c_aa525b2cea53b39f8fdd94edd4730cff2}{vmm\_switch}(\hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3});
+172     outb(0x20, 0x20);
+173 
+174     \hyperlink{task_8c_a82b2dfd3955cf0689cda053f3dc24481}{task\_context\_switch}(&old->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env}, &
+      \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env});
+175 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{task.\+c@{task.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!task.\+c@{task.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Definizione alla linea 33 del file sched.\+c.
+
+\hypertarget{task_8c_a9bed7071511863f81c2de43b3c3f7db9}{\index{task.\+c@{task.\+c}!current\+\_\+vmm@{current\+\_\+vmm}}
+\index{current\+\_\+vmm@{current\+\_\+vmm}!task.\+c@{task.\+c}}
+\subsubsection[{current\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ current\+\_\+vmm}}\label{task_8c_a9bed7071511863f81c2de43b3c3f7db9}
+
+
+Definizione alla linea 46 del file paging.\+c.
+
+\hypertarget{task_8c_ac08620610e2419aca3878305400a96b7}{\index{task.\+c@{task.\+c}!kernel\+\_\+task@{kernel\+\_\+task}}
+\index{kernel\+\_\+task@{kernel\+\_\+task}!task.\+c@{task.\+c}}
+\subsubsection[{kernel\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ kernel\+\_\+task}}\label{task_8c_ac08620610e2419aca3878305400a96b7}
+
+
+Definizione alla linea 34 del file sched.\+c.
+
+\hypertarget{task_8c_afac53891df03c313fc0b5b24e0acc8a9}{\index{task.\+c@{task.\+c}!kernel\+\_\+vmm@{kernel\+\_\+vmm}}
+\index{kernel\+\_\+vmm@{kernel\+\_\+vmm}!task.\+c@{task.\+c}}
+\subsubsection[{kernel\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ kernel\+\_\+vmm}}\label{task_8c_afac53891df03c313fc0b5b24e0acc8a9}
+
+
+Definizione alla linea 47 del file paging.\+c.
+
+\hypertarget{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{\index{task.\+c@{task.\+c}!task\+\_\+queue@{task\+\_\+queue}}
+\index{task\+\_\+queue@{task\+\_\+queue}!task.\+c@{task.\+c}}
+\subsubsection[{task\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ task\+\_\+queue}}\label{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}
+
+
+Definizione alla linea 36 del file sched.\+c.
+
+\hypertarget{task_8c_a93cc6260faf18f2e31742272b38a534c}{\index{task.\+c@{task.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
+\index{vfs\+\_\+root@{vfs\+\_\+root}!task.\+c@{task.\+c}}
+\subsubsection[{vfs\+\_\+root}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf inode\+\_\+t}$\ast$ vfs\+\_\+root}}\label{task_8c_a93cc6260faf18f2e31742272b38a534c}
+
+
+Definizione alla linea 19 del file vfs.\+c.
+

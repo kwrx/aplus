@@ -1,0 +1,126 @@
+.TH "src/include/aplus/attribute.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/attribute.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBattribute\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fB__UNION2\fP(x, y, z)   x ## y ## z"
+.br
+.ti -1c
+.RI "#define \fB__UNION\fP(x, y, z)   \fB__UNION2\fP(x, y, z)"
+.br
+.ti -1c
+.RI "#define \fBATTRIBUTE\fP(\fBname\fP, \fBvalue\fP)"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "struct \fBattribute\fP \fB__attribute__\fP ((aligned(0x100))) attribute_t"
+.br
+.ti -1c
+.RI "static \fBlist_t\fP * \fBattribute\fP (const char *\fBname\fP)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "char \fBname\fP [0x80]"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBvalue\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define __UNION(x, y, z)   \fB__UNION2\fP(x, y, z)"
+
+.PP
+Definizione alla linea 15 del file attribute\&.h\&.
+.SS "#define __UNION2(x, y, z)   x ## y ## z"
+
+.PP
+Definizione alla linea 12 del file attribute\&.h\&.
+.SS "#define ATTRIBUTE(\fBname\fP, \fBvalue\fP)"
+\fBValore:\fP
+.PP
+.nf
+attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section("\&.attribute"))) = {   \\
+		name, (uint32_t) &value                                                                       \
+    }                                                                                               \
+.fi
+.PP
+Definizione alla linea 18 del file attribute\&.h\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "struct \fBattribute\fP __attribute__ ((aligned(0x100)))"
+
+.SS "static \fBlist_t\fP* \fBattribute\fP (const char *name)\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definizione alla linea 31 del file attribute\&.h\&.
+.PP
+Referenzia list_add(), list_init, e uint32_t\&.
+.PP
+.nf
+31                                                   {
+32     extern int attribute_start;
+33     extern int attribute_end;
+34     
+35     uint32_t attr_s = (uint32_t) &attribute_start;
+36     uint32_t attr_e = (uint32_t) &attribute_end;
+37     
+38     list_t* tmp;
+39     list_init(tmp);
+40     
+41     while(attr_s < attr_e) {
+42         attribute_t* attr = (attribute_t*) attr_s;
+43 
+44         if(strcmp(attr->name, name) == 0)
+45             list_add(tmp, (listval_t) attr->value);
+46             
+47         attr_s += sizeof(attribute_t);
+48     }
+49     
+50     return tmp;
+51 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "char name[0x80]"
+
+.PP
+Definizione alla linea 82 del file attribute\&.h\&.
+.SS "\fBuint32_t\fP value"
+
+.PP
+Definizione alla linea 83 del file attribute\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

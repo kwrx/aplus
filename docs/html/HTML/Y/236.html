@@ -1,0 +1,26 @@
+<html>
+<head>
+<title>env</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L94'>env</a>                94 src/arch/task.c 	child-&gt;context.env = current_task-&gt;context.env;
+<a href='../S/159.html#L149'>env</a>               149 src/arch/task.c 	child-&gt;context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+<a href='../S/159.html#L151'>env</a>               151 src/arch/task.c 	child-&gt;context.env-&gt;eax = (uint32_t) arg;
+<a href='../S/159.html#L152'>env</a>               152 src/arch/task.c 	child-&gt;context.env-&gt;eip = (uint32_t) entry;
+<a href='../S/159.html#L153'>env</a>               153 src/arch/task.c 	child-&gt;context.env-&gt;ebp = (uint32_t) child-&gt;context.env; 
+<a href='../S/159.html#L174'>env</a>               174 src/arch/task.c 	task_context_switch(&amp;old-&gt;context.env, &amp;current_task-&gt;context.env);
+<a href='../S/159.html#L187'>env</a>               187 src/arch/task.c 	current_task-&gt;context.env = (task_env_t*) 0;
+<a href='../S/90.html#L76'>env</a>                76 src/include/aplus/task.h 		task_env_t* env;
+<a href='../S/23.html#L6'>env</a>                 6 usr/src/libposix/src/_execve.c extern int execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/23.html#L8'>env</a>                 8 usr/src/libposix/src/_execve.c int _execve(const char* filename, char* const args[], char* const env[]) {
+<a href='../S/23.html#L9'>env</a>                 9 usr/src/libposix/src/_execve.c 	return execve(filename, args, env);
+<a href='../S/19.html#L13'>env</a>                13 usr/src/libposix/src/execl.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/39.html#L9'>env</a>                 9 usr/src/libposix/src/execle.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/30.html#L9'>env</a>                 9 usr/src/libposix/src/execlp.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/22.html#L14'>env</a>                14 usr/src/libposix/src/execv.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+</pre>
+</body>
+</html>

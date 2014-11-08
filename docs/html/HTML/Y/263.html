@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>filename</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/133.html#L13'>filename</a>           13 src/syscall/chown.c int sys_chown(char* filename, uid_t owner, gid_t group) {
+<a href='../S/133.html#L22'>filename</a>           22 src/syscall/chown.c 	int fd = sys_open(filename, O_RDONLY, 0644);
+<a href='../S/141.html#L12'>filename</a>           12 src/syscall/execve.c int sys_execve(char* filename, char** argv, char** environ) {
+<a href='../S/141.html#L14'>filename</a>           14 src/syscall/execve.c 	int fd = sys_open(filename, O_RDONLY, 0644);
+<a href='../S/118.html#L14'>filename</a>           14 src/syscall/link.c int sys_link(char* filename, char* link) {
+<a href='../S/139.html#L19'>filename</a>           19 src/syscall/open.c static inode_t* ino_open(char* filename, int flags, mode_t mode) {
+<a href='../S/139.html#L22'>filename</a>           22 src/syscall/open.c 	if(filename[0] == '/')
+<a href='../S/139.html#L39'>filename</a>           39 src/syscall/open.c 	if(filename[0] == '/')
+<a href='../S/139.html#L40'>filename</a>           40 src/syscall/open.c 		filename++;
+<a href='../S/139.html#L42'>filename</a>           42 src/syscall/open.c 	if(filename[0] == 0)
+<a href='../S/139.html#L46'>filename</a>           46 src/syscall/open.c 	char* s = filename;
+<a href='../S/139.html#L107'>filename</a>          107 src/syscall/open.c int sys_open(char* filename, int flags, mode_t mode) {
+<a href='../S/139.html#L111'>filename</a>          111 src/syscall/open.c 	inode_t* ino = ino_open(filename, flags, mode);
+<a href='../S/124.html#L15'>filename</a>           15 src/syscall/stat.c int sys_stat(const char* filename, struct stat* st) {
+<a href='../S/124.html#L16'>filename</a>           16 src/syscall/stat.c 	int fd = sys_open(filename, O_RDONLY, 0644);
+<a href='../S/23.html#L6'>filename</a>            6 usr/src/libposix/src/_execve.c extern int execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/23.html#L8'>filename</a>            8 usr/src/libposix/src/_execve.c int _execve(const char* filename, char* const args[], char* const env[]) {
+<a href='../S/23.html#L9'>filename</a>            9 usr/src/libposix/src/_execve.c 	return execve(filename, args, env);
+<a href='../S/19.html#L13'>filename</a>           13 usr/src/libposix/src/execl.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/39.html#L9'>filename</a>            9 usr/src/libposix/src/execle.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/30.html#L9'>filename</a>            9 usr/src/libposix/src/execlp.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/22.html#L14'>filename</a>           14 usr/src/libposix/src/execv.c extern int _execve(const char* filename, char* const args[], char* const env[]);
+<a href='../S/34.html#L5'>filename</a>            5 usr/src/libposix/src/lstat.c int lstat(const char* filename, struct stat* st) {
+<a href='../S/34.html#L6'>filename</a>            6 usr/src/libposix/src/lstat.c 	int fd = open(filename, O_RDONLY | O_NOFOLLOW, 0644);
+</pre>
+</body>
+</html>

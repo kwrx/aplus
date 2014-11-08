@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>usr/src/libposix/src/dup2.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/dup2.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L3'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L3' title='Defined at 3.'>dup2</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L2'>   2 
+<a name='L3'>   3 <b>int</b> dup2(<b>int</b> <a href='../Y/431.html' title='Multiple used in 2 places.'>oldfd</a>, <b>int</b> <a href='../Y/406.html' title='Multiple used in 2 places.'>newfd</a>) <font color='red'>{</font>
+<a name='L4'>   4         <b>return</b> <a href='../Y/259.html' title='Multiple used in 2 places.'>fcntl</a>(<a href='../Y/431.html' title='Multiple used in 2 places.'>oldfd</a>, F_DUPFD, <a href='../Y/406.html' title='Multiple used in 2 places.'>newfd</a>);
+<a name='L5'>   5 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L3'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

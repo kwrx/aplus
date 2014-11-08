@@ -1,0 +1,45 @@
+\hypertarget{pthread__exit_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+exit.c}
+\label{pthread__exit_8c}\index{usr/src/libpthread/src/pthread\+\_\+exit.\+c@{usr/src/libpthread/src/pthread\+\_\+exit.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} void \hyperlink{pthread__exit_8c_a3a51b7ef885351f98fab56947a39c523}{pthread\+\_\+exit} (void $\ast$value\+\_\+ptr)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__exit_8c_a3a51b7ef885351f98fab56947a39c523}{\index{pthread\+\_\+exit.\+c@{pthread\+\_\+exit.\+c}!pthread\+\_\+exit@{pthread\+\_\+exit}}
+\index{pthread\+\_\+exit@{pthread\+\_\+exit}!pthread\+\_\+exit.\+c@{pthread\+\_\+exit.\+c}}
+\subsubsection[{pthread\+\_\+exit}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} void pthread\+\_\+exit (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{value\+\_\+ptr}
+\end{DoxyParamCaption}
+)}}\label{pthread__exit_8c_a3a51b7ef885351f98fab56947a39c523}
+
+
+Definizione alla linea 8 del file pthread\+\_\+exit.\+c.
+
+
+
+Referenzia pthread\+\_\+context\+::exitval, pthread\+\_\+detach(), e pthread\+\_\+self().
+
+
+\begin{DoxyCode}
+8                                           \{
+9     \hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\_t} ptx = \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}();
+10     \hyperlink{structpthread__context}{pthread\_context\_t}* ctx = (\hyperlink{structpthread__context}{pthread\_context\_t}*) ptx;
+11 
+12     \textcolor{keywordflow}{if}(ptx) \{
+13         ctx->\hyperlink{structpthread__context_ab2848ec5b075681f217e57545f986c1b}{exitval} = value\_ptr;
+14         \hyperlink{pthread_8h_a7c275c509c26566b6dd95a2de1668a2f}{pthread\_detach}(ptx);
+15     \}\textcolor{keywordflow}{else}
+16         abort();
+17 
+18     \textcolor{keywordflow}{for}(;;);
+19 \}
+\end{DoxyCode}

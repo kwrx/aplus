@@ -1,0 +1,226 @@
+.TH "usr/src/libposix/src/sched.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/sched.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include 'config\&.h'\fP
+.br
+\fC#include <sched\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/times\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef int \fBcpu_set_t\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsched_setscheduler\fP (pid_t pid, int policy, const struct sched_param *param)"
+.br
+.ti -1c
+.RI "int \fBsched_getscheduler\fP (pid_t pid)"
+.br
+.ti -1c
+.RI "int \fBsched_setparam\fP (pid_t pid, const struct sched_param *param)"
+.br
+.ti -1c
+.RI "int \fBsched_getparam\fP (pid_t pid, struct sched_param *param)"
+.br
+.ti -1c
+.RI "int \fBsched_get_priority_max\fP (int policy)"
+.br
+.ti -1c
+.RI "int \fBsched_get_priority_min\fP (int policy)"
+.br
+.ti -1c
+.RI "int \fBsched_rr_get_interval\fP (pid_t pid, struct timespec *tp)"
+.br
+.ti -1c
+.RI "int \fBsched_setaffinity\fP (pid_t pid, size_t cpusetsize, const \fBcpu_set_t\fP *mask)"
+.br
+.ti -1c
+.RI "int \fBsched_getaffinity\fP (pid_t pid, size_t cpusetsize, \fBcpu_set_t\fP *mask)"
+.br
+.in -1c
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef int \fBcpu_set_t\fP"
+
+.PP
+Definizione alla linea 11 del file sched\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sched_get_priority_max (intpolicy)"
+
+.PP
+Definizione alla linea 60 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+60                                        {
+61     errno = ENOSYS;
+62     return -1;
+63 }
+.fi
+.SS "int sched_get_priority_min (intpolicy)"
+
+.PP
+Definizione alla linea 65 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+65                                        {
+66     errno = ENOSYS;
+67     return -1;
+68 }
+.fi
+.SS "int sched_getaffinity (pid_tpid, size_tcpusetsize, \fBcpu_set_t\fP *mask)"
+
+.PP
+Definizione alla linea 93 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+93                                                                      {
+94     errno = ENOSYS;
+95     return -1;
+96 }
+.fi
+.SS "int sched_getparam (pid_tpid, struct sched_param *param)"
+
+.PP
+Definizione alla linea 50 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+50                                                          {
+51     if(pid < 0) {
+52         errno = EINVAL;
+53         return -1;
+54     }
+55 
+56     errno = ENOSYS;
+57     return -1;
+58 }
+.fi
+.SS "int sched_getscheduler (pid_tpid)"
+
+.PP
+Definizione alla linea 29 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+29                                   {
+30     errno = ENOSYS;
+31     return -1;
+32 }
+.fi
+.SS "int sched_rr_get_interval (pid_tpid, struct timespec *tp)"
+
+.PP
+Definizione alla linea 70 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+70                                                           {
+71     if(pid < 0) {
+72         errno = EINVAL;
+73         return -1;
+74     }
+75 
+76     if(tp == NULL) {
+77         errno = EINVAL;
+78         return -1;
+79     }
+80 
+81     tp->tv_sec = 0;
+82     tp->tv_nsec = CLOCKS_PER_SEC / 1000000000;
+83 
+84     return 0;
+85 }
+.fi
+.SS "int sched_setaffinity (pid_tpid, size_tcpusetsize, const \fBcpu_set_t\fP *mask)"
+
+.PP
+Definizione alla linea 88 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+88                                                                            {
+89     errno = ENOSYS;
+90     return -1;
+91 }
+.fi
+.SS "int sched_setparam (pid_tpid, const struct sched_param *param)"
+
+.PP
+Definizione alla linea 35 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+35                                                                {
+36     if(param == NULL) {
+37         errno = EINVAL;
+38         return -1;
+39     }
+40 
+41     if(pid < 0) {
+42         errno = EINVAL;
+43         return -1;
+44     }
+45 
+46     errno = ENOSYS;
+47     return -1;
+48 }
+.fi
+.SS "int sched_setscheduler (pid_tpid, intpolicy, const struct sched_param *param)"
+
+.PP
+Definizione alla linea 14 del file sched\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+14                                                                                {
+15     if(param == NULL) {
+16         errno = EINVAL;
+17         return -1;
+18     }
+19 
+20     if(pid < 0) {
+21         errno = EINVAL;
+22         return -1;
+23     }
+24 
+25     errno = ENOSYS;
+26     return -1;
+27 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="execv_8c" kind="file">
+    <compoundname>execv.c</compoundname>
+    <includes local="no">_ansi.h</includes>
+    <includes local="no">unistd.h</includes>
+    <incdepgraph>
+      <node id="2072">
+        <label>_ansi.h</label>
+      </node>
+      <node id="2071">
+        <label>usr/src/libposix/src/execv.c</label>
+        <link refid="execv.c"/>
+        <childnode refid="2072" relation="include">
+        </childnode>
+        <childnode refid="2073" relation="include">
+        </childnode>
+      </node>
+      <node id="2073">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="execv_8c_1a8facdfc3e966886a03275b03efb78576" prot="public" static="yes" mutable="no">
+        <type>char ***</type>
+        <definition>char*** p_environ</definition>
+        <argsstring></argsstring>
+        <name>p_environ</name>
+        <initializer>= &amp;<ref refid="environ_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execv.c" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/execv.c" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="execv_8c_1accd0d84615f4b84367796ea088af9d72" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int _execve</definition>
+        <argsstring>(const char *filename, char *const args[], char *const env[])</argsstring>
+        <name>_execve</name>
+        <param>
+          <type>const char *</type>
+          <declname>filename</declname>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>args</declname>
+          <array>[]</array>
+        </param>
+        <param>
+          <type>char *const</type>
+          <declname>env</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execv.c" line="14" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/_execve.c" bodystart="8" bodyend="10"/>
+        <references refid="__execve_8c_1a69afa95020be08ad581031bc33921680">execve</references>
+      </memberdef>
+      <memberdef kind="function" id="execv_8c_1af785e3a983b2ce8aa8cdfb77e3b5b903" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int _DEFUN</definition>
+        <argsstring>(execv,(path, argv), const char *path _AND char *const argv[])</argsstring>
+        <name>_DEFUN</name>
+        <param>
+          <type>execv</type>
+        </param>
+        <param>
+          <type>(path, argv)</type>
+        </param>
+        <param>
+          <type>const char *path _AND char *const</type>
+          <declname>argv</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execv.c" line="17" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/execv.c" bodystart="17" bodyend="22"/>
+        <references refid="execv_8c_1accd0d84615f4b84367796ea088af9d72" compoundref="__execve_8c" startline="8" endline="10">_execve</references>
+        <references refid="execv_8c_1a8facdfc3e966886a03275b03efb78576" compoundref="execv_8c" startline="13">p_environ</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>execv.c<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>This<sp/>and<sp/>the<sp/>other<sp/>exec*.c<sp/>files<sp/>in<sp/>this<sp/>directory<sp/>require<sp/></highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/><sp/><sp/>the<sp/>target<sp/>to<sp/>provide<sp/>the<sp/>_execve<sp/>syscall.<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;_ansi.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>Only<sp/>deal<sp/>with<sp/>a<sp/>pointer<sp/>to<sp/>environ,<sp/>to<sp/>work<sp/>around<sp/>subtle<sp/>bugs<sp/>with<sp/>shared</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/><sp/><sp/>libraries<sp/>and/or<sp/>small<sp/>data<sp/>systems<sp/>where<sp/>the<sp/>user<sp/>declares<sp/>his<sp/>own</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/><sp/><sp/>&apos;environ&apos;.<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="execv_8c_1a8facdfc3e966886a03275b03efb78576" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>***<ref refid="execv_8c_1a8facdfc3e966886a03275b03efb78576" kindref="member">p_environ</ref><sp/>=<sp/>&amp;<ref refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref>;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="execv_8c_1accd0d84615f4b84367796ea088af9d72" kindref="member">_execve</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filename,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>args[],<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>env[]);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="execv_8c_1af785e3a983b2ce8aa8cdfb77e3b5b903" refkind="member"><highlight class="normal"><ref refid="execv_8c_1af785e3a983b2ce8aa8cdfb77e3b5b903" kindref="member">_DEFUN</ref><sp/>(execv,<sp/>(path,<sp/>argv),<sp/></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*path<sp/>_AND</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>argv[])</highlight></codeline>
+<codeline lineno="20"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="execv_8c_1accd0d84615f4b84367796ea088af9d72" kindref="member">_execve</ref><sp/>(path,<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/>_CONST<sp/>*)<sp/>argv,<sp/>*<ref refid="execv_8c_1a8facdfc3e966886a03275b03efb78576" kindref="member">p_environ</ref>);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/execv.c"/>
+  </compounddef>
+</doxygen>

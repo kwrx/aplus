@@ -1,0 +1,40 @@
+\hypertarget{isatty_8c}{\section{Riferimenti per il file src/syscall/isatty.c}
+\label{isatty_8c}\index{src/syscall/isatty.\+c@{src/syscall/isatty.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{isatty_8c_a8d573db3182ff07f367a9274de7a0039}{sys\+\_\+isatty} (int fd)
+\item 
+\hyperlink{isatty_8c_ac111a88c909250bbdf1ec8f925622f42}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{isatty_8c_a8d573db3182ff07f367a9274de7a0039}{sys\+\_\+isatty}, 6)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{isatty_8c_a8d573db3182ff07f367a9274de7a0039}{\index{isatty.\+c@{isatty.\+c}!sys\+\_\+isatty@{sys\+\_\+isatty}}
+\index{sys\+\_\+isatty@{sys\+\_\+isatty}!isatty.\+c@{isatty.\+c}}
+\subsubsection[{sys\+\_\+isatty}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+isatty (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{isatty_8c_a8d573db3182ff07f367a9274de7a0039}
+
+
+Definizione alla linea 5 del file isatty.\+c.
+
+
+\begin{DoxyCode}
+5                        \{
+6     \textcolor{keywordflow}{return} (fd < 3);
+7 \}
+\end{DoxyCode}
+\hypertarget{isatty_8c_ac111a88c909250bbdf1ec8f925622f42}{\index{isatty.\+c@{isatty.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!isatty.\+c@{isatty.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+isatty}}]{, }
+\item[{6}]{}
+\end{DoxyParamCaption}
+)}}\label{isatty_8c_ac111a88c909250bbdf1ec8f925622f42}

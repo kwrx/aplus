@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>usr/src/libssp/src/chkfail.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/192.html'>libssp</a>/<a href='../files/193.html'>src</a>/chkfail.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L19'>[^]</a><a href='#L47'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L19' title='Defined at 19.'>__stack_chk_fail</a>
+<li><a href='#L33' title='Defined at 33.'>__chk_fail</a>
+<li><a href='#L47' title='Defined at 47.'>__stack_chk_fail_local</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L7'>   7 
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#if</font> <a href='../Y/50.html' title='Multiple used in 3 places.'>UINT32_MAX</a> == UINTPTR_MAX
+<a name='L10'>  10 <font color='darkred'>#define</font> <a href='../S/78.html#L15' title='Refered from 15 in usr/src/libssp/src/chkfail.c.'>STACK_CHK_GUARD</a> 0xe2dee396
+<a name='L11'>  11 <font color='darkred'>#else</font>
+<a name='L12'>  12 <font color='darkred'>#define</font> <a href='../S/78.html#L15' title='Refered from 15 in usr/src/libssp/src/chkfail.c.'>STACK_CHK_GUARD</a> 0x595e9fbd94fda766
+<a name='L13'>  13 <font color='darkred'>#endif</font>
+<a name='L14'>  14 
+<a name='L15'>  15 <b>void</b>* __stack_chk_guard = (<b>void</b>*) <a href='../D/223.html' title='Multiple defined in 2 places.'>STACK_CHK_GUARD</a>;
+<a name='L16'>  16 
+<a name='L17'>  17 
+<a name='L18'>  18 <b>__attribute__</b>((<a href='../Y/416.html' title='Multiple used in 3 places.'>noreturn</a>))
+<a name='L19'>  19 <b>void</b> <a href='../S/78.html#L48' title='Refered from 48 in usr/src/libssp/src/chkfail.c.'>__stack_chk_fail</a>(<b>void</b>) <font color='red'>{</font>
+<a name='L20'>  20 
+<a name='L21'>  21 <font color='darkred'>#ifdef</font> <a href='../Y/64.html' title='Multiple used in 2 places.'>__GNU_LIBRARY__</a>
+<a name='L22'>  22         <b>extern</b> <b>char</b>* <a href='../Y/76.html' title='Multiple used in 6 places.'>__progname</a>;
+<a name='L23'>  23 <font color='darkred'>#else</font>
+<a name='L24'>  24         <b>static</b> <b>const</b> <b>char</b> <a href='../Y/76.html' title='Multiple used in 6 places.'>__progname</a>[] = "panic";
+<a name='L25'>  25 <font color='darkred'>#endif</font>
+<a name='L26'>  26 
+<a name='L27'>  27         <a href='../Y/271.html' title='Multiple used in 2 places.'>fprintf</a>(<a href='../Y/611.html' title='Multiple used in 2 places.'>stderr</a>, "%s: stack smashing detected\n", <a href='../Y/76.html' title='Multiple used in 6 places.'>__progname</a>);
+<a name='L28'>  28         <a href='../Y/87.html' title='Multiple used in 3 places.'>abort</a>();
+<a name='L29'>  29 <font color='red'>}</font>
+<a name='L30'>  30 
+<a name='L31'>  31 
+<a name='L32'>  32 <b>__attribute__</b>((<a href='../Y/416.html' title='Multiple used in 3 places.'>noreturn</a>))
+<a name='L33'>  33 <b>void</b> __chk_fail(<b>void</b>) <font color='red'>{</font>
+<a name='L34'>  34 <font color='darkred'>        #ifdef</font> <a href='../Y/64.html' title='Multiple used in 2 places.'>__GNU_LIBRARY__</a>
+<a name='L35'>  35         <b>extern</b> <b>char</b>* <a href='../Y/76.html' title='Multiple used in 6 places.'>__progname</a>;
+<a name='L36'>  36 <font color='darkred'>#else</font>
+<a name='L37'>  37         <b>static</b> <b>const</b> <b>char</b> <a href='../Y/76.html' title='Multiple used in 6 places.'>__progname</a>[] = "panic";
+<a name='L38'>  38 <font color='darkred'>#endif</font>
+<a name='L39'>  39 
+<a name='L40'>  40         <a href='../Y/271.html' title='Multiple used in 2 places.'>fprintf</a>(<a href='../Y/611.html' title='Multiple used in 2 places.'>stderr</a>, "%s: buffer overflow detected\n", <a href='../Y/76.html' title='Multiple used in 6 places.'>__progname</a>);
+<a name='L41'>  41         <a href='../Y/87.html' title='Multiple used in 3 places.'>abort</a>();
+<a name='L42'>  42 <font color='red'>}</font>
+<a name='L43'>  43 
+<a name='L44'>  44 
+<a name='L45'>  45 <font color='darkred'>#ifdef</font> HAVE_HIDDEN_VISIBILITY
+<a name='L46'>  46 <b>__attribute__</b>((visibility("hidden")))
+<a name='L47'>  47 <b>void</b> __stack_chk_fail_local(<b>void</b>) <font color='red'>{</font>
+<a name='L48'>  48         <a href='../S/78.html#L19' title='Defined at 19 in usr/src/libssp/src/chkfail.c.'>__stack_chk_fail</a>();
+<a name='L49'>  49 <font color='red'>}</font>
+<a name='L50'>  50 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L19'>[^]</a><a href='#L47'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

@@ -1,0 +1,276 @@
+\hypertarget{mm_8c}{\section{Riferimenti per il file src/mm/mm.c}
+\label{mm_8c}\index{src/mm/mm.\+c@{src/mm/mm.\+c}}
+}
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$grub.\+h$>$}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structblock}{block}
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structblock}{block} \hyperlink{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed))
+\item 
+void \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree} (void $\ast$ptr)
+\item 
+void $\ast$ \hyperlink{mm_8c_a0a2a93dff1df0b626cb5ff6d85d0553e}{krealloc} (void $\ast$ptr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\item 
+void \hyperlink{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}{mm\+\_\+setheap} (\hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$\hyperlink{structheap}{heap})
+\item 
+volatile \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$ \hyperlink{mm_8c_a4e692b1c1f4e04a8b231f1493babb82f}{mm\+\_\+getheap} ()
+\item 
+int \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\+\_\+init} ()
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize}
+\item 
+volatile \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$ \hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\+\_\+heap}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{mm_8c_a9bed7071511863f81c2de43b3c3f7db9}{current\+\_\+vmm}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{mm_8c_afac53891df03c313fc0b5b24e0acc8a9}{kernel\+\_\+vmm}
+\item 
+\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{mm_8c_a3744f58bc6d40534a3e026b2f242ab25}{vmm\+\_\+queue}
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{mm_8c_a8c61e64b8675498cee79c59d3f8131e2}{magic}
+\item 
+size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}{\index{mm.\+c@{mm.\+c}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!mm.\+c@{mm.\+c}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf block} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(packed)}]{}
+\end{DoxyParamCaption}
+)}}\label{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}
+
+
+Definizione alla linea 47 del file mm.\+c.
+
+
+\begin{DoxyCode}
+50                            \{
+51     \textcolor{keywordtype}{void}* addr = (\textcolor{keywordtype}{void}*) \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc}(\hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+52     \textcolor{keywordflow}{if}(!addr)
+53         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"halloc(): failed!"});
+54 
+55 
+56     addr = \hyperlink{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}{mm\_vaddr}(addr);
+57 
+58     block\_t* \hyperlink{structblock}{block} = (block\_t*) addr;
+59     block->\hyperlink{structblock_a0dc8afecb033f59b42e0d8502a7f8ff0}{magic} = \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC};
+60     block->size = \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
+61 
+62     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) block + \textcolor{keyword}{sizeof}(block\_t));
+63 \}
+\end{DoxyCode}
+\hypertarget{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{\index{mm.\+c@{mm.\+c}!kfree@{kfree}}
+\index{kfree@{kfree}!mm.\+c@{mm.\+c}}
+\subsubsection[{kfree}]{\setlength{\rightskip}{0pt plus 5cm}void kfree (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{mm_8c_a069f85a5001d71bc44d8be6532a4e432}
+
+
+Definizione alla linea 66 del file mm.\+c.
+
+
+
+Referenzia B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), e size.
+
+
+\begin{DoxyCode}
+66                       \{
+67     \textcolor{keywordflow}{if}(!ptr)
+68         \textcolor{keywordflow}{return};
+69         
+70     
+71     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+72     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+73         \textcolor{keywordflow}{return};
+74         
+75     \textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+76     block->size = 0;
+77     block->magic = 0;
+78     
+79     
+80     \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree}(\hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(\hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(ptr)), size);
+81 \}
+\end{DoxyCode}
+\hypertarget{mm_8c_a0a2a93dff1df0b626cb5ff6d85d0553e}{\index{mm.\+c@{mm.\+c}!krealloc@{krealloc}}
+\index{krealloc@{krealloc}!mm.\+c@{mm.\+c}}
+\subsubsection[{krealloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ krealloc (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{ptr, }
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)}}\label{mm_8c_a0a2a93dff1df0b626cb5ff6d85d0553e}
+
+
+Definizione alla linea 84 del file mm.\+c.
+
+
+
+Referenzia B\+L\+K\+M\+A\+G\+I\+C, kfree(), e kmalloc().
+
+
+\begin{DoxyCode}
+84                                        \{
+85     \textcolor{keywordflow}{if}(ptr == NULL)
+86         \textcolor{keywordflow}{return} \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+87         
+88     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} == 0) \{
+89         \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+90         \textcolor{keywordflow}{return} NULL;
+91     \}   
+92 
+93     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+94     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+95         \textcolor{keywordflow}{return} NULL;
+96         
+97     \textcolor{keywordtype}{void}* newptr = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+98     \textcolor{keywordflow}{if}(!newptr)
+99         \textcolor{keywordflow}{return} NULL;
+100         
+101     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > block->size)
+102         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+103         
+104     memcpy(newptr, ptr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+105     \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+106     
+107     \textcolor{keywordflow}{return} newptr;
+108 \}
+\end{DoxyCode}
+\hypertarget{mm_8c_a4e692b1c1f4e04a8b231f1493babb82f}{\index{mm.\+c@{mm.\+c}!mm\+\_\+getheap@{mm\+\_\+getheap}}
+\index{mm\+\_\+getheap@{mm\+\_\+getheap}!mm.\+c@{mm.\+c}}
+\subsubsection[{mm\+\_\+getheap}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf heap\+\_\+t}$\ast$ mm\+\_\+getheap (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{mm_8c_a4e692b1c1f4e04a8b231f1493babb82f}
+
+
+Definizione alla linea 117 del file mm.\+c.
+
+
+
+Referenzia current\+\_\+heap.
+
+
+\begin{DoxyCode}
+117                               \{
+118     \textcolor{keywordflow}{return} \hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap};
+119 \}
+\end{DoxyCode}
+\hypertarget{mm_8c_a25db4b3982d49366c88b6be8331b9215}{\index{mm.\+c@{mm.\+c}!mm\+\_\+init@{mm\+\_\+init}}
+\index{mm\+\_\+init@{mm\+\_\+init}!mm.\+c@{mm.\+c}}
+\subsubsection[{mm\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int mm\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{mm_8c_a25db4b3982d49366c88b6be8331b9215}
+
+
+Definizione alla linea 122 del file mm.\+c.
+
+
+
+Referenzia kheap\+\_\+init(), mbd, Boot\+Info\+\_\+t\+::mem\+\_\+lower, Boot\+Info\+\_\+t\+::mem\+\_\+upper, memsize, vmm\+\_\+init(), e V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y.
+
+
+\begin{DoxyCode}
+122               \{
+123 
+124     \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} = (\hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_ab20281f521d626a49714e06b62291be9}{mem\_upper} + \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a4b144c9db5fe2c5a9d72522068d65138}{mem\_lower}) * 1024;
+125     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} > \hyperlink{mm_8h_a17f8a27ab3548000488ca27d70785240}{VMM\_MAX\_MEMORY})
+126         \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} = \hyperlink{mm_8h_a17f8a27ab3548000488ca27d70785240}{VMM\_MAX\_MEMORY};
+127 
+128 
+129     \hyperlink{kheap_8c_ab761c0c9768623b035f3fd5c98f77b08}{kheap\_init}();
+130     \hyperlink{paging_8c_aac183f585641487a954ca46c0d7bde31}{vmm\_init}();
+131 
+132     \textcolor{keywordflow}{return} 0;
+133 \}
+\end{DoxyCode}
+\hypertarget{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}{\index{mm.\+c@{mm.\+c}!mm\+\_\+setheap@{mm\+\_\+setheap}}
+\index{mm\+\_\+setheap@{mm\+\_\+setheap}!mm.\+c@{mm.\+c}}
+\subsubsection[{mm\+\_\+setheap}]{\setlength{\rightskip}{0pt plus 5cm}void mm\+\_\+setheap (
+\begin{DoxyParamCaption}
+\item[{{\bf heap\+\_\+t} $\ast$}]{heap}
+\end{DoxyParamCaption}
+)}}\label{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}
+
+
+Definizione alla linea 113 del file mm.\+c.
+
+
+\begin{DoxyCode}
+113                               \{
+114     \hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap} = heap;
+115 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{\index{mm.\+c@{mm.\+c}!current\+\_\+heap@{current\+\_\+heap}}
+\index{current\+\_\+heap@{current\+\_\+heap}!mm.\+c@{mm.\+c}}
+\subsubsection[{current\+\_\+heap}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf heap\+\_\+t}$\ast$ current\+\_\+heap}}\label{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}
+
+
+Definizione alla linea 36 del file mm.\+c.
+
+\hypertarget{mm_8c_a9bed7071511863f81c2de43b3c3f7db9}{\index{mm.\+c@{mm.\+c}!current\+\_\+vmm@{current\+\_\+vmm}}
+\index{current\+\_\+vmm@{current\+\_\+vmm}!mm.\+c@{mm.\+c}}
+\subsubsection[{current\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ current\+\_\+vmm}}\label{mm_8c_a9bed7071511863f81c2de43b3c3f7db9}
+
+
+Definizione alla linea 46 del file paging.\+c.
+
+\hypertarget{mm_8c_afac53891df03c313fc0b5b24e0acc8a9}{\index{mm.\+c@{mm.\+c}!kernel\+\_\+vmm@{kernel\+\_\+vmm}}
+\index{kernel\+\_\+vmm@{kernel\+\_\+vmm}!mm.\+c@{mm.\+c}}
+\subsubsection[{kernel\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ kernel\+\_\+vmm}}\label{mm_8c_afac53891df03c313fc0b5b24e0acc8a9}
+
+
+Definizione alla linea 47 del file paging.\+c.
+
+\hypertarget{mm_8c_a8c61e64b8675498cee79c59d3f8131e2}{\index{mm.\+c@{mm.\+c}!magic@{magic}}
+\index{magic@{magic}!mm.\+c@{mm.\+c}}
+\subsubsection[{magic}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} magic}}\label{mm_8c_a8c61e64b8675498cee79c59d3f8131e2}
+
+
+Definizione alla linea 42 del file mm.\+c.
+
+\hypertarget{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{\index{mm.\+c@{mm.\+c}!memsize@{memsize}}
+\index{memsize@{memsize}!mm.\+c@{mm.\+c}}
+\subsubsection[{memsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} memsize}}\label{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}
+
+
+Definizione alla linea 35 del file mm.\+c.
+
+\hypertarget{mm_8c_a854352f53b148adc24983a58a1866d66}{\index{mm.\+c@{mm.\+c}!size@{size}}
+\index{size@{size}!mm.\+c@{mm.\+c}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t size}}\label{mm_8c_a854352f53b148adc24983a58a1866d66}
+
+
+Definizione alla linea 43 del file mm.\+c.
+
+\hypertarget{mm_8c_a3744f58bc6d40534a3e026b2f242ab25}{\index{mm.\+c@{mm.\+c}!vmm\+\_\+queue@{vmm\+\_\+queue}}
+\index{vmm\+\_\+queue@{vmm\+\_\+queue}!mm.\+c@{mm.\+c}}
+\subsubsection[{vmm\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ vmm\+\_\+queue}}\label{mm_8c_a3744f58bc6d40534a3e026b2f242ab25}
+
+
+Definizione alla linea 49 del file paging.\+c.
+

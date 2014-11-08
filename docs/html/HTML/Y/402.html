@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>netdev</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/107.html#L124'>netdev</a>            124 src/net/netif.c int netif_add(netif_t* netdev) {
+<a href='../S/107.html#L130'>netdev</a>            130 src/net/netif.c 	if(netif_find_by_ipv4(&amp;netdev-&gt;ipv4) != NULL) {
+<a href='../S/107.html#L135'>netdev</a>            135 src/net/netif.c 	if(netif_find_by_ipv6(&amp;netdev-&gt;ipv6) != NULL) {
+<a href='../S/107.html#L141'>netdev</a>            141 src/net/netif.c 	if(netif_find_by_macaddr(&amp;netdev-&gt;macaddr) != NULL) {
+<a href='../S/107.html#L149'>netdev</a>            149 src/net/netif.c 			netdev-&gt;name,
+<a href='../S/107.html#L150'>netdev</a>            150 src/net/netif.c 			netdev-&gt;ipv4[0],
+<a href='../S/107.html#L151'>netdev</a>            151 src/net/netif.c 			netdev-&gt;ipv4[1],
+<a href='../S/107.html#L152'>netdev</a>            152 src/net/netif.c 			netdev-&gt;ipv4[2],
+<a href='../S/107.html#L153'>netdev</a>            153 src/net/netif.c 			netdev-&gt;ipv4[3],
+<a href='../S/107.html#L154'>netdev</a>            154 src/net/netif.c 			netdev-&gt;netmask[0],
+<a href='../S/107.html#L155'>netdev</a>            155 src/net/netif.c 			netdev-&gt;netmask[1],
+<a href='../S/107.html#L156'>netdev</a>            156 src/net/netif.c 			netdev-&gt;netmask[2],
+<a href='../S/107.html#L157'>netdev</a>            157 src/net/netif.c 			netdev-&gt;netmask[3]
+<a href='../S/107.html#L161'>netdev</a>            161 src/net/netif.c 			netdev-&gt;ipv6[0],
+<a href='../S/107.html#L162'>netdev</a>            162 src/net/netif.c 			netdev-&gt;ipv6[1],
+<a href='../S/107.html#L163'>netdev</a>            163 src/net/netif.c 			netdev-&gt;ipv6[2],
+<a href='../S/107.html#L164'>netdev</a>            164 src/net/netif.c 			netdev-&gt;ipv6[3],
+<a href='../S/107.html#L165'>netdev</a>            165 src/net/netif.c 			netdev-&gt;ipv6[4],
+<a href='../S/107.html#L166'>netdev</a>            166 src/net/netif.c 			netdev-&gt;ipv6[5],
+<a href='../S/107.html#L167'>netdev</a>            167 src/net/netif.c 			netdev-&gt;ipv6[6],
+<a href='../S/107.html#L168'>netdev</a>            168 src/net/netif.c 			netdev-&gt;ipv6[7]
+<a href='../S/107.html#L172'>netdev</a>            172 src/net/netif.c 			netdev-&gt;macaddr[0],
+<a href='../S/107.html#L173'>netdev</a>            173 src/net/netif.c 			netdev-&gt;macaddr[1],
+<a href='../S/107.html#L174'>netdev</a>            174 src/net/netif.c 			netdev-&gt;macaddr[2],
+<a href='../S/107.html#L175'>netdev</a>            175 src/net/netif.c 			netdev-&gt;macaddr[3],
+<a href='../S/107.html#L176'>netdev</a>            176 src/net/netif.c 			netdev-&gt;macaddr[4],
+<a href='../S/107.html#L177'>netdev</a>            177 src/net/netif.c 			netdev-&gt;macaddr[5],
+<a href='../S/107.html#L178'>netdev</a>            178 src/net/netif.c 			netdev-&gt;mtu
+<a href='../S/107.html#L182'>netdev</a>            182 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[0],
+<a href='../S/107.html#L183'>netdev</a>            183 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[1],
+<a href='../S/107.html#L184'>netdev</a>            184 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[2],
+<a href='../S/107.html#L185'>netdev</a>            185 src/net/netif.c 			netdev-&gt;dns.primary.ipv4[3],
+<a href='../S/107.html#L186'>netdev</a>            186 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[0],
+<a href='../S/107.html#L187'>netdev</a>            187 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[1],
+<a href='../S/107.html#L188'>netdev</a>            188 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[2],
+<a href='../S/107.html#L189'>netdev</a>            189 src/net/netif.c 			netdev-&gt;dns.secondary.ipv4[3]
+<a href='../S/107.html#L193'>netdev</a>            193 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[0],
+<a href='../S/107.html#L194'>netdev</a>            194 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[1],
+<a href='../S/107.html#L195'>netdev</a>            195 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[2],
+<a href='../S/107.html#L196'>netdev</a>            196 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[3],
+<a href='../S/107.html#L197'>netdev</a>            197 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[4],
+<a href='../S/107.html#L198'>netdev</a>            198 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[5],
+<a href='../S/107.html#L199'>netdev</a>            199 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[6],
+<a href='../S/107.html#L200'>netdev</a>            200 src/net/netif.c 			netdev-&gt;dns.primary.ipv6[7],
+<a href='../S/107.html#L201'>netdev</a>            201 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[0],
+<a href='../S/107.html#L202'>netdev</a>            202 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[1],
+<a href='../S/107.html#L203'>netdev</a>            203 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[2],
+<a href='../S/107.html#L204'>netdev</a>            204 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[3],
+<a href='../S/107.html#L205'>netdev</a>            205 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[4],
+<a href='../S/107.html#L206'>netdev</a>            206 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[5],
+<a href='../S/107.html#L207'>netdev</a>            207 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[6],
+<a href='../S/107.html#L208'>netdev</a>            208 src/net/netif.c 			netdev-&gt;dns.secondary.ipv6[7]
+<a href='../S/107.html#L211'>netdev</a>            211 src/net/netif.c 	return list_add(lst_netif, (listval_t) netdev);
+<a href='../S/107.html#L214'>netdev</a>            214 src/net/netif.c int netif_remove(netif_t* netdev) {
+<a href='../S/107.html#L218'>netdev</a>            218 src/net/netif.c 	return list_remove(lst_netif, (listval_t) netdev);
+</pre>
+</body>
+</html>

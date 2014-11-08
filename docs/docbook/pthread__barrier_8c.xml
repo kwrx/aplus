@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__barrier_8c">
+    <title>pthread_barrier.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__barrier_8c_1aa71605591924fcd01057ff5e73ddd19e">pthread_barrier_init</link> (
+<link linkend="pthread_8h_1a0af030d8520cb3271d895b21a5ecca34">pthread_barrier_t</link> * barrier, const <link linkend="pthread_8h_1a8b994175b42c340d079d21007eaf51c7">pthread_barrierattr_t</link> * attr, unsigned int count)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__barrier_8c_1a42a6ff31584d9d5e63bd8cb9dd57a2eb">pthread_barrier_destroy</link> (
+<link linkend="pthread_8h_1a0af030d8520cb3271d895b21a5ecca34">pthread_barrier_t</link> * barrier)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__barrier_8c_1ad61c7efb7bd52899877f3ec8c6895d06">pthread_barrier_wait</link> (
+<link linkend="pthread_8h_1a0af030d8520cb3271d895b21a5ecca34">pthread_barrier_t</link> * barrier)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c</para>
+    </simplesect>
+</section>

@@ -1,0 +1,669 @@
+.TH "src/arch/desc.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/arch/desc.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+\fC#include <grub\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <sys/times\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBgdt_entry\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFAULT_MASK\fP   0x3FFFFFE3"
+.br
+.ti -1c
+.RI "#define \fBPIT_FREQ\fP   (CLOCKS_PER_SEC)"
+.br
+.ti -1c
+.RI "#define \fBgdt_set\fP(n, b, l, a, g)"
+.br
+.ti -1c
+.RI "#define \fBidt_set\fP(i, b, s, f)"
+.br
+.ti -1c
+.RI "#define \fB_i\fP(n)"
+.br
+.ti -1c
+.RI "#define \fB_i\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBBCD2BIN\fP(bcd)   ((((bcd) & 0x0F) + ((bcd) / 16) * 10))"
+.br
+.ti -1c
+.RI "#define \fBBCD2BIN2\fP(bcd)   (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "struct \fBgdt_entry\fP \fB__attribute__\fP ((packed))"
+.br
+.ti -1c
+.RI "void \fBschedule\fP ()"
+.br
+.ti -1c
+.RI "void \fBsyscall_handler\fP (regs_t *)"
+.br
+.ti -1c
+.RI "\fB__asm__\fP ('\&.section \&.text		\\n\\
+	\&.global gdt_load	\\n\\
+	gdt_load:			\\n\\
+	lgdt [\fBgdt_p\fP]		\\n\\
+						\\n\\
+	mov ax, 0x10		\\n\\
+	mov ds, ax			\\n\\
+	mov es, ax			\\n\\
+	mov fs, ax			\\n\\
+	mov gs, ax			\\n\\
+	mov ss, ax			\\n\\
+	jmp 0x08:\&.done		\\n\\
+						\\n\\
+	\&.done:				\\n\\
+	ret					\\n\\
+						\\n\\
+						\\n\\
+						\\n\\
+						\\n\\
+	\&.global idt_load	\\n\\
+	idt_load:			\\n\\
+	lidt [idt_p]		\\n\\
+	ret					\\n\\
+						\\n\\
+						\\n')"
+.br
+.ti -1c
+.RI "void \fBisr_handler\fP (regs_t *r)"
+.br
+.ti -1c
+.RI "void \fBirq_handler\fP (regs_t *r)"
+.br
+.ti -1c
+.RI "void \fBpit_handler\fP (regs_t *r)"
+.br
+.ti -1c
+.RI "void \fBpagefault_handler\fP (regs_t *r)"
+.br
+.ti -1c
+.RI "int \fBdesc_init\fP ()"
+.br
+.ti -1c
+.RI "int \fBirq_set\fP (int n, void *handler)"
+.br
+.ti -1c
+.RI "int \fBirq_unset\fP (int n)"
+.br
+.ti -1c
+.RI "void * \fBirq_get\fP (int n)"
+.br
+.ti -1c
+.RI "static \fBuint8_t\fP \fBrtc\fP (\fBuint8_t\fP addr)"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBpit_gettime\fP ()"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBpit_getticks\fP ()"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBuint16_t\fP \fBlimit_l\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBbase_l\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBbase_m\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBaccess\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBgranularity\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBbase_h\fP"
+.br
+.ti -1c
+.RI "static void * \fBirqs\fP [16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }"
+.br
+.ti -1c
+.RI "static gdt_entry_t \fBgdt_e\fP [5]"
+.br
+.ti -1c
+.RI "static gdt_ptr_t \fBgdt_p\fP"
+.br
+.ti -1c
+.RI "static idt_entry_t \fBidt_e\fP [256]"
+.br
+.ti -1c
+.RI "static idt_ptr_t \fBidt_p\fP"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpit_ticks\fP"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpit_seconds\fP"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpit_days\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBkeyboard_ready\fP = 0"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define _i(n)"
+\fBValore:\fP
+.PP
+.nf
+extern void isr##n();                     \\
+		idt_set(n, (uint32_t)isr##n, 0x08, 0x8E)
+.fi
+.SS "#define _i(n)"
+\fBValore:\fP
+.PP
+.nf
+extern void irq##n();                          \\
+		idt_set(n + 32, (uint32_t)irq##n, 0x08, 0x8E)
+.fi
+.SS "#define BCD2BIN(bcd)   ((((bcd) & 0x0F) + ((bcd) / 16) * 10))"
+
+.SS "#define BCD2BIN2(bcd)   (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))"
+
+.SS "#define FAULT_MASK   0x3FFFFFE3"
+
+.PP
+Definizione alla linea 37 del file desc\&.c\&.
+.SS "#define gdt_set(n, b, l, a, g)"
+\fBValore:\fP
+.PP
+.nf
+gdt_e[n]\&.base_l = (b & 0xFFFF);                \\
+		gdt_e[n]\&.base_m = (b >> 16) & 0xFF;            \\
+		gdt_e[n]\&.base_h = (b >> 24) & 0xFF;            \\
+		gdt_e[n]\&.limit_l = (l & 0xFFFF);           \\
+		gdt_e[n]\&.granularity = (l >> 16) & 0x0F;   \\
+		gdt_e[n]\&.granularity |= g & 0xF0;          \\
+		gdt_e[n]\&.access = a
+.fi
+.SS "#define idt_set(i, b, s, f)"
+\fBValore:\fP
+.PP
+.nf
+idt_e[i]\&.base_l = b & 0xFFFF;             \\
+		idt_e[i]\&.base_h = (b >> 16) & 0xFFFF;      \\
+		idt_e[i]\&.sel = s;                          \\
+		idt_e[i]\&.null = 0;                         \\
+		idt_e[i]\&.flags = f
+.fi
+.SS "#define PIT_FREQ   (CLOCKS_PER_SEC)"
+
+.PP
+Definizione alla linea 38 del file desc\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "__asm__ ('\&.section \&.text \\n\\ \&.global gdt_load \\n\\ gdt_load: \\n\\ lgdt  \\n\\ \\n\\ movax[gdt_p], 0x10\\n\\movds, ax\\n\\moves, ax\\n\\movfs, ax\\n\\movgs, ax\\n\\movss, ax\\n\\jmp 0x08:\&.done\\n\\\\n\\\&.done:\\n\\ret\\n\\\\n\\\\n\\\\n\\\\n\\\&.global idt_load\\n\\idt_load:\\n\\lidt\\n\\ret\\n\\\\n\\\\n'[idt_p])"
+
+.SS "__attribute__ ((packed))"
+
+.PP
+Definizione alla linea 44 del file desc\&.c\&.
+.PP
+.nf
+46                        {
+47     uint16_t limit;
+48     uint32_t base;
+49 } __attribute__((packed)) gdt_ptr_t;
+.fi
+.SS "int desc_init ()"
+
+.PP
+Definizione alla linea 195 del file desc\&.c\&.
+.PP
+Referenzia __asm__(), _i, gdt_set, irq_set(), PIT_FREQ, pit_handler(), uint32_t, e uint8_t\&.
+.PP
+.nf
+195                 {
+196 
+197     __asm__ ("cli");
+198     
+199 
+200     #define gdt_set(n, b, l, a, g)                  \
+201         gdt_e[n]\&.base_l = (b & 0xFFFF);              \
+202         gdt_e[n]\&.base_m = (b >> 16) & 0xFF;          \
+203         gdt_e[n]\&.base_h = (b >> 24) & 0xFF;          \
+204         gdt_e[n]\&.limit_l = (l & 0xFFFF);         \
+205         gdt_e[n]\&.granularity = (l >> 16) & 0x0F; \
+206         gdt_e[n]\&.granularity |= g & 0xF0;            \
+207         gdt_e[n]\&.access = a
+208                 
+209     
+210     memset(&gdt_e, 0, sizeof(gdt_entry_t) * 5);
+211         
+212     gdt_p\&.limit = sizeof(gdt_entry_t) * 5 - 1;
+213     gdt_p\&.base = (uint32_t) gdt_e;
+214         
+215     gdt_set(0, 0, 0, 0, 0);
+216     gdt_set(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
+217     gdt_set(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+218     gdt_set(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
+219     gdt_set(4, 0, 0xFFFFFFFF, 0XF2, 0xCF);
+220 
+221     
+222 
+223     gdt_load();
+224     
+225     
+226     idt_p\&.limit = sizeof(idt_entry_t) * 256 - 1;
+227     idt_p\&.base = (uint32_t) idt_e;
+228     
+229     memset(idt_e, 0, sizeof(idt_entry_t) * 256);
+230     
+231     
+232     #define idt_set(i, b, s, f)                     \
+233         idt_e[i]\&.base_l = b & 0xFFFF;                \
+234         idt_e[i]\&.base_h = (b >> 16) & 0xFFFF;        \
+235         idt_e[i]\&.sel = s;                            \
+236         idt_e[i]\&.null = 0;                           \
+237         idt_e[i]\&.flags = f
+238     
+239     
+240     #define _i(n)                                   \
+241         extern void isr##n();                       \
+242         idt_set(n, (uint32_t)isr##n, 0x08, 0x8E)
+243         
+244     _i(0);
+245     _i(1);
+246     _i(2);
+247     _i(3);
+248     _i(4);
+249     _i(5);
+250     _i(6);
+251     _i(7);
+252     _i(8);
+253     _i(9);
+254     _i(10);
+255     _i(11);
+256     _i(12);
+257     _i(13);
+258     _i(14);
+259     _i(15);
+260     _i(16);
+261     _i(17);
+262     _i(18);
+263     _i(19);
+264     _i(20);
+265     _i(21);
+266     _i(22);
+267     _i(23);
+268     _i(24);
+269     _i(25);
+270     _i(26);
+271     _i(27);
+272     _i(28);
+273     _i(29);
+274     _i(30);
+275     _i(31);
+276     _i(0x80);
+277 
+278     
+279     idt_load();
+280 
+281     
+282     #ifdef _i
+283     #undef _i
+284     #endif
+285     
+286     #define _i(n)                                       \
+287         extern void irq##n();                           \
+288         idt_set(n + 32, (uint32_t)irq##n, 0x08, 0x8E)
+289         
+290     
+291     outb(0x20, 0x11);
+292     outb(0xA0, 0x11);
+293     outb(0x21, 0x20);
+294     outb(0xA1, 0x28);
+295     outb(0x21, 0x04);
+296     outb(0xA1, 0x02);
+297     outb(0x21, 0x01);
+298     outb(0xA1, 0x01);
+299     outb(0x21, 0x00);
+300     outb(0xA1, 0x00);
+301     
+302     _i(0);
+303     _i(1);
+304     _i(2);
+305     _i(3);
+306     _i(4);
+307     _i(5);
+308     _i(6);
+309     _i(7);
+310     _i(8);
+311     _i(9);
+312     _i(10);
+313     _i(11);
+314     _i(12);
+315     _i(13);
+316     _i(14);
+317     _i(15);
+318     
+319     
+320     uint32_t freq = 1193180 / PIT_FREQ;
+321     outb(0x43, 0x36);
+322     outb(0x40, (uint8_t) (freq & 0xFF));
+323     outb(0x40, (uint8_t) ((freq >> 8) & 0xFF));
+324     
+325     irq_set(0, (void*) pit_handler);
+326     
+327     __asm__ ("sti");
+328 
+329     return 0;
+330 }
+.fi
+.SS "void* irq_get (intn)"
+
+.PP
+Definizione alla linea 354 del file desc\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+354                      {
+355     if(n > 16) {
+356         errno = EINVAL;
+357         return NULL;
+358     }
+359     
+360     return irqs[n];
+361 }
+.fi
+.SS "void irq_handler (regs_t *r)"
+
+.PP
+Definizione alla linea 155 del file desc\&.c\&.
+.PP
+.nf
+155                             {
+156 
+157     if(irqs[r->int_no - 32])
+158         ((void (*)(regs_t*)) irqs[r->int_no - 32]) (r);
+159 
+160     if(r->int_no >= 40)
+161         outb(0xA0, 0x20);
+162         
+163     outb(0x20, 0x20);
+164 }
+.fi
+.SS "int irq_set (intn, void *handler)"
+
+.PP
+Definizione alla linea 334 del file desc\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+334                                   {
+335     if(n > 16) {
+336         errno = EINVAL;
+337         return -1;
+338     }
+339     
+340     irqs[n] = handler;
+341     return 0;
+342 }
+.fi
+.SS "int irq_unset (intn)"
+
+.PP
+Definizione alla linea 344 del file desc\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+344                      {
+345     if(n > 16) {
+346         errno = EINVAL;
+347         return -1;
+348     }
+349     
+350     irqs[n] = 0;
+351     return 0;
+352 }
+.fi
+.SS "void isr_handler (regs_t *r)"
+
+.PP
+Definizione alla linea 151 del file desc\&.c\&.
+.PP
+Referenzia panic()\&.
+.PP
+.nf
+151                             {
+152     panic(exception_messages[r->int_no]);
+153 }
+.fi
+.SS "void pagefault_handler (regs_t *r)"
+
+.PP
+Definizione alla linea 183 del file desc\&.c\&.
+.PP
+Referenzia __asm__(), kprintf, panic(), e uint32_t\&.
+.PP
+.nf
+183                                   {
+184     uint32_t faultaddr;
+185     __asm__ __volatile__("mov eax, cr2" : "=a"(faultaddr));
+186 
+187     kprintf("Page fault at address: 0x%x\n", faultaddr);
+188     panic("Page Fault");
+189 }
+.fi
+.SS "\fBuint32_t\fP pit_getticks ()"
+
+.PP
+Definizione alla linea 393 del file desc\&.c\&.
+.PP
+.nf
+393                         {
+394     return ((pit_days * 86400) * 1000) + (pit_seconds * 1000) + pit_ticks;
+395 }
+.fi
+.SS "\fBuint32_t\fP pit_gettime ()"
+
+.PP
+Definizione alla linea 373 del file desc\&.c\&.
+.PP
+Referenzia BCD2BIN, BCD2BIN2, rtc(), e uint32_t\&.
+.PP
+.nf
+373                        {
+374 
+375     #define BCD2BIN(bcd)    ((((bcd) & 0x0F) + ((bcd) / 16) * 10))
+376     #define BCD2BIN2(bcd)   (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))
+377 
+378     
+379     static struct tm t;
+380     t\&.tm_sec = BCD2BIN(rtc(0));
+381     t\&.tm_min = BCD2BIN(rtc(2));
+382     t\&.tm_hour = BCD2BIN2(rtc(4)) + 2;
+383     t\&.tm_mday = BCD2BIN(rtc(7));
+384     t\&.tm_mon = BCD2BIN(rtc(8)) - 1;
+385     t\&.tm_year = (BCD2BIN(rtc(9)) + 100);
+386     t\&.tm_wday = 0;
+387     t\&.tm_yday = 0;
+388     t\&.tm_isdst = 0;
+389     
+390     return (uint32_t) mktime(&t);
+391 }
+.fi
+.SS "void pit_handler (regs_t *r)"
+
+.PP
+Definizione alla linea 166 del file desc\&.c\&.
+.PP
+Referenzia PIT_FREQ, e schedule()\&.
+.PP
+.nf
+166                             {
+167     pit_ticks += (1000 / PIT_FREQ);
+168     
+169     if(pit_ticks >= 1000) {
+170         pit_ticks = 0;
+171         pit_seconds += 1;
+172     }
+173     
+174     if(pit_seconds >= 86400) {
+175         pit_seconds = 0;
+176         pit_days += 1;
+177     }
+178     
+179     schedule();
+180 }
+.fi
+.SS "static \fBuint8_t\fP rtc (\fBuint8_t\fPaddr)\fC [static]\fP"
+
+.PP
+Definizione alla linea 365 del file desc\&.c\&.
+.PP
+Referenzia __asm__(), e uint8_t\&.
+.PP
+.nf
+365                                  {
+366     outb(0x70, addr);
+367     
+368     uint8_t r = 0;
+369     __asm__("inb 0x71" : "=a"(r));
+370     return r;
+371 }
+.fi
+.SS "void schedule ()"
+
+.PP
+Definizione alla linea 93 del file sched\&.c\&.
+.PP
+Referenzia task::clock, list_empty(), task::priority, sched_enabled, schedule_next(), e task_switch()\&.
+.PP
+.nf
+93                 {
+94     if(sched_enabled == 0)
+95         return;
+96         
+97     if(list_empty(task_queue))
+98         return;
+99 
+100         
+101     current_task->clock += 1;
+102     
+103     if(current_task->clock % current_task->priority)
+104         return;
+105         
+106     task_switch(schedule_next());
+107 }
+.fi
+.SS "void syscall_handler (regs_t *)"
+
+.PP
+Definizione alla linea 53 del file syscall\&.c\&.
+.PP
+Referenzia syscall_handlers, e syscall_invoke()\&.
+.PP
+.nf
+53                                {
+54     return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
+55 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBuint8_t\fP access"
+
+.PP
+Definizione alla linea 3 del file desc\&.c\&.
+.SS "\fBuint8_t\fP base_h"
+
+.PP
+Definizione alla linea 3 del file desc\&.c\&.
+.SS "\fBuint16_t\fP base_l"
+
+.PP
+Definizione alla linea 2 del file desc\&.c\&.
+.SS "\fBuint8_t\fP base_m"
+
+.PP
+Definizione alla linea 3 del file desc\&.c\&.
+.SS "gdt_entry_t gdt_e[5]\fC [static]\fP"
+
+.PP
+Definizione alla linea 104 del file desc\&.c\&.
+.SS "gdt_ptr_t gdt_p\fC [static]\fP"
+
+.PP
+Definizione alla linea 105 del file desc\&.c\&.
+.SS "\fBuint8_t\fP granularity"
+
+.PP
+Definizione alla linea 3 del file desc\&.c\&.
+.SS "idt_entry_t idt_e[256]\fC [static]\fP"
+
+.PP
+Definizione alla linea 107 del file desc\&.c\&.
+.SS "idt_ptr_t idt_p\fC [static]\fP"
+
+.PP
+Definizione alla linea 108 del file desc\&.c\&.
+.SS "void* irqs[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }\fC [static]\fP"
+
+.PP
+Definizione alla linea 102 del file desc\&.c\&.
+.SS "\fBuint8_t\fP keyboard_ready = 0"
+
+.PP
+Definizione alla linea 115 del file desc\&.c\&.
+.SS "\fBuint16_t\fP limit_l"
+
+.PP
+Definizione alla linea 2 del file desc\&.c\&.
+.SS "\fBuint32_t\fP pit_days\fC [static]\fP"
+
+.PP
+Definizione alla linea 113 del file desc\&.c\&.
+.SS "\fBuint32_t\fP pit_seconds\fC [static]\fP"
+
+.PP
+Definizione alla linea 112 del file desc\&.c\&.
+.SS "\fBuint32_t\fP pit_ticks\fC [static]\fP"
+
+.PP
+Definizione alla linea 111 del file desc\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

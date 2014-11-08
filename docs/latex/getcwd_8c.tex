@@ -1,0 +1,120 @@
+\hypertarget{getcwd_8c}{\section{Riferimenti per il file usr/src/libposix/src/getcwd.c}
+\label{getcwd_8c}\index{usr/src/libposix/src/getcwd.\+c@{usr/src/libposix/src/getcwd.\+c}}
+}
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+static char $\ast$ \hyperlink{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}{strcat\+\_\+inv} (char $\ast$\hyperlink{ipv6_8h_ab4bf83701631abccacef4ebedf8db65e}{dest}, char $\ast$str)
+\item 
+char $\ast$ \hyperlink{getcwd_8c_a3284211bd28346254245c9d4fd071d7f}{getcwd} (char $\ast$buf, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{getcwd_8c_a3284211bd28346254245c9d4fd071d7f}{\index{getcwd.\+c@{getcwd.\+c}!getcwd@{getcwd}}
+\index{getcwd@{getcwd}!getcwd.\+c@{getcwd.\+c}}
+\subsubsection[{getcwd}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ getcwd (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buf, }
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)}}\label{getcwd_8c_a3284211bd28346254245c9d4fd071d7f}
+
+
+Definizione alla linea 17 del file getcwd.\+c.
+
+
+
+Referenzia closedir(), dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, opendir(), readdir(), e strcat\+\_\+inv().
+
+
+\begin{DoxyCode}
+17                                      \{
+18     \textcolor{keyword}{struct }stat st;
+19     \textcolor{keywordtype}{char} tmpbuf[1024];
+20 
+21     \textcolor{keywordtype}{int} root\_ino = 0;
+22     \textcolor{keywordtype}{int} curr\_ino = 0;
+23 
+24     \textcolor{keywordflow}{if}(stat(\textcolor{stringliteral}{"/"}, &st) != 0)
+25         \textcolor{keywordflow}{return} NULL;
+26     root\_ino = st.st\_ino;
+27 
+28     \textcolor{keywordflow}{if}(stat(\textcolor{stringliteral}{"."}, &st) != 0)
+29         \textcolor{keywordflow}{return} NULL;
+30     curr\_ino = st.st\_ino;
+31 
+32 
+33     memset(buf, 0, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+34     memset(tmpbuf, 0, 1024);
+35     strcat(tmpbuf, \textcolor{stringliteral}{"."});
+36 
+37     \textcolor{keywordflow}{if}(curr\_ino == root\_ino) \{
+38         \hyperlink{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}{strcat\_inv}(buf, \textcolor{stringliteral}{"/"});
+39         \textcolor{keywordflow}{return} buf;
+40     \}
+41 
+42 
+43     \textcolor{keywordflow}{while}(curr\_ino != root\_ino) \{
+44         \textcolor{keywordflow}{if}(stat(tmpbuf, &st) != 0)
+45             \textcolor{keywordflow}{return} NULL;
+46 
+47         curr\_ino = st.st\_ino;
+48 
+49         \textcolor{keywordflow}{if}(curr\_ino == root\_ino)
+50             \textcolor{keywordflow}{break};
+51 
+52         strcat(tmpbuf, \textcolor{stringliteral}{"/.."});
+53         \hyperlink{struct____DIR}{DIR}* dir = \hyperlink{dirent_8h_afa648ff43ec9eba592716a334f243111}{opendir}(tmpbuf);
+54         \textcolor{keywordflow}{if}(!dir)
+55             \textcolor{keywordflow}{return} NULL;
+56 
+57         \textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}* ent;
+58         \textcolor{keywordflow}{while}((ent = \hyperlink{dirent_8h_aa7687571d2af8efd5153874ae6e678d9}{readdir}(dir))) \{
+59             \textcolor{keywordflow}{if}(ent->\hyperlink{structdirent_aef01e92a29cba347e6e6a5f22d4908a2}{d\_ino} == curr\_ino) \{
+60                 \hyperlink{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}{strcat\_inv}(buf, ent->\hyperlink{structdirent_a39a9af609c1808f0bdf90155bd3f55ed}{d\_name});
+61                 \hyperlink{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}{strcat\_inv}(buf, \textcolor{stringliteral}{"/"});         
+62             \}
+63 
+64             free(ent);
+65         \}
+66 
+67         \hyperlink{dirent_8h_a058e669d865116ec6419ea3a52207830}{closedir}(dir);
+68     \}
+69 
+70     \textcolor{keywordflow}{return} buf;
+71 \}
+\end{DoxyCode}
+\hypertarget{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}{\index{getcwd.\+c@{getcwd.\+c}!strcat\+\_\+inv@{strcat\+\_\+inv}}
+\index{strcat\+\_\+inv@{strcat\+\_\+inv}!getcwd.\+c@{getcwd.\+c}}
+\subsubsection[{strcat\+\_\+inv}]{\setlength{\rightskip}{0pt plus 5cm}static char$\ast$ strcat\+\_\+inv (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{dest, }
+\item[{char $\ast$}]{str}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}
+
+
+Definizione alla linea 7 del file getcwd.\+c.
+
+
+
+Referenzia dest.
+
+
+\begin{DoxyCode}
+7                                                \{
+8     \textcolor{keywordtype}{char}* res = malloc(strlen(\hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest}) + strlen(str));
+9     strcpy(res, str);   
+10     strcat(res, \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest});
+11     strcpy(\hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest}, res);
+12 
+13     free(res);
+14     \textcolor{keywordflow}{return} \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest};
+15 \}
+\end{DoxyCode}

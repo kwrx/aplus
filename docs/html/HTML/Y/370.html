@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>macaddr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/94.html#L41'>macaddr</a>            41 src/include/aplus/net/arp.h 	macaddr_t macaddr;
+<a href='../S/89.html#L40'>macaddr</a>            40 src/include/aplus/netif.h 	macaddr_t macaddr;
+<a href='../S/108.html#L16'>macaddr</a>            16 src/net/arp.c  arp_cache_entry_t* arp_cache_find_by_macaddr(macaddr_t macaddr) {
+<a href='../S/108.html#L26'>macaddr</a>            26 src/net/arp.c  		if(memcmp(arp-&gt;macaddr, macaddr, sizeof(macaddr_t)) == 0)
+<a href='../S/108.html#L33'>macaddr</a>            33 src/net/arp.c  int arp_cache_add(macaddr_t macaddr, ipv4_t ipv4) {
+<a href='../S/108.html#L39'>macaddr</a>            39 src/net/arp.c  	arp_cache_entry_t* arp = arp_cache_find_by_macaddr(macaddr);
+<a href='../S/108.html#L45'>macaddr</a>            45 src/net/arp.c  	memcpy(arp-&gt;macaddr, macaddr, sizeof(macaddr_t));
+<a href='../S/108.html#L60'>macaddr</a>            60 src/net/arp.c  	netif_t* netif = (netif_t*) netif_find_by_macaddr(arp-&gt;macaddr);
+<a href='../S/108.html#L72'>macaddr</a>            72 src/net/arp.c  		if(memcmp(netif-&gt;macaddr, arp-&gt;tha, sizeof(macaddr_t)) == 0)
+<a href='../S/108.html#L87'>macaddr</a>            87 src/net/arp.c  	memcpy(arp-&gt;sha, netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/112.html#L52'>macaddr</a>            52 src/net/eth.c  	memcpy((void*) ethpkt-&gt;source, (void*) netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/111.html#L72'>macaddr</a>            72 src/net/loopback/loopback.c 	memset(netif-&gt;macaddr, 0xFF, sizeof(macaddr_t));
+<a href='../S/107.html#L66'>macaddr</a>            66 src/net/netif.c netif_t* netif_find_by_macaddr(macaddr_t* macaddr) {
+<a href='../S/107.html#L73'>macaddr</a>            73 src/net/netif.c 		if(memcmp(netif-&gt;macaddr, macaddr, sizeof(macaddr_t)) == 0)
+<a href='../S/107.html#L141'>macaddr</a>           141 src/net/netif.c 	if(netif_find_by_macaddr(&amp;netdev-&gt;macaddr) != NULL) {
+<a href='../S/107.html#L172'>macaddr</a>           172 src/net/netif.c 			netdev-&gt;macaddr[0],
+<a href='../S/107.html#L173'>macaddr</a>           173 src/net/netif.c 			netdev-&gt;macaddr[1],
+<a href='../S/107.html#L174'>macaddr</a>           174 src/net/netif.c 			netdev-&gt;macaddr[2],
+<a href='../S/107.html#L175'>macaddr</a>           175 src/net/netif.c 			netdev-&gt;macaddr[3],
+<a href='../S/107.html#L176'>macaddr</a>           176 src/net/netif.c 			netdev-&gt;macaddr[4],
+<a href='../S/107.html#L177'>macaddr</a>           177 src/net/netif.c 			netdev-&gt;macaddr[5],
+<a href='../S/104.html#L22'>macaddr</a>            22 src/net/rtl8139/rtl8139.c 	char macaddr[6];
+<a href='../S/104.html#L184'>macaddr</a>           184 src/net/rtl8139/rtl8139.c 	memset(card-&gt;macaddr, 0, 6);
+<a href='../S/104.html#L186'>macaddr</a>           186 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[i] = int_in8(card, i);
+<a href='../S/104.html#L196'>macaddr</a>           196 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[0],
+<a href='../S/104.html#L197'>macaddr</a>           197 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[1],
+<a href='../S/104.html#L198'>macaddr</a>           198 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[2],
+<a href='../S/104.html#L199'>macaddr</a>           199 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[3],
+<a href='../S/104.html#L200'>macaddr</a>           200 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[4],
+<a href='../S/104.html#L201'>macaddr</a>           201 src/net/rtl8139/rtl8139.c 		card-&gt;macaddr[5]
+<a href='../S/104.html#L244'>macaddr</a>           244 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;netif-&gt;macaddr, card-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/110.html#L145'>macaddr</a>           145 src/net/slirp/slirp.c 	netif-&gt;macaddr[0] = 10;
+<a href='../S/110.html#L146'>macaddr</a>           146 src/net/slirp/slirp.c 	netif-&gt;macaddr[1] = 0;
+<a href='../S/110.html#L147'>macaddr</a>           147 src/net/slirp/slirp.c 	netif-&gt;macaddr[2] = 2;
+<a href='../S/110.html#L148'>macaddr</a>           148 src/net/slirp/slirp.c 	netif-&gt;macaddr[3] = 0;
+<a href='../S/110.html#L149'>macaddr</a>           149 src/net/slirp/slirp.c 	netif-&gt;macaddr[4] = 255;
+<a href='../S/110.html#L150'>macaddr</a>           150 src/net/slirp/slirp.c 	netif-&gt;macaddr[5] = 255;
+</pre>
+</body>
+</html>

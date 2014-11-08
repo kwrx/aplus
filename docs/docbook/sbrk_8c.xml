@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="sbrk_8c">
+    <title>sbrk.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="sbrk_8c_1a31ee556c0ad05626a17b4881fa269e7f">sys_sbrk</link> (
+ptrdiff_t increment)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="sbrk_8c_1a181c1f01f7967b89792ddeed15e4b935">SYSCALL</link> (
+<link linkend="sbrk_8c_1a31ee556c0ad05626a17b4881fa269e7f">sys_sbrk</link> , 12 )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/syscall/sbrk.c</para>
+    </simplesect>
+</section>

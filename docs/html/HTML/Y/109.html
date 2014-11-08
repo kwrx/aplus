@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>assert</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/79.html#L29'>assert</a>             29 usr/src/libcrt0/test/main.c 	assert(signal(SIGUSR1, __test_signals__) != SIG_ERR);
+<a href='../S/79.html#L36'>assert</a>             36 usr/src/libcrt0/test/main.c 	assert(test_stdio() &amp;&amp; "Test stdio failed");
+<a href='../S/79.html#L37'>assert</a>             37 usr/src/libcrt0/test/main.c 	assert(test_args(argc, argv) &amp;&amp; "Test arguments failed");
+<a href='../S/79.html#L38'>assert</a>             38 usr/src/libcrt0/test/main.c 	assert(test_signals() &gt;= 0 &amp;&amp; "Test signals failed");
+<a href='../S/47.html#L19'>assert</a>             19 usr/src/libpthread/test/main.c 	assert(pthread_create(&amp;ptx_1, NULL, __test_pthread_1, NULL) == 0);
+<a href='../S/47.html#L20'>assert</a>             20 usr/src/libpthread/test/main.c 	assert(pthread_join(ptx_1, &amp;retval_1) == 0);
+<a href='../S/47.html#L21'>assert</a>             21 usr/src/libpthread/test/main.c 	assert((int) retval_1 == 200 &amp;&amp; "bad returned value");
+<a href='../S/47.html#L28'>assert</a>             28 usr/src/libpthread/test/main.c 	assert(pthread_mutex_init(&amp;mtx_2, NULL) == 0);
+<a href='../S/47.html#L29'>assert</a>             29 usr/src/libpthread/test/main.c 	assert(pthread_mutex_trylock(&amp;mtx_2) == 0);
+<a href='../S/47.html#L30'>assert</a>             30 usr/src/libpthread/test/main.c 	assert(pthread_mutex_unlock(&amp;mtx_2) == 0);
+<a href='../S/47.html#L31'>assert</a>             31 usr/src/libpthread/test/main.c 	assert(pthread_mutex_destroy(&amp;mtx_2) == 0);
+<a href='../S/47.html#L38'>assert</a>             38 usr/src/libpthread/test/main.c 	assert(pthread_spin_init(&amp;spl_3, 0) == 0);
+<a href='../S/47.html#L39'>assert</a>             39 usr/src/libpthread/test/main.c 	assert(pthread_spin_trylock(&amp;spl_3) == 0);
+<a href='../S/47.html#L40'>assert</a>             40 usr/src/libpthread/test/main.c 	assert(pthread_spin_unlock(&amp;spl_3) == 0);
+<a href='../S/47.html#L41'>assert</a>             41 usr/src/libpthread/test/main.c 	assert(pthread_spin_destroy(&amp;spl_3) == 0);
+<a href='../S/47.html#L49'>assert</a>             49 usr/src/libpthread/test/main.c 	assert(pthread_mutex_init(&amp;mtx_4, NULL) == 0);
+<a href='../S/47.html#L50'>assert</a>             50 usr/src/libpthread/test/main.c 	assert(pthread_cond_init(&amp;cond_4, NULL) == 0);
+<a href='../S/47.html#L51'>assert</a>             51 usr/src/libpthread/test/main.c 	assert(pthread_cond_destroy(&amp;cond_4) == 0);
+<a href='../S/47.html#L58'>assert</a>             58 usr/src/libpthread/test/main.c 	assert(pthread_rwlock_init(&amp;rw_5, NULL) == 0);
+<a href='../S/47.html#L59'>assert</a>             59 usr/src/libpthread/test/main.c 	assert(pthread_rwlock_tryrdlock(&amp;rw_5) == 0);
+<a href='../S/47.html#L60'>assert</a>             60 usr/src/libpthread/test/main.c 	assert(pthread_rwlock_unlock(&amp;rw_5) == 0);
+<a href='../S/47.html#L61'>assert</a>             61 usr/src/libpthread/test/main.c 	assert(pthread_rwlock_trywrlock(&amp;rw_5) == 0);
+<a href='../S/47.html#L62'>assert</a>             62 usr/src/libpthread/test/main.c 	assert(pthread_rwlock_unlock(&amp;rw_5) == 0);
+<a href='../S/47.html#L63'>assert</a>             63 usr/src/libpthread/test/main.c 	assert(pthread_rwlock_destroy(&amp;rw_5) == 0);
+<a href='../S/47.html#L68'>assert</a>             68 usr/src/libpthread/test/main.c 	assert(pthread_barrier_init(&amp;bar_6, NULL, 1) == 0);
+<a href='../S/47.html#L69'>assert</a>             69 usr/src/libpthread/test/main.c 	assert(pthread_barrier_wait(&amp;bar_6) == PTHREAD_BARRIER_SERIAL_THREAD);
+<a href='../S/47.html#L70'>assert</a>             70 usr/src/libpthread/test/main.c 	assert(pthread_barrier_destroy(&amp;bar_6) == 0);
+<a href='../S/47.html#L77'>assert</a>             77 usr/src/libpthread/test/main.c 	assert(pthread_key_create(&amp;key_7, NULL) == 0);
+<a href='../S/47.html#L78'>assert</a>             78 usr/src/libpthread/test/main.c 	assert(pthread_setspecific(key_7, (const void*) 200) == 0);
+<a href='../S/47.html#L79'>assert</a>             79 usr/src/libpthread/test/main.c 	assert((int) pthread_getspecific(key_7) == 200 &amp;&amp; "bad returned value");
+<a href='../S/47.html#L80'>assert</a>             80 usr/src/libpthread/test/main.c 	assert(pthread_key_delete(key_7) == 0);
+</pre>
+</body>
+</html>

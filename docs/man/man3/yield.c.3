@@ -1,0 +1,44 @@
+.TH "src/syscall/yield.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/yield.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "void \fBsys_yield\fP ()"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_yield\fP, 82)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "void sys_yield ()"
+
+.PP
+Definizione alla linea 6 del file yield\&.c\&.
+.PP
+Referenzia schedule_yield()\&.
+.PP
+.nf
+6                  {
+7     schedule_yield();
+8 }
+.fi
+.SS "SYSCALL (\fBsys_yield\fP, 82)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

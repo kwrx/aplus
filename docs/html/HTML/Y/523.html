@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>ret</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/102.html#L34'>ret</a>                34 src/include/aplus.h 		uint32_t ret;											\
+<a href='../S/102.html#L35'>ret</a>                35 src/include/aplus.h 		__asm__ __volatile__ ("mov %0, " #n : "=r"(ret));		\
+<a href='../S/102.html#L36'>ret</a>                36 src/include/aplus.h 		return ret;												\
+<a href='../S/102.html#L60'>ret</a>                60 src/include/aplus.h 	uint32_t ret;
+<a href='../S/102.html#L61'>ret</a>                61 src/include/aplus.h 	__asm__ __volatile__("pushfd; pop eax" : "=a"(ret));
+<a href='../S/102.html#L62'>ret</a>                62 src/include/aplus.h 	return ret;
+<a href='../S/108.html#L96'>ret</a>                96 src/net/arp.c  	int ret = eth_send(netif, arp, sizeof(arp_header_t), NETIF_ARP);
+<a href='../S/108.html#L99'>ret</a>                99 src/net/arp.c  	return ret;
+<a href='../S/112.html#L73'>ret</a>                73 src/net/eth.c  	int ret = netif-&gt;send(netif, ethpkt, length, NETIF_ETH);
+<a href='../S/112.html#L76'>ret</a>                76 src/net/eth.c  	return ret;
+<a href='../S/112.html#L89'>ret</a>                89 src/net/eth.c  	int ret = 0;
+<a href='../S/112.html#L93'>ret</a>                93 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + i), delta, type);
+<a href='../S/112.html#L96'>ret</a>                96 src/net/eth.c  		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + length - (length % delta)), length % delta, type);
+<a href='../S/112.html#L99'>ret</a>                99 src/net/eth.c  	if(ret)
+<a href='../S/113.html#L119'>ret</a>               119 src/net/ipv4.c 		int ret = eth_send(netif, pkt, length + sizeof(ipv4_header_t), NETIF_INET);
+<a href='../S/113.html#L122'>ret</a>               122 src/net/ipv4.c 		if(ret)
+<a href='../S/113.html#L128'>ret</a>               128 src/net/ipv4.c 	int ret = 0;
+<a href='../S/113.html#L137'>ret</a>               137 src/net/ipv4.c 		ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+<a href='../S/113.html#L143'>ret</a>               143 src/net/ipv4.c 	ret += eth_send(netif, pkt, IPV4_MAX_LENGTH, NETIF_INET);
+<a href='../S/113.html#L146'>ret</a>               146 src/net/ipv4.c 	if(ret)
+<a href='../S/106.html#L82'>ret</a>                82 src/net/ipv6.c 	int ret = eth_send(netif, (void*) ip, length + sizeof(ipv6_header_t), NETIF_INET6);
+<a href='../S/106.html#L85'>ret</a>                85 src/net/ipv6.c 	if(ret)
+<a href='../S/124.html#L21'>ret</a>                21 src/syscall/stat.c 	int ret = sys_fstat(fd, st);
+<a href='../S/124.html#L24'>ret</a>                24 src/syscall/stat.c 	return ret;
+<a href='../S/34.html#L10'>ret</a>                10 usr/src/libposix/src/lstat.c 	int ret = fstat(fd, st);
+<a href='../S/34.html#L12'>ret</a>                12 usr/src/libposix/src/lstat.c 	return ret;
+</pre>
+</body>
+</html>

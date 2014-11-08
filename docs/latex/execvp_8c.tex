@@ -1,0 +1,115 @@
+\hypertarget{execvp_8c}{\section{Riferimenti per il file usr/src/libposix/src/execvp.c}
+\label{execvp_8c}\index{usr/src/libposix/src/execvp.\+c@{usr/src/libposix/src/execvp.\+c}}
+}
+{\ttfamily \#include $<$\+\_\+ansi.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$ctype.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{execvp_8c_a79a1771c654f4dd46398088f3e33701a}{P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M}~'\+:'
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+static char $\ast$ \hyperlink{execvp_8c_a10efa145fdda589520d161cf247a568f}{\+\_\+\+D\+E\+F\+U\+N} (strccpy,(s1, s2, c), char $\ast$s1 \+\_\+\+A\+N\+D char $\ast$s2 \+\_\+\+A\+N\+D char c)
+\item 
+int \hyperlink{execvp_8c_abd01b9e4dcf0b408353235fe59e17675}{\+\_\+\+D\+E\+F\+U\+N} (execvp,(file, argv), \+\_\+\+C\+O\+N\+S\+T char $\ast$file \+\_\+\+A\+N\+D char $\ast$\+\_\+\+C\+O\+N\+S\+T argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{execvp_8c_a79a1771c654f4dd46398088f3e33701a}{\index{execvp.\+c@{execvp.\+c}!P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M@{P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M}}
+\index{P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M@{P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M}!execvp.\+c@{execvp.\+c}}
+\subsubsection[{P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M~'\+:'}}\label{execvp_8c_a79a1771c654f4dd46398088f3e33701a}
+
+
+Definizione alla linea 16 del file execvp.\+c.
+
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{execvp_8c_a10efa145fdda589520d161cf247a568f}{\index{execvp.\+c@{execvp.\+c}!\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}}
+\index{\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}!execvp.\+c@{execvp.\+c}}
+\subsubsection[{\+\_\+\+D\+E\+F\+U\+N}]{\setlength{\rightskip}{0pt plus 5cm}static char$\ast$ \+\_\+\+D\+E\+F\+U\+N (
+\begin{DoxyParamCaption}
+\item[{strccpy}]{, }
+\item[{(s1, s2, c)}]{, }
+\item[{char $\ast$s1 \+\_\+\+A\+N\+D char $\ast$s2 \+\_\+\+A\+N\+D char}]{c}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{execvp_8c_a10efa145fdda589520d161cf247a568f}
+
+
+Definizione alla linea 24 del file execvp.\+c.
+
+
+
+Referenzia dest.
+
+
+\begin{DoxyCode}
+28 \{
+29   \textcolor{keywordtype}{char} *\hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest} = s1;
+30 
+31   \textcolor{keywordflow}{while} (*s2 && *s2 != c)
+32     *s1++ = *s2++;
+33   *s1 = 0;
+34 
+35   \textcolor{keywordflow}{return} \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest};
+36 \}
+\end{DoxyCode}
+\hypertarget{execvp_8c_abd01b9e4dcf0b408353235fe59e17675}{\index{execvp.\+c@{execvp.\+c}!\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}}
+\index{\+\_\+\+D\+E\+F\+U\+N@{\+\_\+\+D\+E\+F\+U\+N}!execvp.\+c@{execvp.\+c}}
+\subsubsection[{\+\_\+\+D\+E\+F\+U\+N}]{\setlength{\rightskip}{0pt plus 5cm}int \+\_\+\+D\+E\+F\+U\+N (
+\begin{DoxyParamCaption}
+\item[{execvp}]{, }
+\item[{(file, argv)}]{, }
+\item[{\+\_\+\+C\+O\+N\+S\+T char $\ast$file \+\_\+\+A\+N\+D char $\ast$\+\_\+\+C\+O\+N\+S\+T}]{argv\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{execvp_8c_abd01b9e4dcf0b408353235fe59e17675}
+
+
+Definizione alla linea 39 del file execvp.\+c.
+
+
+
+Referenzia P\+A\+T\+H\+\_\+\+D\+E\+L\+I\+M.
+
+
+\begin{DoxyCode}
+42 \{
+43   \textcolor{keywordtype}{char} *path = getenv (\textcolor{stringliteral}{"PATH"});
+44   \textcolor{keywordtype}{char} buf[MAXNAMLEN];
+45 
+46   \textcolor{comment}{/* If $PATH doesn't exist, just pass FILE on unchanged.  */}
+47   \textcolor{keywordflow}{if} (!path)
+48     \textcolor{keywordflow}{return} execv (file, argv);
+49 
+50   \textcolor{comment}{/* If FILE contains a directory, don't search $PATH.  */}
+51   \textcolor{keywordflow}{if} (strchr (file, \textcolor{charliteral}{'/'})
+52       )
+53     \textcolor{keywordflow}{return} execv (file, argv);
+54 
+55   \textcolor{keywordflow}{while} (*path)
+56     \{
+57       strccpy (buf, path, \hyperlink{execvp_8c_a79a1771c654f4dd46398088f3e33701a}{PATH\_DELIM});
+58       \textcolor{comment}{/* An empty entry means the current directory.  */}
+59       \textcolor{keywordflow}{if} (*buf != 0 && buf[strlen(buf) - 1] != \textcolor{charliteral}{'/'})
+60     strcat (buf, \textcolor{stringliteral}{"/"});
+61       strcat (buf, file);
+62       \textcolor{keywordflow}{if}(execv (buf, argv) == 0)
+63         \textcolor{keywordflow}{return} 0;       
+64 
+65       \textcolor{keywordflow}{while} (*path && *path != \hyperlink{execvp_8c_a79a1771c654f4dd46398088f3e33701a}{PATH\_DELIM})
+66     path++;
+67       \textcolor{keywordflow}{if} (*path == \hyperlink{execvp_8c_a79a1771c654f4dd46398088f3e33701a}{PATH\_DELIM})
+68     path++;         \textcolor{comment}{/* skip over delim */}
+69     \}
+70 
+71   \textcolor{keywordflow}{return} -1;
+72 \}
+\end{DoxyCode}

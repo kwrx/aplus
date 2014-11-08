@@ -1,0 +1,783 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="grub_8h" kind="file">
+    <compoundname>grub.h</compoundname>
+    <includedby refid="desc_8c" local="no">src/arch/desc.c</includedby>
+    <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
+    <includedby refid="kheap_8c" local="no">src/mm/kheap.c</includedby>
+    <includedby refid="mm_8c" local="no">src/mm/mm.c</includedby>
+    <includedby refid="paging_8c" local="no">src/mm/paging.c</includedby>
+    <invincdepgraph>
+      <node id="876">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="875">
+        <label>src/arch/desc.c</label>
+        <link refid="desc_8c"/>
+      </node>
+      <node id="879">
+        <label>src/mm/paging.c</label>
+        <link refid="paging_8c"/>
+      </node>
+      <node id="874">
+        <label>src/include/grub.h</label>
+        <link refid="grub.h"/>
+        <childnode refid="875" relation="include">
+        </childnode>
+        <childnode refid="876" relation="include">
+        </childnode>
+        <childnode refid="877" relation="include">
+        </childnode>
+        <childnode refid="878" relation="include">
+        </childnode>
+        <childnode refid="879" relation="include">
+        </childnode>
+      </node>
+      <node id="877">
+        <label>src/mm/kheap.c</label>
+        <link refid="kheap_8c"/>
+      </node>
+      <node id="878">
+        <label>src/mm/mm.c</label>
+        <link refid="mm_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structvesaInfo__t" prot="public">vesaInfo_t</innerclass>
+    <innerclass refid="structvesaModeInfo__t" prot="public">vesaModeInfo_t</innerclass>
+    <innerclass refid="structBootInfo__t" prot="public">BootInfo_t</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="grub_8h_1a3efad85ab30d96e506aba9003c0ee4dd" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_MEM</name>
+        <initializer>0x001</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="95" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1a9f338ee148fe6f4c672e8e53e608d985" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_DEVICE</name>
+        <initializer>0x002</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="96" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1af58e2129db03f11e8f3d1be24c67f273" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_CMDLINE</name>
+        <initializer>0x004</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="97" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1a05c950e0dfa2339451b7256de3b6634b" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_MODS</name>
+        <initializer>0x008</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="98" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1a8ab64e4da5caf65cf7ae2991b984a3cf" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_AOUT</name>
+        <initializer>0x010</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="99" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1ae67a3767b0bcf8b3a57a1f9d84a0d12c" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_ELF</name>
+        <initializer>0x020</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="100" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1a2ed735dcce6c8367f6e3ee5f56e16a42" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_MMAP</name>
+        <initializer>0x040</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="101" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1ab3d220808412fa0f715b0a1844f1843f" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_CONFIG</name>
+        <initializer>0x080</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="102" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1ab80180da32c134cf24f3dd64e3e14176" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_LOADER</name>
+        <initializer>0x100</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="103" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1a3fb3ddd4db5c7fb88fd513c66577735a" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_APM</name>
+        <initializer>0x200</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="104" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="grub_8h_1a852a5720b636e1bdc5799f72dd04b8d8" prot="public" static="no">
+        <name>MULTIBOOT_FLAG_VBE</name>
+        <initializer>0x400</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="105" column="10" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="grub_8h_1a949fefd565685608cdc3489425f32a93" prot="public" static="no">
+        <type>struct <ref refid="structvesaInfo__t" kindref="compound">vesaInfo_t</ref></type>
+        <definition>typedef struct vesaInfo_t  vesaInfo</definition>
+        <argsstring></argsstring>
+        <name>vesaInfo</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="37" column="1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="grub_8h_1aaf761d57d118a95f28fd464fd6eaf593" prot="public" static="no">
+        <type>struct <ref refid="structBootInfo__t" kindref="compound">BootInfo_t</ref></type>
+        <definition>typedef struct BootInfo_t  BootInfo</definition>
+        <argsstring></argsstring>
+        <name>BootInfo</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="89" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="grub_8h_1a448571b444d84b29e9528860d6198688" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short attributes</definition>
+        <argsstring></argsstring>
+        <name>attributes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="140" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a5b375a9d989dccc8cf3e3b452552eee8" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char winA</definition>
+        <argsstring></argsstring>
+        <name>winA</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="141" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1ae9719a24ee031bd20ea4c0cacb5c77b0" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char winB</definition>
+        <argsstring></argsstring>
+        <name>winB</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="141" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a78687e772fb4891075ad895a984b3d50" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short granularity</definition>
+        <argsstring></argsstring>
+        <name>granularity</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="142" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a75544d53f0c0032654ba8afc5ea4fb34" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short winsize</definition>
+        <argsstring></argsstring>
+        <name>winsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="143" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1ac1dd41cdbe52db68044288e65284f178" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short segmentA</definition>
+        <argsstring></argsstring>
+        <name>segmentA</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="144" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1ab80bf8c9c3587a6b04b7eb6188557c81" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short segmentB</definition>
+        <argsstring></argsstring>
+        <name>segmentB</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="144" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a9329c4f8f09e8a7ba8edcb7979b0724d" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int realFctPtr</definition>
+        <argsstring></argsstring>
+        <name>realFctPtr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="145" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="145" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1aa8bd203bb72055179d33b87afbfaafdf" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short pitch</definition>
+        <argsstring></argsstring>
+        <name>pitch</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="146" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="146" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a92b3661512e0dc29b5e5fe94b249a0a8" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short Xres</definition>
+        <argsstring></argsstring>
+        <name>Xres</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="148" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1aa642f35e530d0e197056de47b7a24679" prot="public" static="no" mutable="no">
+        <type>unsigned short</type>
+        <definition>unsigned short Yres</definition>
+        <argsstring></argsstring>
+        <name>Yres</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="148" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1af822f8807abe8e921d0622a13d619e57" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char Wchar</definition>
+        <argsstring></argsstring>
+        <name>Wchar</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="149" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a386cee69730f3541482246638e04a662" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char Ychar</definition>
+        <argsstring></argsstring>
+        <name>Ychar</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="149" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a234b1cba8a11f25edbe4473129954041" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char planes</definition>
+        <argsstring></argsstring>
+        <name>planes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="149" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a29d3773a35b844e2dbb12bb5d895ab50" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char bpp</definition>
+        <argsstring></argsstring>
+        <name>bpp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="149" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1af8898775b98504132a77f294f60914ad" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char banks</definition>
+        <argsstring></argsstring>
+        <name>banks</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="149" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1ab17dac0f2b0af0515bd1dcde0e8eb29d" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char memory_model</definition>
+        <argsstring></argsstring>
+        <name>memory_model</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="150" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="150" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a32d05d9fdf87ed2f2fe33d299c279df7" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char bank_size</definition>
+        <argsstring></argsstring>
+        <name>bank_size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="150" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="150" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a09782d07df1b4bb29e0aeab2347bd4f7" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char image_pages</definition>
+        <argsstring></argsstring>
+        <name>image_pages</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="150" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="150" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a91deebede3408c2739eaf833278ac98d" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char reserved0</definition>
+        <argsstring></argsstring>
+        <name>reserved0</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="151" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="151" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a9bbaeb61ae0158164a6478df20df6d2a" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char red_mask</definition>
+        <argsstring></argsstring>
+        <name>red_mask</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="153" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="153" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1ac0012f5fa55e6e780ad2d34752fc092a" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char red_position</definition>
+        <argsstring></argsstring>
+        <name>red_position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="153" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="153" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a2b05ae4ade4d301d04912921911089f1" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char green_mask</definition>
+        <argsstring></argsstring>
+        <name>green_mask</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="154" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="154" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a3b620a4a97d8a86e7ddbb0bcb758e33b" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char green_position</definition>
+        <argsstring></argsstring>
+        <name>green_position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="154" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="154" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a2bed3c9924cd7dd9ea7213a94e0f516b" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char blue_mask</definition>
+        <argsstring></argsstring>
+        <name>blue_mask</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="155" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="155" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a87172d563ac78dbb31b20f32baf3ed85" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char blue_position</definition>
+        <argsstring></argsstring>
+        <name>blue_position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="155" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="155" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1abd702c4796391fd472a86c57720397ff" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char rsv_mask</definition>
+        <argsstring></argsstring>
+        <name>rsv_mask</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="156" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1ad837b538d4b0b41c8fb2ff139a2a931b" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char rsv_position</definition>
+        <argsstring></argsstring>
+        <name>rsv_position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="156" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a8badd781205f0a5db81752962c9357a6" prot="public" static="no" mutable="no">
+        <type>unsigned char</type>
+        <definition>unsigned char directcolor_attributes</definition>
+        <argsstring></argsstring>
+        <name>directcolor_attributes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="157" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="157" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a2000b367a91e9bd30bebc900c40203b8" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int physbase</definition>
+        <argsstring></argsstring>
+        <name>physbase</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="159" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="159" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1ae9f4ffc72ce26b93734d48c73f726ad4" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int reserved1</definition>
+        <argsstring></argsstring>
+        <name>reserved1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="160" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a69bce65d59ea99847ac5bccfbf6ce0f9" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short reserved2</definition>
+        <argsstring></argsstring>
+        <name>reserved2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="161" column="1" bodyfile="/opt/prj/aPlus/src/include/grub.h" bodystart="161" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" prot="public" static="no" mutable="no">
+        <type><ref refid="grub_8h_1aaf761d57d118a95f28fd464fd6eaf593" kindref="member">BootInfo</ref> *</type>
+        <definition>BootInfo* mbd</definition>
+        <argsstring></argsstring>
+        <name>mbd</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="109" column="1"/>
+      </memberdef>
+      <memberdef kind="variable" id="grub_8h_1a7154179fe070a40c828f7c03f454d4d6" prot="public" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int magic</definition>
+        <argsstring></argsstring>
+        <name>magic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="110" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="grub_8h_1afa73cc1cb823e7947162fcc569b64e5a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structvesaModeInfo__t" kindref="compound">vesaModeInfo_t</ref></type>
+        <definition>struct vesaModeInfo_t __attribute__</definition>
+        <argsstring>((packed)) vesaModeInfo</argsstring>
+        <name>__attribute__</name>
+        <param>
+          <type>(packed)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/grub.h" line="139" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>grub.h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Author:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Antonio<sp/>Natale<sp/>&lt;inferdevil97@gmail.com&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>2014<sp/>WareX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software:<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation,<sp/>either<sp/>version<sp/>3<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>along<sp/>with<sp/>this<sp/>program.<sp/><sp/>If<sp/>not,<sp/>see<sp/>&lt;http://www.gnu.org/licenses/&gt;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_GRUB_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_GRUB_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="structvesaInfo__t" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structvesaInfo__t" kindref="compound">vesaInfo_t</ref><sp/>{</highlight></codeline>
+<codeline lineno="27" refid="structvesaInfo__t_1a48deedd69aeb2ce0d1c27e77f9da23c5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaInfo__t_1a48deedd69aeb2ce0d1c27e77f9da23c5" kindref="member">signature</ref>[4];</highlight></codeline>
+<codeline lineno="28" refid="structvesaInfo__t_1a6c1001f337933e02a68640cfc7abdfb6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaInfo__t_1a6c1001f337933e02a68640cfc7abdfb6" kindref="member">version</ref>;</highlight></codeline>
+<codeline lineno="29" refid="structvesaInfo__t_1aee5b0eb81a986dc3adadc287dd6809c4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structvesaInfo__t_1aee5b0eb81a986dc3adadc287dd6809c4" kindref="member">oem_string_ptr</ref>;</highlight></codeline>
+<codeline lineno="30" refid="structvesaInfo__t_1a1f4453c48c6629e27fd2e97948deb62b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structvesaInfo__t_1a1f4453c48c6629e27fd2e97948deb62b" kindref="member">capabilities</ref>;</highlight></codeline>
+<codeline lineno="31" refid="structvesaInfo__t_1af4342c2c5c65c802e4a042d324572b9d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structvesaInfo__t_1af4342c2c5c65c802e4a042d324572b9d" kindref="member">video_mode_ptr</ref>;</highlight></codeline>
+<codeline lineno="32" refid="structvesaInfo__t_1ab94cc102e07cdfbf3cb53690bf205321" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaInfo__t_1ab94cc102e07cdfbf3cb53690bf205321" kindref="member">total_memory</ref>;</highlight></codeline>
+<codeline lineno="33" refid="structvesaInfo__t_1af0e5f50889726f62d961141ee8fa06f3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structvesaInfo__t_1af0e5f50889726f62d961141ee8fa06f3" kindref="member">oem_software_rev</ref>;</highlight></codeline>
+<codeline lineno="34" refid="structvesaInfo__t_1a35b0e91dc1f97ab1f05b8c9a6fe8988f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="structvesaInfo__t_1a35b0e91dc1f97ab1f05b8c9a6fe8988f" kindref="member">oem_vendor_name</ref>;</highlight></codeline>
+<codeline lineno="35" refid="structvesaInfo__t_1a532306633838e6bc58a9e91f69835302" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="structvesaInfo__t_1a532306633838e6bc58a9e91f69835302" kindref="member">oem_product_name</ref>;</highlight></codeline>
+<codeline lineno="36" refid="structvesaInfo__t_1a4df6ee9c56e2171999b8346550e2273f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="structvesaInfo__t_1a4df6ee9c56e2171999b8346550e2273f" kindref="member">oem_product_rev</ref>;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><ref refid="grub_8h_1a949fefd565685608cdc3489425f32a93" kindref="member">vesaInfo</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="structvesaModeInfo__t" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structvesaModeInfo__t" kindref="compound">vesaModeInfo_t</ref><sp/>{</highlight></codeline>
+<codeline lineno="40" refid="structvesaModeInfo__t_1a339145bcfb50fc81609813734415d4db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a339145bcfb50fc81609813734415d4db" kindref="member">attributes</ref>;</highlight></codeline>
+<codeline lineno="41" refid="structvesaModeInfo__t_1a386d2bc2570ec21a98664958429247ed" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1ac056f64b4375a72439ae6e84aae88e7f" kindref="member">winA</ref>,<ref refid="structvesaModeInfo__t_1a386d2bc2570ec21a98664958429247ed" kindref="member">winB</ref>;</highlight></codeline>
+<codeline lineno="42" refid="structvesaModeInfo__t_1a59708e15ac9929ad9218b4ef25f4e861" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a59708e15ac9929ad9218b4ef25f4e861" kindref="member">granularity</ref>;</highlight></codeline>
+<codeline lineno="43" refid="structvesaModeInfo__t_1a215d7dc86f8c13909156dbff6518d0c8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a215d7dc86f8c13909156dbff6518d0c8" kindref="member">winsize</ref>;</highlight></codeline>
+<codeline lineno="44" refid="structvesaModeInfo__t_1a3f8f6fe3c4ee7fdbca2cf15883db343f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1af83d59348e11c50399f088cea83fb0a9" kindref="member">segmentA</ref>,<sp/><ref refid="structvesaModeInfo__t_1a3f8f6fe3c4ee7fdbca2cf15883db343f" kindref="member">segmentB</ref>;</highlight></codeline>
+<codeline lineno="45" refid="structvesaModeInfo__t_1a3c3c1fa91bfb8ec58a80ff0b9c1deaae" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a3c3c1fa91bfb8ec58a80ff0b9c1deaae" kindref="member">realFctPtr</ref>;</highlight></codeline>
+<codeline lineno="46" refid="structvesaModeInfo__t_1aed2e5dc0be6bd66efb67ab3de2191bfe" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1aed2e5dc0be6bd66efb67ab3de2191bfe" kindref="member">pitch</ref>;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="structvesaModeInfo__t_1a54003f0083b0581fc14babfec48a1d7d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a5ed5fe4414e2a46fa3670733486905ae" kindref="member">Xres</ref>,<sp/><ref refid="structvesaModeInfo__t_1a54003f0083b0581fc14babfec48a1d7d" kindref="member">Yres</ref>;</highlight></codeline>
+<codeline lineno="49" refid="structvesaModeInfo__t_1a1c395c3097057ffd0f3d12ea9df6133d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a154546a781d9a7d5da7cc0b77a7b998c" kindref="member">Wchar</ref>,<sp/><ref refid="structvesaModeInfo__t_1a1c395c3097057ffd0f3d12ea9df6133d" kindref="member">Ychar</ref>,<sp/><ref refid="structvesaModeInfo__t_1a9d1ab189d261e008a41daa04d5ee9693" kindref="member">planes</ref>,<sp/><ref refid="structvesaModeInfo__t_1acbf51c6b217de951bd6b40ae60b2343d" kindref="member">bpp</ref>,<sp/><ref refid="structvesaModeInfo__t_1a543f6b11b8caed004dc0f4dd8fed13c8" kindref="member">banks</ref>;</highlight></codeline>
+<codeline lineno="50" refid="structvesaModeInfo__t_1a3f6f4827e2c4d40d89a6e8ec6e15c8f4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a3f6f4827e2c4d40d89a6e8ec6e15c8f4" kindref="member">memory_model</ref>,<sp/><ref refid="structvesaModeInfo__t_1a6f7476f0df157c2fc8969131512a9bc1" kindref="member">bank_size</ref>,<sp/><ref refid="structvesaModeInfo__t_1a072aebfd294ef7c940917ad1f5d53176" kindref="member">image_pages</ref>;</highlight></codeline>
+<codeline lineno="51" refid="structvesaModeInfo__t_1a0f912afd0a853ea123ad3a157fc579c9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a0f912afd0a853ea123ad3a157fc579c9" kindref="member">reserved0</ref>;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53" refid="structvesaModeInfo__t_1a96ecd4368bbcf68b97c9496939069c55" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a653392718e3a3c21aad77d0236ec8929" kindref="member">red_mask</ref>,<sp/><ref refid="structvesaModeInfo__t_1a96ecd4368bbcf68b97c9496939069c55" kindref="member">red_position</ref>;</highlight></codeline>
+<codeline lineno="54" refid="structvesaModeInfo__t_1ac5e0330302132e9423fa856f26a34286" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a00414463a3873e70cc7418f109b35f06" kindref="member">green_mask</ref>,<sp/><ref refid="structvesaModeInfo__t_1ac5e0330302132e9423fa856f26a34286" kindref="member">green_position</ref>;</highlight></codeline>
+<codeline lineno="55" refid="structvesaModeInfo__t_1a20289f01bea4e5cbb2533e3c97f8d308" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1aff78588c9039e0f8985d08bc2c5dd5ae" kindref="member">blue_mask</ref>,<sp/><ref refid="structvesaModeInfo__t_1a20289f01bea4e5cbb2533e3c97f8d308" kindref="member">blue_position</ref>;</highlight></codeline>
+<codeline lineno="56" refid="structvesaModeInfo__t_1a2af8762aa842598e8a6a33872a83b5ab" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a8b424620d78b885292f29849acfe962c" kindref="member">rsv_mask</ref>,<sp/><ref refid="structvesaModeInfo__t_1a2af8762aa842598e8a6a33872a83b5ab" kindref="member">rsv_position</ref>;</highlight></codeline>
+<codeline lineno="57" refid="structvesaModeInfo__t_1afb95209f1e3ffa74635cb68495ecec26" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1afb95209f1e3ffa74635cb68495ecec26" kindref="member">directcolor_attributes</ref>;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="structvesaModeInfo__t_1a0233746f9f5f4ecab8622c3a08dc6f5c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a0233746f9f5f4ecab8622c3a08dc6f5c" kindref="member">physbase</ref>;</highlight></codeline>
+<codeline lineno="60" refid="structvesaModeInfo__t_1aacef0071c533de26e708289e474a0542" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1aacef0071c533de26e708289e474a0542" kindref="member">reserved1</ref>;</highlight></codeline>
+<codeline lineno="61" refid="structvesaModeInfo__t_1a5ffbef6f6a9ac0ae6975827208b77ec5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structvesaModeInfo__t_1a5ffbef6f6a9ac0ae6975827208b77ec5" kindref="member">reserved2</ref>;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><ref refid="grub_8h_1afa73cc1cb823e7947162fcc569b64e5a" kindref="member">__attribute__</ref><sp/>((packed))<sp/>vesaModeInfo;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64" refid="structBootInfo__t" refkind="compound"><highlight class="normal"><sp/><sp/><sp/><sp/>typedef<sp/>struct<sp/><ref refid="structBootInfo__t" kindref="compound">BootInfo_t</ref><sp/>{</highlight></codeline>
+<codeline lineno="65" refid="structBootInfo__t_1a255b75459b2ed645abe749075f3ca25d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a255b75459b2ed645abe749075f3ca25d" kindref="member">flags</ref>;</highlight></codeline>
+<codeline lineno="66" refid="structBootInfo__t_1a4b144c9db5fe2c5a9d72522068d65138" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a4b144c9db5fe2c5a9d72522068d65138" kindref="member">mem_lower</ref>;</highlight></codeline>
+<codeline lineno="67" refid="structBootInfo__t_1ab20281f521d626a49714e06b62291be9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1ab20281f521d626a49714e06b62291be9" kindref="member">mem_upper</ref>;</highlight></codeline>
+<codeline lineno="68" refid="structBootInfo__t_1a11fa989df3074f1a90fcb646aa434b97" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a11fa989df3074f1a90fcb646aa434b97" kindref="member">boot_device</ref>;</highlight></codeline>
+<codeline lineno="69" refid="structBootInfo__t_1a23d97e399056fd818fdd31ceb1a07f42" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a23d97e399056fd818fdd31ceb1a07f42" kindref="member">cmdline</ref>;</highlight></codeline>
+<codeline lineno="70" refid="structBootInfo__t_1a178ef95a8fbd89ec018899b9ba241d92" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a178ef95a8fbd89ec018899b9ba241d92" kindref="member">mods_count</ref>;</highlight></codeline>
+<codeline lineno="71" refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">**<sp/><ref refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" kindref="member">mods_addr</ref>;</highlight></codeline>
+<codeline lineno="72" refid="structBootInfo__t_1a6a38dc50fe6f5719f544488a265b8cf1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a6a38dc50fe6f5719f544488a265b8cf1" kindref="member">num</ref>;</highlight></codeline>
+<codeline lineno="73" refid="structBootInfo__t_1a761344d9a2bf10e1551dca7bd77f90cf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a761344d9a2bf10e1551dca7bd77f90cf" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="74" refid="structBootInfo__t_1ac0a248c150ec1bceaafc488988174a1d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1ac0a248c150ec1bceaafc488988174a1d" kindref="member">addr</ref>;</highlight></codeline>
+<codeline lineno="75" refid="structBootInfo__t_1ab2c8b3b8778032a87c0c2fe73245e9e8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1ab2c8b3b8778032a87c0c2fe73245e9e8" kindref="member">shndx</ref>;</highlight></codeline>
+<codeline lineno="76" refid="structBootInfo__t_1ac44eb8289f5f6fbbca78dc24e5052be7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1ac44eb8289f5f6fbbca78dc24e5052be7" kindref="member">mmap_length</ref>;</highlight></codeline>
+<codeline lineno="77" refid="structBootInfo__t_1a904e8344d4c4ef9a650305409b933b17" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a904e8344d4c4ef9a650305409b933b17" kindref="member">mmap_addr</ref>;</highlight></codeline>
+<codeline lineno="78" refid="structBootInfo__t_1adc0745eb234059fc6eb37d8a6c18e4b4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1adc0745eb234059fc6eb37d8a6c18e4b4" kindref="member">drives_length</ref>;</highlight></codeline>
+<codeline lineno="79" refid="structBootInfo__t_1aa355db96d835f264c29a00f15ba126bf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1aa355db96d835f264c29a00f15ba126bf" kindref="member">drives_addr</ref>;</highlight></codeline>
+<codeline lineno="80" refid="structBootInfo__t_1a43ae8547b0cea379829329a622d9bc4c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a43ae8547b0cea379829329a622d9bc4c" kindref="member">config_table</ref>;</highlight></codeline>
+<codeline lineno="81" refid="structBootInfo__t_1a49973d2d24c8f4159b125f2fe0a42e3d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a49973d2d24c8f4159b125f2fe0a42e3d" kindref="member">boot_loader_name</ref>;</highlight></codeline>
+<codeline lineno="82" refid="structBootInfo__t_1a1ce55d9a9d425ccbc6c447a8d73ffdba" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a1ce55d9a9d425ccbc6c447a8d73ffdba" kindref="member">apm_table</ref>;</highlight></codeline>
+<codeline lineno="83" refid="structBootInfo__t_1a8a09488fd20d514ccd02e07e5ca45d6d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a8a09488fd20d514ccd02e07e5ca45d6d" kindref="member">vbe_control_info</ref>;</highlight></codeline>
+<codeline lineno="84" refid="structBootInfo__t_1ad583d2ecbdc34a87c6ab29a2fded69b6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vesaModeInfo*<sp/><ref refid="structBootInfo__t_1ad583d2ecbdc34a87c6ab29a2fded69b6" kindref="member">vbe_mode_info</ref>;</highlight></codeline>
+<codeline lineno="85" refid="structBootInfo__t_1a55a278b70ee059fd245f08f3293440d9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structvesaInfo__t" kindref="compound">vesaInfo</ref>*<sp/><ref refid="structBootInfo__t_1a55a278b70ee059fd245f08f3293440d9" kindref="member">vbe_mode</ref>;</highlight></codeline>
+<codeline lineno="86" refid="structBootInfo__t_1a878cf7a1a61c7b7d21b704feee0fcc60" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a878cf7a1a61c7b7d21b704feee0fcc60" kindref="member">vbe_interface_seg</ref>;</highlight></codeline>
+<codeline lineno="87" refid="structBootInfo__t_1a2359d311e9a6d45dcebb8e6fae1a1f63" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a2359d311e9a6d45dcebb8e6fae1a1f63" kindref="member">vbe_interface_off</ref>;</highlight></codeline>
+<codeline lineno="88" refid="structBootInfo__t_1a47ae9ab2b4242be9be167ea095956097" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t_1a47ae9ab2b4242be9be167ea095956097" kindref="member">vbe_interface_len</ref>;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><ref refid="grub_8h_1aaf761d57d118a95f28fd464fd6eaf593" kindref="member">BootInfo</ref>;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="95" refid="grub_8h_1a3efad85ab30d96e506aba9003c0ee4dd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_MEM<sp/>0x001</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96" refid="grub_8h_1a9f338ee148fe6f4c672e8e53e608d985" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_DEVICE<sp/>0x002</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97" refid="grub_8h_1af58e2129db03f11e8f3d1be24c67f273" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_CMDLINE<sp/>0x004</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98" refid="grub_8h_1a05c950e0dfa2339451b7256de3b6634b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_MODS<sp/>0x008</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99" refid="grub_8h_1a8ab64e4da5caf65cf7ae2991b984a3cf" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_AOUT<sp/>0x010</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100" refid="grub_8h_1ae67a3767b0bcf8b3a57a1f9d84a0d12c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_ELF<sp/>0x020</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101" refid="grub_8h_1a2ed735dcce6c8367f6e3ee5f56e16a42" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_MMAP<sp/>0x040</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102" refid="grub_8h_1ab3d220808412fa0f715b0a1844f1843f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_CONFIG<sp/>0x080</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103" refid="grub_8h_1ab80180da32c134cf24f3dd64e3e14176" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_LOADER<sp/>0x100</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104" refid="grub_8h_1a3fb3ddd4db5c7fb88fd513c66577735a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_APM<sp/>0x200</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105" refid="grub_8h_1a852a5720b636e1bdc5799f72dd04b8d8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>MULTIBOOT_FLAG_VBE<sp/>0x400</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Informazioni<sp/>passate<sp/>con<sp/>il<sp/>loader</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structBootInfo__t" kindref="compound">BootInfo</ref>*<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="grub_8h_1a7154179fe070a40c828f7c03f454d4d6" kindref="member">magic</ref>;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/grub.h"/>
+  </compounddef>
+</doxygen>

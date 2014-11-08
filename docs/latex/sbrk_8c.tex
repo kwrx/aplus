@@ -1,0 +1,45 @@
+\hypertarget{sbrk_8c}{\section{Riferimenti per il file src/syscall/sbrk.c}
+\label{sbrk_8c}\index{src/syscall/sbrk.\+c@{src/syscall/sbrk.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+void $\ast$ \hyperlink{sbrk_8c_a31ee556c0ad05626a17b4881fa269e7f}{sys\+\_\+sbrk} (ptrdiff\+\_\+t increment)
+\item 
+\hyperlink{sbrk_8c_a181c1f01f7967b89792ddeed15e4b935}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{sbrk_8c_a31ee556c0ad05626a17b4881fa269e7f}{sys\+\_\+sbrk}, 12)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{sbrk_8c_a31ee556c0ad05626a17b4881fa269e7f}{\index{sbrk.\+c@{sbrk.\+c}!sys\+\_\+sbrk@{sys\+\_\+sbrk}}
+\index{sys\+\_\+sbrk@{sys\+\_\+sbrk}!sbrk.\+c@{sbrk.\+c}}
+\subsubsection[{sys\+\_\+sbrk}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ sys\+\_\+sbrk (
+\begin{DoxyParamCaption}
+\item[{ptrdiff\+\_\+t}]{increment}
+\end{DoxyParamCaption}
+)}}\label{sbrk_8c_a31ee556c0ad05626a17b4881fa269e7f}
+
+
+Definizione alla linea 6 del file sbrk.\+c.
+
+
+
+Referenzia schedule\+\_\+sbrk().
+
+
+\begin{DoxyCode}
+6                                     \{
+7     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) \hyperlink{src_2sched_8c_a5af6764b80e6b9a24df59f7bb636f3d4}{schedule\_sbrk}(increment);
+8 \}
+\end{DoxyCode}
+\hypertarget{sbrk_8c_a181c1f01f7967b89792ddeed15e4b935}{\index{sbrk.\+c@{sbrk.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!sbrk.\+c@{sbrk.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+sbrk}}]{, }
+\item[{12}]{}
+\end{DoxyParamCaption}
+)}}\label{sbrk_8c_a181c1f01f7967b89792ddeed15e4b935}

@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__mutexattr" kind="struct" prot="public">
+    <compoundname>pthread_mutexattr</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__mutexattr_1a886b6893f8e2ac727baa10ae3d5433a8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_mutexattr::pshared</definition>
+        <argsstring></argsstring>
+        <name>pshared</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="82" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__mutexattr_1a8f33b94daf83faf08982414db0b16a0c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_mutexattr::kind</definition>
+        <argsstring></argsstring>
+        <name>kind</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="83" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="87">
+        <label>pthread_mutexattr</label>
+        <link refid="structpthread__mutexattr"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="81" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="81" bodyend="84"/>
+    <listofallmembers>
+      <member refid="structpthread__mutexattr_1a8f33b94daf83faf08982414db0b16a0c" prot="public" virt="non-virtual"><scope>pthread_mutexattr</scope><name>kind</name></member>
+      <member refid="structpthread__mutexattr_1a886b6893f8e2ac727baa10ae3d5433a8" prot="public" virt="non-virtual"><scope>pthread_mutexattr</scope><name>pshared</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>hdr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/115.html#L89'>hdr</a>                89 src/exec.c     int elf32_check(elf32_hdr_t* hdr) {
+<a href='../S/115.html#L98'>hdr</a>                98 src/exec.c     		(hdr-&gt;e_ident[EI_MAG0] != ELF_MAG0) ||
+<a href='../S/115.html#L99'>hdr</a>                99 src/exec.c     		(hdr-&gt;e_ident[EI_MAG1] != ELF_MAG1) ||
+<a href='../S/115.html#L100'>hdr</a>               100 src/exec.c     		(hdr-&gt;e_ident[EI_MAG2] != ELF_MAG2) ||
+<a href='../S/115.html#L101'>hdr</a>               101 src/exec.c     		(hdr-&gt;e_ident[EI_MAG3] != ELF_MAG3)
+<a href='../S/115.html#L104'>hdr</a>               104 src/exec.c     	check(hdr-&gt;e_ident[EI_CLASS] != ELF_CLASS_32)
+<a href='../S/115.html#L105'>hdr</a>               105 src/exec.c     	check(hdr-&gt;e_ident[EI_DATA] != ELF_DATA_LSB)
+<a href='../S/115.html#L120'>hdr</a>               120 src/exec.c     	elf32_hdr_t* hdr = (elf32_hdr_t*) image;
+<a href='../S/115.html#L121'>hdr</a>               121 src/exec.c     	elf32_shdr_t* sec = (elf32_shdr_t*) ((uint32_t) hdr-&gt;e_shoff + (uint32_t) hdr);
+<a href='../S/115.html#L123'>hdr</a>               123 src/exec.c     	int sn = hdr-&gt;e_shnum;
+<a href='../S/115.html#L124'>hdr</a>               124 src/exec.c     	int ss = hdr-&gt;e_shentsize;
+<a href='../S/115.html#L137'>hdr</a>               137 src/exec.c     				memcpy((void*) sec-&gt;sh_addr, (void*) ((uint32_t) hdr + sec-&gt;sh_offset), sec-&gt;sh_size);
+<a href='../S/115.html#L145'>hdr</a>               145 src/exec.c     	return (void*) hdr-&gt;e_entry;
+</pre>
+</body>
+</html>

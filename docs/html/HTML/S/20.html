@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>usr/src/libposix/src/config.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/config.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/86.html' title='Multiple included from 4 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/20.html#L2' title='Defined at 2 in usr/src/libposix/src/config.h.'>_CONFIG_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/20.html#L1' title='Refered from 1 in usr/src/libposix/src/config.h.'>_CONFIG_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;sys/types.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#ifdef</font> <a href='../Y/65.html' title='Multiple used in 3 places.'>__aplus__</a>
+<a name='L8'>   8 <b>extern</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>* aplus_readdir(<b>int</b>, <b>int</b>);
+<a name='L9'>   9 <b>extern</b> <b>int</b> aplus_getgroups(<b>int</b>, <a href='../Y/287.html' title='Multiple used in 12 places.'>gid_t</a>*);
+<a name='L10'>  10 
+<a name='L11'>  11 <font color='darkred'>#define</font> <a href='../S/35.html#L21' title='Refered from 21 in usr/src/libposix/src/readdir.c.'>__os_readdir</a>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>)                                         <a href='../Y/99.html' title='Multiple used in 2 places.'>aplus_readdir</a>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>, <a href='../Y/187.html' title='Multiple used in 6 places.'>d</a>-&gt;<a href='../Y/480.html' title='Multiple used in 14 places.'>position</a>)
+<a name='L12'>  12 <font color='darkred'>#define</font> <a href='../S/16.html#L19' title='Refered from 19 in usr/src/libposix/src/gid.c.'>__os_getgroups</a>(<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>, <a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a>)                        <a href='../Y/97.html' title='Multiple used in 2 places.'>aplus_getgroups</a>(<a href='../Y/355.html' title='Multiple used in 54 places.'>len</a>, <a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a>)
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 
+<a name='L16'>  16 <i><font color='green'>/* #elif PLATFORM ... */</font></i>
+<a name='L17'>  17         
+<a name='L18'>  18 <font color='darkred'>#else</font>
+<a name='L19'>  19 <font color='darkred'>#error</font> "config.h: define hooks for your platform"
+<a name='L20'>  20 <font color='darkred'>#endif</font>
+<a name='L21'>  21 
+<a name='L22'>  22 
+<a name='L23'>  23 
+<a name='L24'>  24 <i><font color='green'>/*#define USE_PTHREAD   1*/</font></i>
+<a name='L25'>  25 
+<a name='L26'>  26 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

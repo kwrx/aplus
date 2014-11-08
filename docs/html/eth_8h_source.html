@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus:  File sorgente src/include/aplus/net/eth.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('eth_8h_source.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">eth.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="eth_8h.html">Vai alla documentazione di questo file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _ETH_H</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define _ETH_H</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="netif_8h.html">aplus/netif.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">/* ETH:</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> *  [dest] [source] [type] [data...] [crc32] </span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="eth_8h.html#acba2f68ee7a6d728108123f0209690fb">   12</a></span>&#160;<span class="preprocessor">#define ETH_TYPE_IPV4           0x0800</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="eth_8h.html#a14a88f547fcbf1570273a1582e823f87">   13</a></span>&#160;<span class="preprocessor">#define ETH_TYPE_ARP            0x0806</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="eth_8h.html#a9f5c136f58003cd8efe144d478877ead">   14</a></span>&#160;<span class="preprocessor">#define ETH_TYPE_IPV6           0x86DD</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="eth_8h.html#a4ee455ff428c9a93c9ad5730bf120785">   15</a></span>&#160;<span class="preprocessor">#define ETH_TYPE_WAKEONLAN      0x0842</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="eth_8h.html#a7278aac14aa7e9e425b13b1d676878b7">   16</a></span>&#160;<span class="preprocessor">#define ETH_TYPE_RARP           0x8035</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="eth_8h.html#aec9f2aac7e6a6448440cf0e28bb401e8">   17</a></span>&#160;<span class="preprocessor">#define ETH_TYPE_RAW            0xFFFF</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="structeth__header.html">   20</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structeth__header.html">eth_header</a> {</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="structeth__header.html#a60d1b5300409163d627fbe1f033ef3bc">   21</a></span>&#160;    <a class="code" href="netif_8h.html#a95d524a06a1ff12a314f88bac04db658">macaddr_t</a> <a class="code" href="structeth__header.html#a60d1b5300409163d627fbe1f033ef3bc">dest</a>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="structeth__header.html#a2f9bf23af31f9234e9ebe6efdf6f38da">   22</a></span>&#160;    <a class="code" href="netif_8h.html#a95d524a06a1ff12a314f88bac04db658">macaddr_t</a> <a class="code" href="structeth__header.html#a2f9bf23af31f9234e9ebe6efdf6f38da">source</a>;</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="structeth__header.html#a1f44bfea959183d53e42185c107fa7c0">   23</a></span>&#160;    <a class="code" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a> <a class="code" href="structeth__header.html#a1f44bfea959183d53e42185c107fa7c0">type</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;} <a class="code" href="eth_8h.html#a5af061aaa0da1dfd1022f738cc6686cc">__attribute__</a>((packed)) eth_header_t;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="structeth__header_html"><div class="ttname"><a href="structeth__header.html">eth_header</a></div><div class="ttdef"><b>Definition:</b> <a href="eth_8h_source.html#l00020">eth.h:20</a></div></div>
+<div class="ttc" id="structeth__header_html_a1f44bfea959183d53e42185c107fa7c0"><div class="ttname"><a href="structeth__header.html#a1f44bfea959183d53e42185c107fa7c0">eth_header::type</a></div><div class="ttdeci">uint16_t type</div><div class="ttdef"><b>Definition:</b> <a href="eth_8h_source.html#l00023">eth.h:23</a></div></div>
+<div class="ttc" id="eth_8h_html_a5af061aaa0da1dfd1022f738cc6686cc"><div class="ttname"><a href="eth_8h.html#a5af061aaa0da1dfd1022f738cc6686cc">__attribute__</a></div><div class="ttdeci">struct eth_header __attribute__((packed)) eth_header_t</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
+<div class="ttc" id="netif_8h_html_a95d524a06a1ff12a314f88bac04db658"><div class="ttname"><a href="netif_8h.html#a95d524a06a1ff12a314f88bac04db658">macaddr_t</a></div><div class="ttdeci">uint8_t macaddr_t[6]</div><div class="ttdef"><b>Definition:</b> <a href="netif_8h_source.html#l00012">netif.h:12</a></div></div>
+<div class="ttc" id="netif_8h_html"><div class="ttname"><a href="netif_8h.html">netif.h</a></div></div>
+<div class="ttc" id="structeth__header_html_a2f9bf23af31f9234e9ebe6efdf6f38da"><div class="ttname"><a href="structeth__header.html#a2f9bf23af31f9234e9ebe6efdf6f38da">eth_header::source</a></div><div class="ttdeci">macaddr_t source</div><div class="ttdef"><b>Definition:</b> <a href="eth_8h_source.html#l00022">eth.h:22</a></div></div>
+<div class="ttc" id="aplus_8h_html_a5a8b2dc9e45a9ee81a94ef304fb62505"><div class="ttname"><a href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a></div><div class="ttdeci">uint16_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00102">aplus.h:102</a></div></div>
+<div class="ttc" id="structeth__header_html_a60d1b5300409163d627fbe1f033ef3bc"><div class="ttname"><a href="structeth__header.html#a60d1b5300409163d627fbe1f033ef3bc">eth_header::dest</a></div><div class="ttdeci">macaddr_t dest</div><div class="ttdef"><b>Definition:</b> <a href="eth_8h_source.html#l00021">eth.h:21</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="dir_cfd1fb2b98030f4f81570490591de86f.html">aplus</a></li><li class="navelem"><a class="el" href="dir_b8ca20df803ef84e5c6a3ca32d69d2c8.html">net</a></li><li class="navelem"><a class="el" href="eth_8h.html">eth.h</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:03 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

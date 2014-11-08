@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__spinlock" kind="struct" prot="public">
+    <compoundname>pthread_spinlock</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_spinlock::interlock</definition>
+        <argsstring></argsstring>
+        <name>interlock</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="150" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="150" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba" kindref="member">pthread_mutex_t</ref></type>
+        <definition>pthread_mutex_t pthread_spinlock::mutex</definition>
+        <argsstring></argsstring>
+        <name>mutex</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="151" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="151" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="96">
+        <label>pthread_spinlock</label>
+        <link refid="structpthread__spinlock"/>
+        <childnode refid="97" relation="usage">
+          <edgelabel>+mutex</edgelabel>
+        </childnode>
+      </node>
+      <node id="97">
+        <label>pthread_mutex</label>
+        <link refid="structpthread__mutex"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="149" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="149" bodyend="152"/>
+    <listofallmembers>
+      <member refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" prot="public" virt="non-virtual"><scope>pthread_spinlock</scope><name>interlock</name></member>
+      <member refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" prot="public" virt="non-virtual"><scope>pthread_spinlock</scope><name>mutex</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

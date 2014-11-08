@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__mutex" kind="struct" prot="public">
+    <compoundname>pthread_mutex</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_mutex::lock</definition>
+        <argsstring></argsstring>
+        <name>lock</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="88" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_mutex::recursion</definition>
+        <argsstring></argsstring>
+        <name>recursion</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="89" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_mutex::kind</definition>
+        <argsstring></argsstring>
+        <name>kind</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="90" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref></type>
+        <definition>pthread_t pthread_mutex::owner</definition>
+        <argsstring></argsstring>
+        <name>owner</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="91" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__mutex_1a3fdfabe67e940844d49b5f98809907f3" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1aea4188cfb1472f9bb606fd2566133e34" kindref="member">handle_t</ref></type>
+        <definition>handle_t pthread_mutex::event</definition>
+        <argsstring></argsstring>
+        <name>event</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="92" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_mutex::time</definition>
+        <argsstring></argsstring>
+        <name>time</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="93" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="85">
+        <label>pthread_mutex</label>
+        <link refid="structpthread__mutex"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="87" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="87" bodyend="94"/>
+    <listofallmembers>
+      <member refid="structpthread__mutex_1a3fdfabe67e940844d49b5f98809907f3" prot="public" virt="non-virtual"><scope>pthread_mutex</scope><name>event</name></member>
+      <member refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" prot="public" virt="non-virtual"><scope>pthread_mutex</scope><name>kind</name></member>
+      <member refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" prot="public" virt="non-virtual"><scope>pthread_mutex</scope><name>lock</name></member>
+      <member refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" prot="public" virt="non-virtual"><scope>pthread_mutex</scope><name>owner</name></member>
+      <member refid="structpthread__mutex_1ad0a6948ac1d12f9ec3f11fea2ac07ff9" prot="public" virt="non-virtual"><scope>pthread_mutex</scope><name>recursion</name></member>
+      <member refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" prot="public" virt="non-virtual"><scope>pthread_mutex</scope><name>time</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

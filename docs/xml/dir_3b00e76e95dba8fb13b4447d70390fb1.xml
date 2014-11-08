@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_3b00e76e95dba8fb13b4447d70390fb1" kind="dir">
+    <compoundname>src/net/rtl8139</compoundname>
+    <innerfile refid="rtl8139_8c">rtl8139.c</innerfile>
+    <innerfile refid="rtl8139_8h">rtl8139.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/net/rtl8139/"/>
+  </compounddef>
+</doxygen>

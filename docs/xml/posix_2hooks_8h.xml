@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="posix_2hooks_8h" kind="file">
+    <compoundname>hooks.h</compoundname>
+    <includes local="no">sched.h</includes>
+    <incdepgraph>
+      <node id="2206">
+        <label>usr/src/libpthread/src/platform/posix/hooks.h</label>
+        <link refid="posix/hooks.h"/>
+        <childnode refid="2207" relation="include">
+        </childnode>
+      </node>
+      <node id="2207">
+        <label>sched.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="posix_2hooks_8h_1a369266c24eacffb87046522897a570d5" prot="public" static="no">
+        <name>_GNU_SOURCE</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="4" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5" prot="public" static="no">
+        <name>CLONE_VM</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="12" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="posix_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34" prot="public" static="no">
+        <name>__os_thread_create</name>
+        <param><defname>e</defname></param>
+        <param><defname>a</defname></param>
+        <param><defname>p</defname></param>
+        <initializer><ref refid="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe" kindref="member">clone</ref>((int(*)(void*)) e, NULL, <ref refid="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5" kindref="member">CLONE_VM</ref>, a)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="16" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="posix_2hooks_8h_1ab48a49c5d6297d7b9023b8796a1c996e" prot="public" static="no">
+        <name>__os_thread_kill</name>
+        <param><defname>t</defname></param>
+        <param><defname>s</defname></param>
+        <initializer><ref refid="posix_2hooks_8h_1a6edea8ed9aecaef5fc4762da7ec641ff" kindref="member">kill</ref>(t, s)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="17" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" prot="public" static="no">
+        <name>__os_gettid</name>
+        <param></param>
+        <initializer><ref refid="posix_2hooks_8h_1a2ccdeb931b6cfcf884ca5ad73e0ba11c" kindref="member">getpid</ref>()</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="18" column="9" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int clone</definition>
+        <argsstring>(int(*fn)(void *), void *, int, void *)</argsstring>
+        <name>clone</name>
+        <param>
+          <type>int(*)(void *)</type>
+          <declname>fn</declname>
+        </param>
+        <param>
+          <type>void *</type>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <param>
+          <type>void *</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="7" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="posix_2hooks_8h_1a6edea8ed9aecaef5fc4762da7ec641ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int kill</definition>
+        <argsstring>(int, int)</argsstring>
+        <name>kill</name>
+        <param>
+          <type>int</type>
+        </param>
+        <param>
+          <type>int</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="8" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="posix_2hooks_8h_1a2ccdeb931b6cfcf884ca5ad73e0ba11c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int getpid</definition>
+        <argsstring>()</argsstring>
+        <name>getpid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h" line="9" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_PTHREAD_HOOKS_T</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_PTHREAD_HOOKS_T</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4" refid="posix_2hooks_8h_1a369266c24eacffb87046522897a570d5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_GNU_SOURCE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sched.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe" kindref="member">clone</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>(*fn)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*),<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*);</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="posix_2hooks_8h_1a6edea8ed9aecaef5fc4762da7ec641ff" kindref="member">kill</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="posix_2hooks_8h_1a2ccdeb931b6cfcf884ca5ad73e0ba11c" kindref="member">getpid</ref>();</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CLONE_VM</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CLONE_VM<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>Hooks<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="posix_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__os_thread_create(e,<sp/>a,<sp/>p)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>clone((int(*)(void*))<sp/>e,<sp/>NULL,<sp/>CLONE_VM,<sp/>a)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="posix_2hooks_8h_1ab48a49c5d6297d7b9023b8796a1c996e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__os_thread_kill(t,<sp/>s)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>kill(t,<sp/>s)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__os_gettid()<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>getpid()</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/posix/hooks.h"/>
+  </compounddef>
+</doxygen>

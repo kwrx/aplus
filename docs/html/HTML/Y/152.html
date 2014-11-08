@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>child</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L53'>child</a>              53 src/arch/task.c 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/159.html#L54'>child</a>              54 src/arch/task.c 	memset(child, 0, sizeof(task_t));
+<a href='../S/159.html#L56'>child</a>              56 src/arch/task.c 	child-&gt;pid = schedule_nextpid();
+<a href='../S/159.html#L57'>child</a>              57 src/arch/task.c 	child-&gt;cwd = current_task-&gt;cwd;
+<a href='../S/159.html#L58'>child</a>              58 src/arch/task.c 	child-&gt;exe = current_task-&gt;exe;
+<a href='../S/159.html#L59'>child</a>              59 src/arch/task.c 	child-&gt;uid = current_task-&gt;uid;
+<a href='../S/159.html#L60'>child</a>              60 src/arch/task.c 	child-&gt;gid = current_task-&gt;gid;
+<a href='../S/159.html#L62'>child</a>              62 src/arch/task.c 	child-&gt;state = TASK_STATE_ALIVE;
+<a href='../S/159.html#L63'>child</a>              63 src/arch/task.c 	child-&gt;priority = current_task-&gt;priority;
+<a href='../S/159.html#L64'>child</a>              64 src/arch/task.c 	child-&gt;clock = 0;
+<a href='../S/159.html#L65'>child</a>              65 src/arch/task.c 	child-&gt;parent = current_task;
+<a href='../S/159.html#L67'>child</a>              67 src/arch/task.c 	child-&gt;signal_handler = current_task-&gt;signal_handler;
+<a href='../S/159.html#L68'>child</a>              68 src/arch/task.c 	child-&gt;signal_sig = current_task-&gt;signal_sig;
+<a href='../S/159.html#L72'>child</a>              72 src/arch/task.c 		child-&gt;fd[i] = current_task-&gt;fd[i];
+<a href='../S/159.html#L75'>child</a>              75 src/arch/task.c 	child-&gt;context.cr3 = vmm_create();
+<a href='../S/159.html#L76'>child</a>              76 src/arch/task.c 	vmm_mapkernel(child-&gt;context.cr3);
+<a href='../S/159.html#L79'>child</a>              79 src/arch/task.c 	child-&gt;image.vaddr = current_task-&gt;image.vaddr;
+<a href='../S/159.html#L80'>child</a>              80 src/arch/task.c 	child-&gt;image.length = current_task-&gt;image.length;
+<a href='../S/159.html#L84'>child</a>              84 src/arch/task.c 		void* addr = (void*) kmalloc(child-&gt;image.length);
+<a href='../S/159.html#L85'>child</a>              85 src/arch/task.c 		memcpy(addr, (void*) child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L87'>child</a>              87 src/arch/task.c 		vmm_map(child-&gt;context.cr3, mm_paddr(addr), child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L88'>child</a>              88 src/arch/task.c 		child-&gt;image.ptr = (uint32_t) mm_paddr(addr);
+<a href='../S/159.html#L93'>child</a>              93 src/arch/task.c 	child-&gt;context.stack = current_task-&gt;context.stack;
+<a href='../S/159.html#L94'>child</a>              94 src/arch/task.c 	child-&gt;context.env = current_task-&gt;context.env;
+<a href='../S/159.html#L97'>child</a>              97 src/arch/task.c 	memcpy(stack, (void*) child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L99'>child</a>              99 src/arch/task.c 	vmm_umap(child-&gt;context.cr3, child-&gt;context.stack, TASK_STACKSIZE);
+<a href='../S/159.html#L100'>child</a>             100 src/arch/task.c 	vmm_map(child-&gt;context.cr3, mm_paddr(stack), child-&gt;context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+<a href='../S/159.html#L105'>child</a>             105 src/arch/task.c 	if(current_task == child)
+<a href='../S/159.html#L109'>child</a>             109 src/arch/task.c 	list_add(task_queue, (listval_t) child);
+<a href='../S/159.html#L110'>child</a>             110 src/arch/task.c 	return child;
+<a href='../S/159.html#L125'>child</a>             125 src/arch/task.c 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+<a href='../S/159.html#L126'>child</a>             126 src/arch/task.c 	memset(child, 0, sizeof(task_t));
+<a href='../S/159.html#L128'>child</a>             128 src/arch/task.c 	child-&gt;pid = schedule_nextpid();
+<a href='../S/159.html#L129'>child</a>             129 src/arch/task.c 	child-&gt;cwd = current_task-&gt;cwd;
+<a href='../S/159.html#L130'>child</a>             130 src/arch/task.c 	child-&gt;exe = current_task-&gt;exe;
+<a href='../S/159.html#L131'>child</a>             131 src/arch/task.c 	child-&gt;uid = current_task-&gt;uid;
+<a href='../S/159.html#L132'>child</a>             132 src/arch/task.c 	child-&gt;gid = current_task-&gt;gid;
+<a href='../S/159.html#L134'>child</a>             134 src/arch/task.c 	child-&gt;state = TASK_STATE_ALIVE;
+<a href='../S/159.html#L135'>child</a>             135 src/arch/task.c 	child-&gt;priority = current_task-&gt;priority;
+<a href='../S/159.html#L136'>child</a>             136 src/arch/task.c 	child-&gt;clock = 0;
+<a href='../S/159.html#L137'>child</a>             137 src/arch/task.c 	child-&gt;parent = current_task;
+<a href='../S/159.html#L139'>child</a>             139 src/arch/task.c 	child-&gt;signal_handler = current_task-&gt;signal_handler;
+<a href='../S/159.html#L140'>child</a>             140 src/arch/task.c 	child-&gt;signal_sig = current_task-&gt;signal_sig;
+<a href='../S/159.html#L142'>child</a>             142 src/arch/task.c 	child-&gt;image.vaddr = current_task-&gt;image.vaddr;
+<a href='../S/159.html#L143'>child</a>             143 src/arch/task.c 	child-&gt;image.length = current_task-&gt;image.length;
+<a href='../S/159.html#L144'>child</a>             144 src/arch/task.c 	child-&gt;image.ptr = current_task-&gt;image.ptr;
+<a href='../S/159.html#L147'>child</a>             147 src/arch/task.c 	child-&gt;context.cr3 = current_task-&gt;context.cr3;
+<a href='../S/159.html#L148'>child</a>             148 src/arch/task.c 	child-&gt;context.stack = (uint32_t) stack - TASK_STACKSIZE;
+<a href='../S/159.html#L149'>child</a>             149 src/arch/task.c 	child-&gt;context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+<a href='../S/159.html#L151'>child</a>             151 src/arch/task.c 	child-&gt;context.env-&gt;eax = (uint32_t) arg;
+<a href='../S/159.html#L152'>child</a>             152 src/arch/task.c 	child-&gt;context.env-&gt;eip = (uint32_t) entry;
+<a href='../S/159.html#L153'>child</a>             153 src/arch/task.c 	child-&gt;context.env-&gt;ebp = (uint32_t) child-&gt;context.env; 
+<a href='../S/159.html#L157'>child</a>             157 src/arch/task.c 		child-&gt;fd[i] = current_task-&gt;fd[i];
+<a href='../S/159.html#L160'>child</a>             160 src/arch/task.c 	list_add(task_queue, (listval_t) child);
+<a href='../S/159.html#L161'>child</a>             161 src/arch/task.c 	return child;
+<a href='../S/143.html#L123'>child</a>             123 src/sched.c    int schedule_wait(task_t* child) {
+<a href='../S/143.html#L124'>child</a>             124 src/sched.c    	if(!child)
+<a href='../S/143.html#L127'>child</a>             127 src/sched.c    	spinlock_waiton(child-&gt;state != TASK_STATE_DEAD);
+<a href='../S/143.html#L128'>child</a>             128 src/sched.c    	return child-&gt;exitcode;
+<a href='../S/143.html#L137'>child</a>             137 src/sched.c    		task_t* child = (task_t*) value;
+<a href='../S/143.html#L139'>child</a>             139 src/sched.c    		if(child-&gt;parent == current_task)
+<a href='../S/143.html#L140'>child</a>             140 src/sched.c    			return child;
+<a href='../S/126.html#L18'>child</a>              18 src/syscall/clone.c 	task_t* child = (task_t*) task_clone(fn, arg, child_stack);
+<a href='../S/126.html#L19'>child</a>              19 src/syscall/clone.c 	if(!child) {
+<a href='../S/126.html#L24'>child</a>              24 src/syscall/clone.c 	return child-&gt;pid;
+<a href='../S/122.html#L10'>child</a>              10 src/syscall/fork.c 	task_t* child = (task_t*) task_fork();
+<a href='../S/122.html#L12'>child</a>              12 src/syscall/fork.c 	if(child)
+<a href='../S/122.html#L13'>child</a>              13 src/syscall/fork.c 		return child-&gt;pid;
+<a href='../S/116.html#L25'>child</a>              25 src/syscall/times.c 	task_t* child = (task_t*) schedule_child();
+<a href='../S/116.html#L26'>child</a>              26 src/syscall/times.c 	if(child)
+<a href='../S/116.html#L27'>child</a>              27 src/syscall/times.c 		tm-&gt;tms_cutime = current_task-&gt;clock + child-&gt;clock;
+<a href='../S/137.html#L18'>child</a>              18 src/syscall/wait.c 	task_t* child = (task_t*) schedule_child();
+<a href='../S/137.html#L19'>child</a>              19 src/syscall/wait.c 	if(child == NULL) {
+<a href='../S/137.html#L24'>child</a>              24 src/syscall/wait.c 	int exitcode = schedule_wait(child);
+<a href='../S/137.html#L29'>child</a>              29 src/syscall/wait.c 	return child-&gt;pid;
+</pre>
+</body>
+</html>

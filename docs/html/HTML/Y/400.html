@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>name</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/147.html#L24'>name</a>               24 src/fs/devfs.c struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
+<a href='../S/147.html#L25'>name</a>               25 src/fs/devfs.c 	if((void*) vfs_mapped(inode, name) != NULL)
+<a href='../S/147.html#L29'>name</a>               29 src/fs/devfs.c 	strcpy(ino-&gt;name, name);
+<a href='../S/147.html#L63'>name</a>               63 src/fs/devfs.c 	strcpy(devfs-&gt;name, "dev");
+<a href='../S/146.html#L36'>name</a>               36 src/fs/fs.c    		strcpy(ent-&gt;d_name, map-&gt;name);
+<a href='../S/146.html#L49'>name</a>               49 src/fs/fs.c    struct inode* fs_finddir (struct inode* inode, char* name) {
+<a href='../S/146.html#L52'>name</a>               52 src/fs/fs.c    	if((map = (inode_t*) vfs_mapped(inode, name)) != NULL)
+<a href='../S/146.html#L56'>name</a>               56 src/fs/fs.c    		return inode-&gt;finddir(inode, name);
+<a href='../S/146.html#L62'>name</a>               62 src/fs/fs.c    struct inode* fs_creat (struct inode* inode, char* name, mode_t mode) {
+<a href='../S/146.html#L64'>name</a>               64 src/fs/fs.c    		return inode-&gt;creat(inode, name, mode);
+<a href='../S/146.html#L78'>name</a>               78 src/fs/fs.c    int fs_unlink (struct inode* inode, char* name) {
+<a href='../S/146.html#L80'>name</a>               80 src/fs/fs.c    		return inode-&gt;unlink(inode, name);
+<a href='../S/145.html#L86'>name</a>               86 src/fs/pipe.c  	strcpy(inodes[0].name, "[pipe:read]");
+<a href='../S/145.html#L87'>name</a>               87 src/fs/pipe.c  	strcpy(inodes[1].name, "[pipe:write]");
+<a href='../S/144.html#L32'>name</a>               32 src/fs/vfs.c   inode_t* vfs_mapped(inode_t* parent, char* name) {
+<a href='../S/144.html#L37'>name</a>               37 src/fs/vfs.c   			if(strcmp(value-&gt;name, name) == 0)
+<a href='../S/144.html#L86'>name</a>               86 src/fs/vfs.c   	vfs_root-&gt;name[0] = '/';
+<a href='../S/144.html#L87'>name</a>               87 src/fs/vfs.c   	vfs_root-&gt;name[1] = 0;
+<a href='../S/99.html#L18'>name</a>               18 src/include/aplus/attribute.h #define ATTRIBUTE(name, value)																		\
+<a href='../S/99.html#L20'>name</a>               20 src/include/aplus/attribute.h 		name, (uint32_t) &amp;value																		\
+<a href='../S/99.html#L26'>name</a>               26 src/include/aplus/attribute.h 	char name[0x80];
+<a href='../S/99.html#L31'>name</a>               31 src/include/aplus/attribute.h static inline list_t* attribute(const char* name) {
+<a href='../S/99.html#L44'>name</a>               44 src/include/aplus/attribute.h 		if(strcmp(attr-&gt;name, name) == 0)
+<a href='../S/97.html#L37'>name</a>               37 src/include/aplus/fs.h 	char name[255];
+<a href='../S/97.html#L59'>name</a>               59 src/include/aplus/fs.h 	struct inode* (*finddir) (struct inode* inode, char* name);
+<a href='../S/97.html#L60'>name</a>               60 src/include/aplus/fs.h 	struct inode* (*creat) (struct inode* inode, char* name, mode_t mode);
+<a href='../S/97.html#L63'>name</a>               63 src/include/aplus/fs.h 	int (*unlink) (struct inode* inode, char* name);
+<a href='../S/89.html#L34'>name</a>               34 src/include/aplus/netif.h 	char name[32];
+<a href='../S/108.html#L93'>name</a>               93 src/net/arp.c  	kprintf("arp: sending request for %s\n", netif-&gt;name);
+<a href='../S/111.html#L71'>name</a>               71 src/net/loopback/loopback.c 	strcpy(netif-&gt;name, "lo");
+<a href='../S/107.html#L80'>name</a>               80 src/net/netif.c netif_t* netif_find_by_name(char* name) {
+<a href='../S/107.html#L87'>name</a>               87 src/net/netif.c 		if(strcmp(netif-&gt;name, name) == 0)
+<a href='../S/107.html#L149'>name</a>              149 src/net/netif.c 			netdev-&gt;name,
+<a href='../S/104.html#L243'>name</a>              243 src/net/rtl8139/rtl8139.c 	strcpy(card-&gt;netif-&gt;name, "eth0");
+<a href='../S/110.html#L142'>name</a>              142 src/net/slirp/slirp.c 	strcpy(netif-&gt;name, "slp0");
+<a href='../S/148.html#L65'>name</a>               65 src/panic.c    			kprintf("%s ", task-&gt;exe-&gt;name);
+</pre>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>param</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/26.html#L14'>param</a>              14 usr/src/libposix/src/sched.c int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param) {
+<a href='../S/26.html#L15'>param</a>              15 usr/src/libposix/src/sched.c 	if(param == NULL) {
+<a href='../S/26.html#L35'>param</a>              35 usr/src/libposix/src/sched.c int sched_setparam(pid_t pid, const struct sched_param *param) {
+<a href='../S/26.html#L36'>param</a>              36 usr/src/libposix/src/sched.c 	if(param == NULL) {
+<a href='../S/26.html#L50'>param</a>              50 usr/src/libposix/src/sched.c int sched_getparam(pid_t pid, struct sched_param *param) {
+<a href='../S/43.html#L61'>param</a>              61 usr/src/libpthread/include/pthread.h 	struct sched_param param;
+<a href='../S/43.html#L173'>param</a>             173 usr/src/libpthread/include/pthread.h int pthread_attr_getschedparam(const pthread_attr_t *attr, struct sched_param *param);
+<a href='../S/43.html#L174'>param</a>             174 usr/src/libpthread/include/pthread.h int pthread_attr_setschedparam(pthread_attr_t *attr, const struct sched_param *param);
+<a href='../S/43.html#L202'>param</a>             202 usr/src/libpthread/include/pthread.h int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param);
+<a href='../S/43.html#L203'>param</a>             203 usr/src/libpthread/include/pthread.h int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param);
+<a href='../S/65.html#L21'>param</a>              21 usr/src/libpthread/src/pthread_attr.c 	attr-&gt;param.sched_priority = 0;
+<a href='../S/65.html#L100'>param</a>             100 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_getschedparam(const pthread_attr_t *attr, struct sched_param *param) {
+<a href='../S/65.html#L106'>param</a>             106 usr/src/libpthread/src/pthread_attr.c 	memcpy(param, &amp;attr-&gt;param, sizeof(struct sched_param));
+<a href='../S/65.html#L112'>param</a>             112 usr/src/libpthread/src/pthread_attr.c PUBLIC int pthread_attr_setschedparam(pthread_attr_t *attr, const struct sched_param *param) {
+<a href='../S/65.html#L118'>param</a>             118 usr/src/libpthread/src/pthread_attr.c 	memcpy(&amp;attr-&gt;param, param, sizeof(struct sched_param));
+<a href='../S/64.html#L33'>param</a>              33 usr/src/libpthread/src/pthread_create.c 	pthread_exit(ctx-&gt;entry(ctx-&gt;param));
+<a href='../S/64.html#L55'>param</a>              55 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;param = arg;
+<a href='../S/64.html#L67'>param</a>              67 usr/src/libpthread/src/pthread_create.c 			pthread_attr_setschedparam(&amp;ctx-&gt;attr, &amp;inh-&gt;attr.param);
+<a href='../S/64.html#L81'>param</a>              81 usr/src/libpthread/src/pthread_create.c 	ctx-&gt;tid = __os_thread_create(__pthread_handler__, ctx, ctx-&gt;attr.param.sched_priority);
+<a href='../S/50.html#L40'>param</a>              40 usr/src/libpthread/src/pthread_internal.h 	void* param;
+<a href='../S/61.html#L18'>param</a>              18 usr/src/libpthread/src/pthread_queue.c 	__current_thread.param = NULL;
+<a href='../S/51.html#L8'>param</a>               8 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_setparam(pid_t pid, const struct sched_param *param);
+<a href='../S/51.html#L9'>param</a>               9 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_getparam(pid_t pid, const struct sched_param *param);
+<a href='../S/51.html#L11'>param</a>              11 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param *param) {
+<a href='../S/51.html#L17'>param</a>              17 usr/src/libpthread/src/pthread_sched.c 	if(param == NULL) {
+<a href='../S/51.html#L23'>param</a>              23 usr/src/libpthread/src/pthread_sched.c 	return sched_setparam(ctx-&gt;tid, param);
+<a href='../S/51.html#L26'>param</a>              26 usr/src/libpthread/src/pthread_sched.c PUBLIC int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param) {
+<a href='../S/51.html#L32'>param</a>              32 usr/src/libpthread/src/pthread_sched.c 	if(param == NULL) {
+<a href='../S/51.html#L38'>param</a>              38 usr/src/libpthread/src/pthread_sched.c 	if((*policy = sched_getparam(ctx-&gt;tid, param)) != -1)
+<a href='../S/51.html#L52'>param</a>              52 usr/src/libpthread/src/pthread_sched.c 	ctx-&gt;attr.param.sched_priority = level;
+<a href='../S/51.html#L65'>param</a>              65 usr/src/libpthread/src/pthread_sched.c 	return ctx-&gt;attr.param.sched_priority;
+</pre>
+</body>
+</html>

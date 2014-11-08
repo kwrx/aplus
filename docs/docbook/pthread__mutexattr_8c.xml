@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__mutexattr_8c">
+    <title>pthread_mutexattr.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutexattr_8c_1a951ee9f0ed108e42ce1f3890e5cfad29">pthread_mutexattr_init</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutexattr_8c_1a428c4ef5c8a65c0c0f3a2e5d97c16101">pthread_mutexattr_destroy</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutexattr_8c_1a059614946cddb4ae7582dae6c046e597">pthread_mutexattr_getpshared</link> (
+const <link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int * pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutexattr_8c_1a8b5370e0a2923da165a744ee687c7f2e">pthread_mutexattr_setpshared</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutexattr_8c_1a5a64049989f6b78e9d9c6d727c461955">pthread_mutexattr_gettype</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int * kind)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__mutexattr_8c_1a13c3f57e9d04b73af87fdb0cbac6bd27">pthread_mutexattr_settype</link> (
+<link linkend="pthread_8h_1a32aba25ecddcfa6adc6391f85ef08d1a">pthread_mutexattr_t</link> * attr, int kind)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_mutexattr.c</para>
+    </simplesect>
+</section>

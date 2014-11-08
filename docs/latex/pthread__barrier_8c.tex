@@ -1,0 +1,119 @@
+\hypertarget{pthread__barrier_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+barrier.c}
+\label{pthread__barrier_8c}\index{usr/src/libpthread/src/pthread\+\_\+barrier.\+c@{usr/src/libpthread/src/pthread\+\_\+barrier.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$sched.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__barrier_8c_aa71605591924fcd01057ff5e73ddd19e}{pthread\+\_\+barrier\+\_\+init} (\hyperlink{pthread_8h_a0af030d8520cb3271d895b21a5ecca34}{pthread\+\_\+barrier\+\_\+t} $\ast$barrier, const \hyperlink{pthread_8h_a8b994175b42c340d079d21007eaf51c7}{pthread\+\_\+barrierattr\+\_\+t} $\ast$attr, unsigned int count)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__barrier_8c_a42a6ff31584d9d5e63bd8cb9dd57a2eb}{pthread\+\_\+barrier\+\_\+destroy} (\hyperlink{pthread_8h_a0af030d8520cb3271d895b21a5ecca34}{pthread\+\_\+barrier\+\_\+t} $\ast$barrier)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__barrier_8c_ad61c7efb7bd52899877f3ec8c6895d06}{pthread\+\_\+barrier\+\_\+wait} (\hyperlink{pthread_8h_a0af030d8520cb3271d895b21a5ecca34}{pthread\+\_\+barrier\+\_\+t} $\ast$barrier)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__barrier_8c_a42a6ff31584d9d5e63bd8cb9dd57a2eb}{\index{pthread\+\_\+barrier.\+c@{pthread\+\_\+barrier.\+c}!pthread\+\_\+barrier\+\_\+destroy@{pthread\+\_\+barrier\+\_\+destroy}}
+\index{pthread\+\_\+barrier\+\_\+destroy@{pthread\+\_\+barrier\+\_\+destroy}!pthread\+\_\+barrier.\+c@{pthread\+\_\+barrier.\+c}}
+\subsubsection[{pthread\+\_\+barrier\+\_\+destroy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+barrier\+\_\+destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+barrier\+\_\+t} $\ast$}]{barrier}
+\end{DoxyParamCaption}
+)}}\label{pthread__barrier_8c_a42a6ff31584d9d5e63bd8cb9dd57a2eb}
+
+
+Definizione alla linea 28 del file pthread\+\_\+barrier.\+c.
+
+
+
+Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, e pthread\+\_\+barrier\+::init\+\_\+height.
+
+
+\begin{DoxyCode}
+28                                                                \{
+29     \textcolor{keywordflow}{if}(barrier == NULL) \{
+30         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+31         \textcolor{keywordflow}{return} 1;
+32     \}
+33 
+34     barrier->\hyperlink{structpthread__barrier_a3b8e6f276f11a62fb77525fe5d11b18c}{curr\_height} = 0;
+35     barrier->\hyperlink{structpthread__barrier_a71938bf4346ecc8a2f997f18df267ae0}{init\_height} = 0;
+36     
+37 
+38     \textcolor{keywordflow}{return} 0;
+39 \}
+\end{DoxyCode}
+\hypertarget{pthread__barrier_8c_aa71605591924fcd01057ff5e73ddd19e}{\index{pthread\+\_\+barrier.\+c@{pthread\+\_\+barrier.\+c}!pthread\+\_\+barrier\+\_\+init@{pthread\+\_\+barrier\+\_\+init}}
+\index{pthread\+\_\+barrier\+\_\+init@{pthread\+\_\+barrier\+\_\+init}!pthread\+\_\+barrier.\+c@{pthread\+\_\+barrier.\+c}}
+\subsubsection[{pthread\+\_\+barrier\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+barrier\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+barrier\+\_\+t} $\ast$}]{barrier, }
+\item[{const {\bf pthread\+\_\+barrierattr\+\_\+t} $\ast$}]{attr, }
+\item[{unsigned int}]{count}
+\end{DoxyParamCaption}
+)}}\label{pthread__barrier_8c_aa71605591924fcd01057ff5e73ddd19e}
+
+
+Definizione alla linea 9 del file pthread\+\_\+barrier.\+c.
+
+
+
+Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, e pthread\+\_\+barrier\+::init\+\_\+height.
+
+
+\begin{DoxyCode}
+9                                                                                                            
+              \{
+10     \textcolor{keywordflow}{if}(barrier == NULL) \{
+11         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+12         \textcolor{keywordflow}{return} 1;
+13     \}
+14 
+15     \textcolor{keywordflow}{if}(count == 0) \{
+16         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+17         \textcolor{keywordflow}{return} 1;
+18     \}
+19 
+20     barrier->\hyperlink{structpthread__barrier_a3b8e6f276f11a62fb77525fe5d11b18c}{curr\_height} = 0;
+21     barrier->\hyperlink{structpthread__barrier_a71938bf4346ecc8a2f997f18df267ae0}{init\_height} = count;
+22     
+23 
+24     \textcolor{keywordflow}{return} 0;
+25 \}
+\end{DoxyCode}
+\hypertarget{pthread__barrier_8c_ad61c7efb7bd52899877f3ec8c6895d06}{\index{pthread\+\_\+barrier.\+c@{pthread\+\_\+barrier.\+c}!pthread\+\_\+barrier\+\_\+wait@{pthread\+\_\+barrier\+\_\+wait}}
+\index{pthread\+\_\+barrier\+\_\+wait@{pthread\+\_\+barrier\+\_\+wait}!pthread\+\_\+barrier.\+c@{pthread\+\_\+barrier.\+c}}
+\subsubsection[{pthread\+\_\+barrier\+\_\+wait}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+barrier\+\_\+wait (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+barrier\+\_\+t} $\ast$}]{barrier}
+\end{DoxyParamCaption}
+)}}\label{pthread__barrier_8c_ad61c7efb7bd52899877f3ec8c6895d06}
+
+
+Definizione alla linea 42 del file pthread\+\_\+barrier.\+c.
+
+
+
+Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, pthread\+\_\+barrier\+::init\+\_\+height, e sched\+\_\+yield().
+
+
+\begin{DoxyCode}
+42                                                             \{
+43     \textcolor{keywordflow}{if}(barrier == NULL) \{
+44         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+45         \textcolor{keywordflow}{return} 1;
+46     \}
+47 
+48     barrier->\hyperlink{structpthread__barrier_a3b8e6f276f11a62fb77525fe5d11b18c}{curr\_height} += 1;
+49 
+50     \textcolor{keywordflow}{while}(barrier->\hyperlink{structpthread__barrier_a3b8e6f276f11a62fb77525fe5d11b18c}{curr\_height} < barrier->\hyperlink{structpthread__barrier_a71938bf4346ecc8a2f997f18df267ae0}{init\_height})
+51         \hyperlink{nanosleep_8c_a357cd4b34c13011749dfffb42b489f09}{sched\_yield}();
+52 
+53     \textcolor{keywordflow}{return} 0;
+54 \}
+\end{DoxyCode}

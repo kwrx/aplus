@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>r</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L151'>r</a>                 151 src/arch/desc.c void isr_handler(regs_t* r) {
+<a href='../S/158.html#L152'>r</a>                 152 src/arch/desc.c 	panic(exception_messages[r-&gt;int_no]);
+<a href='../S/158.html#L155'>r</a>                 155 src/arch/desc.c void irq_handler(regs_t* r) {
+<a href='../S/158.html#L157'>r</a>                 157 src/arch/desc.c 	if(irqs[r-&gt;int_no - 32])
+<a href='../S/158.html#L158'>r</a>                 158 src/arch/desc.c 		((void (*)(regs_t*)) irqs[r-&gt;int_no - 32]) (r);
+<a href='../S/158.html#L160'>r</a>                 160 src/arch/desc.c 	if(r-&gt;int_no &gt;= 40)
+<a href='../S/158.html#L166'>r</a>                 166 src/arch/desc.c void pit_handler(regs_t* r) {
+<a href='../S/158.html#L183'>r</a>                 183 src/arch/desc.c void pagefault_handler(regs_t* r) {
+<a href='../S/158.html#L368'>r</a>                 368 src/arch/desc.c 	uint8_t r = 0;
+<a href='../S/158.html#L369'>r</a>                 369 src/arch/desc.c 	__asm__("inb 0x71" : "=a"(r));
+<a href='../S/158.html#L370'>r</a>                 370 src/arch/desc.c 	return r;
+<a href='../S/163.html#L35'>r</a>                  35 src/arch/syscall.c 	int r = 0;
+<a href='../S/163.html#L45'>r</a>                  45 src/arch/syscall.c 		: "=a"(r) 
+<a href='../S/163.html#L49'>r</a>                  49 src/arch/syscall.c 	return r;
+<a href='../S/163.html#L53'>r</a>                  53 src/arch/syscall.c int syscall_handler(regs_t* r) {
+<a href='../S/163.html#L54'>r</a>                  54 src/arch/syscall.c 	return syscall_invoke(syscall_handlers[r-&gt;eax], r-&gt;ebx, r-&gt;ecx, r-&gt;edx, r-&gt;esi, r-&gt;edi);
+<a href='../S/155.html#L38'>r</a>                  38 src/debug.c    		int r = value % 10;
+<a href='../S/155.html#L39'>r</a>                  39 src/debug.c    		buf[*ptr + i - 1] = r + '0';
+<a href='../S/102.html#L108'>r</a>                 108 src/include/aplus.h 		t r;														\
+<a href='../S/102.html#L109'>r</a>                 109 src/include/aplus.h 		__asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));\
+<a href='../S/102.html#L110'>r</a>                 110 src/include/aplus.h 		return r;													\
+<a href='../S/83.html#L7'>r</a>                   7 usr/src/libcrt0/src/syscalls.c 		int r, e;							\
+<a href='../S/83.html#L10'>r</a>                  10 usr/src/libcrt0/src/syscalls.c 			: "=a"(r), "=b"(e)	\
+<a href='../S/83.html#L14'>r</a>                  14 usr/src/libcrt0/src/syscalls.c 		return r;						\
+<a href='../S/83.html#L19'>r</a>                  19 usr/src/libcrt0/src/syscalls.c 		int r, e;							\
+<a href='../S/83.html#L22'>r</a>                  22 usr/src/libcrt0/src/syscalls.c 			: "=a"(r), "=b"(e)	\
+<a href='../S/83.html#L26'>r</a>                  26 usr/src/libcrt0/src/syscalls.c 		return r;						\
+<a href='../S/83.html#L31'>r</a>                  31 usr/src/libcrt0/src/syscalls.c 		int r, e;							\
+<a href='../S/83.html#L34'>r</a>                  34 usr/src/libcrt0/src/syscalls.c 			: "=a"(r), "=b"(e)	\
+<a href='../S/83.html#L38'>r</a>                  38 usr/src/libcrt0/src/syscalls.c 		return r;						\
+<a href='../S/83.html#L43'>r</a>                  43 usr/src/libcrt0/src/syscalls.c 		int r, e;							\
+<a href='../S/83.html#L46'>r</a>                  46 usr/src/libcrt0/src/syscalls.c 			: "=a"(r), "=b"(e)	\
+<a href='../S/83.html#L51'>r</a>                  51 usr/src/libcrt0/src/syscalls.c 		return r;						\
+<a href='../S/83.html#L56'>r</a>                  56 usr/src/libcrt0/src/syscalls.c 		int r, e;							\
+<a href='../S/83.html#L59'>r</a>                  59 usr/src/libcrt0/src/syscalls.c 			: "=a"(r), "=b"(e)	\
+<a href='../S/83.html#L64'>r</a>                  64 usr/src/libcrt0/src/syscalls.c 		return r;						\
+<a href='../S/83.html#L69'>r</a>                  69 usr/src/libcrt0/src/syscalls.c 		int r, e;							\
+<a href='../S/83.html#L72'>r</a>                  72 usr/src/libcrt0/src/syscalls.c 			: "=a"(r), "=b"(e)	\
+<a href='../S/83.html#L77'>r</a>                  77 usr/src/libcrt0/src/syscalls.c 		return r;						\
+</pre>
+</body>
+</html>

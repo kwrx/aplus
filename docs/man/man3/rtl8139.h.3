@@ -1,0 +1,286 @@
+.TH "src/net/rtl8139/rtl8139.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/rtl8139/rtl8139.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus/netif\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBREG_ID0\fP   0x00"
+.br
+.ti -1c
+.RI "#define \fBREG_ID4\fP   0x04"
+.br
+.ti -1c
+.RI "#define \fBREG_TRANSMIT_STATUS0\fP   0x10"
+.br
+.ti -1c
+.RI "#define \fBREG_TRANSMIT_ADDR0\fP   0x20"
+.br
+.ti -1c
+.RI "#define \fBREG_RECEIVE_BUFFER\fP   0x30"
+.br
+.ti -1c
+.RI "#define \fBREG_COMMAND\fP   0x37"
+.br
+.ti -1c
+.RI "#define \fBREG_CUR_READ_ADDR\fP   0x38"
+.br
+.ti -1c
+.RI "#define \fBREG_INTERRUPT_MASK\fP   0x3C"
+.br
+.ti -1c
+.RI "#define \fBREG_INTERRUPT_STATUS\fP   0x3E"
+.br
+.ti -1c
+.RI "#define \fBREG_TRANSMIT_CONFIGURATION\fP   0x40"
+.br
+.ti -1c
+.RI "#define \fBREG_RECEIVE_CONFIGURATION\fP   0x44"
+.br
+.ti -1c
+.RI "#define \fBREG_CONFIG1\fP   0x52"
+.br
+.ti -1c
+.RI "#define \fBCR_RESET\fP   (1 << 4)"
+.br
+.ti -1c
+.RI "#define \fBCR_RECEIVER_ENABLE\fP   (1 << 3)"
+.br
+.ti -1c
+.RI "#define \fBCR_TRANSMITTER_ENABLE\fP   (1 << 2)"
+.br
+.ti -1c
+.RI "#define \fBCR_BUFFER_IS_EMPTY\fP   (1 << 0)"
+.br
+.ti -1c
+.RI "#define \fBTCR_IFG_STANDARD\fP   (3 << 24)"
+.br
+.ti -1c
+.RI "#define \fBTCR_MXDMA_256\fP   (4 << 8)"
+.br
+.ti -1c
+.RI "#define \fBTCR_MXDMA_512\fP   (5 << 8)"
+.br
+.ti -1c
+.RI "#define \fBTCR_MXDMA_1024\fP   (6 << 8)"
+.br
+.ti -1c
+.RI "#define \fBTCR_MXDMA_2048\fP   (7 << 8)"
+.br
+.ti -1c
+.RI "#define \fBRCR_MXDMA_512\fP   (5 << 8)"
+.br
+.ti -1c
+.RI "#define \fBRCR_MXDMA_1024\fP   (6 << 8)"
+.br
+.ti -1c
+.RI "#define \fBRCR_MXDMA_UNLIMITED\fP   (7 << 8)"
+.br
+.ti -1c
+.RI "#define \fBRCR_ACCEPT_BROADCAST\fP   (1 << 3)"
+.br
+.ti -1c
+.RI "#define \fBRCR_ACCEPT_MULTICAST\fP   (1 << 2)"
+.br
+.ti -1c
+.RI "#define \fBRCR_ACCEPT_PHYS_MATCH\fP   (1 << 1)"
+.br
+.ti -1c
+.RI "#define \fBISR_RECEIVE_BUFFER_OVERFLOW\fP   (1 << 4)"
+.br
+.ti -1c
+.RI "#define \fBISR_TRANSMIT_OK\fP   (1 << 2)"
+.br
+.ti -1c
+.RI "#define \fBISR_RECEIVE_OK\fP   (1 << 0)"
+.br
+.ti -1c
+.RI "#define \fBRX_BUFFER_SIZE\fP   8192"
+.br
+.ti -1c
+.RI "#define \fBTX_BUFFER_SIZE\fP   4096"
+.br
+.ti -1c
+.RI "#define \fBint_out8\fP(\fBcard\fP, port, \fBvalue\fP)   outb(\fBcard\fP->device->iobase + port, \fBvalue\fP)"
+.br
+.ti -1c
+.RI "#define \fBint_out16\fP(\fBcard\fP, port, \fBvalue\fP)   outw(\fBcard\fP->device->iobase + port, \fBvalue\fP)"
+.br
+.ti -1c
+.RI "#define \fBint_out32\fP(\fBcard\fP, port, \fBvalue\fP)   outl(\fBcard\fP->device->iobase + port, \fBvalue\fP)"
+.br
+.ti -1c
+.RI "#define \fBint_in8\fP(\fBcard\fP, port)   inb(\fBcard\fP->device->iobase + port)"
+.br
+.ti -1c
+.RI "#define \fBint_in16\fP(\fBcard\fP, port)   inw(\fBcard\fP->device->iobase + port)"
+.br
+.ti -1c
+.RI "#define \fBRTL8139_MAGIC\fP   0x8139FFFF"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define CR_BUFFER_IS_EMPTY   (1 << 0)"
+
+.PP
+Definizione alla linea 23 del file rtl8139\&.h\&.
+.SS "#define CR_RECEIVER_ENABLE   (1 << 3)"
+
+.PP
+Definizione alla linea 21 del file rtl8139\&.h\&.
+.SS "#define CR_RESET   (1 << 4)"
+
+.PP
+Definizione alla linea 20 del file rtl8139\&.h\&.
+.SS "#define CR_TRANSMITTER_ENABLE   (1 << 2)"
+
+.PP
+Definizione alla linea 22 del file rtl8139\&.h\&.
+.SS "#define int_in16(\fBcard\fP, port)   inw(\fBcard\fP->device->iobase + port)"
+
+.PP
+Definizione alla linea 51 del file rtl8139\&.h\&.
+.SS "#define int_in8(\fBcard\fP, port)   inb(\fBcard\fP->device->iobase + port)"
+
+.PP
+Definizione alla linea 50 del file rtl8139\&.h\&.
+.SS "#define int_out16(\fBcard\fP, port, \fBvalue\fP)   outw(\fBcard\fP->device->iobase + port, \fBvalue\fP)"
+
+.PP
+Definizione alla linea 47 del file rtl8139\&.h\&.
+.SS "#define int_out32(\fBcard\fP, port, \fBvalue\fP)   outl(\fBcard\fP->device->iobase + port, \fBvalue\fP)"
+
+.PP
+Definizione alla linea 48 del file rtl8139\&.h\&.
+.SS "#define int_out8(\fBcard\fP, port, \fBvalue\fP)   outb(\fBcard\fP->device->iobase + port, \fBvalue\fP)"
+
+.PP
+Definizione alla linea 46 del file rtl8139\&.h\&.
+.SS "#define ISR_RECEIVE_BUFFER_OVERFLOW   (1 << 4)"
+
+.PP
+Definizione alla linea 38 del file rtl8139\&.h\&.
+.SS "#define ISR_RECEIVE_OK   (1 << 0)"
+
+.PP
+Definizione alla linea 40 del file rtl8139\&.h\&.
+.SS "#define ISR_TRANSMIT_OK   (1 << 2)"
+
+.PP
+Definizione alla linea 39 del file rtl8139\&.h\&.
+.SS "#define RCR_ACCEPT_BROADCAST   (1 << 3)"
+
+.PP
+Definizione alla linea 34 del file rtl8139\&.h\&.
+.SS "#define RCR_ACCEPT_MULTICAST   (1 << 2)"
+
+.PP
+Definizione alla linea 35 del file rtl8139\&.h\&.
+.SS "#define RCR_ACCEPT_PHYS_MATCH   (1 << 1)"
+
+.PP
+Definizione alla linea 36 del file rtl8139\&.h\&.
+.SS "#define RCR_MXDMA_1024   (6 << 8)"
+
+.PP
+Definizione alla linea 32 del file rtl8139\&.h\&.
+.SS "#define RCR_MXDMA_512   (5 << 8)"
+
+.PP
+Definizione alla linea 31 del file rtl8139\&.h\&.
+.SS "#define RCR_MXDMA_UNLIMITED   (7 << 8)"
+
+.PP
+Definizione alla linea 33 del file rtl8139\&.h\&.
+.SS "#define REG_COMMAND   0x37"
+
+.PP
+Definizione alla linea 12 del file rtl8139\&.h\&.
+.SS "#define REG_CONFIG1   0x52"
+
+.PP
+Definizione alla linea 18 del file rtl8139\&.h\&.
+.SS "#define REG_CUR_READ_ADDR   0x38"
+
+.PP
+Definizione alla linea 13 del file rtl8139\&.h\&.
+.SS "#define REG_ID0   0x00"
+
+.PP
+Definizione alla linea 6 del file rtl8139\&.h\&.
+.SS "#define REG_ID4   0x04"
+
+.PP
+Definizione alla linea 7 del file rtl8139\&.h\&.
+.SS "#define REG_INTERRUPT_MASK   0x3C"
+
+.PP
+Definizione alla linea 14 del file rtl8139\&.h\&.
+.SS "#define REG_INTERRUPT_STATUS   0x3E"
+
+.PP
+Definizione alla linea 15 del file rtl8139\&.h\&.
+.SS "#define REG_RECEIVE_BUFFER   0x30"
+
+.PP
+Definizione alla linea 11 del file rtl8139\&.h\&.
+.SS "#define REG_RECEIVE_CONFIGURATION   0x44"
+
+.PP
+Definizione alla linea 17 del file rtl8139\&.h\&.
+.SS "#define REG_TRANSMIT_ADDR0   0x20"
+
+.PP
+Definizione alla linea 10 del file rtl8139\&.h\&.
+.SS "#define REG_TRANSMIT_CONFIGURATION   0x40"
+
+.PP
+Definizione alla linea 16 del file rtl8139\&.h\&.
+.SS "#define REG_TRANSMIT_STATUS0   0x10"
+
+.PP
+Definizione alla linea 9 del file rtl8139\&.h\&.
+.SS "#define RTL8139_MAGIC   0x8139FFFF"
+
+.PP
+Definizione alla linea 53 del file rtl8139\&.h\&.
+.SS "#define RX_BUFFER_SIZE   8192"
+
+.PP
+Definizione alla linea 42 del file rtl8139\&.h\&.
+.SS "#define TCR_IFG_STANDARD   (3 << 24)"
+
+.PP
+Definizione alla linea 25 del file rtl8139\&.h\&.
+.SS "#define TCR_MXDMA_1024   (6 << 8)"
+
+.PP
+Definizione alla linea 28 del file rtl8139\&.h\&.
+.SS "#define TCR_MXDMA_2048   (7 << 8)"
+
+.PP
+Definizione alla linea 29 del file rtl8139\&.h\&.
+.SS "#define TCR_MXDMA_256   (4 << 8)"
+
+.PP
+Definizione alla linea 26 del file rtl8139\&.h\&.
+.SS "#define TCR_MXDMA_512   (5 << 8)"
+
+.PP
+Definizione alla linea 27 del file rtl8139\&.h\&.
+.SS "#define TX_BUFFER_SIZE   4096"
+
+.PP
+Definizione alla linea 43 del file rtl8139\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

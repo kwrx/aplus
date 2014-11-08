@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_e87e7991faf28f71b600c8b3b35f99ec" kind="dir">
+    <compoundname>usr/src/libpthread/src/platform/win32</compoundname>
+    <innerfile refid="win32_2hooks_8h">hooks.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/src/platform/win32/"/>
+  </compounddef>
+</doxygen>

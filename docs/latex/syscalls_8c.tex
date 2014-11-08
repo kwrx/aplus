@@ -1,0 +1,184 @@
+\hypertarget{syscalls_8c}{\section{Riferimenti per il file usr/src/libcrt0/src/syscalls.c}
+\label{syscalls_8c}\index{usr/src/libcrt0/src/syscalls.\+c@{usr/src/libcrt0/src/syscalls.\+c}}
+}
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{S\+Y\+S\+C\+O\+D\+E}~\char`\"{}int \$0x80\char`\"{}
+\item 
+\#define \hyperlink{syscalls_8c_a24015b2a2ab097b62202f166ddd904ac}{syscall0}(n, h)
+\item 
+\#define \hyperlink{syscalls_8c_a05bd8f431f2ebc917a20387c229f43dd}{syscall1}(n, h)
+\item 
+\#define \hyperlink{syscalls_8c_a1ea836cfb65e3b32b607af3e81e144f1}{syscall2}(n, h)
+\item 
+\#define \hyperlink{syscalls_8c_a6ebd56a469ce4c96b73134cc1e63b69e}{syscall3}(n, h)
+\item 
+\#define \hyperlink{syscalls_8c_a67af7b4caa02d0e160fe462b03d3320f}{syscall4}(n, h)
+\item 
+\#define \hyperlink{syscalls_8c_a68e3cd45619716c1f58001c8cf79f1c3}{syscall5}(n, h)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{syscalls_8c_a24015b2a2ab097b62202f166ddd904ac}{\index{syscalls.\+c@{syscalls.\+c}!syscall0@{syscall0}}
+\index{syscall0@{syscall0}!syscalls.\+c@{syscalls.\+c}}
+\subsubsection[{syscall0}]{\setlength{\rightskip}{0pt plus 5cm}\#define syscall0(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{h}
+\end{DoxyParamCaption}
+)}}\label{syscalls_8c_a24015b2a2ab097b62202f166ddd904ac}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+h() \{                               \(\backslash\)
+        int r, e;                           \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (         \(\backslash\)
+            \hyperlink{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{SYSCODE}                      \(\backslash\)
+            : \textcolor{stringliteral}{"=a"}(r), \textcolor{stringliteral}{"=b"}(e)  \(\backslash\)
+            : \textcolor{stringliteral}{"a"}(n)                    \(\backslash\)
+        );                              \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{\(\backslash\)}
+\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{        errno} = e;                       \(\backslash\)
+        return r;                       \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 5 del file syscalls.\+c.
+
+\hypertarget{syscalls_8c_a05bd8f431f2ebc917a20387c229f43dd}{\index{syscalls.\+c@{syscalls.\+c}!syscall1@{syscall1}}
+\index{syscall1@{syscall1}!syscalls.\+c@{syscalls.\+c}}
+\subsubsection[{syscall1}]{\setlength{\rightskip}{0pt plus 5cm}\#define syscall1(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{h}
+\end{DoxyParamCaption}
+)}}\label{syscalls_8c_a05bd8f431f2ebc917a20387c229f43dd}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+h(p1) \{                             \(\backslash\)
+        int r, e;                           \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (         \(\backslash\)
+            \hyperlink{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{SYSCODE}                      \(\backslash\)
+            : \textcolor{stringliteral}{"=a"}(r), \textcolor{stringliteral}{"=b"}(e)  \(\backslash\)
+            : \textcolor{stringliteral}{"a"}(n), \textcolor{stringliteral}{"b"}(p1)           \(\backslash\)
+        );                              \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{\(\backslash\)}
+\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{        errno} = e;                       \(\backslash\)
+        return r;                       \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 17 del file syscalls.\+c.
+
+\hypertarget{syscalls_8c_a1ea836cfb65e3b32b607af3e81e144f1}{\index{syscalls.\+c@{syscalls.\+c}!syscall2@{syscall2}}
+\index{syscall2@{syscall2}!syscalls.\+c@{syscalls.\+c}}
+\subsubsection[{syscall2}]{\setlength{\rightskip}{0pt plus 5cm}\#define syscall2(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{h}
+\end{DoxyParamCaption}
+)}}\label{syscalls_8c_a1ea836cfb65e3b32b607af3e81e144f1}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+h(p1, p2) \{                         \(\backslash\)
+        int r, e;                           \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (         \(\backslash\)
+            \hyperlink{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{SYSCODE}                      \(\backslash\)
+            : \textcolor{stringliteral}{"=a"}(r), \textcolor{stringliteral}{"=b"}(e)  \(\backslash\)
+            : \textcolor{stringliteral}{"a"}(n), \textcolor{stringliteral}{"b"}(p1), \textcolor{stringliteral}{"c"}(p2)  \(\backslash\)
+        );                              \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{\(\backslash\)}
+\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{        errno} = e;                       \(\backslash\)
+        return r;                       \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 29 del file syscalls.\+c.
+
+\hypertarget{syscalls_8c_a6ebd56a469ce4c96b73134cc1e63b69e}{\index{syscalls.\+c@{syscalls.\+c}!syscall3@{syscall3}}
+\index{syscall3@{syscall3}!syscalls.\+c@{syscalls.\+c}}
+\subsubsection[{syscall3}]{\setlength{\rightskip}{0pt plus 5cm}\#define syscall3(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{h}
+\end{DoxyParamCaption}
+)}}\label{syscalls_8c_a6ebd56a469ce4c96b73134cc1e63b69e}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+h(p1, p2, p3) \{                     \(\backslash\)
+        int r, e;                           \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (         \(\backslash\)
+            \hyperlink{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{SYSCODE}                      \(\backslash\)
+            : \textcolor{stringliteral}{"=a"}(r), \textcolor{stringliteral}{"=b"}(e)  \(\backslash\)
+            : \textcolor{stringliteral}{"a"}(n), \textcolor{stringliteral}{"b"}(p1), \textcolor{stringliteral}{"c"}(p2), \(\backslash\)
+              \textcolor{stringliteral}{"d"}(p3)                   \(\backslash\)
+        );                              \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{\(\backslash\)}
+\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{        errno} = e;                       \(\backslash\)
+        return r;                       \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 41 del file syscalls.\+c.
+
+\hypertarget{syscalls_8c_a67af7b4caa02d0e160fe462b03d3320f}{\index{syscalls.\+c@{syscalls.\+c}!syscall4@{syscall4}}
+\index{syscall4@{syscall4}!syscalls.\+c@{syscalls.\+c}}
+\subsubsection[{syscall4}]{\setlength{\rightskip}{0pt plus 5cm}\#define syscall4(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{h}
+\end{DoxyParamCaption}
+)}}\label{syscalls_8c_a67af7b4caa02d0e160fe462b03d3320f}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+h(p1, p2, p3, p4) \{                 \(\backslash\)
+        int r, e;                           \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (         \(\backslash\)
+            \hyperlink{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{SYSCODE}                      \(\backslash\)
+            : \textcolor{stringliteral}{"=a"}(r), \textcolor{stringliteral}{"=b"}(e)  \(\backslash\)
+            : \textcolor{stringliteral}{"a"}(n), \textcolor{stringliteral}{"b"}(p1), \textcolor{stringliteral}{"c"}(p2), \(\backslash\)
+              \textcolor{stringliteral}{"d"}(p3), \textcolor{stringliteral}{"S"}(p4)          \(\backslash\)
+        );                              \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{\(\backslash\)}
+\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{        errno} = e;                       \(\backslash\)
+        return r;                       \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 54 del file syscalls.\+c.
+
+\hypertarget{syscalls_8c_a68e3cd45619716c1f58001c8cf79f1c3}{\index{syscalls.\+c@{syscalls.\+c}!syscall5@{syscall5}}
+\index{syscall5@{syscall5}!syscalls.\+c@{syscalls.\+c}}
+\subsubsection[{syscall5}]{\setlength{\rightskip}{0pt plus 5cm}\#define syscall5(
+\begin{DoxyParamCaption}
+\item[{}]{n, }
+\item[{}]{h}
+\end{DoxyParamCaption}
+)}}\label{syscalls_8c_a68e3cd45619716c1f58001c8cf79f1c3}
+{\bfseries Valore\+:}
+\begin{DoxyCode}
+h(p1, p2, p3, p4, p5) \{             \(\backslash\)
+        int r, e;                           \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\(\backslash\)}
+\hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{        \_\_asm\_\_} \_\_volatile\_\_ (         \(\backslash\)
+            \hyperlink{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{SYSCODE}                      \(\backslash\)
+            : \textcolor{stringliteral}{"=a"}(r), \textcolor{stringliteral}{"=b"}(e)  \(\backslash\)
+            : \textcolor{stringliteral}{"a"}(n), \textcolor{stringliteral}{"b"}(p1), \textcolor{stringliteral}{"c"}(p2), \(\backslash\)
+              \textcolor{stringliteral}{"d"}(p3), \textcolor{stringliteral}{"S"}(p4), \textcolor{stringliteral}{"D"}(p5) \(\backslash\)
+        );                              \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{\(\backslash\)}
+\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{        errno} = e;                       \(\backslash\)
+        return r;                       \(\backslash\)
+    \}
+\end{DoxyCode}
+
+
+Definizione alla linea 67 del file syscalls.\+c.
+
+\hypertarget{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}{\index{syscalls.\+c@{syscalls.\+c}!S\+Y\+S\+C\+O\+D\+E@{S\+Y\+S\+C\+O\+D\+E}}
+\index{S\+Y\+S\+C\+O\+D\+E@{S\+Y\+S\+C\+O\+D\+E}!syscalls.\+c@{syscalls.\+c}}
+\subsubsection[{S\+Y\+S\+C\+O\+D\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+Y\+S\+C\+O\+D\+E~\char`\"{}int \$0x80\char`\"{}}}\label{syscalls_8c_af6da46e3404bff9a08b470ccab480d38}
+
+
+Definizione alla linea 3 del file syscalls.\+c.
+

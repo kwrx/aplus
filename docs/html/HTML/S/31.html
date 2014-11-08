@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>usr/src/libposix/src/sleep.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/sleep.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L8'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L8' title='Defined at 8.'>sleep</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;time.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <b>extern</b> <b>int</b> <a href='../S/24.html#L10' title='Defined at 10 in usr/src/libposix/src/nanosleep.c.'>nanosleep</a>(<b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a>* <a href='../Y/702.html' title='Multiple used in 12 places.'>ts</a>, <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a>* <a href='../Y/700.html' title='Multiple used in 2 places.'>tr</a>);
+<a name='L7'>   7 
+<a name='L8'>   8 <b>unsigned</b> <a href='../S/17.html#L12' title='Refered from 12 in usr/src/libposix/src/alarm.c.'>sleep</a>(<b>unsigned</b> <a href='../Y/550.html' title='Multiple used in 7 places.'>seconds</a>) <font color='red'>{</font>
+<a name='L9'>   9     <b>struct</b> <a href='../Y/674.html' title='Multiple used in 14 places.'>timespec</a> <a href='../Y/702.html' title='Multiple used in 12 places.'>ts</a>;
+<a name='L10'>  10 
+<a name='L11'>  11     <a href='../Y/702.html' title='Multiple used in 12 places.'>ts</a>.<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a> = <a href='../Y/550.html' title='Multiple used in 7 places.'>seconds</a>;
+<a name='L12'>  12     <a href='../Y/702.html' title='Multiple used in 12 places.'>ts</a>.<a href='../Y/705.html' title='Multiple used in 5 places.'>tv_nsec</a> = 0;
+<a name='L13'>  13     <b>if</b> (!<a href='../S/24.html#L10' title='Defined at 10 in usr/src/libposix/src/nanosleep.c.'>nanosleep</a>(&amp;<a href='../Y/702.html' title='Multiple used in 12 places.'>ts</a>,&amp;<a href='../Y/702.html' title='Multiple used in 12 places.'>ts</a>)) <b>return</b> 0;
+<a name='L14'>  14     <b>if</b> (<a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> == <a href='../Y/12.html' title='Multiple used in 2 places.'>EINTR</a>) <b>return</b> <a href='../Y/702.html' title='Multiple used in 12 places.'>ts</a>.<a href='../Y/706.html' title='Multiple used in 12 places.'>tv_sec</a>;
+<a name='L15'>  15     <b>return</b> -1;
+<a name='L16'>  16 <font color='red'>}</font>
+<a name='L17'>  17 
+<a name='L18'>  18 
+<a name='L19'>  19 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L8'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

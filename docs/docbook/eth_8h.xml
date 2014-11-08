@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="eth_8h">
+    <title>eth.h File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/netif.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structeth__header">eth_header</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="eth_8h_1acba2f68ee7a6d728108123f0209690fb">ETH_TYPE_IPV4</link> 0x0800</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="eth_8h_1a14a88f547fcbf1570273a1582e823f87">ETH_TYPE_ARP</link> 0x0806</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="eth_8h_1a9f5c136f58003cd8efe144d478877ead">ETH_TYPE_IPV6</link> 0x86DD</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="eth_8h_1a4ee455ff428c9a93c9ad5730bf120785">ETH_TYPE_WAKEONLAN</link> 0x0842</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="eth_8h_1a7278aac14aa7e9e425b13b1d676878b7">ETH_TYPE_RARP</link> 0x8035</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="eth_8h_1aec9f2aac7e6a6448440cf0e28bb401e8">ETH_TYPE_RAW</link> 0xFFFF</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1a95d524a06a1ff12a314f88bac04db658">macaddr_t</link> <link linkend="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4">dest</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="netif_8h_1a95d524a06a1ff12a314f88bac04db658">macaddr_t</link> <link linkend="eth_8h_1ad67aa3eb3b4517f80ebf59a2b845ffc5">source</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> <link linkend="eth_8h_1acb5cfd209ba75c853d03f701e7f91679">type</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structeth__header">eth_header</link> <link linkend="eth_8h_1a5af061aaa0da1dfd1022f738cc6686cc">__attribute__</link> (
+(packed) )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/net/eth.h</para>
+    </simplesect>
+</section>

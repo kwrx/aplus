@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['mm_5flbase',['MM_LBASE',['../mm_8h.html#a1b54983be7272f850a1eef88a78db6f8',1,'mm.h']]],
+  ['mm_5flsize',['MM_LSIZE',['../mm_8h.html#a4b54a4ab7755c6c4dfebb91b75d9d956',1,'mm.h']]],
+  ['mm_5fubase',['MM_UBASE',['../mm_8h.html#a61d9fae3cb95715f92171f153d9ff018',1,'mm.h']]],
+  ['mm_5fusize',['MM_USIZE',['../mm_8h.html#a600b21bbb74401132349a1325dadfdbe',1,'mm.h']]],
+  ['mm_5fvbase',['MM_VBASE',['../mm_8h.html#ae874c5b00fa6293a175b988b647afcc9',1,'mm.h']]],
+  ['mm_5fvsize',['MM_VSIZE',['../mm_8h.html#afbad6879737307d726ae456844b05320',1,'mm.h']]],
+  ['multiboot_5fflag_5faout',['MULTIBOOT_FLAG_AOUT',['../grub_8h.html#a8ab64e4da5caf65cf7ae2991b984a3cf',1,'grub.h']]],
+  ['multiboot_5fflag_5fapm',['MULTIBOOT_FLAG_APM',['../grub_8h.html#a3fb3ddd4db5c7fb88fd513c66577735a',1,'grub.h']]],
+  ['multiboot_5fflag_5fcmdline',['MULTIBOOT_FLAG_CMDLINE',['../grub_8h.html#af58e2129db03f11e8f3d1be24c67f273',1,'grub.h']]],
+  ['multiboot_5fflag_5fconfig',['MULTIBOOT_FLAG_CONFIG',['../grub_8h.html#ab3d220808412fa0f715b0a1844f1843f',1,'grub.h']]],
+  ['multiboot_5fflag_5fdevice',['MULTIBOOT_FLAG_DEVICE',['../grub_8h.html#a9f338ee148fe6f4c672e8e53e608d985',1,'grub.h']]],
+  ['multiboot_5fflag_5felf',['MULTIBOOT_FLAG_ELF',['../grub_8h.html#ae67a3767b0bcf8b3a57a1f9d84a0d12c',1,'grub.h']]],
+  ['multiboot_5fflag_5floader',['MULTIBOOT_FLAG_LOADER',['../grub_8h.html#ab80180da32c134cf24f3dd64e3e14176',1,'grub.h']]],
+  ['multiboot_5fflag_5fmem',['MULTIBOOT_FLAG_MEM',['../grub_8h.html#a3efad85ab30d96e506aba9003c0ee4dd',1,'grub.h']]],
+  ['multiboot_5fflag_5fmmap',['MULTIBOOT_FLAG_MMAP',['../grub_8h.html#a2ed735dcce6c8367f6e3ee5f56e16a42',1,'grub.h']]],
+  ['multiboot_5fflag_5fmods',['MULTIBOOT_FLAG_MODS',['../grub_8h.html#a05c950e0dfa2339451b7256de3b6634b',1,'grub.h']]],
+  ['multiboot_5fflag_5fvbe',['MULTIBOOT_FLAG_VBE',['../grub_8h.html#a852a5720b636e1bdc5799f72dd04b8d8',1,'grub.h']]]
+];

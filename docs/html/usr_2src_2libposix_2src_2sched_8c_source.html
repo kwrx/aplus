@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus:  File sorgente usr/src/libposix/src/sched.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('usr_2src_2libposix_2src_2sched_8c_source.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">sched.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="usr_2src_2libposix_2src_2sched_8c.html">Vai alla documentazione di questo file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;sched.h&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;sys/types.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;sys/times.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;sys/times.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;time.h&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#acd49b6ab6b9adcb42cdf2f6a0db877e1">   11</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#acd49b6ab6b9adcb42cdf2f6a0db877e1">cpu_set_t</a>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#a84ad29a6f2ad27370df09c664ac65eac">   14</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#a84ad29a6f2ad27370df09c664ac65eac">sched_setscheduler</a>(pid_t pid, <span class="keywordtype">int</span> policy, <span class="keyword">const</span> <span class="keyword">struct</span> sched_param* param) {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">if</span>(param == NULL) {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    }</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">if</span>(pid &lt; 0) {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#a99fcb2532b1482d236dc04495a3f194d">   29</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#a99fcb2532b1482d236dc04495a3f194d">sched_getscheduler</a>(pid_t pid) {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="pthread__sched_8c.html#a00095e5c0543cbca7a166edfcdda659e">   35</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#a06b497c4ea6bbabd2b62ba1a8a848a1b">sched_setparam</a>(pid_t pid, <span class="keyword">const</span> <span class="keyword">struct</span> sched_param *param) {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">if</span>(param == NULL) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span>(pid &lt; 0) {</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#a563c7ac53bac2c1b51379147e66c44ec">   50</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#a563c7ac53bac2c1b51379147e66c44ec">sched_getparam</a>(pid_t pid, <span class="keyword">struct</span> sched_param *param) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">if</span>(pid &lt; 0) {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#afaebd1698caeb9b9b9e614ad84edd609">   60</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#afaebd1698caeb9b9b9e614ad84edd609">sched_get_priority_max</a>(<span class="keywordtype">int</span> policy) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#af1f370fc36ea6b22ed42b5ee3cf82a81">   65</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#af1f370fc36ea6b22ed42b5ee3cf82a81">sched_get_priority_min</a>(<span class="keywordtype">int</span> policy) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#a761d3ef9e8d86918e92b2b5c0d3e60e0">   70</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#a761d3ef9e8d86918e92b2b5c0d3e60e0">sched_rr_get_interval</a>(pid_t pid, <span class="keyword">struct</span> timespec* tp) {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">if</span>(pid &lt; 0) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span>(tp == NULL) {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    tp-&gt;tv_sec = 0;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    tp-&gt;tv_nsec = CLOCKS_PER_SEC / 1000000000;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#ac5dd89aac453a882679e3651fc2aefe8">   88</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#ac5dd89aac453a882679e3651fc2aefe8">sched_setaffinity</a>(pid_t pid, <span class="keywordtype">size_t</span> cpusetsize, <span class="keyword">const</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#acd49b6ab6b9adcb42cdf2f6a0db877e1">cpu_set_t</a> *mask) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="usr_2src_2libposix_2src_2sched_8c.html#a4b7ccb0eb4ad49973d9c54d7b7bc1ace">   93</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#a4b7ccb0eb4ad49973d9c54d7b7bc1ace">sched_getaffinity</a>(pid_t pid, <span class="keywordtype">size_t</span> cpusetsize, <a class="code" href="usr_2src_2libposix_2src_2sched_8c.html#acd49b6ab6b9adcb42cdf2f6a0db877e1">cpu_set_t</a> *mask) {</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_a99fcb2532b1482d236dc04495a3f194d"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#a99fcb2532b1482d236dc04495a3f194d">sched_getscheduler</a></div><div class="ttdeci">int sched_getscheduler(pid_t pid)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00029">sched.c:29</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_afaebd1698caeb9b9b9e614ad84edd609"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#afaebd1698caeb9b9b9e614ad84edd609">sched_get_priority_max</a></div><div class="ttdeci">int sched_get_priority_max(int policy)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00060">sched.c:60</a></div></div>
+<div class="ttc" id="config_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_a563c7ac53bac2c1b51379147e66c44ec"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#a563c7ac53bac2c1b51379147e66c44ec">sched_getparam</a></div><div class="ttdeci">int sched_getparam(pid_t pid, struct sched_param *param)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00050">sched.c:50</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_af1f370fc36ea6b22ed42b5ee3cf82a81"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#af1f370fc36ea6b22ed42b5ee3cf82a81">sched_get_priority_min</a></div><div class="ttdeci">int sched_get_priority_min(int policy)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00065">sched.c:65</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_acd49b6ab6b9adcb42cdf2f6a0db877e1"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#acd49b6ab6b9adcb42cdf2f6a0db877e1">cpu_set_t</a></div><div class="ttdeci">int cpu_set_t</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00011">sched.c:11</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_ac5dd89aac453a882679e3651fc2aefe8"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#ac5dd89aac453a882679e3651fc2aefe8">sched_setaffinity</a></div><div class="ttdeci">int sched_setaffinity(pid_t pid, size_t cpusetsize, const cpu_set_t *mask)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00088">sched.c:88</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_a761d3ef9e8d86918e92b2b5c0d3e60e0"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#a761d3ef9e8d86918e92b2b5c0d3e60e0">sched_rr_get_interval</a></div><div class="ttdeci">int sched_rr_get_interval(pid_t pid, struct timespec *tp)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00070">sched.c:70</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_a4b7ccb0eb4ad49973d9c54d7b7bc1ace"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#a4b7ccb0eb4ad49973d9c54d7b7bc1ace">sched_getaffinity</a></div><div class="ttdeci">int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00093">sched.c:93</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_a06b497c4ea6bbabd2b62ba1a8a848a1b"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#a06b497c4ea6bbabd2b62ba1a8a848a1b">sched_setparam</a></div><div class="ttdeci">int sched_setparam(pid_t pid, const struct sched_param *param)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
+<div class="ttc" id="usr_2src_2libposix_2src_2sched_8c_html_a84ad29a6f2ad27370df09c664ac65eac"><div class="ttname"><a href="usr_2src_2libposix_2src_2sched_8c.html#a84ad29a6f2ad27370df09c664ac65eac">sched_setscheduler</a></div><div class="ttdeci">int sched_setscheduler(pid_t pid, int policy, const struct sched_param *param)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2sched_8c_source.html#l00014">sched.c:14</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_4e1c7ae8f9024ef006e86a9c3fc355ed.html">libposix</a></li><li class="navelem"><a class="el" href="dir_f434c0cea4b0f002ce018129171d40a3.html">src</a></li><li class="navelem"><a class="el" href="usr_2src_2libposix_2src_2sched_8c.html">sched.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

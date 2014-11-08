@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_0caf30b0063b53481c30c5521011cf7e" kind="dir">
+    <compoundname>src/net/slirp</compoundname>
+    <innerfile refid="slirp_8c">slirp.c</innerfile>
+    <innerfile refid="slirp_8h">slirp.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/net/slirp/"/>
+  </compounddef>
+</doxygen>

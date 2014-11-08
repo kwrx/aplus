@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_17e86ab152701384703abf7b0cb4d7d2" kind="dir">
+    <compoundname>src/include</compoundname>
+    <innerdir refid="dir_cfd1fb2b98030f4f81570490591de86f">src/include/aplus</innerdir>
+    <innerfile refid="aplus_8h">aplus.h</innerfile>
+    <innerfile refid="grub_8h">grub.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/include/"/>
+  </compounddef>
+</doxygen>

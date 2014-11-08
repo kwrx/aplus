@@ -1,0 +1,151 @@
+\hypertarget{ipv6_8c}{\section{Riferimenti per il file src/net/ipv6.c}
+\label{ipv6_8c}\index{src/net/ipv6.\+c@{src/net/ipv6.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/ipv6.\+h$>$}\\*
+\subsection*{Definizioni}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{ipv6_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\+\_\+\+\_\+params}~\hyperlink{structnetif}{netif}, (void$\ast$) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t}) ip + sizeof(ipv6\+\_\+header\+\_\+t)), \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} -\/ sizeof(ipv6\+\_\+header\+\_\+t)
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{ipv6_8c_a65c6f6768d3db7c82274e94dbd24c141}{ipv6\+\_\+recv} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type})
+\item 
+int \hyperlink{ipv6_8c_a825b0204f5a5e52b8ab9ed49c393821e}{ipv6\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}, \hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\+\_\+t} \hyperlink{ipv6_8h_ab4bf83701631abccacef4ebedf8db65e}{dest})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle definizioni}
+\hypertarget{ipv6_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\index{ipv6.\+c@{ipv6.\+c}!\+\_\+\+\_\+params@{\+\_\+\+\_\+params}}
+\index{\+\_\+\+\_\+params@{\+\_\+\+\_\+params}!ipv6.\+c@{ipv6.\+c}}
+\subsubsection[{\+\_\+\+\_\+params}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+params~{\bf netif}, (void$\ast$) (({\bf uint32\+\_\+t}) ip + sizeof(ipv6\+\_\+header\+\_\+t)), {\bf length} -\/ sizeof(ipv6\+\_\+header\+\_\+t)}}\label{ipv6_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{ipv6_8c_a65c6f6768d3db7c82274e94dbd24c141}{\index{ipv6.\+c@{ipv6.\+c}!ipv6\+\_\+recv@{ipv6\+\_\+recv}}
+\index{ipv6\+\_\+recv@{ipv6\+\_\+recv}!ipv6.\+c@{ipv6.\+c}}
+\subsubsection[{ipv6\+\_\+recv}]{\setlength{\rightskip}{0pt plus 5cm}int ipv6\+\_\+recv (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length, }
+\item[{int}]{type}
+\end{DoxyParamCaption}
+)}}\label{ipv6_8c_a65c6f6768d3db7c82274e94dbd24c141}
+
+
+Definizione alla linea 14 del file ipv6.\+c.
+
+
+
+Referenzia I\+P\+V6\+\_\+\+C\+H\+E\+C\+K\+\_\+\+V\+E\+R\+S\+I\+O\+N, I\+P\+V6\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P, I\+P\+V6\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P, I\+P\+V6\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P, length, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T6, netif\+\_\+packets\+\_\+add(), e netif\+\_\+packets\+\_\+create().
+
+
+\begin{DoxyCode}
+14                                                                   \{
+15     ipv6\_header\_t* ip = (ipv6\_header\_t*) buf;
+16     
+17     \textcolor{keywordflow}{if}(\hyperlink{ipv6_8h_a2fdd498e777544abf4550a4dcabc0956}{IPV6\_CHECK\_VERSION}(ip) == 0)
+18         \textcolor{keywordflow}{return} 0;
+19 
+20 
+21 \textcolor{preprocessor}{    #define \_\_params    \(\backslash\)}
+22 \textcolor{preprocessor}{        netif, (void*) ((uint32\_t) ip + sizeof(ipv6\_header\_t)), length - sizeof(ipv6\_header\_t)}
+23 
+24     \textcolor{keywordflow}{switch}(ip->protocol) \{
+25         \textcolor{keywordflow}{case} \hyperlink{ipv6_8h_ac20f7482f4004cf280be3faac5426286}{IPV6\_PROTO\_UDP}:
+26             \textcolor{comment}{//if(udp\_recv(\_\_params) == 0)}
+27             \textcolor{comment}{//  return 0;}
+28             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+29         
+30         \textcolor{keywordflow}{case} \hyperlink{ipv6_8h_a58e09bc38cf1ae0c45e962c3654cc811}{IPV6\_PROTO\_TCP}:
+31             \textcolor{comment}{//if(tcp\_recv(\_\_params) == 0)       /* Support for TCP ?? -> pfff.. ù.ù */}
+32             \textcolor{comment}{//  return 0;}
+33             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+34 
+35         \textcolor{keywordflow}{case} \hyperlink{ipv6_8h_a10f6aee7b292cec10261ac1bdfac9f65}{IPV6\_PROTO\_ICMP}:
+36             \textcolor{comment}{//if(icmp\_recv(\_\_params) == 0)}
+37             \textcolor{comment}{//  return 0;}
+38             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+39     \}
+40 
+41     \textcolor{comment}{/* IPV6\_PROTO\_RAW */}
+42     \hyperlink{netif_8c_a3edf21f1cc51e87714ea8911236d896c}{netif\_packets\_add} (
+43         \hyperlink{netif_8c_aa14a95992efbcac98c16a43724dc0942}{netif\_packets\_create} (
+44                             netif,
+45                             \hyperlink{netif_8h_a9bd90d73c2b516907768b552d6bbaa56}{NETIF\_INET6}, 
+46                             \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, 
+47                             \textcolor{keyword}{sizeof}(ipv6\_header\_t), 
+48                             buf
+49         )
+50     );
+51 
+52     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+53 \}
+\end{DoxyCode}
+\hypertarget{ipv6_8c_a825b0204f5a5e52b8ab9ed49c393821e}{\index{ipv6.\+c@{ipv6.\+c}!ipv6\+\_\+send@{ipv6\+\_\+send}}
+\index{ipv6\+\_\+send@{ipv6\+\_\+send}!ipv6.\+c@{ipv6.\+c}}
+\subsubsection[{ipv6\+\_\+send}]{\setlength{\rightskip}{0pt plus 5cm}int ipv6\+\_\+send (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length, }
+\item[{int}]{type, }
+\item[{{\bf ipv6\+\_\+t}}]{dest}
+\end{DoxyParamCaption}
+)}}\label{ipv6_8c_a825b0204f5a5e52b8ab9ed49c393821e}
+
+
+Definizione alla linea 55 del file ipv6.\+c.
+
+
+
+Referenzia eth\+\_\+send(), netif\+::ipv6, I\+P\+V6\+\_\+\+P\+R\+O\+T\+O\+\_\+\+I\+C\+M\+P, I\+P\+V6\+\_\+\+P\+R\+O\+T\+O\+\_\+\+R\+A\+W, I\+P\+V6\+\_\+\+P\+R\+O\+T\+O\+\_\+\+T\+C\+P, I\+P\+V6\+\_\+\+P\+R\+O\+T\+O\+\_\+\+U\+D\+P, kfree(), kmalloc(), length, N\+E\+T\+I\+F\+\_\+\+I\+C\+M\+P, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T6, N\+E\+T\+I\+F\+\_\+\+T\+C\+P, N\+E\+T\+I\+F\+\_\+\+U\+D\+P, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+55                                                                                \{
+56     ipv6\_header\_t* ip = (ipv6\_header\_t*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} + \textcolor{keyword}{sizeof}(ipv6\_header\_t));
+57     ip->version = 6;
+58     ip->traffic = 0;
+59     ip->flow = 0;
+60     ip->length = \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+61     ip->ttl = 0xFF;
+62     
+63     \textcolor{keywordflow}{switch}(\hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}) \{
+64         \textcolor{keywordflow}{case} \hyperlink{netif_8h_a4da4a42cc7d9462ce613d54d0393f8d1}{NETIF\_UDP}:
+65             ip->protocol = \hyperlink{ipv6_8h_ac20f7482f4004cf280be3faac5426286}{IPV6\_PROTO\_UDP};
+66             \textcolor{keywordflow}{break};
+67         \textcolor{keywordflow}{case} \hyperlink{netif_8h_a572091993e27c5d0b0b1786b05a9d233}{NETIF\_TCP}:
+68             ip->protocol = \hyperlink{ipv6_8h_a58e09bc38cf1ae0c45e962c3654cc811}{IPV6\_PROTO\_TCP};
+69             \textcolor{keywordflow}{break};
+70         \textcolor{keywordflow}{case} \hyperlink{netif_8h_aaca7f6ff0ebc3b44543507ad70e9685f}{NETIF\_ICMP}:
+71             ip->protocol = \hyperlink{ipv6_8h_a10f6aee7b292cec10261ac1bdfac9f65}{IPV6\_PROTO\_ICMP};
+72             \textcolor{keywordflow}{break};
+73         \textcolor{keywordflow}{default}:
+74             ip->protocol = \hyperlink{ipv6_8h_a5ab0d8305d9494be97f24a9fb241978c}{IPV6\_PROTO\_RAW};
+75             \textcolor{keywordflow}{break};
+76     \}
+77 
+78     memcpy(ip->dest, \hyperlink{eth_8h_a15f677ba1a36e16b06f2b91f545be2f4}{dest}, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\_t}));
+79     memcpy(ip->source, netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\_t}));
+80     memcpy((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) ip + \textcolor{keyword}{sizeof}(ipv6\_header\_t)), buf, \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length});
+81 
+82     \textcolor{keywordtype}{int} ret = \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\_send}(netif, (\textcolor{keywordtype}{void}*) ip, \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} + \textcolor{keyword}{sizeof}(ipv6\_header\_t), 
+      \hyperlink{netif_8h_a9bd90d73c2b516907768b552d6bbaa56}{NETIF\_INET6});
+83     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(ip);
+84 
+85     \textcolor{keywordflow}{if}(ret)
+86         \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+87     
+88     \textcolor{keywordflow}{return} 0;
+89 \}
+\end{DoxyCode}

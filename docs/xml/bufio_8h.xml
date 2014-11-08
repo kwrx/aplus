@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="bufio_8h" kind="file">
+    <compoundname>bufio.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includedby refid="bufio_8c" local="no">src/bufio.c</includedby>
+    <includedby refid="pipe_8c" local="no">src/fs/pipe.c</includedby>
+    <includedby refid="ramdev_8c" local="no">src/fs/ramdev.c</includedby>
+    <includedby refid="loopback_8c" local="no">src/net/loopback/loopback.c</includedby>
+    <includedby refid="rtl8139_8c" local="no">src/net/rtl8139/rtl8139.c</includedby>
+    <includedby refid="slirp_8c" local="no">src/net/slirp/slirp.c</includedby>
+    <incdepgraph>
+      <node id="360">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="357">
+        <label>stdarg.h</label>
+      </node>
+      <node id="359">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="351" relation="include">
+        </childnode>
+        <childnode refid="352" relation="include">
+        </childnode>
+        <childnode refid="353" relation="include">
+        </childnode>
+        <childnode refid="360" relation="include">
+        </childnode>
+        <childnode refid="361" relation="include">
+        </childnode>
+      </node>
+      <node id="351">
+        <label>stdint.h</label>
+      </node>
+      <node id="364">
+        <label>setjmp.h</label>
+      </node>
+      <node id="355">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="351" relation="include">
+        </childnode>
+        <childnode refid="356" relation="include">
+        </childnode>
+        <childnode refid="359" relation="include">
+        </childnode>
+        <childnode refid="363" relation="include">
+        </childnode>
+        <childnode refid="353" relation="include">
+        </childnode>
+        <childnode refid="364" relation="include">
+        </childnode>
+      </node>
+      <node id="352">
+        <label>stddef.h</label>
+      </node>
+      <node id="356">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="351" relation="include">
+        </childnode>
+        <childnode refid="357" relation="include">
+        </childnode>
+        <childnode refid="358" relation="include">
+        </childnode>
+      </node>
+      <node id="353">
+        <label>sys/types.h</label>
+      </node>
+      <node id="358">
+        <label>string.h</label>
+      </node>
+      <node id="362">
+        <label>unistd.h</label>
+      </node>
+      <node id="363">
+        <label>signal.h</label>
+      </node>
+      <node id="361">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="362" relation="include">
+        </childnode>
+        <childnode refid="353" relation="include">
+        </childnode>
+      </node>
+      <node id="354">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="350">
+        <label>src/include/aplus/bufio.h</label>
+        <link refid="bufio.h"/>
+        <childnode refid="351" relation="include">
+        </childnode>
+        <childnode refid="352" relation="include">
+        </childnode>
+        <childnode refid="353" relation="include">
+        </childnode>
+        <childnode refid="354" relation="include">
+        </childnode>
+        <childnode refid="355" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="370">
+        <label>src/net/rtl8139/rtl8139.c</label>
+        <link refid="rtl8139_8c"/>
+      </node>
+      <node id="371">
+        <label>src/net/slirp/slirp.c</label>
+        <link refid="slirp_8c"/>
+      </node>
+      <node id="369">
+        <label>src/net/loopback/loopback.c</label>
+        <link refid="loopback_8c"/>
+      </node>
+      <node id="367">
+        <label>src/fs/pipe.c</label>
+        <link refid="pipe_8c"/>
+      </node>
+      <node id="366">
+        <label>src/bufio.c</label>
+        <link refid="bufio_8c"/>
+      </node>
+      <node id="368">
+        <label>src/fs/ramdev.c</label>
+        <link refid="ramdev_8c"/>
+      </node>
+      <node id="365">
+        <label>src/include/aplus/bufio.h</label>
+        <link refid="bufio.h"/>
+        <childnode refid="366" relation="include">
+        </childnode>
+        <childnode refid="367" relation="include">
+        </childnode>
+        <childnode refid="368" relation="include">
+        </childnode>
+        <childnode refid="369" relation="include">
+        </childnode>
+        <childnode refid="370" relation="include">
+        </childnode>
+        <childnode refid="371" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structbufio" prot="public">bufio</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="bufio_8h_1aed33c7684664724ce2d39fe264246e35" prot="public" static="no">
+        <type>struct <ref refid="structbufio" kindref="compound">bufio</ref></type>
+        <definition>typedef struct bufio  bufio_t</definition>
+        <argsstring></argsstring>
+        <name>bufio_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/bufio.h" line="39" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>bufio.h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Author:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Antonio<sp/>Natale<sp/>&lt;inferdevil97@gmail.com&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>2014<sp/>WareX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software:<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation,<sp/>either<sp/>version<sp/>3<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>along<sp/>with<sp/>this<sp/>program.<sp/><sp/>If<sp/>not,<sp/>see<sp/>&lt;http://www.gnu.org/licenses/&gt;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_BUFIO_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_BUFIO_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="structbufio" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structbufio" kindref="compound">bufio</ref><sp/>{</highlight></codeline>
+<codeline lineno="33" refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" kindref="member">raw</ref>;</highlight></codeline>
+<codeline lineno="34" refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="35" refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>off_t<sp/><ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="36" refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" kindref="member">type</ref>;</highlight></codeline>
+<codeline lineno="37" refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref><sp/><ref refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" kindref="member">lock</ref>;</highlight></codeline>
+<codeline lineno="38" refid="structbufio_1a27683bf934579d5f42529dcea191db50" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structbufio_1a27683bf934579d5f42529dcea191db50" kindref="member">task</ref>;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal">}<sp/><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref>;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/bufio.h"/>
+  </compounddef>
+</doxygen>

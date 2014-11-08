@@ -1,0 +1,894 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="netif_8c" kind="file">
+    <compoundname>netif.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes refid="netif_8h" local="no">aplus/netif.h</includes>
+    <includes refid="attribute_8h" local="no">aplus/attribute.h</includes>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">string.h</includes>
+    <includes refid="arp_8h" local="no">aplus/net/arp.h</includes>
+    <incdepgraph>
+      <node id="1116">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1107">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1123">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1105" relation="include">
+        </childnode>
+        <childnode refid="1109" relation="include">
+        </childnode>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1108" relation="include">
+        </childnode>
+        <childnode refid="1111" relation="include">
+        </childnode>
+      </node>
+      <node id="1115">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1110" relation="include">
+        </childnode>
+        <childnode refid="1111" relation="include">
+        </childnode>
+        <childnode refid="1116" relation="include">
+        </childnode>
+        <childnode refid="1117" relation="include">
+        </childnode>
+      </node>
+      <node id="1104">
+        <label>src/net/netif.c</label>
+        <link refid="netif.c"/>
+        <childnode refid="1105" relation="include">
+        </childnode>
+        <childnode refid="1109" relation="include">
+        </childnode>
+        <childnode refid="1121" relation="include">
+        </childnode>
+        <childnode refid="1123" relation="include">
+        </childnode>
+        <childnode refid="1110" relation="include">
+        </childnode>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1108" relation="include">
+        </childnode>
+        <childnode refid="1124" relation="include">
+        </childnode>
+      </node>
+      <node id="1106">
+        <label>stdint.h</label>
+      </node>
+      <node id="1120">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1114">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1105" relation="include">
+        </childnode>
+        <childnode refid="1115" relation="include">
+        </childnode>
+        <childnode refid="1119" relation="include">
+        </childnode>
+        <childnode refid="1111" relation="include">
+        </childnode>
+        <childnode refid="1120" relation="include">
+        </childnode>
+      </node>
+      <node id="1122">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="1105" relation="include">
+        </childnode>
+        <childnode refid="1106" relation="include">
+        </childnode>
+      </node>
+      <node id="1110">
+        <label>stddef.h</label>
+      </node>
+      <node id="1109">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1110" relation="include">
+        </childnode>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1111" relation="include">
+        </childnode>
+        <childnode refid="1112" relation="include">
+        </childnode>
+        <childnode refid="1113" relation="include">
+        </childnode>
+      </node>
+      <node id="1125">
+        <label>aplus/net/eth.h</label>
+        <link refid="eth_8h"/>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1121" relation="include">
+        </childnode>
+      </node>
+      <node id="1124">
+        <label>aplus/net/arp.h</label>
+        <link refid="arp_8h"/>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1121" relation="include">
+        </childnode>
+        <childnode refid="1125" relation="include">
+        </childnode>
+        <childnode refid="1126" relation="include">
+        </childnode>
+      </node>
+      <node id="1105">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1107" relation="include">
+        </childnode>
+        <childnode refid="1108" relation="include">
+        </childnode>
+      </node>
+      <node id="1111">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1108">
+        <label>string.h</label>
+      </node>
+      <node id="1118">
+        <label>unistd.h</label>
+      </node>
+      <node id="1119">
+        <label>signal.h</label>
+      </node>
+      <node id="1121">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="1105" relation="include">
+        </childnode>
+        <childnode refid="1122" relation="include">
+        </childnode>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1110" relation="include">
+        </childnode>
+      </node>
+      <node id="1113">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1106" relation="include">
+        </childnode>
+        <childnode refid="1114" relation="include">
+        </childnode>
+      </node>
+      <node id="1126">
+        <label>time.h</label>
+      </node>
+      <node id="1117">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1118" relation="include">
+        </childnode>
+        <childnode refid="1111" relation="include">
+        </childnode>
+      </node>
+      <node id="1112">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="netif_8c_1aa7d07620133cc2243295b0c03ac8436e" prot="public" static="yes" mutable="no">
+        <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+        <definition>list_t* lst_netif</definition>
+        <argsstring></argsstring>
+        <name>lst_netif</name>
+        <initializer>= NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="netif_8c_1accbe476fec12cec39066f558e3040ef6" prot="public" static="yes" mutable="no">
+        <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+        <definition>list_t* lst_packets</definition>
+        <argsstring></argsstring>
+        <name>lst_packets</name>
+        <initializer>= NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="14" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="netif_8c_1ac75c28e791563771b563d670aeebd552" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t netif_htonl</definition>
+        <argsstring>(uint32_t h)</argsstring>
+        <name>netif_htonl</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="18" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="18" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1aa915d67e8c3d0b0e1beed32f3ee21749" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t netif_htons</definition>
+        <argsstring>(uint16_t h)</argsstring>
+        <name>netif_htons</name>
+        <param>
+          <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="23" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="23" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a5e9c3efca67d84bdcfffdbbdfe70711b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t netif_ntohl</definition>
+        <argsstring>(uint32_t h)</argsstring>
+        <name>netif_ntohl</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="27" bodyend="30"/>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1ae01b55d09345802921e2a0348cfeb9a0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t netif_ntohs</definition>
+        <argsstring>(uint32_t h)</argsstring>
+        <name>netif_ntohs</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>h</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="32" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="32" bodyend="34"/>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a7a9fee228b8774a921b2d7ea567a0006" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+        <definition>netif_t* netif_find_by_ipv4</definition>
+        <argsstring>(ipv4_t *ipv4)</argsstring>
+        <name>netif_find_by_ipv4</name>
+        <param>
+          <type><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref> *</type>
+          <declname>ipv4</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="36" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="36" bodyend="48"/>
+        <references refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" compoundref="netif_8h" startline="38">netif::ipv4</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a9f5e5c9b8dab074ad69fa4991dbe1898" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+        <definition>netif_t* netif_find_by_ipv6</definition>
+        <argsstring>(ipv6_t *ipv6)</argsstring>
+        <name>netif_find_by_ipv6</name>
+        <param>
+          <type><ref refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kindref="member">ipv6_t</ref> *</type>
+          <declname>ipv6</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="50" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="50" bodyend="62"/>
+        <references refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" compoundref="netif_8h" startline="37">netif::ipv6</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+        <definition>netif_t* netif_find_by_macaddr</definition>
+        <argsstring>(macaddr_t *macaddr)</argsstring>
+        <name>netif_find_by_macaddr</name>
+        <param>
+          <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref> *</type>
+          <declname>macaddr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="66" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="66" bodyend="78"/>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a0de3666f699d7d9cc7ec52171b844fa0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+        <definition>netif_t* netif_find_by_name</definition>
+        <argsstring>(char *name)</argsstring>
+        <name>netif_find_by_name</name>
+        <param>
+          <type>char *</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="80" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="80" bodyend="92"/>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" compoundref="netif_8h" startline="34">netif::name</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1aa233de3d4ae3825f0beafd81d10fbe36" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int netif_ifup</definition>
+        <argsstring>()</argsstring>
+        <name>netif_ifup</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="94" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="94" bodyend="108"/>
+        <references refid="arp_8c_1a0494cc7052a3d81efd628c0e4cc98f97" compoundref="arp_8c" startline="79" endline="100">arp_send</references>
+        <references refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" compoundref="netif_8h" startline="67">netif::ifup</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a801ea0d4582b551b79c186cd1023180c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int netif_ifdown</definition>
+        <argsstring>()</argsstring>
+        <name>netif_ifdown</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="110" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="110" bodyend="122"/>
+        <references refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" compoundref="netif_8h" startline="68">netif::ifdown</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int netif_add</definition>
+        <argsstring>(netif_t *netdev)</argsstring>
+        <name>netif_add</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netdev</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="124" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="124" bodyend="212"/>
+        <references refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e">netif::dns</references>
+        <references refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" compoundref="netif_8h" startline="38">netif::ipv4</references>
+        <references refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" compoundref="netif_8h" startline="37">netif::ipv6</references>
+        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
+        <references refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" compoundref="netif_8h" startline="70">netif::mtu</references>
+        <references refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" compoundref="netif_8h" startline="34">netif::name</references>
+        <references refid="netif_8c_1a7a9fee228b8774a921b2d7ea567a0006" compoundref="netif_8c" startline="36" endline="48">netif_find_by_ipv4</references>
+        <references refid="netif_8c_1a9f5e5c9b8dab074ad69fa4991dbe1898" compoundref="netif_8c" startline="50" endline="62">netif_find_by_ipv6</references>
+        <references refid="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b" compoundref="netif_8c" startline="66" endline="78">netif_find_by_macaddr</references>
+        <references refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" compoundref="netif_8h" startline="39">netif::netmask</references>
+        <references refid="structnetif_1a367e7d85725497d7703bfc0424f472cf">netif::primary</references>
+        <references refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2">netif::secondary</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a9c8fb9469b40267eb50031f262587eab" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int netif_remove</definition>
+        <argsstring>(netif_t *netdev)</argsstring>
+        <name>netif_remove</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netdev</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="214" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="214" bodyend="219"/>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1af7c3254022249b2dfa78151c8f345e77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int netif_init</definition>
+        <argsstring>()</argsstring>
+        <name>netif_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="221" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="221" bodyend="239"/>
+        <references refid="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e" compoundref="attribute_8h" startline="31" endline="51">attribute</references>
+        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="193">list_destroy</references>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="49" endline="54">list_empty</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="netif_8c_1aa233de3d4ae3825f0beafd81d10fbe36" compoundref="netif_8c" startline="94" endline="108">netif_ifup</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a3edf21f1cc51e87714ea8911236d896c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int netif_packets_add</definition>
+        <argsstring>(netif_packet_t *packet)</argsstring>
+        <name>netif_packets_add</name>
+        <param>
+          <type><ref refid="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c" kindref="member">netif_packet_t</ref> *</type>
+          <declname>packet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="242" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="242" bodyend="247"/>
+        <references refid="structnetif__packet_1ac2dc39fe302e155960127c09161f36ae" compoundref="netif_8h" startline="78">netif_packet::id</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1ae9331f4834a47cc6f7c9edf6490046cf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int netif_packets_remove</definition>
+        <argsstring>(netif_packet_t *packet)</argsstring>
+        <name>netif_packets_remove</name>
+        <param>
+          <type><ref refid="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c" kindref="member">netif_packet_t</ref> *</type>
+          <declname>packet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="249" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="249" bodyend="251"/>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1a298d555d31337e14e76688ecdbf08ef6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c" kindref="member">netif_packet_t</ref> *</type>
+        <definition>netif_packet_t* netif_packets_find_by_id</definition>
+        <argsstring>(uint64_t id)</argsstring>
+        <name>netif_packets_find_by_id</name>
+        <param>
+          <type>uint64_t</type>
+          <declname>id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="253" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="253" bodyend="262"/>
+        <references refid="structnetif__packet_1ac2dc39fe302e155960127c09161f36ae" compoundref="netif_8h" startline="78">netif_packet::id</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1ae6bde7bab4c04cc235035e789ae2854b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+        <definition>list_t* netif_packets_find_by_protocol</definition>
+        <argsstring>(int protocol)</argsstring>
+        <name>netif_packets_find_by_protocol</name>
+        <param>
+          <type>int</type>
+          <declname>protocol</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="264" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="264" bodyend="277"/>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="structnetif__packet_1a2517358f8125e0a674a0628a77f1095d" compoundref="netif_8h" startline="79">netif_packet::protocol</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="netif_8c_1aa14a95992efbcac98c16a43724dc0942" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="netif_8h_1a258b0bd35563d9af265d975f94bdbd4c" kindref="member">netif_packet_t</ref> *</type>
+        <definition>netif_packet_t* netif_packets_create</definition>
+        <argsstring>(netif_t *netif, int protocol, int tot_length, int head_length, void *data)</argsstring>
+        <name>netif_packets_create</name>
+        <param>
+          <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+          <declname>netif</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>protocol</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>tot_length</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>head_length</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>data</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/netif.c" line="279" column="1" bodyfile="/opt/prj/aPlus/src/net/netif.c" bodystart="279" bodyend="289"/>
+        <references refid="structnetif__packet_1a3b4b8603d752944ba4360db33c5870b5" compoundref="netif_8h" startline="83">netif_packet::data</references>
+        <references refid="structnetif__packet_1a3733c55855518d575eea678f5a2815e8" compoundref="netif_8h" startline="82">netif_packet::header</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="structnetif__packet_1a244620016b7d377fd2558f5ccfc85d18" compoundref="netif_8h" startline="80">netif_packet::length</references>
+        <references refid="structnetif__packet_1a3590a941c954bab54971940eeab55144" compoundref="netif_8h" startline="85">netif_packet::netif</references>
+        <references refid="ipv4_8h_1ad124d3d2e02c729afa303c775295278e" compoundref="ipv4_8h" startline="53">protocol</references>
+        <references refid="structnetif__packet_1a2517358f8125e0a674a0628a77f1095d" compoundref="netif_8h" startline="79">netif_packet::protocol</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="netif_8h" kindref="compound">aplus/netif.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="attribute_8h" kindref="compound">aplus/attribute.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="arp_8h" kindref="compound">aplus/net/arp.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="netif_8c_1aa7d07620133cc2243295b0c03ac8436e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="netif_8c_1aa7d07620133cc2243295b0c03ac8436e" kindref="member">lst_netif</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="14" refid="netif_8c_1accbe476fec12cec39066f558e3040ef6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="netif_8c_1accbe476fec12cec39066f558e3040ef6" kindref="member">lst_packets</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="netif_8c_1ac75c28e791563771b563d670aeebd552" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="netif_8c_1ac75c28e791563771b563d670aeebd552" kindref="member">netif_htonl</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>h)<sp/>{</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>((h<sp/>&amp;<sp/>0xFF000000)<sp/>&gt;&gt;<sp/>24)<sp/>|<sp/>((h<sp/>&amp;<sp/>0x000000FF)<sp/>&lt;&lt;<sp/>24)<sp/>|</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((h<sp/>&amp;<sp/>0x00FF0000)<sp/>&gt;&gt;<sp/>8)<sp/>|<sp/>((h<sp/>&amp;<sp/>0x0000FF00)<sp/>&lt;&lt;<sp/>8);</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="netif_8c_1aa915d67e8c3d0b0e1beed32f3ee21749" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="netif_8c_1aa915d67e8c3d0b0e1beed32f3ee21749" kindref="member">netif_htons</ref>(<ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>h)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>((h<sp/>&amp;<sp/>0xFF00)<sp/>&gt;&gt;<sp/>8)<sp/>|<sp/>((h<sp/>&amp;<sp/>0x00FF)<sp/>&lt;&lt;<sp/>8);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="netif_8c_1a5e9c3efca67d84bdcfffdbbdfe70711b" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="netif_8c_1a5e9c3efca67d84bdcfffdbbdfe70711b" kindref="member">netif_ntohl</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>h)<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>((h<sp/>&amp;<sp/>0xFF000000)<sp/>&gt;&gt;<sp/>24)<sp/>|<sp/>((h<sp/>&amp;<sp/>0x000000FF)<sp/>&lt;&lt;<sp/>24)<sp/>|</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((h<sp/>&amp;<sp/>0x00FF0000)<sp/>&gt;&gt;<sp/>8)<sp/>|<sp/>((h<sp/>&amp;<sp/>0x0000FF00)<sp/>&lt;&lt;<sp/>8);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="netif_8c_1ae01b55d09345802921e2a0348cfeb9a0" refkind="member"><highlight class="normal"><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="netif_8c_1ae01b55d09345802921e2a0348cfeb9a0" kindref="member">netif_ntohs</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>h)<sp/>{</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>((h<sp/>&amp;<sp/>0xFF00)<sp/>&gt;&gt;<sp/>8)<sp/>|<sp/>((h<sp/>&amp;<sp/>0x00FF)<sp/>&lt;&lt;<sp/>8);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="netif_8c_1a7a9fee228b8774a921b2d7ea567a0006" refkind="member"><highlight class="normal"><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="netif_8c_1a7a9fee228b8774a921b2d7ea567a0006" kindref="member">netif_find_by_ipv4</ref>(<ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref>*<sp/>ipv4)<sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_netif)<sp/>{</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(memcmp(netif-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>,<sp/>ipv4,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref>))<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>netif;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="netif_8c_1a9f5e5c9b8dab074ad69fa4991dbe1898" refkind="member"><highlight class="normal"><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="netif_8c_1a9f5e5c9b8dab074ad69fa4991dbe1898" kindref="member">netif_find_by_ipv6</ref>(<ref refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kindref="member">ipv6_t</ref>*<sp/>ipv6)<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_netif)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(memcmp(netif-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>,<sp/>ipv6,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kindref="member">ipv6_t</ref>))<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>netif;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66" refid="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b" refkind="member"><highlight class="normal"><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b" kindref="member">netif_find_by_macaddr</ref>(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>*<sp/>macaddr)<sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_netif)<sp/>{</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(memcmp(netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>,<sp/>macaddr,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>))<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>netif;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80" refid="netif_8c_1a0de3666f699d7d9cc7ec52171b844fa0" refkind="member"><highlight class="normal"><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="netif_8c_1a0de3666f699d7d9cc7ec52171b844fa0" kindref="member">netif_find_by_name</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_netif)<sp/>{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(strcmp(netif-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>,<sp/>name)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>netif;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94" refid="netif_8c_1aa233de3d4ae3825f0beafd81d10fbe36" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="netif_8c_1aa233de3d4ae3825f0beafd81d10fbe36" kindref="member">netif_ifup</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_netif)<sp/>{</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(netif-&gt;<ref refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" kindref="member">ifup</ref>)</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a70984b0d611d5a941aecabbc98f62467" kindref="member">ifup</ref>(netif);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="arp_8c_1a0494cc7052a3d81efd628c0e4cc98f97" kindref="member">arp_send</ref>(netif);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110" refid="netif_8c_1a801ea0d4582b551b79c186cd1023180c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="netif_8c_1a801ea0d4582b551b79c186cd1023180c" kindref="member">netif_ifdown</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_netif)<sp/>{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref><sp/>=<sp/>(<ref refid="structnetif" kindref="compound">netif_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(netif-&gt;<ref refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" kindref="member">ifdown</ref>)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netif-&gt;<ref refid="structnetif_1a73d7967fecfead19c8ae2a39a8cbf112" kindref="member">ifdown</ref>(netif);</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124" refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="netif_8c_1a01bed7c80274b7830923cdde25b1d48a" kindref="member">netif_add</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/>netdev)<sp/>{</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(lst_netif);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="netif_8c_1a7a9fee228b8774a921b2d7ea567a0006" kindref="member">netif_find_by_ipv4</ref>(&amp;netdev-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>)<sp/>!=<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;netif:<sp/>conflitto<sp/>di<sp/>ipv4\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="netif_8c_1a9f5e5c9b8dab074ad69fa4991dbe1898" kindref="member">netif_find_by_ipv6</ref>(&amp;netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>)<sp/>!=<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;netif:<sp/>conflitto<sp/>di<sp/>ipv6\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="netif_8c_1aa9fb3336f90a384ee5a2bdd22f1c084b" kindref="member">netif_find_by_macaddr</ref>(&amp;netdev-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>)<sp/>!=<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;netif:<sp/>conflitto<sp/>di<sp/>macaddr\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\n%s:\tipv4\t%d.%d.%d.%d\n\tnetmask\t%d.%d.%d.%d\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>,</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[0],</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[1],</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[2],</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" kindref="member">ipv4</ref>[3],</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[0],</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[1],</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[2],</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a36ef3cfb5f0403df355dc6db0ddc2426" kindref="member">netmask</ref>[3]</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\tipv6\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[0],</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[1],</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[2],</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[3],</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[4],</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[5],</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[6],</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1aced1ed63f6f33dd3987a06deee6a2292" kindref="member">ipv6</ref>[7]</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\tmacaddr\t%02x:%02x:%02x:%02x:%02x:%02x\n\tmtu\t%d<sp/>bytes\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[0],</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[1],</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[2],</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[3],</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[4],</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>[5],</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a2eb32b1acf0a223c5cc3874da3c2f3df" kindref="member">mtu</ref></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\tdns\t%d.%d.%d.%d\n\t\t%d.%d.%d.%d\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[0],</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[1],</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[2],</highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv4[3],</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[0],</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[1],</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[2],</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv4[3]</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[0],</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[1],</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[2],</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[3],</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[4],</highlight></codeline>
+<codeline lineno="198"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[5],</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[6],</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a367e7d85725497d7703bfc0424f472cf" kindref="member">primary</ref>.ipv6[7],</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[0],</highlight></codeline>
+<codeline lineno="202"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[1],</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[2],</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[3],</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[4],</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[5],</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[6],</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>netdev-&gt;<ref refid="structnetif_1a30f1247e8e2ef8ac954833c81873608e" kindref="member">dns</ref>.<ref refid="structnetif_1a793ad0cb27997bfa7874a2097a77b0e2" kindref="member">secondary</ref>.ipv6[7]</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(lst_netif,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>netdev);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="213"><highlight class="normal"></highlight></codeline>
+<codeline lineno="214" refid="netif_8c_1a9c8fb9469b40267eb50031f262587eab" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="netif_8c_1a9c8fb9469b40267eb50031f262587eab" kindref="member">netif_remove</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/>netdev)<sp/>{</highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(lst_netif<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a4470c240b622941415ae5250067699b5" kindref="member">list_remove</ref>(lst_netif,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>netdev);</highlight></codeline>
+<codeline lineno="219"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"></highlight></codeline>
+<codeline lineno="221" refid="netif_8c_1af7c3254022249b2dfa78151c8f345e77" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="netif_8c_1af7c3254022249b2dfa78151c8f345e77" kindref="member">netif_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(lst_packets);</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"></highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/>lst_netif<sp/>=<sp/><ref refid="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e" kindref="member">attribute</ref>(</highlight><highlight class="stringliteral">&quot;netif&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(lst_netif))</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"></highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_netif)<sp/>{</highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>int<sp/>(*handler)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>(*)<sp/>())<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"></highlight></codeline>
+<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(handler)</highlight></codeline>
+<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>handler();</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" kindref="member">list_destroy</ref>(lst_netif);</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"></highlight></codeline>
+<codeline lineno="237"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8c_1aa233de3d4ae3825f0beafd81d10fbe36" kindref="member">netif_ifup</ref>();</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="239"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"></highlight></codeline>
+<codeline lineno="241"><highlight class="normal"></highlight></codeline>
+<codeline lineno="242" refid="netif_8c_1a3edf21f1cc51e87714ea8911236d896c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="netif_8c_1a3edf21f1cc51e87714ea8911236d896c" kindref="member">netif_packets_add</ref>(<ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*<sp/>packet)<sp/>{</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>uint64_t<sp/>nextid<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/>packet-&gt;<ref refid="structnetif__packet_1ac2dc39fe302e155960127c09161f36ae" kindref="member">id</ref><sp/>=<sp/>nextid++;</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(lst_packets,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>packet);</highlight></codeline>
+<codeline lineno="247"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"></highlight></codeline>
+<codeline lineno="249" refid="netif_8c_1ae9331f4834a47cc6f7c9edf6490046cf" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="netif_8c_1ae9331f4834a47cc6f7c9edf6490046cf" kindref="member">netif_packets_remove</ref>(<ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*<sp/>packet)<sp/>{</highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a4470c240b622941415ae5250067699b5" kindref="member">list_remove</ref>(lst_packets,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>packet);</highlight></codeline>
+<codeline lineno="251"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253" refid="netif_8c_1a298d555d31337e14e76688ecdbf08ef6" refkind="member"><highlight class="normal"><ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*<sp/><ref refid="netif_8c_1a298d555d31337e14e76688ecdbf08ef6" kindref="member">netif_packets_find_by_id</ref>(uint64_t<sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_packets)<sp/>{</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*<sp/>pkt<sp/>=<sp/>(<ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(pkt-&gt;<ref refid="structnetif__packet_1ac2dc39fe302e155960127c09161f36ae" kindref="member">id</ref><sp/>==<sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pkt;</highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"></highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="262"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"></highlight></codeline>
+<codeline lineno="264" refid="netif_8c_1ae6bde7bab4c04cc235035e789ae2854b" refkind="member"><highlight class="normal"><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="netif_8c_1ae6bde7bab4c04cc235035e789ae2854b" kindref="member">netif_packets_find_by_protocol</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1ad124d3d2e02c729afa303c775295278e" kindref="member">protocol</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/>tmp<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(tmp);</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"></highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>lst_packets)<sp/>{</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*<sp/>pkt<sp/>=<sp/>(<ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"></highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(pkt-&gt;<ref refid="structnetif__packet_1a2517358f8125e0a674a0628a77f1095d" kindref="member">protocol</ref><sp/>==<sp/>protocol)</highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(tmp,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>pkt);</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="275"><highlight class="normal"></highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>tmp;</highlight></codeline>
+<codeline lineno="277"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"></highlight></codeline>
+<codeline lineno="279" refid="netif_8c_1aa14a95992efbcac98c16a43724dc0942" refkind="member"><highlight class="normal"><ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*<sp/><ref refid="netif_8c_1aa14a95992efbcac98c16a43724dc0942" kindref="member">netif_packets_create</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1ad124d3d2e02c729afa303c775295278e" kindref="member">protocol</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>tot_length,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>head_length,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data)<sp/>{</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*<sp/>pkt<sp/>=<sp/>(<ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structnetif__packet" kindref="compound">netif_packet_t</ref>)<sp/>+<sp/>tot_length);</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/>pkt-&gt;<ref refid="structnetif__packet_1a3590a941c954bab54971940eeab55144" kindref="member">netif</ref><sp/>=<sp/>netif;</highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/>pkt-&gt;<ref refid="structnetif__packet_1a2517358f8125e0a674a0628a77f1095d" kindref="member">protocol</ref><sp/>=<sp/><ref refid="ipv4_8h_1ad124d3d2e02c729afa303c775295278e" kindref="member">protocol</ref>;</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/>pkt-&gt;<ref refid="structnetif__packet_1a244620016b7d377fd2558f5ccfc85d18" kindref="member">length</ref><sp/>=<sp/>tot_length<sp/>-<sp/>head_length;</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(pkt-&gt;<ref refid="structnetif__packet_1a3733c55855518d575eea678f5a2815e8" kindref="member">header</ref>,<sp/>data,<sp/>head_length);</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(pkt-&gt;<ref refid="structnetif__packet_1a3b4b8603d752944ba4360db33c5870b5" kindref="member">data</ref>,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>data<sp/>+<sp/>head_length),<sp/>pkt-&gt;<ref refid="structnetif__packet_1a244620016b7d377fd2558f5ccfc85d18" kindref="member">length</ref>);</highlight></codeline>
+<codeline lineno="287"><highlight class="normal"></highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pkt;</highlight></codeline>
+<codeline lineno="289"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="290"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/net/netif.c"/>
+  </compounddef>
+</doxygen>

@@ -78,7 +78,7 @@ inode_t* devfs_mount() {
 	devfs->write = NULL;
 	devfs->readdir = NULL;
 	devfs->finddir = NULL;
-	devfs->creat = NULL;
+	devfs->creat = devfs_creat;
 	devfs->rename = NULL;
 	devfs->unlink = NULL;
 	devfs->chown = NULL;

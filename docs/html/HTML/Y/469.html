@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>pid_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/90.html#L73'>pid_t</a>              73 src/include/aplus/task.h 	pid_t pid;
+<a href='../S/143.html#L59'>pid_t</a>              59 src/sched.c    pid_t schedule_nextpid() {
+<a href='../S/143.html#L60'>pid_t</a>              60 src/sched.c    	static pid_t nextpid = 0;
+<a href='../S/143.html#L163'>pid_t</a>             163 src/sched.c    pid_t schedule_getpid() {
+<a href='../S/143.html#L170'>pid_t</a>             170 src/sched.c    task_t* schedule_getbypid(pid_t pid) {
+<a href='../S/131.html#L13'>pid_t</a>              13 src/syscall/getpid.c pid_t sys_getpid() {
+<a href='../S/125.html#L10'>pid_t</a>              10 src/syscall/kill.c int sys_kill(pid_t pid, int signal) {
+<a href='../S/26.html#L14'>pid_t</a>              14 usr/src/libposix/src/sched.c int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param) {
+<a href='../S/26.html#L29'>pid_t</a>              29 usr/src/libposix/src/sched.c int sched_getscheduler(pid_t pid) {
+<a href='../S/26.html#L35'>pid_t</a>              35 usr/src/libposix/src/sched.c int sched_setparam(pid_t pid, const struct sched_param *param) {
+<a href='../S/26.html#L50'>pid_t</a>              50 usr/src/libposix/src/sched.c int sched_getparam(pid_t pid, struct sched_param *param) {
+<a href='../S/26.html#L70'>pid_t</a>              70 usr/src/libposix/src/sched.c int sched_rr_get_interval(pid_t pid, struct timespec* tp) {
+<a href='../S/26.html#L88'>pid_t</a>              88 usr/src/libposix/src/sched.c int sched_setaffinity(pid_t pid, size_t cpusetsize, const cpu_set_t *mask) {
+<a href='../S/26.html#L93'>pid_t</a>              93 usr/src/libposix/src/sched.c int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask) {
+<a href='../S/51.html#L8'>pid_t</a>               8 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_setparam(pid_t pid, const struct sched_param *param);
+<a href='../S/51.html#L9'>pid_t</a>               9 usr/src/libpthread/src/pthread_sched.c EXTERN int sched_getparam(pid_t pid, const struct sched_param *param);
+</pre>
+</body>
+</html>

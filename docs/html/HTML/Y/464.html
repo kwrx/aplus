@@ -1,0 +1,31 @@
+<html>
+<head>
+<title>pci_devices</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/160.html#L19'>pci_devices</a>        19 src/arch/pci.c pci_device_t* pci_devices = NULL;
+<a href='../S/160.html#L122'>pci_devices</a>       122 src/arch/pci.c 		if(pci_devices[i].vendorID != vendorID &amp;&amp; pci_devices[i].deviceID != deviceID)
+<a href='../S/160.html#L125'>pci_devices</a>       125 src/arch/pci.c 		return &amp;pci_devices[i];
+<a href='../S/160.html#L134'>pci_devices</a>       134 src/arch/pci.c 		if(pci_devices[i].pci_class != class)
+<a href='../S/160.html#L137'>pci_devices</a>       137 src/arch/pci.c 		rdevs[j++] = &amp;pci_devices[i];
+<a href='../S/160.html#L145'>pci_devices</a>       145 src/arch/pci.c 	pci_devices = (pci_device_t*) kmalloc(PCI_MAX_DEVICES * sizeof(pci_device_t));
+<a href='../S/160.html#L146'>pci_devices</a>       146 src/arch/pci.c 	memset(pci_devices, 0xFF, PCI_MAX_DEVICES * sizeof(pci_device_t));
+<a href='../S/160.html#L157'>pci_devices</a>       157 src/arch/pci.c 				pci_load_device(&amp;pci_devices[i], bus, dev, func);
+<a href='../S/160.html#L161'>pci_devices</a>       161 src/arch/pci.c 							pci_devices[i].bus,
+<a href='../S/160.html#L162'>pci_devices</a>       162 src/arch/pci.c 							pci_devices[i].dev,
+<a href='../S/160.html#L163'>pci_devices</a>       163 src/arch/pci.c 							pci_devices[i].func,
+<a href='../S/160.html#L164'>pci_devices</a>       164 src/arch/pci.c 							pci_devices[i].vendorID,
+<a href='../S/160.html#L165'>pci_devices</a>       165 src/arch/pci.c 							pci_devices[i].deviceID,
+<a href='../S/160.html#L166'>pci_devices</a>       166 src/arch/pci.c 							pci_devices[i].revision,
+<a href='../S/160.html#L167'>pci_devices</a>       167 src/arch/pci.c 							pci_devices[i].pci_class,
+<a href='../S/160.html#L168'>pci_devices</a>       168 src/arch/pci.c 							pci_devices[i].iobase,
+<a href='../S/160.html#L169'>pci_devices</a>       169 src/arch/pci.c 							pci_devices[i].membase,
+<a href='../S/160.html#L170'>pci_devices</a>       170 src/arch/pci.c 							pci_devices[i].header,
+<a href='../S/160.html#L171'>pci_devices</a>       171 src/arch/pci.c 							pci_devices[i].intr_line,
+<a href='../S/160.html#L172'>pci_devices</a>       172 src/arch/pci.c 							pci_devices[i].intr_pin);
+</pre>
+</body>
+</html>

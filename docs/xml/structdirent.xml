@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structdirent" kind="struct" prot="public">
+    <compoundname>dirent</compoundname>
+    <includes refid="dirent_8h" local="no">dirent.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structdirent_1aef01e92a29cba347e6e6a5f22d4908a2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int dirent::d_ino</definition>
+        <argsstring></argsstring>
+        <name>d_ino</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/include/sys/dirent.h" line="36" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/include/sys/dirent.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structdirent_1a39a9af609c1808f0bdf90155bd3f55ed" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char dirent::d_name[]</definition>
+        <argsstring>[]</argsstring>
+        <name>d_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/include/sys/dirent.h" line="37" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/include/sys/dirent.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="27">
+        <label>dirent</label>
+        <link refid="structdirent"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libposix/include/sys/dirent.h" line="35" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/include/sys/dirent.h" bodystart="35" bodyend="38"/>
+    <listofallmembers>
+      <member refid="structdirent_1aef01e92a29cba347e6e6a5f22d4908a2" prot="public" virt="non-virtual"><scope>dirent</scope><name>d_ino</name></member>
+      <member refid="structdirent_1a39a9af609c1808f0bdf90155bd3f55ed" prot="public" virt="non-virtual"><scope>dirent</scope><name>d_name</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

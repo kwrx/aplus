@@ -1,0 +1,425 @@
+.TH "src/arch/pci.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/arch/pci.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/pci\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBPCI_CONFIG_ADDRESS\fP   0x0CF8"
+.br
+.ti -1c
+.RI "#define \fBPCI_CONFIG_DATA\fP   0x0CFC"
+.br
+.ti -1c
+.RI "#define \fBPCI_MAX_DEVICES\fP   65536"
+.br
+.ti -1c
+.RI "#define \fBPCI_MAX_BUS\fP   255"
+.br
+.ti -1c
+.RI "#define \fBPCI_MAX_DEV\fP   32"
+.br
+.ti -1c
+.RI "#define \fBPCI_MAX_FUNC\fP   8"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "static int \fBpci_get_address\fP (\fBuint8_t\fP bus, \fBuint8_t\fP dev, \fBuint8_t\fP func, \fBuint8_t\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_config_read\fP (\fBuint8_t\fP bus, \fBuint8_t\fP dev, \fBuint8_t\fP func, \fBuint8_t\fP \fBoffset\fP)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_device_id\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_vendor_id\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_intr_pin\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_intr_line\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_revision\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_class\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_header_type\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_bar\fP (\fBpci_device_t\fP *device, \fBuint8_t\fP bar)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_iobase\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static \fBuint32_t\fP \fBpci_get_membase\fP (\fBpci_device_t\fP *device)"
+.br
+.ti -1c
+.RI "static void \fBpci_load_device\fP (\fBpci_device_t\fP *device, \fBuint8_t\fP bus, \fBuint8_t\fP dev, \fBuint8_t\fP func)"
+.br
+.ti -1c
+.RI "\fBpci_device_t\fP * \fBpci_find_by_id\fP (\fBuint32_t\fP vendorID, \fBuint32_t\fP deviceID)"
+.br
+.ti -1c
+.RI "int \fBpci_find_by_class\fP (\fBpci_device_t\fP **rdevs, \fBuint32_t\fP class, \fBuint32_t\fP \fBlength\fP)"
+.br
+.ti -1c
+.RI "int \fBpci_init\fP ()"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBpci_device_t\fP * \fBpci_devices\fP = NULL"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define PCI_CONFIG_ADDRESS   0x0CF8"
+
+.PP
+Definizione alla linea 11 del file pci\&.c\&.
+.SS "#define PCI_CONFIG_DATA   0x0CFC"
+
+.PP
+Definizione alla linea 12 del file pci\&.c\&.
+.SS "#define PCI_MAX_BUS   255"
+
+.PP
+Definizione alla linea 14 del file pci\&.c\&.
+.SS "#define PCI_MAX_DEV   32"
+
+.PP
+Definizione alla linea 15 del file pci\&.c\&.
+.SS "#define PCI_MAX_DEVICES   65536"
+
+.PP
+Definizione alla linea 13 del file pci\&.c\&.
+.SS "#define PCI_MAX_FUNC   8"
+
+.PP
+Definizione alla linea 16 del file pci\&.c\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "static \fBuint32_t\fP pci_config_read (\fBuint8_t\fPbus, \fBuint8_t\fPdev, \fBuint8_t\fPfunc, \fBuint8_t\fPoffset)\fC [static]\fP"
+
+.PP
+Definizione alla linea 26 del file pci\&.c\&.
+.PP
+Referenzia PCI_CONFIG_ADDRESS, PCI_CONFIG_DATA, e pci_get_address()\&.
+.PP
+.nf
+26                                                                                         {
+27     outl(PCI_CONFIG_ADDRESS, pci_get_address(bus, dev, func, offset));
+28     
+29     if(offset % 4 == 0)
+30         return inl(PCI_CONFIG_DATA);
+31 
+32     return (inl(PCI_CONFIG_DATA) >> ((offset % 4) * 8));
+33 }
+.fi
+.SS "int pci_find_by_class (\fBpci_device_t\fP **rdevs, \fBuint32_t\fPclass, \fBuint32_t\fPlength)"
+
+.PP
+Definizione alla linea 131 del file pci\&.c\&.
+.PP
+Referenzia length, e PCI_MAX_DEVICES\&.
+.PP
+.nf
+131                                                                              {
+132     int j = 0;  
+133     for(int i = 0; i < PCI_MAX_DEVICES && j < length; i++) {
+134         if(pci_devices[i]\&.pci_class != class)
+135             continue;
+136 
+137         rdevs[j++] = &pci_devices[i];
+138     }
+139 
+140     return j;
+141 }
+.fi
+.SS "\fBpci_device_t\fP* pci_find_by_id (\fBuint32_t\fPvendorID, \fBuint32_t\fPdeviceID)"
+
+.PP
+Definizione alla linea 120 del file pci\&.c\&.
+.PP
+Referenzia PCI_MAX_DEVICES\&.
+.PP
+.nf
+120                                                                    {
+121     for(int i = 0; i < PCI_MAX_DEVICES; i++) {
+122         if(pci_devices[i]\&.vendorID != vendorID && pci_devices[i]\&.deviceID != deviceID)
+123             continue;
+124 
+125         return &pci_devices[i];
+126     }
+127 
+128     return NULL;
+129 }
+.fi
+.SS "static int pci_get_address (\fBuint8_t\fPbus, \fBuint8_t\fPdev, \fBuint8_t\fPfunc, \fBuint8_t\fPoffset)\fC [static]\fP"
+
+.PP
+Definizione alla linea 22 del file pci\&.c\&.
+.PP
+.nf
+22                                                                                    {
+23     return 0x80000000 | (bus << 16) | (dev << 11) | (func << 8) | (offset & 0xFC);
+24 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_bar (\fBpci_device_t\fP *device, \fBuint8_t\fPbar)\fC [static]\fP"
+
+.PP
+Definizione alla linea 65 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, pci_config_read(), pci_get_header_type(), e uint8_t\&.
+.PP
+.nf
+65                                                                {
+66     if(bar >= 6)
+67         return 0;
+68 
+69     uint8_t header = pci_get_header_type(device);
+70     if(header == 0x02 || (header == 0x01 && bar < 2))
+71         return 0;
+72 
+73     uint8_t reg = 0x10 + (0x04 * bar);
+74     return pci_config_read(device->bus, device->dev, device->func, reg);
+75 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_class (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 56 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+.PP
+.nf
+56                                                     {
+57     return pci_config_read(device->bus, device->dev, device->func, 0x0B) & 0xFF;
+58 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_device_id (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 36 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+.PP
+.nf
+36                                                         {
+37     return pci_config_read(device->bus, device->dev, device->func, 2) & 0xFFFF;
+38 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_header_type (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 60 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+.PP
+.nf
+60                                                           {
+61     return pci_config_read(device->bus, device->dev, device->func, 0x0E) & 0x7F;
+62 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_intr_line (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 48 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+.PP
+.nf
+48                                                         {
+49     return pci_config_read(device->bus, device->dev, device->func, 0x3C) & 0xFF;
+50 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_intr_pin (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 44 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+.PP
+.nf
+44                                                        {
+45     return pci_config_read(device->bus, device->dev, device->func, 0x3D) & 0xFF;
+46 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_iobase (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 77 del file pci\&.c\&.
+.PP
+Referenzia pci_get_bar(), pci_get_header_type(), uint32_t, e uint8_t\&.
+.PP
+.nf
+77                                                      {
+78     uint8_t bars = 6 - pci_get_header_type(device) * 4;
+79     uint8_t i = 0;
+80 
+81     while(i < bars) {
+82         uint32_t bar = pci_get_bar(device, i++);
+83         if(bar & 0x01)
+84             return bar & 0xFFFFFFFC;
+85     }
+86 
+87     return 0;
+88 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_membase (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 90 del file pci\&.c\&.
+.PP
+Referenzia pci_get_bar(), pci_get_header_type(), uint32_t, e uint8_t\&.
+.PP
+.nf
+90                                                       {
+91     uint8_t bars = 6 - pci_get_header_type(device) * 4;
+92     uint8_t i = 0;
+93 
+94     while(i < bars) {
+95         uint32_t bar = pci_get_bar(device, i++);
+96         if((bar & 0x01) == 0)
+97             return bar & 0xFFFFFFF0;
+98     }
+99 
+100     return 0;
+101 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_revision (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 52 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+.PP
+.nf
+52                                                        {
+53     return pci_config_read(device->bus, device->dev, device->func, 0x08) & 0xFF;
+54 }
+.fi
+.SS "static \fBuint32_t\fP pci_get_vendor_id (\fBpci_device_t\fP *device)\fC [static]\fP"
+
+.PP
+Definizione alla linea 40 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+.PP
+.nf
+40                                                         {
+41     return pci_config_read(device->bus, device->dev, device->func, 0) & 0xFFFF;
+42 }
+.fi
+.SS "int pci_init ()"
+
+.PP
+Definizione alla linea 144 del file pci\&.c\&.
+.PP
+Referenzia kmalloc(), kprintf, pci_config_read(), pci_load_device(), PCI_MAX_BUS, PCI_MAX_DEV, PCI_MAX_DEVICES, PCI_MAX_FUNC, e uint32_t\&.
+.PP
+.nf
+144                {
+145     pci_devices = (pci_device_t*) kmalloc(PCI_MAX_DEVICES * sizeof(pci_device_t));
+146     memset(pci_devices, 0xFF, PCI_MAX_DEVICES * sizeof(pci_device_t));
+147 
+148     int i = 0;
+149     for(int bus = 0; bus < PCI_MAX_BUS; bus++) {
+150         for(int dev = 0; dev < PCI_MAX_DEV; dev++) {
+151             for(int func = 0; func < PCI_MAX_FUNC; func++) {
+152                 uint32_t vendor = pci_config_read(bus, dev, func, 0) & 0xFFFF;
+153 
+154                 if(vendor == 0xFFFF || vendor == 0)
+155                     continue;
+156 
+157                 pci_load_device(&pci_devices[i], bus, dev, func);
+158 
+159 #if 1
+160                 kprintf("pci: %d:%d\&.%d: [%x:%x] (rev %x class %x iobase %x mmio %x type %x int %d pin %d)\n",
+161                             pci_devices[i]\&.bus,
+162                             pci_devices[i]\&.dev,
+163                             pci_devices[i]\&.func,
+164                             pci_devices[i]\&.vendorID,
+165                             pci_devices[i]\&.deviceID,
+166                             pci_devices[i]\&.revision,
+167                             pci_devices[i]\&.pci_class,
+168                             pci_devices[i]\&.iobase,
+169                             pci_devices[i]\&.membase,
+170                             pci_devices[i]\&.header,
+171                             pci_devices[i]\&.intr_line,
+172                             pci_devices[i]\&.intr_pin);
+173 #endif
+174 
+175                 i++;
+176             }
+177         }
+178     }
+179 
+180 
+181     kprintf("pci: loaded %d devices\n", i);
+182 
+183     return 0;
+184 }
+.fi
+.SS "static void pci_load_device (\fBpci_device_t\fP *device, \fBuint8_t\fPbus, \fBuint8_t\fPdev, \fBuint8_t\fPfunc)\fC [static]\fP"
+
+.PP
+Definizione alla linea 103 del file pci\&.c\&.
+.PP
+Referenzia pci_device::bus, pci_device::dev, pci_device::deviceID, pci_device::func, pci_device::header, pci_device::intr_line, pci_device::intr_pin, pci_device::iobase, pci_device::membase, pci_device::pci_class, pci_get_class(), pci_get_device_id(), pci_get_header_type(), pci_get_intr_line(), pci_get_intr_pin(), pci_get_iobase(), pci_get_membase(), pci_get_revision(), pci_get_vendor_id(), pci_device::revision, e pci_device::vendorID\&.
+.PP
+.nf
+103                                                                                           {
+104     device->bus = bus;
+105     device->dev = dev;
+106     device->func = func;
+107 
+108     device->vendorID = pci_get_vendor_id(device);
+109     device->deviceID = pci_get_device_id(device);
+110     device->revision = pci_get_revision(device);
+111     device->pci_class = pci_get_class(device);
+112     device->iobase = pci_get_iobase(device);
+113     device->membase = pci_get_membase(device);
+114     device->header = pci_get_header_type(device);
+115     device->intr_pin = pci_get_intr_pin(device);
+116     device->intr_line = pci_get_intr_line(device);
+117 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBpci_device_t\fP* pci_devices = NULL"
+
+.PP
+Definizione alla linea 19 del file pci\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

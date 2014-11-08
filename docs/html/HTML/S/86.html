@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>src/include/aplus/syscall.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/syscall.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/29.html' title='Multiple included from 28 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/86.html#L2' title='Defined at 2 in src/include/aplus/syscall.h.'>_SYSCALL_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/86.html#L1' title='Refered from 1 in src/include/aplus/syscall.h.'>_SYSCALL_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='99.html'>aplus/attribute.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <b>typedef</b> <b>struct</b> __syscall <font color='red'>{</font>
+<a name='L10'>  10         <b>void</b>* <a href='../Y/294.html' title='Multiple used in 10 places.'>handler</a>;
+<a name='L11'>  11         <b>int</b> <a href='../Y/422.html' title='Multiple used in 2 places.'>number</a>;
+<a name='L12'>  12 <font color='red'>}</font> <a href='../R/503.html' title='Multiple refered from 2 places.'>syscall_t</a>;
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 <font color='darkred'>#define</font> <a href='../R/134.html' title='Multiple refered from 27 places.'>SYSCALL</a>(<a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>, <a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>)                                                                                                           \
+<a name='L16'>  16         <b>static</b> <a href='../S/86.html#L12' title='Defined at 12 in src/include/aplus/syscall.h.'>syscall_t</a> <a href='../Y/656.html' title='Multiple used in 2 places.'>syscall_</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a> = <font color='red'>{</font>                                                                                \
+<a name='L17'>  17                 (<b>void</b>*) <a href='../Y/293.html' title='Multiple used in 27 places.'>h</a>, (<b>int</b>) <a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>                                                                                                      \
+<a name='L18'>  18         <font color='red'>}</font>;                                                                                                                                              \
+<a name='L19'>  19         <a href='../S/99.html#L18' title='Defined at 18 in src/include/aplus/attribute.h.'>ATTRIBUTE</a>("syscall", <a href='../Y/656.html' title='Multiple used in 2 places.'>syscall_</a>##<a href='../Y/398.html' title='Multiple used in 57 places.'>n</a>)
+<a name='L20'>  20 
+<a name='L21'>  21 
+<a name='L22'>  22 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

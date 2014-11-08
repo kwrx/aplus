@@ -1,0 +1,55 @@
+\hypertarget{unlink_8c}{\section{Riferimenti per il file src/syscall/unlink.c}
+\label{unlink_8c}\index{src/syscall/unlink.\+c@{src/syscall/unlink.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}{sys\+\_\+unlink} (const char $\ast$pathname)
+\item 
+\hyperlink{unlink_8c_ad98c9664626206607298e17936a4421e}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}{sys\+\_\+unlink}, 15)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}{\index{unlink.\+c@{unlink.\+c}!sys\+\_\+unlink@{sys\+\_\+unlink}}
+\index{sys\+\_\+unlink@{sys\+\_\+unlink}!unlink.\+c@{unlink.\+c}}
+\subsubsection[{sys\+\_\+unlink}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+unlink (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{pathname}
+\end{DoxyParamCaption}
+)}}\label{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}
+
+
+Definizione alla linea 13 del file unlink.\+c.
+
+
+
+Referenzia errno, e kprintf.
+
+
+\begin{DoxyCode}
+13                                      \{
+14     \textcolor{comment}{/* TODO */}
+15     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"sys\_unlink: TODO"});
+16 
+17     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+18     \textcolor{keywordflow}{return} -1;
+19 \}
+\end{DoxyCode}
+\hypertarget{unlink_8c_ad98c9664626206607298e17936a4421e}{\index{unlink.\+c@{unlink.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!unlink.\+c@{unlink.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+unlink}}]{, }
+\item[{15}]{}
+\end{DoxyParamCaption}
+)}}\label{unlink_8c_ad98c9664626206607298e17936a4421e}

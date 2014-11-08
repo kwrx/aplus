@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>macaddr_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/94.html#L32'>macaddr_t</a>          32 src/include/aplus/net/arp.h 	macaddr_t sha;
+<a href='../S/94.html#L34'>macaddr_t</a>          34 src/include/aplus/net/arp.h 	macaddr_t tha;
+<a href='../S/94.html#L41'>macaddr_t</a>          41 src/include/aplus/net/arp.h 	macaddr_t macaddr;
+<a href='../S/93.html#L21'>macaddr_t</a>          21 src/include/aplus/net/eth.h 	macaddr_t dest;
+<a href='../S/93.html#L22'>macaddr_t</a>          22 src/include/aplus/net/eth.h 	macaddr_t source;
+<a href='../S/89.html#L40'>macaddr_t</a>          40 src/include/aplus/netif.h 	macaddr_t macaddr;
+<a href='../S/108.html#L16'>macaddr_t</a>          16 src/net/arp.c  arp_cache_entry_t* arp_cache_find_by_macaddr(macaddr_t macaddr) {
+<a href='../S/108.html#L26'>macaddr_t</a>          26 src/net/arp.c  		if(memcmp(arp-&gt;macaddr, macaddr, sizeof(macaddr_t)) == 0)
+<a href='../S/108.html#L33'>macaddr_t</a>          33 src/net/arp.c  int arp_cache_add(macaddr_t macaddr, ipv4_t ipv4) {
+<a href='../S/108.html#L45'>macaddr_t</a>          45 src/net/arp.c  	memcpy(arp-&gt;macaddr, macaddr, sizeof(macaddr_t));
+<a href='../S/108.html#L72'>macaddr_t</a>          72 src/net/arp.c  		if(memcmp(netif-&gt;macaddr, arp-&gt;tha, sizeof(macaddr_t)) == 0)
+<a href='../S/108.html#L87'>macaddr_t</a>          87 src/net/arp.c  	memcpy(arp-&gt;sha, netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/108.html#L88'>macaddr_t</a>          88 src/net/arp.c  	memset(arp-&gt;tha, 0, sizeof(macaddr_t));
+<a href='../S/112.html#L51'>macaddr_t</a>          51 src/net/eth.c  	memset((void*) ethpkt-&gt;dest, 0xFF, sizeof(macaddr_t));
+<a href='../S/112.html#L52'>macaddr_t</a>          52 src/net/eth.c  	memcpy((void*) ethpkt-&gt;source, (void*) netif-&gt;macaddr, sizeof(macaddr_t));
+<a href='../S/111.html#L72'>macaddr_t</a>          72 src/net/loopback/loopback.c 	memset(netif-&gt;macaddr, 0xFF, sizeof(macaddr_t));
+<a href='../S/107.html#L66'>macaddr_t</a>          66 src/net/netif.c netif_t* netif_find_by_macaddr(macaddr_t* macaddr) {
+<a href='../S/107.html#L73'>macaddr_t</a>          73 src/net/netif.c 		if(memcmp(netif-&gt;macaddr, macaddr, sizeof(macaddr_t)) == 0)
+<a href='../S/104.html#L244'>macaddr_t</a>         244 src/net/rtl8139/rtl8139.c 	memcpy(card-&gt;netif-&gt;macaddr, card-&gt;macaddr, sizeof(macaddr_t));
+</pre>
+</body>
+</html>

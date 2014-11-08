@@ -1,0 +1,24 @@
+<html>
+<head>
+<title>block</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/151.html#L58'>block</a>              58 src/mm/mm.c    	block_t* block = (block_t*) addr;
+<a href='../S/151.html#L59'>block</a>              59 src/mm/mm.c    	block-&gt;magic = BLKMAGIC;
+<a href='../S/151.html#L60'>block</a>              60 src/mm/mm.c    	block-&gt;size = size;
+<a href='../S/151.html#L62'>block</a>              62 src/mm/mm.c    	return (void*) ((uint32_t) block + sizeof(block_t));
+<a href='../S/151.html#L71'>block</a>              71 src/mm/mm.c    	block_t* block = (block_t*) ptr;
+<a href='../S/151.html#L72'>block</a>              72 src/mm/mm.c    	if(block-&gt;magic != BLKMAGIC)
+<a href='../S/151.html#L75'>block</a>              75 src/mm/mm.c    	size_t size = block-&gt;size;
+<a href='../S/151.html#L76'>block</a>              76 src/mm/mm.c    	block-&gt;size = 0;
+<a href='../S/151.html#L77'>block</a>              77 src/mm/mm.c    	block-&gt;magic = 0;
+<a href='../S/151.html#L93'>block</a>              93 src/mm/mm.c    	block_t* block = (block_t*) ptr;
+<a href='../S/151.html#L94'>block</a>              94 src/mm/mm.c    	if(block-&gt;magic != BLKMAGIC)
+<a href='../S/151.html#L101'>block</a>             101 src/mm/mm.c    	if(size &gt; block-&gt;size)
+<a href='../S/151.html#L102'>block</a>             102 src/mm/mm.c    		size = block-&gt;size;
+</pre>
+</body>
+</html>

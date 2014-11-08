@@ -1,0 +1,432 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file src/include/aplus/netif.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('netif_8h.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Strutture dati</a> &#124;
+<a href="#define-members">Definizioni</a> &#124;
+<a href="#typedef-members">Ridefinizioni di tipo (typedef)</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file netif.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="aplus_8h_source.html">aplus.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="pci_8h_source.html">aplus/pci.h</a>&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stddef.h&gt;</code><br />
+</div>
+<p><a href="netif_8h_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Strutture dati</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetif.html">netif</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetif__packet.html">netif_packet</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structnetif__socket.html">netif_socket</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Definizioni</h2></td></tr>
+<tr class="memitem:a92b354424f46fe25b001e3cf311fb951"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a92b354424f46fe25b001e3cf311fb951">NETIF_RAW</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a92b354424f46fe25b001e3cf311fb951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00e0d33542bf01395718b7c5047921d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a00e0d33542bf01395718b7c5047921d1">NETIF_INET</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a00e0d33542bf01395718b7c5047921d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bd90d73c2b516907768b552d6bbaa56"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a9bd90d73c2b516907768b552d6bbaa56">NETIF_INET6</a>&#160;&#160;&#160;2</td></tr>
+<tr class="separator:a9bd90d73c2b516907768b552d6bbaa56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9935405723cb9caabff3f18b66446ca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#ae9935405723cb9caabff3f18b66446ca">NETIF_ARP</a>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:ae9935405723cb9caabff3f18b66446ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b5ab571fbbee0edabe0bbf9029663cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a1b5ab571fbbee0edabe0bbf9029663cf">NETIF_ETH</a>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:a1b5ab571fbbee0edabe0bbf9029663cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4da4a42cc7d9462ce613d54d0393f8d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a4da4a42cc7d9462ce613d54d0393f8d1">NETIF_UDP</a>&#160;&#160;&#160;5</td></tr>
+<tr class="separator:a4da4a42cc7d9462ce613d54d0393f8d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a572091993e27c5d0b0b1786b05a9d233"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a572091993e27c5d0b0b1786b05a9d233">NETIF_TCP</a>&#160;&#160;&#160;6</td></tr>
+<tr class="separator:a572091993e27c5d0b0b1786b05a9d233"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaca7f6ff0ebc3b44543507ad70e9685f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#aaca7f6ff0ebc3b44543507ad70e9685f">NETIF_ICMP</a>&#160;&#160;&#160;7</td></tr>
+<tr class="separator:aaca7f6ff0ebc3b44543507ad70e9685f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63655cdcdbc2051668addaa61d30386c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a63655cdcdbc2051668addaa61d30386c">NETIF_TELNET</a>&#160;&#160;&#160;8</td></tr>
+<tr class="separator:a63655cdcdbc2051668addaa61d30386c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10eb923b0cb08f2b992345dd1a1bf98b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a10eb923b0cb08f2b992345dd1a1bf98b">NETIF_FLAGS_ENABLE</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:a10eb923b0cb08f2b992345dd1a1bf98b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fa8be0d28d77b4ab4f44d924d4d69e2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a7fa8be0d28d77b4ab4f44d924d4d69e2">ARP_DEBUG</a></td></tr>
+<tr class="separator:a7fa8be0d28d77b4ab4f44d924d4d69e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb47e3cd6431190b167127036fd827eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#afb47e3cd6431190b167127036fd827eb">RTL8139_DEBUG</a></td></tr>
+<tr class="separator:afb47e3cd6431190b167127036fd827eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Ridefinizioni di tipo (typedef)</h2></td></tr>
+<tr class="memitem:aea29db0d4ae23303ff7591af75c7b74a"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#aea29db0d4ae23303ff7591af75c7b74a">ipv4_t</a> [4]</td></tr>
+<tr class="separator:aea29db0d4ae23303ff7591af75c7b74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a195da7affbedb767969c3a02c9a82d"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a0a195da7affbedb767969c3a02c9a82d">ipv6_t</a> [8]</td></tr>
+<tr class="separator:a0a195da7affbedb767969c3a02c9a82d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95d524a06a1ff12a314f88bac04db658"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a95d524a06a1ff12a314f88bac04db658">macaddr_t</a> [6]</td></tr>
+<tr class="separator:a95d524a06a1ff12a314f88bac04db658"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6c73b8fa12396c0382f58d63e895008"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structnetif.html">netif</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#af6c73b8fa12396c0382f58d63e895008">netif_t</a></td></tr>
+<tr class="separator:af6c73b8fa12396c0382f58d63e895008"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a258b0bd35563d9af265d975f94bdbd4c"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structnetif__packet.html">netif_packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a258b0bd35563d9af265d975f94bdbd4c">netif_packet_t</a></td></tr>
+<tr class="separator:a258b0bd35563d9af265d975f94bdbd4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a202e437372fb57cace51d5724ce46fa2"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structnetif__socket.html">netif_socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="netif_8h.html#a202e437372fb57cace51d5724ce46fa2">netif_socket_t</a></td></tr>
+<tr class="separator:a202e437372fb57cace51d5724ce46fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle definizioni</h2>
+<a class="anchor" id="a7fa8be0d28d77b4ab4f44d924d4d69e2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ARP_DEBUG</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00029">29</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae9935405723cb9caabff3f18b66446ca"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_ARP&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00018">18</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1b5ab571fbbee0edabe0bbf9029663cf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_ETH&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00019">19</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a10eb923b0cb08f2b992345dd1a1bf98b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_FLAGS_ENABLE&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00026">26</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aaca7f6ff0ebc3b44543507ad70e9685f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_ICMP&#160;&#160;&#160;7</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00022">22</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a00e0d33542bf01395718b7c5047921d1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_INET&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00016">16</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9bd90d73c2b516907768b552d6bbaa56"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_INET6&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00017">17</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a92b354424f46fe25b001e3cf311fb951"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_RAW&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00015">15</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a572091993e27c5d0b0b1786b05a9d233"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_TCP&#160;&#160;&#160;6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00021">21</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a63655cdcdbc2051668addaa61d30386c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_TELNET&#160;&#160;&#160;8</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00023">23</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4da4a42cc7d9462ce613d54d0393f8d1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NETIF_UDP&#160;&#160;&#160;5</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00020">20</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afb47e3cd6431190b167127036fd827eb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RTL8139_DEBUG</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00030">30</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle ridefinizioni di tipo (typedef)</h2>
+<a class="anchor" id="aea29db0d4ae23303ff7591af75c7b74a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> ipv4_t[4]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00010">10</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0a195da7affbedb767969c3a02c9a82d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a> ipv6_t[8]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00011">11</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a95d524a06a1ff12a314f88bac04db658"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a> macaddr_t[6]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="netif_8h_source.html#l00012">12</a> del file <a class="el" href="netif_8h_source.html">netif.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a258b0bd35563d9af265d975f94bdbd4c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structnetif__packet.html">netif_packet</a>  <a class="el" href="netif_8h.html#a258b0bd35563d9af265d975f94bdbd4c">netif_packet_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a202e437372fb57cace51d5724ce46fa2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structnetif__socket.html">netif_socket</a>  <a class="el" href="netif_8h.html#a202e437372fb57cace51d5724ce46fa2">netif_socket_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af6c73b8fa12396c0382f58d63e895008"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structnetif.html">netif</a>  <a class="el" href="netif_8h.html#af6c73b8fa12396c0382f58d63e895008">netif_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="dir_cfd1fb2b98030f4f81570490591de86f.html">aplus</a></li><li class="navelem"><a class="el" href="netif_8h.html">netif.h</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>pthread_key_t</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L211'>pthread_key_t</a>     211 usr/src/libpthread/include/pthread.h int pthread_key_create(pthread_key_t *key, void (*destructor)(void *));
+<a href='../S/43.html#L212'>pthread_key_t</a>     212 usr/src/libpthread/include/pthread.h int pthread_key_delete(pthread_key_t key);
+<a href='../S/43.html#L213'>pthread_key_t</a>     213 usr/src/libpthread/include/pthread.h int pthread_setspecific(pthread_key_t key, const void *value);
+<a href='../S/43.html#L214'>pthread_key_t</a>     214 usr/src/libpthread/include/pthread.h void *pthread_getspecific(pthread_key_t key);
+<a href='../S/70.html#L9'>pthread_key_t</a>       9 usr/src/libpthread/src/pthread_key.c PUBLIC int pthread_key_create(pthread_key_t *key, void (*destructor)(void *)) {
+<a href='../S/70.html#L32'>pthread_key_t</a>      32 usr/src/libpthread/src/pthread_key.c PUBLIC int pthread_key_delete(pthread_key_t key) {
+<a href='../S/70.html#L49'>pthread_key_t</a>      49 usr/src/libpthread/src/pthread_key.c PUBLIC int pthread_setspecific(pthread_key_t key, const void *value) {
+<a href='../S/70.html#L65'>pthread_key_t</a>      65 usr/src/libpthread/src/pthread_key.c PUBLIC void *pthread_getspecific(pthread_key_t key) {
+<a href='../S/47.html#L75'>pthread_key_t</a>      75 usr/src/libpthread/test/main.c 	pthread_key_t key_7;
+</pre>
+</body>
+</html>

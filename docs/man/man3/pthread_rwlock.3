@@ -1,0 +1,72 @@
+.TH "pthread_rwlock" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+pthread_rwlock \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <pthread\&.h>\fP
+.SS "Campi"
+
+.in +1c
+.ti -1c
+.RI "\fBpthread_mutex_t\fP \fBrdmutex\fP"
+.br
+.ti -1c
+.RI "\fBpthread_mutex_t\fP \fBwrmutex\fP"
+.br
+.ti -1c
+.RI "\fBhandle_t\fP \fBshared_waiters\fP"
+.br
+.ti -1c
+.RI "\fBhandle_t\fP \fBexclusive_waiters\fP"
+.br
+.ti -1c
+.RI "int \fBnum_shared_waiters\fP"
+.br
+.ti -1c
+.RI "int \fBnum_exclusive_waiters\fP"
+.br
+.ti -1c
+.RI "\fBpthread_t\fP \fBowner\fP"
+.br
+.in -1c
+.SH "Descrizione dettagliata"
+.PP 
+Definizione alla linea 132 del file pthread\&.h\&.
+.SH "Documentazione dei campi"
+.PP 
+.SS "\fBhandle_t\fP pthread_rwlock::exclusive_waiters"
+
+.PP
+Definizione alla linea 136 del file pthread\&.h\&.
+.SS "int pthread_rwlock::num_exclusive_waiters"
+
+.PP
+Definizione alla linea 138 del file pthread\&.h\&.
+.SS "int pthread_rwlock::num_shared_waiters"
+
+.PP
+Definizione alla linea 137 del file pthread\&.h\&.
+.SS "\fBpthread_t\fP pthread_rwlock::owner"
+
+.PP
+Definizione alla linea 139 del file pthread\&.h\&.
+.SS "\fBpthread_mutex_t\fP pthread_rwlock::rdmutex"
+
+.PP
+Definizione alla linea 133 del file pthread\&.h\&.
+.SS "\fBhandle_t\fP pthread_rwlock::shared_waiters"
+
+.PP
+Definizione alla linea 135 del file pthread\&.h\&.
+.SS "\fBpthread_mutex_t\fP pthread_rwlock::wrmutex"
+
+.PP
+Definizione alla linea 134 del file pthread\&.h\&.
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

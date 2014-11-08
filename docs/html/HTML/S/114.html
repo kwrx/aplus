@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>src/net/udp.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/udp.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L12'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L12' title='Defined at 12.'>udp_recv</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;<a href='93.html'>aplus/net/eth.h</a>&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;<a href='91.html'>aplus/net/udp.h</a>&gt;
+<a name='L11'>  11 
+<a name='L12'>  12 <b>int</b> <a href='../R/518.html' title='Multiple refered from 2 places.'>udp_recv</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) <font color='red'>{</font>
+<a name='L13'>  13         
+<a name='L14'>  14         <a href='../S/107.html#L242' title='Defined at 242 in src/net/netif.c.'>netif_packets_add</a> (
+<a name='L15'>  15                 <a href='../S/107.html#L279' title='Defined at 279 in src/net/netif.c.'>netif_packets_create</a> (
+<a name='L16'>  16                                                         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>,
+<a name='L17'>  17                                                         <a href='../S/89.html#L20' title='Defined at 20 in src/include/aplus/netif.h.'>NETIF_UDP</a>, 
+<a name='L18'>  18                                                         <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, 
+<a name='L19'>  19                                                         <b>sizeof</b>(<a href='../S/91.html#L12' title='Defined at 12 in src/include/aplus/net/udp.h.'>udp_header_t</a>), 
+<a name='L20'>  20                                                         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>
+<a name='L21'>  21                 )
+<a name='L22'>  22         );
+<a name='L23'>  23 
+<a name='L24'>  24         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L25'>  25 <font color='red'>}</font>
+<a name='L26'>  26 
+<a name='L27'>  27 <i><font color='green'>/* TODO: udp_send */</font></i>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L12'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

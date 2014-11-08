@@ -1,0 +1,118 @@
+.TH "src/include/aplus/net/eth.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/net/eth.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBeth_header\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBETH_TYPE_IPV4\fP   0x0800"
+.br
+.ti -1c
+.RI "#define \fBETH_TYPE_ARP\fP   0x0806"
+.br
+.ti -1c
+.RI "#define \fBETH_TYPE_IPV6\fP   0x86DD"
+.br
+.ti -1c
+.RI "#define \fBETH_TYPE_WAKEONLAN\fP   0x0842"
+.br
+.ti -1c
+.RI "#define \fBETH_TYPE_RARP\fP   0x8035"
+.br
+.ti -1c
+.RI "#define \fBETH_TYPE_RAW\fP   0xFFFF"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "struct \fBeth_header\fP \fB__attribute__\fP ((packed)) eth_header_t"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBmacaddr_t\fP \fBdest\fP"
+.br
+.ti -1c
+.RI "\fBmacaddr_t\fP \fBsource\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBtype\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define ETH_TYPE_ARP   0x0806"
+
+.PP
+Definizione alla linea 13 del file eth\&.h\&.
+.SS "#define ETH_TYPE_IPV4   0x0800"
+
+.PP
+Definizione alla linea 12 del file eth\&.h\&.
+.SS "#define ETH_TYPE_IPV6   0x86DD"
+
+.PP
+Definizione alla linea 14 del file eth\&.h\&.
+.SS "#define ETH_TYPE_RARP   0x8035"
+
+.PP
+Definizione alla linea 16 del file eth\&.h\&.
+.SS "#define ETH_TYPE_RAW   0xFFFF"
+
+.PP
+Definizione alla linea 17 del file eth\&.h\&.
+.SS "#define ETH_TYPE_WAKEONLAN   0x0842"
+
+.PP
+Definizione alla linea 15 del file eth\&.h\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "struct \fBeth_header\fP __attribute__ ((packed))"
+
+.PP
+Definizione alla linea 44 del file desc\&.c\&.
+.PP
+.nf
+46                        {
+47     uint16_t limit;
+48     uint32_t base;
+49 } __attribute__((packed)) gdt_ptr_t;
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBmacaddr_t\fP dest"
+
+.PP
+Definizione alla linea 44 del file eth\&.h\&.
+.SS "\fBmacaddr_t\fP source"
+
+.PP
+Definizione alla linea 45 del file eth\&.h\&.
+.SS "\fBuint16_t\fP type"
+
+.PP
+Definizione alla linea 46 del file eth\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

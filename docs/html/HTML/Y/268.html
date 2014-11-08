@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>fmt</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/155.html#L74'>fmt</a>                74 src/debug.c    size_t vasprintf(char * buf, const char *fmt, va_list args) {
+<a href='../S/155.html#L78'>fmt</a>                78 src/debug.c    	int len = strlen(fmt);
+<a href='../S/155.html#L79'>fmt</a>                79 src/debug.c    	for ( ; i &lt; len &amp;&amp; fmt[i]; ++i) {
+<a href='../S/155.html#L80'>fmt</a>                80 src/debug.c    		if (fmt[i] != '%') {
+<a href='../S/155.html#L81'>fmt</a>                81 src/debug.c    			buf[ptr++] = fmt[i];
+<a href='../S/155.html#L86'>fmt</a>                86 src/debug.c    		while (fmt[i] &gt;= '0' &amp;&amp; fmt[i] &lt;= '9') {
+<a href='../S/155.html#L88'>fmt</a>                88 src/debug.c    			arg_width += fmt[i] - '0';
+<a href='../S/155.html#L92'>fmt</a>                92 src/debug.c    		switch (fmt[i]) {
+<a href='../S/155.html#L115'>fmt</a>               115 src/debug.c    				buf[ptr++] = fmt[i];
+<a href='../S/155.html#L126'>fmt</a>               126 src/debug.c    void kprintf(char* fmt, ...) {
+<a href='../S/155.html#L131'>fmt</a>               131 src/debug.c    	va_start(lst, fmt);
+<a href='../S/155.html#L132'>fmt</a>               132 src/debug.c    	vasprintf(__kprintf_buf, fmt, lst);
+</pre>
+</body>
+</html>

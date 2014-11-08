@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>tm</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L379'>tm</a>                379 src/arch/desc.c 	static struct tm t;
+<a href='../S/116.html#L15'>tm</a>                 15 src/syscall/times.c clock_t sys_times(struct tms* tm) {
+<a href='../S/116.html#L16'>tm</a>                 16 src/syscall/times.c 	if(tm == NULL) 
+<a href='../S/116.html#L20'>tm</a>                 20 src/syscall/times.c 	tm-&gt;tms_utime = current_task-&gt;clock;
+<a href='../S/116.html#L21'>tm</a>                 21 src/syscall/times.c 	tm-&gt;tms_stime = 0;
+<a href='../S/116.html#L22'>tm</a>                 22 src/syscall/times.c 	tm-&gt;tms_cstime = 0;
+<a href='../S/116.html#L27'>tm</a>                 27 src/syscall/times.c 		tm-&gt;tms_cutime = current_task-&gt;clock + child-&gt;clock;
+<a href='../S/116.html#L29'>tm</a>                 29 src/syscall/times.c 		tm-&gt;tms_cutime = 0;
+<a href='../S/24.html#L16'>tm</a>                 16 usr/src/libposix/src/nanosleep.c 	struct timeval* tm = malloc(sizeof(struct timeval));
+<a href='../S/24.html#L19'>tm</a>                 19 usr/src/libposix/src/nanosleep.c 	if(!tm &amp;&amp; !tz) {
+<a href='../S/24.html#L24'>tm</a>                 24 usr/src/libposix/src/nanosleep.c 	if(gettimeofday(tm, tz) != 0)
+<a href='../S/24.html#L27'>tm</a>                 27 usr/src/libposix/src/nanosleep.c 	int t0 = req-&gt;tv_sec + tm-&gt;tv_sec;
+<a href='../S/24.html#L28'>tm</a>                 28 usr/src/libposix/src/nanosleep.c 	int t1 = req-&gt;tv_nsec + tm-&gt;tv_usec;
+<a href='../S/24.html#L32'>tm</a>                 32 usr/src/libposix/src/nanosleep.c 		if(gettimeofday(tm, tz) != 0)
+<a href='../S/24.html#L35'>tm</a>                 35 usr/src/libposix/src/nanosleep.c 		if(tm-&gt;tv_sec &gt; t0 &amp;&amp; tm-&gt;tv_usec &gt; t1)
+<a href='../S/24.html#L39'>tm</a>                 39 usr/src/libposix/src/nanosleep.c 			rem-&gt;tv_sec = t0 - tm-&gt;tv_sec;
+<a href='../S/24.html#L40'>tm</a>                 40 usr/src/libposix/src/nanosleep.c 			rem-&gt;tv_nsec = t1 - tm-&gt;tv_usec;
+<a href='../S/24.html#L47'>tm</a>                 47 usr/src/libposix/src/nanosleep.c 	free(tm);
+</pre>
+</body>
+</html>

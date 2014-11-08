@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__spin_8c">
+    <title>pthread_spin.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__spin_8c_1adeb2a567e6ea725a201a151747315072">pthread_spin_init</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock, int pshared)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__spin_8c_1a7b6102c55f484c1f57b34294d16b13d1">pthread_spin_destroy</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__spin_8c_1a11a36f5063d9ec9958c59fd5712a297c">pthread_spin_lock</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__spin_8c_1aa4ee5217fd415283c75e390c76c53c5f">pthread_spin_trylock</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__spin_8c_1a923365fbde5bb89fcb333d057e9d33e5">pthread_spin_unlock</link> (
+<link linkend="pthread_8h_1a89b34d06ba0b6d13117e0043ea284800">pthread_spinlock_t</link> * lock)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c</para>
+    </simplesect>
+</section>

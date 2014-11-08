@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>req</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/146.html#L102'>req</a>               102 src/fs/fs.c    int fs_ioctl(struct inode* inode, int req, void* buf) {
+<a href='../S/146.html#L104'>req</a>               104 src/fs/fs.c    		return inode-&gt;ioctl(inode, req, buf);
+<a href='../S/97.html#L67'>req</a>                67 src/include/aplus/fs.h 	int (*ioctl) (struct inode* inode, int req, void* buf);
+<a href='../S/136.html#L15'>req</a>                15 src/syscall/ioctl.c int sys_ioctl(int fd, int req, void* buf) {
+<a href='../S/136.html#L24'>req</a>                24 src/syscall/ioctl.c 	return fs_ioctl(ino, req, buf);
+<a href='../S/24.html#L10'>req</a>                10 usr/src/libposix/src/nanosleep.c int nanosleep(const struct timespec* req, struct timespec* rem) {
+<a href='../S/24.html#L11'>req</a>                11 usr/src/libposix/src/nanosleep.c 	if(req-&gt;tv_sec &gt; 999999999) {
+<a href='../S/24.html#L27'>req</a>                27 usr/src/libposix/src/nanosleep.c 	int t0 = req-&gt;tv_sec + tm-&gt;tv_sec;
+<a href='../S/24.html#L28'>req</a>                28 usr/src/libposix/src/nanosleep.c 	int t1 = req-&gt;tv_nsec + tm-&gt;tv_usec;
+</pre>
+</body>
+</html>

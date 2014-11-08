@@ -1,0 +1,60 @@
+.TH "src/syscall/link.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/link.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_link\fP (char *filename, char *link)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_link\fP, 8)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_link (char *filename, char *link)"
+
+.PP
+Definizione alla linea 14 del file link\&.c\&.
+.PP
+Referenzia errno, e kprintf\&.
+.PP
+.nf
+14                                          {
+15     /* TODO */
+16     kprintf("sys_link: TODO");
+17 
+18     errno = ENOSYS;
+19     return -1;
+20 }
+.fi
+.SS "SYSCALL (\fBsys_link\fP, 8)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

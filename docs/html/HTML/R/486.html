@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>slirpcard</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/110.html#L26'>slirpcard</a>          26 src/net/slirp/slirp.c static slirpcard_t* slirpcard = NULL;
+<a href='../S/110.html#L29'>slirpcard</a>          29 src/net/slirp/slirp.c 	if(slirpcard == NULL)
+<a href='../S/110.html#L32'>slirpcard</a>          32 src/net/slirp/slirp.c 	netif_t* netif = slirpcard-&gt;netif;
+<a href='../S/110.html#L39'>slirpcard</a>          39 src/net/slirp/slirp.c 	uint8_t d = serial_recv(slirpcard-&gt;ioport);
+<a href='../S/110.html#L40'>slirpcard</a>          40 src/net/slirp/slirp.c 	if(slirpcard-&gt;used == 0) {
+<a href='../S/110.html#L44'>slirpcard</a>          44 src/net/slirp/slirp.c 		if(slirpcard-&gt;buffer)
+<a href='../S/110.html#L45'>slirpcard</a>          45 src/net/slirp/slirp.c 			kfree(slirpcard-&gt;buffer);
+<a href='../S/110.html#L47'>slirpcard</a>          47 src/net/slirp/slirp.c 		slirpcard-&gt;buffer = (uint8_t*) kmalloc(sizeof(uint8_t) * SLIRP_BUFSIZ);
+<a href='../S/110.html#L48'>slirpcard</a>          48 src/net/slirp/slirp.c 		slirpcard-&gt;offset = 0;
+<a href='../S/110.html#L49'>slirpcard</a>          49 src/net/slirp/slirp.c 		slirpcard-&gt;used = 1;
+<a href='../S/110.html#L53'>slirpcard</a>          53 src/net/slirp/slirp.c 	if((d == SLIRP_PACKET_END &amp;&amp; slirpcard-&gt;used) || slirpcard-&gt;offset &gt;= SLIRP_BUFSIZ) {
+<a href='../S/110.html#L54'>slirpcard</a>          54 src/net/slirp/slirp.c 		slirpcard-&gt;used = 0;
+<a href='../S/110.html#L56'>slirpcard</a>          56 src/net/slirp/slirp.c 		if(ipv4_recv(netif, slirpcard-&gt;buffer, slirpcard-&gt;offset) &gt; 0) {
+<a href='../S/110.html#L58'>slirpcard</a>          58 src/net/slirp/slirp.c 			netif-&gt;state.rx_bytes += slirpcard-&gt;offset;
+<a href='../S/110.html#L62'>slirpcard</a>          62 src/net/slirp/slirp.c 		slirpcard-&gt;offset = 0;
+<a href='../S/110.html#L67'>slirpcard</a>          67 src/net/slirp/slirp.c 			d = serial_recv(slirpcard-&gt;ioport);
+<a href='../S/110.html#L79'>slirpcard</a>          79 src/net/slirp/slirp.c 			slirpcard-&gt;buffer[slirpcard-&gt;offset++] = d;
+<a href='../S/110.html#L89'>slirpcard</a>          89 src/net/slirp/slirp.c 	slirpcard_t* slirpcard = (slirpcard_t*) netif-&gt;data;
+<a href='../S/110.html#L90'>slirpcard</a>          90 src/net/slirp/slirp.c 	if(slirpcard-&gt;magic != SLIRP_MAGIC)
+<a href='../S/110.html#L94'>slirpcard</a>          94 src/net/slirp/slirp.c 	serial_send(slirpcard-&gt;ioport, SLIRP_PACKET_END);
+<a href='../S/110.html#L100'>slirpcard</a>         100 src/net/slirp/slirp.c 				serial_send(slirpcard-&gt;ioport, SLIRP_PACKET_ESC);
+<a href='../S/110.html#L101'>slirpcard</a>         101 src/net/slirp/slirp.c 				serial_send(slirpcard-&gt;ioport, SLIRP_PACKET_ESC_END);
+<a href='../S/110.html#L105'>slirpcard</a>         105 src/net/slirp/slirp.c 				serial_send(slirpcard-&gt;ioport, SLIRP_PACKET_ESC);
+<a href='../S/110.html#L106'>slirpcard</a>         106 src/net/slirp/slirp.c 				serial_send(slirpcard-&gt;ioport, SLIRP_PACKET_ESC_ESC);
+<a href='../S/110.html#L110'>slirpcard</a>         110 src/net/slirp/slirp.c 				serial_send(slirpcard-&gt;ioport, b[i]);
+<a href='../S/110.html#L115'>slirpcard</a>         115 src/net/slirp/slirp.c 	serial_send(slirpcard-&gt;ioport, SLIRP_PACKET_END);
+<a href='../S/110.html#L131'>slirpcard</a>         131 src/net/slirp/slirp.c 	slirpcard = (slirpcard_t*) kmalloc(sizeof(slirpcard_t));
+<a href='../S/110.html#L132'>slirpcard</a>         132 src/net/slirp/slirp.c 	slirpcard-&gt;magic = SLIRP_MAGIC;
+<a href='../S/110.html#L133'>slirpcard</a>         133 src/net/slirp/slirp.c 	slirpcard-&gt;buffer = NULL;
+<a href='../S/110.html#L134'>slirpcard</a>         134 src/net/slirp/slirp.c 	slirpcard-&gt;offset = 0;
+<a href='../S/110.html#L135'>slirpcard</a>         135 src/net/slirp/slirp.c 	slirpcard-&gt;used = 0;
+<a href='../S/110.html#L136'>slirpcard</a>         136 src/net/slirp/slirp.c 	slirpcard-&gt;ioport = 1;
+<a href='../S/110.html#L204'>slirpcard</a>         204 src/net/slirp/slirp.c 	netif-&gt;data = (void*) slirpcard;
+<a href='../S/110.html#L206'>slirpcard</a>         206 src/net/slirp/slirp.c 	slirpcard-&gt;netif = netif;
+</pre>
+</body>
+</html>

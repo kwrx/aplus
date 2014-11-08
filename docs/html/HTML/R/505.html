@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>task</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/156.html#L59'>task</a>               59 src/bufio.c    	buf-&gt;task = current_task;
+<a href='../S/156.html#L81'>task</a>               81 src/bufio.c    	buf-&gt;task = current_task;
+<a href='../S/98.html#L38'>task</a>               38 src/include/aplus/bufio.h 	task_t* task;
+<a href='../S/90.html#L108'>task</a>              108 src/include/aplus/task.h 	struct task* parent;
+<a href='../S/148.html#L61'>task</a>               61 src/panic.c    		task_t* task = (task_t*) value;
+<a href='../S/148.html#L62'>task</a>               62 src/panic.c    		kprintf(" # %d: ", task-&gt;pid);
+<a href='../S/148.html#L64'>task</a>               64 src/panic.c    		if(task-&gt;exe)
+<a href='../S/148.html#L65'>task</a>               65 src/panic.c    			kprintf("%s ", task-&gt;exe-&gt;name);
+<a href='../S/148.html#L69'>task</a>               69 src/panic.c    		if(task == current_task)
+<a href='../S/148.html#L72'>task</a>               72 src/panic.c    		if(task == kernel_task)
+<a href='../S/143.html#L147'>task</a>              147 src/sched.c    	if(!task)
+<a href='../S/143.html#L150'>task</a>              150 src/sched.c    	list_remove(task_queue, (listval_t) task);
+<a href='../S/143.html#L152'>task</a>              152 src/sched.c    	task-&gt;state = TASK_STATE_DEAD;
+<a href='../S/143.html#L153'>task</a>              153 src/sched.c    	task-&gt;exitcode = status;
+<a href='../S/143.html#L155'>task</a>              155 src/sched.c    	kfree((void*) task-&gt;image.ptr);
+<a href='../S/125.html#L11'>task</a>               11 src/syscall/kill.c 	task_t* task = (task_t*) schedule_getbypid(pid);
+<a href='../S/125.html#L12'>task</a>               12 src/syscall/kill.c 	if(!task) {
+<a href='../S/125.html#L17'>task</a>               17 src/syscall/kill.c 	task-&gt;signal_sig = signal;
+</pre>
+</body>
+</html>

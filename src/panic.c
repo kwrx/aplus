@@ -2,12 +2,17 @@
 #include <aplus/task.h>
 #include <aplus/fs.h>
 #include <aplus/list.h>
-
+#include <errno.h>
 
 
 extern list_t* task_queue;
 extern task_t* current_task;
 extern task_t* kernel_task;
+
+
+static void dump_errno() {
+	kprintf("errno: %d - %s\n", errno, strerror(errno));
+}
 
 static void dump_registers() {
 
@@ -72,7 +77,7 @@ static void dump_task() {
 		if(task == kernel_task)
 			kprintf("(kernel) ");
 			
-		kprintf("\n");
+		kprintf("\n\n");
 	}
 }
 
@@ -80,10 +85,11 @@ void panic(char* msg) {
 	__asm__ ("cli");
 	kprintf("panic: \"%s\"\n", msg);
 	
+	
 	dump_registers();
 	dump_stacktrace(6);
 	dump_task();
-	
+	dump_errno();
 	
 	for(;;);
 }

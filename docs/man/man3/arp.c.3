@@ -1,0 +1,176 @@
+.TH "src/net/arp.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/arp.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <aplus/net/eth\&.h>\fP
+.br
+\fC#include <aplus/net/arp\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBarp_cache_entry_t\fP * \fBarp_cache_find_by_macaddr\fP (\fBmacaddr_t\fP macaddr)"
+.br
+.ti -1c
+.RI "int \fBarp_cache_add\fP (\fBmacaddr_t\fP macaddr, \fBipv4_t\fP ipv4)"
+.br
+.ti -1c
+.RI "int \fBarp_recv\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP)"
+.br
+.ti -1c
+.RI "int \fBarp_send\fP (\fBnetif_t\fP *\fBnetif\fP)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBlist_t\fP * \fBarp_cache\fP = NULL"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int arp_cache_add (\fBmacaddr_t\fPmacaddr, \fBipv4_t\fPipv4)"
+
+.PP
+Definizione alla linea 33 del file arp\&.c\&.
+.PP
+Referenzia arp_cache_find_by_macaddr(), netif::ipv4, kmalloc(), kprintf, list_add(), list_init, list_remove(), e netif_find_by_macaddr()\&.
+.PP
+.nf
+33                                                   {
+34     if(arp_cache == NULL) {
+35         list_init(arp_cache);
+36     }
+37 
+38 
+39     arp_cache_entry_t* arp = arp_cache_find_by_macaddr(macaddr);
+40     if(arp)
+41         list_remove(arp_cache, (listval_t) arp);
+42 
+43 
+44     arp = kmalloc(sizeof(arp_cache_entry_t));
+45     memcpy(arp->macaddr, macaddr, sizeof(macaddr_t));
+46     memcpy(arp->ipv4, ipv4, sizeof(ipv4_t));
+47 
+48     //arp->ttl = time(NULL) + ARP_TTL;
+49 
+50 
+51 #ifdef ARP_DEBUG
+52     kprintf("arp: added new cache entry (%02x\&.%02x\&.%02x\&.%02x)\n",
+53         arp->ipv4[0],
+54         arp->ipv4[1],
+55         arp->ipv4[2],
+56         arp->ipv4[3]
+57     );
+58 #endif
+59 
+60     netif_t* netif = (netif_t*) netif_find_by_macaddr(arp->macaddr);
+61     if(netif)
+62         memcpy(netif->ipv4, arp->ipv4, sizeof(ipv4_t));
+63 
+64     return list_add(arp_cache, (listval_t) arp);
+65 }
+.fi
+.SS "\fBarp_cache_entry_t\fP* arp_cache_find_by_macaddr (\fBmacaddr_t\fPmacaddr)"
+
+.PP
+Definizione alla linea 16 del file arp\&.c\&.
+.PP
+Referenzia list_empty(), list_foreach, arp_cache_entry::macaddr, e value\&.
+.PP
+.nf
+16                                                                 {
+17     if(arp_cache == NULL)
+18         return NULL;
+19 
+20     if(list_empty(arp_cache))
+21         return NULL;
+22 
+23     list_foreach(value, arp_cache) {
+24         arp_cache_entry_t* arp = (arp_cache_entry_t*) value;
+25 
+26         if(memcmp(arp->macaddr, macaddr, sizeof(macaddr_t)) == 0)
+27             return arp;
+28     }
+29 
+30     return NULL;
+31 }
+.fi
+.SS "int arp_recv (\fBnetif_t\fP *netif, void *buf, size_tlength)"
+
+.PP
+Definizione alla linea 67 del file arp\&.c\&.
+.PP
+Referenzia arp_cache_add(), ARP_OPERATION_REPLY, length, e netif::macaddr\&.
+.PP
+.nf
+67                                                        {
+68     arp_header_t* arp = (arp_header_t*) buf;
+69 
+70 
+71     if(arp->operation == ARP_OPERATION_REPLY)
+72         if(memcmp(netif->macaddr, arp->tha, sizeof(macaddr_t)) == 0)
+73             arp_cache_add(arp->tha, arp->tpa);
+74 
+75     return length;
+76 }
+.fi
+.SS "int arp_send (\fBnetif_t\fP *netif)"
+
+.PP
+Definizione alla linea 79 del file arp\&.c\&.
+.PP
+Referenzia ARP_HWLEN, ARP_HWTYPE, ARP_OPERATION_REQUEST, ARP_PRLEN, ARP_PRTYPE, eth_send(), kfree(), kmalloc(), kprintf, netif::macaddr, netif::name, e NETIF_ARP\&.
+.PP
+.nf
+79                              {
+80     arp_header_t* arp = (arp_header_t*) kmalloc(sizeof(arp_header_t));
+81     arp->hwtype = ARP_HWTYPE;
+82     arp->prtype = ARP_PRTYPE;
+83     arp->hwlen = ARP_HWLEN;
+84     arp->prlen = ARP_PRLEN;
+85     arp->operation = ARP_OPERATION_REQUEST;
+86     
+87     memcpy(arp->sha, netif->macaddr, sizeof(macaddr_t));
+88     memset(arp->tha, 0, sizeof(macaddr_t));
+89     memset(arp->spa, 0, sizeof(ipv4_t));
+90     memset(arp->tpa, 0, sizeof(ipv4_t));
+91 
+92 #ifdef ARP_DEBUG
+93     kprintf("arp: sending request for %s\n", netif->name);
+94 #endif
+95 
+96     int ret = eth_send(netif, arp, sizeof(arp_header_t), NETIF_ARP);
+97     kfree(arp);
+98     
+99     return ret;
+100 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBlist_t\fP* arp_cache = NULL"
+
+.PP
+Definizione alla linea 13 del file arp\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

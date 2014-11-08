@@ -1,0 +1,399 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structinode" kind="struct" prot="public">
+    <compoundname>inode</compoundname>
+    <includes refid="fs_8h" local="no">fs.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char inode::name[255]</definition>
+        <argsstring>[255]</argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="37" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a127a2eb030df332fa64a81188731ad6b" prot="public" static="no" mutable="no">
+        <type>dev_t</type>
+        <definition>dev_t inode::dev</definition>
+        <argsstring></argsstring>
+        <name>dev</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="39" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" prot="public" static="no" mutable="no">
+        <type>ino_t</type>
+        <definition>ino_t inode::ino</definition>
+        <argsstring></argsstring>
+        <name>ino</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="40" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" prot="public" static="no" mutable="no">
+        <type>mode_t</type>
+        <definition>mode_t inode::mode</definition>
+        <argsstring></argsstring>
+        <name>mode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="41" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a1daedc820c86b5af32f0a137419f7a8f" prot="public" static="no" mutable="no">
+        <type>nlink_t</type>
+        <definition>nlink_t inode::nlink</definition>
+        <argsstring></argsstring>
+        <name>nlink</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="42" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a0eac94e96ded19029e871d5cce815bcb" prot="public" static="no" mutable="no">
+        <type>uid_t</type>
+        <definition>uid_t inode::uid</definition>
+        <argsstring></argsstring>
+        <name>uid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="43" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a8434fb9dd05057d00b37ed713713835d" prot="public" static="no" mutable="no">
+        <type>gid_t</type>
+        <definition>gid_t inode::gid</definition>
+        <argsstring></argsstring>
+        <name>gid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="44" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a3e7613383954ff7b5faf7c2188e1f61b" prot="public" static="no" mutable="no">
+        <type>dev_t</type>
+        <definition>dev_t inode::rdev</definition>
+        <argsstring></argsstring>
+        <name>rdev</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="45" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a53722b1b60b7136ce0204b66527bb400" prot="public" static="no" mutable="no">
+        <type>off_t</type>
+        <definition>off_t inode::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="46" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a5756f61233e40d01652094d29b5daf6c" prot="public" static="no" mutable="no">
+        <type>off_t</type>
+        <definition>off_t inode::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="47" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a7e52661a115f6def97778566f2be0d80" prot="public" static="no" mutable="no">
+        <type>time_t</type>
+        <definition>time_t inode::atime</definition>
+        <argsstring></argsstring>
+        <name>atime</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="49" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a19f0d407fa2962c942e406d3e00c1da4" prot="public" static="no" mutable="no">
+        <type>time_t</type>
+        <definition>time_t inode::mtime</definition>
+        <argsstring></argsstring>
+        <name>mtime</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="50" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" prot="public" static="no" mutable="no">
+        <type>time_t</type>
+        <definition>time_t inode::ctime</definition>
+        <argsstring></argsstring>
+        <name>ctime</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="51" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* inode::userdata</definition>
+        <argsstring></argsstring>
+        <name>userdata</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="53" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1ae2c5e8a0a372334b97024fbd9ef694c1" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* inode::read)(struct inode *inode, char *ptr, int len)</definition>
+        <argsstring>)(struct inode *inode, char *ptr, int len)</argsstring>
+        <name>read</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="55" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a53a123d38834fa17e7ef5c1e5f47bba2" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* inode::write)(struct inode *inode, char *ptr, int len)</definition>
+        <argsstring>)(struct inode *inode, char *ptr, int len)</argsstring>
+        <name>write</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a0a54c11571f19f23322f3e6ad3ecb113" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structdirent" kindref="compound">dirent</ref> *(*</type>
+        <definition>struct dirent*(* inode::readdir)(struct inode *inode, int index)</definition>
+        <argsstring>)(struct inode *inode, int index)</argsstring>
+        <name>readdir</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1ab6c5e2d912fdbd506086e53185cd370d" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structinode" kindref="compound">inode</ref> *(*</type>
+        <definition>struct inode*(* inode::finddir)(struct inode *inode, char *name)</definition>
+        <argsstring>)(struct inode *inode, char *name)</argsstring>
+        <name>finddir</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1ad622a049b34780786d9ba4311b06b3b4" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structinode" kindref="compound">inode</ref> *(*</type>
+        <definition>struct inode*(* inode::creat)(struct inode *inode, char *name, mode_t mode)</definition>
+        <argsstring>)(struct inode *inode, char *name, mode_t mode)</argsstring>
+        <name>creat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a5a309a9c4ada7e4d062162b06125a929" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* inode::rename)(struct inode *inode, char *oldname, char *newname)</definition>
+        <argsstring>)(struct inode *inode, char *oldname, char *newname)</argsstring>
+        <name>rename</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="62" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1adf65bac80736631b8000d3d34e953aaa" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* inode::unlink)(struct inode *inode, char *name)</definition>
+        <argsstring>)(struct inode *inode, char *name)</argsstring>
+        <name>unlink</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="63" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a8221183a697c9f2b4e0e295f5a9d8afd" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* inode::chown)(struct inode *inode, uid_t owner, gid_t group)</definition>
+        <argsstring>)(struct inode *inode, uid_t owner, gid_t group)</argsstring>
+        <name>chown</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="64" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1ae2972ef183f5c39aac7cb83b9f8a04a8" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* inode::flush)(struct inode *inode)</definition>
+        <argsstring>)(struct inode *inode)</argsstring>
+        <name>flush</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="65" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a636843da203574bc338b016758bf8c7e" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* inode::ioctl)(struct inode *inode, int req, void *buf)</definition>
+        <argsstring>)(struct inode *inode, int req, void *buf)</argsstring>
+        <name>ioctl</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="67" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structinode" kindref="compound">inode</ref> *</type>
+        <definition>struct inode* inode::parent</definition>
+        <argsstring></argsstring>
+        <name>parent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="70" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structinode_1a3533c53c5391601c66b3ae0f389c0843" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structinode" kindref="compound">inode</ref> *</type>
+        <definition>struct inode* inode::link</definition>
+        <argsstring></argsstring>
+        <name>link</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="41">
+        <label>inode</label>
+        <link refid="structinode"/>
+        <childnode refid="41" relation="usage">
+          <edgelabel>+finddir</edgelabel>
+          <edgelabel>+link</edgelabel>
+          <edgelabel>+parent</edgelabel>
+          <edgelabel>+creat</edgelabel>
+        </childnode>
+        <childnode refid="42" relation="usage">
+          <edgelabel>+readdir</edgelabel>
+        </childnode>
+      </node>
+      <node id="42">
+        <label>dirent</label>
+        <link refid="structdirent"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="36" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="36" bodyend="72"/>
+    <listofallmembers>
+      <member refid="structinode_1a7e52661a115f6def97778566f2be0d80" prot="public" virt="non-virtual"><scope>inode</scope><name>atime</name></member>
+      <member refid="structinode_1a8221183a697c9f2b4e0e295f5a9d8afd" prot="public" virt="non-virtual"><scope>inode</scope><name>chown</name></member>
+      <member refid="structinode_1ad622a049b34780786d9ba4311b06b3b4" prot="public" virt="non-virtual"><scope>inode</scope><name>creat</name></member>
+      <member refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" prot="public" virt="non-virtual"><scope>inode</scope><name>ctime</name></member>
+      <member refid="structinode_1a127a2eb030df332fa64a81188731ad6b" prot="public" virt="non-virtual"><scope>inode</scope><name>dev</name></member>
+      <member refid="structinode_1ab6c5e2d912fdbd506086e53185cd370d" prot="public" virt="non-virtual"><scope>inode</scope><name>finddir</name></member>
+      <member refid="structinode_1ae2972ef183f5c39aac7cb83b9f8a04a8" prot="public" virt="non-virtual"><scope>inode</scope><name>flush</name></member>
+      <member refid="structinode_1a8434fb9dd05057d00b37ed713713835d" prot="public" virt="non-virtual"><scope>inode</scope><name>gid</name></member>
+      <member refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" prot="public" virt="non-virtual"><scope>inode</scope><name>ino</name></member>
+      <member refid="structinode_1a636843da203574bc338b016758bf8c7e" prot="public" virt="non-virtual"><scope>inode</scope><name>ioctl</name></member>
+      <member refid="structinode_1a3533c53c5391601c66b3ae0f389c0843" prot="public" virt="non-virtual"><scope>inode</scope><name>link</name></member>
+      <member refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" prot="public" virt="non-virtual"><scope>inode</scope><name>mode</name></member>
+      <member refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" prot="public" virt="non-virtual"><scope>inode</scope><name>mtime</name></member>
+      <member refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" prot="public" virt="non-virtual"><scope>inode</scope><name>name</name></member>
+      <member refid="structinode_1a1daedc820c86b5af32f0a137419f7a8f" prot="public" virt="non-virtual"><scope>inode</scope><name>nlink</name></member>
+      <member refid="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" prot="public" virt="non-virtual"><scope>inode</scope><name>parent</name></member>
+      <member refid="structinode_1a5756f61233e40d01652094d29b5daf6c" prot="public" virt="non-virtual"><scope>inode</scope><name>position</name></member>
+      <member refid="structinode_1a3e7613383954ff7b5faf7c2188e1f61b" prot="public" virt="non-virtual"><scope>inode</scope><name>rdev</name></member>
+      <member refid="structinode_1ae2c5e8a0a372334b97024fbd9ef694c1" prot="public" virt="non-virtual"><scope>inode</scope><name>read</name></member>
+      <member refid="structinode_1a0a54c11571f19f23322f3e6ad3ecb113" prot="public" virt="non-virtual"><scope>inode</scope><name>readdir</name></member>
+      <member refid="structinode_1a5a309a9c4ada7e4d062162b06125a929" prot="public" virt="non-virtual"><scope>inode</scope><name>rename</name></member>
+      <member refid="structinode_1a53722b1b60b7136ce0204b66527bb400" prot="public" virt="non-virtual"><scope>inode</scope><name>size</name></member>
+      <member refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" prot="public" virt="non-virtual"><scope>inode</scope><name>uid</name></member>
+      <member refid="structinode_1adf65bac80736631b8000d3d34e953aaa" prot="public" virt="non-virtual"><scope>inode</scope><name>unlink</name></member>
+      <member refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" prot="public" virt="non-virtual"><scope>inode</scope><name>userdata</name></member>
+      <member refid="structinode_1a53a123d38834fa17e7ef5c1e5f47bba2" prot="public" virt="non-virtual"><scope>inode</scope><name>write</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

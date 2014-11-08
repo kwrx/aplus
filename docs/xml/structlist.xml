@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structlist" kind="struct" prot="public">
+    <compoundname>list</compoundname>
+    <includes refid="list_8h" local="no">list.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structlist_1a86cadf6e44fd6505728c5149b336d3db" prot="public" static="no" mutable="no">
+        <type><ref refid="list_8h_1a26009b16c17e2336df1025f49f3ebd7e" kindref="member">list_body_t</ref> *</type>
+        <definition>list_body_t* list::body</definition>
+        <argsstring></argsstring>
+        <name>body</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="42" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" prot="public" static="no" mutable="no">
+        <type><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref></type>
+        <definition>spinlock_t list::lock</definition>
+        <argsstring></argsstring>
+        <name>lock</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="44" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structlist_1ae581be90bd8eb7051528b61ad216de88" prot="public" static="no" mutable="no">
+        <type>size_t</type>
+        <definition>size_t list::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="45" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="48">
+        <label>list</label>
+        <link refid="structlist"/>
+        <childnode refid="49" relation="usage">
+          <edgelabel>+body</edgelabel>
+        </childnode>
+      </node>
+      <node id="49">
+        <label>list_body</label>
+        <link refid="structlist__body"/>
+        <childnode refid="49" relation="usage">
+          <edgelabel>+next</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="41" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="41" bodyend="46"/>
+    <listofallmembers>
+      <member refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" prot="public" virt="non-virtual"><scope>list</scope><name>body</name></member>
+      <member refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" prot="public" virt="non-virtual"><scope>list</scope><name>lock</name></member>
+      <member refid="structlist_1ae581be90bd8eb7051528b61ad216de88" prot="public" virt="non-virtual"><scope>list</scope><name>size</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

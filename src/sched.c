@@ -41,6 +41,9 @@ static int sched_enabled = 0;
 int im_superuser() {
 	if(!current_task)
 		return -1;
+
+	if(current_task == kernel_task)
+		return 1;
 		
 	if(current_task->uid == UID_SUPERUSER && current_task->gid == GID_SUPERUSER)
 		return 1;

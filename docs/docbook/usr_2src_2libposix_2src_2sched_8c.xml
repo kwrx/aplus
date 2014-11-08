@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="usr_2src_2libposix_2src_2sched_8c">
+    <title>sched.c File Reference</title>
+    <programlisting>#include &quot;config.h&quot;</programlisting>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/times.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef int  <link linkend="usr_2src_2libposix_2src_2sched_8c_1acd49b6ab6b9adcb42cdf2f6a0db877e1">cpu_set_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1a84ad29a6f2ad27370df09c664ac65eac">sched_setscheduler</link> (
+pid_t pid, int policy, const struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1a99fcb2532b1482d236dc04495a3f194d">sched_getscheduler</link> (
+pid_t pid)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1a06b497c4ea6bbabd2b62ba1a8a848a1b">sched_setparam</link> (
+pid_t pid, const struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1a563c7ac53bac2c1b51379147e66c44ec">sched_getparam</link> (
+pid_t pid, struct sched_param * param)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1afaebd1698caeb9b9b9e614ad84edd609">sched_get_priority_max</link> (
+int policy)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1af1f370fc36ea6b22ed42b5ee3cf82a81">sched_get_priority_min</link> (
+int policy)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1a761d3ef9e8d86918e92b2b5c0d3e60e0">sched_rr_get_interval</link> (
+pid_t pid, struct timespec * tp)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1ac5dd89aac453a882679e3651fc2aefe8">sched_setaffinity</link> (
+pid_t pid, size_t cpusetsize, const <link linkend="usr_2src_2libposix_2src_2sched_8c_1acd49b6ab6b9adcb42cdf2f6a0db877e1">cpu_set_t</link> * mask)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2sched_8c_1a4b7ccb0eb4ad49973d9c54d7b7bc1ace">sched_getaffinity</link> (
+pid_t pid, size_t cpusetsize, <link linkend="usr_2src_2libposix_2src_2sched_8c_1acd49b6ab6b9adcb42cdf2f6a0db877e1">cpu_set_t</link> * mask)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libposix/src/sched.c</para>
+    </simplesect>
+</section>

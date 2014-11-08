@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>kernel_vmm</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L42'>kernel_vmm</a>         42 src/arch/task.c extern uint32_t* kernel_vmm;
+<a href='../S/159.html#L188'>kernel_vmm</a>        188 src/arch/task.c 	current_task-&gt;context.cr3 = (uint32_t) kernel_vmm;
+<a href='../S/151.html#L39'>kernel_vmm</a>         39 src/mm/mm.c    extern uint32_t* kernel_vmm;
+<a href='../S/150.html#L47'>kernel_vmm</a>         47 src/mm/paging.c uint32_t* kernel_vmm;
+<a href='../S/150.html#L167'>kernel_vmm</a>        167 src/mm/paging.c 	kernel_vmm = halloc(current_heap, PDSIZE * sizeof(uint32_t));
+<a href='../S/150.html#L168'>kernel_vmm</a>        168 src/mm/paging.c 	if(!kernel_vmm)
+<a href='../S/150.html#L172'>kernel_vmm</a>        172 src/mm/paging.c 	memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
+<a href='../S/150.html#L174'>kernel_vmm</a>        174 src/mm/paging.c 	vmm_mapkernel(kernel_vmm);
+<a href='../S/150.html#L175'>kernel_vmm</a>        175 src/mm/paging.c 	vmm_switch(kernel_vmm);
+</pre>
+</body>
+</html>

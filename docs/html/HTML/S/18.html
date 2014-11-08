@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>usr/src/libposix/src/scandir.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/181.html'>libposix</a>/<a href='../files/184.html'>src</a>/scandir.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L11'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L11' title='Defined at 11.'>scandir</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L10'>  10 
+<a name='L11'>  11 <b>int</b> <a href='../S/10.html#L59' title='Refered from 59 in usr/src/libposix/include/sys/dirent.h.'>scandir</a>(<b>const</b> <b>char</b> *<a href='../Y/462.html' title='Multiple used in 4 places.'>pathname</a>, <b>struct</b> <a href='../Y/202.html' title='Multiple used in 2 places.'>dirent</a> ***<a href='../Y/401.html' title='Multiple used in 4 places.'>namelist</a>, <b>int</b> (*<a href='../Y/555.html' title='Multiple used in 4 places.'>select</a>)(<b>const</b> <b>struct</b> <a href='../Y/202.html' title='Multiple used in 2 places.'>dirent</a> *), <b>int</b> (*<a href='../Y/163.html' title='Multiple used in 3 places.'>compar</a>)(<b>const</b> <b>struct</b> <a href='../Y/202.html' title='Multiple used in 2 places.'>dirent</a> **, <b>const</b> <b>struct</b> <a href='../Y/202.html' title='Multiple used in 2 places.'>dirent</a> **)) <font color='red'>{</font>
+<a name='L12'>  12         <a href='../S/10.html#L32' title='Defined at 32 in usr/src/libposix/include/sys/dirent.h.'>DIR</a>* <a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> = <a href='../S/42.html#L13' title='Defined at 13 in usr/src/libposix/src/opendir.c.'>opendir</a>(<a href='../Y/462.html' title='Multiple used in 4 places.'>pathname</a>);
+<a name='L13'>  13         <b>if</b>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L14'>  14                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/18.html' title='Multiple used in 7 places.'>ENOENT</a>;
+<a name='L15'>  15                 <b>return</b> -1;
+<a name='L16'>  16         <font color='red'>}</font>
+<a name='L17'>  17 
+<a name='L18'>  18         <b>if</b>(<a href='../Y/401.html' title='Multiple used in 4 places.'>namelist</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L19'>  19                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L20'>  20                 <b>return</b> -1;
+<a name='L21'>  21         <font color='red'>}</font>
+<a name='L22'>  22 
+<a name='L23'>  23         <b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>* <a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L24'>  24         <b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>** <a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a> = (<b>const</b> <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>**) *<a href='../Y/401.html' title='Multiple used in 4 places.'>namelist</a>;
+<a name='L25'>  25 
+<a name='L26'>  26         <b>int</b> <a href='../Y/314.html' title='Multiple used in 23 places.'>index</a> = 0;
+<a name='L27'>  27 
+<a name='L28'>  28 
+<a name='L29'>  29         <b>while</b>((<a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a> = <a href='../S/35.html#L15' title='Defined at 15 in usr/src/libposix/src/readdir.c.'>readdir</a>(<a href='../D/343.html' title='Multiple defined in 2 places.'>d</a>))) <font color='red'>{</font>
+<a name='L30'>  30                 <b>if</b>(<a href='../Y/555.html' title='Multiple used in 4 places.'>select</a>)
+<a name='L31'>  31                         <b>if</b>(<a href='../Y/555.html' title='Multiple used in 4 places.'>select</a>(<a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>) != 0)
+<a name='L32'>  32                                 <b>continue</b>;
+<a name='L33'>  33 
+<a name='L34'>  34                 
+<a name='L35'>  35                 <b>if</b>((<a href='../Y/314.html' title='Multiple used in 23 places.'>index</a> &gt; 0) &amp;&amp; (<a href='../Y/163.html' title='Multiple used in 3 places.'>compar</a>) &amp;&amp; (<a href='../Y/163.html' title='Multiple used in 3 places.'>compar</a>(&amp;<a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a>[<a href='../Y/314.html' title='Multiple used in 23 places.'>index</a> - 1], &amp;<a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>) &gt; 0)) <font color='red'>{</font>
+<a name='L36'>  36                         <a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a>[<a href='../Y/314.html' title='Multiple used in 23 places.'>index</a>] = <a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a>[<a href='../Y/314.html' title='Multiple used in 23 places.'>index</a> - 1];
+<a name='L37'>  37                         <a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a>[<a href='../Y/314.html' title='Multiple used in 23 places.'>index</a> - 1] = <a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>;
+<a name='L38'>  38                 <font color='red'>}</font> <b>else</b>
+<a name='L39'>  39                         <a href='../Y/367.html' title='Multiple used in 10 places.'>lst</a>[<a href='../Y/314.html' title='Multiple used in 23 places.'>index</a>] = <a href='../Y/234.html' title='Multiple used in 15 places.'>ent</a>;
+<a name='L40'>  40 
+<a name='L41'>  41                 <a href='../Y/314.html' title='Multiple used in 23 places.'>index</a> += 1;
+<a name='L42'>  42         <font color='red'>}</font>
+<a name='L43'>  43 
+<a name='L44'>  44         <b>return</b> <a href='../Y/314.html' title='Multiple used in 23 places.'>index</a>;
+<a name='L45'>  45 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L11'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

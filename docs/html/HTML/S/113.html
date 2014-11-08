@@ -1,0 +1,177 @@
+<html>
+<head>
+<title>src/net/ipv4.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/ipv4.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L13'>[^]</a><a href='#L116'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L13' title='Defined at 13.'>ipv4_checksum</a>
+<li><a href='#L34' title='Defined at 34.'>ipv4_create_packet</a>
+<li><a href='#L71' title='Defined at 71.'>ipv4_recv</a>
+<li><a href='#L116' title='Defined at 116.'>ipv4_send</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;<a href='93.html'>aplus/net/eth.h</a>&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;<a href='95.html'>aplus/net/ipv4.h</a>&gt;
+<a name='L11'>  11 
+<a name='L12'>  12 
+<a name='L13'>  13 <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../S/113.html#L67' title='Refered from 67 in src/net/ipv4.c.'>ipv4_checksum</a>(<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>* <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>) <font color='red'>{</font>
+<a name='L14'>  14         <b>int</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> = <b>sizeof</b>(<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>);
+<a name='L15'>  15         <b>int</b> <a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> = 0;
+<a name='L16'>  16         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> = (<a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a>*) <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>;
+<a name='L17'>  17 
+<a name='L18'>  18         <b>while</b>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> &gt; 1) <font color='red'>{</font>
+<a name='L19'>  19                 <a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> += 0xFFFF &amp; *((<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>*) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>);
+<a name='L20'>  20                 <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> += <b>sizeof</b>(<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>);
+<a name='L21'>  21                 <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> -= <b>sizeof</b>(<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>);
+<a name='L22'>  22         <font color='red'>}</font>
+<a name='L23'>  23 
+<a name='L24'>  24         <b>if</b>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>)
+<a name='L25'>  25                 <a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> += (0xFF &amp; *<a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>) &lt;&lt; 8;
+<a name='L26'>  26 
+<a name='L27'>  27         <b>while</b>(<a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> &gt;&gt; 16)
+<a name='L28'>  28                 <a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> = (<a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> &amp; 0xFFFF) + (<a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> &gt;&gt; 16);
+<a name='L29'>  29 
+<a name='L30'>  30         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/155.html' title='Multiple used in 2 places.'>cksum</a> = ((<a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a>) <a href='../Y/622.html' title='Multiple used in 6 places.'>sum</a> ^ 0xFFFF);
+<a name='L31'>  31         <b>return</b> (((<a href='../Y/155.html' title='Multiple used in 2 places.'>cksum</a> &amp; 0x00FF) &lt;&lt; 8) | ((<a href='../Y/155.html' title='Multiple used in 2 places.'>cksum</a> &amp; 0xFF00) &gt;&gt; 8)) &amp; 0xFFFF;
+<a name='L32'>  32 <font color='red'>}</font>
+<a name='L33'>  33 
+<a name='L34'>  34 <b>void</b>* <a href='../R/274.html' title='Multiple refered from 3 places.'>ipv4_create_packet</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>, <a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a> <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <b>int</b> <a href='../Y/272.html' title='Multiple used in 2 places.'>fragment</a>, <b>int</b> <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>) <font color='red'>{</font>
+<a name='L35'>  35 
+<a name='L36'>  36         <a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>* <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> = (<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + <b>sizeof</b>(<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>));
+<a name='L37'>  37         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/315.html' title='Multiple used in 4 places.'>info</a> = (((<b>sizeof</b>(<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>) &gt;&gt; 2) &amp; 0xF) &lt;&lt; 4) | 4;     <i><font color='green'>/* length: 20 byte; Version: ipv4; */</font></i>
+<a name='L38'>  38         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/695.html' title='Multiple used in 6 places.'>tos</a> = 0;
+<a name='L39'>  39         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> = <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + <b>sizeof</b>(<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>);
+<a name='L40'>  40         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/303.html' title='Multiple used in 6 places.'>id</a> = 0;
+<a name='L41'>  41         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/703.html' title='Multiple used in 5 places.'>ttl</a> = 0xFF;
+<a name='L42'>  42 
+<a name='L43'>  43         <b>if</b>(<a href='../Y/272.html' title='Multiple used in 2 places.'>fragment</a> == -1)
+<a name='L44'>  44                 <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = <a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a>;
+<a name='L45'>  45         <b>else</b>
+<a name='L46'>  46                 <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> = <a href='../S/95.html#L9' title='Defined at 9 in src/include/aplus/net/ipv4.h.'>IPV4_FLAGS_MF</a> | (<a href='../Y/429.html' title='Multiple used in 39 places.'>offset</a> * <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>);
+<a name='L47'>  47 
+<a name='L48'>  48         <b>switch</b>(<a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>) <font color='red'>{</font>
+<a name='L49'>  49                 <b>case</b> <a href='../S/89.html#L20' title='Defined at 20 in src/include/aplus/netif.h.'>NETIF_UDP</a>:
+<a name='L50'>  50                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/95.html#L25' title='Defined at 25 in src/include/aplus/net/ipv4.h.'>IPV4_PROTO_UDP</a>;
+<a name='L51'>  51                         <b>break</b>;
+<a name='L52'>  52                 <b>case</b> <a href='../S/89.html#L21' title='Defined at 21 in src/include/aplus/netif.h.'>NETIF_TCP</a>:
+<a name='L53'>  53                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/95.html#L24' title='Defined at 24 in src/include/aplus/net/ipv4.h.'>IPV4_PROTO_TCP</a>;
+<a name='L54'>  54                         <b>break</b>;
+<a name='L55'>  55                 <b>case</b> <a href='../S/89.html#L22' title='Defined at 22 in src/include/aplus/netif.h.'>NETIF_ICMP</a>:
+<a name='L56'>  56                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/95.html#L23' title='Defined at 23 in src/include/aplus/net/ipv4.h.'>IPV4_PROTO_ICMP</a>;
+<a name='L57'>  57                         <b>break</b>;
+<a name='L58'>  58                 <b>default</b>:
+<a name='L59'>  59                         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a> = <a href='../S/95.html#L22' title='Defined at 22 in src/include/aplus/net/ipv4.h.'>IPV4_PROTO_RAW</a>;
+<a name='L60'>  60                         <b>break</b>;
+<a name='L61'>  61         <font color='red'>}</font>
+<a name='L62'>  62 
+<a name='L63'>  63         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/582.html' title='Multiple used in 6 places.'>source</a>, <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>, <b>sizeof</b>(<a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a>));
+<a name='L64'>  64         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, <b>sizeof</b>(<a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a>));
+<a name='L65'>  65         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>((<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> + <b>sizeof</b>(<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>)), <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>);
+<a name='L66'>  66 
+<a name='L67'>  67         <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/151.html' title='Multiple used in 3 places.'>checksum</a> = <a href='../S/113.html#L13' title='Defined at 13 in src/net/ipv4.c.'>ipv4_checksum</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>);
+<a name='L68'>  68         <b>return</b> (<b>void</b>*) <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>;
+<a name='L69'>  69 <font color='red'>}</font>
+<a name='L70'>  70 
+<a name='L71'>  71 <b>int</b> <a href='../R/276.html' title='Multiple refered from 2 places.'>ipv4_recv</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) <font color='red'>{</font>
+<a name='L72'>  72         <a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>* <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> = (<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>*) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L73'>  73 
+<a name='L74'>  74         <b>if</b>(<a href='../S/95.html#L11' title='Defined at 11 in src/include/aplus/net/ipv4.h.'>IPV4_CHECK_VERSION</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>) == 0)
+<a name='L75'>  75                 <b>return</b> 0;
+<a name='L76'>  76 
+<a name='L77'>  77         <b>if</b>(<a href='../S/95.html#L13' title='Defined at 13 in src/include/aplus/net/ipv4.h.'>IPV4_FLAGS</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>) &amp; <a href='../S/95.html#L9' title='Defined at 9 in src/include/aplus/net/ipv4.h.'>IPV4_FLAGS_MF</a>)
+<a name='L78'>  78                 <a href='../S/148.html#L79' title='Defined at 79 in src/panic.c.'>panic</a>("ipv4: packet fragmentation not supported in recv mode");
+<a name='L79'>  79 
+<a name='L80'>  80 
+<a name='L81'>  81 <font color='darkred'>        #define</font> <a href='../R/187.html' title='Multiple refered from 4 places.'>__params</a>        \
+<a name='L82'>  82                 <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a> + <a href='../S/95.html#L12' title='Defined at 12 in src/include/aplus/net/ipv4.h.'>IPV4_HEADER_LENGTH</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>)), <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> - <a href='../S/95.html#L12' title='Defined at 12 in src/include/aplus/net/ipv4.h.'>IPV4_HEADER_LENGTH</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>)
+<a name='L83'>  83 
+<a name='L84'>  84         <b>switch</b>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>-&gt;<a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a>) <font color='red'>{</font>
+<a name='L85'>  85                 <b>case</b> <a href='../S/95.html#L25' title='Defined at 25 in src/include/aplus/net/ipv4.h.'>IPV4_PROTO_UDP</a>:
+<a name='L86'>  86                         <b>if</b>(<a href='../S/114.html#L12' title='Defined at 12 in src/net/udp.c.'>udp_recv</a>(<a href='../D/292.html' title='Multiple defined in 3 places.'>__params</a>) == 0)
+<a name='L87'>  87                                 <b>return</b> 0;
+<a name='L88'>  88                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L89'>  89                 
+<a name='L90'>  90                 <b>case</b> <a href='../S/95.html#L24' title='Defined at 24 in src/include/aplus/net/ipv4.h.'>IPV4_PROTO_TCP</a>:
+<a name='L91'>  91                         <i><font color='green'>//if(tcp_recv(__params) == 0)           /* Support for TCP ?? -&gt; pfff.. ù.ù */</font></i>
+<a name='L92'>  92                         <i><font color='green'>//      return 0;</font></i>
+<a name='L93'>  93                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L94'>  94 
+<a name='L95'>  95                 <b>case</b> <a href='../S/95.html#L23' title='Defined at 23 in src/include/aplus/net/ipv4.h.'>IPV4_PROTO_ICMP</a>:
+<a name='L96'>  96                         <i><font color='green'>//if(icmp_recv(__params) == 0)</font></i>
+<a name='L97'>  97                         <i><font color='green'>//      return 0;</font></i>
+<a name='L98'>  98                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L99'>  99         <font color='red'>}</font>
+<a name='L100'> 100 
+<a name='L101'> 101         <i><font color='green'>/* IPV4_PROTO_RAW */</font></i>
+<a name='L102'> 102         <a href='../S/107.html#L242' title='Defined at 242 in src/net/netif.c.'>netif_packets_add</a> (
+<a name='L103'> 103                 <a href='../S/107.html#L279' title='Defined at 279 in src/net/netif.c.'>netif_packets_create</a> (
+<a name='L104'> 104                                                         <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>,
+<a name='L105'> 105                                                         <a href='../S/89.html#L16' title='Defined at 16 in src/include/aplus/netif.h.'>NETIF_INET</a>, 
+<a name='L106'> 106                                                         <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, 
+<a name='L107'> 107                                                         <a href='../S/95.html#L12' title='Defined at 12 in src/include/aplus/net/ipv4.h.'>IPV4_HEADER_LENGTH</a>(<a href='../Y/337.html' title='Multiple used in 42 places.'>ip</a>), 
+<a name='L108'> 108                                                         <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>
+<a name='L109'> 109                 )
+<a name='L110'> 110         );
+<a name='L111'> 111 
+<a name='L112'> 112         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("ok\n");
+<a name='L113'> 113         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L114'> 114 <font color='red'>}</font>
+<a name='L115'> 115 
+<a name='L116'> 116 <b>int</b> ipv4_send(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <b>int</b> <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>, <a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a> <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>) <font color='red'>{</font>
+<a name='L117'> 117         <b>if</b>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> &lt; <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>) <font color='red'>{</font>
+<a name='L118'> 118                 <b>void</b>* <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a> = <a href='../S/113.html#L34' title='Defined at 34 in src/net/ipv4.c.'>ipv4_create_packet</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>, <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>, <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, -1, 0);
+<a name='L119'> 119                 <b>int</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> = <a href='../S/112.html#L79' title='Defined at 79 in src/net/eth.c.'>eth_send</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>, <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> + <b>sizeof</b>(<a href='../S/95.html#L43' title='Defined at 43 in src/include/aplus/net/ipv4.h.'>ipv4_header_t</a>), <a href='../S/89.html#L16' title='Defined at 16 in src/include/aplus/netif.h.'>NETIF_INET</a>);
+<a name='L120'> 120                 <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>);
+<a name='L121'> 121 
+<a name='L122'> 122                 <b>if</b>(<a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>)
+<a name='L123'> 123                         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L124'> 124         
+<a name='L125'> 125                 <b>return</b> 0;
+<a name='L126'> 126         <font color='red'>}</font>
+<a name='L127'> 127 
+<a name='L128'> 128         <b>int</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> = 0;
+<a name='L129'> 129         <b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0;
+<a name='L130'> 130         <b>int</b> <a href='../Y/375.html' title='Multiple used in 3 places.'>max</a> = <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> / <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>;
+<a name='L131'> 131 
+<a name='L132'> 132         <b>if</b>(<a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> % <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a> == 0)
+<a name='L133'> 133                 <a href='../Y/375.html' title='Multiple used in 3 places.'>max</a> -= 1;
+<a name='L134'> 134 
+<a name='L135'> 135         <b>for</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/375.html' title='Multiple used in 3 places.'>max</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++) <font color='red'>{</font>
+<a name='L136'> 136                 <b>void</b>* <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a> = <a href='../S/113.html#L34' title='Defined at 34 in src/net/ipv4.c.'>ipv4_create_packet</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> + (<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> * <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>)), <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>, <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>, <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, 0, <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>);
+<a name='L137'> 137                 <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> += <a href='../S/112.html#L79' title='Defined at 79 in src/net/eth.c.'>eth_send</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>, <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>, <a href='../S/89.html#L16' title='Defined at 16 in src/include/aplus/netif.h.'>NETIF_INET</a>);
+<a name='L138'> 138                 <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>);
+<a name='L139'> 139         <font color='red'>}</font>
+<a name='L140'> 140 
+<a name='L141'> 141 
+<a name='L142'> 142         <b>void</b>* <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a> = <a href='../S/113.html#L34' title='Defined at 34 in src/net/ipv4.c.'>ipv4_create_packet</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, (<b>void</b>*) ((<a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a>) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a> + (<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> * <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>)), <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a> - ((<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> - 1) * <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>), <a href='../Y/714.html' title='Multiple used in 31 places.'>type</a>, <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>, -1, <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>);
+<a name='L143'> 143         <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> += <a href='../S/112.html#L79' title='Defined at 79 in src/net/eth.c.'>eth_send</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>, <a href='../S/95.html#L27' title='Defined at 27 in src/include/aplus/net/ipv4.h.'>IPV4_MAX_LENGTH</a>, <a href='../S/89.html#L16' title='Defined at 16 in src/include/aplus/netif.h.'>NETIF_INET</a>);
+<a name='L144'> 144         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/475.html' title='Multiple used in 24 places.'>pkt</a>);
+<a name='L145'> 145 
+<a name='L146'> 146         <b>if</b>(<a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>)
+<a name='L147'> 147                 <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L148'> 148         
+<a name='L149'> 149         <b>return</b> 0;
+<a name='L150'> 150 <font color='red'>}</font>
+<a name='L151'> 151 
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L13'>[^]</a><a href='#L116'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

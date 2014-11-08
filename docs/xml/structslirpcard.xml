@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structslirpcard" kind="struct" prot="public">
+    <compoundname>slirpcard</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t slirpcard::magic</definition>
+        <argsstring></argsstring>
+        <name>magic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="17" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref> *</type>
+        <definition>uint8_t* slirpcard::buffer</definition>
+        <argsstring></argsstring>
+        <name>buffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="18" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t slirpcard::used</definition>
+        <argsstring></argsstring>
+        <name>used</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int slirpcard::offset</definition>
+        <argsstring></argsstring>
+        <name>offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="21" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structslirpcard_1aed1b09924afb61043cd93bed7edea389" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int slirpcard::ioport</definition>
+        <argsstring></argsstring>
+        <name>ioport</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" prot="public" static="no" mutable="no">
+        <type><ref refid="netif_8h_1af6c73b8fa12396c0382f58d63e895008" kindref="member">netif_t</ref> *</type>
+        <definition>netif_t* slirpcard::netif</definition>
+        <argsstring></argsstring>
+        <name>netif</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="23" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="101">
+        <label>slirpcard</label>
+        <link refid="structslirpcard"/>
+        <childnode refid="102" relation="usage">
+          <edgelabel>+netif</edgelabel>
+        </childnode>
+      </node>
+      <node id="103">
+        <label>pci_device</label>
+        <link refid="structpci__device"/>
+      </node>
+      <node id="102">
+        <label>netif</label>
+        <link refid="structnetif"/>
+        <childnode refid="103" relation="usage">
+          <edgelabel>+device</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="16" bodyend="24"/>
+    <listofallmembers>
+      <member refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" prot="public" virt="non-virtual"><scope>slirpcard</scope><name>buffer</name></member>
+      <member refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" prot="public" virt="non-virtual"><scope>slirpcard</scope><name>ioport</name></member>
+      <member refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" prot="public" virt="non-virtual"><scope>slirpcard</scope><name>magic</name></member>
+      <member refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" prot="public" virt="non-virtual"><scope>slirpcard</scope><name>netif</name></member>
+      <member refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" prot="public" virt="non-virtual"><scope>slirpcard</scope><name>offset</name></member>
+      <member refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" prot="public" virt="non-virtual"><scope>slirpcard</scope><name>used</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

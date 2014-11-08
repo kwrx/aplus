@@ -1,0 +1,134 @@
+.TH "src/syscall/mount.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/mount.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/attribute\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_mount\fP (const char *dev, const char *dir, const char *fstype, int options, const void *data)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_mount (const char *dev, const char *dir, const char *fstype, intoptions, const void *data)"
+
+.PP
+Definizione alla linea 20 del file mount\&.c\&.
+.PP
+Referenzia attribute(), inode::dev, errno, task::fd, im_superuser(), inode::ino, list_destroy, list_empty(), list_foreach, inode::mode, fs::mount, fs::name, O_DIRECTORY, sys_close(), sys_open(), e value\&.
+.PP
+.nf
+20                                                                                                    {
+21     if(!current_task)
+22         return -1;
+23 
+24 
+25     if(!im_superuser()) {
+26         errno = EPERM;
+27         return -1;
+28     }
+29 
+30 
+31     if(dir == NULL || strlen(dir) == 0) {
+32         errno = EINVAL;
+33         return -1;
+34     }
+35 
+36     inode_t* idev = NULL;
+37     inode_t* idir = NULL;
+38 
+39 
+40     if(dev && strlen(dev) > 0) {
+41         int dfd = sys_open(dev, O_RDONLY, 0644);
+42         if(dfd < 0) {
+43             errno = ENOENT;
+44             return -1;
+45         }
+46 
+47         idev = current_task->fd[dfd];
+48         sys_close(dfd);
+49     }
+50 
+51 
+52     int sfd = sys_open(dir, O_CREAT | O_DIRECTORY | O_RDONLY, S_IFDIR);
+53     if(sfd < 0) {
+54         errno = ENOENT;
+55         return -1;
+56     }
+57 
+58     idir = current_task->fd[sfd];
+59     sys_close(sfd);
+60 
+61     list_t* fs = attribute("fs");
+62     if(list_empty(fs)) {
+63         errno = ENODEV;
+64         return -1;
+65     }
+66     
+67 
+68     fs_t* found = NULL;
+69 
+70     list_foreach(value, fs) {
+71         fs_t* f = (fs_t*) value;
+72 
+73         if(strcmp(f->name, fstype) == 0)
+74             found = f;
+75     }
+76 
+77     list_destroy(fs);
+78 
+79     if(found == NULL) {
+80         errno = ENODEV;
+81         return -1;
+82     }
+83 
+84     idir->mode |= S_IFMT;
+85     idir->dev = idev->ino;
+86 
+87     return found->mount(idev, idir, options);
+88 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Definizione alla linea 33 del file sched\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

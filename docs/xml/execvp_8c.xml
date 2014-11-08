@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="execvp_8c" kind="file">
+    <compoundname>execvp.c</compoundname>
+    <includes local="no">_ansi.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes refid="dirent_8h" local="no">dirent.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes local="no">ctype.h</includes>
+    <incdepgraph>
+      <node id="2076">
+        <label>_ansi.h</label>
+      </node>
+      <node id="2077">
+        <label>stdlib.h</label>
+      </node>
+      <node id="2082">
+        <label>errno.h</label>
+      </node>
+      <node id="2075">
+        <label>usr/src/libposix/src/execvp.c</label>
+        <link refid="execvp.c"/>
+        <childnode refid="2076" relation="include">
+        </childnode>
+        <childnode refid="2077" relation="include">
+        </childnode>
+        <childnode refid="2078" relation="include">
+        </childnode>
+        <childnode refid="2079" relation="include">
+        </childnode>
+        <childnode refid="2081" relation="include">
+        </childnode>
+        <childnode refid="2082" relation="include">
+        </childnode>
+        <childnode refid="2083" relation="include">
+        </childnode>
+      </node>
+      <node id="2080">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2081">
+        <label>string.h</label>
+      </node>
+      <node id="2078">
+        <label>unistd.h</label>
+      </node>
+      <node id="2079">
+        <label>dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="2078" relation="include">
+        </childnode>
+        <childnode refid="2080" relation="include">
+        </childnode>
+      </node>
+      <node id="2083">
+        <label>ctype.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="execvp_8c_1a79a1771c654f4dd46398088f3e33701a" prot="public" static="no">
+        <name>PATH_DELIM</name>
+        <initializer>&apos;:&apos;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execvp.c" line="16" column="9" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/execvp.c" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="execvp_8c_1a10efa145fdda589520d161cf247a568f" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>static char* _DEFUN</definition>
+        <argsstring>(strccpy,(s1, s2, c), char *s1 _AND char *s2 _AND char c)</argsstring>
+        <name>_DEFUN</name>
+        <param>
+          <type>strccpy</type>
+        </param>
+        <param>
+          <type>(s1, s2, c)</type>
+        </param>
+        <param>
+          <type>char *s1 _AND char *s2 _AND char</type>
+          <declname>c</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execvp.c" line="24" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/execvp.c" bodystart="24" bodyend="36"/>
+        <references refid="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4" compoundref="eth_8h" startline="44">dest</references>
+      </memberdef>
+      <memberdef kind="function" id="execvp_8c_1abd01b9e4dcf0b408353235fe59e17675" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int _DEFUN</definition>
+        <argsstring>(execvp,(file, argv), _CONST char *file _AND char *_CONST argv[])</argsstring>
+        <name>_DEFUN</name>
+        <param>
+          <type>execvp</type>
+        </param>
+        <param>
+          <type>(file, argv)</type>
+        </param>
+        <param>
+          <type>_CONST char *file _AND char *_CONST</type>
+          <declname>argv</declname>
+          <array>[]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/execvp.c" line="39" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/execvp.c" bodystart="39" bodyend="72"/>
+        <references refid="execvp_8c_1a79a1771c654f4dd46398088f3e33701a" compoundref="execvp_8c" startline="16">PATH_DELIM</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*<sp/>execvp.c<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>This<sp/>and<sp/>the<sp/>other<sp/>exec*.c<sp/>files<sp/>in<sp/>this<sp/>directory<sp/>require<sp/></highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/><sp/><sp/>the<sp/>target<sp/>to<sp/>provide<sp/>the<sp/>_execve<sp/>syscall.<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;_ansi.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;ctype.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="execvp_8c_1a79a1771c654f4dd46398088f3e33701a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PATH_DELIM<sp/>&apos;:&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/>Copy<sp/>string,<sp/>until<sp/>c<sp/>or<sp/>&lt;nul&gt;<sp/>is<sp/>encountered.</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>NUL-terminate<sp/>the<sp/>destination<sp/>string<sp/>(s1).</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*</highlight></codeline>
+<codeline lineno="24" refid="execvp_8c_1a10efa145fdda589520d161cf247a568f" refkind="member"><highlight class="normal"><ref refid="execvp_8c_1a10efa145fdda589520d161cf247a568f" kindref="member">_DEFUN</ref><sp/>(strccpy,<sp/>(s1,<sp/>s2,<sp/>c),</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*s1<sp/>_AND</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*s2<sp/>_AND</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>c)</highlight></codeline>
+<codeline lineno="28"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4" kindref="member">dest</ref><sp/>=<sp/>s1;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(*s2<sp/>&amp;&amp;<sp/>*s2<sp/>!=<sp/>c)</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>*s1++<sp/>=<sp/>*s2++;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/>*s1<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4" kindref="member">dest</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="execvp_8c_1abd01b9e4dcf0b408353235fe59e17675" refkind="member"><highlight class="normal"><ref refid="execvp_8c_1a10efa145fdda589520d161cf247a568f" kindref="member">_DEFUN</ref><sp/>(execvp,<sp/>(file,<sp/>argv),</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>_CONST<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*file<sp/>_AND</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<sp/>_CONST<sp/>argv[])</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*path<sp/>=<sp/>getenv<sp/>(</highlight><highlight class="stringliteral">&quot;PATH&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>buf[MAXNAMLEN];</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>If<sp/>$PATH<sp/>doesn&apos;t<sp/>exist,<sp/>just<sp/>pass<sp/>FILE<sp/>on<sp/>unchanged.<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!path)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>execv<sp/>(file,<sp/>argv);</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>If<sp/>FILE<sp/>contains<sp/>a<sp/>directory,<sp/>don&apos;t<sp/>search<sp/>$PATH.<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(strchr<sp/>(file,<sp/></highlight><highlight class="charliteral">&apos;/&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>execv<sp/>(file,<sp/>argv);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(*path)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>strccpy<sp/>(buf,<sp/>path,<sp/><ref refid="execvp_8c_1a79a1771c654f4dd46398088f3e33701a" kindref="member">PATH_DELIM</ref>);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>An<sp/>empty<sp/>entry<sp/>means<sp/>the<sp/>current<sp/>directory.<sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(*buf<sp/>!=<sp/>0<sp/>&amp;&amp;<sp/>buf[strlen(buf)<sp/>-<sp/>1]<sp/>!=<sp/></highlight><highlight class="charliteral">&apos;/&apos;</highlight><highlight class="normal">)</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>strcat<sp/>(buf,<sp/></highlight><highlight class="stringliteral">&quot;/&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>strcat<sp/>(buf,<sp/>file);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(execv<sp/>(buf,<sp/>argv)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(*path<sp/>&amp;&amp;<sp/>*path<sp/>!=<sp/><ref refid="execvp_8c_1a79a1771c654f4dd46398088f3e33701a" kindref="member">PATH_DELIM</ref>)</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>path++;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(*path<sp/>==<sp/><ref refid="execvp_8c_1a79a1771c654f4dd46398088f3e33701a" kindref="member">PATH_DELIM</ref>)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>path++;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>skip<sp/>over<sp/>delim<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/execvp.c"/>
+  </compounddef>
+</doxygen>

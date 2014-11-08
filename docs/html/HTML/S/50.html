@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/pthread_internal.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/pthread_internal.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/122.html' title='Multiple included from 21 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/50.html#L2' title='Defined at 2 in usr/src/libpthread/src/pthread_internal.h.'>PTHREAD_INTERNAL_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/50.html#L1' title='Refered from 1 in usr/src/libpthread/src/pthread_internal.h.'>PTHREAD_INTERNAL_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;<a href='43.html'>pthread.h</a>&gt;
+<a name='L7'>   7 
+<a name='L8'>   8 <font color='darkred'>#ifdef</font> <a href='../Y/4.html' title='Multiple used in 3 places.'>DEBUG</a>
+<a name='L9'>   9 <font color='darkred'>#define</font> <a href='../R/92.html' title='Multiple refered from 5 places.'>PRIVATE</a>
+<a name='L10'>  10 <font color='darkred'>#else</font>
+<a name='L11'>  11 <font color='darkred'>#define</font> <a href='../R/92.html' title='Multiple refered from 5 places.'>PRIVATE</a> <b>static</b>
+<a name='L12'>  12 <font color='darkred'>#endif</font>
+<a name='L13'>  13 
+<a name='L14'>  14 
+<a name='L15'>  15 <font color='darkred'>#define</font> <a href='../R/107.html' title='Multiple refered from 85 places.'>PUBLIC</a>
+<a name='L16'>  16 
+<a name='L17'>  17 <font color='darkred'>#ifdef</font> <a href='../Y/67.html' title='Multiple used in 5 places.'>__cplusplus</a>
+<a name='L18'>  18 <font color='darkred'>#define</font> <a href='../R/40.html' title='Multiple refered from 9 places.'>EXTERN</a> <b>extern</b> "C"
+<a name='L19'>  19 <font color='darkred'>#else</font>
+<a name='L20'>  20 <font color='darkred'>#define</font> <a href='../R/40.html' title='Multiple refered from 9 places.'>EXTERN</a> <b>extern</b>
+<a name='L21'>  21 <font color='darkred'>#endif</font>
+<a name='L22'>  22 
+<a name='L23'>  23 
+<a name='L24'>  24 
+<a name='L25'>  25 <font color='darkred'>#define</font> <a href='../R/98.html' title='Multiple refered from 5 places.'>PTHREAD_KEYS_MAX</a>                64
+<a name='L26'>  26 <font color='darkred'>#define</font> <a href='../R/104.html' title='Multiple refered from 2 places.'>PTHREAD_STACK_MIN</a>               4096
+<a name='L27'>  27 <font color='darkred'>#define</font> <a href='../S/64.html#L46' title='Refered from 46 in usr/src/libpthread/src/pthread_create.c.'>PTHREAD_THREADS_MAX</a>             2048
+<a name='L28'>  28 
+<a name='L29'>  29 
+<a name='L30'>  30 
+<a name='L31'>  31 <b>typedef</b> <b>struct</b> __pthread_key <font color='red'>{</font>
+<a name='L32'>  32         <b>char</b> <a href='../Y/726.html' title='Multiple used in 16 places.'>used</a>;
+<a name='L33'>  33         <b>void</b> (*<a href='../Y/209.html' title='Multiple used in 5 places.'>dtor</a>) (<b>void</b>*);
+<a name='L34'>  34         <b>void</b>* <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L35'>  35 <font color='red'>}</font> <a href='../S/70.html#L7' title='Refered from 7 in usr/src/libpthread/src/pthread_key.c.'>__pthread_key_t</a>;
+<a name='L36'>  36 
+<a name='L37'>  37 <b>typedef</b> <b>struct</b> <a href='../S/50.html#L47' title='Refered from 47 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context</a> <font color='red'>{</font>
+<a name='L38'>  38         <b>int</b> <a href='../Y/670.html' title='Multiple used in 10 places.'>tid</a>;
+<a name='L39'>  39         <b>void</b> *(*<a href='../Y/235.html' title='Multiple used in 11 places.'>entry</a>) (<b>void</b>* <a href='../Y/447.html' title='Multiple used in 16 places.'>p</a>);
+<a name='L40'>  40         <b>void</b>* <a href='../Y/459.html' title='Multiple used in 31 places.'>param</a>;
+<a name='L41'>  41         <b>void</b>* <a href='../Y/256.html' title='Multiple used in 4 places.'>exitval</a>;
+<a name='L42'>  42 
+<a name='L43'>  43         <a href='../S/43.html#L70' title='Defined at 70 in usr/src/libpthread/include/pthread.h.'>pthread_once_t</a> <a href='../Y/435.html' title='Multiple used in 7 places.'>once</a>;
+<a name='L44'>  44         <a href='../S/43.html#L64' title='Defined at 64 in usr/src/libpthread/include/pthread.h.'>pthread_attr_t</a> <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>;
+<a name='L45'>  45         <a href='../S/43.html#L108' title='Defined at 108 in usr/src/libpthread/include/pthread.h.'>pthread_cond_t</a>* <a href='../Y/164.html' title='Multiple used in 42 places.'>cond</a>;
+<a name='L46'>  46 
+<a name='L47'>  47         <b>struct</b> <a href='../S/50.html#L37' title='Defined at 37 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context</a>* <a href='../Y/410.html' title='Multiple used in 27 places.'>next</a>;
+<a name='L48'>  48 <font color='red'>}</font> <a href='../R/395.html' title='Multiple refered from 25 places.'>pthread_context_t</a>;
+<a name='L49'>  49 
+<a name='L50'>  50 
+<a name='L51'>  51 <b>extern</b> <b>int</b> sched_yield(<b>void</b>);
+<a name='L52'>  52 
+<a name='L53'>  53 
+<a name='L54'>  54 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

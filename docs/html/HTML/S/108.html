@@ -1,0 +1,126 @@
+<html>
+<head>
+<title>src/net/arp.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/171.html'>net</a>/arp.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L16'>[^]</a><a href='#L79'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L16' title='Defined at 16.'>arp_cache_find_by_macaddr</a>
+<li><a href='#L33' title='Defined at 33.'>arp_cache_add</a>
+<li><a href='#L67' title='Defined at 67.'>arp_recv</a>
+<li><a href='#L79' title='Defined at 79.'>arp_send</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='96.html'>aplus/list.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;stddef.h&gt;
+<a name='L6'>   6 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L8'>   8 
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;<a href='93.html'>aplus/net/eth.h</a>&gt;
+<a name='L10'>  10 <font color='darkred'>#include</font> &lt;<a href='94.html'>aplus/net/arp.h</a>&gt;
+<a name='L11'>  11 
+<a name='L12'>  12 
+<a name='L13'>  13 <a href='../S/96.html#L46' title='Defined at 46 in src/include/aplus/list.h.'>list_t</a>* <a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a> = <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L14'>  14 
+<a name='L15'>  15 
+<a name='L16'>  16 <a href='../S/94.html#L44' title='Defined at 44 in src/include/aplus/net/arp.h.'>arp_cache_entry_t</a>* <a href='../S/108.html#L39' title='Refered from 39 in src/net/arp.c.'>arp_cache_find_by_macaddr</a>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a> <a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>) <font color='red'>{</font>
+<a name='L17'>  17         <b>if</b>(<a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>)
+<a name='L18'>  18                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L19'>  19 
+<a name='L20'>  20         <b>if</b>(<a href='../S/96.html#L49' title='Defined at 49 in src/include/aplus/list.h.'>list_empty</a>(<a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a>))
+<a name='L21'>  21                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L22'>  22 
+<a name='L23'>  23         <a href='../S/96.html#L175' title='Defined at 175 in src/include/aplus/list.h.'>list_foreach</a>(<a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>, <a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a>) <font color='red'>{</font>
+<a name='L24'>  24                 <a href='../S/94.html#L44' title='Defined at 44 in src/include/aplus/net/arp.h.'>arp_cache_entry_t</a>* <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a> = (<a href='../S/94.html#L44' title='Defined at 44 in src/include/aplus/net/arp.h.'>arp_cache_entry_t</a>*) <a href='../Y/738.html' title='Multiple used in 85 places.'>value</a>;
+<a name='L25'>  25 
+<a name='L26'>  26                 <b>if</b>(<a href='../Y/380.html' title='Multiple used in 5 places.'>memcmp</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>)) == 0)
+<a name='L27'>  27                         <b>return</b> <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>;
+<a name='L28'>  28         <font color='red'>}</font>
+<a name='L29'>  29 
+<a name='L30'>  30         <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L31'>  31 <font color='red'>}</font>
+<a name='L32'>  32 
+<a name='L33'>  33 <b>int</b> <a href='../S/108.html#L73' title='Refered from 73 in src/net/arp.c.'>arp_cache_add</a>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a> <a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a> <a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>) <font color='red'>{</font>
+<a name='L34'>  34         <b>if</b>(<a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L35'>  35                 <a href='../S/96.html#L187' title='Defined at 187 in src/include/aplus/list.h.'>list_init</a>(<a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a>);
+<a name='L36'>  36         <font color='red'>}</font>
+<a name='L37'>  37 
+<a name='L38'>  38 
+<a name='L39'>  39         <a href='../S/94.html#L44' title='Defined at 44 in src/include/aplus/net/arp.h.'>arp_cache_entry_t</a>* <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a> = <a href='../S/108.html#L16' title='Defined at 16 in src/net/arp.c.'>arp_cache_find_by_macaddr</a>(<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>);
+<a name='L40'>  40         <b>if</b>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>)
+<a name='L41'>  41                 <a href='../S/96.html#L73' title='Defined at 73 in src/include/aplus/list.h.'>list_remove</a>(<a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>);
+<a name='L42'>  42 
+<a name='L43'>  43 
+<a name='L44'>  44         <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a> = <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/94.html#L44' title='Defined at 44 in src/include/aplus/net/arp.h.'>arp_cache_entry_t</a>));
+<a name='L45'>  45         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>));
+<a name='L46'>  46         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>, <a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>, <b>sizeof</b>(<a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a>));
+<a name='L47'>  47 
+<a name='L48'>  48         <i><font color='green'>//arp-&gt;ttl = time(NULL) + ARP_TTL;</font></i>
+<a name='L49'>  49 
+<a name='L50'>  50 
+<a name='L51'>  51 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L29' title='Defined at 29 in src/include/aplus/netif.h.'>ARP_DEBUG</a>
+<a name='L52'>  52         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("arp: added new cache entry (%02x.%02x.%02x.%02x)\n",
+<a name='L53'>  53                 <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[0],
+<a name='L54'>  54                 <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[1],
+<a name='L55'>  55                 <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[2],
+<a name='L56'>  56                 <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>[3]
+<a name='L57'>  57         );
+<a name='L58'>  58 <font color='darkred'>#endif</font>
+<a name='L59'>  59 
+<a name='L60'>  60         <a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a> = (<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>*) <a href='../S/107.html#L66' title='Defined at 66 in src/net/netif.c.'>netif_find_by_macaddr</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>);
+<a name='L61'>  61         <b>if</b>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>)
+<a name='L62'>  62                 <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>, <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/338.html' title='Multiple used in 55 places.'>ipv4</a>, <b>sizeof</b>(<a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a>));
+<a name='L63'>  63 
+<a name='L64'>  64         <b>return</b> <a href='../S/96.html#L56' title='Defined at 56 in src/include/aplus/list.h.'>list_add</a>(<a href='../Y/108.html' title='Multiple used in 8 places.'>arp_cache</a>, (<a href='../S/96.html#L33' title='Defined at 33 in src/include/aplus/list.h.'>listval_t</a>) <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>);
+<a name='L65'>  65 <font color='red'>}</font>
+<a name='L66'>  66 
+<a name='L67'>  67 <b>int</b> <a href='../S/112.html#L29' title='Refered from 29 in src/net/eth.c.'>arp_recv</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>, <b>void</b>* <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>, <a href='../Y/579.html' title='Multiple used in 56 places.'>size_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>) <font color='red'>{</font>
+<a name='L68'>  68         <a href='../S/94.html#L36' title='Defined at 36 in src/include/aplus/net/arp.h.'>arp_header_t</a>* <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a> = (<a href='../S/94.html#L36' title='Defined at 36 in src/include/aplus/net/arp.h.'>arp_header_t</a>*) <a href='../Y/141.html' title='Multiple used in 123 places.'>buf</a>;
+<a name='L69'>  69 
+<a name='L70'>  70 
+<a name='L71'>  71         <b>if</b>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/438.html' title='Multiple used in 3 places.'>operation</a> == <a href='../S/94.html#L19' title='Defined at 19 in src/include/aplus/net/arp.h.'>ARP_OPERATION_REPLY</a>)
+<a name='L72'>  72                 <b>if</b>(<a href='../Y/380.html' title='Multiple used in 5 places.'>memcmp</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/667.html' title='Multiple used in 4 places.'>tha</a>, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>)) == 0)
+<a name='L73'>  73                         <a href='../S/108.html#L33' title='Defined at 33 in src/net/arp.c.'>arp_cache_add</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/667.html' title='Multiple used in 4 places.'>tha</a>, <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/699.html' title='Multiple used in 3 places.'>tpa</a>);
+<a name='L74'>  74 
+<a name='L75'>  75         <b>return</b> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L76'>  76 <font color='red'>}</font>
+<a name='L77'>  77 
+<a name='L78'>  78 
+<a name='L79'>  79 <b>int</b> <a href='../S/107.html#L104' title='Refered from 104 in src/net/netif.c.'>arp_send</a>(<a href='../S/89.html#L74' title='Defined at 74 in src/include/aplus/netif.h.'>netif_t</a>* <a href='../Y/403.html' title='Multiple used in 22 places.'>netif</a>) <font color='red'>{</font>
+<a name='L80'>  80         <a href='../S/94.html#L36' title='Defined at 36 in src/include/aplus/net/arp.h.'>arp_header_t</a>* <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a> = (<a href='../S/94.html#L36' title='Defined at 36 in src/include/aplus/net/arp.h.'>arp_header_t</a>*) <a href='../S/151.html#L50' title='Defined at 50 in src/mm/mm.c.'>kmalloc</a>(<b>sizeof</b>(<a href='../S/94.html#L36' title='Defined at 36 in src/include/aplus/net/arp.h.'>arp_header_t</a>));
+<a name='L81'>  81         <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/301.html' title='Multiple used in 2 places.'>hwtype</a> = <a href='../S/94.html#L15' title='Defined at 15 in src/include/aplus/net/arp.h.'>ARP_HWTYPE</a>;
+<a name='L82'>  82         <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/488.html' title='Multiple used in 2 places.'>prtype</a> = <a href='../S/94.html#L12' title='Defined at 12 in src/include/aplus/net/arp.h.'>ARP_PRTYPE</a>;
+<a name='L83'>  83         <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/300.html' title='Multiple used in 2 places.'>hwlen</a> = <a href='../S/94.html#L16' title='Defined at 16 in src/include/aplus/net/arp.h.'>ARP_HWLEN</a>;
+<a name='L84'>  84         <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/486.html' title='Multiple used in 2 places.'>prlen</a> = <a href='../S/94.html#L13' title='Defined at 13 in src/include/aplus/net/arp.h.'>ARP_PRLEN</a>;
+<a name='L85'>  85         <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/438.html' title='Multiple used in 3 places.'>operation</a> = <a href='../S/94.html#L18' title='Defined at 18 in src/include/aplus/net/arp.h.'>ARP_OPERATION_REQUEST</a>;
+<a name='L86'>  86         
+<a name='L87'>  87         <a href='../Y/381.html' title='Multiple used in 28 places.'>memcpy</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/570.html' title='Multiple used in 2 places.'>sha</a>, <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/370.html' title='Multiple used in 37 places.'>macaddr</a>, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>));
+<a name='L88'>  88         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/667.html' title='Multiple used in 4 places.'>tha</a>, 0, <b>sizeof</b>(<a href='../S/89.html#L12' title='Defined at 12 in src/include/aplus/netif.h.'>macaddr_t</a>));
+<a name='L89'>  89         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/583.html' title='Multiple used in 2 places.'>spa</a>, 0, <b>sizeof</b>(<a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a>));
+<a name='L90'>  90         <a href='../Y/383.html' title='Multiple used in 34 places.'>memset</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>-&gt;<a href='../Y/699.html' title='Multiple used in 3 places.'>tpa</a>, 0, <b>sizeof</b>(<a href='../S/89.html#L10' title='Defined at 10 in src/include/aplus/netif.h.'>ipv4_t</a>));
+<a name='L91'>  91 
+<a name='L92'>  92 <font color='darkred'>#ifdef</font> <a href='../S/89.html#L29' title='Defined at 29 in src/include/aplus/netif.h.'>ARP_DEBUG</a>
+<a name='L93'>  93         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("arp: sending request for %s\n", <a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>-&gt;<a href='../Y/400.html' title='Multiple used in 36 places.'>name</a>);
+<a name='L94'>  94 <font color='darkred'>#endif</font>
+<a name='L95'>  95 
+<a name='L96'>  96         <b>int</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a> = <a href='../S/112.html#L79' title='Defined at 79 in src/net/eth.c.'>eth_send</a>(<a href='../S/89.html#L33' title='Defined at 33 in src/include/aplus/netif.h.'>netif</a>, <a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>, <b>sizeof</b>(<a href='../S/94.html#L36' title='Defined at 36 in src/include/aplus/net/arp.h.'>arp_header_t</a>), <a href='../S/89.html#L18' title='Defined at 18 in src/include/aplus/netif.h.'>NETIF_ARP</a>);
+<a name='L97'>  97         <a href='../S/151.html#L66' title='Defined at 66 in src/mm/mm.c.'>kfree</a>(<a href='../Y/107.html' title='Multiple used in 32 places.'>arp</a>);
+<a name='L98'>  98         
+<a name='L99'>  99         <b>return</b> <a href='../Y/523.html' title='Multiple used in 26 places.'>ret</a>;
+<a name='L100'> 100 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L16'>[^]</a><a href='#L79'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

@@ -1,0 +1,65 @@
+.TH "usr/src/libposix/src/execv.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/execv.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <_ansi\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fB_execve\fP (const char *filename, char *const args[], char *const env[])"
+.br
+.ti -1c
+.RI "int \fB_DEFUN\fP (execv,(path, argv), const char *path _AND char *const argv[])"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "static char *** \fBp_environ\fP = &\fBenviron\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int _DEFUN (execv, (path, argv), const char *path _AND char *constargv[])"
+
+.PP
+Definizione alla linea 17 del file execv\&.c\&.
+.PP
+Referenzia _execve(), e p_environ\&.
+.PP
+.nf
+20 {
+21   return _execve (path, (char * _CONST *) argv, *p_environ);
+22 }
+.fi
+.SS "int _execve (const char *filename, char *constargs[], char *constenv[])"
+
+.PP
+Definizione alla linea 8 del file _execve\&.c\&.
+.PP
+Referenzia execve()\&.
+.PP
+.nf
+8                                                                          {
+9     return execve(filename, args, env);
+10 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "char*** p_environ = &\fBenviron\fP\fC [static]\fP"
+
+.PP
+Definizione alla linea 13 del file execv\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

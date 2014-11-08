@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="slirp_8h" kind="file">
+    <compoundname>slirp.h</compoundname>
+    <includedby refid="slirp_8c" local="yes">src/net/slirp/slirp.c</includedby>
+    <invincdepgraph>
+      <node id="1189">
+        <label>src/net/slirp/slirp.c</label>
+        <link refid="slirp_8c"/>
+      </node>
+      <node id="1188">
+        <label>src/net/slirp/slirp.h</label>
+        <link refid="slirp.h"/>
+        <childnode refid="1189" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" prot="public" static="no">
+        <name>SLIRP_PACKET_END</name>
+        <initializer>0xC0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.h" line="4" column="9" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.h" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" prot="public" static="no">
+        <name>SLIRP_PACKET_ESC</name>
+        <initializer>0xDB</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.h" line="5" column="9" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.h" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="slirp_8h_1ab3edcb78e24f3e17d99d94ac4494ca17" prot="public" static="no">
+        <name>SLIRP_PACKET_ESC_END</name>
+        <initializer>0xDC</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.h" line="6" column="9" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.h" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="slirp_8h_1aadc4cd7d052d18d94b1b10e139628dc1" prot="public" static="no">
+        <name>SLIRP_PACKET_ESC_ESC</name>
+        <initializer>0xDD</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.h" line="7" column="9" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.h" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="slirp_8h_1a1a2dfb64959285fee075cc1f612289cb" prot="public" static="no">
+        <name>SLIRP_BUFSIZ</name>
+        <initializer>1006</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.h" line="9" column="9" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="slirp_8h_1a96377139dd32f24736da76a132dafcf1" prot="public" static="no">
+        <name>SLIRP_MTU</name>
+        <initializer>65536</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.h" line="10" column="9" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="slirp_8h_1aa2c40ffa219abb80aa6d683964c43e25" prot="public" static="no">
+        <name>SLIRP_MAGIC</name>
+        <initializer>0x100200FF</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/net/slirp/slirp.h" line="12" column="9" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_SLIRP_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_SLIRP_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4" refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SLIRP_PACKET_END<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0xC0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5" refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SLIRP_PACKET_ESC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0xDB</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="slirp_8h_1ab3edcb78e24f3e17d99d94ac4494ca17" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SLIRP_PACKET_ESC_END<sp/><sp/><sp/><sp/>0xDC</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="slirp_8h_1aadc4cd7d052d18d94b1b10e139628dc1" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SLIRP_PACKET_ESC_ESC<sp/><sp/><sp/><sp/>0xDD</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="slirp_8h_1a1a2dfb64959285fee075cc1f612289cb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SLIRP_BUFSIZ<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1006</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="slirp_8h_1a96377139dd32f24736da76a132dafcf1" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SLIRP_MTU<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>65536</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="slirp_8h_1aa2c40ffa219abb80aa6d683964c43e25" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SLIRP_MAGIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x100200FF</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/net/slirp/slirp.h"/>
+  </compounddef>
+</doxygen>

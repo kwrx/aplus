@@ -1,0 +1,80 @@
+<html>
+<head>
+<title>ino</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/147.html#L28'>ino</a>                28 src/fs/devfs.c 	inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/147.html#L29'>ino</a>                29 src/fs/devfs.c 	strcpy(ino-&gt;name, name);
+<a href='../S/147.html#L31'>ino</a>                31 src/fs/devfs.c 	ino-&gt;dev = inode-&gt;dev;
+<a href='../S/147.html#L32'>ino</a>                32 src/fs/devfs.c 	ino-&gt;ino = 0;
+<a href='../S/147.html#L33'>ino</a>                33 src/fs/devfs.c 	ino-&gt;mode = mode;
+<a href='../S/147.html#L34'>ino</a>                34 src/fs/devfs.c 	ino-&gt;nlink = 0;
+<a href='../S/147.html#L35'>ino</a>                35 src/fs/devfs.c 	ino-&gt;uid = current_task-&gt;uid;
+<a href='../S/147.html#L36'>ino</a>                36 src/fs/devfs.c 	ino-&gt;gid = current_task-&gt;gid;
+<a href='../S/147.html#L37'>ino</a>                37 src/fs/devfs.c 	ino-&gt;rdev = ino-&gt;rdev;
+<a href='../S/147.html#L38'>ino</a>                38 src/fs/devfs.c 	ino-&gt;size = (size_t) 0;
+<a href='../S/147.html#L40'>ino</a>                40 src/fs/devfs.c 	ino-&gt;parent = inode;
+<a href='../S/147.html#L41'>ino</a>                41 src/fs/devfs.c 	ino-&gt;link = NULL;
+<a href='../S/147.html#L43'>ino</a>                43 src/fs/devfs.c 	ino-&gt;read = NULL;
+<a href='../S/147.html#L44'>ino</a>                44 src/fs/devfs.c 	ino-&gt;write = NULL;
+<a href='../S/147.html#L45'>ino</a>                45 src/fs/devfs.c 	ino-&gt;readdir = NULL;
+<a href='../S/147.html#L46'>ino</a>                46 src/fs/devfs.c 	ino-&gt;finddir = NULL;
+<a href='../S/147.html#L47'>ino</a>                47 src/fs/devfs.c 	ino-&gt;creat = NULL;
+<a href='../S/147.html#L48'>ino</a>                48 src/fs/devfs.c 	ino-&gt;rename = NULL;
+<a href='../S/147.html#L49'>ino</a>                49 src/fs/devfs.c 	ino-&gt;unlink = NULL;
+<a href='../S/147.html#L50'>ino</a>                50 src/fs/devfs.c 	ino-&gt;chown = NULL;
+<a href='../S/147.html#L51'>ino</a>                51 src/fs/devfs.c 	ino-&gt;flush = NULL;
+<a href='../S/147.html#L52'>ino</a>                52 src/fs/devfs.c 	ino-&gt;ioctl = NULL;
+<a href='../S/147.html#L54'>ino</a>                54 src/fs/devfs.c 	vfs_map(ino);
+<a href='../S/147.html#L56'>ino</a>                56 src/fs/devfs.c 	return ino;
+<a href='../S/147.html#L66'>ino</a>                66 src/fs/devfs.c 	devfs-&gt;ino = (ino_t) 0;
+<a href='../S/146.html#L37'>ino</a>                37 src/fs/fs.c    		ent-&gt;d_ino = map-&gt;ino;
+<a href='../S/144.html#L23'>ino</a>                23 src/fs/vfs.c   	inode-&gt;ino = (ino_t) nextinode++;
+<a href='../S/144.html#L90'>ino</a>                90 src/fs/vfs.c   	vfs_root-&gt;ino = (ino_t) nextinode++;
+<a href='../S/97.html#L40'>ino</a>                40 src/include/aplus/fs.h 	ino_t ino;
+<a href='../S/133.html#L28'>ino</a>                28 src/syscall/chown.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/133.html#L29'>ino</a>                29 src/syscall/chown.c 	return fs_chown(ino, owner, group);
+<a href='../S/138.html#L24'>ino</a>                24 src/syscall/fcntl.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/138.html#L25'>ino</a>                25 src/syscall/fcntl.c 	if(!ino) {
+<a href='../S/120.html#L21'>ino</a>                21 src/syscall/fstat.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/120.html#L22'>ino</a>                22 src/syscall/fstat.c 	if(!ino) {
+<a href='../S/120.html#L28'>ino</a>                28 src/syscall/fstat.c 	st-&gt;st_mode = ino-&gt;mode;
+<a href='../S/120.html#L29'>ino</a>                29 src/syscall/fstat.c 	st-&gt;st_ino = ino-&gt;ino;
+<a href='../S/120.html#L30'>ino</a>                30 src/syscall/fstat.c 	st-&gt;st_dev = ino-&gt;dev;
+<a href='../S/120.html#L31'>ino</a>                31 src/syscall/fstat.c 	st-&gt;st_uid = ino-&gt;uid;
+<a href='../S/120.html#L32'>ino</a>                32 src/syscall/fstat.c 	st-&gt;st_gid = ino-&gt;gid;
+<a href='../S/120.html#L33'>ino</a>                33 src/syscall/fstat.c 	st-&gt;st_atime = ino-&gt;atime;
+<a href='../S/120.html#L34'>ino</a>                34 src/syscall/fstat.c 	st-&gt;st_ctime = ino-&gt;ctime;
+<a href='../S/120.html#L35'>ino</a>                35 src/syscall/fstat.c 	st-&gt;st_mtime = ino-&gt;mtime;
+<a href='../S/120.html#L36'>ino</a>                36 src/syscall/fstat.c 	st-&gt;st_nlink = ino-&gt;nlink;
+<a href='../S/120.html#L37'>ino</a>                37 src/syscall/fstat.c 	st-&gt;st_size = ino-&gt;size;
+<a href='../S/120.html#L38'>ino</a>                38 src/syscall/fstat.c 	st-&gt;st_rdev = ino-&gt;rdev;
+<a href='../S/136.html#L17'>ino</a>                17 src/syscall/ioctl.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/136.html#L18'>ino</a>                18 src/syscall/ioctl.c 	if(!ino) {
+<a href='../S/136.html#L24'>ino</a>                24 src/syscall/ioctl.c 	return fs_ioctl(ino, req, buf);
+<a href='../S/132.html#L19'>ino</a>                19 src/syscall/lseek.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/132.html#L20'>ino</a>                20 src/syscall/lseek.c 	if(!ino) {
+<a href='../S/132.html#L26'>ino</a>                26 src/syscall/lseek.c 	if(pos &gt; ino-&gt;size)
+<a href='../S/132.html#L27'>ino</a>                27 src/syscall/lseek.c 		pos = ino-&gt;size;
+<a href='../S/132.html#L31'>ino</a>                31 src/syscall/lseek.c 			ino-&gt;position = pos;
+<a href='../S/132.html#L34'>ino</a>                34 src/syscall/lseek.c 			ino-&gt;position = ino-&gt;size - pos;
+<a href='../S/132.html#L37'>ino</a>                37 src/syscall/lseek.c 			ino-&gt;position = (ino-&gt;position + pos &gt; ino-&gt;size ? ino-&gt;size : ino-&gt;position + pos);
+<a href='../S/132.html#L44'>ino</a>                44 src/syscall/lseek.c 	return ino-&gt;position;
+<a href='../S/139.html#L111'>ino</a>               111 src/syscall/open.c 	inode_t* ino = ino_open(filename, flags, mode);
+<a href='../S/139.html#L112'>ino</a>               112 src/syscall/open.c 	if(!ino)
+<a href='../S/139.html#L129'>ino</a>               129 src/syscall/open.c 	*fd = ino;
+<a href='../S/127.html#L24'>ino</a>                24 src/syscall/read.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/127.html#L25'>ino</a>                25 src/syscall/read.c 	if(!ino) {
+<a href='../S/127.html#L31'>ino</a>                31 src/syscall/read.c 	return fs_read(ino, ptr, size);
+<a href='../S/140.html#L14'>ino</a>                14 src/syscall/readdir.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/140.html#L15'>ino</a>                15 src/syscall/readdir.c 	if(!ino) {
+<a href='../S/140.html#L21'>ino</a>                21 src/syscall/readdir.c 	return (struct dirent*) fs_readdir(ino, position);
+<a href='../S/128.html#L24'>ino</a>                24 src/syscall/write.c 	inode_t* ino = current_task-&gt;fd[fd];
+<a href='../S/128.html#L25'>ino</a>                25 src/syscall/write.c 	if(!ino) {
+<a href='../S/128.html#L31'>ino</a>                31 src/syscall/write.c 	return fs_write(ino, ptr, size);
+</pre>
+</body>
+</html>

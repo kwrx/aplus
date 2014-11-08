@@ -1,0 +1,26 @@
+var structtask =
+[
+    [ "argv", "structtask.html#a91e7540d20695c7439f7d0755a7a0545", null ],
+    [ "clock", "structtask.html#a8a31c6648c1b1869bfa069f4a969b0ad", null ],
+    [ "context", "structtask.html#a7e47fc3627188eeefc77f78e8d36ddd1", null ],
+    [ "cr3", "structtask.html#a5f4968459d4640f19c7e802ae7057179", null ],
+    [ "cwd", "structtask.html#a7099e7ba6a4c94559edfb4d396803b15", null ],
+    [ "env", "structtask.html#a8dbbb79f7c29771d36f1d98ec84cbbdf", null ],
+    [ "envp", "structtask.html#a09fbc78d666a0b49e2e2064121d28364", null ],
+    [ "exe", "structtask.html#a22a59fcfc18d5f671340669f96571768", null ],
+    [ "exitcode", "structtask.html#a9bd7bbd83fe1f4744c76ff240b6da5db", null ],
+    [ "fd", "structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a", null ],
+    [ "gid", "structtask.html#aaf3b6e15445e766a5c4823b815bca630", null ],
+    [ "image", "structtask.html#a3eac6c8a544ff49a836c5eed9ec48107", null ],
+    [ "length", "structtask.html#aa90dc3e7e232d6ba3f04700b3197b366", null ],
+    [ "parent", "structtask.html#a34c6613744820a1e8127756fb6a5392c", null ],
+    [ "pid", "structtask.html#ab56448ae42a75825ea923bd86648f3ae", null ],
+    [ "priority", "structtask.html#a9ab46b5a6e7c471f1fe32db13e6636a2", null ],
+    [ "ptr", "structtask.html#afbc0623ab058e402e92ea084dc37ab6a", null ],
+    [ "signal_handler", "structtask.html#aea4c9382e5f4f148a0a74c0680729cf0", null ],
+    [ "signal_sig", "structtask.html#a3d6991558f05258094bbef5c47073928", null ],
+    [ "stack", "structtask.html#a71232ebd31259f41c057b3e789b44587", null ],
+    [ "state", "structtask.html#a09ebd490ccb87f169fd7c3d8d95b4f39", null ],
+    [ "uid", "structtask.html#ade8fc4c414bce856dacf9efee3031be8", null ],
+    [ "vaddr", "structtask.html#a340cbedbdc4b542793e7677dd4966ade", null ]
+];

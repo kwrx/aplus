@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>newtask</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L165'>newtask</a>           165 src/arch/task.c void task_switch(task_t* newtask) {
+<a href='../S/159.html#L168'>newtask</a>           168 src/arch/task.c 	current_task = newtask;
+<a href='../S/143.html#L77'>newtask</a>            77 src/sched.c    	task_t* newtask = current_task;
+<a href='../S/143.html#L80'>newtask</a>            80 src/sched.c    		newtask = (task_t*) list_next(task_queue, (listval_t) newtask);
+<a href='../S/143.html#L81'>newtask</a>            81 src/sched.c    		if(!newtask)
+<a href='../S/143.html#L82'>newtask</a>            82 src/sched.c    			newtask = (task_t*) list_head(task_queue);
+<a href='../S/143.html#L84'>newtask</a>            84 src/sched.c    	} while(newtask-&gt;state != TASK_STATE_ALIVE);
+<a href='../S/143.html#L87'>newtask</a>            87 src/sched.c    	return newtask;
+</pre>
+</body>
+</html>

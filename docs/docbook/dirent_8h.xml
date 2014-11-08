@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="dirent_8h">
+    <title>dirent.h File Reference</title>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="struct____DIR">__DIR</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structdirent">dirent</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="dirent_8h_1a6afd3dd2f570069804b40e6aa24fc966">O_DIRECTORY</link> 00200000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="dirent_8h_1a82d4d551b214905742c9e045185d352a">O_NOFOLLOW</link> 00400000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="struct____DIR">__DIR</link>  <link linkend="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa">DIR</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="dirent_8h_1a8a52fd9a3ded793b8200ac0a5a1f10d2">alphasort</link> (
+const struct <link linkend="structdirent">dirent</link> ** a, const struct <link linkend="structdirent">dirent</link> ** b)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="dirent_8h_1a058e669d865116ec6419ea3a52207830">closedir</link> (
+<link linkend="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa">DIR</link> * d)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa">DIR</link> * <link linkend="dirent_8h_1afa648ff43ec9eba592716a334f243111">opendir</link> (
+const char * path)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structdirent">dirent</link> * <link linkend="dirent_8h_1aa7687571d2af8efd5153874ae6e678d9">readdir</link> (
+<link linkend="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa">DIR</link> * d)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="dirent_8h_1a08e6a89050229d246d07d9e17d57cb29">rewinddir</link> (
+<link linkend="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa">DIR</link> * d)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="dirent_8h_1a53d80292d58567db0826c243ab29166b">scandir</link> (
+const char * pathname, struct <link linkend="structdirent">dirent</link> *** namelist, int(*)(const struct <link linkend="structdirent">dirent</link> *) select, int(*)(const struct <link linkend="structdirent">dirent</link> **, const struct <link linkend="structdirent">dirent</link> **) compar)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="dirent_8h_1a58829cca160034015b3dddc17bb502ab">seekdir</link> (
+<link linkend="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa">DIR</link> * d, off_t offset)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>off_t <link linkend="dirent_8h_1a8460dc201f4c651f8d6b84b4316e4180">telldir</link> (
+<link linkend="dirent_8h_1a067065071b5bdb96054ed58b5f848bfa">DIR</link> * d)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libposix/include/sys/dirent.h</para>
+    </simplesect>
+</section>

@@ -1,0 +1,197 @@
+<html>
+<head>
+<title>errno</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L336'>errno</a>             336 src/arch/desc.c 		errno = EINVAL;
+<a href='../S/158.html#L346'>errno</a>             346 src/arch/desc.c 		errno = EINVAL;
+<a href='../S/158.html#L356'>errno</a>             356 src/arch/desc.c 		errno = EINVAL;
+<a href='../S/163.html#L30'>errno</a>              30 src/arch/syscall.c 		errno = ENOSYS;
+<a href='../S/115.html#L93'>errno</a>              93 src/exec.c     			errno = ENOEXEC;		\
+<a href='../S/115.html#L113'>errno</a>             113 src/exec.c     		errno = EINVAL;
+<a href='../S/146.html#L20'>errno</a>              20 src/fs/fs.c    	errno = ENOSYS;		
+<a href='../S/146.html#L28'>errno</a>              28 src/fs/fs.c    	errno = ENOSYS;	
+<a href='../S/146.html#L45'>errno</a>              45 src/fs/fs.c    	errno = ENOSYS;	
+<a href='../S/146.html#L58'>errno</a>              58 src/fs/fs.c    	errno = ENOSYS;	
+<a href='../S/146.html#L66'>errno</a>              66 src/fs/fs.c    	errno = ENOSYS;		
+<a href='../S/146.html#L74'>errno</a>              74 src/fs/fs.c    	errno = ENOSYS;		
+<a href='../S/146.html#L82'>errno</a>              82 src/fs/fs.c    	errno = ENOSYS;	
+<a href='../S/146.html#L90'>errno</a>              90 src/fs/fs.c    	errno = ENOSYS;	
+<a href='../S/146.html#L98'>errno</a>              98 src/fs/fs.c    	errno = ENOSYS;	
+<a href='../S/146.html#L106'>errno</a>             106 src/fs/fs.c    	errno = ENOSYS;	
+<a href='../S/133.html#L17'>errno</a>              17 src/syscall/chown.c 		errno = EACCES;
+<a href='../S/133.html#L24'>errno</a>              24 src/syscall/chown.c 		kprintf("sys_chown: %s.", strerror(errno));
+<a href='../S/126.html#L13'>errno</a>              13 src/syscall/clone.c 		errno = EINVAL;
+<a href='../S/126.html#L20'>errno</a>              20 src/syscall/clone.c 		errno = EFAULT;
+<a href='../S/119.html#L23'>errno</a>              23 src/syscall/close.c 		errno = EBADF;
+<a href='../S/141.html#L16'>errno</a>              16 src/syscall/execve.c 		errno = ENOENT;
+<a href='../S/141.html#L28'>errno</a>              28 src/syscall/execve.c 		errno = ENOMEM;
+<a href='../S/141.html#L36'>errno</a>              36 src/syscall/execve.c 		errno = EIO;
+<a href='../S/138.html#L26'>errno</a>              26 src/syscall/fcntl.c 		errno = EBADF;
+<a href='../S/138.html#L34'>errno</a>              34 src/syscall/fcntl.c 	errno = ENOSYS;
+<a href='../S/120.html#L17'>errno</a>              17 src/syscall/fstat.c 		errno = EINVAL;
+<a href='../S/120.html#L23'>errno</a>              23 src/syscall/fstat.c 		kprintf("sys_fstat: %s.", strerror(errno));
+<a href='../S/120.html#L24'>errno</a>              24 src/syscall/fstat.c 		errno = EBADF;
+<a href='../S/142.html#L20'>errno</a>              20 src/syscall/getgroups.c 		errno = EINVAL;
+<a href='../S/142.html#L25'>errno</a>              25 src/syscall/getgroups.c 		errno = EINVAL;
+<a href='../S/129.html#L17'>errno</a>              17 src/syscall/gettimeofday.c 		errno = EINVAL;
+<a href='../S/136.html#L19'>errno</a>              19 src/syscall/ioctl.c 		errno = EBADF;
+<a href='../S/125.html#L13'>errno</a>              13 src/syscall/kill.c 		errno = ESRCH;
+<a href='../S/118.html#L18'>errno</a>              18 src/syscall/link.c 	errno = ENOSYS;
+<a href='../S/132.html#L21'>errno</a>              21 src/syscall/lseek.c 		errno = EBADF;
+<a href='../S/132.html#L40'>errno</a>              40 src/syscall/lseek.c 			errno = EINVAL;
+<a href='../S/139.html#L31'>errno</a>              31 src/syscall/open.c 			errno = ENOENT;
+<a href='../S/139.html#L55'>errno</a>              55 src/syscall/open.c 				errno = ENOENT;
+<a href='../S/139.html#L71'>errno</a>              71 src/syscall/open.c 		errno = ENOENT;
+<a href='../S/139.html#L77'>errno</a>              77 src/syscall/open.c 		errno = ENOENT;
+<a href='../S/139.html#L85'>errno</a>              85 src/syscall/open.c 				errno = ELOOP;
+<a href='../S/139.html#L98'>errno</a>              98 src/syscall/open.c 			errno = ENOTDIR;
+<a href='../S/139.html#L125'>errno</a>             125 src/syscall/open.c 		errno = EMFILE;
+<a href='../S/127.html#L26'>errno</a>              26 src/syscall/read.c 		errno = EBADF;
+<a href='../S/140.html#L16'>errno</a>              16 src/syscall/readdir.c 		errno = EBADF;
+<a href='../S/124.html#L18'>errno</a>              18 src/syscall/stat.c 		kprintf("sys_stat: %s.", strerror(errno));		
+<a href='../S/123.html#L17'>errno</a>              17 src/syscall/unlink.c 	errno = ENOSYS;
+<a href='../S/137.html#L14'>errno</a>              14 src/syscall/wait.c 		errno = EFAULT;
+<a href='../S/137.html#L20'>errno</a>              20 src/syscall/wait.c 		errno = ECHILD;
+<a href='../S/128.html#L26'>errno</a>              26 src/syscall/write.c 		errno = EBADF;
+<a href='../S/83.html#L13'>errno</a>              13 usr/src/libcrt0/src/syscalls.c 		errno = e;						\
+<a href='../S/83.html#L25'>errno</a>              25 usr/src/libcrt0/src/syscalls.c 		errno = e;						\
+<a href='../S/83.html#L37'>errno</a>              37 usr/src/libcrt0/src/syscalls.c 		errno = e;						\
+<a href='../S/83.html#L50'>errno</a>              50 usr/src/libcrt0/src/syscalls.c 		errno = e;						\
+<a href='../S/83.html#L63'>errno</a>              63 usr/src/libcrt0/src/syscalls.c 		errno = e;						\
+<a href='../S/83.html#L76'>errno</a>              76 usr/src/libcrt0/src/syscalls.c 		errno = e;						\
+<a href='../S/17.html#L34'>errno</a>              34 usr/src/libposix/src/alarm.c 	errno = ENOSYS;
+<a href='../S/21.html#L13'>errno</a>              13 usr/src/libposix/src/closedir.c 		errno = EINVAL;
+<a href='../S/38.html#L3'>errno</a>               3 usr/src/libposix/src/errno.c int errno = 0;
+<a href='../S/24.html#L12'>errno</a>              12 usr/src/libposix/src/nanosleep.c 		errno = EINVAL;
+<a href='../S/24.html#L20'>errno</a>              20 usr/src/libposix/src/nanosleep.c 		errno = ENOMEM;
+<a href='../S/42.html#L16'>errno</a>              16 usr/src/libposix/src/opendir.c 		errno = ENOENT;
+<a href='../S/35.html#L17'>errno</a>              17 usr/src/libposix/src/readdir.c 		errno = EINVAL;
+<a href='../S/18.html#L14'>errno</a>              14 usr/src/libposix/src/scandir.c 		errno = ENOENT;
+<a href='../S/18.html#L19'>errno</a>              19 usr/src/libposix/src/scandir.c 		errno = EINVAL;
+<a href='../S/26.html#L16'>errno</a>              16 usr/src/libposix/src/sched.c 		errno = EINVAL;
+<a href='../S/26.html#L21'>errno</a>              21 usr/src/libposix/src/sched.c 		errno = EINVAL;
+<a href='../S/26.html#L25'>errno</a>              25 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/26.html#L30'>errno</a>              30 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/26.html#L37'>errno</a>              37 usr/src/libposix/src/sched.c 		errno = EINVAL;
+<a href='../S/26.html#L42'>errno</a>              42 usr/src/libposix/src/sched.c 		errno = EINVAL;
+<a href='../S/26.html#L46'>errno</a>              46 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/26.html#L52'>errno</a>              52 usr/src/libposix/src/sched.c 		errno = EINVAL;
+<a href='../S/26.html#L56'>errno</a>              56 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/26.html#L61'>errno</a>              61 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/26.html#L66'>errno</a>              66 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/26.html#L72'>errno</a>              72 usr/src/libposix/src/sched.c 		errno = EINVAL;
+<a href='../S/26.html#L77'>errno</a>              77 usr/src/libposix/src/sched.c 		errno = EINVAL;
+<a href='../S/26.html#L89'>errno</a>              89 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/26.html#L94'>errno</a>              94 usr/src/libposix/src/sched.c 	errno = ENOSYS;
+<a href='../S/31.html#L14'>errno</a>              14 usr/src/libposix/src/sleep.c     if (errno == EINTR) return ts.tv_sec;
+<a href='../S/41.html#L13'>errno</a>              13 usr/src/libposix/src/telldir.c 		errno = EINVAL;
+<a href='../S/37.html#L13'>errno</a>              13 usr/src/libposix/src/usleep.c     if (errno == EINTR) return ts.tv_sec;
+<a href='../S/65.html#L14'>errno</a>              14 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L30'>errno</a>              30 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L40'>errno</a>              40 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L50'>errno</a>              50 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L60'>errno</a>              60 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L70'>errno</a>              70 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L81'>errno</a>              81 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L91'>errno</a>              91 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L102'>errno</a>             102 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L114'>errno</a>             114 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L124'>errno</a>             124 usr/src/libpthread/src/pthread_attr.c 	errno = ENOSYS;
+<a href='../S/65.html#L129'>errno</a>             129 usr/src/libpthread/src/pthread_attr.c 	errno = ENOSYS;
+<a href='../S/65.html#L135'>errno</a>             135 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L145'>errno</a>             145 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L155'>errno</a>             155 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/65.html#L165'>errno</a>             165 usr/src/libpthread/src/pthread_attr.c 		errno = EINVAL;
+<a href='../S/57.html#L11'>errno</a>              11 usr/src/libpthread/src/pthread_barrier.c 		errno = EINVAL;
+<a href='../S/57.html#L16'>errno</a>              16 usr/src/libpthread/src/pthread_barrier.c 		errno = EINVAL;
+<a href='../S/57.html#L30'>errno</a>              30 usr/src/libpthread/src/pthread_barrier.c 		errno = EINVAL;
+<a href='../S/57.html#L44'>errno</a>              44 usr/src/libpthread/src/pthread_barrier.c 		errno = EINVAL;
+<a href='../S/54.html#L11'>errno</a>              11 usr/src/libpthread/src/pthread_barrierattr.c 		errno = EINVAL;
+<a href='../S/54.html#L22'>errno</a>              22 usr/src/libpthread/src/pthread_barrierattr.c 		errno = EINVAL;
+<a href='../S/54.html#L33'>errno</a>              33 usr/src/libpthread/src/pthread_barrierattr.c 		errno = EINVAL;
+<a href='../S/54.html#L38'>errno</a>              38 usr/src/libpthread/src/pthread_barrierattr.c 		errno = EINVAL;
+<a href='../S/54.html#L49'>errno</a>              49 usr/src/libpthread/src/pthread_barrierattr.c 		errno = EINVAL;
+<a href='../S/58.html#L13'>errno</a>              13 usr/src/libpthread/src/pthread_cancel.c 	errno = ENOSYS;
+<a href='../S/58.html#L19'>errno</a>              19 usr/src/libpthread/src/pthread_cancel.c 	errno = ENOSYS;
+<a href='../S/71.html#L15'>errno</a>              15 usr/src/libpthread/src/pthread_cond.c 		errno = EINVAL;
+<a href='../S/71.html#L27'>errno</a>              27 usr/src/libpthread/src/pthread_cond.c 		errno = EINVAL;
+<a href='../S/71.html#L32'>errno</a>              32 usr/src/libpthread/src/pthread_cond.c 		errno = EBUSY;
+<a href='../S/71.html#L46'>errno</a>              46 usr/src/libpthread/src/pthread_cond.c 		errno = EINVAL;
+<a href='../S/71.html#L51'>errno</a>              51 usr/src/libpthread/src/pthread_cond.c 		errno = EINVAL;
+<a href='../S/71.html#L56'>errno</a>              56 usr/src/libpthread/src/pthread_cond.c 		errno = EINVAL;
+<a href='../S/71.html#L62'>errno</a>              62 usr/src/libpthread/src/pthread_cond.c 		errno = EINVAL;
+<a href='../S/71.html#L95'>errno</a>              95 usr/src/libpthread/src/pthread_cond.c 		errno = ESRCH;
+<a href='../S/71.html#L112'>errno</a>             112 usr/src/libpthread/src/pthread_cond.c 	errno = ESRCH;
+<a href='../S/71.html#L118'>errno</a>             118 usr/src/libpthread/src/pthread_cond.c 		errno = ESRCH;
+<a href='../S/66.html#L9'>errno</a>               9 usr/src/libpthread/src/pthread_condattr.c 		errno = EINVAL;
+<a href='../S/66.html#L20'>errno</a>              20 usr/src/libpthread/src/pthread_condattr.c 		errno = EINVAL;
+<a href='../S/66.html#L31'>errno</a>              31 usr/src/libpthread/src/pthread_condattr.c 		errno = EINVAL;
+<a href='../S/66.html#L43'>errno</a>              43 usr/src/libpthread/src/pthread_condattr.c 		errno = EINVAL;
+<a href='../S/64.html#L42'>errno</a>              42 usr/src/libpthread/src/pthread_create.c 		errno = EINVAL;
+<a href='../S/64.html#L47'>errno</a>              47 usr/src/libpthread/src/pthread_create.c 		errno = EAGAIN;
+<a href='../S/56.html#L14'>errno</a>              14 usr/src/libpthread/src/pthread_detach.c 		errno = EINVAL;
+<a href='../S/56.html#L19'>errno</a>              19 usr/src/libpthread/src/pthread_detach.c 		errno = ESRCH;
+<a href='../S/56.html#L27'>errno</a>              27 usr/src/libpthread/src/pthread_detach.c 		errno = ESRCH;
+<a href='../S/73.html#L10'>errno</a>              10 usr/src/libpthread/src/pthread_join.c 		errno = EINVAL;
+<a href='../S/70.html#L11'>errno</a>              11 usr/src/libpthread/src/pthread_key.c 		errno = EINVAL;
+<a href='../S/70.html#L27'>errno</a>              27 usr/src/libpthread/src/pthread_key.c 	errno = EAGAIN;
+<a href='../S/70.html#L34'>errno</a>              34 usr/src/libpthread/src/pthread_key.c 		errno = EINVAL;
+<a href='../S/70.html#L51'>errno</a>              51 usr/src/libpthread/src/pthread_key.c 		errno = EINVAL;
+<a href='../S/70.html#L56'>errno</a>              56 usr/src/libpthread/src/pthread_key.c 		errno = EINVAL;
+<a href='../S/70.html#L67'>errno</a>              67 usr/src/libpthread/src/pthread_key.c 		errno = EINVAL;
+<a href='../S/70.html#L72'>errno</a>              72 usr/src/libpthread/src/pthread_key.c 		errno = EINVAL;
+<a href='../S/59.html#L28'>errno</a>              28 usr/src/libpthread/src/pthread_mutex.c 		errno = EINVAL;
+<a href='../S/59.html#L48'>errno</a>              48 usr/src/libpthread/src/pthread_mutex.c 		errno = EINVAL;
+<a href='../S/59.html#L53'>errno</a>              53 usr/src/libpthread/src/pthread_mutex.c 		errno = EBUSY;
+<a href='../S/59.html#L69'>errno</a>              69 usr/src/libpthread/src/pthread_mutex.c 		errno = EINVAL;
+<a href='../S/59.html#L81'>errno</a>              81 usr/src/libpthread/src/pthread_mutex.c 		errno = EDEADLK;
+<a href='../S/59.html#L94'>errno</a>              94 usr/src/libpthread/src/pthread_mutex.c 		errno = EINVAL;
+<a href='../S/59.html#L109'>errno</a>             109 usr/src/libpthread/src/pthread_mutex.c 		errno = EINVAL;
+<a href='../S/59.html#L115'>errno</a>             115 usr/src/libpthread/src/pthread_mutex.c 			errno = EBUSY;
+<a href='../S/59.html#L123'>errno</a>             123 usr/src/libpthread/src/pthread_mutex.c 		errno = EDEADLK;
+<a href='../S/59.html#L135'>errno</a>             135 usr/src/libpthread/src/pthread_mutex.c 		errno = EINVAL;
+<a href='../S/59.html#L148'>errno</a>             148 usr/src/libpthread/src/pthread_mutex.c 		errno = EPERM;
+<a href='../S/68.html#L10'>errno</a>              10 usr/src/libpthread/src/pthread_mutexattr.c 		errno = EINVAL;
+<a href='../S/68.html#L22'>errno</a>              22 usr/src/libpthread/src/pthread_mutexattr.c 		errno = EINVAL;
+<a href='../S/68.html#L34'>errno</a>              34 usr/src/libpthread/src/pthread_mutexattr.c 		errno = EINVAL;
+<a href='../S/68.html#L44'>errno</a>              44 usr/src/libpthread/src/pthread_mutexattr.c 		errno = EINVAL;
+<a href='../S/68.html#L54'>errno</a>              54 usr/src/libpthread/src/pthread_mutexattr.c 		errno = EINVAL;
+<a href='../S/68.html#L64'>errno</a>              64 usr/src/libpthread/src/pthread_mutexattr.c 		errno = EINVAL;
+<a href='../S/67.html#L8'>errno</a>               8 usr/src/libpthread/src/pthread_once.c 	errno = ENOSYS;
+<a href='../S/72.html#L12'>errno</a>              12 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L18'>errno</a>              18 usr/src/libpthread/src/pthread_rwlock.c 		errno = EFAULT;
+<a href='../S/72.html#L36'>errno</a>              36 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L42'>errno</a>              42 usr/src/libpthread/src/pthread_rwlock.c 		errno = EFAULT;
+<a href='../S/72.html#L47'>errno</a>              47 usr/src/libpthread/src/pthread_rwlock.c 		errno = EPERM;
+<a href='../S/72.html#L65'>errno</a>              65 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L74'>errno</a>              74 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L83'>errno</a>              83 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L92'>errno</a>              92 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L101'>errno</a>             101 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L110'>errno</a>             110 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/72.html#L119'>errno</a>             119 usr/src/libpthread/src/pthread_rwlock.c 		errno = EINVAL;
+<a href='../S/60.html#L11'>errno</a>              11 usr/src/libpthread/src/pthread_rwlockattr.c 		errno = EINVAL;
+<a href='../S/60.html#L21'>errno</a>              21 usr/src/libpthread/src/pthread_rwlockattr.c 		errno = EINVAL;
+<a href='../S/60.html#L31'>errno</a>              31 usr/src/libpthread/src/pthread_rwlockattr.c 		errno = EINVAL;
+<a href='../S/60.html#L36'>errno</a>              36 usr/src/libpthread/src/pthread_rwlockattr.c 		errno = EINVAL;
+<a href='../S/60.html#L46'>errno</a>              46 usr/src/libpthread/src/pthread_rwlockattr.c 		errno = EINVAL;
+<a href='../S/51.html#L13'>errno</a>              13 usr/src/libpthread/src/pthread_sched.c 		errno = EINVAL;
+<a href='../S/51.html#L18'>errno</a>              18 usr/src/libpthread/src/pthread_sched.c 		errno = EINVAL;
+<a href='../S/51.html#L28'>errno</a>              28 usr/src/libpthread/src/pthread_sched.c 		errno = EINVAL;
+<a href='../S/51.html#L33'>errno</a>              33 usr/src/libpthread/src/pthread_sched.c 		errno = EINVAL;
+<a href='../S/51.html#L47'>errno</a>              47 usr/src/libpthread/src/pthread_sched.c 		errno = ESRCH;
+<a href='../S/51.html#L60'>errno</a>              60 usr/src/libpthread/src/pthread_sched.c 		errno = ESRCH;
+<a href='../S/69.html#L12'>errno</a>              12 usr/src/libpthread/src/pthread_self.c 		errno = ESRCH;
+<a href='../S/69.html#L25'>errno</a>              25 usr/src/libpthread/src/pthread_self.c 	errno = ESRCH;
+<a href='../S/53.html#L9'>errno</a>               9 usr/src/libpthread/src/pthread_spin.c 		errno = EINVAL;
+<a href='../S/53.html#L21'>errno</a>              21 usr/src/libpthread/src/pthread_spin.c 		errno = EINVAL;
+<a href='../S/53.html#L33'>errno</a>              33 usr/src/libpthread/src/pthread_spin.c 		errno = EINVAL;
+<a href='../S/53.html#L47'>errno</a>              47 usr/src/libpthread/src/pthread_spin.c 		errno = EINVAL;
+<a href='../S/53.html#L61'>errno</a>              61 usr/src/libpthread/src/pthread_spin.c 		errno = EINVAL;
+</pre>
+</body>
+</html>

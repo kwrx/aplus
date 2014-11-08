@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>stream</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/145.html#L21'>stream</a>             21 src/fs/pipe.c  	bufio_t* stream;
+<a href='../S/145.html#L32'>stream</a>             32 src/fs/pipe.c  	bufio_seek(pipe-&gt;stream, pipe-&gt;read_offset % pipe-&gt;stream-&gt;size, SEEK_SET);
+<a href='../S/145.html#L35'>stream</a>             35 src/fs/pipe.c  	while((tolen = bufio_read(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/145.html#L36'>stream</a>             36 src/fs/pipe.c  		bufio_seek(pipe-&gt;stream, 0, SEEK_SET);
+<a href='../S/145.html#L38'>stream</a>             38 src/fs/pipe.c  	pipe-&gt;write_offset = bufio_tell(pipe-&gt;stream);
+<a href='../S/145.html#L44'>stream</a>             44 src/fs/pipe.c  	bufio_seek(pipe-&gt;stream, pipe-&gt;write_offset % pipe-&gt;stream-&gt;size, SEEK_SET);
+<a href='../S/145.html#L47'>stream</a>             47 src/fs/pipe.c  	while((tolen = bufio_write(pipe-&gt;stream, (void*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)
+<a href='../S/145.html#L48'>stream</a>             48 src/fs/pipe.c  		bufio_seek(pipe-&gt;stream, 0, SEEK_SET);
+<a href='../S/145.html#L50'>stream</a>             50 src/fs/pipe.c  	pipe-&gt;write_offset = bufio_tell(pipe-&gt;stream);
+<a href='../S/145.html#L57'>stream</a>             57 src/fs/pipe.c  	bufio_free(pipe-&gt;stream);
+<a href='../S/145.html#L66'>stream</a>             66 src/fs/pipe.c  	pipe-&gt;stream = (bufio_t*) bufio_alloc(BUFSIZ);
+</pre>
+</body>
+</html>

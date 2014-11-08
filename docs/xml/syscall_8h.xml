@@ -1,0 +1,401 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="syscall_8h" kind="file">
+    <compoundname>syscall.h</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="attribute_8h" local="no">aplus/attribute.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includedby refid="syscall_8c" local="no">src/arch/syscall.c</includedby>
+    <includedby refid="__exit_8c" local="no">src/syscall/_exit.c</includedby>
+    <includedby refid="chown_8c" local="no">src/syscall/chown.c</includedby>
+    <includedby refid="clone_8c" local="no">src/syscall/clone.c</includedby>
+    <includedby refid="close_8c" local="no">src/syscall/close.c</includedby>
+    <includedby refid="execve_8c" local="no">src/syscall/execve.c</includedby>
+    <includedby refid="fcntl_8c" local="no">src/syscall/fcntl.c</includedby>
+    <includedby refid="fork_8c" local="no">src/syscall/fork.c</includedby>
+    <includedby refid="fstat_8c" local="no">src/syscall/fstat.c</includedby>
+    <includedby refid="getgroups_8c" local="no">src/syscall/getgroups.c</includedby>
+    <includedby refid="getpid_8c" local="no">src/syscall/getpid.c</includedby>
+    <includedby refid="gettimeofday_8c" local="no">src/syscall/gettimeofday.c</includedby>
+    <includedby refid="ioctl_8c" local="no">src/syscall/ioctl.c</includedby>
+    <includedby refid="isatty_8c" local="no">src/syscall/isatty.c</includedby>
+    <includedby refid="kill_8c" local="no">src/syscall/kill.c</includedby>
+    <includedby refid="link_8c" local="no">src/syscall/link.c</includedby>
+    <includedby refid="lseek_8c" local="no">src/syscall/lseek.c</includedby>
+    <includedby refid="open_8c" local="no">src/syscall/open.c</includedby>
+    <includedby refid="read_8c" local="no">src/syscall/read.c</includedby>
+    <includedby refid="src_2syscall_2readdir_8c" local="no">src/syscall/readdir.c</includedby>
+    <includedby refid="sbrk_8c" local="no">src/syscall/sbrk.c</includedby>
+    <includedby refid="stat_8c" local="no">src/syscall/stat.c</includedby>
+    <includedby refid="test_8c" local="no">src/syscall/test.c</includedby>
+    <includedby refid="times_8c" local="no">src/syscall/times.c</includedby>
+    <includedby refid="unlink_8c" local="no">src/syscall/unlink.c</includedby>
+    <includedby refid="wait_8c" local="no">src/syscall/wait.c</includedby>
+    <includedby refid="write_8c" local="no">src/syscall/write.c</includedby>
+    <includedby refid="yield_8c" local="no">src/syscall/yield.c</includedby>
+    <incdepgraph>
+      <node id="764">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="754">
+        <label>stdarg.h</label>
+      </node>
+      <node id="756">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="752" relation="include">
+        </childnode>
+        <childnode refid="757" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+        <childnode refid="755" relation="include">
+        </childnode>
+        <childnode refid="759" relation="include">
+        </childnode>
+      </node>
+      <node id="763">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="753" relation="include">
+        </childnode>
+        <childnode refid="758" relation="include">
+        </childnode>
+        <childnode refid="759" relation="include">
+        </childnode>
+        <childnode refid="764" relation="include">
+        </childnode>
+        <childnode refid="765" relation="include">
+        </childnode>
+      </node>
+      <node id="753">
+        <label>stdint.h</label>
+      </node>
+      <node id="751">
+        <label>src/include/aplus/syscall.h</label>
+        <link refid="syscall.h"/>
+        <childnode refid="752" relation="include">
+        </childnode>
+        <childnode refid="756" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="768">
+        <label>setjmp.h</label>
+      </node>
+      <node id="762">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="753" relation="include">
+        </childnode>
+        <childnode refid="752" relation="include">
+        </childnode>
+        <childnode refid="763" relation="include">
+        </childnode>
+        <childnode refid="767" relation="include">
+        </childnode>
+        <childnode refid="759" relation="include">
+        </childnode>
+        <childnode refid="768" relation="include">
+        </childnode>
+      </node>
+      <node id="758">
+        <label>stddef.h</label>
+      </node>
+      <node id="757">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="758" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+        <childnode refid="759" relation="include">
+        </childnode>
+        <childnode refid="760" relation="include">
+        </childnode>
+        <childnode refid="761" relation="include">
+        </childnode>
+      </node>
+      <node id="752">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="753" relation="include">
+        </childnode>
+        <childnode refid="754" relation="include">
+        </childnode>
+        <childnode refid="755" relation="include">
+        </childnode>
+      </node>
+      <node id="759">
+        <label>sys/types.h</label>
+      </node>
+      <node id="755">
+        <label>string.h</label>
+      </node>
+      <node id="766">
+        <label>unistd.h</label>
+      </node>
+      <node id="767">
+        <label>signal.h</label>
+      </node>
+      <node id="761">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="753" relation="include">
+        </childnode>
+        <childnode refid="762" relation="include">
+        </childnode>
+      </node>
+      <node id="765">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="766" relation="include">
+        </childnode>
+        <childnode refid="759" relation="include">
+        </childnode>
+      </node>
+      <node id="760">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="776">
+        <label>src/syscall/fcntl.c</label>
+        <link refid="fcntl_8c"/>
+      </node>
+      <node id="786">
+        <label>src/syscall/lseek.c</label>
+        <link refid="lseek_8c"/>
+      </node>
+      <node id="774">
+        <label>src/syscall/close.c</label>
+        <link refid="close_8c"/>
+      </node>
+      <node id="783">
+        <label>src/syscall/isatty.c</label>
+        <link refid="isatty_8c"/>
+      </node>
+      <node id="782">
+        <label>src/syscall/ioctl.c</label>
+        <link refid="ioctl_8c"/>
+      </node>
+      <node id="790">
+        <label>src/syscall/sbrk.c</label>
+        <link refid="sbrk_8c"/>
+      </node>
+      <node id="769">
+        <label>src/include/aplus/syscall.h</label>
+        <link refid="syscall.h"/>
+        <childnode refid="770" relation="include">
+        </childnode>
+        <childnode refid="771" relation="include">
+        </childnode>
+        <childnode refid="772" relation="include">
+        </childnode>
+        <childnode refid="773" relation="include">
+        </childnode>
+        <childnode refid="774" relation="include">
+        </childnode>
+        <childnode refid="775" relation="include">
+        </childnode>
+        <childnode refid="776" relation="include">
+        </childnode>
+        <childnode refid="777" relation="include">
+        </childnode>
+        <childnode refid="778" relation="include">
+        </childnode>
+        <childnode refid="779" relation="include">
+        </childnode>
+        <childnode refid="780" relation="include">
+        </childnode>
+        <childnode refid="781" relation="include">
+        </childnode>
+        <childnode refid="782" relation="include">
+        </childnode>
+        <childnode refid="783" relation="include">
+        </childnode>
+        <childnode refid="784" relation="include">
+        </childnode>
+        <childnode refid="785" relation="include">
+        </childnode>
+        <childnode refid="786" relation="include">
+        </childnode>
+        <childnode refid="787" relation="include">
+        </childnode>
+        <childnode refid="788" relation="include">
+        </childnode>
+        <childnode refid="789" relation="include">
+        </childnode>
+        <childnode refid="790" relation="include">
+        </childnode>
+        <childnode refid="791" relation="include">
+        </childnode>
+        <childnode refid="792" relation="include">
+        </childnode>
+        <childnode refid="793" relation="include">
+        </childnode>
+        <childnode refid="794" relation="include">
+        </childnode>
+        <childnode refid="795" relation="include">
+        </childnode>
+        <childnode refid="796" relation="include">
+        </childnode>
+        <childnode refid="797" relation="include">
+        </childnode>
+      </node>
+      <node id="779">
+        <label>src/syscall/getgroups.c</label>
+        <link refid="getgroups_8c"/>
+      </node>
+      <node id="796">
+        <label>src/syscall/write.c</label>
+        <link refid="write_8c"/>
+      </node>
+      <node id="797">
+        <label>src/syscall/yield.c</label>
+        <link refid="yield_8c"/>
+      </node>
+      <node id="788">
+        <label>src/syscall/read.c</label>
+        <link refid="read_8c"/>
+      </node>
+      <node id="773">
+        <label>src/syscall/clone.c</label>
+        <link refid="clone_8c"/>
+      </node>
+      <node id="780">
+        <label>src/syscall/getpid.c</label>
+        <link refid="getpid_8c"/>
+      </node>
+      <node id="771">
+        <label>src/syscall/_exit.c</label>
+        <link refid="__exit_8c"/>
+      </node>
+      <node id="787">
+        <label>src/syscall/open.c</label>
+        <link refid="open_8c"/>
+      </node>
+      <node id="777">
+        <label>src/syscall/fork.c</label>
+        <link refid="fork_8c"/>
+      </node>
+      <node id="791">
+        <label>src/syscall/stat.c</label>
+        <link refid="stat_8c"/>
+      </node>
+      <node id="785">
+        <label>src/syscall/link.c</label>
+        <link refid="link_8c"/>
+      </node>
+      <node id="792">
+        <label>src/syscall/test.c</label>
+        <link refid="test_8c"/>
+      </node>
+      <node id="781">
+        <label>src/syscall/gettimeofday.c</label>
+        <link refid="gettimeofday_8c"/>
+      </node>
+      <node id="775">
+        <label>src/syscall/execve.c</label>
+        <link refid="execve_8c"/>
+      </node>
+      <node id="772">
+        <label>src/syscall/chown.c</label>
+        <link refid="chown_8c"/>
+      </node>
+      <node id="789">
+        <label>src/syscall/readdir.c</label>
+        <link refid="src_2syscall_2readdir_8c"/>
+      </node>
+      <node id="793">
+        <label>src/syscall/times.c</label>
+        <link refid="times_8c"/>
+      </node>
+      <node id="770">
+        <label>src/arch/syscall.c</label>
+        <link refid="syscall_8c"/>
+      </node>
+      <node id="795">
+        <label>src/syscall/wait.c</label>
+        <link refid="wait_8c"/>
+      </node>
+      <node id="784">
+        <label>src/syscall/kill.c</label>
+        <link refid="kill_8c"/>
+      </node>
+      <node id="794">
+        <label>src/syscall/unlink.c</label>
+        <link refid="unlink_8c"/>
+      </node>
+      <node id="778">
+        <label>src/syscall/fstat.c</label>
+        <link refid="fstat_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="struct____syscall" prot="public">__syscall</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="syscall_8h_1a66a9851e5871109859df72962d80c3a6" prot="public" static="no">
+        <name>SYSCALL</name>
+        <param><defname>h</defname></param>
+        <param><defname>n</defname></param>
+        <initializer>static <ref refid="syscall_8h_1ae65b9b33e5689e1897162dab3777e62f" kindref="member">syscall_t</ref> syscall_##n = {										\
+		(void*) h, (int) n													\
+	}; 																		\
+	<ref refid="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae" kindref="member">ATTRIBUTE</ref>(&quot;syscall&quot;, syscall_##n)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/syscall.h" line="15" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/syscall.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="syscall_8h_1ae65b9b33e5689e1897162dab3777e62f" prot="public" static="no">
+        <type>struct <ref refid="struct____syscall" kindref="compound">__syscall</ref></type>
+        <definition>typedef struct __syscall  syscall_t</definition>
+        <argsstring></argsstring>
+        <name>syscall_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/syscall.h" line="12" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_SYSCALL_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_SYSCALL_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="attribute_8h" kindref="compound">aplus/attribute.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="struct____syscall" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="struct____syscall" kindref="compound">__syscall</ref><sp/>{</highlight></codeline>
+<codeline lineno="10" refid="struct____syscall_1af1d75ee98d8568f74e8421654a1081d3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="struct____syscall_1af1d75ee98d8568f74e8421654a1081d3" kindref="member">handler</ref>;</highlight></codeline>
+<codeline lineno="11" refid="struct____syscall_1a7f020a41ed9bf3daff3dfc46ee673eef" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="struct____syscall_1a7f020a41ed9bf3daff3dfc46ee673eef" kindref="member">number</ref>;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal">}<sp/><ref refid="syscall_8h_1ae65b9b33e5689e1897162dab3777e62f" kindref="member">syscall_t</ref>;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="syscall_8h_1a66a9851e5871109859df72962d80c3a6" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SYSCALL(h,<sp/>n)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="16"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>static<sp/>syscall_t<sp/>syscall_##n<sp/>=<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="17"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(void*)<sp/>h,<sp/>(int)<sp/>n<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>};<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="19"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>ATTRIBUTE(&quot;syscall&quot;,<sp/>syscall_##n)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/syscall.h"/>
+  </compounddef>
+</doxygen>

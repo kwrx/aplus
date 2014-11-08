@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="execv_8c">
+    <title>execv.c File Reference</title>
+    <programlisting>#include &lt;_ansi.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static char *** <link linkend="execv_8c_1a8facdfc3e966886a03275b03efb78576">p_environ</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="execv_8c_1accd0d84615f4b84367796ea088af9d72">_execve</link> (
+const char * filename, char *const args, char *const env)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="execv_8c_1af785e3a983b2ce8aa8cdfb77e3b5b903">_DEFUN</link> (
+execv , (path, argv) , const char *path _AND char *const argv)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libposix/src/execv.c</para>
+    </simplesect>
+</section>

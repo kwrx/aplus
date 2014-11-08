@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_e8086224b30c3cef66d8adbaa7f25de7" kind="dir">
+    <compoundname>usr/src/libssp</compoundname>
+    <innerdir refid="dir_f3daf20736111013d4579244582b51df">usr/src/libssp/src</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libssp/"/>
+  </compounddef>
+</doxygen>

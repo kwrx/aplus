@@ -1,0 +1,51 @@
+\hypertarget{usleep_8c}{\section{Riferimenti per il file usr/src/libposix/src/usleep.c}
+\label{usleep_8c}\index{usr/src/libposix/src/usleep.\+c@{usr/src/libposix/src/usleep.\+c}}
+}
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{usleep_8c_a1beaecc28fb9396d30c206bde6aa4717}{nanosleep} (struct timespec $\ast$ts, struct timespec $\ast$tr)
+\item 
+int \hyperlink{usleep_8c_a59715f1a0a2ee4dc75e8343aca15c1dd}{usleep} (useconds\+\_\+t useconds)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{usleep_8c_a1beaecc28fb9396d30c206bde6aa4717}{\index{usleep.\+c@{usleep.\+c}!nanosleep@{nanosleep}}
+\index{nanosleep@{nanosleep}!usleep.\+c@{usleep.\+c}}
+\subsubsection[{nanosleep}]{\setlength{\rightskip}{0pt plus 5cm}int nanosleep (
+\begin{DoxyParamCaption}
+\item[{struct timespec $\ast$}]{ts, }
+\item[{struct timespec $\ast$}]{tr}
+\end{DoxyParamCaption}
+)}}\label{usleep_8c_a1beaecc28fb9396d30c206bde6aa4717}
+\hypertarget{usleep_8c_a59715f1a0a2ee4dc75e8343aca15c1dd}{\index{usleep.\+c@{usleep.\+c}!usleep@{usleep}}
+\index{usleep@{usleep}!usleep.\+c@{usleep.\+c}}
+\subsubsection[{usleep}]{\setlength{\rightskip}{0pt plus 5cm}int usleep (
+\begin{DoxyParamCaption}
+\item[{useconds\+\_\+t}]{useconds}
+\end{DoxyParamCaption}
+)}}\label{usleep_8c_a59715f1a0a2ee4dc75e8343aca15c1dd}
+
+
+Definizione alla linea 7 del file usleep.\+c.
+
+
+
+Referenzia errno, e nanosleep().
+
+
+\begin{DoxyCode}
+7                                 \{
+8     \textcolor{keyword}{struct }timespec ts;
+9 
+10     ts.tv\_sec = (\textcolor{keywordtype}{long} int)useconds / 1000000;
+11     ts.tv\_nsec = ((\textcolor{keywordtype}{long} int)useconds % 1000000);
+12     \textcolor{keywordflow}{if} (!\hyperlink{usleep_8c_a1beaecc28fb9396d30c206bde6aa4717}{nanosleep}(&ts,&ts)) \textcolor{keywordflow}{return} 0;
+13     \textcolor{keywordflow}{if} (\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} == EINTR) \textcolor{keywordflow}{return} ts.tv\_sec;
+14     \textcolor{keywordflow}{return} -1;
+15 \}
+\end{DoxyCode}

@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>src/include/aplus/net/ipv6.h</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/167.html'>include</a>/<a href='../files/168.html'>aplus</a>/<a href='../files/169.html'>net</a>/ipv6.h</h2>
+<i><font color='green'>/* [&lt;][&gt;][^][v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2><a href='../J/24.html' title='Multiple included from 2 places.'>INCLUDED FROM</a></h2>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#ifndef</font> <a href='../S/92.html#L2' title='Defined at 2 in src/include/aplus/net/ipv6.h.'>_IPV6_H</a>
+<a name='L2'>   2 <font color='darkred'>#define</font> <a href='../S/92.html#L1' title='Refered from 1 in src/include/aplus/net/ipv6.h.'>_IPV6_H</a>
+<a name='L3'>   3 
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='89.html'>aplus/netif.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 
+<a name='L8'>   8 <font color='darkred'>#define</font> <a href='../S/106.html#L17' title='Refered from 17 in src/net/ipv6.c.'>IPV6_CHECK_VERSION</a>(<a href='../Y/296.html' title='Multiple used in 7 places.'>head</a>)                (<a href='../Y/296.html' title='Multiple used in 7 places.'>head</a>-&gt;<a href='../Y/749.html' title='Multiple used in 4 places.'>version</a> == 6)
+<a name='L9'>   9 
+<a name='L10'>  10 <font color='darkred'>#define</font> <a href='../S/106.html#L74' title='Refered from 74 in src/net/ipv6.c.'>IPV6_PROTO_RAW</a>                                  0
+<a name='L11'>  11 <font color='darkred'>#define</font> <a href='../R/58.html' title='Multiple refered from 2 places.'>IPV6_PROTO_ICMP</a>                                 1
+<a name='L12'>  12 <font color='darkred'>#define</font> <a href='../R/60.html' title='Multiple refered from 2 places.'>IPV6_PROTO_TCP</a>                                  6
+<a name='L13'>  13 <font color='darkred'>#define</font> <a href='../R/61.html' title='Multiple refered from 2 places.'>IPV6_PROTO_UDP</a>                                  17
+<a name='L14'>  14 
+<a name='L15'>  15 <b>typedef</b> <b>struct</b> ipv6_header <font color='red'>{</font>
+<a name='L16'>  16         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/749.html' title='Multiple used in 4 places.'>version</a>:4;
+<a name='L17'>  17         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/701.html' title='Multiple used in 2 places.'>traffic</a>:8;
+<a name='L18'>  18         <a href='../Y/719.html' title='Multiple used in 167 places.'>uint32_t</a> <a href='../Y/266.html' title='Multiple used in 2 places.'>flow</a>:20;
+<a name='L19'>  19 
+<a name='L20'>  20         <a href='../Y/718.html' title='Multiple used in 43 places.'>uint16_t</a> <a href='../Y/356.html' title='Multiple used in 99 places.'>length</a>;
+<a name='L21'>  21         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/487.html' title='Multiple used in 17 places.'>protocol</a>;
+<a name='L22'>  22         <a href='../Y/721.html' title='Multiple used in 51 places.'>uint8_t</a> <a href='../Y/703.html' title='Multiple used in 5 places.'>ttl</a>;
+<a name='L23'>  23 
+<a name='L24'>  24         <a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a> <a href='../Y/582.html' title='Multiple used in 6 places.'>source</a>;
+<a name='L25'>  25         <a href='../S/89.html#L11' title='Defined at 11 in src/include/aplus/netif.h.'>ipv6_t</a> <a href='../Y/192.html' title='Multiple used in 25 places.'>dest</a>;
+<a name='L26'>  26 <font color='red'>}</font> <b>__attribute__</b>((<a href='../Y/455.html' title='Multiple used in 13 places.'>packed</a>)) <a href='../R/278.html' title='Multiple refered from 6 places.'>ipv6_header_t</a>;
+<a name='L27'>  27 
+<a name='L28'>  28 <font color='darkred'>#endif</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^][v]<a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

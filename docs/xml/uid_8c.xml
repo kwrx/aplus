@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="uid_8c" kind="file">
+    <compoundname>uid.c</compoundname>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">sys/stat.h</includes>
+    <incdepgraph>
+      <node id="2169">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="2168">
+        <label>unistd.h</label>
+      </node>
+      <node id="2167">
+        <label>usr/src/libposix/src/uid.c</label>
+        <link refid="uid.c"/>
+        <childnode refid="2168" relation="include">
+        </childnode>
+        <childnode refid="2169" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="uid_8c_1a2f517436c22ef73337d3de4920908c6c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uid_t</type>
+        <definition>uid_t getuid</definition>
+        <argsstring>(void)</argsstring>
+        <name>getuid</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/uid.c" line="5" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/uid.c" bodystart="5" bodyend="11"/>
+      </memberdef>
+      <memberdef kind="function" id="uid_8c_1a8b9a6dcf4e1d237f5607256dad93e26a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>uid_t</type>
+        <definition>uid_t geteuid</definition>
+        <argsstring>(void)</argsstring>
+        <name>geteuid</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/uid.c" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/uid.c" bodystart="13" bodyend="15"/>
+        <references refid="uid_8c_1a2f517436c22ef73337d3de4920908c6c" compoundref="uid_8c" startline="5" endline="11">getuid</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/stat.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5" refid="uid_8c_1a2f517436c22ef73337d3de4920908c6c" refkind="member"><highlight class="normal">uid_t<sp/><ref refid="uid_8c_1a2f517436c22ef73337d3de4920908c6c" kindref="member">getuid</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">stat<sp/>st;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fstat(STDIN_FILENO,<sp/>&amp;st)<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>st.st_uid;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="uid_8c_1a8b9a6dcf4e1d237f5607256dad93e26a" refkind="member"><highlight class="normal">uid_t<sp/><ref refid="uid_8c_1a8b9a6dcf4e1d237f5607256dad93e26a" kindref="member">geteuid</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="uid_8c_1a2f517436c22ef73337d3de4920908c6c" kindref="member">getuid</ref>();</highlight></codeline>
+<codeline lineno="15"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/uid.c"/>
+  </compounddef>
+</doxygen>

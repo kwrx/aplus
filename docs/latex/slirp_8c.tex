@@ -1,0 +1,354 @@
+\hypertarget{slirp_8c}{\section{Riferimenti per il file src/net/slirp/slirp.c}
+\label{slirp_8c}\index{src/net/slirp/slirp.\+c@{src/net/slirp/slirp.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/bufio.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}slirp.\+h\char`\"{}}\\*
+\subsection*{Strutture dati}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structslirpcard}{slirpcard}
+\end{DoxyCompactItemize}
+\subsection*{Ridefinizioni di tipo (typedef)}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structslirpcard}{slirpcard} \hyperlink{slirp_8c_a568a798f46022c03ad5665b75e55909a}{slirpcard\+\_\+t}
+\end{DoxyCompactItemize}
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}{slirp\+\_\+handler} (void $\ast$unused)
+\item 
+int \hyperlink{slirp_8c_a5bb8edbc515f4ca455cdfff6c75cf708}{slirp\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type})
+\item 
+int \hyperlink{slirp_8c_a6edb6b8f286eafaf6272e6e024c70934}{slirp\+\_\+ifup} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif})
+\item 
+int \hyperlink{slirp_8c_a145cf2e489aa075e08f69f79bdb19574}{slirp\+\_\+ifdown} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif})
+\item 
+int \hyperlink{slirp_8c_a8e7e3c2a9bf497a11fd8e2159976e5ad}{slirp\+\_\+init} ()
+\item 
+\hyperlink{slirp_8c_a37f21b9482ca9c4a0e418a266742a8ae}{A\+T\+T\+R\+I\+B\+U\+T\+E} (\char`\"{}netif\char`\"{}, slirp\+\_\+init)
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{slirp_8c_a568a798f46022c03ad5665b75e55909a}{slirpcard\+\_\+t} $\ast$ \hyperlink{slirp_8c_a0f272b2d098a6c4df9edf6a275a4447f}{slirpcard} = N\+U\+L\+L
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\hypertarget{slirp_8c_a568a798f46022c03ad5665b75e55909a}{\index{slirp.\+c@{slirp.\+c}!slirpcard\+\_\+t@{slirpcard\+\_\+t}}
+\index{slirpcard\+\_\+t@{slirpcard\+\_\+t}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{slirpcard\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf slirpcard}  {\bf slirpcard\+\_\+t}}}\label{slirp_8c_a568a798f46022c03ad5665b75e55909a}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{slirp_8c_a37f21b9482ca9c4a0e418a266742a8ae}{\index{slirp.\+c@{slirp.\+c}!A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}}
+\index{A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{A\+T\+T\+R\+I\+B\+U\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}A\+T\+T\+R\+I\+B\+U\+T\+E (
+\begin{DoxyParamCaption}
+\item[{\char`\"{}netif\char`\"{}}]{, }
+\item[{{\bf slirp\+\_\+init}}]{}
+\end{DoxyParamCaption}
+)}}\label{slirp_8c_a37f21b9482ca9c4a0e418a266742a8ae}
+\hypertarget{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}{\index{slirp.\+c@{slirp.\+c}!slirp\+\_\+handler@{slirp\+\_\+handler}}
+\index{slirp\+\_\+handler@{slirp\+\_\+handler}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{slirp\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}void slirp\+\_\+handler (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{unused}
+\end{DoxyParamCaption}
+)}}\label{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}
+
+
+Definizione alla linea 28 del file slirp.\+c.
+
+
+
+Referenzia slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_\+recv(), kfree(), kmalloc(), kprintf, slirpcard\+::netif, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, slirpcard\+::offset, netif\+::rx\+\_\+bytes, netif\+::rx\+\_\+errors, netif\+::rx\+\_\+packets, serial\+\_\+recv(), S\+L\+I\+R\+P\+\_\+\+B\+U\+F\+S\+I\+Z, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, netif\+::state, uint8\+\_\+t, e slirpcard\+::used.
+
+
+\begin{DoxyCode}
+28                                  \{
+29     \textcolor{keywordflow}{if}(\hyperlink{structslirpcard}{slirpcard} == NULL)
+30         \textcolor{keywordflow}{return};
+31 
+32     \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a4c84f5911831326cc979fe1c96c8607b}{netif};
+33 
+34     \textcolor{keywordflow}{if}((netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} & \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE}) == 0)
+35         \textcolor{keywordflow}{return};
+36     
+37     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"slirp: received data\(\backslash\)n"});
+38 
+39     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t} \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d} = \hyperlink{serial_8c_abfa1d9231846e7f9820b4609e32f8f7c}{serial\_recv}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport});
+40     \textcolor{keywordflow}{if}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aca0b3836ef213a9ab9cab689175d6a38}{used} == 0) \{
+41         \textcolor{keywordflow}{if}(d != \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END})
+42             \textcolor{keywordflow}{return};
+43 
+44         \textcolor{keywordflow}{if}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer})
+45             \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer});
+46 
+47         \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer} = (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(
+      \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}) * \hyperlink{slirp_8h_a1a2dfb64959285fee075cc1f612289cb}{SLIRP\_BUFSIZ});
+48         \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset} = 0;
+49         \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aca0b3836ef213a9ab9cab689175d6a38}{used} = 1;
+50         \textcolor{keywordflow}{return};
+51     \}
+52 
+53     \textcolor{keywordflow}{if}((d == \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END} && \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aca0b3836ef213a9ab9cab689175d6a38}{used}) || 
+      \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset} >= \hyperlink{slirp_8h_a1a2dfb64959285fee075cc1f612289cb}{SLIRP\_BUFSIZ}) \{
+54         \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aca0b3836ef213a9ab9cab689175d6a38}{used} = 0;
+55             
+56         \textcolor{keywordflow}{if}(\hyperlink{ipv4_8c_aef7e4d9aa0ca33ce3ed3d39d613ebf64}{ipv4\_recv}(netif, \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer}, \hyperlink{structslirpcard}{slirpcard}->
+      \hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset}) > 0) \{
+57             netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_a80040f58867713ff1b5ec982a450221e}{rx\_packets} += 1;
+58             netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_a5a078449e22bb6f4d3d0068345d8dabc}{rx\_bytes} += \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset};
+59         \} \textcolor{keywordflow}{else}
+60             netif->\hyperlink{structnetif_a5ae2198374cbfd44de7e41e646aaae64}{state}.\hyperlink{structnetif_adb3c694759403e67d539a5e81a552c92}{rx\_errors} += 1;
+61 
+62         \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset} = 0;
+63     \}
+64 
+65     \textcolor{keywordflow}{switch}(d) \{
+66         \textcolor{keywordflow}{case} \hyperlink{slirp_8h_ab1ab0ab4001d8bdbfe07457776e58579}{SLIRP\_PACKET\_ESC}: \{
+67             d = \hyperlink{serial_8c_abfa1d9231846e7f9820b4609e32f8f7c}{serial\_recv}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport});
+68             \textcolor{keywordflow}{switch}(d) \{
+69                 \textcolor{keywordflow}{case} \hyperlink{slirp_8h_ab3edcb78e24f3e17d99d94ac4494ca17}{SLIRP\_PACKET\_ESC\_END}:
+70                     d = \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END};
+71                     \textcolor{keywordflow}{break};
+72                 \textcolor{keywordflow}{case} \hyperlink{slirp_8h_aadc4cd7d052d18d94b1b10e139628dc1}{SLIRP\_PACKET\_ESC\_ESC}:
+73                     d = \hyperlink{slirp_8h_ab1ab0ab4001d8bdbfe07457776e58579}{SLIRP\_PACKET\_ESC};
+74                     \textcolor{keywordflow}{break};
+75             \}
+76         \}
+77 
+78         \textcolor{keywordflow}{default}:
+79             \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer}[\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset}++] = 
+      \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d};
+80     \}
+81     
+82 \}
+\end{DoxyCode}
+\hypertarget{slirp_8c_a145cf2e489aa075e08f69f79bdb19574}{\index{slirp.\+c@{slirp.\+c}!slirp\+\_\+ifdown@{slirp\+\_\+ifdown}}
+\index{slirp\+\_\+ifdown@{slirp\+\_\+ifdown}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{slirp\+\_\+ifdown}]{\setlength{\rightskip}{0pt plus 5cm}int slirp\+\_\+ifdown (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif}
+\end{DoxyParamCaption}
+)}}\label{slirp_8c_a145cf2e489aa075e08f69f79bdb19574}
+
+
+Definizione alla linea 124 del file slirp.\+c.
+
+
+
+Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+
+
+\begin{DoxyCode}
+124                                  \{
+125     netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} &= ~\hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE};
+126     \textcolor{keywordflow}{return} 0;
+127 \}
+\end{DoxyCode}
+\hypertarget{slirp_8c_a6edb6b8f286eafaf6272e6e024c70934}{\index{slirp.\+c@{slirp.\+c}!slirp\+\_\+ifup@{slirp\+\_\+ifup}}
+\index{slirp\+\_\+ifup@{slirp\+\_\+ifup}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{slirp\+\_\+ifup}]{\setlength{\rightskip}{0pt plus 5cm}int slirp\+\_\+ifup (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif}
+\end{DoxyParamCaption}
+)}}\label{slirp_8c_a6edb6b8f286eafaf6272e6e024c70934}
+
+
+Definizione alla linea 119 del file slirp.\+c.
+
+
+
+Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+
+
+\begin{DoxyCode}
+119                                \{
+120     netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} |= \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE};
+121     \textcolor{keywordflow}{return} 0;
+122 \}
+\end{DoxyCode}
+\hypertarget{slirp_8c_a8e7e3c2a9bf497a11fd8e2159976e5ad}{\index{slirp.\+c@{slirp.\+c}!slirp\+\_\+init@{slirp\+\_\+init}}
+\index{slirp\+\_\+init@{slirp\+\_\+init}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{slirp\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int slirp\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{slirp_8c_a8e7e3c2a9bf497a11fd8e2159976e5ad}
+
+
+Definizione alla linea 129 del file slirp.\+c.
+
+
+
+Referenzia slirpcard\+::buffer, netif\+::data, netif\+::dns, netif\+::ifdown, netif\+::ifup, slirpcard\+::ioport, netif\+::ipv4, netif\+::ipv6, irq\+\_\+set(), kmalloc(), netif\+::macaddr, slirpcard\+::magic, netif\+::mtu, netif\+::name, slirpcard\+::netif, netif\+\_\+add(), netif\+::netmask, slirpcard\+::offset, netif\+::primary, netif\+::secondary, netif\+::send, slirp\+\_\+handler(), slirp\+\_\+ifdown(), slirp\+\_\+ifup(), S\+L\+I\+R\+P\+\_\+\+M\+A\+G\+I\+C, S\+L\+I\+R\+P\+\_\+\+M\+T\+U, slirp\+\_\+send(), e slirpcard\+::used.
+
+
+\begin{DoxyCode}
+129                  \{
+130     
+131     \hyperlink{structslirpcard}{slirpcard} = (\hyperlink{structslirpcard}{slirpcard\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(
+      \hyperlink{structslirpcard}{slirpcard\_t}));
+132     \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_ab77a4a7b33ab2cd4a821aff9445cd134}{magic} = \hyperlink{slirp_8h_aa2c40ffa219abb80aa6d683964c43e25}{SLIRP\_MAGIC};
+133     \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer} = NULL;
+134     \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset} = 0;
+135     \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aca0b3836ef213a9ab9cab689175d6a38}{used} = 0;
+136     \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport} = 1;
+137 
+138     \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structnetif}{netif\_t}));
+139     memset(netif, 0, \textcolor{keyword}{sizeof}(\hyperlink{structnetif}{netif\_t}));
+140 
+141 
+142     strcpy(netif->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name}, \textcolor{stringliteral}{"slp0"});
+143 
+144 
+145     netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[0] = 10;
+146     netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[1] = 0;
+147     netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[2] = 2;
+148     netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[3] = 0;
+149     netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[4] = 255;
+150     netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[5] = 255;
+151 
+152     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[0] = 10;
+153     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[1] = 0;
+154     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[2] = 2;
+155     netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[3] = 0;
+156 
+157     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[0] = 255;
+158     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[1] = 255;
+159     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[2] = 255;
+160     netif->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[3] = 0;
+161 
+162     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[0] = 0xfe80;
+163     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[1] = 0x0000;
+164     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[2] = 0x0000;
+165     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[3] = 0x0000;
+166     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[4] = 0x0000;
+167     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[5] = 0x10ff;
+168     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[6] = 0xcef9;
+169     netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[7] = 0x9b70;
+170 
+171     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[0] = 8;
+172     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[1] = 8;
+173     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[2] = 8;
+174     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[3] = 8;
+175 
+176     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[0] = 8;
+177     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[1] = 8;
+178     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[2] = 4;
+179     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[3] = 4;
+180     
+181 
+182     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[0] = 0x2001;
+183     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[1] = 0x4860;
+184     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[2] = 0x4860;
+185     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[3] = 0x0000;
+186     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[4] = 0x0000;
+187     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[5] = 0x0000;
+188     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[6] = 0x0000;
+189     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[7] = 0x8888;
+190     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[0] = 0x2001;
+191     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[1] = 0x4860;
+192     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[2] = 0x4860;
+193     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[3] = 0x0000;
+194     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[4] = 0x0000;
+195     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[5] = 0x0000;
+196     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[6] = 0x0000;
+197     netif->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[7] = 0x8844;
+198 
+199 
+200     netif->\hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu} = \hyperlink{slirp_8h_a96377139dd32f24736da76a132dafcf1}{SLIRP\_MTU};
+201     netif->\hyperlink{structnetif_ac0505ae55088f68c2cefa77dc6871208}{send} = \hyperlink{slirp_8c_a5bb8edbc515f4ca455cdfff6c75cf708}{slirp\_send};
+202     netif->\hyperlink{structnetif_a70984b0d611d5a941aecabbc98f62467}{ifup} = \hyperlink{slirp_8c_a6edb6b8f286eafaf6272e6e024c70934}{slirp\_ifup};
+203     netif->\hyperlink{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}{ifdown} = \hyperlink{slirp_8c_a145cf2e489aa075e08f69f79bdb19574}{slirp\_ifdown};
+204     netif->\hyperlink{structnetif_af45fb467da3492eb4473cb9208044ac8}{data} = (\textcolor{keywordtype}{void}*) \hyperlink{structslirpcard}{slirpcard};
+205 
+206     \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a4c84f5911831326cc979fe1c96c8607b}{netif} = netif;
+207     \hyperlink{netif_8c_a01bed7c80274b7830923cdde25b1d48a}{netif\_add}(netif);
+208     
+209 
+210     \hyperlink{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}{irq\_set}(4, \hyperlink{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}{slirp\_handler});
+211     \hyperlink{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}{irq\_set}(3, \hyperlink{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}{slirp\_handler});
+212     \textcolor{keywordflow}{return} 0;
+213 \}
+\end{DoxyCode}
+\hypertarget{slirp_8c_a5bb8edbc515f4ca455cdfff6c75cf708}{\index{slirp.\+c@{slirp.\+c}!slirp\+\_\+send@{slirp\+\_\+send}}
+\index{slirp\+\_\+send@{slirp\+\_\+send}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{slirp\+\_\+send}]{\setlength{\rightskip}{0pt plus 5cm}int slirp\+\_\+send (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length, }
+\item[{int}]{type}
+\end{DoxyParamCaption}
+)}}\label{slirp_8c_a5bb8edbc515f4ca455cdfff6c75cf708}
+
+
+Definizione alla linea 85 del file slirp.\+c.
+
+
+
+Referenzia netif\+::data, netif\+::flags, slirpcard\+::ioport, length, slirpcard\+::magic, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, serial\+\_\+send(), S\+L\+I\+R\+P\+\_\+\+M\+A\+G\+I\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, e uint8\+\_\+t.
+
+
+\begin{DoxyCode}
+85                                                                    \{
+86     \textcolor{keywordflow}{if}((netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} & \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE}) == 0)
+87         \textcolor{keywordflow}{return} 0;
+88 
+89     \hyperlink{structslirpcard}{slirpcard\_t}* \hyperlink{structslirpcard}{slirpcard} = (\hyperlink{structslirpcard}{slirpcard\_t}*) netif->
+      \hyperlink{structnetif_af45fb467da3492eb4473cb9208044ac8}{data};
+90     \textcolor{keywordflow}{if}(slirpcard->\hyperlink{structslirpcard_ab77a4a7b33ab2cd4a821aff9445cd134}{magic} != \hyperlink{slirp_8h_aa2c40ffa219abb80aa6d683964c43e25}{SLIRP\_MAGIC})
+91         \textcolor{keywordflow}{return} 0;
+92 
+93     
+94     \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END});
+95 
+96     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}* b = (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}*) buf;
+97     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}; i++) \{
+98         \textcolor{keywordflow}{switch}(b[i]) \{
+99             \textcolor{keywordflow}{case} \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END}:
+100                 \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, \hyperlink{slirp_8h_ab1ab0ab4001d8bdbfe07457776e58579}{SLIRP\_PACKET\_ESC});
+101                 \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, 
+      \hyperlink{slirp_8h_ab3edcb78e24f3e17d99d94ac4494ca17}{SLIRP\_PACKET\_ESC\_END});
+102                 \textcolor{keywordflow}{break};
+103 
+104             \textcolor{keywordflow}{case} \hyperlink{slirp_8h_ab1ab0ab4001d8bdbfe07457776e58579}{SLIRP\_PACKET\_ESC}:
+105                 \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, \hyperlink{slirp_8h_ab1ab0ab4001d8bdbfe07457776e58579}{SLIRP\_PACKET\_ESC});
+106                 \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, 
+      \hyperlink{slirp_8h_aadc4cd7d052d18d94b1b10e139628dc1}{SLIRP\_PACKET\_ESC\_ESC});
+107                 \textcolor{keywordflow}{break};
+108     
+109             \textcolor{keywordflow}{default}:
+110                 \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, b[i]);
+111                 \textcolor{keywordflow}{break};
+112         \}
+113     \}
+114 
+115     \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END});
+116     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+117 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{slirp_8c_a0f272b2d098a6c4df9edf6a275a4447f}{\index{slirp.\+c@{slirp.\+c}!slirpcard@{slirpcard}}
+\index{slirpcard@{slirpcard}!slirp.\+c@{slirp.\+c}}
+\subsubsection[{slirpcard}]{\setlength{\rightskip}{0pt plus 5cm}{\bf slirpcard\+\_\+t}$\ast$ {\bf slirpcard} = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{slirp_8c_a0f272b2d098a6c4df9edf6a275a4447f}
+
+
+Definizione alla linea 26 del file slirp.\+c.
+

@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>pos</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/132.html#L18'>pos</a>                18 src/syscall/lseek.c int sys_lseek(int fd, int pos, int dir) {
+<a href='../S/132.html#L26'>pos</a>                26 src/syscall/lseek.c 	if(pos &gt; ino-&gt;size)
+<a href='../S/132.html#L27'>pos</a>                27 src/syscall/lseek.c 		pos = ino-&gt;size;
+<a href='../S/132.html#L31'>pos</a>                31 src/syscall/lseek.c 			ino-&gt;position = pos;
+<a href='../S/132.html#L34'>pos</a>                34 src/syscall/lseek.c 			ino-&gt;position = ino-&gt;size - pos;
+<a href='../S/132.html#L37'>pos</a>                37 src/syscall/lseek.c 			ino-&gt;position = (ino-&gt;position + pos &gt; ino-&gt;size ? ino-&gt;size : ino-&gt;position + pos);
+</pre>
+</body>
+</html>

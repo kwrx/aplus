@@ -1,0 +1,660 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="bufio_8c" kind="file">
+    <compoundname>bufio.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="bufio_8h" local="no">aplus/bufio.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes local="no">stdio.h</includes>
+    <incdepgraph>
+      <node id="103">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="94">
+        <label>stdarg.h</label>
+      </node>
+      <node id="102">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="103" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
+      </node>
+      <node id="93">
+        <label>stdint.h</label>
+      </node>
+      <node id="107">
+        <label>setjmp.h</label>
+      </node>
+      <node id="101">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="92" relation="include">
+        </childnode>
+        <childnode refid="102" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="107" relation="include">
+        </childnode>
+      </node>
+      <node id="97">
+        <label>stddef.h</label>
+      </node>
+      <node id="96">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+        <childnode refid="100" relation="include">
+        </childnode>
+      </node>
+      <node id="92">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="94" relation="include">
+        </childnode>
+        <childnode refid="95" relation="include">
+        </childnode>
+      </node>
+      <node id="98">
+        <label>sys/types.h</label>
+      </node>
+      <node id="95">
+        <label>string.h</label>
+      </node>
+      <node id="105">
+        <label>unistd.h</label>
+      </node>
+      <node id="106">
+        <label>signal.h</label>
+      </node>
+      <node id="91">
+        <label>src/bufio.c</label>
+        <link refid="bufio.c"/>
+        <childnode refid="92" relation="include">
+        </childnode>
+        <childnode refid="96" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+        <childnode refid="100" relation="include">
+        </childnode>
+        <childnode refid="108" relation="include">
+        </childnode>
+        <childnode refid="101" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="109" relation="include">
+        </childnode>
+      </node>
+      <node id="100">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="101" relation="include">
+        </childnode>
+      </node>
+      <node id="104">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="105" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+      </node>
+      <node id="99">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="108">
+        <label>aplus/bufio.h</label>
+        <link refid="bufio_8h"/>
+        <childnode refid="93" relation="include">
+        </childnode>
+        <childnode refid="97" relation="include">
+        </childnode>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+        <childnode refid="101" relation="include">
+        </childnode>
+      </node>
+      <node id="109">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="bufio_8c_1a5e9324428544e1da920f5be30824d350" prot="public" static="yes" mutable="no">
+        <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+        <definition>list_t* list_buffers</definition>
+        <argsstring></argsstring>
+        <name>list_buffers</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" prot="public" static="yes" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t buffers_length</definition>
+        <argsstring></argsstring>
+        <name>buffers_length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" prot="public" static="no" mutable="no">
+        <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+        <definition>task_t* current_task</definition>
+        <argsstring></argsstring>
+        <name>current_task</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="18" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="bufio_8c_1a8553eb3703bbc2ac89010ccfaefe760f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bufio_init</definition>
+        <argsstring>()</argsstring>
+        <name>bufio_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="20" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="20" bodyend="24"/>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a078ef38ac6ed6b044ebaf4f06dafdf46" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void bufio_free_unused</definition>
+        <argsstring>()</argsstring>
+        <name>bufio_free_unused</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="28" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="28" bodyend="42"/>
+        <references refid="list_8h_1ad29245eda34d4cdac400323a1bd63cdd" compoundref="list_8h" startline="119" endline="127">list_clone</references>
+        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="193">list_destroy</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a788d5286cd4a5a1d4aed02c319aaf030" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+        <definition>bufio_t* bufio_alloc</definition>
+        <argsstring>(size_t size)</argsstring>
+        <name>bufio_alloc</name>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="45" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="45" bodyend="66"/>
+        <references refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" compoundref="bufio_8c" startline="16">buffers_length</references>
+        <references refid="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="33">current_task</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" compoundref="spinlock_8h" startline="38">lock</references>
+        <references refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" compoundref="bufio_8h" startline="35">bufio::offset</references>
+        <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
+        <references refid="structbufio_1a27683bf934579d5f42529dcea191db50" compoundref="bufio_8h" startline="38">bufio::task</references>
+        <references refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" compoundref="bufio_8h" startline="36">bufio::type</references>
+        <references refid="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" compoundref="spinlock_8h" startline="42">unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a1258244c4b6ffe2885086facaa7a72b0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+        <definition>bufio_t* bufio_alloc_raw</definition>
+        <argsstring>(void *raw, size_t size)</argsstring>
+        <name>bufio_alloc_raw</name>
+        <param>
+          <type>void *</type>
+          <declname>raw</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="68" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="68" bodyend="88"/>
+        <references refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" compoundref="bufio_8c" startline="16">buffers_length</references>
+        <references refid="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="33">current_task</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" compoundref="spinlock_8h" startline="38">lock</references>
+        <references refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" compoundref="bufio_8h" startline="35">bufio::offset</references>
+        <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
+        <references refid="structbufio_1a27683bf934579d5f42529dcea191db50" compoundref="bufio_8h" startline="38">bufio::task</references>
+        <references refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" compoundref="bufio_8h" startline="36">bufio::type</references>
+        <references refid="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" compoundref="spinlock_8h" startline="42">unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a2a92ff5d9427e2d5d88b4c95247b0f64" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void bufio_free</definition>
+        <argsstring>(bufio_t *buf)</argsstring>
+        <name>bufio_free</name>
+        <param>
+          <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="90" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="90" bodyend="101"/>
+        <references refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" compoundref="bufio_8c" startline="16">buffers_length</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
+        <references refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" compoundref="spinlock_8h" startline="38">lock</references>
+        <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" compoundref="spinlock_8h" startline="42">unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bufio_seek</definition>
+        <argsstring>(bufio_t *buf, off_t offset, int dir)</argsstring>
+        <name>bufio_seek</name>
+        <param>
+          <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>off_t</type>
+          <declname>offset</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>dir</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="103" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="103" bodyend="129"/>
+        <references refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" compoundref="bufio_8h" startline="35">bufio::offset</references>
+        <references refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" compoundref="ipv4_8h" startline="51">offset</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bufio_tell</definition>
+        <argsstring>(bufio_t *buf)</argsstring>
+        <name>bufio_tell</name>
+        <param>
+          <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="131" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="131" bodyend="133"/>
+        <references refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" compoundref="bufio_8c" startline="103" endline="129">bufio_seek</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1ac3fb155871895c9d49c8bcb2290e1afa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void bufio_clear</definition>
+        <argsstring>(bufio_t *buf)</argsstring>
+        <name>bufio_clear</name>
+        <param>
+          <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="135" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="135" bodyend="139"/>
+        <references refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" compoundref="bufio_8h" startline="37">bufio::lock</references>
+        <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" compoundref="spinlock_8c" startline="27" endline="34">spinlock_lock</references>
+        <references refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" compoundref="spinlock_8c" startline="37" endline="39">spinlock_unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a75016850df49d95e52a5508d22ff79e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bufio_read</definition>
+        <argsstring>(bufio_t *buf, void *ptr, size_t len)</argsstring>
+        <name>bufio_read</name>
+        <param>
+          <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="141" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="141" bodyend="152"/>
+        <references refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" compoundref="bufio_8h" startline="37">bufio::lock</references>
+        <references refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" compoundref="bufio_8h" startline="35">bufio::offset</references>
+        <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" compoundref="spinlock_8c" startline="27" endline="34">spinlock_lock</references>
+        <references refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" compoundref="spinlock_8c" startline="37" endline="39">spinlock_unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1a8db791aa56b168544d7666a723af32de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bufio_write</definition>
+        <argsstring>(bufio_t *buf, void *ptr, size_t len)</argsstring>
+        <name>bufio_write</name>
+        <param>
+          <type><ref refid="bufio_8h_1aed33c7684664724ce2d39fe264246e35" kindref="member">bufio_t</ref> *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type>size_t</type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="154" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="154" bodyend="166"/>
+        <references refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" compoundref="bufio_8h" startline="37">bufio::lock</references>
+        <references refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" compoundref="bufio_8h" startline="35">bufio::offset</references>
+        <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" compoundref="spinlock_8c" startline="27" endline="34">spinlock_lock</references>
+        <references refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" compoundref="spinlock_8c" startline="37" endline="39">spinlock_unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="bufio_8c_1ab4a60d54cf7a99daf16f558781a99334" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+        <definition>list_t* bufio_find_by_type</definition>
+        <argsstring>(uint32_t type)</argsstring>
+        <name>bufio_find_by_type</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>type</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/bufio.c" line="168" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="168" bodyend="180"/>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" compoundref="bufio_8h" startline="36">bufio::type</references>
+        <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="bufio_8h" kindref="compound">aplus/bufio.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="bufio_8c_1a5e9324428544e1da920f5be30824d350" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="bufio_8c_1a5e9324428544e1da920f5be30824d350" kindref="member">list_buffers</ref>;</highlight></codeline>
+<codeline lineno="16" refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>uint64_t<sp/><ref refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" kindref="member">buffers_length</ref>;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="bufio_8c_1a8553eb3703bbc2ac89010ccfaefe760f" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a8553eb3703bbc2ac89010ccfaefe760f" kindref="member">bufio_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(list_buffers);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="bufio_8c_1a078ef38ac6ed6b044ebaf4f06dafdf46" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a078ef38ac6ed6b044ebaf4f06dafdf46" kindref="member">bufio_free_unused</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/>tmp;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(tmp);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1ad29245eda34d4cdac400323a1bd63cdd" kindref="member">list_clone</ref>(tmp,<sp/>list_buffers);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>tmp)<sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//bufio_t*<sp/>value<sp/>=<sp/>(bufio_t*)<sp/>value;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//if(value-&gt;task-&gt;state<sp/>==<sp/>TASK_STATE_DEAD)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/>bufio_free(value);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" kindref="member">list_destroy</ref>(tmp);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="bufio_8c_1a788d5286cd4a5a1d4aed02c319aaf030" refkind="member"><highlight class="normal"><ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/><ref refid="bufio_8c_1a788d5286cd4a5a1d4aed02c319aaf030" kindref="member">bufio_alloc</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(size);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!addr)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>();<sp/></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" kindref="member">buffers_length</ref><sp/>+=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf<sp/>=<sp/>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(size);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" kindref="member">raw</ref><sp/>=<sp/>addr;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref><sp/>=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" kindref="member">type</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>=<sp/>(off_t)<sp/>0;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a27683bf934579d5f42529dcea191db50" kindref="member">task</ref><sp/>=<sp/><ref refid="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(list_buffers,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>buf);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" kindref="member">unlock</ref>();</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>buf;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68" refid="bufio_8c_1a1258244c4b6ffe2885086facaa7a72b0" refkind="member"><highlight class="normal"><ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/><ref refid="bufio_8c_1a1258244c4b6ffe2885086facaa7a72b0" kindref="member">bufio_alloc_raw</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>raw,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!raw)</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>();<sp/></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" kindref="member">buffers_length</ref><sp/>+=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf<sp/>=<sp/>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(size);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" kindref="member">raw</ref><sp/>=<sp/>raw;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref><sp/>=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" kindref="member">type</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>=<sp/>(off_t)<sp/>0;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a27683bf934579d5f42529dcea191db50" kindref="member">task</ref><sp/>=<sp/><ref refid="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(list_buffers,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>buf);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" kindref="member">unlock</ref>();</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>buf;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90" refid="bufio_8c_1a2a92ff5d9427e2d5d88b4c95247b0f64" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a2a92ff5d9427e2d5d88b4c95247b0f64" kindref="member">bufio_free</ref>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf)<sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>();</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" kindref="member">buffers_length</ref><sp/>-=<sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(buf-&gt;<ref refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" kindref="member">raw</ref>);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(buf);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a4470c240b622941415ae5250067699b5" kindref="member">list_remove</ref>(list_buffers,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>buf);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a5f543d9add4a39382826f0d7ff9e94d8" kindref="member">unlock</ref>();</highlight></codeline>
+<codeline lineno="101"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103" refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" kindref="member">bufio_seek</ref>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf,<sp/>off_t<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dir)<sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(offset<sp/>&gt;<sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dir<sp/>==<sp/>SEEK_CUR<sp/>&amp;&amp;<sp/>(offset<sp/>+<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref>)<sp/>&gt;<sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>)</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(dir)<sp/>{</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>SEEK_SET:</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>=<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>SEEK_END:</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>=<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>-<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>SEEK_CUR:</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>+=<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref>;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131" refid="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3" kindref="member">bufio_tell</ref>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf)<sp/>{</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" kindref="member">bufio_seek</ref>(buf,<sp/>0,<sp/>SEEK_CUR);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
+<codeline lineno="135" refid="bufio_8c_1ac3fb155871895c9d49c8bcb2290e1afa" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1ac3fb155871895c9d49c8bcb2290e1afa" kindref="member">bufio_clear</ref>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf)<sp/>{</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;buf-&gt;<ref refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(buf-&gt;<ref refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" kindref="member">raw</ref>,<sp/>0,<sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>);</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;buf-&gt;<ref refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="139"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141" refid="bufio_8c_1a75016850df49d95e52a5508d22ff79e8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a75016850df49d95e52a5508d22ff79e8" kindref="member">bufio_read</ref>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ptr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;buf-&gt;<ref refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>len<sp/>=<sp/>(len<sp/>+<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>&gt;<sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>)<sp/>?<sp/>(buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref><sp/>-<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref>)<sp/>:<sp/>len;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(ptr,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((off_t)<sp/>buf-&gt;<ref refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" kindref="member">raw</ref><sp/>+<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref>),<sp/>len);</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>+=<sp/>(off_t)<sp/>len;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;buf-&gt;<ref refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>len;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154" refid="bufio_8c_1a8db791aa56b168544d7666a723af32de" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="bufio_8c_1a8db791aa56b168544d7666a723af32de" kindref="member">bufio_write</ref>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ptr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>len)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;buf-&gt;<ref refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>len<sp/>=<sp/>(len<sp/>+<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>&gt;<sp/>buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>)<sp/>?<sp/>(buf-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref><sp/>-<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref>)<sp/>:<sp/>len;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((off_t)<sp/>buf-&gt;<ref refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" kindref="member">raw</ref><sp/>+<sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref>),<sp/>ptr,<sp/>len);</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/>buf-&gt;<ref refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" kindref="member">offset</ref><sp/>+=<sp/>(off_t)<sp/>len;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;buf-&gt;<ref refid="structbufio_1acaf54fa3069ec8ccc9362b1527a1a72c" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>len;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight></codeline>
+<codeline lineno="168" refid="bufio_8c_1ab4a60d54cf7a99daf16f558781a99334" refkind="member"><highlight class="normal"><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="bufio_8c_1ab4a60d54cf7a99daf16f558781a99334" kindref="member">bufio_find_by_type</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/>tmp;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(tmp);</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>list_buffers)<sp/>{</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/>buf<sp/>=<sp/>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(buf-&gt;<ref refid="structbufio_1ad5542b6d1da521611e9d5790a4a9e651" kindref="member">type</ref><sp/>==<sp/>type)</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(tmp,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>buf);</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>tmp;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/bufio.c"/>
+  </compounddef>
+</doxygen>

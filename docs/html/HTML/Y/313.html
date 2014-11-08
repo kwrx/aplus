@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>increment</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/143.html#L184'>increment</a>         184 src/sched.c    void* schedule_sbrk(ptrdiff_t increment) {
+<a href='../S/143.html#L191'>increment</a>         191 src/sched.c    	if(increment == 0)
+<a href='../S/143.html#L194'>increment</a>         194 src/sched.c    	current_task-&gt;image.length += increment;
+<a href='../S/117.html#L6'>increment</a>           6 src/syscall/sbrk.c void* sys_sbrk(ptrdiff_t increment) {
+<a href='../S/117.html#L7'>increment</a>           7 src/syscall/sbrk.c 	return (void*) schedule_sbrk(increment);
+</pre>
+</body>
+</html>

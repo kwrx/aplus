@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file src/fs/ramdev.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('ramdev_8c.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Funzioni</a> &#124;
+<a href="#var-members">Variabili</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file ramdev.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="aplus_8h_source.html">aplus.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="fs_8h_source.html">aplus/fs.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="task_8h_source.html">aplus/task.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="bufio_8h_source.html">aplus/bufio.h</a>&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="dirent_8h_source.html">dirent.h</a>&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+</div>
+<p><a href="ramdev_8c_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funzioni</h2></td></tr>
+<tr class="memitem:a6c11bf3d3e83703d529cd8697e1dc618"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ramdev_8c.html#a6c11bf3d3e83703d529cd8697e1dc618">ramdev_read</a> (<a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *ino, char *buf, int <a class="el" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>)</td></tr>
+<tr class="separator:a6c11bf3d3e83703d529cd8697e1dc618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9abd59435d15eab678b7b601e7415c97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ramdev_8c.html#a9abd59435d15eab678b7b601e7415c97">ramdev_write</a> (<a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *ino, char *buf, int <a class="el" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>)</td></tr>
+<tr class="separator:a9abd59435d15eab678b7b601e7415c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9ef7e9fc03cb083b7c94bda843576bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ramdev_8c.html#ac9ef7e9fc03cb083b7c94bda843576bd">ramdev_flush</a> (<a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *ino)</td></tr>
+<tr class="separator:ac9ef7e9fc03cb083b7c94bda843576bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c040a7a5a5150b0b0d18354ac6f4958"><td class="memItemLeft" align="right" valign="top"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ramdev_8c.html#a0c040a7a5a5150b0b0d18354ac6f4958">mkramdev</a> (char *path, <a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> addr, <a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> <a class="el" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>)</td></tr>
+<tr class="separator:a0c040a7a5a5150b0b0d18354ac6f4958"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variabili</h2></td></tr>
+<tr class="memitem:a4743b3673a8794b8e7bd0b6c91a63cd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="task_8h.html#a8aeef2cdb643462b97cd459a8e68cad3">task_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ramdev_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></td></tr>
+<tr class="separator:a4743b3673a8794b8e7bd0b6c91a63cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle funzioni</h2>
+<a class="anchor" id="a0c040a7a5a5150b0b0d18354ac6f4958"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a>* mkramdev </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="ramdev_8c_source.html#l00075">75</a> del file <a class="el" href="ramdev_8c_source.html">ramdev.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00068">bufio_alloc_raw()</a>, <a class="el" href="task_8h_source.html#l00087">task::fd</a>, <a class="el" href="fs_8h_source.html#l00065">inode::flush</a>, <a class="el" href="ramdev_8c_source.html#l00064">ramdev_flush()</a>, <a class="el" href="ramdev_8c_source.html#l00015">ramdev_read()</a>, <a class="el" href="ramdev_8c_source.html#l00039">ramdev_write()</a>, <a class="el" href="fs_8h_source.html#l00055">inode::read</a>, <a class="el" href="mm_8c_source.html#l00043">size</a>, <a class="el" href="fs_8h_source.html#l00046">inode::size</a>, <a class="el" href="close_8c_source.html#l00016">sys_close()</a>, <a class="el" href="open_8c_source.html#l00126">sys_open()</a>, <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>, e <a class="el" href="fs_8h_source.html#l00056">inode::write</a>.</p>
+<div class="fragment"><div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                                                            {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">int</span> fd = <a class="code" href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a>(path, O_CREAT | O_EXCL | O_TRUNC, S_IFCHR);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span>(fd &lt; 0)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="structinode.html">inode_t</a>* ino = (<a class="code" href="structinode.html">inode_t</a>*) <a class="code" href="ramdev_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">fd</a>[fd];</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    ino-&gt;<a class="code" href="structinode.html#ae2c5e8a0a372334b97024fbd9ef694c1">read</a> = <a class="code" href="ramdev_8c.html#a6c11bf3d3e83703d529cd8697e1dc618">ramdev_read</a>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    ino-&gt;<a class="code" href="structinode.html#a53a123d38834fa17e7ef5c1e5f47bba2">write</a> = <a class="code" href="ramdev_8c.html#a9abd59435d15eab678b7b601e7415c97">ramdev_write</a>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    ino-&gt;<a class="code" href="structinode.html#ae2972ef183f5c39aac7cb83b9f8a04a8">flush</a> = <a class="code" href="ramdev_8c.html#ac9ef7e9fc03cb083b7c94bda843576bd">ramdev_flush</a>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    ino-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a> = (<span class="keywordtype">void</span>*) <a class="code" href="bufio_8c.html#a1258244c4b6ffe2885086facaa7a72b0">bufio_alloc_raw</a>((<span class="keywordtype">void</span>*) addr, <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a> = <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">return</span> ino;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
+<div class="ttc" id="mm_8c_html_a854352f53b148adc24983a58a1866d66"><div class="ttname"><a href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00043">mm.c:43</a></div></div>
+<div class="ttc" id="ramdev_8c_html_ac9ef7e9fc03cb083b7c94bda843576bd"><div class="ttname"><a href="ramdev_8c.html#ac9ef7e9fc03cb083b7c94bda843576bd">ramdev_flush</a></div><div class="ttdeci">void ramdev_flush(inode_t *ino)</div><div class="ttdef"><b>Definition:</b> <a href="ramdev_8c_source.html#l00064">ramdev.c:64</a></div></div>
+<div class="ttc" id="structinode_html"><div class="ttname"><a href="structinode.html">inode</a></div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00036">fs.h:36</a></div></div>
+<div class="ttc" id="structinode_html_ae2972ef183f5c39aac7cb83b9f8a04a8"><div class="ttname"><a href="structinode.html#ae2972ef183f5c39aac7cb83b9f8a04a8">inode::flush</a></div><div class="ttdeci">void(* flush)(struct inode *inode)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00065">fs.h:65</a></div></div>
+<div class="ttc" id="ramdev_8c_html_a9abd59435d15eab678b7b601e7415c97"><div class="ttname"><a href="ramdev_8c.html#a9abd59435d15eab678b7b601e7415c97">ramdev_write</a></div><div class="ttdeci">int ramdev_write(inode_t *ino, char *buf, int size)</div><div class="ttdef"><b>Definition:</b> <a href="ramdev_8c_source.html#l00039">ramdev.c:39</a></div></div>
+<div class="ttc" id="structinode_html_a53722b1b60b7136ce0204b66527bb400"><div class="ttname"><a href="structinode.html#a53722b1b60b7136ce0204b66527bb400">inode::size</a></div><div class="ttdeci">off_t size</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00046">fs.h:46</a></div></div>
+<div class="ttc" id="structinode_html_ae2c5e8a0a372334b97024fbd9ef694c1"><div class="ttname"><a href="structinode.html#ae2c5e8a0a372334b97024fbd9ef694c1">inode::read</a></div><div class="ttdeci">int(* read)(struct inode *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00055">fs.h:55</a></div></div>
+<div class="ttc" id="ramdev_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="ramdev_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00033">sched.c:33</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+<div class="ttc" id="bufio_8c_html_a1258244c4b6ffe2885086facaa7a72b0"><div class="ttname"><a href="bufio_8c.html#a1258244c4b6ffe2885086facaa7a72b0">bufio_alloc_raw</a></div><div class="ttdeci">bufio_t * bufio_alloc_raw(void *raw, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00068">bufio.c:68</a></div></div>
+<div class="ttc" id="structinode_html_a53a123d38834fa17e7ef5c1e5f47bba2"><div class="ttname"><a href="structinode.html#a53a123d38834fa17e7ef5c1e5f47bba2">inode::write</a></div><div class="ttdeci">int(* write)(struct inode *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00056">fs.h:56</a></div></div>
+<div class="ttc" id="open_8c_html_ab7835c4352479c7a3d7af78c138e81c1"><div class="ttname"><a href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a></div><div class="ttdeci">int sys_open(char *filename, int flags, mode_t mode)</div><div class="ttdef"><b>Definition:</b> <a href="open_8c_source.html#l00126">open.c:126</a></div></div>
+<div class="ttc" id="close_8c_html_a9d94cbe3ac3c59ac54d9e884a024d9c5"><div class="ttname"><a href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a></div><div class="ttdeci">int sys_close(int fd)</div><div class="ttdef"><b>Definition:</b> <a href="close_8c_source.html#l00016">close.c:16</a></div></div>
+<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00087">task.h:87</a></div></div>
+<div class="ttc" id="ramdev_8c_html_a6c11bf3d3e83703d529cd8697e1dc618"><div class="ttname"><a href="ramdev_8c.html#a6c11bf3d3e83703d529cd8697e1dc618">ramdev_read</a></div><div class="ttdeci">int ramdev_read(inode_t *ino, char *buf, int size)</div><div class="ttdef"><b>Definition:</b> <a href="ramdev_8c_source.html#l00015">ramdev.c:15</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ac9ef7e9fc03cb083b7c94bda843576bd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ramdev_flush </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *&#160;</td>
+          <td class="paramname"><em>ino</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="ramdev_8c_source.html#l00064">64</a> del file <a class="el" href="ramdev_8c_source.html">ramdev.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00090">bufio_free()</a>, e <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>.</p>
+<div class="fragment"><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                                {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">if</span>(!ino)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span>(!ino-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a>)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="bufio_8c.html#a2a92ff5d9427e2d5d88b4c95247b0f64">bufio_free</a>(ino-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="ttc" id="bufio_8c_html_a2a92ff5d9427e2d5d88b4c95247b0f64"><div class="ttname"><a href="bufio_8c.html#a2a92ff5d9427e2d5d88b4c95247b0f64">bufio_free</a></div><div class="ttdeci">void bufio_free(bufio_t *buf)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00090">bufio.c:90</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a6c11bf3d3e83703d529cd8697e1dc618"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ramdev_read </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *&#160;</td>
+          <td class="paramname"><em>ino</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="ramdev_8c_source.html#l00015">15</a> del file <a class="el" href="ramdev_8c_source.html">ramdev.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00141">bufio_read()</a>, <a class="el" href="fs_8h_source.html#l00047">inode::position</a>, <a class="el" href="mm_8c_source.html#l00043">size</a>, <a class="el" href="fs_8h_source.html#l00046">inode::size</a>, e <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>.</p>
+<div class="fragment"><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;                                                   {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">if</span>(!ino)</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">if</span>(!buf)</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> &gt; ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>)</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">if</span>(ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> &gt; ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>)</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">if</span>(ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> + <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> &gt; ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a> - ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">if</span>(!<a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = <a class="code" href="bufio_8c.html#a75016850df49d95e52a5508d22ff79e8">bufio_read</a>(ino-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a>, buf, <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> += <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
+<div class="ttc" id="mm_8c_html_a854352f53b148adc24983a58a1866d66"><div class="ttname"><a href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00043">mm.c:43</a></div></div>
+<div class="ttc" id="structinode_html_a5756f61233e40d01652094d29b5daf6c"><div class="ttname"><a href="structinode.html#a5756f61233e40d01652094d29b5daf6c">inode::position</a></div><div class="ttdeci">off_t position</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00047">fs.h:47</a></div></div>
+<div class="ttc" id="structinode_html_a53722b1b60b7136ce0204b66527bb400"><div class="ttname"><a href="structinode.html#a53722b1b60b7136ce0204b66527bb400">inode::size</a></div><div class="ttdeci">off_t size</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00046">fs.h:46</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+<div class="ttc" id="bufio_8c_html_a75016850df49d95e52a5508d22ff79e8"><div class="ttname"><a href="bufio_8c.html#a75016850df49d95e52a5508d22ff79e8">bufio_read</a></div><div class="ttdeci">int bufio_read(bufio_t *buf, void *ptr, size_t len)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00141">bufio.c:141</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a9abd59435d15eab678b7b601e7415c97"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ramdev_write </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *&#160;</td>
+          <td class="paramname"><em>ino</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="ramdev_8c_source.html#l00039">39</a> del file <a class="el" href="ramdev_8c_source.html">ramdev.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00154">bufio_write()</a>, <a class="el" href="fs_8h_source.html#l00047">inode::position</a>, <a class="el" href="mm_8c_source.html#l00043">size</a>, <a class="el" href="fs_8h_source.html#l00046">inode::size</a>, e <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>.</p>
+<div class="fragment"><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                                                    {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span>(!ino)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">if</span>(!buf)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> &gt; ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span>(ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> &gt; ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span>(ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> + <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> &gt; ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a> - ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span>(!<a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = <a class="code" href="bufio_8c.html#a8db791aa56b168544d7666a723af32de">bufio_write</a>(ino-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a>, buf, <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    ino-&gt;<a class="code" href="structinode.html#a5756f61233e40d01652094d29b5daf6c">position</a> += <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
+<div class="ttc" id="mm_8c_html_a854352f53b148adc24983a58a1866d66"><div class="ttname"><a href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00043">mm.c:43</a></div></div>
+<div class="ttc" id="structinode_html_a5756f61233e40d01652094d29b5daf6c"><div class="ttname"><a href="structinode.html#a5756f61233e40d01652094d29b5daf6c">inode::position</a></div><div class="ttdeci">off_t position</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00047">fs.h:47</a></div></div>
+<div class="ttc" id="bufio_8c_html_a8db791aa56b168544d7666a723af32de"><div class="ttname"><a href="bufio_8c.html#a8db791aa56b168544d7666a723af32de">bufio_write</a></div><div class="ttdeci">int bufio_write(bufio_t *buf, void *ptr, size_t len)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00154">bufio.c:154</a></div></div>
+<div class="ttc" id="structinode_html_a53722b1b60b7136ce0204b66527bb400"><div class="ttname"><a href="structinode.html#a53722b1b60b7136ce0204b66527bb400">inode::size</a></div><div class="ttdeci">off_t size</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00046">fs.h:46</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle variabili</h2>
+<a class="anchor" id="a4743b3673a8794b8e7bd0b6c91a63cd5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="task_8h.html#a8aeef2cdb643462b97cd459a8e68cad3">task_t</a>* current_task</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="src_2sched_8c_source.html#l00033">33</a> del file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_67dd5697b37f207f225bbd7a2e3631fb.html">fs</a></li><li class="navelem"><a class="el" href="ramdev_8c.html">ramdev.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

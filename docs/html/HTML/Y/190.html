@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>data</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/89.html#L35'>data</a>               35 src/include/aplus/netif.h 	void* data;
+<a href='../S/89.html#L83'>data</a>               83 src/include/aplus/netif.h 	void* data;
+<a href='../S/111.html#L98'>data</a>               98 src/net/loopback/loopback.c 	netif-&gt;data = NULL;
+<a href='../S/107.html#L279'>data</a>              279 src/net/netif.c netif_packet_t* netif_packets_create(netif_t* netif, int protocol, int tot_length, int head_length, void* data) {
+<a href='../S/107.html#L285'>data</a>              285 src/net/netif.c 	memcpy(pkt-&gt;header, data, head_length);
+<a href='../S/107.html#L286'>data</a>              286 src/net/netif.c 	memcpy(pkt-&gt;data, (void*) ((uint32_t) data + head_length), pkt-&gt;length);
+<a href='../S/104.html#L58'>data</a>               58 src/net/rtl8139/rtl8139.c 	card_t* card = (card_t*) netif-&gt;data;
+<a href='../S/104.html#L111'>data</a>              111 src/net/rtl8139/rtl8139.c 		void* data = kmalloc(length);
+<a href='../S/104.html#L113'>data</a>              113 src/net/rtl8139/rtl8139.c 			memcpy(data, rxBuffer, RX_BUFFER_SIZE - card-&gt;rxBufferOffset);
+<a href='../S/104.html#L114'>data</a>              114 src/net/rtl8139/rtl8139.c 			memcpy((void*) ((uint32_t) data + RX_BUFFER_SIZE - card-&gt;rxBufferOffset), card-&gt;rxBuffer, length - (RX_BUFFER_SIZE - card-&gt;rxBufferOffset));
+<a href='../S/104.html#L116'>data</a>              116 src/net/rtl8139/rtl8139.c 			memcpy(data, rxBuffer, length);
+<a href='../S/104.html#L123'>data</a>              123 src/net/rtl8139/rtl8139.c 		if(udp_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L125'>data</a>              125 src/net/rtl8139/rtl8139.c 		if(eth_recv(card-&gt;netif, data, length) &gt; 0) {
+<a href='../S/104.html#L298'>data</a>              298 src/net/rtl8139/rtl8139.c 	card-&gt;netif-&gt;data = (void*) card;
+<a href='../S/110.html#L89'>data</a>               89 src/net/slirp/slirp.c 	slirpcard_t* slirpcard = (slirpcard_t*) netif-&gt;data;
+<a href='../S/110.html#L204'>data</a>              204 src/net/slirp/slirp.c 	netif-&gt;data = (void*) slirpcard;
+</pre>
+</body>
+</html>

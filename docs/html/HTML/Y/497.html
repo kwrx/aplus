@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>raw</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/156.html#L55'>raw</a>                55 src/bufio.c    	buf-&gt;raw = addr;
+<a href='../S/156.html#L68'>raw</a>                68 src/bufio.c    bufio_t* bufio_alloc_raw(void* raw, size_t size) {
+<a href='../S/156.html#L69'>raw</a>                69 src/bufio.c    	if(!raw)
+<a href='../S/156.html#L77'>raw</a>                77 src/bufio.c    	buf-&gt;raw = raw;
+<a href='../S/156.html#L94'>raw</a>                94 src/bufio.c    	kfree(buf-&gt;raw);
+<a href='../S/156.html#L137'>raw</a>               137 src/bufio.c    	memset(buf-&gt;raw, 0, buf-&gt;size);
+<a href='../S/156.html#L145'>raw</a>               145 src/bufio.c    	memcpy(ptr, (void*) ((off_t) buf-&gt;raw + buf-&gt;offset), len);
+<a href='../S/156.html#L159'>raw</a>               159 src/bufio.c    	memcpy((void*) ((off_t) buf-&gt;raw + buf-&gt;offset), ptr, len);
+<a href='../S/98.html#L33'>raw</a>                33 src/include/aplus/bufio.h 	void* raw;
+</pre>
+</body>
+</html>

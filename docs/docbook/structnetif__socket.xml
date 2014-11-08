@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="structnetif__socket">
+<title>netif_socket struct Reference</title>
+<para>
+    <programlisting>#include <link linkend="netif_8h">&lt;netif.h&gt;</link></programlisting>
+</para>
+</section>

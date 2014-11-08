@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>kprintf</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L187'>kprintf</a>           187 src/arch/desc.c 	kprintf("Page fault at address: 0x%x\n", faultaddr);
+<a href='../S/160.html#L160'>kprintf</a>           160 src/arch/pci.c 				kprintf("pci: %d:%d.%d: [%x:%x] (rev %x class %x iobase %x mmio %x type %x int %d pin %d)\n",
+<a href='../S/160.html#L181'>kprintf</a>           181 src/arch/pci.c 	kprintf("pci: loaded %d devices\n", i);
+<a href='../S/163.html#L23'>kprintf</a>            23 src/arch/syscall.c 	kprintf("syscall: loaded %d handlers\n", syslist-&gt;size);
+<a href='../S/115.html#L132'>kprintf</a>           132 src/exec.c     		kprintf("elf: copy section to 0x%8x (%d KB)\n", sec-&gt;sh_addr, sh-&gt;sh_size / 1024);
+<a href='../S/108.html#L52'>kprintf</a>            52 src/net/arp.c  	kprintf("arp: added new cache entry (%02x.%02x.%02x.%02x)\n",
+<a href='../S/108.html#L93'>kprintf</a>            93 src/net/arp.c  	kprintf("arp: sending request for %s\n", netif-&gt;name);
+<a href='../S/113.html#L112'>kprintf</a>           112 src/net/ipv4.c 	kprintf("ok\n");
+<a href='../S/107.html#L131'>kprintf</a>           131 src/net/netif.c 		kprintf("netif: conflitto di ipv4\n");
+<a href='../S/107.html#L136'>kprintf</a>           136 src/net/netif.c 		kprintf("netif: conflitto di ipv6\n");
+<a href='../S/107.html#L142'>kprintf</a>           142 src/net/netif.c 		kprintf("netif: conflitto di macaddr\n");
+<a href='../S/107.html#L148'>kprintf</a>           148 src/net/netif.c 	kprintf("\n%s:\tipv4\t%d.%d.%d.%d\n\tnetmask\t%d.%d.%d.%d\n",
+<a href='../S/107.html#L160'>kprintf</a>           160 src/net/netif.c 	kprintf("\tipv6\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
+<a href='../S/107.html#L171'>kprintf</a>           171 src/net/netif.c 	kprintf("\tmacaddr\t%02x:%02x:%02x:%02x:%02x:%02x\n\tmtu\t%d bytes\n",
+<a href='../S/107.html#L181'>kprintf</a>           181 src/net/netif.c 	kprintf("\tdns\t%d.%d.%d.%d\n\t\t%d.%d.%d.%d\n",
+<a href='../S/107.html#L192'>kprintf</a>           192 src/net/netif.c 	kprintf("\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n\t\t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\n",
+<a href='../S/104.html#L119'>kprintf</a>           119 src/net/rtl8139/rtl8139.c 		kprintf("rtl8139: receveid %d bytes\n", length);
+<a href='../S/104.html#L147'>kprintf</a>           147 src/net/rtl8139/rtl8139.c 		kprintf("rtl8139: Transmitted data successfully\n");
+<a href='../S/104.html#L156'>kprintf</a>           156 src/net/rtl8139/rtl8139.c 		kprintf("rtl8139: Received data\n");
+<a href='../S/104.html#L170'>kprintf</a>           170 src/net/rtl8139/rtl8139.c 		kprintf("rtl8139: no device found\n");
+<a href='../S/104.html#L190'>kprintf</a>           190 src/net/rtl8139/rtl8139.c 	kprintf("rtl8139: %d:%d.%d, iobase 0x%x, irq %d, MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n",
+<a href='../S/104.html#L206'>kprintf</a>           206 src/net/rtl8139/rtl8139.c 		kprintf("rtl8139: network card isn't connected to the PIC\n");
+<a href='../S/104.html#L301'>kprintf</a>           301 src/net/rtl8139/rtl8139.c 	kprintf("rtl8139: sending data for test (512 Bytes)\n");
+<a href='../S/110.html#L37'>kprintf</a>            37 src/net/slirp/slirp.c 	kprintf("slirp: received data\n");
+<a href='../S/148.html#L14'>kprintf</a>            14 src/panic.c    	kprintf("Registers:\n");
+<a href='../S/148.html#L17'>kprintf</a>            17 src/panic.c    		kprintf(#reg ": 0x%x\t\t", read_##reg());
+<a href='../S/148.html#L20'>kprintf</a>            20 src/panic.c    		kprintf("\n");	
+<a href='../S/148.html#L53'>kprintf</a>            53 src/panic.c    	kprintf("Stack trace:\n");
+<a href='../S/148.html#L54'>kprintf</a>            54 src/panic.c    	kprintf("TODO\n\n");
+<a href='../S/148.html#L58'>kprintf</a>            58 src/panic.c    	kprintf("Task:\n");
+<a href='../S/148.html#L62'>kprintf</a>            62 src/panic.c    		kprintf(" # %d: ", task-&gt;pid);
+<a href='../S/148.html#L65'>kprintf</a>            65 src/panic.c    			kprintf("%s ", task-&gt;exe-&gt;name);
+<a href='../S/148.html#L67'>kprintf</a>            67 src/panic.c    			kprintf("unknown ");
+<a href='../S/148.html#L70'>kprintf</a>            70 src/panic.c    			kprintf("(current) ");
+<a href='../S/148.html#L73'>kprintf</a>            73 src/panic.c    			kprintf("(kernel) ");
+<a href='../S/148.html#L75'>kprintf</a>            75 src/panic.c    		kprintf("\n");
+<a href='../S/148.html#L81'>kprintf</a>            81 src/panic.c    	kprintf("panic: \"%s\"\n", msg);
+<a href='../S/133.html#L15'>kprintf</a>            15 src/syscall/chown.c 		kprintf("sys_chown: only superuser allow to use this function.");
+<a href='../S/133.html#L24'>kprintf</a>            24 src/syscall/chown.c 		kprintf("sys_chown: %s.", strerror(errno));
+<a href='../S/119.html#L21'>kprintf</a>            21 src/syscall/close.c 		kprintf("sys_close: fd %d not exist.", fd);
+<a href='../S/138.html#L32'>kprintf</a>            32 src/syscall/fcntl.c 	kprintf("sys_chown: TODO.");
+<a href='../S/120.html#L23'>kprintf</a>            23 src/syscall/fstat.c 		kprintf("sys_fstat: %s.", strerror(errno));
+<a href='../S/118.html#L16'>kprintf</a>            16 src/syscall/link.c 	kprintf("sys_link: TODO");
+<a href='../S/139.html#L29'>kprintf</a>            29 src/syscall/open.c 			kprintf("sys_open: no root found for cwd.");
+<a href='../S/124.html#L18'>kprintf</a>            18 src/syscall/stat.c 		kprintf("sys_stat: %s.", strerror(errno));		
+<a href='../S/134.html#L5'>kprintf</a>             5 src/syscall/test.c 	kprintf("sys_test called with (p0: %d; p1: %d)\n", p0, p1);
+<a href='../S/123.html#L15'>kprintf</a>            15 src/syscall/unlink.c 	kprintf("sys_unlink: TODO");
+</pre>
+</body>
+</html>

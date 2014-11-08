@@ -1,0 +1,174 @@
+\hypertarget{pthread__spin_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+spin.c}
+\label{pthread__spin_8c}\index{usr/src/libpthread/src/pthread\+\_\+spin.\+c@{usr/src/libpthread/src/pthread\+\_\+spin.\+c}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$pthread.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__spin_8c_adeb2a567e6ea725a201a151747315072}{pthread\+\_\+spin\+\_\+init} (\hyperlink{pthread_8h_a89b34d06ba0b6d13117e0043ea284800}{pthread\+\_\+spinlock\+\_\+t} $\ast$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}, int pshared)
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__spin_8c_a7b6102c55f484c1f57b34294d16b13d1}{pthread\+\_\+spin\+\_\+destroy} (\hyperlink{pthread_8h_a89b34d06ba0b6d13117e0043ea284800}{pthread\+\_\+spinlock\+\_\+t} $\ast$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock})
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__spin_8c_a11a36f5063d9ec9958c59fd5712a297c}{pthread\+\_\+spin\+\_\+lock} (\hyperlink{pthread_8h_a89b34d06ba0b6d13117e0043ea284800}{pthread\+\_\+spinlock\+\_\+t} $\ast$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock})
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__spin_8c_aa4ee5217fd415283c75e390c76c53c5f}{pthread\+\_\+spin\+\_\+trylock} (\hyperlink{pthread_8h_a89b34d06ba0b6d13117e0043ea284800}{pthread\+\_\+spinlock\+\_\+t} $\ast$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock})
+\item 
+\hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__spin_8c_a923365fbde5bb89fcb333d057e9d33e5}{pthread\+\_\+spin\+\_\+unlock} (\hyperlink{pthread_8h_a89b34d06ba0b6d13117e0043ea284800}{pthread\+\_\+spinlock\+\_\+t} $\ast$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{pthread__spin_8c_a7b6102c55f484c1f57b34294d16b13d1}{\index{pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}!pthread\+\_\+spin\+\_\+destroy@{pthread\+\_\+spin\+\_\+destroy}}
+\index{pthread\+\_\+spin\+\_\+destroy@{pthread\+\_\+spin\+\_\+destroy}!pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}}
+\subsubsection[{pthread\+\_\+spin\+\_\+destroy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+spin\+\_\+destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+spinlock\+\_\+t} $\ast$}]{lock}
+\end{DoxyParamCaption}
+)}}\label{pthread__spin_8c_a7b6102c55f484c1f57b34294d16b13d1}
+
+
+Definizione alla linea 19 del file pthread\+\_\+spin.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+destroy().
+
+
+\begin{DoxyCode}
+19                                                           \{
+20     \textcolor{keywordflow}{if}(!lock) \{
+21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+22         \textcolor{keywordflow}{return} 1;
+23     \}
+24 
+25     lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 0;
+26     \hyperlink{pthread_8h_a3cf620ff3a40af11d79cf28901dc55e2}{pthread\_mutex\_destroy}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex});
+27 
+28     \textcolor{keywordflow}{return} 0;
+29 \}
+\end{DoxyCode}
+\hypertarget{pthread__spin_8c_adeb2a567e6ea725a201a151747315072}{\index{pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}!pthread\+\_\+spin\+\_\+init@{pthread\+\_\+spin\+\_\+init}}
+\index{pthread\+\_\+spin\+\_\+init@{pthread\+\_\+spin\+\_\+init}!pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}}
+\subsubsection[{pthread\+\_\+spin\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+spin\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+spinlock\+\_\+t} $\ast$}]{lock, }
+\item[{int}]{pshared}
+\end{DoxyParamCaption}
+)}}\label{pthread__spin_8c_adeb2a567e6ea725a201a151747315072}
+
+
+Definizione alla linea 7 del file pthread\+\_\+spin.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+init().
+
+
+\begin{DoxyCode}
+7                                                                     \{
+8     \textcolor{keywordflow}{if}(!lock) \{
+9         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+10         \textcolor{keywordflow}{return} 1;
+11     \}
+12 
+13     lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 0;
+14     \hyperlink{pthread_8h_a7454d249ed94ad5d5e57ba1529d7a7f2}{pthread\_mutex\_init}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex}, NULL);
+15 
+16     \textcolor{keywordflow}{return} 0;
+17 \}
+\end{DoxyCode}
+\hypertarget{pthread__spin_8c_a11a36f5063d9ec9958c59fd5712a297c}{\index{pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}!pthread\+\_\+spin\+\_\+lock@{pthread\+\_\+spin\+\_\+lock}}
+\index{pthread\+\_\+spin\+\_\+lock@{pthread\+\_\+spin\+\_\+lock}!pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}}
+\subsubsection[{pthread\+\_\+spin\+\_\+lock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+spin\+\_\+lock (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+spinlock\+\_\+t} $\ast$}]{lock}
+\end{DoxyParamCaption}
+)}}\label{pthread__spin_8c_a11a36f5063d9ec9958c59fd5712a297c}
+
+
+Definizione alla linea 31 del file pthread\+\_\+spin.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+lock().
+
+
+\begin{DoxyCode}
+31                                                        \{
+32     \textcolor{keywordflow}{if}(!lock) \{
+33         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+34         \textcolor{keywordflow}{return} 1;
+35     \}
+36 
+37     \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a12809c44718c21544ceb280dc1a53573}{pthread\_mutex\_lock}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex}) == 0)
+38         lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 1;
+39     \textcolor{keywordflow}{else}
+40         \textcolor{keywordflow}{return} 1; \textcolor{comment}{/* errno already setted */}
+41 
+42     \textcolor{keywordflow}{return} 0;
+43 \}
+\end{DoxyCode}
+\hypertarget{pthread__spin_8c_aa4ee5217fd415283c75e390c76c53c5f}{\index{pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}!pthread\+\_\+spin\+\_\+trylock@{pthread\+\_\+spin\+\_\+trylock}}
+\index{pthread\+\_\+spin\+\_\+trylock@{pthread\+\_\+spin\+\_\+trylock}!pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}}
+\subsubsection[{pthread\+\_\+spin\+\_\+trylock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+spin\+\_\+trylock (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+spinlock\+\_\+t} $\ast$}]{lock}
+\end{DoxyParamCaption}
+)}}\label{pthread__spin_8c_aa4ee5217fd415283c75e390c76c53c5f}
+
+
+Definizione alla linea 45 del file pthread\+\_\+spin.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+trylock().
+
+
+\begin{DoxyCode}
+45                                                           \{
+46     \textcolor{keywordflow}{if}(!lock) \{
+47         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+48         \textcolor{keywordflow}{return} 1;
+49     \}
+50 
+51     \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a27da386211db1a7e9a3b2a0db4d22144}{pthread\_mutex\_trylock}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex}) == 0)
+52         lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 1;
+53     \textcolor{keywordflow}{else}
+54         \textcolor{keywordflow}{return} 1; \textcolor{comment}{/* errno already setted */}
+55 
+56     \textcolor{keywordflow}{return} 0;
+57 \}
+\end{DoxyCode}
+\hypertarget{pthread__spin_8c_a923365fbde5bb89fcb333d057e9d33e5}{\index{pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}!pthread\+\_\+spin\+\_\+unlock@{pthread\+\_\+spin\+\_\+unlock}}
+\index{pthread\+\_\+spin\+\_\+unlock@{pthread\+\_\+spin\+\_\+unlock}!pthread\+\_\+spin.\+c@{pthread\+\_\+spin.\+c}}
+\subsubsection[{pthread\+\_\+spin\+\_\+unlock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+spin\+\_\+unlock (
+\begin{DoxyParamCaption}
+\item[{{\bf pthread\+\_\+spinlock\+\_\+t} $\ast$}]{lock}
+\end{DoxyParamCaption}
+)}}\label{pthread__spin_8c_a923365fbde5bb89fcb333d057e9d33e5}
+
+
+Definizione alla linea 59 del file pthread\+\_\+spin.\+c.
+
+
+
+Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+unlock().
+
+
+\begin{DoxyCode}
+59                                                          \{
+60     \textcolor{keywordflow}{if}(!lock) \{
+61         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+62         \textcolor{keywordflow}{return} 1;
+63     \}
+64 
+65     \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a96184290ffb60e04c53a52869cf960a2}{pthread\_mutex\_unlock}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex}) == 0)
+66         lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 0;
+67     \textcolor{keywordflow}{else}
+68         \textcolor{keywordflow}{return} 1; \textcolor{comment}{/* errno already setted */}
+69     
+70     \textcolor{keywordflow}{return} 0;
+71 \}
+\end{DoxyCode}

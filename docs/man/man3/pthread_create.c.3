@@ -1,0 +1,157 @@
+.TH "usr/src/libpthread/src/pthread_create.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/src/pthread_create.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <pthread\&.h>\fP
+.br
+\fC#include 'pthread_internal\&.h'\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBEXTERN\fP void \fB__pthread_init_queue\fP (void)"
+.br
+.ti -1c
+.RI "\fBPRIVATE\fP void \fB__pthread_handler__\fP (\fBpthread_context_t\fP *ctx)"
+.br
+.ti -1c
+.RI "\fBPUBLIC\fP int \fBpthread_create\fP (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*start)(void *), void *arg)"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBEXTERN\fP \fBuint32_t\fP \fB__pthread_counts\fP"
+.br
+.ti -1c
+.RI "\fBEXTERN\fP \fBpthread_context_t\fP * \fB__pthread_queue\fP"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "\fBPRIVATE\fP void __pthread_handler__ (\fBpthread_context_t\fP *ctx)"
+
+.PP
+Definizione alla linea 24 del file pthread_create\&.c\&.
+.PP
+Referenzia pthread_context::entry, pthread_context::param, e pthread_exit()\&.
+.PP
+.nf
+24                                                          {
+25 #endif
+26 
+27     if(ctx == NULL)
+28         _exit(-1);
+29 
+30     if(ctx->entry == NULL)
+31         _exit(-1);
+32 
+33     pthread_exit(ctx->entry(ctx->param));
+34 }
+.fi
+.SS "\fBEXTERN\fP void __pthread_init_queue (void)"
+
+.PP
+Definizione alla linea 12 del file pthread_queue\&.c\&.
+.PP
+Referenzia __current_thread, __os_gettid, pthread_context::attr, pthread_context::cond, pthread_once::done, pthread_context::entry, pthread_context::exitval, pthread_context::next, pthread_context::once, pthread_context::param, pthread_once::started, e pthread_context::tid\&.
+.PP
+.nf
+12                                    {
+13     if(__current_thread\&.tid)
+14         return;
+15 
+16     __current_thread\&.tid = __os_gettid();
+17     __current_thread\&.entry = NULL;
+18     __current_thread\&.param = NULL;
+19     __current_thread\&.exitval = NULL;
+20     __current_thread\&.once\&.done = 0;
+21     __current_thread\&.once\&.started = -1;
+22     __current_thread\&.cond = NULL;
+23     __current_thread\&.next = NULL;
+24 
+25     memset(&__current_thread\&.attr, 0, sizeof(pthread_attr_t));
+26 }
+.fi
+.SS "\fBPUBLIC\fP int pthread_create (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*)(void *)start, void *arg)"
+
+.PP
+Definizione alla linea 37 del file pthread_create\&.c\&.
+.PP
+Referenzia __os_thread_create, __pthread_counts, __pthread_handler__(), __pthread_init_queue(), __pthread_queue, pthread_context::attr, pthread_once::done, pthread_context::entry, errno, pthread_attr::inheritsched, pthread_context::next, pthread_context::once, pthread_context::param, pthread_attr::param, pthread_attr_setschedparam(), PTHREAD_INHERIT_SCHED, pthread_self(), PTHREAD_THREADS_MAX, pthread_once::started, e pthread_context::tid\&.
+.PP
+.nf
+37                                                                                                            {
+38 
+39     __pthread_init_queue();
+40 
+41     if(!thread) {
+42         errno = EINVAL;
+43         return 1;
+44     }
+45 
+46     if(__pthread_counts > PTHREAD_THREADS_MAX) {
+47         errno = EAGAIN;
+48         return 1;
+49     }
+50 
+51     pthread_context_t* ctx = malloc(sizeof(pthread_context_t));
+52     memset(ctx, 0, sizeof(pthread_context_t));
+53 
+54     ctx->entry = start;
+55     ctx->param = arg;
+56     ctx->once\&.done = 0;
+57     ctx->once\&.started = -1;
+58     ctx->next = 0;
+59 
+60     if(attr)
+61         memcpy(&ctx->attr, attr, sizeof(pthread_attr_t));
+62 
+63     if(ctx->attr\&.inheritsched == PTHREAD_INHERIT_SCHED) {
+64         pthread_t px = pthread_self();
+65         if(px) {
+66             pthread_context_t* inh = (pthread_context_t*) px;
+67             pthread_attr_setschedparam(&ctx->attr, &inh->attr\&.param);
+68         }
+69     }
+70 
+71 
+72     __pthread_counts += 1;
+73     *thread = (pthread_t) ctx;
+74     
+75     
+76     ctx->next = __pthread_queue;
+77     __pthread_queue = ctx;
+78         
+79 
+80 
+81     ctx->tid = __os_thread_create(__pthread_handler__, ctx, ctx->attr\&.param\&.sched_priority);
+82     return 0;
+83 }
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBEXTERN\fP \fBuint32_t\fP __pthread_counts"
+
+.PP
+Definizione alla linea 10 del file pthread_create\&.c\&.
+.SS "\fBEXTERN\fP \fBpthread_context_t\fP* __pthread_queue"
+
+.PP
+Definizione alla linea 11 del file pthread_create\&.c\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

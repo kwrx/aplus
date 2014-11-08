@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>devfs</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/147.html#L20'>devfs</a>              20 src/fs/devfs.c inode_t* devfs; 
+<a href='../S/147.html#L62'>devfs</a>              62 src/fs/devfs.c 	devfs = (inode_t*) kmalloc(sizeof(inode_t));
+<a href='../S/147.html#L63'>devfs</a>              63 src/fs/devfs.c 	strcpy(devfs-&gt;name, "dev");
+<a href='../S/147.html#L65'>devfs</a>              65 src/fs/devfs.c 	devfs-&gt;dev = (dev_t) 0;
+<a href='../S/147.html#L66'>devfs</a>              66 src/fs/devfs.c 	devfs-&gt;ino = (ino_t) 0;
+<a href='../S/147.html#L67'>devfs</a>              67 src/fs/devfs.c 	devfs-&gt;mode = S_IFDIR;
+<a href='../S/147.html#L68'>devfs</a>              68 src/fs/devfs.c 	devfs-&gt;nlink = 0;
+<a href='../S/147.html#L69'>devfs</a>              69 src/fs/devfs.c 	devfs-&gt;uid = UID_ROOT;
+<a href='../S/147.html#L70'>devfs</a>              70 src/fs/devfs.c 	devfs-&gt;gid = GID_ROOT;
+<a href='../S/147.html#L71'>devfs</a>              71 src/fs/devfs.c 	devfs-&gt;rdev = (dev_t) 0;
+<a href='../S/147.html#L72'>devfs</a>              72 src/fs/devfs.c 	devfs-&gt;size = (size_t) 0;
+<a href='../S/147.html#L74'>devfs</a>              74 src/fs/devfs.c 	devfs-&gt;parent = vfs_root;
+<a href='../S/147.html#L75'>devfs</a>              75 src/fs/devfs.c 	devfs-&gt;link = NULL;
+<a href='../S/147.html#L77'>devfs</a>              77 src/fs/devfs.c 	devfs-&gt;read = NULL;
+<a href='../S/147.html#L78'>devfs</a>              78 src/fs/devfs.c 	devfs-&gt;write = NULL;
+<a href='../S/147.html#L79'>devfs</a>              79 src/fs/devfs.c 	devfs-&gt;readdir = NULL;
+<a href='../S/147.html#L80'>devfs</a>              80 src/fs/devfs.c 	devfs-&gt;finddir = NULL;
+<a href='../S/147.html#L81'>devfs</a>              81 src/fs/devfs.c 	devfs-&gt;creat = NULL;
+<a href='../S/147.html#L82'>devfs</a>              82 src/fs/devfs.c 	devfs-&gt;rename = NULL;
+<a href='../S/147.html#L83'>devfs</a>              83 src/fs/devfs.c 	devfs-&gt;unlink = NULL;
+<a href='../S/147.html#L84'>devfs</a>              84 src/fs/devfs.c 	devfs-&gt;chown = NULL;
+<a href='../S/147.html#L85'>devfs</a>              85 src/fs/devfs.c 	devfs-&gt;flush = NULL;
+<a href='../S/147.html#L86'>devfs</a>              86 src/fs/devfs.c 	devfs-&gt;ioctl = NULL;
+<a href='../S/147.html#L88'>devfs</a>              88 src/fs/devfs.c 	return devfs;
+</pre>
+</body>
+</html>

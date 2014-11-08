@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="slirp_8c">
+    <title>slirp.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/netif.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/bufio.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &quot;slirp.h&quot;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structslirpcard">slirpcard</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structslirpcard">slirpcard</link>  <link linkend="slirp_8c_1a568a798f46022c03ad5665b75e55909a">slirpcard_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="slirp_8c_1a568a798f46022c03ad5665b75e55909a">slirpcard_t</link> * <link linkend="slirp_8c_1a0f272b2d098a6c4df9edf6a275a4447f">slirpcard</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95">slirp_handler</link> (
+void * unused)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708">slirp_send</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif, void * buf, size_t length, int type)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934">slirp_ifup</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="slirp_8c_1a145cf2e489aa075e08f69f79bdb19574">slirp_ifdown</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="slirp_8c_1a8e7e3c2a9bf497a11fd8e2159976e5ad">slirp_init</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae">ATTRIBUTE</link> (
+&quot;netif&quot; , <link linkend="slirp_8c_1a8e7e3c2a9bf497a11fd8e2159976e5ad">slirp_init</link> )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/net/slirp/slirp.c</para>
+    </simplesect>
+</section>

@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>src/syscall/readdir.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/readdir.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L9'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L9' title='Defined at 9.'>sys_readdir</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <b>extern</b> <a href='../S/90.html#L109' title='Defined at 109 in src/include/aplus/task.h.'>task_t</a>* <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>;
+<a name='L8'>   8 
+<a name='L9'>   9 <b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>* sys_readdir(<b>int</b> <a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>, <b>int</b> <a href='../Y/480.html' title='Multiple used in 14 places.'>position</a>) <font color='red'>{</font>
+<a name='L10'>  10         <b>if</b>(!<a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>)
+<a name='L11'>  11                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L12'>  12                 
+<a name='L13'>  13         
+<a name='L14'>  14         <a href='../S/97.html#L72' title='Defined at 72 in src/include/aplus/fs.h.'>inode_t</a>* <a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a> = <a href='../Y/184.html' title='Multiple used in 124 places.'>current_task</a>-&gt;<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>[<a href='../Y/260.html' title='Multiple used in 57 places.'>fd</a>];
+<a name='L15'>  15         <b>if</b>(!<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>) <font color='red'>{</font>
+<a name='L16'>  16                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/7.html' title='Multiple used in 8 places.'>EBADF</a>;
+<a name='L17'>  17                 <b>return</b> <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>;
+<a name='L18'>  18         <font color='red'>}</font>
+<a name='L19'>  19 
+<a name='L20'>  20 
+<a name='L21'>  21         <b>return</b> (<b>struct</b> <a href='../S/10.html#L35' title='Defined at 35 in usr/src/libposix/include/sys/dirent.h.'>dirent</a>*) <a href='../S/146.html#L32' title='Defined at 32 in src/fs/fs.c.'>fs_readdir</a>(<a href='../Y/321.html' title='Multiple used in 69 places.'>ino</a>, <a href='../Y/480.html' title='Multiple used in 14 places.'>position</a>);
+<a name='L22'>  22 <font color='red'>}</font>
+<a name='L23'>  23 
+<a name='L24'>  24 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_readdir, 80);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L9'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

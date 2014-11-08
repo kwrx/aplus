@@ -1,0 +1,647 @@
+\hypertarget{netif_8c}{\section{Riferimenti per il file src/net/netif.c}
+\label{netif_8c}\index{src/net/netif.\+c@{src/net/netif.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/arp.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{netif_8c_ac75c28e791563771b563d670aeebd552}{netif\+\_\+htonl} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} h)
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{netif_8c_aa915d67e8c3d0b0e1beed32f3ee21749}{netif\+\_\+htons} (\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} h)
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{netif_8c_a5e9c3efca67d84bdcfffdbbdfe70711b}{netif\+\_\+ntohl} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} h)
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{netif_8c_ae01b55d09345802921e2a0348cfeb9a0}{netif\+\_\+ntohs} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} h)
+\item 
+\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$ \hyperlink{netif_8c_a7a9fee228b8774a921b2d7ea567a0006}{netif\+\_\+find\+\_\+by\+\_\+ipv4} (\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} $\ast$ipv4)
+\item 
+\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$ \hyperlink{netif_8c_a9f5e5c9b8dab074ad69fa4991dbe1898}{netif\+\_\+find\+\_\+by\+\_\+ipv6} (\hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\+\_\+t} $\ast$ipv6)
+\item 
+\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$ \hyperlink{netif_8c_aa9fb3336f90a384ee5a2bdd22f1c084b}{netif\+\_\+find\+\_\+by\+\_\+macaddr} (\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\+\_\+t} $\ast$macaddr)
+\item 
+\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$ \hyperlink{netif_8c_a0de3666f699d7d9cc7ec52171b844fa0}{netif\+\_\+find\+\_\+by\+\_\+name} (char $\ast$\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name})
+\item 
+int \hyperlink{netif_8c_aa233de3d4ae3825f0beafd81d10fbe36}{netif\+\_\+ifup} ()
+\item 
+int \hyperlink{netif_8c_a801ea0d4582b551b79c186cd1023180c}{netif\+\_\+ifdown} ()
+\item 
+int \hyperlink{netif_8c_a01bed7c80274b7830923cdde25b1d48a}{netif\+\_\+add} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$netdev)
+\item 
+int \hyperlink{netif_8c_a9c8fb9469b40267eb50031f262587eab}{netif\+\_\+remove} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$netdev)
+\item 
+int \hyperlink{netif_8c_af7c3254022249b2dfa78151c8f345e77}{netif\+\_\+init} ()
+\item 
+int \hyperlink{netif_8c_a3edf21f1cc51e87714ea8911236d896c}{netif\+\_\+packets\+\_\+add} (\hyperlink{netif_8h_a258b0bd35563d9af265d975f94bdbd4c}{netif\+\_\+packet\+\_\+t} $\ast$packet)
+\item 
+int \hyperlink{netif_8c_ae9331f4834a47cc6f7c9edf6490046cf}{netif\+\_\+packets\+\_\+remove} (\hyperlink{netif_8h_a258b0bd35563d9af265d975f94bdbd4c}{netif\+\_\+packet\+\_\+t} $\ast$packet)
+\item 
+\hyperlink{netif_8h_a258b0bd35563d9af265d975f94bdbd4c}{netif\+\_\+packet\+\_\+t} $\ast$ \hyperlink{netif_8c_a298d555d31337e14e76688ecdbf08ef6}{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+id} (uint64\+\_\+t \hyperlink{ipv4_8h_a4fc3a0c58dfbd1e68224521185cb9384}{id})
+\item 
+\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{netif_8c_ae6bde7bab4c04cc235035e789ae2854b}{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol} (int \hyperlink{ipv6_8h_ad124d3d2e02c729afa303c775295278e}{protocol})
+\item 
+\hyperlink{netif_8h_a258b0bd35563d9af265d975f94bdbd4c}{netif\+\_\+packet\+\_\+t} $\ast$ \hyperlink{netif_8c_aa14a95992efbcac98c16a43724dc0942}{netif\+\_\+packets\+\_\+create} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, int \hyperlink{ipv6_8h_ad124d3d2e02c729afa303c775295278e}{protocol}, int tot\+\_\+length, int head\+\_\+length, void $\ast$data)
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\+\_\+netif} = N\+U\+L\+L
+\item 
+static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{netif_8c_accbe476fec12cec39066f558e3040ef6}{lst\+\_\+packets} = N\+U\+L\+L
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{netif_8c_a01bed7c80274b7830923cdde25b1d48a}{\index{netif.\+c@{netif.\+c}!netif\+\_\+add@{netif\+\_\+add}}
+\index{netif\+\_\+add@{netif\+\_\+add}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+add (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netdev}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a01bed7c80274b7830923cdde25b1d48a}
+
+
+Definizione alla linea 124 del file netif.\+c.
+
+
+
+Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(), list\+\_\+init, netif\+::macaddr, netif\+::mtu, netif\+::name, netif\+\_\+find\+\_\+by\+\_\+ipv4(), netif\+\_\+find\+\_\+by\+\_\+ipv6(), netif\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::netmask, netif\+::primary, e netif\+::secondary.
+
+
+\begin{DoxyCode}
+124                                \{
+125     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL) \{
+126         \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif});
+127     \}
+128 
+129 
+130     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_a7a9fee228b8774a921b2d7ea567a0006}{netif\_find\_by\_ipv4}(&netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}) != NULL) \{
+131         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di ipv4\(\backslash\)n"});
+132         \textcolor{keywordflow}{return} -1;
+133     \}
+134 
+135     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_a9f5e5c9b8dab074ad69fa4991dbe1898}{netif\_find\_by\_ipv6}(&netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}) != NULL) \{
+136         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di ipv6\(\backslash\)n"});
+137         \textcolor{keywordflow}{return} -1;
+138     \}
+139 
+140 
+141     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa9fb3336f90a384ee5a2bdd22f1c084b}{netif\_find\_by\_macaddr}(&netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}) != NULL) \{
+142         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di macaddr\(\backslash\)n"});
+143         \textcolor{keywordflow}{return} -1;
+144     \}
+145 
+146 
+147 
+148     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)n%s:\(\backslash\)tipv4\(\backslash\)t%d.%d.%d.%d\(\backslash\)n\(\backslash\)tnetmask\(\backslash\)t%d.%d.%d.%d\(\backslash\)n"},
+149             netdev->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name},
+150             netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[0],
+151             netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[1],
+152             netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[2],
+153             netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[3],
+154             netdev->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[0],
+155             netdev->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[1],
+156             netdev->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[2],
+157             netdev->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[3]
+158     );
+159 
+160     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tipv6\(\backslash\)t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n"},
+161             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[0],
+162             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[1],
+163             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[2],
+164             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[3],
+165             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[4],
+166             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[5],
+167             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[6],
+168             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[7]
+169     );
+170 
+171     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tmacaddr\(\backslash\)t%02x:%02x:%02x:%02x:%02x:%02x\(\backslash\)n\(\backslash\)tmtu\(\backslash\)t%d bytes\(\backslash\)n"},
+172             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[0],
+173             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[1],
+174             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[2],
+175             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[3],
+176             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[4],
+177             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[5],
+178             netdev->\hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu}
+179     );
+180 
+181     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tdns\(\backslash\)t%d.%d.%d.%d\(\backslash\)n\(\backslash\)t\(\backslash\)t%d.%d.%d.%d\(\backslash\)n"},
+182             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[0],
+183             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[1],
+184             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[2],
+185             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[3],
+186             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[0],
+187             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[1],
+188             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[2],
+189             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[3]
+190     );
+191 
+192     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n\(\backslash\)t\(\backslash\)t
+      %04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n"},
+193             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[0],
+194             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[1],
+195             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[2],
+196             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[3],
+197             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[4],
+198             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[5],
+199             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[6],
+200             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[7],
+201             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[0],
+202             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[1],
+203             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[2],
+204             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[3],
+205             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[4],
+206             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[5],
+207             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[6],
+208             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv6[7]
+209     );
+210 
+211     \textcolor{keywordflow}{return} \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) netdev);
+212 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a7a9fee228b8774a921b2d7ea567a0006}{\index{netif.\+c@{netif.\+c}!netif\+\_\+find\+\_\+by\+\_\+ipv4@{netif\+\_\+find\+\_\+by\+\_\+ipv4}}
+\index{netif\+\_\+find\+\_\+by\+\_\+ipv4@{netif\+\_\+find\+\_\+by\+\_\+ipv4}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+find\+\_\+by\+\_\+ipv4}]{\setlength{\rightskip}{0pt plus 5cm}{\bf netif\+\_\+t}$\ast$ netif\+\_\+find\+\_\+by\+\_\+ipv4 (
+\begin{DoxyParamCaption}
+\item[{{\bf ipv4\+\_\+t} $\ast$}]{ipv4}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a7a9fee228b8774a921b2d7ea567a0006}
+
+
+Definizione alla linea 36 del file netif.\+c.
+
+
+
+Referenzia netif\+::ipv4, list\+\_\+foreach, e value.
+
+
+\begin{DoxyCode}
+36                                           \{
+37     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL)
+38         \textcolor{keywordflow}{return} NULL;
+39 
+40     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}) \{
+41         \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+42 
+43         \textcolor{keywordflow}{if}(memcmp(netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}, ipv4, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t})) == 0)
+44             \textcolor{keywordflow}{return} netif;
+45     \}
+46 
+47     \textcolor{keywordflow}{return} NULL;
+48 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a9f5e5c9b8dab074ad69fa4991dbe1898}{\index{netif.\+c@{netif.\+c}!netif\+\_\+find\+\_\+by\+\_\+ipv6@{netif\+\_\+find\+\_\+by\+\_\+ipv6}}
+\index{netif\+\_\+find\+\_\+by\+\_\+ipv6@{netif\+\_\+find\+\_\+by\+\_\+ipv6}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+find\+\_\+by\+\_\+ipv6}]{\setlength{\rightskip}{0pt plus 5cm}{\bf netif\+\_\+t}$\ast$ netif\+\_\+find\+\_\+by\+\_\+ipv6 (
+\begin{DoxyParamCaption}
+\item[{{\bf ipv6\+\_\+t} $\ast$}]{ipv6}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a9f5e5c9b8dab074ad69fa4991dbe1898}
+
+
+Definizione alla linea 50 del file netif.\+c.
+
+
+
+Referenzia netif\+::ipv6, list\+\_\+foreach, e value.
+
+
+\begin{DoxyCode}
+50                                           \{
+51     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL)
+52         \textcolor{keywordflow}{return} NULL;
+53 
+54     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}) \{
+55         \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+56 
+57         \textcolor{keywordflow}{if}(memcmp(netif->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}, ipv6, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a0a195da7affbedb767969c3a02c9a82d}{ipv6\_t})) == 0)
+58             \textcolor{keywordflow}{return} netif;
+59     \}
+60 
+61     \textcolor{keywordflow}{return} NULL;
+62 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_aa9fb3336f90a384ee5a2bdd22f1c084b}{\index{netif.\+c@{netif.\+c}!netif\+\_\+find\+\_\+by\+\_\+macaddr@{netif\+\_\+find\+\_\+by\+\_\+macaddr}}
+\index{netif\+\_\+find\+\_\+by\+\_\+macaddr@{netif\+\_\+find\+\_\+by\+\_\+macaddr}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+find\+\_\+by\+\_\+macaddr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf netif\+\_\+t}$\ast$ netif\+\_\+find\+\_\+by\+\_\+macaddr (
+\begin{DoxyParamCaption}
+\item[{{\bf macaddr\+\_\+t} $\ast$}]{macaddr}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_aa9fb3336f90a384ee5a2bdd22f1c084b}
+
+
+Definizione alla linea 66 del file netif.\+c.
+
+
+
+Referenzia list\+\_\+foreach, netif\+::macaddr, e value.
+
+
+\begin{DoxyCode}
+66                                                    \{
+67     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL)
+68         \textcolor{keywordflow}{return} NULL;
+69 
+70     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}) \{
+71         \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+72 
+73         \textcolor{keywordflow}{if}(memcmp(netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}, macaddr, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t})) == 0)
+74             \textcolor{keywordflow}{return} netif;
+75     \}
+76 
+77     \textcolor{keywordflow}{return} NULL;
+78 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a0de3666f699d7d9cc7ec52171b844fa0}{\index{netif.\+c@{netif.\+c}!netif\+\_\+find\+\_\+by\+\_\+name@{netif\+\_\+find\+\_\+by\+\_\+name}}
+\index{netif\+\_\+find\+\_\+by\+\_\+name@{netif\+\_\+find\+\_\+by\+\_\+name}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+find\+\_\+by\+\_\+name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf netif\+\_\+t}$\ast$ netif\+\_\+find\+\_\+by\+\_\+name (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a0de3666f699d7d9cc7ec52171b844fa0}
+
+
+Definizione alla linea 80 del file netif.\+c.
+
+
+
+Referenzia list\+\_\+foreach, netif\+::name, e value.
+
+
+\begin{DoxyCode}
+80                                         \{
+81     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL)
+82         \textcolor{keywordflow}{return} NULL;
+83 
+84     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}) \{
+85         \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+86 
+87         \textcolor{keywordflow}{if}(strcmp(netif->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name}, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}) == 0)
+88             \textcolor{keywordflow}{return} netif;
+89     \}
+90 
+91     \textcolor{keywordflow}{return} NULL;
+92 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_ac75c28e791563771b563d670aeebd552}{\index{netif.\+c@{netif.\+c}!netif\+\_\+htonl@{netif\+\_\+htonl}}
+\index{netif\+\_\+htonl@{netif\+\_\+htonl}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+htonl}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} netif\+\_\+htonl (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{h}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_ac75c28e791563771b563d670aeebd552}
+
+
+Definizione alla linea 18 del file netif.\+c.
+
+
+\begin{DoxyCode}
+18                                  \{
+19     \textcolor{keywordflow}{return} ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
+20             ((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
+21 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_aa915d67e8c3d0b0e1beed32f3ee21749}{\index{netif.\+c@{netif.\+c}!netif\+\_\+htons@{netif\+\_\+htons}}
+\index{netif\+\_\+htons@{netif\+\_\+htons}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+htons}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} netif\+\_\+htons (
+\begin{DoxyParamCaption}
+\item[{{\bf uint16\+\_\+t}}]{h}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_aa915d67e8c3d0b0e1beed32f3ee21749}
+
+
+Definizione alla linea 23 del file netif.\+c.
+
+
+\begin{DoxyCode}
+23                                  \{
+24     \textcolor{keywordflow}{return} ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
+25 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a801ea0d4582b551b79c186cd1023180c}{\index{netif.\+c@{netif.\+c}!netif\+\_\+ifdown@{netif\+\_\+ifdown}}
+\index{netif\+\_\+ifdown@{netif\+\_\+ifdown}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+ifdown}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+ifdown (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a801ea0d4582b551b79c186cd1023180c}
+
+
+Definizione alla linea 110 del file netif.\+c.
+
+
+
+Referenzia netif\+::ifdown, list\+\_\+foreach, e value.
+
+
+\begin{DoxyCode}
+110                    \{
+111     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL)
+112         \textcolor{keywordflow}{return} -1;
+113 
+114     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}) \{
+115         \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+116 
+117         \textcolor{keywordflow}{if}(netif->\hyperlink{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}{ifdown})
+118             netif->\hyperlink{structnetif_a73d7967fecfead19c8ae2a39a8cbf112}{ifdown}(netif);
+119     \}
+120 
+121     \textcolor{keywordflow}{return} -1;
+122 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_aa233de3d4ae3825f0beafd81d10fbe36}{\index{netif.\+c@{netif.\+c}!netif\+\_\+ifup@{netif\+\_\+ifup}}
+\index{netif\+\_\+ifup@{netif\+\_\+ifup}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+ifup}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+ifup (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_aa233de3d4ae3825f0beafd81d10fbe36}
+
+
+Definizione alla linea 94 del file netif.\+c.
+
+
+
+Referenzia arp\+\_\+send(), netif\+::ifup, list\+\_\+foreach, e value.
+
+
+\begin{DoxyCode}
+94                  \{
+95     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL)
+96         \textcolor{keywordflow}{return} -1;
+97 
+98     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}) \{
+99         \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+100 
+101         \textcolor{keywordflow}{if}(netif->\hyperlink{structnetif_a70984b0d611d5a941aecabbc98f62467}{ifup})
+102             netif->\hyperlink{structnetif_a70984b0d611d5a941aecabbc98f62467}{ifup}(netif);
+103 
+104         \hyperlink{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}{arp\_send}(netif);
+105     \}
+106 
+107     \textcolor{keywordflow}{return} -1;
+108 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_af7c3254022249b2dfa78151c8f345e77}{\index{netif.\+c@{netif.\+c}!netif\+\_\+init@{netif\+\_\+init}}
+\index{netif\+\_\+init@{netif\+\_\+init}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_af7c3254022249b2dfa78151c8f345e77}
+
+
+Definizione alla linea 221 del file netif.\+c.
+
+
+
+Referenzia attribute(), list\+\_\+destroy, list\+\_\+empty(), list\+\_\+foreach, list\+\_\+init, netif\+\_\+ifup(), e value.
+
+
+\begin{DoxyCode}
+221                  \{
+222     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{netif_8c_accbe476fec12cec39066f558e3040ef6}{lst\_packets});
+223 
+224     \hyperlink{structlist}{list\_t}* \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} = \hyperlink{attribute_8h_ab96abe3fdf944e75a2316807105c1b6e}{attribute}(\textcolor{stringliteral}{"netif"});
+225     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(lst\_netif))
+226         \textcolor{keywordflow}{return} -1;
+227 
+228     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, lst\_netif) \{
+229         int (*handler) () = (\textcolor{keywordtype}{int} (*) ()) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+230 
+231         \textcolor{keywordflow}{if}(handler)
+232             handler();
+233     \}
+234     
+235     \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\_destroy}(lst\_netif);
+236 
+237     \hyperlink{netif_8c_aa233de3d4ae3825f0beafd81d10fbe36}{netif\_ifup}();
+238     \textcolor{keywordflow}{return} 0;
+239 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a5e9c3efca67d84bdcfffdbbdfe70711b}{\index{netif.\+c@{netif.\+c}!netif\+\_\+ntohl@{netif\+\_\+ntohl}}
+\index{netif\+\_\+ntohl@{netif\+\_\+ntohl}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+ntohl}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} netif\+\_\+ntohl (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{h}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a5e9c3efca67d84bdcfffdbbdfe70711b}
+
+
+Definizione alla linea 27 del file netif.\+c.
+
+
+\begin{DoxyCode}
+27                                  \{
+28     \textcolor{keywordflow}{return} ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
+29             ((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
+30 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_ae01b55d09345802921e2a0348cfeb9a0}{\index{netif.\+c@{netif.\+c}!netif\+\_\+ntohs@{netif\+\_\+ntohs}}
+\index{netif\+\_\+ntohs@{netif\+\_\+ntohs}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+ntohs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} netif\+\_\+ntohs (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{h}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_ae01b55d09345802921e2a0348cfeb9a0}
+
+
+Definizione alla linea 32 del file netif.\+c.
+
+
+\begin{DoxyCode}
+32                                  \{
+33     \textcolor{keywordflow}{return} ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
+34 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a3edf21f1cc51e87714ea8911236d896c}{\index{netif.\+c@{netif.\+c}!netif\+\_\+packets\+\_\+add@{netif\+\_\+packets\+\_\+add}}
+\index{netif\+\_\+packets\+\_\+add@{netif\+\_\+packets\+\_\+add}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+packets\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+packets\+\_\+add (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+packet\+\_\+t} $\ast$}]{packet}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a3edf21f1cc51e87714ea8911236d896c}
+
+
+Definizione alla linea 242 del file netif.\+c.
+
+
+
+Referenzia netif\+\_\+packet\+::id, e list\+\_\+add().
+
+
+\begin{DoxyCode}
+242                                               \{
+243     \textcolor{keyword}{static} uint64\_t nextid = 0;
+244     
+245     packet->\hyperlink{structnetif__packet_ac2dc39fe302e155960127c09161f36ae}{id} = nextid++;
+246     \textcolor{keywordflow}{return} \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{netif_8c_accbe476fec12cec39066f558e3040ef6}{lst\_packets}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) packet);
+247 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_aa14a95992efbcac98c16a43724dc0942}{\index{netif.\+c@{netif.\+c}!netif\+\_\+packets\+\_\+create@{netif\+\_\+packets\+\_\+create}}
+\index{netif\+\_\+packets\+\_\+create@{netif\+\_\+packets\+\_\+create}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+packets\+\_\+create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf netif\+\_\+packet\+\_\+t}$\ast$ netif\+\_\+packets\+\_\+create (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{int}]{protocol, }
+\item[{int}]{tot\+\_\+length, }
+\item[{int}]{head\+\_\+length, }
+\item[{void $\ast$}]{data}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_aa14a95992efbcac98c16a43724dc0942}
+
+
+Definizione alla linea 279 del file netif.\+c.
+
+
+
+Referenzia netif\+\_\+packet\+::data, netif\+\_\+packet\+::header, kmalloc(), netif\+\_\+packet\+::length, netif\+\_\+packet\+::netif, protocol, netif\+\_\+packet\+::protocol, e uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+279                                                                                                            
+           \{
+280     \hyperlink{structnetif__packet}{netif\_packet\_t}* pkt = (\hyperlink{structnetif__packet}{netif\_packet\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(
+      \hyperlink{structnetif__packet}{netif\_packet\_t}) + tot\_length);
+281     pkt->\hyperlink{structnetif__packet_a3590a941c954bab54971940eeab55144}{netif} = netif;
+282     pkt->\hyperlink{structnetif__packet_a2517358f8125e0a674a0628a77f1095d}{protocol} = \hyperlink{ipv4_8h_ad124d3d2e02c729afa303c775295278e}{protocol};
+283     pkt->\hyperlink{structnetif__packet_a244620016b7d377fd2558f5ccfc85d18}{length} = tot\_length - head\_length;
+284     
+285     memcpy(pkt->\hyperlink{structnetif__packet_a3733c55855518d575eea678f5a2815e8}{header}, data, head\_length);
+286     memcpy(pkt->\hyperlink{structnetif__packet_a3b4b8603d752944ba4360db33c5870b5}{data}, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) data + head\_length), pkt->
+      \hyperlink{structnetif__packet_a244620016b7d377fd2558f5ccfc85d18}{length});
+287 
+288     \textcolor{keywordflow}{return} pkt;
+289 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a298d555d31337e14e76688ecdbf08ef6}{\index{netif.\+c@{netif.\+c}!netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+id@{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+id}}
+\index{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+id@{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+id}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}{\bf netif\+\_\+packet\+\_\+t}$\ast$ netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+id (
+\begin{DoxyParamCaption}
+\item[{uint64\+\_\+t}]{id}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a298d555d31337e14e76688ecdbf08ef6}
+
+
+Definizione alla linea 253 del file netif.\+c.
+
+
+
+Referenzia netif\+\_\+packet\+::id, list\+\_\+foreach, e value.
+
+
+\begin{DoxyCode}
+253                                                       \{
+254     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_accbe476fec12cec39066f558e3040ef6}{lst\_packets}) \{
+255         \hyperlink{structnetif__packet}{netif\_packet\_t}* pkt = (\hyperlink{structnetif__packet}{netif\_packet\_t}*) 
+      \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+256 
+257         \textcolor{keywordflow}{if}(pkt->\hyperlink{structnetif__packet_ac2dc39fe302e155960127c09161f36ae}{id} == \textcolor{keywordtype}{id})
+258             \textcolor{keywordflow}{return} pkt;
+259     \}
+260 
+261     \textcolor{keywordflow}{return} NULL;
+262 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_ae6bde7bab4c04cc235035e789ae2854b}{\index{netif.\+c@{netif.\+c}!netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol@{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol}}
+\index{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol@{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol (
+\begin{DoxyParamCaption}
+\item[{int}]{protocol}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_ae6bde7bab4c04cc235035e789ae2854b}
+
+
+Definizione alla linea 264 del file netif.\+c.
+
+
+
+Referenzia list\+\_\+add(), list\+\_\+foreach, list\+\_\+init, netif\+\_\+packet\+::protocol, e value.
+
+
+\begin{DoxyCode}
+264                                                      \{
+265     \hyperlink{structlist}{list\_t}* tmp = NULL;
+266     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(tmp);
+267 
+268 
+269     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{netif_8c_accbe476fec12cec39066f558e3040ef6}{lst\_packets}) \{
+270         \hyperlink{structnetif__packet}{netif\_packet\_t}* pkt = (\hyperlink{structnetif__packet}{netif\_packet\_t}*) 
+      \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+271 
+272         \textcolor{keywordflow}{if}(pkt->\hyperlink{structnetif__packet_a2517358f8125e0a674a0628a77f1095d}{protocol} == \hyperlink{ipv4_8h_ad124d3d2e02c729afa303c775295278e}{protocol})
+273             \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(tmp, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) pkt);
+274     \}
+275 
+276     \textcolor{keywordflow}{return} tmp;
+277 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_ae9331f4834a47cc6f7c9edf6490046cf}{\index{netif.\+c@{netif.\+c}!netif\+\_\+packets\+\_\+remove@{netif\+\_\+packets\+\_\+remove}}
+\index{netif\+\_\+packets\+\_\+remove@{netif\+\_\+packets\+\_\+remove}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+packets\+\_\+remove}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+packets\+\_\+remove (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+packet\+\_\+t} $\ast$}]{packet}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_ae9331f4834a47cc6f7c9edf6490046cf}
+
+
+Definizione alla linea 249 del file netif.\+c.
+
+
+
+Referenzia list\+\_\+remove().
+
+
+\begin{DoxyCode}
+249                                                  \{
+250     \textcolor{keywordflow}{return} \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{netif_8c_accbe476fec12cec39066f558e3040ef6}{lst\_packets}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) packet);
+251 \}
+\end{DoxyCode}
+\hypertarget{netif_8c_a9c8fb9469b40267eb50031f262587eab}{\index{netif.\+c@{netif.\+c}!netif\+\_\+remove@{netif\+\_\+remove}}
+\index{netif\+\_\+remove@{netif\+\_\+remove}!netif.\+c@{netif.\+c}}
+\subsubsection[{netif\+\_\+remove}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+remove (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netdev}
+\end{DoxyParamCaption}
+)}}\label{netif_8c_a9c8fb9469b40267eb50031f262587eab}
+
+
+Definizione alla linea 214 del file netif.\+c.
+
+
+
+Referenzia list\+\_\+remove().
+
+
+\begin{DoxyCode}
+214                                   \{
+215     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif} == NULL)
+216         \textcolor{keywordflow}{return} -1;
+217 
+218     \textcolor{keywordflow}{return} \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\_netif}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) netdev);
+219 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{\index{netif.\+c@{netif.\+c}!lst\+\_\+netif@{lst\+\_\+netif}}
+\index{lst\+\_\+netif@{lst\+\_\+netif}!netif.\+c@{netif.\+c}}
+\subsubsection[{lst\+\_\+netif}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ lst\+\_\+netif = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{netif_8c_aa7d07620133cc2243295b0c03ac8436e}
+
+
+Definizione alla linea 13 del file netif.\+c.
+
+\hypertarget{netif_8c_accbe476fec12cec39066f558e3040ef6}{\index{netif.\+c@{netif.\+c}!lst\+\_\+packets@{lst\+\_\+packets}}
+\index{lst\+\_\+packets@{lst\+\_\+packets}!netif.\+c@{netif.\+c}}
+\subsubsection[{lst\+\_\+packets}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ lst\+\_\+packets = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{netif_8c_accbe476fec12cec39066f558e3040ef6}
+
+
+Definizione alla linea 14 del file netif.\+c.
+

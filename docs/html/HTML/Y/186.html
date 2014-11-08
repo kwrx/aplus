@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>cwd</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L57'>cwd</a>                57 src/arch/task.c 	child-&gt;cwd = current_task-&gt;cwd;
+<a href='../S/159.html#L129'>cwd</a>               129 src/arch/task.c 	child-&gt;cwd = current_task-&gt;cwd;
+<a href='../S/159.html#L193'>cwd</a>               193 src/arch/task.c 	current_task-&gt;cwd = (inode_t*) vfs_root;
+<a href='../S/90.html#L85'>cwd</a>                85 src/include/aplus/task.h 	inode_t* cwd;
+<a href='../S/139.html#L20'>cwd</a>                20 src/syscall/open.c 	inode_t* cwd = NULL;
+<a href='../S/139.html#L23'>cwd</a>                23 src/syscall/open.c 		cwd = vfs_root;
+<a href='../S/139.html#L25'>cwd</a>                25 src/syscall/open.c 	 	cwd = current_task-&gt;cwd;
+<a href='../S/139.html#L27'>cwd</a>                27 src/syscall/open.c 	if(!cwd) {
+<a href='../S/139.html#L35'>cwd</a>                35 src/syscall/open.c 		cwd = vfs_root;
+<a href='../S/139.html#L43'>cwd</a>                43 src/syscall/open.c 		return cwd;
+<a href='../S/139.html#L53'>cwd</a>                53 src/syscall/open.c 			cwd = (inode_t*) fs_finddir(cwd, s);
+<a href='../S/139.html#L54'>cwd</a>                54 src/syscall/open.c 			if(!cwd) {
+<a href='../S/139.html#L59'>cwd</a>                59 src/syscall/open.c 			while(S_ISLNK(cwd-&gt;mode))
+<a href='../S/139.html#L60'>cwd</a>                60 src/syscall/open.c 				if(cwd-&gt;link)
+<a href='../S/139.html#L61'>cwd</a>                61 src/syscall/open.c 					cwd = cwd-&gt;link;
+<a href='../S/139.html#L75'>cwd</a>                75 src/syscall/open.c 	cwd = (inode_t*) fs_finddir(cwd, s);
+<a href='../S/139.html#L76'>cwd</a>                76 src/syscall/open.c 	if(!cwd) {
+<a href='../S/139.html#L83'>cwd</a>                83 src/syscall/open.c 		while(S_ISLNK(cwd-&gt;mode)) {
+<a href='../S/139.html#L84'>cwd</a>                84 src/syscall/open.c 			if(cwd == cwd-&gt;link) {
+<a href='../S/139.html#L89'>cwd</a>                89 src/syscall/open.c 			if(cwd-&gt;link)
+<a href='../S/139.html#L90'>cwd</a>                90 src/syscall/open.c 				cwd = cwd-&gt;link;
+<a href='../S/139.html#L97'>cwd</a>                97 src/syscall/open.c 		if(!(S_ISDIR(cwd-&gt;mode))) {
+<a href='../S/139.html#L104'>cwd</a>               104 src/syscall/open.c 	return cwd;
+</pre>
+</body>
+</html>

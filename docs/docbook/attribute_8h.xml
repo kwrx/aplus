@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="attribute_8h">
+    <title>attribute.h File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structattribute">attribute</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="attribute_8h_1affb81d409ffa74c8bfb080cb1c3047db">__UNION2</link> x ## y ## z</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="attribute_8h_1afc6a4ef8385e48238a0037eb5fedf21a">__UNION</link> <link linkend="attribute_8h_1affb81d409ffa74c8bfb080cb1c3047db">__UNION2</link>(x, y, z)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="attribute_8h_1a672da6e381bbc58f66bf3f332d6fbb97">ATTRIBUTE</link> attribute_t <link linkend="attribute_8h_1afc6a4ef8385e48238a0037eb5fedf21a">__UNION</link>(attribute_, <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>, __COUNTER__) <link linkend="chkfail_8c_1a1b6824bfd4ec0404a4f875ed8db0274e">__attribute__</link>((section(&quot;.attribute&quot;))) = {	\
+		name, (<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>) &amp;<link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link>																		\
+	}																								\</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27">name</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd">value</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structattribute">attribute</link> <link linkend="attribute_8h_1a4b7f6d2e9be3c83ead055e037a05f9d0">__attribute__</link> (
+(aligned(0x100)) )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e">attribute</link> (
+const char * name)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/attribute.h</para>
+    </simplesect>
+</section>

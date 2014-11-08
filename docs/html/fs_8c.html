@@ -1,0 +1,605 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file src/fs/fs.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('fs_8c.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Funzioni</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file fs.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="aplus_8h_source.html">aplus.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="fs_8h_source.html">aplus/fs.h</a>&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+<code>#include &lt;sys/types.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="dirent_8h_source.html">dirent.h</a>&gt;</code><br />
+<code>#include &lt;errno.h&gt;</code><br />
+</div>
+<p><a href="fs_8c_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funzioni</h2></td></tr>
+<tr class="memitem:a8e53a98b93e6b136196b2ebd99e43dcd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#a8e53a98b93e6b136196b2ebd99e43dcd">fs_read</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, char *ptr, int len)</td></tr>
+<tr class="separator:a8e53a98b93e6b136196b2ebd99e43dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d87cba454ac1212bfc2277b5792bf95"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#a7d87cba454ac1212bfc2277b5792bf95">fs_write</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, char *ptr, int len)</td></tr>
+<tr class="separator:a7d87cba454ac1212bfc2277b5792bf95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6320f9253c5bd1f298876fdbe41b9de"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structdirent.html">dirent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#af6320f9253c5bd1f298876fdbe41b9de">fs_readdir</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, int index)</td></tr>
+<tr class="separator:af6320f9253c5bd1f298876fdbe41b9de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8edcff785980ccbc26c887c19ac8989"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structinode.html">inode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#ad8edcff785980ccbc26c887c19ac8989">fs_finddir</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, char *<a class="el" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>)</td></tr>
+<tr class="separator:ad8edcff785980ccbc26c887c19ac8989"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8973117250569528548e2c2ff3f6e44e"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structinode.html">inode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#a8973117250569528548e2c2ff3f6e44e">fs_creat</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, char *<a class="el" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>, mode_t mode)</td></tr>
+<tr class="separator:a8973117250569528548e2c2ff3f6e44e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23db0b0dd4f66cd2cc34a9116164cfc4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#a23db0b0dd4f66cd2cc34a9116164cfc4">fs_rename</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, char *oldname, char *newname)</td></tr>
+<tr class="separator:a23db0b0dd4f66cd2cc34a9116164cfc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0e4dd01b14f5ba2495318b840acdfff"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#ab0e4dd01b14f5ba2495318b840acdfff">fs_unlink</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, char *<a class="el" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>)</td></tr>
+<tr class="separator:ab0e4dd01b14f5ba2495318b840acdfff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2928203c42eba392963b57bfed7b65c4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#a2928203c42eba392963b57bfed7b65c4">fs_chown</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, uid_t owner, gid_t group)</td></tr>
+<tr class="separator:a2928203c42eba392963b57bfed7b65c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37ebdb2a9963f0f89d938fa2cc5d78df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#a37ebdb2a9963f0f89d938fa2cc5d78df">fs_flush</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>)</td></tr>
+<tr class="separator:a37ebdb2a9963f0f89d938fa2cc5d78df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb548bce2f916933a7c7d95a48b57cdb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fs_8c.html#afb548bce2f916933a7c7d95a48b57cdb">fs_ioctl</a> (struct <a class="el" href="structinode.html">inode</a> *<a class="el" href="structinode.html">inode</a>, int req, void *buf)</td></tr>
+<tr class="separator:afb548bce2f916933a7c7d95a48b57cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle funzioni</h2>
+<a class="anchor" id="a2928203c42eba392963b57bfed7b65c4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fs_chown </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uid_t&#160;</td>
+          <td class="paramname"><em>owner</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gid_t&#160;</td>
+          <td class="paramname"><em>group</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00086">86</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="fs_8h_source.html#l00064">inode::chown</a>, e <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                                                             {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#a8221183a697c9f2b4e0e295f5a9d8afd">chown</a>)</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#a8221183a697c9f2b4e0e295f5a9d8afd">chown</a>(inode, owner, group);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+<div class="ttc" id="structinode_html_a8221183a697c9f2b4e0e295f5a9d8afd"><div class="ttname"><a href="structinode.html#a8221183a697c9f2b4e0e295f5a9d8afd">inode::chown</a></div><div class="ttdeci">int(* chown)(struct inode *inode, uid_t owner, gid_t group)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00064">fs.h:64</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a8973117250569528548e2c2ff3f6e44e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structinode.html">inode</a>* fs_creat </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">mode_t&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00062">62</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="fs_8h_source.html#l00060">inode::creat</a>, e <a class="el" href="errno_8c_source.html#l00003">errno</a>.</p>
+<div class="fragment"><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                                                                      {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#ad622a049b34780786d9ba4311b06b3b4">creat</a>)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#ad622a049b34780786d9ba4311b06b3b4">creat</a>(inode, <a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>, mode);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;     </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="ttc" id="attribute_8h_html_aae08e5b919f01beb6c69d2859e0dfc27"><div class="ttname"><a href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a></div><div class="ttdeci">char name[0x80]</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00082">attribute.h:82</a></div></div>
+<div class="ttc" id="structinode_html_ad622a049b34780786d9ba4311b06b3b4"><div class="ttname"><a href="structinode.html#ad622a049b34780786d9ba4311b06b3b4">inode::creat</a></div><div class="ttdeci">struct inode *(* creat)(struct inode *inode, char *name, mode_t mode)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00060">fs.h:60</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ad8edcff785980ccbc26c887c19ac8989"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structinode.html">inode</a>* fs_finddir </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00049">49</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="fs_8h_source.html#l00059">inode::finddir</a>, e <a class="el" href="vfs_8c_source.html#l00032">vfs_mapped()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                                                           {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="structinode.html">inode_t</a>* map = NULL;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span>((map = (<a class="code" href="structinode.html">inode_t</a>*) <a class="code" href="vfs_8c.html#a99334446cfc1dfc32088d838b4f2895c">vfs_mapped</a>(inode, <a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>)) != NULL)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">return</span> map;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#ab6c5e2d912fdbd506086e53185cd370d">finddir</a>)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#ab6c5e2d912fdbd506086e53185cd370d">finddir</a>(inode, <a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
+<div class="ttc" id="attribute_8h_html_aae08e5b919f01beb6c69d2859e0dfc27"><div class="ttname"><a href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a></div><div class="ttdeci">char name[0x80]</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00082">attribute.h:82</a></div></div>
+<div class="ttc" id="structinode_html"><div class="ttname"><a href="structinode.html">inode</a></div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00036">fs.h:36</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structinode_html_ab6c5e2d912fdbd506086e53185cd370d"><div class="ttname"><a href="structinode.html#ab6c5e2d912fdbd506086e53185cd370d">inode::finddir</a></div><div class="ttdeci">struct inode *(* finddir)(struct inode *inode, char *name)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00059">fs.h:59</a></div></div>
+<div class="ttc" id="vfs_8c_html_a99334446cfc1dfc32088d838b4f2895c"><div class="ttname"><a href="vfs_8c.html#a99334446cfc1dfc32088d838b4f2895c">vfs_mapped</a></div><div class="ttdeci">inode_t * vfs_mapped(inode_t *parent, char *name)</div><div class="ttdef"><b>Definition:</b> <a href="vfs_8c_source.html#l00032">vfs.c:32</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a37ebdb2a9963f0f89d938fa2cc5d78df"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fs_flush </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00094">94</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="fs_8h_source.html#l00065">inode::flush</a>.</p>
+<div class="fragment"><div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                                   {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#ae2972ef183f5c39aac7cb83b9f8a04a8">flush</a>)</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        inode-&gt;<a class="code" href="structinode.html#ae2972ef183f5c39aac7cb83b9f8a04a8">flush</a>(inode);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="ttc" id="structinode_html_ae2972ef183f5c39aac7cb83b9f8a04a8"><div class="ttname"><a href="structinode.html#ae2972ef183f5c39aac7cb83b9f8a04a8">inode::flush</a></div><div class="ttdeci">void(* flush)(struct inode *inode)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00065">fs.h:65</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="afb548bce2f916933a7c7d95a48b57cdb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fs_ioctl </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>req</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>buf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00102">102</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="fs_8h_source.html#l00067">inode::ioctl</a>.</p>
+<div class="fragment"><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                                                      {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#a636843da203574bc338b016758bf8c7e">ioctl</a>)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#a636843da203574bc338b016758bf8c7e">ioctl</a>(inode, req, buf);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structinode_html_a636843da203574bc338b016758bf8c7e"><div class="ttname"><a href="structinode.html#a636843da203574bc338b016758bf8c7e">inode::ioctl</a></div><div class="ttdeci">int(* ioctl)(struct inode *inode, int req, void *buf)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00067">fs.h:67</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a8e53a98b93e6b136196b2ebd99e43dcd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fs_read </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00016">16</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="fs_8h_source.html#l00055">inode::read</a>.</p>
+<div class="fragment"><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                                                      {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#ae2c5e8a0a372334b97024fbd9ef694c1">read</a>)</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#ae2c5e8a0a372334b97024fbd9ef694c1">read</a>(inode, ptr, len);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;     </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structinode_html_ae2c5e8a0a372334b97024fbd9ef694c1"><div class="ttname"><a href="structinode.html#ae2c5e8a0a372334b97024fbd9ef694c1">inode::read</a></div><div class="ttdeci">int(* read)(struct inode *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00055">fs.h:55</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="af6320f9253c5bd1f298876fdbe41b9de"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structdirent.html">dirent</a>* fs_readdir </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00032">32</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="dirent_8h_source.html#l00036">dirent::d_ino</a>, <a class="el" href="dirent_8h_source.html#l00037">dirent::d_name</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="fs_8h_source.html#l00040">inode::ino</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="fs_8h_source.html#l00037">inode::name</a>, <a class="el" href="fs_8h_source.html#l00058">inode::readdir</a>, <a class="el" href="vfs_8c_source.html#l00044">vfs_mapped_at_index()</a>, e <a class="el" href="vfs_8c_source.html#l00058">vfs_mapped_count()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                                           {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="structinode.html">inode_t</a>* map = NULL;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">if</span>((map = (<a class="code" href="structinode.html">inode_t</a>*) <a class="code" href="vfs_8c.html#a4f7b5f17ac7c4b3a0a574d9620e0512d">vfs_mapped_at_index</a>(inode, index)) != NULL) {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">struct </span><a class="code" href="structdirent.html">dirent</a>* ent = (<span class="keyword">struct </span><a class="code" href="structdirent.html">dirent</a>*) <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> <a class="code" href="structdirent.html">dirent</a>));</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        strcpy(ent-&gt;<a class="code" href="structdirent.html#a39a9af609c1808f0bdf90155bd3f55ed">d_name</a>, map-&gt;<a class="code" href="structinode.html#ad64802d9d4ebdd1c56af5ab6e302faf0">name</a>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        ent-&gt;<a class="code" href="structdirent.html#aef01e92a29cba347e6e6a5f22d4908a2">d_ino</a> = map-&gt;<a class="code" href="structinode.html#a1a77be0f24a6c9a18bbdbcecfb75df7c">ino</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordflow">return</span> ent;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#a0a54c11571f19f23322f3e6ad3ecb113">readdir</a>)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#a0a54c11571f19f23322f3e6ad3ecb113">readdir</a>(inode, index - <a class="code" href="vfs_8c.html#a829e1c063db610c46554db0e28cb2bcb">vfs_mapped_count</a>(inode));</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;}</div>
+<div class="ttc" id="vfs_8c_html_a829e1c063db610c46554db0e28cb2bcb"><div class="ttname"><a href="vfs_8c.html#a829e1c063db610c46554db0e28cb2bcb">vfs_mapped_count</a></div><div class="ttdeci">int vfs_mapped_count(inode_t *parent)</div><div class="ttdef"><b>Definition:</b> <a href="vfs_8c_source.html#l00058">vfs.c:58</a></div></div>
+<div class="ttc" id="structdirent_html_a39a9af609c1808f0bdf90155bd3f55ed"><div class="ttname"><a href="structdirent.html#a39a9af609c1808f0bdf90155bd3f55ed">dirent::d_name</a></div><div class="ttdeci">char d_name[]</div><div class="ttdef"><b>Definition:</b> <a href="dirent_8h_source.html#l00037">dirent.h:37</a></div></div>
+<div class="ttc" id="structdirent_html"><div class="ttname"><a href="structdirent.html">dirent</a></div><div class="ttdef"><b>Definition:</b> <a href="dirent_8h_source.html#l00035">dirent.h:35</a></div></div>
+<div class="ttc" id="structinode_html"><div class="ttname"><a href="structinode.html">inode</a></div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00036">fs.h:36</a></div></div>
+<div class="ttc" id="structinode_html_ad64802d9d4ebdd1c56af5ab6e302faf0"><div class="ttname"><a href="structinode.html#ad64802d9d4ebdd1c56af5ab6e302faf0">inode::name</a></div><div class="ttdeci">char name[255]</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00037">fs.h:37</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structinode_html_a1a77be0f24a6c9a18bbdbcecfb75df7c"><div class="ttname"><a href="structinode.html#a1a77be0f24a6c9a18bbdbcecfb75df7c">inode::ino</a></div><div class="ttdeci">ino_t ino</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00040">fs.h:40</a></div></div>
+<div class="ttc" id="mm_8h_html_a1f5d4240b2decc62c0e6eae06c72916c"><div class="ttname"><a href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a></div><div class="ttdeci">void * kmalloc(size_t)</div></div>
+<div class="ttc" id="vfs_8c_html_a4f7b5f17ac7c4b3a0a574d9620e0512d"><div class="ttname"><a href="vfs_8c.html#a4f7b5f17ac7c4b3a0a574d9620e0512d">vfs_mapped_at_index</a></div><div class="ttdeci">inode_t * vfs_mapped_at_index(inode_t *parent, int index)</div><div class="ttdef"><b>Definition:</b> <a href="vfs_8c_source.html#l00044">vfs.c:44</a></div></div>
+<div class="ttc" id="structdirent_html_aef01e92a29cba347e6e6a5f22d4908a2"><div class="ttname"><a href="structdirent.html#aef01e92a29cba347e6e6a5f22d4908a2">dirent::d_ino</a></div><div class="ttdeci">int d_ino</div><div class="ttdef"><b>Definition:</b> <a href="dirent_8h_source.html#l00036">dirent.h:36</a></div></div>
+<div class="ttc" id="structinode_html_a0a54c11571f19f23322f3e6ad3ecb113"><div class="ttname"><a href="structinode.html#a0a54c11571f19f23322f3e6ad3ecb113">inode::readdir</a></div><div class="ttdeci">struct dirent *(* readdir)(struct inode *inode, int index)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00058">fs.h:58</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a23db0b0dd4f66cd2cc34a9116164cfc4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fs_rename </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>oldname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>newname</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00070">70</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="fs_8h_source.html#l00062">inode::rename</a>.</p>
+<div class="fragment"><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                                                                  {</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#a5a309a9c4ada7e4d062162b06125a929">rename</a>)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#a5a309a9c4ada7e4d062162b06125a929">rename</a>(inode, oldname, newname);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;     </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<div class="ttc" id="structinode_html_a5a309a9c4ada7e4d062162b06125a929"><div class="ttname"><a href="structinode.html#a5a309a9c4ada7e4d062162b06125a929">inode::rename</a></div><div class="ttdeci">int(* rename)(struct inode *inode, char *oldname, char *newname)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00062">fs.h:62</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="ab0e4dd01b14f5ba2495318b840acdfff"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fs_unlink </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00078">78</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="fs_8h_source.html#l00063">inode::unlink</a>.</p>
+<div class="fragment"><div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                                                {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#adf65bac80736631b8000d3d34e953aaa">unlink</a>)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#adf65bac80736631b8000d3d34e953aaa">unlink</a>(inode, <a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;}</div>
+<div class="ttc" id="attribute_8h_html_aae08e5b919f01beb6c69d2859e0dfc27"><div class="ttname"><a href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a></div><div class="ttdeci">char name[0x80]</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00082">attribute.h:82</a></div></div>
+<div class="ttc" id="structinode_html_adf65bac80736631b8000d3d34e953aaa"><div class="ttname"><a href="structinode.html#adf65bac80736631b8000d3d34e953aaa">inode::unlink</a></div><div class="ttdeci">int(* unlink)(struct inode *inode, char *name)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00063">fs.h:63</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a7d87cba454ac1212bfc2277b5792bf95"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int fs_write </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structinode.html">inode</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="fs_8c_source.html#l00024">24</a> del file <a class="el" href="fs_8c_source.html">fs.c</a>.</p>
+
+<p>Referenzia <a class="el" href="errno_8c_source.html#l00003">errno</a>, e <a class="el" href="fs_8h_source.html#l00056">inode::write</a>.</p>
+<div class="fragment"><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                                                       {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">if</span>(inode-&gt;<a class="code" href="structinode.html#a53a123d38834fa17e7ef5c1e5f47bba2">write</a>)</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">return</span> inode-&gt;<a class="code" href="structinode.html#a53a123d38834fa17e7ef5c1e5f47bba2">write</a>(inode, ptr, len);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS; </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structinode_html_a53a123d38834fa17e7ef5c1e5f47bba2"><div class="ttname"><a href="structinode.html#a53a123d38834fa17e7ef5c1e5f47bba2">inode::write</a></div><div class="ttdeci">int(* write)(struct inode *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00056">fs.h:56</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_67dd5697b37f207f225bbd7a2e3631fb.html">fs</a></li><li class="navelem"><a class="el" href="fs_8c.html">fs.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

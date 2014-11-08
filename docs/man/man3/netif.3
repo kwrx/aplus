@@ -1,0 +1,207 @@
+.TH "netif" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+netif \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <netif\&.h>\fP
+.SS "Campi"
+
+.in +1c
+.ti -1c
+.RI "char \fBname\fP [32]"
+.br
+.ti -1c
+.RI "void * \fBdata\fP"
+.br
+.ti -1c
+.RI "\fBipv6_t\fP \fBipv6\fP"
+.br
+.ti -1c
+.RI "\fBipv4_t\fP \fBipv4\fP"
+.br
+.ti -1c
+.RI "\fBipv4_t\fP \fBnetmask\fP"
+.br
+.ti -1c
+.RI "\fBmacaddr_t\fP \fBmacaddr\fP"
+.br
+.ti -1c
+.RI "struct {"
+.br
+.ti -1c
+.RI "   struct {"
+.br
+.ti -1c
+.RI "      \fBipv4_t\fP \fBipv4\fP"
+.br
+.ti -1c
+.RI "      \fBipv6_t\fP \fBipv6\fP"
+.br
+.ti -1c
+.RI "   } \fBprimary\fP"
+.br
+.ti -1c
+.RI "   struct {"
+.br
+.ti -1c
+.RI "      \fBipv4_t\fP \fBipv4\fP"
+.br
+.ti -1c
+.RI "      \fBipv6_t\fP \fBipv6\fP"
+.br
+.ti -1c
+.RI "   } \fBsecondary\fP"
+.br
+.ti -1c
+.RI "} \fBdns\fP"
+.br
+.ti -1c
+.RI "struct {"
+.br
+.ti -1c
+.RI "   uint64_t \fBrx_packets\fP"
+.br
+.ti -1c
+.RI "   uint64_t \fBrx_bytes\fP"
+.br
+.ti -1c
+.RI "   uint64_t \fBrx_errors\fP"
+.br
+.ti -1c
+.RI "   uint64_t \fBrx_dropped\fP"
+.br
+.ti -1c
+.RI "   uint64_t \fBtx_packets\fP"
+.br
+.ti -1c
+.RI "   uint64_t \fBtx_bytes\fP"
+.br
+.ti -1c
+.RI "   uint64_t \fBtx_errors\fP"
+.br
+.ti -1c
+.RI "   uint64_t \fBtx_dropped\fP"
+.br
+.ti -1c
+.RI "} \fBstate\fP"
+.br
+.ti -1c
+.RI "int(* \fBsend\fP )(struct \fBnetif\fP *, void *, size_t, int)"
+.br
+.ti -1c
+.RI "int(* \fBifup\fP )(struct \fBnetif\fP *)"
+.br
+.ti -1c
+.RI "int(* \fBifdown\fP )(struct \fBnetif\fP *)"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBmtu\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBflags\fP"
+.br
+.ti -1c
+.RI "\fBpci_device_t\fP * \fBdevice\fP"
+.br
+.in -1c
+.SH "Descrizione dettagliata"
+.PP 
+Definizione alla linea 33 del file netif\&.h\&.
+.SH "Documentazione dei campi"
+.PP 
+.SS "void* netif::data"
+
+.PP
+Definizione alla linea 35 del file netif\&.h\&.
+.SS "\fBpci_device_t\fP* netif::device"
+
+.PP
+Definizione alla linea 73 del file netif\&.h\&.
+.SS "struct { \&.\&.\&. }   netif::dns"
+
+.SS "\fBuint32_t\fP netif::flags"
+
+.PP
+Definizione alla linea 71 del file netif\&.h\&.
+.SS "int(* netif::ifdown)(struct \fBnetif\fP *)"
+
+.PP
+Definizione alla linea 68 del file netif\&.h\&.
+.SS "int(* netif::ifup)(struct \fBnetif\fP *)"
+
+.PP
+Definizione alla linea 67 del file netif\&.h\&.
+.SS "\fBipv4_t\fP netif::ipv4"
+
+.PP
+Definizione alla linea 38 del file netif\&.h\&.
+.SS "\fBipv6_t\fP netif::ipv6"
+
+.PP
+Definizione alla linea 37 del file netif\&.h\&.
+.SS "\fBmacaddr_t\fP netif::macaddr"
+
+.PP
+Definizione alla linea 40 del file netif\&.h\&.
+.SS "\fBuint32_t\fP netif::mtu"
+
+.PP
+Definizione alla linea 70 del file netif\&.h\&.
+.SS "char netif::name[32]"
+
+.PP
+Definizione alla linea 34 del file netif\&.h\&.
+.SS "\fBipv4_t\fP netif::netmask"
+
+.PP
+Definizione alla linea 39 del file netif\&.h\&.
+.SS "struct { \&.\&.\&. }   netif::primary"
+
+.SS "uint64_t netif::rx_bytes"
+
+.PP
+Definizione alla linea 56 del file netif\&.h\&.
+.SS "uint64_t netif::rx_dropped"
+
+.PP
+Definizione alla linea 58 del file netif\&.h\&.
+.SS "uint64_t netif::rx_errors"
+
+.PP
+Definizione alla linea 57 del file netif\&.h\&.
+.SS "uint64_t netif::rx_packets"
+
+.PP
+Definizione alla linea 55 del file netif\&.h\&.
+.SS "struct { \&.\&.\&. }   netif::secondary"
+
+.SS "int(* netif::send)(struct \fBnetif\fP *, void *, size_t, int)"
+
+.PP
+Definizione alla linea 66 del file netif\&.h\&.
+.SS "struct { \&.\&.\&. }   netif::state"
+
+.SS "uint64_t netif::tx_bytes"
+
+.PP
+Definizione alla linea 61 del file netif\&.h\&.
+.SS "uint64_t netif::tx_dropped"
+
+.PP
+Definizione alla linea 63 del file netif\&.h\&.
+.SS "uint64_t netif::tx_errors"
+
+.PP
+Definizione alla linea 62 del file netif\&.h\&.
+.SS "uint64_t netif::tx_packets"
+
+.PP
+Definizione alla linea 60 del file netif\&.h\&.
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

@@ -1,0 +1,355 @@
+.TH "src/include/aplus.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <stdarg\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBregs\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fBread_reg\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBwrite_reg\fP(n)"
+.br
+.ti -1c
+.RI "#define \fBoutx\fP(n, t, reg)"
+.br
+.ti -1c
+.RI "#define \fBinx\fP(n, t, reg)"
+.br
+.ti -1c
+.RI "#define \fBoutsx\fP(n, t, reg)"
+.br
+.ti -1c
+.RI "#define \fBinsx\fP(n, t, reg)"
+.br
+.ti -1c
+.RI "#define \fBkprintf\fP(a, b\&.\&.\&.)   ;"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "\fBread_reg\fP (\fBeax\fP) read_reg(\fBebx\fP) read_reg(\fBecx\fP) read_reg(\fBedx\fP) read_reg(\fBesi\fP) read_reg(\fBedi\fP) read_reg(\fBebp\fP) read_reg(\fBesp\fP) read_reg(cr0) read_reg(cr1) read_reg(cr2) read_reg(cr3) read_reg(cr4) read_reg(\fBcs\fP) read_reg(\fBds\fP) read_reg(\fBes\fP) read_reg(\fBfs\fP) read_reg(\fBgs\fP) static inline \fBuint32_t\fP read_eflags()"
+.br
+.ti -1c
+.RI "\fBwrite_reg\fP (\fBeax\fP) write_reg(\fBebx\fP) write_reg(\fBecx\fP) write_reg(\fBedx\fP) write_reg(\fBesi\fP) write_reg(\fBedi\fP) write_reg(\fBebp\fP) write_reg(\fBesp\fP) write_reg(cr0) write_reg(cr1) write_reg(cr2) write_reg(cr3) write_reg(cr4) write_reg(\fBcs\fP) write_reg(\fBds\fP) write_reg(\fBes\fP) write_reg(\fBfs\fP) write_reg(\fBgs\fP) static inline void write_eflags(\fBuint32_t\fP val)"
+.br
+.ti -1c
+.RI "\fBoutx\fP (b, \fBuint8_t\fP, al) outx(w"
+.br
+.ti -1c
+.RI "ax \fBoutx\fP (l, \fBuint32_t\fP, \fBeax\fP) \fBinx\fP(b"
+.br
+.ti -1c
+.RI "ax al \fBinx\fP (w, \fBuint16_t\fP, ax) inx(l"
+.br
+.ti -1c
+.RI "\fBoutsx\fP (b, \fBuint8_t\fP, al) outsx(w"
+.br
+.ti -1c
+.RI "ax \fBoutsx\fP (l, \fBuint32_t\fP, \fBeax\fP) \fBinsx\fP(b"
+.br
+.ti -1c
+.RI "ax al \fBinsx\fP (w, \fBuint16_t\fP, ax) insx(l"
+.br
+.ti -1c
+.RI "ax al \fBeax\fP struct \fBregs\fP \fB__attribute__\fP ((packed)) regs_t"
+.br
+.in -1c
+.SS "Variabili"
+
+.in +1c
+.ti -1c
+.RI "\fBuint16_t\fP"
+.br
+.ti -1c
+.RI "ax \fBuint8_t\fP"
+.br
+.ti -1c
+.RI "ax al \fBuint32_t\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBgs\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBfs\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBes\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBds\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBedi\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBesi\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBebp\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBesp\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBebx\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBedx\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBecx\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBeax\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBint_no\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBerr_code\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBeip\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBcs\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBeflags\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBuseresp\fP"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define insx(n, t, reg)"
+\fBValore:\fP
+.PP
+.nf
+static inline t* ins##n(uint16_t p, t* v, uint32_t len) {        \
+        for(int i = 0; i < len; i++)                                \
+            v[i] = in##n(p);                                        \
+                                                                    \
+        return v;                                                   \
+    }
+.fi
+.SS "#define inx(n, t, reg)"
+\fBValore:\fP
+.PP
+.nf
+static inline t in##n(uint16_t p) {                               \
+        t r;                                                        \\
+		__asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));\
+        return r;                                                   \
+    }
+.fi
+.SS "#define kprintf(a, b\&.\&.\&.)   ;"
+
+.PP
+Definizione alla linea 147 del file aplus\&.h\&.
+.SS "#define outsx(n, t, reg)"
+\fBValore:\fP
+.PP
+.nf
+static inline void outs##n(uint16_t p, t* v, uint32_t len) { \
+        for(int i = 0; i < len; i++)                                \
+            out##n(p, v[i]);                                        \
+    }
+.fi
+.PP
+Definizione alla linea 117 del file aplus\&.h\&.
+.SS "#define outx(n, t, reg)"
+\fBValore:\fP
+.PP
+.nf
+static inline void out##n(uint16_t p, t v) {                    \\
+		__asm__ __volatile__ ("out dx, " #reg : : "a"(v), "d"(p));    \
+    }
+.fi
+.PP
+Definizione alla linea 96 del file aplus\&.h\&.
+.SS "#define read_reg(n)"
+\fBValore:\fP
+.PP
+.nf
+static inline uint32_t read_##n() {                          \\
+		uint32_t ret;                                         \\
+		__asm__ __volatile__ ("mov %0, " #n : "=r"(ret));     \
+        return ret;                                             \
+    }
+.fi
+.PP
+Definizione alla linea 32 del file aplus\&.h\&.
+.SS "#define write_reg(n)"
+\fBValore:\fP
+.PP
+.nf
+static inline void write_##n(uint32_t val) {                \\
+		__asm__ __volatile__ ("mov " #n ", %0" : : "r"(val)); \
+    }
+.fi
+.PP
+Definizione alla linea 66 del file aplus\&.h\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "ax al \fBeax\fP struct \fBregs\fP __attribute__ ((packed))"
+
+.PP
+Definizione alla linea 44 del file desc\&.c\&.
+.PP
+.nf
+46                        {
+47     uint16_t limit;
+48     uint32_t base;
+49 } __attribute__((packed)) gdt_ptr_t;
+.fi
+.SS "ax al insx (w, \fBuint16_t\fP, ax)"
+
+.SS "ax al inx (w, \fBuint16_t\fP, ax)"
+
+.SS "outsx (b, \fBuint8_t\fP, al)"
+
+.SS "ax outsx (l, \fBuint32_t\fP, \fBeax\fP)"
+
+.SS "outx (b, \fBuint8_t\fP, al)"
+
+.SS "ax outx (l, \fBuint32_t\fP, \fBeax\fP)"
+
+.SS "read_reg (\fBeax\fP)"
+
+.PP
+Definizione alla linea 39 del file aplus\&.h\&.
+.PP
+Referenzia __asm__(), e uint32_t\&.
+.PP
+.nf
+59                                      {
+60     uint32_t ret;
+61     __asm__ __volatile__("pushfd; pop eax" : "=a"(ret));
+62     return ret;
+63 }
+.fi
+.SS "write_reg (\fBeax\fP)"
+
+.PP
+Definizione alla linea 72 del file aplus\&.h\&.
+.PP
+Referenzia __asm__()\&.
+.PP
+.nf
+92                                               {
+93     __asm__ __volatile__("push eax; popfd" : : "a"(val));
+94 }   
+.fi
+.SH "Documentazione delle variabili"
+.PP 
+.SS "\fBuint32_t\fP cs"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP ds"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP eax"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP ebp"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP ebx"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP ecx"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP edi"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP edx"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP eflags"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP eip"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP err_code"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP es"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP esi"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP esp"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP \fBfs\fP"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP gs"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP int_no"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SS "uint16_t"
+
+.PP
+Definizione alla linea 102 del file aplus\&.h\&.
+.SS "ax al uint32_t"
+
+.PP
+Definizione alla linea 115 del file aplus\&.h\&.
+.SS "ax uint8_t"
+
+.PP
+Definizione alla linea 113 del file aplus\&.h\&.
+.SS "\fBuint32_t\fP useresp"
+
+.PP
+Definizione alla linea 139 del file aplus\&.h\&.
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

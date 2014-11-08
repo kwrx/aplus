@@ -1,0 +1,42 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/pthread_exit.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/pthread_exit.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L8'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L8' title='Defined at 8.'>pthread_exit</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='43.html'>pthread.h</a>&gt;
+<a name='L5'>   5 
+<a name='L6'>   6 <font color='darkred'>#include</font> "<a href='50.html'>pthread_internal.h</a>"
+<a name='L7'>   7 
+<a name='L8'>   8 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>void</b> <a href='../R/399.html' title='Multiple refered from 2 places.'>pthread_exit</a>(<b>void</b>* <a href='../Y/739.html' title='Multiple used in 7 places.'>value_ptr</a>) <font color='red'>{</font>
+<a name='L9'>   9         <a href='../S/43.html#L37' title='Defined at 37 in usr/src/libpthread/include/pthread.h.'>pthread_t</a> <a href='../Y/492.html' title='Multiple used in 4 places.'>ptx</a> = <a href='../S/69.html#L10' title='Defined at 10 in usr/src/libpthread/src/pthread_self.c.'>pthread_self</a>();
+<a name='L10'>  10         <a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>* <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a> = (<a href='../S/50.html#L48' title='Defined at 48 in usr/src/libpthread/src/pthread_internal.h.'>pthread_context_t</a>*) <a href='../Y/492.html' title='Multiple used in 4 places.'>ptx</a>;
+<a name='L11'>  11 
+<a name='L12'>  12         <b>if</b>(<a href='../Y/492.html' title='Multiple used in 4 places.'>ptx</a>) <font color='red'>{</font>
+<a name='L13'>  13                 <a href='../Y/179.html' title='Multiple used in 48 places.'>ctx</a>-&gt;<a href='../Y/256.html' title='Multiple used in 4 places.'>exitval</a> = <a href='../Y/739.html' title='Multiple used in 7 places.'>value_ptr</a>;
+<a name='L14'>  14                 <a href='../S/56.html#L12' title='Defined at 12 in usr/src/libpthread/src/pthread_detach.c.'>pthread_detach</a>(<a href='../Y/492.html' title='Multiple used in 4 places.'>ptx</a>);
+<a name='L15'>  15         <font color='red'>}</font><b>else</b>
+<a name='L16'>  16                 <a href='../Y/87.html' title='Multiple used in 3 places.'>abort</a>();
+<a name='L17'>  17 
+<a name='L18'>  18         <b>for</b>(;;);
+<a name='L19'>  19 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L8'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

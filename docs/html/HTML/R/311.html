@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>mm_align</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/159.html#L96'>mm_align</a>           96 src/arch/task.c 	void* stack = (void*) mm_align(kmalloc(TASK_STACKSIZE * 2));
+<a href='../S/159.html#L120'>mm_align</a>          120 src/arch/task.c 		stack = (void*) ((int) mm_align(kmalloc(TASK_STACKSIZE * 2)) + TASK_STACKSIZE);
+<a href='../S/151.html#L80'>mm_align</a>           80 src/mm/mm.c    	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+<a href='../S/150.html#L76'>mm_align</a>           76 src/mm/paging.c 	paddr = mm_align(paddr);
+<a href='../S/150.html#L77'>mm_align</a>           77 src/mm/paging.c 	vaddr = mm_align(vaddr);
+<a href='../S/150.html#L113'>mm_align</a>          113 src/mm/paging.c 	addr = mm_align(addr);
+<a href='../S/150.html#L152'>mm_align</a>          152 src/mm/paging.c 	uint32_t* addr = (uint32_t*) mm_align((void*) kmalloc(PDSIZE * sizeof(uint32_t)));
+</pre>
+</body>
+</html>

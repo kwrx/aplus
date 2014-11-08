@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>addr</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/158.html#L365'>addr</a>              365 src/arch/desc.c static uint8_t rtc(uint8_t addr) {
+<a href='../S/158.html#L366'>addr</a>              366 src/arch/desc.c 	outb(0x70, addr);
+<a href='../S/159.html#L84'>addr</a>               84 src/arch/task.c 		void* addr = (void*) kmalloc(child-&gt;image.length);
+<a href='../S/159.html#L85'>addr</a>               85 src/arch/task.c 		memcpy(addr, (void*) child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L87'>addr</a>               87 src/arch/task.c 		vmm_map(child-&gt;context.cr3, mm_paddr(addr), child-&gt;image.vaddr, child-&gt;image.length);
+<a href='../S/159.html#L88'>addr</a>               88 src/arch/task.c 		child-&gt;image.ptr = (uint32_t) mm_paddr(addr);
+<a href='../S/156.html#L46'>addr</a>               46 src/bufio.c    	void* addr = (void*) kmalloc(size);
+<a href='../S/156.html#L47'>addr</a>               47 src/bufio.c    	if(!addr)
+<a href='../S/156.html#L55'>addr</a>               55 src/bufio.c    	buf-&gt;raw = addr;
+<a href='../S/101.html#L74'>addr</a>               74 src/include/grub.h 		unsigned int addr;
+<a href='../S/152.html#L36'>addr</a>               36 src/mm/heap.c  void hfree(heap_t* heap, void* addr, size_t size) {
+<a href='../S/152.html#L39'>addr</a>               39 src/mm/heap.c  			heap-&gt;free(heap, addr, size);
+<a href='../S/153.html#L42'>addr</a>               42 src/mm/kheap.c #define GETBIT(addr)	\
+<a href='../S/153.html#L43'>addr</a>               43 src/mm/kheap.c 	((uint32_t) addr / BLKSIZE)
+<a href='../S/153.html#L103'>addr</a>              103 src/mm/kheap.c void bitmap_free(heap_t* heap, void* addr, size_t size) {
+<a href='../S/153.html#L119'>addr</a>              119 src/mm/kheap.c 	int index = GETBIT(addr);
+<a href='../S/151.html#L51'>addr</a>               51 src/mm/mm.c    	void* addr = (void*) halloc(current_heap, size);
+<a href='../S/151.html#L52'>addr</a>               52 src/mm/mm.c    	if(!addr)
+<a href='../S/151.html#L56'>addr</a>               56 src/mm/mm.c    	addr = mm_vaddr(addr);
+<a href='../S/151.html#L58'>addr</a>               58 src/mm/mm.c    	block_t* block = (block_t*) addr;
+<a href='../S/150.html#L54'>addr</a>               54 src/mm/paging.c void vmm_switch(uint32_t* addr) {
+<a href='../S/150.html#L55'>addr</a>               55 src/mm/paging.c 	current_vmm = addr;
+<a href='../S/150.html#L57'>addr</a>               57 src/mm/paging.c 	write_cr3((uint32_t) mm_paddr((void*) addr));
+<a href='../S/150.html#L109'>addr</a>              109 src/mm/paging.c void vmm_umap(uint32_t* pd, void* addr, size_t len) {
+<a href='../S/150.html#L113'>addr</a>              113 src/mm/paging.c 	addr = mm_align(addr);
+<a href='../S/150.html#L118'>addr</a>              118 src/mm/paging.c 	for(uint32_t i = 0, frame = (uint32_t) addr; i &lt; pages; i++, frame += PGSIZE) {
+<a href='../S/150.html#L152'>addr</a>              152 src/mm/paging.c 	uint32_t* addr = (uint32_t*) mm_align((void*) kmalloc(PDSIZE * sizeof(uint32_t)));
+<a href='../S/150.html#L153'>addr</a>              153 src/mm/paging.c 	if(!addr)
+<a href='../S/150.html#L157'>addr</a>              157 src/mm/paging.c 	memset(addr, 0, PDSIZE * sizeof(uint32_t));
+<a href='../S/150.html#L158'>addr</a>              158 src/mm/paging.c 	return addr;
+</pre>
+</body>
+</html>

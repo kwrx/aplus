@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>usr/src/libcrt0/test/main.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/178.html'>libcrt0</a>/<a href='../files/180.html'>test</a>/main.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L6'>[^]</a><a href='#L34'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L6' title='Defined at 6.'>__test_signals__</a>
+<li><a href='#L12' title='Defined at 12.'>test_stdio</a>
+<li><a href='#L16' title='Defined at 16.'>test_args</a>
+<li><a href='#L28' title='Defined at 28.'>test_signals</a>
+<li><a href='#L34' title='Defined at 34.'>main</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 <font color='darkred'>#include</font> &lt;stdio.h&gt;
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;signal.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;assert.h&gt;
+<a name='L4'>   4 
+<a name='L5'>   5 
+<a name='L6'>   6 <b>static</b> <b>int</b> <a href='../S/79.html#L29' title='Refered from 29 in usr/src/libcrt0/test/main.c.'>__test_signals__</a>(<b>int</b> <a href='../Y/573.html' title='Multiple used in 6 places.'>sig</a>) <font color='red'>{</font>
+<a name='L7'>   7         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("received signal %d\n", <a href='../Y/573.html' title='Multiple used in 6 places.'>sig</a>);
+<a name='L8'>   8 
+<a name='L9'>   9         <b>return</b> 0;
+<a name='L10'>  10 <font color='red'>}</font>
+<a name='L11'>  11 
+<a name='L12'>  12 <b>static</b> <b>int</b> <a href='../S/79.html#L36' title='Refered from 36 in usr/src/libcrt0/test/main.c.'>test_stdio</a>() <font color='red'>{</font>
+<a name='L13'>  13         <b>return</b> <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Bla bla bla\n");
+<a name='L14'>  14 <font color='red'>}</font>
+<a name='L15'>  15 
+<a name='L16'>  16 <b>static</b> <b>int</b> <a href='../S/79.html#L37' title='Refered from 37 in usr/src/libcrt0/test/main.c.'>test_args</a>(<b>int</b> <a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a>, <b>char</b>** <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>) <font color='red'>{</font>
+<a name='L17'>  17         <b>if</b>(<a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a> == 0)
+<a name='L18'>  18                 <b>return</b> 0;
+<a name='L19'>  19 
+<a name='L20'>  20         <b>int</b> <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>;
+<a name='L21'>  21         <b>for</b>(<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> = 0; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a> &lt; <a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a>; <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>++)
+<a name='L22'>  22                 <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("argv[%d] =&gt; \"%s\"\n", <a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>[<a href='../Y/302.html' title='Multiple used in 151 places.'>i</a>]);
+<a name='L23'>  23 
+<a name='L24'>  24         <b>return</b> 1;
+<a name='L25'>  25 <font color='red'>}</font>
+<a name='L26'>  26 
+<a name='L27'>  27 
+<a name='L28'>  28 <b>static</b> <b>int</b> <a href='../S/79.html#L38' title='Refered from 38 in usr/src/libcrt0/test/main.c.'>test_signals</a>() <font color='red'>{</font>
+<a name='L29'>  29         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../Y/574.html' title='Multiple used in 10 places.'>signal</a>(<a href='../Y/42.html' title='Multiple used in 2 places.'>SIGUSR1</a>, <a href='../S/79.html#L6' title='Defined at 6 in usr/src/libcrt0/test/main.c.'>__test_signals__</a>) != SIG_ERR);
+<a name='L30'>  30         <b>return</b> <a href='../Y/496.html' title='Multiple used in 2 places.'>raise</a>(<a href='../Y/42.html' title='Multiple used in 2 places.'>SIGUSR1</a>);
+<a name='L31'>  31 <font color='red'>}</font>
+<a name='L32'>  32 
+<a name='L33'>  33 
+<a name='L34'>  34 <b>int</b> <a href='../R/310.html' title='Multiple refered from 2 places.'>main</a>(<b>int</b> <a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a>, <b>char</b>** <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>) <font color='red'>{</font>
+<a name='L35'>  35         
+<a name='L36'>  36         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/79.html#L12' title='Defined at 12 in usr/src/libcrt0/test/main.c.'>test_stdio</a>() &amp;&amp; "Test stdio failed");
+<a name='L37'>  37         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/79.html#L16' title='Defined at 16 in usr/src/libcrt0/test/main.c.'>test_args</a>(<a href='../Y/104.html' title='Multiple used in 10 places.'>argc</a>, <a href='../Y/106.html' title='Multiple used in 34 places.'>argv</a>) &amp;&amp; "Test arguments failed");
+<a name='L38'>  38         <a href='../Y/109.html' title='Multiple used in 31 places.'>assert</a>(<a href='../S/79.html#L28' title='Defined at 28 in usr/src/libcrt0/test/main.c.'>test_signals</a>() &gt;= 0 &amp;&amp; "Test signals failed");
+<a name='L39'>  39         
+<a name='L40'>  40         <a href='../Y/484.html' title='Multiple used in 12 places.'>printf</a>("Test OK\n");
+<a name='L41'>  41         <b>return</b> 0;
+<a name='L42'>  42 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L6'>[^]</a><a href='#L34'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

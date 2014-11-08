@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>key</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<pre>
+<a href='../S/43.html#L211'>key</a>               211 usr/src/libpthread/include/pthread.h int pthread_key_create(pthread_key_t *key, void (*destructor)(void *));
+<a href='../S/43.html#L212'>key</a>               212 usr/src/libpthread/include/pthread.h int pthread_key_delete(pthread_key_t key);
+<a href='../S/43.html#L213'>key</a>               213 usr/src/libpthread/include/pthread.h int pthread_setspecific(pthread_key_t key, const void *value);
+<a href='../S/43.html#L214'>key</a>               214 usr/src/libpthread/include/pthread.h void *pthread_getspecific(pthread_key_t key);
+<a href='../S/70.html#L9'>key</a>                 9 usr/src/libpthread/src/pthread_key.c PUBLIC int pthread_key_create(pthread_key_t *key, void (*destructor)(void *)) {
+<a href='../S/70.html#L10'>key</a>                10 usr/src/libpthread/src/pthread_key.c 	if(!key) {
+<a href='../S/70.html#L22'>key</a>                22 usr/src/libpthread/src/pthread_key.c 			*key = i;
+<a href='../S/70.html#L32'>key</a>                32 usr/src/libpthread/src/pthread_key.c PUBLIC int pthread_key_delete(pthread_key_t key) {
+<a href='../S/70.html#L33'>key</a>                33 usr/src/libpthread/src/pthread_key.c 	if(key &gt; PTHREAD_KEYS_MAX) {
+<a href='../S/70.html#L38'>key</a>                38 usr/src/libpthread/src/pthread_key.c 	if(__pthread_keys[key].dtor)
+<a href='../S/70.html#L39'>key</a>                39 usr/src/libpthread/src/pthread_key.c 		__pthread_keys[key].dtor(__pthread_keys[key].value);
+<a href='../S/70.html#L41'>key</a>                41 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].used = 0;
+<a href='../S/70.html#L42'>key</a>                42 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].dtor = 0;
+<a href='../S/70.html#L43'>key</a>                43 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].value = NULL;
+<a href='../S/70.html#L49'>key</a>                49 usr/src/libpthread/src/pthread_key.c PUBLIC int pthread_setspecific(pthread_key_t key, const void *value) {
+<a href='../S/70.html#L50'>key</a>                50 usr/src/libpthread/src/pthread_key.c 	if(key &gt; PTHREAD_KEYS_MAX) {
+<a href='../S/70.html#L55'>key</a>                55 usr/src/libpthread/src/pthread_key.c 	if(__pthread_keys[key].used == 0) {
+<a href='../S/70.html#L60'>key</a>                60 usr/src/libpthread/src/pthread_key.c 	__pthread_keys[key].value = (void*) value;
+<a href='../S/70.html#L65'>key</a>                65 usr/src/libpthread/src/pthread_key.c PUBLIC void *pthread_getspecific(pthread_key_t key) {
+<a href='../S/70.html#L66'>key</a>                66 usr/src/libpthread/src/pthread_key.c 	if(key &gt; PTHREAD_KEYS_MAX) {
+<a href='../S/70.html#L71'>key</a>                71 usr/src/libpthread/src/pthread_key.c 	if(__pthread_keys[key].used == 0) {
+<a href='../S/70.html#L76'>key</a>                76 usr/src/libpthread/src/pthread_key.c 	return __pthread_keys[key].value;
+</pre>
+</body>
+</html>

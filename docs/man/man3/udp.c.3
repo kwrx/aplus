@@ -1,0 +1,60 @@
+.TH "src/net/udp.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/net/udp.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/netif\&.h>\fP
+.br
+\fC#include <stddef\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <aplus/net/eth\&.h>\fP
+.br
+\fC#include <aplus/net/udp\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBudp_recv\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int udp_recv (\fBnetif_t\fP *netif, void *buf, size_tlength)"
+
+.PP
+Definizione alla linea 12 del file udp\&.c\&.
+.PP
+Referenzia length, netif_packets_add(), netif_packets_create(), e NETIF_UDP\&.
+.PP
+.nf
+12                                                        {
+13     
+14     netif_packets_add (
+15         netif_packets_create (
+16                             netif,
+17                             NETIF_UDP, 
+18                             length, 
+19                             sizeof(udp_header_t), 
+20                             buf
+21         )
+22     );
+23 
+24     return length;
+25 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

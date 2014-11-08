@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['gdt_5fe',['gdt_e',['../desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08',1,'desc.c']]],
+  ['gdt_5fentry',['gdt_entry',['../structgdt__entry.html',1,'']]],
+  ['gdt_5fp',['gdt_p',['../desc_8c.html#af67a6154264e775ccf3c976fefe43618',1,'desc.c']]],
+  ['gdt_5fset',['gdt_set',['../desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2',1,'desc.c']]],
+  ['getbit',['GETBIT',['../kheap_8c.html#a112c287ac25c656c889838c3629d822b',1,'kheap.c']]],
+  ['getcwd',['getcwd',['../getcwd_8c.html#a3284211bd28346254245c9d4fd071d7f',1,'getcwd.c']]],
+  ['getcwd_2ec',['getcwd.c',['../getcwd_8c.html',1,'']]],
+  ['getegid',['getegid',['../gid_8c.html#a3e7c694d68b4e62c1f275612d30b6d9d',1,'gid.c']]],
+  ['geteuid',['geteuid',['../uid_8c.html#a8b9a6dcf4e1d237f5607256dad93e26a',1,'uid.c']]],
+  ['getgid',['getgid',['../gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49',1,'gid.c']]],
+  ['getgroups',['getgroups',['../gid_8c.html#a5dec302aecbe8f2f9be1528cd5ffeba7',1,'gid.c']]],
+  ['getgroups_2ec',['getgroups.c',['../getgroups_8c.html',1,'']]],
+  ['getpid',['getpid',['../posix_2hooks_8h.html#a2ccdeb931b6cfcf884ca5ad73e0ba11c',1,'hooks.h']]],
+  ['getpid_2ec',['getpid.c',['../getpid_8c.html',1,'']]],
+  ['gettimeofday_2ec',['gettimeofday.c',['../gettimeofday_8c.html',1,'']]],
+  ['getuid',['getuid',['../uid_8c.html#a2f517436c22ef73337d3de4920908c6c',1,'uid.c']]],
+  ['gid',['gid',['../structinode.html#a8434fb9dd05057d00b37ed713713835d',1,'inode::gid()'],['../structtask.html#aaf3b6e15445e766a5c4823b815bca630',1,'task::gid()']]],
+  ['gid_2ec',['gid.c',['../gid_8c.html',1,'']]],
+  ['gid_5froot',['GID_ROOT',['../fs_8h.html#a2a5a81b6a48db264d1ec6048268ea154',1,'fs.h']]],
+  ['gid_5fsuperuser',['GID_SUPERUSER',['../task_8h.html#a6120fde6185466f2810fd0457009aaf0',1,'task.h']]],
+  ['granularity',['granularity',['../structgdt__entry.html#accb2a2ef318b0e4fbe2016eb8097947d',1,'gdt_entry::granularity()'],['../structvesaModeInfo__t.html#a59708e15ac9929ad9218b4ef25f4e861',1,'vesaModeInfo_t::granularity()'],['../desc_8c.html#acfea365f69e71368a2db03333d4afd6f',1,'granularity():&#160;desc.c'],['../grub_8h.html#a78687e772fb4891075ad895a984b3d50',1,'granularity():&#160;grub.h']]],
+  ['green_5fmask',['green_mask',['../structvesaModeInfo__t.html#a00414463a3873e70cc7418f109b35f06',1,'vesaModeInfo_t::green_mask()'],['../grub_8h.html#a2b05ae4ade4d301d04912921911089f1',1,'green_mask():&#160;grub.h']]],
+  ['green_5fposition',['green_position',['../structvesaModeInfo__t.html#ac5e0330302132e9423fa856f26a34286',1,'vesaModeInfo_t::green_position()'],['../grub_8h.html#a3b620a4a97d8a86e7ddbb0bcb758e33b',1,'green_position():&#160;grub.h']]],
+  ['grub_2eh',['grub.h',['../grub_8h.html',1,'']]],
+  ['gs',['gs',['../structregs.html#a0fd3992a1d7ba82600e1e03bf5466ce8',1,'regs::gs()'],['../aplus_8h.html#a85904ecbf7b717abe738645b4ff2f4ff',1,'gs():&#160;aplus.h']]]
+];

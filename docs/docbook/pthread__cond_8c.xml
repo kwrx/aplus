@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__cond_8c">
+    <title>pthread_cond.c File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sched.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+    <programlisting>#include &lt;pthread.h&gt;</programlisting>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1a77366c1bd428629dc898e188bfd182a3">EXTERN</link> <link linkend="pthread__internal_8h_1acef1d04f94658c4052cd87213538f7e4">pthread_context_t</link> * <link linkend="pthread__cond_8c_1a9ed893dd8f37e017f207c1c6ccdb41ec">__pthread_queue</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__cond_8c_1a60c9d532c0f4c450979307bab4b89738">pthread_cond_init</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond, const <link linkend="pthread_8h_1a1cb4a4bcfaf20a38280f1511610f8c80">pthread_condattr_t</link> * attr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__cond_8c_1a4ba88c1bfd075c245199278ff5310ab5">pthread_cond_destroy</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__cond_8c_1a7b5e3293c3234f268ee29acf3571f7cd">pthread_cond_timedwait</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond, <link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex, const struct timespec * abstime)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__cond_8c_1a4343bea6bb58200ecf6c779ee5c42b4c">pthread_cond_wait</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond, <link linkend="pthread_8h_1ad613e9ad2d8d9713a8440618e7a70bba">pthread_mutex_t</link> * mutex)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__cond_8c_1ab2910ce488d133a2e94a6133e2daf75c">pthread_cond_signal</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> int <link linkend="pthread__cond_8c_1a00c122e72e89b2ea7997c2bf7815ca5e">pthread_cond_broadcast</link> (
+<link linkend="pthread_8h_1a3fca5856f6b33b80711e4942c1e33a61">pthread_cond_t</link> * cond)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_cond.c</para>
+    </simplesect>
+</section>

@@ -1,0 +1,1005 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="list_8h" kind="file">
+    <compoundname>list.h</compoundname>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includedby refid="task_8c" local="no">src/arch/task.c</includedby>
+    <includedby refid="bufio_8c" local="no">src/bufio.c</includedby>
+    <includedby refid="vfs_8c" local="no">src/fs/vfs.c</includedby>
+    <includedby refid="attribute_8h" local="no">src/include/aplus/attribute.h</includedby>
+    <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
+    <includedby refid="mm_8c" local="no">src/mm/mm.c</includedby>
+    <includedby refid="paging_8c" local="no">src/mm/paging.c</includedby>
+    <includedby refid="arp_8c" local="no">src/net/arp.c</includedby>
+    <includedby refid="eth_8c" local="no">src/net/eth.c</includedby>
+    <includedby refid="ipv4_8c" local="no">src/net/ipv4.c</includedby>
+    <includedby refid="ipv6_8c" local="no">src/net/ipv6.c</includedby>
+    <includedby refid="loopback_8c" local="no">src/net/loopback/loopback.c</includedby>
+    <includedby refid="netif_8c" local="no">src/net/netif.c</includedby>
+    <includedby refid="rtl8139_8c" local="no">src/net/rtl8139/rtl8139.c</includedby>
+    <includedby refid="slirp_8c" local="no">src/net/slirp/slirp.c</includedby>
+    <includedby refid="udp_8c" local="no">src/net/udp.c</includedby>
+    <includedby refid="panic_8c" local="no">src/panic.c</includedby>
+    <includedby refid="src_2sched_8c" local="no">src/sched.c</includedby>
+    <includedby refid="spinlock_8c" local="no">src/spinlock.c</includedby>
+    <includedby refid="mount_8c" local="no">src/syscall/mount.c</includedby>
+    <includedby refid="umount_8c" local="no">src/syscall/umount.c</includedby>
+    <incdepgraph>
+      <node id="454">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="451">
+        <label>stdarg.h</label>
+      </node>
+      <node id="453">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="445" relation="include">
+        </childnode>
+        <childnode refid="444" relation="include">
+        </childnode>
+        <childnode refid="446" relation="include">
+        </childnode>
+        <childnode refid="454" relation="include">
+        </childnode>
+        <childnode refid="455" relation="include">
+        </childnode>
+      </node>
+      <node id="445">
+        <label>stdint.h</label>
+      </node>
+      <node id="458">
+        <label>setjmp.h</label>
+      </node>
+      <node id="449">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="445" relation="include">
+        </childnode>
+        <childnode refid="450" relation="include">
+        </childnode>
+        <childnode refid="453" relation="include">
+        </childnode>
+        <childnode refid="457" relation="include">
+        </childnode>
+        <childnode refid="446" relation="include">
+        </childnode>
+        <childnode refid="458" relation="include">
+        </childnode>
+      </node>
+      <node id="444">
+        <label>stddef.h</label>
+      </node>
+      <node id="443">
+        <label>src/include/aplus/list.h</label>
+        <link refid="list.h"/>
+        <childnode refid="444" relation="include">
+        </childnode>
+        <childnode refid="445" relation="include">
+        </childnode>
+        <childnode refid="446" relation="include">
+        </childnode>
+        <childnode refid="447" relation="include">
+        </childnode>
+        <childnode refid="448" relation="include">
+        </childnode>
+      </node>
+      <node id="450">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="445" relation="include">
+        </childnode>
+        <childnode refid="451" relation="include">
+        </childnode>
+        <childnode refid="452" relation="include">
+        </childnode>
+      </node>
+      <node id="446">
+        <label>sys/types.h</label>
+      </node>
+      <node id="452">
+        <label>string.h</label>
+      </node>
+      <node id="456">
+        <label>unistd.h</label>
+      </node>
+      <node id="457">
+        <label>signal.h</label>
+      </node>
+      <node id="448">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="445" relation="include">
+        </childnode>
+        <childnode refid="449" relation="include">
+        </childnode>
+      </node>
+      <node id="455">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="456" relation="include">
+        </childnode>
+        <childnode refid="446" relation="include">
+        </childnode>
+      </node>
+      <node id="447">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="471">
+        <label>src/syscall/fcntl.c</label>
+        <link refid="fcntl_8c"/>
+      </node>
+      <node id="493">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="481">
+        <label>src/syscall/lseek.c</label>
+        <link refid="lseek_8c"/>
+      </node>
+      <node id="463">
+        <label>src/include/aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="464" relation="include">
+        </childnode>
+        <childnode refid="465" relation="include">
+        </childnode>
+        <childnode refid="493" relation="include">
+        </childnode>
+        <childnode refid="494" relation="include">
+        </childnode>
+        <childnode refid="495" relation="include">
+        </childnode>
+        <childnode refid="496" relation="include">
+        </childnode>
+        <childnode refid="497" relation="include">
+        </childnode>
+        <childnode refid="498" relation="include">
+        </childnode>
+        <childnode refid="499" relation="include">
+        </childnode>
+      </node>
+      <node id="498">
+        <label>src/syscall/mount.c</label>
+        <link refid="mount_8c"/>
+      </node>
+      <node id="496">
+        <label>src/net/rtl8139/rtl8139.c</label>
+        <link refid="rtl8139_8c"/>
+      </node>
+      <node id="501">
+        <label>src/mm/paging.c</label>
+        <link refid="paging_8c"/>
+      </node>
+      <node id="469">
+        <label>src/syscall/close.c</label>
+        <link refid="close_8c"/>
+      </node>
+      <node id="478">
+        <label>src/syscall/isatty.c</label>
+        <link refid="isatty_8c"/>
+      </node>
+      <node id="509">
+        <label>src/spinlock.c</label>
+        <link refid="spinlock_8c"/>
+      </node>
+      <node id="497">
+        <label>src/net/slirp/slirp.c</label>
+        <link refid="slirp_8c"/>
+      </node>
+      <node id="495">
+        <label>src/net/netif.c</label>
+        <link refid="netif_8c"/>
+      </node>
+      <node id="477">
+        <label>src/syscall/ioctl.c</label>
+        <link refid="ioctl_8c"/>
+      </node>
+      <node id="485">
+        <label>src/syscall/sbrk.c</label>
+        <link refid="sbrk_8c"/>
+      </node>
+      <node id="465">
+        <label>src/include/aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="464" relation="include">
+        </childnode>
+        <childnode refid="466" relation="include">
+        </childnode>
+        <childnode refid="467" relation="include">
+        </childnode>
+        <childnode refid="468" relation="include">
+        </childnode>
+        <childnode refid="469" relation="include">
+        </childnode>
+        <childnode refid="470" relation="include">
+        </childnode>
+        <childnode refid="471" relation="include">
+        </childnode>
+        <childnode refid="472" relation="include">
+        </childnode>
+        <childnode refid="473" relation="include">
+        </childnode>
+        <childnode refid="474" relation="include">
+        </childnode>
+        <childnode refid="475" relation="include">
+        </childnode>
+        <childnode refid="476" relation="include">
+        </childnode>
+        <childnode refid="477" relation="include">
+        </childnode>
+        <childnode refid="478" relation="include">
+        </childnode>
+        <childnode refid="479" relation="include">
+        </childnode>
+        <childnode refid="480" relation="include">
+        </childnode>
+        <childnode refid="481" relation="include">
+        </childnode>
+        <childnode refid="482" relation="include">
+        </childnode>
+        <childnode refid="483" relation="include">
+        </childnode>
+        <childnode refid="484" relation="include">
+        </childnode>
+        <childnode refid="485" relation="include">
+        </childnode>
+        <childnode refid="486" relation="include">
+        </childnode>
+        <childnode refid="487" relation="include">
+        </childnode>
+        <childnode refid="488" relation="include">
+        </childnode>
+        <childnode refid="489" relation="include">
+        </childnode>
+        <childnode refid="490" relation="include">
+        </childnode>
+        <childnode refid="491" relation="include">
+        </childnode>
+        <childnode refid="492" relation="include">
+        </childnode>
+      </node>
+      <node id="474">
+        <label>src/syscall/getgroups.c</label>
+        <link refid="getgroups_8c"/>
+      </node>
+      <node id="491">
+        <label>src/syscall/write.c</label>
+        <link refid="write_8c"/>
+      </node>
+      <node id="494">
+        <label>src/net/loopback/loopback.c</label>
+        <link refid="loopback_8c"/>
+      </node>
+      <node id="460">
+        <label>src/arch/task.c</label>
+        <link refid="task_8c"/>
+      </node>
+      <node id="459">
+        <label>src/include/aplus/list.h</label>
+        <link refid="list.h"/>
+        <childnode refid="460" relation="include">
+        </childnode>
+        <childnode refid="461" relation="include">
+        </childnode>
+        <childnode refid="462" relation="include">
+        </childnode>
+        <childnode refid="463" relation="include">
+        </childnode>
+        <childnode refid="493" relation="include">
+        </childnode>
+        <childnode refid="500" relation="include">
+        </childnode>
+        <childnode refid="501" relation="include">
+        </childnode>
+        <childnode refid="502" relation="include">
+        </childnode>
+        <childnode refid="503" relation="include">
+        </childnode>
+        <childnode refid="504" relation="include">
+        </childnode>
+        <childnode refid="505" relation="include">
+        </childnode>
+        <childnode refid="494" relation="include">
+        </childnode>
+        <childnode refid="495" relation="include">
+        </childnode>
+        <childnode refid="496" relation="include">
+        </childnode>
+        <childnode refid="497" relation="include">
+        </childnode>
+        <childnode refid="506" relation="include">
+        </childnode>
+        <childnode refid="507" relation="include">
+        </childnode>
+        <childnode refid="508" relation="include">
+        </childnode>
+        <childnode refid="509" relation="include">
+        </childnode>
+        <childnode refid="498" relation="include">
+        </childnode>
+        <childnode refid="499" relation="include">
+        </childnode>
+      </node>
+      <node id="492">
+        <label>src/syscall/yield.c</label>
+        <link refid="yield_8c"/>
+      </node>
+      <node id="504">
+        <label>src/net/ipv4.c</label>
+        <link refid="ipv4_8c"/>
+      </node>
+      <node id="507">
+        <label>src/panic.c</label>
+        <link refid="panic_8c"/>
+      </node>
+      <node id="483">
+        <label>src/syscall/read.c</label>
+        <link refid="read_8c"/>
+      </node>
+      <node id="468">
+        <label>src/syscall/clone.c</label>
+        <link refid="clone_8c"/>
+      </node>
+      <node id="499">
+        <label>src/syscall/umount.c</label>
+        <link refid="umount_8c"/>
+      </node>
+      <node id="462">
+        <label>src/fs/vfs.c</label>
+        <link refid="vfs_8c"/>
+      </node>
+      <node id="475">
+        <label>src/syscall/getpid.c</label>
+        <link refid="getpid_8c"/>
+      </node>
+      <node id="466">
+        <label>src/syscall/_exit.c</label>
+        <link refid="__exit_8c"/>
+      </node>
+      <node id="482">
+        <label>src/syscall/open.c</label>
+        <link refid="open_8c"/>
+      </node>
+      <node id="461">
+        <label>src/bufio.c</label>
+        <link refid="bufio_8c"/>
+      </node>
+      <node id="472">
+        <label>src/syscall/fork.c</label>
+        <link refid="fork_8c"/>
+      </node>
+      <node id="486">
+        <label>src/syscall/stat.c</label>
+        <link refid="stat_8c"/>
+      </node>
+      <node id="480">
+        <label>src/syscall/link.c</label>
+        <link refid="link_8c"/>
+      </node>
+      <node id="487">
+        <label>src/syscall/test.c</label>
+        <link refid="test_8c"/>
+      </node>
+      <node id="508">
+        <label>src/sched.c</label>
+        <link refid="src_2sched_8c"/>
+      </node>
+      <node id="476">
+        <label>src/syscall/gettimeofday.c</label>
+        <link refid="gettimeofday_8c"/>
+      </node>
+      <node id="503">
+        <label>src/net/eth.c</label>
+        <link refid="eth_8c"/>
+      </node>
+      <node id="470">
+        <label>src/syscall/execve.c</label>
+        <link refid="execve_8c"/>
+      </node>
+      <node id="467">
+        <label>src/syscall/chown.c</label>
+        <link refid="chown_8c"/>
+      </node>
+      <node id="484">
+        <label>src/syscall/readdir.c</label>
+        <link refid="src_2syscall_2readdir_8c"/>
+      </node>
+      <node id="488">
+        <label>src/syscall/times.c</label>
+        <link refid="times_8c"/>
+      </node>
+      <node id="506">
+        <label>src/net/udp.c</label>
+        <link refid="udp_8c"/>
+      </node>
+      <node id="464">
+        <label>src/arch/syscall.c</label>
+        <link refid="syscall_8c"/>
+      </node>
+      <node id="500">
+        <label>src/mm/mm.c</label>
+        <link refid="mm_8c"/>
+      </node>
+      <node id="490">
+        <label>src/syscall/wait.c</label>
+        <link refid="wait_8c"/>
+      </node>
+      <node id="505">
+        <label>src/net/ipv6.c</label>
+        <link refid="ipv6_8c"/>
+      </node>
+      <node id="502">
+        <label>src/net/arp.c</label>
+        <link refid="arp_8c"/>
+      </node>
+      <node id="479">
+        <label>src/syscall/kill.c</label>
+        <link refid="kill_8c"/>
+      </node>
+      <node id="489">
+        <label>src/syscall/unlink.c</label>
+        <link refid="unlink_8c"/>
+      </node>
+      <node id="473">
+        <label>src/syscall/fstat.c</label>
+        <link refid="fstat_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structlist__body" prot="public">list_body</innerclass>
+    <innerclass refid="structlist" prot="public">list</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="list_8h_1a22853dfff2d59e6a8ea2d77eeed5f293" prot="public" static="no">
+        <name>list_safe_begin</name>
+        <param><defname>list</defname></param>
+        <initializer><ref refid="spinlock_8c_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;<ref refid="structlist" kindref="compound">list</ref>-&gt;<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="169" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="169" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="list_8h_1a55d0a2f3e6dcbf7213b13e9e0dd9d981" prot="public" static="no">
+        <name>list_safe_end</name>
+        <param><defname>list</defname></param>
+        <initializer><ref refid="spinlock_8c_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;<ref refid="structlist" kindref="compound">list</ref>-&gt;<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="172" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="172" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="list_8h_1a1f44c976d2c698407a17fef984a5b232" prot="public" static="no">
+        <name>list_foreach</name>
+        <param><defname>value</defname></param>
+        <param><defname>list</defname></param>
+        <initializer>for(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref> <ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref> = <ref refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" kindref="member">list_head</ref>(<ref refid="structlist" kindref="compound">list</ref>); 					\
+		<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>; 												\
+		<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref> = <ref refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" kindref="member">list_next</ref>(<ref refid="structlist" kindref="compound">list</ref>, <ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>)						\
+		)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="175" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="175" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="list_8h_1a6e172d1395eb664ce14adbb6ab82abf3" prot="public" static="no">
+        <name>list_foreach_inverse</name>
+        <param><defname>value</defname></param>
+        <param><defname>list</defname></param>
+        <initializer>for(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref> <ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref> = <ref refid="list_8h_1aea7ba4088b37f0bd303771d71a066a90" kindref="member">list_tail</ref>(<ref refid="structlist" kindref="compound">list</ref>); 					\
+		<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>; 												\
+		<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref> = <ref refid="list_8h_1ae9b833d2dc140368303ecffecce7fe3f" kindref="member">list_prev</ref>(<ref refid="structlist" kindref="compound">list</ref>, <ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>)						\
+		)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="181" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="181" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="list_8h_1aa288c0785df071ed8643763202928c82" prot="public" static="no">
+        <name>list_init</name>
+        <param><defname>list</defname></param>
+        <initializer><ref refid="structlist" kindref="compound">list</ref> = (<ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref>*) <ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(sizeof(<ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref>));				\
+	<ref refid="structlist" kindref="compound">list</ref>-&gt;body = 0;											\
+	<ref refid="structlist" kindref="compound">list</ref>-&gt;<ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref> = 0;											\
+	<ref refid="structlist" kindref="compound">list</ref>-&gt;<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref> = 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="187" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="187" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" prot="public" static="no">
+        <name>list_destroy</name>
+        <param><defname>list</defname></param>
+        <initializer><ref refid="list_8h_1ae055500d6fc23c82c45b2e5926df3b40" kindref="member">list_clear</ref>(<ref refid="structlist" kindref="compound">list</ref>);										\
+	<ref refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kindref="member">kfree</ref>(<ref refid="structlist" kindref="compound">list</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="193" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="193" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="list_8h_1a83bc1af7566502e08756b8d8c425972e" prot="public" static="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>typedef uint32_t listval_t</definition>
+        <argsstring></argsstring>
+        <name>listval_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="33" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="list_8h_1a26009b16c17e2336df1025f49f3ebd7e" prot="public" static="no">
+        <type>struct <ref refid="structlist__body" kindref="compound">list_body</ref></type>
+        <definition>typedef struct list_body  list_body_t</definition>
+        <argsstring></argsstring>
+        <name>list_body_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="39" column="1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="list_8h_1af629e6a6713d7de11eab50cbe6449b06" prot="public" static="no">
+        <type>struct <ref refid="structlist" kindref="compound">list</ref></type>
+        <definition>typedef struct list  list_t</definition>
+        <argsstring></argsstring>
+        <name>list_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="46" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int list_empty</definition>
+        <argsstring>(list_t *list)</argsstring>
+        <name>list_empty</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="49" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="49" bodyend="54"/>
+        <references refid="structlist_1ae581be90bd8eb7051528b61ad216de88" compoundref="list_8h" startline="45">list::size</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int list_add</definition>
+        <argsstring>(list_t *list, listval_t v)</argsstring>
+        <name>list_add</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <param>
+          <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="56" bodyend="71"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" compoundref="list_8h" startline="44">list::lock</references>
+        <references refid="structlist__body_1ae0f31e0790456c070895880578d171ca" compoundref="list_8h" startline="38">list_body::next</references>
+        <references refid="structlist_1ae581be90bd8eb7051528b61ad216de88" compoundref="list_8h" startline="45">list::size</references>
+        <references refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" compoundref="spinlock_8c" startline="27" endline="34">spinlock_lock</references>
+        <references refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" compoundref="spinlock_8c" startline="37" endline="39">spinlock_unlock</references>
+        <references refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" compoundref="list_8h" startline="36">list_body::value</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1a4470c240b622941415ae5250067699b5" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int list_remove</definition>
+        <argsstring>(list_t *list, listval_t v)</argsstring>
+        <name>list_remove</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <param>
+          <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="73" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="73" bodyend="97"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" compoundref="list_8h" startline="44">list::lock</references>
+        <references refid="structlist__body_1ae0f31e0790456c070895880578d171ca" compoundref="list_8h" startline="38">list_body::next</references>
+        <references refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" compoundref="spinlock_8c" startline="27" endline="34">spinlock_lock</references>
+        <references refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" compoundref="spinlock_8c" startline="37" endline="39">spinlock_unlock</references>
+        <references refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" compoundref="list_8h" startline="36">list_body::value</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1ae055500d6fc23c82c45b2e5926df3b40" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int list_clear</definition>
+        <argsstring>(list_t *list)</argsstring>
+        <name>list_clear</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="99" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="99" bodyend="116"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" compoundref="list_8h" startline="44">list::lock</references>
+        <references refid="structlist__body_1ae0f31e0790456c070895880578d171ca" compoundref="list_8h" startline="38">list_body::next</references>
+        <references refid="structlist_1ae581be90bd8eb7051528b61ad216de88" compoundref="list_8h" startline="45">list::size</references>
+        <references refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" compoundref="spinlock_8c" startline="27" endline="34">spinlock_lock</references>
+        <references refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" compoundref="spinlock_8c" startline="37" endline="39">spinlock_unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1ad29245eda34d4cdac400323a1bd63cdd" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void list_clone</definition>
+        <argsstring>(list_t *dest, list_t *src)</argsstring>
+        <name>list_clone</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>dest</declname>
+        </param>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>src</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="119" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="119" bodyend="127"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" compoundref="list_8h" startline="44">list::lock</references>
+        <references refid="structlist__body_1ae0f31e0790456c070895880578d171ca" compoundref="list_8h" startline="38">list_body::next</references>
+        <references refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" compoundref="spinlock_8c" startline="27" endline="34">spinlock_lock</references>
+        <references refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" compoundref="spinlock_8c" startline="37" endline="39">spinlock_unlock</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1ae9b833d2dc140368303ecffecce7fe3f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+        <definition>static listval_t list_prev</definition>
+        <argsstring>(list_t *list, listval_t val)</argsstring>
+        <name>list_prev</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <param>
+          <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="129" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="129" bodyend="137"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="structlist__body_1ae0f31e0790456c070895880578d171ca" compoundref="list_8h" startline="38">list_body::next</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+        <definition>static listval_t list_next</definition>
+        <argsstring>(list_t *list, listval_t val)</argsstring>
+        <name>list_next</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <param>
+          <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+          <declname>val</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="139" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="139" bodyend="147"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="structlist__body_1ae0f31e0790456c070895880578d171ca" compoundref="list_8h" startline="38">list_body::next</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1aea7ba4088b37f0bd303771d71a066a90" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+        <definition>static listval_t list_tail</definition>
+        <argsstring>(list_t *list)</argsstring>
+        <name>list_tail</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="149" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="149" bodyend="154"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" compoundref="list_8h" startline="36">list_body::value</references>
+      </memberdef>
+      <memberdef kind="function" id="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref></type>
+        <definition>static listval_t list_head</definition>
+        <argsstring>(list_t *list)</argsstring>
+        <name>list_head</name>
+        <param>
+          <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+          <declname>list</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/list.h" line="156" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/list.h" bodystart="156" bodyend="166"/>
+        <references refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" compoundref="list_8h" startline="42">list::body</references>
+        <references refid="structlist__body_1ae0f31e0790456c070895880578d171ca" compoundref="list_8h" startline="38">list_body::next</references>
+        <references refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" compoundref="list_8h" startline="36">list_body::value</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>list.h</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Author:</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Antonio<sp/>Natale<sp/>&lt;inferdevil97@gmail.com&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>Copyright<sp/>(c)<sp/>2014<sp/>WareX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>free<sp/>software:<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>the<sp/>Free<sp/>Software<sp/>Foundation,<sp/>either<sp/>version<sp/>3<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>You<sp/>should<sp/>have<sp/>received<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/>along<sp/>with<sp/>this<sp/>program.<sp/><sp/>If<sp/>not,<sp/>see<sp/>&lt;http://www.gnu.org/licenses/&gt;.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_LIST_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_LIST_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35" refid="structlist__body" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structlist__body" kindref="compound">list_body</ref><sp/>{</highlight></codeline>
+<codeline lineno="36" refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/><ref refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38" refid="structlist__body_1ae0f31e0790456c070895880578d171ca" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structlist__body" kindref="compound">list_body</ref>*<sp/><ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal">}<sp/><ref refid="list_8h_1a26009b16c17e2336df1025f49f3ebd7e" kindref="member">list_body_t</ref>;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="structlist" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structlist" kindref="compound">list</ref><sp/>{</highlight></codeline>
+<codeline lineno="42" refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/><ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="44" refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref><sp/><ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>;</highlight></codeline>
+<codeline lineno="45" refid="structlist_1ae581be90bd8eb7051528b61ad216de88" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="structlist_1ae581be90bd8eb7051528b61ad216de88" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal">}<sp/><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref>;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(list)</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>list-&gt;<ref refid="structlist_1ae581be90bd8eb7051528b61ad216de88" kindref="member">size</ref><sp/>==<sp/>0;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;<sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>empty<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>,<sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/>v)<sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>val<sp/>=<sp/>(<ref refid="structlist__body" kindref="compound">list_body_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structlist__body" kindref="compound">list_body_t</ref>));</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!val)</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;list-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>val-&gt;<ref refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" kindref="member">value</ref><sp/>=<sp/>v;</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>val-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref><sp/>=<sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref><sp/>=<sp/>val;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>list-&gt;<ref refid="structlist_1ae581be90bd8eb7051528b61ad216de88" kindref="member">size</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;list-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73" refid="list_8h_1a4470c240b622941415ae5250067699b5" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a4470c240b622941415ae5250067699b5" kindref="member">list_remove</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>,<sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/>v)<sp/>{</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;list-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>body<sp/>=<sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>prev<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(body)<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(body-&gt;<ref refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" kindref="member">value</ref><sp/>==<sp/>v)<sp/>{</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(prev)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>prev-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref><sp/>=<sp/>body-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref><sp/>=<sp/>body-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>body-&gt;<ref refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" kindref="member">value</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(body);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>prev<sp/>=<sp/>body;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>body<sp/>=<sp/>body-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;list-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99" refid="list_8h_1ae055500d6fc23c82c45b2e5926df3b40" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="list_8h_1ae055500d6fc23c82c45b2e5926df3b40" kindref="member">list_clear</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;list-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>body<sp/>=<sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>tmp<sp/>=<sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(body)<sp/>{</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>tmp<sp/>=<sp/>body-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(body);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>body<sp/>=<sp/>tmp;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>list-&gt;<ref refid="structlist_1ae581be90bd8eb7051528b61ad216de88" kindref="member">size</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;list-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119" refid="list_8h_1ad29245eda34d4cdac400323a1bd63cdd" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="list_8h_1ad29245eda34d4cdac400323a1bd63cdd" kindref="member">list_clone</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4" kindref="member">dest</ref>,<sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/>src)<sp/>{</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1ab01e311f21f78fc3c2bd0bdf74ef85c4" kindref="member">spinlock_lock</ref>(&amp;src-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>i<sp/>=<sp/>src-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;<sp/>i;<sp/>i<sp/>=<sp/>i-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(dest,<sp/>i-&gt;value);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a4ca6e661fa1b704d39d834ac7341b360" kindref="member">spinlock_unlock</ref>(&amp;src-&gt;<ref refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kindref="member">lock</ref>);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129" refid="list_8h_1ae9b833d2dc140368303ecffecce7fe3f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/><ref refid="list_8h_1ae9b833d2dc140368303ecffecce7fe3f" kindref="member">list_prev</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>,<sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/>val)<sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>i<sp/>=<sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;<sp/>i;<sp/>i<sp/>=<sp/>i-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(i-&gt;value<sp/>==<sp/>val)</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(i-&gt;next)</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>i-&gt;next-&gt;value;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>NULL;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139" refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/><ref refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" kindref="member">list_next</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>,<sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/>val)<sp/>{</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(<ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>i<sp/>=<sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;<sp/>i;<sp/>i<sp/>=<sp/>i-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(i-&gt;next)</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(i-&gt;next-&gt;value<sp/>==<sp/>val)</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>i-&gt;value;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>NULL;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149" refid="list_8h_1aea7ba4088b37f0bd303771d71a066a90" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/><ref refid="list_8h_1aea7ba4088b37f0bd303771d71a066a90" kindref="member">list_tail</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>)</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>-&gt;<ref refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>NULL;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156" refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref><sp/><ref refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" kindref="member">list_head</ref>(<ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>)</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>NULL;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist__body" kindref="compound">list_body_t</ref>*<sp/>tmp<sp/>=<sp/>list-&gt;<ref refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kindref="member">body</ref>;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(tmp-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>)</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>tmp<sp/>=<sp/>tmp-&gt;<ref refid="structlist__body_1ae0f31e0790456c070895880578d171ca" kindref="member">next</ref>;</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>tmp-&gt;<ref refid="structlist__body_1ae3194d24911b82410a61d50f5e6f588d" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169" refid="list_8h_1a22853dfff2d59e6a8ea2d77eeed5f293" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>list_safe_begin(list)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="170"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>spinlock_lock(&amp;list-&gt;lock)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="172" refid="list_8h_1a55d0a2f3e6dcbf7213b13e9e0dd9d981" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>list_safe_end(list)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="173"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>spinlock_unlock(&amp;list-&gt;lock)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="175" refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>list_foreach(value,<sp/>list)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="176"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>for(listval_t<sp/>value<sp/>=<sp/>list_head(list);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="177"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>value;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="178"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>value<sp/>=<sp/>list_next(list,<sp/>value)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="179"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="181" refid="list_8h_1a6e172d1395eb664ce14adbb6ab82abf3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>list_foreach_inverse(value,<sp/>list)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="182"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>for(listval_t<sp/>value<sp/>=<sp/>list_tail(list);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="183"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>value;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="184"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>value<sp/>=<sp/>list_prev(list,<sp/>value)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="185"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight></codeline>
+<codeline lineno="187" refid="list_8h_1aa288c0785df071ed8643763202928c82" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>list_init(list)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="188"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>list<sp/>=<sp/>(list_t*)<sp/>kmalloc(sizeof(list_t));<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="189"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>list-&gt;body<sp/>=<sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="190"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>list-&gt;size<sp/>=<sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="191"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>list-&gt;lock<sp/>=<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="193" refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>list_destroy(list)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="194"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>list_clear(list);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="195"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>kfree(list)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"></highlight></codeline>
+<codeline lineno="198"><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/list.h"/>
+  </compounddef>
+</doxygen>

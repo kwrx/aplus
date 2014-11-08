@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structpthread__barrierattr" kind="struct" prot="public">
+    <compoundname>pthread_barrierattr</compoundname>
+    <includes refid="pthread_8h" local="no">pthread.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structpthread__barrierattr_1a50ef34671e6743cc59c895dd878c4a86" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int pthread_barrierattr::pshared</definition>
+        <argsstring></argsstring>
+        <name>pshared</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="117" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="74">
+        <label>pthread_barrierattr</label>
+        <link refid="structpthread__barrierattr"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="116" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="116" bodyend="118"/>
+    <listofallmembers>
+      <member refid="structpthread__barrierattr_1a50ef34671e6743cc59c895dd878c4a86" prot="public" virt="non-virtual"><scope>pthread_barrierattr</scope><name>pshared</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

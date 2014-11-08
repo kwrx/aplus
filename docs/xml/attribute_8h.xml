@@ -1,0 +1,534 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="attribute_8h" kind="file">
+    <compoundname>attribute.h</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="list_8h" local="no">aplus/list.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includedby refid="syscall_8c" local="no">src/arch/syscall.c</includedby>
+    <includedby refid="syscall_8h" local="no">src/include/aplus/syscall.h</includedby>
+    <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
+    <includedby refid="loopback_8c" local="no">src/net/loopback/loopback.c</includedby>
+    <includedby refid="netif_8c" local="no">src/net/netif.c</includedby>
+    <includedby refid="rtl8139_8c" local="no">src/net/rtl8139/rtl8139.c</includedby>
+    <includedby refid="slirp_8c" local="no">src/net/slirp/slirp.c</includedby>
+    <includedby refid="mount_8c" local="no">src/syscall/mount.c</includedby>
+    <includedby refid="umount_8c" local="no">src/syscall/umount.c</includedby>
+    <incdepgraph>
+      <node id="308">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="299">
+        <label>stdarg.h</label>
+      </node>
+      <node id="296">
+        <label>src/include/aplus/attribute.h</label>
+        <link refid="attribute.h"/>
+        <childnode refid="297" relation="include">
+        </childnode>
+        <childnode refid="301" relation="include">
+        </childnode>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="300" relation="include">
+        </childnode>
+        <childnode refid="303" relation="include">
+        </childnode>
+      </node>
+      <node id="307">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="302" relation="include">
+        </childnode>
+        <childnode refid="303" relation="include">
+        </childnode>
+        <childnode refid="308" relation="include">
+        </childnode>
+        <childnode refid="309" relation="include">
+        </childnode>
+      </node>
+      <node id="298">
+        <label>stdint.h</label>
+      </node>
+      <node id="312">
+        <label>setjmp.h</label>
+      </node>
+      <node id="306">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="297" relation="include">
+        </childnode>
+        <childnode refid="307" relation="include">
+        </childnode>
+        <childnode refid="311" relation="include">
+        </childnode>
+        <childnode refid="303" relation="include">
+        </childnode>
+        <childnode refid="312" relation="include">
+        </childnode>
+      </node>
+      <node id="302">
+        <label>stddef.h</label>
+      </node>
+      <node id="301">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="302" relation="include">
+        </childnode>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="303" relation="include">
+        </childnode>
+        <childnode refid="304" relation="include">
+        </childnode>
+        <childnode refid="305" relation="include">
+        </childnode>
+      </node>
+      <node id="297">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="299" relation="include">
+        </childnode>
+        <childnode refid="300" relation="include">
+        </childnode>
+      </node>
+      <node id="303">
+        <label>sys/types.h</label>
+      </node>
+      <node id="300">
+        <label>string.h</label>
+      </node>
+      <node id="310">
+        <label>unistd.h</label>
+      </node>
+      <node id="311">
+        <label>signal.h</label>
+      </node>
+      <node id="305">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="306" relation="include">
+        </childnode>
+      </node>
+      <node id="309">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="310" relation="include">
+        </childnode>
+        <childnode refid="303" relation="include">
+        </childnode>
+      </node>
+      <node id="304">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="321">
+        <label>src/syscall/fcntl.c</label>
+        <link refid="fcntl_8c"/>
+      </node>
+      <node id="343">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="331">
+        <label>src/syscall/lseek.c</label>
+        <link refid="lseek_8c"/>
+      </node>
+      <node id="313">
+        <label>src/include/aplus/attribute.h</label>
+        <link refid="attribute.h"/>
+        <childnode refid="314" relation="include">
+        </childnode>
+        <childnode refid="315" relation="include">
+        </childnode>
+        <childnode refid="343" relation="include">
+        </childnode>
+        <childnode refid="344" relation="include">
+        </childnode>
+        <childnode refid="345" relation="include">
+        </childnode>
+        <childnode refid="346" relation="include">
+        </childnode>
+        <childnode refid="347" relation="include">
+        </childnode>
+        <childnode refid="348" relation="include">
+        </childnode>
+        <childnode refid="349" relation="include">
+        </childnode>
+      </node>
+      <node id="348">
+        <label>src/syscall/mount.c</label>
+        <link refid="mount_8c"/>
+      </node>
+      <node id="346">
+        <label>src/net/rtl8139/rtl8139.c</label>
+        <link refid="rtl8139_8c"/>
+      </node>
+      <node id="319">
+        <label>src/syscall/close.c</label>
+        <link refid="close_8c"/>
+      </node>
+      <node id="328">
+        <label>src/syscall/isatty.c</label>
+        <link refid="isatty_8c"/>
+      </node>
+      <node id="347">
+        <label>src/net/slirp/slirp.c</label>
+        <link refid="slirp_8c"/>
+      </node>
+      <node id="345">
+        <label>src/net/netif.c</label>
+        <link refid="netif_8c"/>
+      </node>
+      <node id="327">
+        <label>src/syscall/ioctl.c</label>
+        <link refid="ioctl_8c"/>
+      </node>
+      <node id="335">
+        <label>src/syscall/sbrk.c</label>
+        <link refid="sbrk_8c"/>
+      </node>
+      <node id="315">
+        <label>src/include/aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="314" relation="include">
+        </childnode>
+        <childnode refid="316" relation="include">
+        </childnode>
+        <childnode refid="317" relation="include">
+        </childnode>
+        <childnode refid="318" relation="include">
+        </childnode>
+        <childnode refid="319" relation="include">
+        </childnode>
+        <childnode refid="320" relation="include">
+        </childnode>
+        <childnode refid="321" relation="include">
+        </childnode>
+        <childnode refid="322" relation="include">
+        </childnode>
+        <childnode refid="323" relation="include">
+        </childnode>
+        <childnode refid="324" relation="include">
+        </childnode>
+        <childnode refid="325" relation="include">
+        </childnode>
+        <childnode refid="326" relation="include">
+        </childnode>
+        <childnode refid="327" relation="include">
+        </childnode>
+        <childnode refid="328" relation="include">
+        </childnode>
+        <childnode refid="329" relation="include">
+        </childnode>
+        <childnode refid="330" relation="include">
+        </childnode>
+        <childnode refid="331" relation="include">
+        </childnode>
+        <childnode refid="332" relation="include">
+        </childnode>
+        <childnode refid="333" relation="include">
+        </childnode>
+        <childnode refid="334" relation="include">
+        </childnode>
+        <childnode refid="335" relation="include">
+        </childnode>
+        <childnode refid="336" relation="include">
+        </childnode>
+        <childnode refid="337" relation="include">
+        </childnode>
+        <childnode refid="338" relation="include">
+        </childnode>
+        <childnode refid="339" relation="include">
+        </childnode>
+        <childnode refid="340" relation="include">
+        </childnode>
+        <childnode refid="341" relation="include">
+        </childnode>
+        <childnode refid="342" relation="include">
+        </childnode>
+      </node>
+      <node id="324">
+        <label>src/syscall/getgroups.c</label>
+        <link refid="getgroups_8c"/>
+      </node>
+      <node id="341">
+        <label>src/syscall/write.c</label>
+        <link refid="write_8c"/>
+      </node>
+      <node id="344">
+        <label>src/net/loopback/loopback.c</label>
+        <link refid="loopback_8c"/>
+      </node>
+      <node id="342">
+        <label>src/syscall/yield.c</label>
+        <link refid="yield_8c"/>
+      </node>
+      <node id="333">
+        <label>src/syscall/read.c</label>
+        <link refid="read_8c"/>
+      </node>
+      <node id="318">
+        <label>src/syscall/clone.c</label>
+        <link refid="clone_8c"/>
+      </node>
+      <node id="349">
+        <label>src/syscall/umount.c</label>
+        <link refid="umount_8c"/>
+      </node>
+      <node id="325">
+        <label>src/syscall/getpid.c</label>
+        <link refid="getpid_8c"/>
+      </node>
+      <node id="316">
+        <label>src/syscall/_exit.c</label>
+        <link refid="__exit_8c"/>
+      </node>
+      <node id="332">
+        <label>src/syscall/open.c</label>
+        <link refid="open_8c"/>
+      </node>
+      <node id="322">
+        <label>src/syscall/fork.c</label>
+        <link refid="fork_8c"/>
+      </node>
+      <node id="336">
+        <label>src/syscall/stat.c</label>
+        <link refid="stat_8c"/>
+      </node>
+      <node id="330">
+        <label>src/syscall/link.c</label>
+        <link refid="link_8c"/>
+      </node>
+      <node id="337">
+        <label>src/syscall/test.c</label>
+        <link refid="test_8c"/>
+      </node>
+      <node id="326">
+        <label>src/syscall/gettimeofday.c</label>
+        <link refid="gettimeofday_8c"/>
+      </node>
+      <node id="320">
+        <label>src/syscall/execve.c</label>
+        <link refid="execve_8c"/>
+      </node>
+      <node id="317">
+        <label>src/syscall/chown.c</label>
+        <link refid="chown_8c"/>
+      </node>
+      <node id="334">
+        <label>src/syscall/readdir.c</label>
+        <link refid="src_2syscall_2readdir_8c"/>
+      </node>
+      <node id="338">
+        <label>src/syscall/times.c</label>
+        <link refid="times_8c"/>
+      </node>
+      <node id="314">
+        <label>src/arch/syscall.c</label>
+        <link refid="syscall_8c"/>
+      </node>
+      <node id="340">
+        <label>src/syscall/wait.c</label>
+        <link refid="wait_8c"/>
+      </node>
+      <node id="329">
+        <label>src/syscall/kill.c</label>
+        <link refid="kill_8c"/>
+      </node>
+      <node id="339">
+        <label>src/syscall/unlink.c</label>
+        <link refid="unlink_8c"/>
+      </node>
+      <node id="323">
+        <label>src/syscall/fstat.c</label>
+        <link refid="fstat_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structattribute" prot="public">attribute</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="attribute_8h_1affb81d409ffa74c8bfb080cb1c3047db" prot="public" static="no">
+        <name>__UNION2</name>
+        <param><defname>x</defname></param>
+        <param><defname>y</defname></param>
+        <param><defname>z</defname></param>
+        <initializer>x ## y ## z</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="12" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="attribute_8h_1afc6a4ef8385e48238a0037eb5fedf21a" prot="public" static="no">
+        <name>__UNION</name>
+        <param><defname>x</defname></param>
+        <param><defname>y</defname></param>
+        <param><defname>z</defname></param>
+        <initializer><ref refid="attribute_8h_1affb81d409ffa74c8bfb080cb1c3047db" kindref="member">__UNION2</ref>(x, y, z)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="15" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="attribute_8h_1a672da6e381bbc58f66bf3f332d6fbb97" prot="public" static="no">
+        <name>ATTRIBUTE</name>
+        <param><defname>name</defname></param>
+        <param><defname>value</defname></param>
+        <initializer>attribute_t <ref refid="attribute_8h_1afc6a4ef8385e48238a0037eb5fedf21a" kindref="member">__UNION</ref>(attribute_, <ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>, __COUNTER__) <ref refid="chkfail_8c_1a1b6824bfd4ec0404a4f875ed8db0274e" kindref="member">__attribute__</ref>((section(&quot;.attribute&quot;))) = {	\
+		name, (<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>) &amp;<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>																		\
+	}																								\</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="18" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char name[0x80]</definition>
+        <argsstring>[0x80]</argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="82" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="83" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="attribute_8h_1a4b7f6d2e9be3c83ead055e037a05f9d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structattribute" kindref="compound">attribute</ref></type>
+        <definition>struct attribute __attribute__</definition>
+        <argsstring>((aligned(0x100))) attribute_t</argsstring>
+        <name>__attribute__</name>
+        <param>
+          <type>(aligned(0x100))</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="81" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
+        <definition>static list_t* attribute</definition>
+        <argsstring>(const char *name)</argsstring>
+        <name>attribute</name>
+        <param>
+          <type>const char *</type>
+          <declname>name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="31" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="31" bodyend="51"/>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_ATTRIBUTE_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_ATTRIBUTE_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="attribute_8h_1affb81d409ffa74c8bfb080cb1c3047db" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UNION2(x,<sp/>y,<sp/>z)<sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="13"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>x<sp/>##<sp/>y<sp/>##<sp/>z</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="attribute_8h_1afc6a4ef8385e48238a0037eb5fedf21a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UNION(x,<sp/>y,<sp/>z)<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="16"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>__UNION2(x,<sp/>y,<sp/>z)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="attribute_8h_1a672da6e381bbc58f66bf3f332d6fbb97" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATTRIBUTE(name,<sp/>value)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="19"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>attribute_t<sp/>__UNION(attribute_,<sp/>value,<sp/>__COUNTER__)<sp/>__attribute__((section(&quot;.attribute&quot;)))<sp/>=<sp/>{<sp/><sp/>\</highlight></codeline>
+<codeline lineno="20"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>name,<sp/>(uint32_t)<sp/>&amp;value<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="21"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="22"><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="structattribute" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structattribute" kindref="compound">attribute</ref><sp/>{</highlight></codeline>
+<codeline lineno="26" refid="structattribute_1ab0c3a4d25c5c24cd1ea3af2a6631267d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structattribute_1ab0c3a4d25c5c24cd1ea3af2a6631267d" kindref="member">name</ref>[0x80];</highlight></codeline>
+<codeline lineno="27" refid="structattribute_1a868a57c7ba49cfa75755e4061662abe3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structattribute_1a868a57c7ba49cfa75755e4061662abe3" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal">}<sp/><ref refid="attribute_8h_1a4b7f6d2e9be3c83ead055e037a05f9d0" kindref="member">__attribute__</ref>((aligned(0x100)))<sp/>attribute_t;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e" refkind="member"><highlight class="normal">static<sp/>inline<sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structattribute" kindref="compound">attribute</ref>(const<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>attribute_start;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>attribute_end;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>attr_s<sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>&amp;attribute_start;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>attr_e<sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>&amp;attribute_end;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/>tmp;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(tmp);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(attr_s<sp/>&lt;<sp/>attr_e)<sp/>{</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>attribute_t*<sp/>attr<sp/>=<sp/>(attribute_t*)<sp/>attr_s;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(strcmp(attr-&gt;name,<sp/>name)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(tmp,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>attr-&gt;value);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>attr_s<sp/>+=<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(attribute_t);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>tmp;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/attribute.h"/>
+  </compounddef>
+</doxygen>

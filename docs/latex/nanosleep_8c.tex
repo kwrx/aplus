@@ -1,0 +1,86 @@
+\hypertarget{nanosleep_8c}{\section{Riferimenti per il file usr/src/libposix/src/nanosleep.c}
+\label{nanosleep_8c}\index{usr/src/libposix/src/nanosleep.\+c@{usr/src/libposix/src/nanosleep.\+c}}
+}
+{\ttfamily \#include $<$sys/times.\+h$>$}\\*
+{\ttfamily \#include $<$sys/time.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sched.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{nanosleep_8c_a357cd4b34c13011749dfffb42b489f09}{sched\+\_\+yield} (void)
+\item 
+int \hyperlink{nanosleep_8c_a1b63fa141b202a0b01cfef8421aa48d6}{nanosleep} (const struct timespec $\ast$req, struct timespec $\ast$rem)
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{nanosleep_8c_a1b63fa141b202a0b01cfef8421aa48d6}{\index{nanosleep.\+c@{nanosleep.\+c}!nanosleep@{nanosleep}}
+\index{nanosleep@{nanosleep}!nanosleep.\+c@{nanosleep.\+c}}
+\subsubsection[{nanosleep}]{\setlength{\rightskip}{0pt plus 5cm}int nanosleep (
+\begin{DoxyParamCaption}
+\item[{const struct timespec $\ast$}]{req, }
+\item[{struct timespec $\ast$}]{rem}
+\end{DoxyParamCaption}
+)}}\label{nanosleep_8c_a1b63fa141b202a0b01cfef8421aa48d6}
+
+
+Definizione alla linea 10 del file nanosleep.\+c.
+
+
+
+Referenzia errno, e sched\+\_\+yield().
+
+
+\begin{DoxyCode}
+10                                                                 \{
+11     \textcolor{keywordflow}{if}(req->tv\_sec > 999999999) \{
+12         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+13         \textcolor{keywordflow}{return} -1;
+14     \}
+15 
+16     \textcolor{keyword}{struct }timeval* tm = malloc(\textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} timeval));
+17     \textcolor{keyword}{struct }timezone* tz = malloc(\textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} timezone));
+18 
+19     \textcolor{keywordflow}{if}(!tm && !tz) \{
+20         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOMEM;
+21         \textcolor{keywordflow}{return} -1;
+22     \}
+23 
+24     \textcolor{keywordflow}{if}(gettimeofday(tm, tz) != 0)
+25             \textcolor{keywordflow}{return} -1;
+26 
+27     \textcolor{keywordtype}{int} t0 = req->tv\_sec + tm->tv\_sec;
+28     \textcolor{keywordtype}{int} t1 = req->tv\_nsec + tm->tv\_usec;
+29 
+30 
+31     \textcolor{keywordflow}{while}(1) \{
+32         \textcolor{keywordflow}{if}(gettimeofday(tm, tz) != 0)
+33             \textcolor{keywordflow}{return} -1;
+34 
+35         \textcolor{keywordflow}{if}(tm->tv\_sec > t0 && tm->tv\_usec > t1)
+36             \textcolor{keywordflow}{break};
+37 
+38         \textcolor{keywordflow}{if}(rem) \{
+39             rem->tv\_sec = t0 - tm->tv\_sec;
+40             rem->tv\_nsec = t1 - tm->tv\_usec;
+41         \}
+42 
+43         \hyperlink{nanosleep_8c_a357cd4b34c13011749dfffb42b489f09}{sched\_yield}();
+44     \}
+45 
+46 
+47     free(tm);
+48     free(tz);
+49 
+50     \textcolor{keywordflow}{return} 0;
+51 \}
+\end{DoxyCode}
+\hypertarget{nanosleep_8c_a357cd4b34c13011749dfffb42b489f09}{\index{nanosleep.\+c@{nanosleep.\+c}!sched\+\_\+yield@{sched\+\_\+yield}}
+\index{sched\+\_\+yield@{sched\+\_\+yield}!nanosleep.\+c@{nanosleep.\+c}}
+\subsubsection[{sched\+\_\+yield}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+yield (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{nanosleep_8c_a357cd4b34c13011749dfffb42b489f09}

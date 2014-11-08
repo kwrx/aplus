@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="pthread__queue_8c">
+    <title>pthread_queue.c File Reference</title>
+    <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8">PRIVATE</link> <link linkend="pthread__internal_8h_1acef1d04f94658c4052cd87213538f7e4">pthread_context_t</link> <link linkend="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13">__current_thread</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> <link linkend="pthread__internal_8h_1acef1d04f94658c4052cd87213538f7e4">pthread_context_t</link> * <link linkend="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64">__pthread_queue</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> <link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="pthread__queue_8c_1a0b13cae1b0e7848f7d9689241f8f93a8">__pthread_counts</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e">PUBLIC</link> void <link linkend="pthread__queue_8c_1a524e53db3985af45990760ed9068c0a9">__pthread_init_queue</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c</para>
+    </simplesect>
+</section>

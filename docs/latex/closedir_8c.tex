@@ -1,0 +1,49 @@
+\hypertarget{closedir_8c}{\section{Riferimenti per il file usr/src/libposix/src/closedir.c}
+\label{closedir_8c}\index{usr/src/libposix/src/closedir.\+c@{usr/src/libposix/src/closedir.\+c}}
+}
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{closedir_8c_a058e669d865116ec6419ea3a52207830}{closedir} (\hyperlink{dirent_8h_a067065071b5bdb96054ed58b5f848bfa}{D\+I\+R} $\ast$\hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d})
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{closedir_8c_a058e669d865116ec6419ea3a52207830}{\index{closedir.\+c@{closedir.\+c}!closedir@{closedir}}
+\index{closedir@{closedir}!closedir.\+c@{closedir.\+c}}
+\subsubsection[{closedir}]{\setlength{\rightskip}{0pt plus 5cm}int closedir (
+\begin{DoxyParamCaption}
+\item[{{\bf D\+I\+R} $\ast$}]{d}
+\end{DoxyParamCaption}
+)}}\label{closedir_8c_a058e669d865116ec6419ea3a52207830}
+
+
+Definizione alla linea 11 del file closedir.\+c.
+
+
+
+Referenzia errno, \+\_\+\+\_\+\+D\+I\+R\+::fd, e \+\_\+\+\_\+\+D\+I\+R\+::position.
+
+
+\begin{DoxyCode}
+11                      \{
+12     \textcolor{keywordflow}{if}(d == NULL) \{
+13         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+14         \textcolor{keywordflow}{return} -1;
+15     \}
+16 
+17     close(d->\hyperlink{struct____DIR_ae243fc79067063164eb8ec212e6a9e80}{fd});
+18 
+19     d->\hyperlink{struct____DIR_ae243fc79067063164eb8ec212e6a9e80}{fd} = -1;
+20     d->\hyperlink{struct____DIR_adcec35c0ea0ed4342c5425c494554397}{position} = -1;
+21 
+22     \textcolor{keywordflow}{return} 0;
+23 \}
+\end{DoxyCode}

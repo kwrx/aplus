@@ -1,0 +1,27 @@
+var structnetif =
+[
+    [ "data", "structnetif.html#af45fb467da3492eb4473cb9208044ac8", null ],
+    [ "device", "structnetif.html#a8d0c9464b5010487798a5ea8adce5a39", null ],
+    [ "dns", "structnetif.html#a30f1247e8e2ef8ac954833c81873608e", null ],
+    [ "flags", "structnetif.html#a07586ae7a31c1231781af7394ce41659", null ],
+    [ "ifdown", "structnetif.html#a73d7967fecfead19c8ae2a39a8cbf112", null ],
+    [ "ifup", "structnetif.html#a70984b0d611d5a941aecabbc98f62467", null ],
+    [ "ipv4", "structnetif.html#a312a8e870ce8803f02f5b09012ce6bc6", null ],
+    [ "ipv6", "structnetif.html#aced1ed63f6f33dd3987a06deee6a2292", null ],
+    [ "macaddr", "structnetif.html#a7a5c433a646e2b4424fe8ebf12db535c", null ],
+    [ "mtu", "structnetif.html#a2eb32b1acf0a223c5cc3874da3c2f3df", null ],
+    [ "name", "structnetif.html#ad113ca0a458623939eec5ce7fe2b6eef", null ],
+    [ "netmask", "structnetif.html#a36ef3cfb5f0403df355dc6db0ddc2426", null ],
+    [ "primary", "structnetif.html#a367e7d85725497d7703bfc0424f472cf", null ],
+    [ "rx_bytes", "structnetif.html#a5a078449e22bb6f4d3d0068345d8dabc", null ],
+    [ "rx_dropped", "structnetif.html#a1fc7320d2883ee21c7fe0fd954a70887", null ],
+    [ "rx_errors", "structnetif.html#adb3c694759403e67d539a5e81a552c92", null ],
+    [ "rx_packets", "structnetif.html#a80040f58867713ff1b5ec982a450221e", null ],
+    [ "secondary", "structnetif.html#a793ad0cb27997bfa7874a2097a77b0e2", null ],
+    [ "send", "structnetif.html#ac0505ae55088f68c2cefa77dc6871208", null ],
+    [ "state", "structnetif.html#a5ae2198374cbfd44de7e41e646aaae64", null ],
+    [ "tx_bytes", "structnetif.html#ac340647ad948b8103aa9a4e3c7b3fd0f", null ],
+    [ "tx_dropped", "structnetif.html#a7793287254eb992df0174122a81654d0", null ],
+    [ "tx_errors", "structnetif.html#adac4c9e26ac4c17089eaf3a0e060f601", null ],
+    [ "tx_packets", "structnetif.html#aabafd7c28253a190863f673bd5e4320a", null ]
+];

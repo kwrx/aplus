@@ -1,0 +1,198 @@
+\hypertarget{arp_8c}{\section{Riferimenti per il file src/net/arp.c}
+\label{arp_8c}\index{src/net/arp.\+c@{src/net/arp.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
+{\ttfamily \#include $<$stddef.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/net/arp.\+h$>$}\\*
+\subsection*{Funzioni}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{arp_8h_a9b4be1be5ee1e2531c81fa075b4f55d1}{arp\+\_\+cache\+\_\+entry\+\_\+t} $\ast$ \hyperlink{arp_8c_adfa3881c2f0f72ec135119b5260a5039}{arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr} (\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\+\_\+t} macaddr)
+\item 
+int \hyperlink{arp_8c_af1d8473c2adafe1f2bd1df51167c6b65}{arp\+\_\+cache\+\_\+add} (\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\+\_\+t} macaddr, \hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\+\_\+t} ipv4)
+\item 
+int \hyperlink{arp_8c_ad8cef1da8ee381336f1c3bbfa015525c}{arp\+\_\+recv} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length})
+\item 
+int \hyperlink{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}{arp\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif})
+\end{DoxyCompactItemize}
+\subsection*{Variabili}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\+\_\+cache} = N\+U\+L\+L
+\end{DoxyCompactItemize}
+
+
+\subsection{Documentazione delle funzioni}
+\hypertarget{arp_8c_af1d8473c2adafe1f2bd1df51167c6b65}{\index{arp.\+c@{arp.\+c}!arp\+\_\+cache\+\_\+add@{arp\+\_\+cache\+\_\+add}}
+\index{arp\+\_\+cache\+\_\+add@{arp\+\_\+cache\+\_\+add}!arp.\+c@{arp.\+c}}
+\subsubsection[{arp\+\_\+cache\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int arp\+\_\+cache\+\_\+add (
+\begin{DoxyParamCaption}
+\item[{{\bf macaddr\+\_\+t}}]{macaddr, }
+\item[{{\bf ipv4\+\_\+t}}]{ipv4}
+\end{DoxyParamCaption}
+)}}\label{arp_8c_af1d8473c2adafe1f2bd1df51167c6b65}
+
+
+Definizione alla linea 33 del file arp.\+c.
+
+
+
+Referenzia arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::ipv4, kmalloc(), kprintf, list\+\_\+add(), list\+\_\+init, list\+\_\+remove(), e netif\+\_\+find\+\_\+by\+\_\+macaddr().
+
+
+\begin{DoxyCode}
+33                                                   \{
+34     \textcolor{keywordflow}{if}(\hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\_cache} == NULL) \{
+35         \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\_cache});
+36     \}
+37 
+38 
+39     \hyperlink{structarp__cache__entry}{arp\_cache\_entry\_t}* arp = \hyperlink{arp_8c_adfa3881c2f0f72ec135119b5260a5039}{arp\_cache\_find\_by\_macaddr}(macaddr);
+40     \textcolor{keywordflow}{if}(arp)
+41         \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\_cache}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) arp);
+42 
+43 
+44     arp = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structarp__cache__entry}{arp\_cache\_entry\_t}));
+45     memcpy(arp->\hyperlink{structarp__cache__entry_abc5be464b787fc7c71a45330c9b979af}{macaddr}, macaddr, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t}));
+46     memcpy(arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}, ipv4, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t}));
+47 
+48     \textcolor{comment}{//arp->ttl = time(NULL) + ARP\_TTL;}
+49 
+50 
+51 \textcolor{preprocessor}{#ifdef ARP\_DEBUG}
+52     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"arp: added new cache entry (%02x.%02x.%02x.%02x)\(\backslash\)n"},
+53         arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}[0],
+54         arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}[1],
+55         arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}[2],
+56         arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}[3]
+57     );
+58 \textcolor{preprocessor}{#endif}
+59 
+60     \hyperlink{structnetif}{netif\_t}* \hyperlink{structnetif}{netif} = (\hyperlink{structnetif}{netif\_t}*) \hyperlink{netif_8c_aa9fb3336f90a384ee5a2bdd22f1c084b}{netif\_find\_by\_macaddr}(arp->
+      \hyperlink{structarp__cache__entry_abc5be464b787fc7c71a45330c9b979af}{macaddr});
+61     \textcolor{keywordflow}{if}(netif)
+62         memcpy(netif->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}, arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t}));
+63 
+64     \textcolor{keywordflow}{return} \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\_cache}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) arp);
+65 \}
+\end{DoxyCode}
+\hypertarget{arp_8c_adfa3881c2f0f72ec135119b5260a5039}{\index{arp.\+c@{arp.\+c}!arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr@{arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr}}
+\index{arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr@{arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr}!arp.\+c@{arp.\+c}}
+\subsubsection[{arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf arp\+\_\+cache\+\_\+entry\+\_\+t}$\ast$ arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr (
+\begin{DoxyParamCaption}
+\item[{{\bf macaddr\+\_\+t}}]{macaddr}
+\end{DoxyParamCaption}
+)}}\label{arp_8c_adfa3881c2f0f72ec135119b5260a5039}
+
+
+Definizione alla linea 16 del file arp.\+c.
+
+
+
+Referenzia list\+\_\+empty(), list\+\_\+foreach, arp\+\_\+cache\+\_\+entry\+::macaddr, e value.
+
+
+\begin{DoxyCode}
+16                                                                 \{
+17     \textcolor{keywordflow}{if}(\hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\_cache} == NULL)
+18         \textcolor{keywordflow}{return} NULL;
+19 
+20     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\_cache}))
+21         \textcolor{keywordflow}{return} NULL;
+22 
+23     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\_cache}) \{
+24         \hyperlink{structarp__cache__entry}{arp\_cache\_entry\_t}* arp = (\hyperlink{structarp__cache__entry}{arp\_cache\_entry\_t}*) 
+      \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+25 
+26         \textcolor{keywordflow}{if}(memcmp(arp->\hyperlink{structarp__cache__entry_abc5be464b787fc7c71a45330c9b979af}{macaddr}, macaddr, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t})) == 0)
+27             \textcolor{keywordflow}{return} arp;
+28     \}
+29 
+30     \textcolor{keywordflow}{return} NULL;
+31 \}
+\end{DoxyCode}
+\hypertarget{arp_8c_ad8cef1da8ee381336f1c3bbfa015525c}{\index{arp.\+c@{arp.\+c}!arp\+\_\+recv@{arp\+\_\+recv}}
+\index{arp\+\_\+recv@{arp\+\_\+recv}!arp.\+c@{arp.\+c}}
+\subsubsection[{arp\+\_\+recv}]{\setlength{\rightskip}{0pt plus 5cm}int arp\+\_\+recv (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif, }
+\item[{void $\ast$}]{buf, }
+\item[{size\+\_\+t}]{length}
+\end{DoxyParamCaption}
+)}}\label{arp_8c_ad8cef1da8ee381336f1c3bbfa015525c}
+
+
+Definizione alla linea 67 del file arp.\+c.
+
+
+
+Referenzia arp\+\_\+cache\+\_\+add(), A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y, length, e netif\+::macaddr.
+
+
+\begin{DoxyCode}
+67                                                        \{
+68     arp\_header\_t* arp = (arp\_header\_t*) buf;
+69 
+70 
+71     \textcolor{keywordflow}{if}(arp->operation == \hyperlink{arp_8h_ad32703851a1b58336c54dbe3f4e4f8ee}{ARP\_OPERATION\_REPLY})
+72         \textcolor{keywordflow}{if}(memcmp(netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}, arp->tha, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t})) == 0)
+73             \hyperlink{arp_8c_af1d8473c2adafe1f2bd1df51167c6b65}{arp\_cache\_add}(arp->tha, arp->tpa);
+74 
+75     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+76 \}
+\end{DoxyCode}
+\hypertarget{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}{\index{arp.\+c@{arp.\+c}!arp\+\_\+send@{arp\+\_\+send}}
+\index{arp\+\_\+send@{arp\+\_\+send}!arp.\+c@{arp.\+c}}
+\subsubsection[{arp\+\_\+send}]{\setlength{\rightskip}{0pt plus 5cm}int arp\+\_\+send (
+\begin{DoxyParamCaption}
+\item[{{\bf netif\+\_\+t} $\ast$}]{netif}
+\end{DoxyParamCaption}
+)}}\label{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}
+
+
+Definizione alla linea 79 del file arp.\+c.
+
+
+
+Referenzia A\+R\+P\+\_\+\+H\+W\+L\+E\+N, A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E, A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T, A\+R\+P\+\_\+\+P\+R\+L\+E\+N, A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E, eth\+\_\+send(), kfree(), kmalloc(), kprintf, netif\+::macaddr, netif\+::name, e N\+E\+T\+I\+F\+\_\+\+A\+R\+P.
+
+
+\begin{DoxyCode}
+79                              \{
+80     arp\_header\_t* arp = (arp\_header\_t*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(arp\_header\_t));
+81     arp->hwtype = \hyperlink{arp_8h_a8054d75c10f454d169e571ba0bbd0020}{ARP\_HWTYPE};
+82     arp->prtype = \hyperlink{arp_8h_acd36df131f3c821461809b22fdc59d15}{ARP\_PRTYPE};
+83     arp->hwlen = \hyperlink{arp_8h_a1e4785e681402a451395c42f39b7b1cf}{ARP\_HWLEN};
+84     arp->prlen = \hyperlink{arp_8h_a8ea0479afe5a85f08dd59c3323febcbd}{ARP\_PRLEN};
+85     arp->operation = \hyperlink{arp_8h_a46acf87c581047a4931a07ca60a3d057}{ARP\_OPERATION\_REQUEST};
+86     
+87     memcpy(arp->sha, netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t}));
+88     memset(arp->tha, 0, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t}));
+89     memset(arp->spa, 0, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t}));
+90     memset(arp->tpa, 0, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t}));
+91 
+92 \textcolor{preprocessor}{#ifdef ARP\_DEBUG}
+93     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"arp: sending request for %s\(\backslash\)n"}, netif->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name});
+94 \textcolor{preprocessor}{#endif}
+95 
+96     \textcolor{keywordtype}{int} ret = \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\_send}(netif, arp, \textcolor{keyword}{sizeof}(arp\_header\_t), \hyperlink{netif_8h_ae9935405723cb9caabff3f18b66446ca}{NETIF\_ARP});
+97     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(arp);
+98     
+99     \textcolor{keywordflow}{return} ret;
+100 \}
+\end{DoxyCode}
+
+
+\subsection{Documentazione delle variabili}
+\hypertarget{arp_8c_af0c8c4708050f018c061291a0b18275f}{\index{arp.\+c@{arp.\+c}!arp\+\_\+cache@{arp\+\_\+cache}}
+\index{arp\+\_\+cache@{arp\+\_\+cache}!arp.\+c@{arp.\+c}}
+\subsubsection[{arp\+\_\+cache}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ arp\+\_\+cache = N\+U\+L\+L}}\label{arp_8c_af0c8c4708050f018c061291a0b18275f}
+
+
+Definizione alla linea 13 del file arp.\+c.
+

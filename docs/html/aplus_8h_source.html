@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus:  File sorgente src/include/aplus.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('aplus_8h_source.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">aplus.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="aplus_8h.html">Vai alla documentazione di questo file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//  aplus.h</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment">//  Author:</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">//       Antonio Natale &lt;inferdevil97@gmail.com&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">//  Copyright (c) 2014 WareX</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">//  This program is free software: you can redistribute it and/or modify</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">//  it under the terms of the GNU General Public License as published by</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//  the Free Software Foundation, either version 3 of the License, or</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//  (at your option) any later version.</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//  This program is distributed in the hope that it will be useful,</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//  but WITHOUT ANY WARRANTY; without even the implied warranty of</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//  GNU General Public License for more details.</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//  You should have received a copy of the GNU General Public License</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">//  along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef _APLUS_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define _APLUS_H</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">   32</a></span>&#160;<span class="preprocessor">#define read_reg(n)                                             \</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">    static inline uint32_t read_##n() {                         \</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">        uint32_t ret;                                           \</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">        __asm__ __volatile__ (&quot;mov %0, &quot; #n : &quot;=r&quot;(ret));       \</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">        return ret;                                             \</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="aplus_8h.html#a582397538b7cbe449bad4cf35f2437d9">   39</a></span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#ae7c1e3339e4dead200cab41010e9127c">ebx</a>)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#af2b16bef95c844028dd145264d1d3875">ecx</a>)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#ae6db045cebe7b4cf979120dccdee0d01">edx</a>)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#ada78e3124de6adf5a5d212f9ebc4bbe0">esi</a>)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#a36ffab8d34c6c411a7e5205ddb95eaf9">edi</a>)</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#aaba2ad0ff8ba480934feabfdab02b1e7">ebp</a>)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a>)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(cr0)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(cr1)</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(cr2)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(cr3)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(cr4)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#a8519dc239502dfcbac171b3128dc7054">cs</a>)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b">ds</a>)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#a0dacdc927bbcc6457b629ad88119cdc2">es</a>)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="structfs.html">fs</a>)</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a>(<a class="code" href="aplus_8h.html#a85904ecbf7b717abe738645b4ff2f4ff">gs</a>)</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;static inline <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> read_eflags() {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> ret;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> __volatile__(<span class="stringliteral">&quot;pushfd; pop eax&quot;</span> : <span class="stringliteral">&quot;=a&quot;</span>(ret));</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">   66</a></span>&#160;<span class="preprocessor">#define write_reg(n)                                            \</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">    static inline void write_##n(uint32_t val) {                \</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">        __asm__ __volatile__ (&quot;mov &quot; #n &quot;, %0&quot; : : &quot;r&quot;(val));   \</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="aplus_8h.html#ab5b66852551342ea96fdb63ded9b4dfb">   72</a></span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>)</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#ae7c1e3339e4dead200cab41010e9127c">ebx</a>)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#af2b16bef95c844028dd145264d1d3875">ecx</a>)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#ae6db045cebe7b4cf979120dccdee0d01">edx</a>)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#ada78e3124de6adf5a5d212f9ebc4bbe0">esi</a>)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#a36ffab8d34c6c411a7e5205ddb95eaf9">edi</a>)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#aaba2ad0ff8ba480934feabfdab02b1e7">ebp</a>)</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a>)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(cr0)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(cr1)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(cr2)</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(cr3)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(cr4)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#a8519dc239502dfcbac171b3128dc7054">cs</a>)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b">ds</a>)</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#a0dacdc927bbcc6457b629ad88119cdc2">es</a>)</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="structfs.html">fs</a>)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a>(<a class="code" href="aplus_8h.html#a85904ecbf7b717abe738645b4ff2f4ff">gs</a>)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;static inline <span class="keywordtype">void</span> write_eflags(<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> val) {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> __volatile__(<span class="stringliteral">&quot;push eax; popfd&quot;</span> : : <span class="stringliteral">&quot;a&quot;</span>(val));</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}   </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="aplus_8h.html#a2e07ad24c72c7025ebed7cf2a16da243">   96</a></span>&#160;<span class="preprocessor">#define outx(n, t, reg)                                             \</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">    static inline void out##n(uint16_t p, t v) {                    \</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">        __asm__ __volatile__ (&quot;out dx, &quot; #reg : : &quot;a&quot;(v), &quot;d&quot;(p));  \</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="aplus_8h.html#a2e07ad24c72c7025ebed7cf2a16da243">outx</a>(b, <a class="code" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>, al)</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">  102</a></span>&#160;    <a class="code" href="aplus_8h.html#a2e07ad24c72c7025ebed7cf2a16da243">outx</a>(w, <a class="code" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a>, ax)</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <a class="code" href="aplus_8h.html#a2e07ad24c72c7025ebed7cf2a16da243">outx</a>(l, <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>, <a class="code" href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#define inx(n, t, reg)                                              \</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">    static inline t in##n(uint16_t p) {                             \</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">        t r;                                                        \</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">        __asm__ __volatile__ (&quot;in &quot; #reg &quot;, dx&quot; : &quot;=a&quot;(r) : &quot;d&quot;(p));\</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">        return r;                                                   \</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    </div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">  113</a></span>&#160;    <a class="code" href="aplus_8h.html#a0064aeaa3ca77c798b56695f34181b11">inx</a>(b, <a class="code" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>, al)</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="aplus_8h.html#a0064aeaa3ca77c798b56695f34181b11">inx</a>(w, uint16_t, ax)</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">  115</a></span>&#160;    <a class="code" href="aplus_8h.html#a0064aeaa3ca77c798b56695f34181b11">inx</a>(l, uint32_t, <a class="code" href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>)</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    </div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="aplus_8h.html#ad022c8e4176cee8f4f46671ef4072333">  117</a></span>&#160;<span class="preprocessor">#define outsx(n, t, reg)                                            \</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">    static inline void outs##n(uint16_t p, t* v, uint32_t len) {    \</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">        for(int i = 0; i &lt; len; i++)                                \</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">            out##n(p, v[i]);                                        \</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <a class="code" href="aplus_8h.html#ad022c8e4176cee8f4f46671ef4072333">outsx</a>(b, <a class="code" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>, al)</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="aplus_8h.html#ad022c8e4176cee8f4f46671ef4072333">outsx</a>(w, uint16_t, ax)</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="aplus_8h.html#ad022c8e4176cee8f4f46671ef4072333">outsx</a>(l, uint32_t, <a class="code" href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>)</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#define insx(n, t, reg)                                             \</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">    static inline t* ins##n(uint16_t p, t* v, uint32_t len) {       \</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">        for(int i = 0; i &lt; len; i++)                                \</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">            v[i] = in##n(p);                                        \</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">                                                                    \</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">        return v;                                                   \</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="aplus_8h.html#aafaa888797872e143fecc4f28469fde4">insx</a>(b, <a class="code" href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a>, al)</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <a class="code" href="aplus_8h.html#aafaa888797872e143fecc4f28469fde4">insx</a>(w, uint16_t, ax)</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <a class="code" href="aplus_8h.html#aafaa888797872e143fecc4f28469fde4">insx</a>(l, uint32_t, <a class="code" href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>)</div>
+<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="aplus_8h.html#a095c7922f83bb52b2fcfc787e4b24d5a">  139</a></span>&#160;    </div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    </div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="structregs.html">  141</a></span>&#160;typedef struct <a class="code" href="structregs.html">regs</a> {</div>
+<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="structregs.html#af7e777e1535d887de07a5bf3d11eb15f">  142</a></span>&#160;    uint32_t <a class="code" href="aplus_8h.html#a85904ecbf7b717abe738645b4ff2f4ff">gs</a>, <a class="code" href="aplus_8h.html#a2ffb5cf275c124e8f8ff30e1d4449f80">fs</a>, <a class="code" href="aplus_8h.html#a0dacdc927bbcc6457b629ad88119cdc2">es</a>, <a class="code" href="aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b">ds</a>, <a class="code" href="aplus_8h.html#a36ffab8d34c6c411a7e5205ddb95eaf9">edi</a>, <a class="code" href="aplus_8h.html#ada78e3124de6adf5a5d212f9ebc4bbe0">esi</a>, <a class="code" href="aplus_8h.html#aaba2ad0ff8ba480934feabfdab02b1e7">ebp</a>, <a class="code" href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a>, <a class="code" href="aplus_8h.html#ae7c1e3339e4dead200cab41010e9127c">ebx</a>, <a class="code" href="aplus_8h.html#ae6db045cebe7b4cf979120dccdee0d01">edx</a>, <a class="code" href="aplus_8h.html#af2b16bef95c844028dd145264d1d3875">ecx</a>, <a class="code" href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>, <a class="code" href="aplus_8h.html#a35ae7486c6a3ba231714c72cec36e556">int_no</a>, <a class="code" href="aplus_8h.html#a20d3d7867d5207a846cf598532ca353f">err_code</a>, <a class="code" href="aplus_8h.html#a1588906901fc3015e0865574669a56a6">eip</a>, <a class="code" href="aplus_8h.html#a8519dc239502dfcbac171b3128dc7054">cs</a>, <a class="code" href="aplus_8h.html#aeedfc39703ec8e0a1f052a832e74acd3">eflags</a>, <a class="code" href="structregs.html#af7e777e1535d887de07a5bf3d11eb15f">useresp</a>;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;} <a class="code" href="aplus_8h.html#a828ca35a80f14c0f9432022c5f3823a4">__attribute__</a>((packed)) regs_t;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor">#ifndef DEBUG</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno"><a class="line" href="aplus_8h.html#af0b53ac0b8d6868da6396b11b30519c1">  147</a></span>&#160;<span class="preprocessor">#define kprintf(a, b...);</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="structregs_html_af7e777e1535d887de07a5bf3d11eb15f"><div class="ttname"><a href="structregs.html#af7e777e1535d887de07a5bf3d11eb15f">regs::useresp</a></div><div class="ttdeci">uint32_t useresp</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00142">aplus.h:142</a></div></div>
+<div class="ttc" id="aplus_8h_html_a2ffb5cf275c124e8f8ff30e1d4449f80"><div class="ttname"><a href="aplus_8h.html#a2ffb5cf275c124e8f8ff30e1d4449f80">fs</a></div><div class="ttdeci">uint32_t fs</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_ad022c8e4176cee8f4f46671ef4072333"><div class="ttname"><a href="aplus_8h.html#ad022c8e4176cee8f4f46671ef4072333">outsx</a></div><div class="ttdeci">#define outsx(n, t, reg)</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00117">aplus.h:117</a></div></div>
+<div class="ttc" id="aplus_8h_html_a0064aeaa3ca77c798b56695f34181b11"><div class="ttname"><a href="aplus_8h.html#a0064aeaa3ca77c798b56695f34181b11">inx</a></div><div class="ttdeci">#define inx(n, t, reg)</div></div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
+<div class="ttc" id="aplus_8h_html_af2b16bef95c844028dd145264d1d3875"><div class="ttname"><a href="aplus_8h.html#af2b16bef95c844028dd145264d1d3875">ecx</a></div><div class="ttdeci">uint32_t ecx</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a7534a179bc9cc0ef26f0468e0959ee5c"><div class="ttname"><a href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a></div><div class="ttdeci">uint32_t esp</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a828ca35a80f14c0f9432022c5f3823a4"><div class="ttname"><a href="aplus_8h.html#a828ca35a80f14c0f9432022c5f3823a4">__attribute__</a></div><div class="ttdeci">ax al eax struct regs __attribute__((packed)) regs_t</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
+<div class="ttc" id="aplus_8h_html_a2e07ad24c72c7025ebed7cf2a16da243"><div class="ttname"><a href="aplus_8h.html#a2e07ad24c72c7025ebed7cf2a16da243">outx</a></div><div class="ttdeci">#define outx(n, t, reg)</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00096">aplus.h:96</a></div></div>
+<div class="ttc" id="structfs_html"><div class="ttname"><a href="structfs.html">fs</a></div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00075">fs.h:75</a></div></div>
+<div class="ttc" id="aplus_8h_html_ae6db045cebe7b4cf979120dccdee0d01"><div class="ttname"><a href="aplus_8h.html#ae6db045cebe7b4cf979120dccdee0d01">edx</a></div><div class="ttdeci">uint32_t edx</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_aaba2ad0ff8ba480934feabfdab02b1e7"><div class="ttname"><a href="aplus_8h.html#aaba2ad0ff8ba480934feabfdab02b1e7">ebp</a></div><div class="ttdeci">uint32_t ebp</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [gdt_p]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</div></div>
+<div class="ttc" id="aplus_8h_html_aeedfc39703ec8e0a1f052a832e74acd3"><div class="ttname"><a href="aplus_8h.html#aeedfc39703ec8e0a1f052a832e74acd3">eflags</a></div><div class="ttdeci">uint32_t eflags</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_aafaa888797872e143fecc4f28469fde4"><div class="ttname"><a href="aplus_8h.html#aafaa888797872e143fecc4f28469fde4">insx</a></div><div class="ttdeci">#define insx(n, t, reg)</div></div>
+<div class="ttc" id="aplus_8h_html_a20d3d7867d5207a846cf598532ca353f"><div class="ttname"><a href="aplus_8h.html#a20d3d7867d5207a846cf598532ca353f">err_code</a></div><div class="ttdeci">uint32_t err_code</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="structregs_html"><div class="ttname"><a href="structregs.html">regs</a></div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00141">aplus.h:141</a></div></div>
+<div class="ttc" id="aplus_8h_html_a5a8b2dc9e45a9ee81a94ef304fb62505"><div class="ttname"><a href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a></div><div class="ttdeci">uint16_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00102">aplus.h:102</a></div></div>
+<div class="ttc" id="aplus_8h_html_a1588906901fc3015e0865574669a56a6"><div class="ttname"><a href="aplus_8h.html#a1588906901fc3015e0865574669a56a6">eip</a></div><div class="ttdeci">uint32_t eip</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_ae0430369c5a35dcdbc0bc19dcbb33a03"><div class="ttname"><a href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a></div><div class="ttdeci">ax uint8_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00113">aplus.h:113</a></div></div>
+<div class="ttc" id="aplus_8h_html_a8519dc239502dfcbac171b3128dc7054"><div class="ttname"><a href="aplus_8h.html#a8519dc239502dfcbac171b3128dc7054">cs</a></div><div class="ttdeci">uint32_t cs</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a85904ecbf7b717abe738645b4ff2f4ff"><div class="ttname"><a href="aplus_8h.html#a85904ecbf7b717abe738645b4ff2f4ff">gs</a></div><div class="ttdeci">uint32_t gs</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a6fe20edd854a1a653ae71ccf541a6b8b"><div class="ttname"><a href="aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b">ds</a></div><div class="ttdeci">uint32_t ds</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a93d929ad1fc57af9d4f1793c361fb4f2"><div class="ttname"><a href="aplus_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a></div><div class="ttdeci">uint32_t eax</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a35ae7486c6a3ba231714c72cec36e556"><div class="ttname"><a href="aplus_8h.html#a35ae7486c6a3ba231714c72cec36e556">int_no</a></div><div class="ttdeci">uint32_t int_no</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a36ffab8d34c6c411a7e5205ddb95eaf9"><div class="ttname"><a href="aplus_8h.html#a36ffab8d34c6c411a7e5205ddb95eaf9">edi</a></div><div class="ttdeci">uint32_t edi</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a2bfd697ad0983255c5b058a73bfc90af"><div class="ttname"><a href="aplus_8h.html#a2bfd697ad0983255c5b058a73bfc90af">write_reg</a></div><div class="ttdeci">#define write_reg(n)</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00066">aplus.h:66</a></div></div>
+<div class="ttc" id="aplus_8h_html_ada78e3124de6adf5a5d212f9ebc4bbe0"><div class="ttname"><a href="aplus_8h.html#ada78e3124de6adf5a5d212f9ebc4bbe0">esi</a></div><div class="ttdeci">uint32_t esi</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a0dacdc927bbcc6457b629ad88119cdc2"><div class="ttname"><a href="aplus_8h.html#a0dacdc927bbcc6457b629ad88119cdc2">es</a></div><div class="ttdeci">uint32_t es</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="aplus_8h_html_a3985fc195070baeddf8705121a144336"><div class="ttname"><a href="aplus_8h.html#a3985fc195070baeddf8705121a144336">read_reg</a></div><div class="ttdeci">#define read_reg(n)</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00032">aplus.h:32</a></div></div>
+<div class="ttc" id="aplus_8h_html_ae7c1e3339e4dead200cab41010e9127c"><div class="ttname"><a href="aplus_8h.html#ae7c1e3339e4dead200cab41010e9127c">ebx</a></div><div class="ttdeci">uint32_t ebx</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="aplus_8h.html">aplus.h</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:03 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

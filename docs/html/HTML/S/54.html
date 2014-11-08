@@ -1,0 +1,81 @@
+<html>
+<head>
+<title>usr/src/libpthread/src/pthread_barrierattr.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/176.html'>usr</a>/<a href='../files/177.html'>src</a>/<a href='../files/185.html'>libpthread</a>/<a href='../files/187.html'>src</a>/pthread_barrierattr.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L9'>[^]</a><a href='#L47'>[v]</a>[top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L9' title='Defined at 9.'>pthread_barrierattr_init</a>
+<li><a href='#L20' title='Defined at 20.'>pthread_barrierattr_destroy</a>
+<li><a href='#L31' title='Defined at 31.'>pthread_barrierattr_getpshared</a>
+<li><a href='#L47' title='Defined at 47.'>pthread_barrierattr_setpshared</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;stdint.h&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;stdlib.h&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;string.h&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='43.html'>pthread.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#include</font> "<a href='50.html'>pthread_internal.h</a>"
+<a name='L8'>   8 
+<a name='L9'>   9 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L262' title='Refered from 262 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_init</a>(<a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L10'>  10         <b>if</b>(<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L11'>  11                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L12'>  12                 <b>return</b> 1;
+<a name='L13'>  13         <font color='red'>}</font>
+<a name='L14'>  14 
+<a name='L15'>  15         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = 0;
+<a name='L16'>  16         <b>return</b> 0;
+<a name='L17'>  17 <font color='red'>}</font>
+<a name='L18'>  18 
+<a name='L19'>  19 
+<a name='L20'>  20 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L263' title='Refered from 263 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_destroy</a>(<a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>) <font color='red'>{</font>
+<a name='L21'>  21         <b>if</b>(<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L22'>  22                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L23'>  23                 <b>return</b> 1;
+<a name='L24'>  24         <font color='red'>}</font>
+<a name='L25'>  25 
+<a name='L26'>  26         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = 0;
+<a name='L27'>  27         <b>return</b> 0;
+<a name='L28'>  28 <font color='red'>}</font>
+<a name='L29'>  29 
+<a name='L30'>  30 
+<a name='L31'>  31 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L264' title='Refered from 264 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_getpshared</a>(<b>const</b> <a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>) <font color='red'>{</font>
+<a name='L32'>  32         <b>if</b>(<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L33'>  33                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L34'>  34                 <b>return</b> 1;
+<a name='L35'>  35         <font color='red'>}</font>
+<a name='L36'>  36 
+<a name='L37'>  37         <b>if</b>(<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L38'>  38                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L39'>  39                 <b>return</b> 1;
+<a name='L40'>  40         <font color='red'>}</font>
+<a name='L41'>  41         
+<a name='L42'>  42         *<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L43'>  43         <b>return</b> 0;
+<a name='L44'>  44 <font color='red'>}</font>
+<a name='L45'>  45 
+<a name='L46'>  46 
+<a name='L47'>  47 <a href='../S/50.html#L15' title='Defined at 15 in usr/src/libpthread/src/pthread_internal.h.'>PUBLIC</a> <b>int</b> <a href='../S/43.html#L265' title='Refered from 265 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_setpshared</a>(<a href='../S/43.html#L118' title='Defined at 118 in usr/src/libpthread/include/pthread.h.'>pthread_barrierattr_t</a> *<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>, <b>int</b> <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>) <font color='red'>{</font>
+<a name='L48'>  48         <b>if</b>(<a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a> == <a href='../Y/29.html' title='Multiple used in 193 places.'>NULL</a>) <font color='red'>{</font>
+<a name='L49'>  49                 <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/13.html' title='Multiple used in 99 places.'>EINVAL</a>;
+<a name='L50'>  50                 <b>return</b> 1;
+<a name='L51'>  51         <font color='red'>}</font>
+<a name='L52'>  52 
+<a name='L53'>  53         <a href='../Y/112.html' title='Multiple used in 163 places.'>attr</a>-&gt;<a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a> = <a href='../Y/489.html' title='Multiple used in 40 places.'>pshared</a>;
+<a name='L54'>  54         <b>return</b> 0;
+<a name='L55'>  55 <font color='red'>}</font>
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L9'>[^]</a><a href='#L47'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>

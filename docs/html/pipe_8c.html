@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.8"/>
+<title>aPlus: Riferimenti per il file src/fs/pipe.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">aPlus
+   &#160;<span id="projectnumber">0.1</span>
+   </div>
+   <div id="projectbrief">Akernelproject</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generato da Doxygen 1.8.8 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Cerca');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Pagina&#160;Principale</span></a></li>
+      <li><a href="pages.html"><span>Pagine&#160;collegate</span></a></li>
+      <li><a href="annotated.html"><span>Strutture&#160;dati</span></a></li>
+      <li class="current"><a href="files.html"><span>File</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Cerca" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Elenco&#160;dei&#160;file</span></a></li>
+      <li><a href="globals.html"><span>Elementi&#160;globali</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('pipe_8c.html','');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Tutto</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Strutture dati</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>File</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Funzioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variabili</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Ridefinizioni di tipo (typedef)</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Definizioni</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pagine</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Strutture dati</a> &#124;
+<a href="#typedef-members">Ridefinizioni di tipo (typedef)</a> &#124;
+<a href="#func-members">Funzioni</a> &#124;
+<a href="#var-members">Variabili</a>  </div>
+  <div class="headertitle">
+<div class="title">Riferimenti per il file pipe.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><code>#include &lt;<a class="el" href="aplus_8h_source.html">aplus.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="fs_8h_source.html">aplus/fs.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="bufio_8h_source.html">aplus/bufio.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="mm_8h_source.html">aplus/mm.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="spinlock_8h_source.html">aplus/spinlock.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="task_8h_source.html">aplus/task.h</a>&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;unistd.h&gt;</code><br />
+<code>#include &lt;fcntl.h&gt;</code><br />
+<code>#include &lt;sys/stat.h&gt;</code><br />
+</div>
+<p><a href="pipe_8c_source.html">Vai al codice sorgente di questo file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Strutture dati</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structpipeinfo.html">pipeinfo</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Ridefinizioni di tipo (typedef)</h2></td></tr>
+<tr class="memitem:ac26d15f7a161e67a1245925bf9ec0b64"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structpipeinfo.html">pipeinfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pipe_8c.html#ac26d15f7a161e67a1245925bf9ec0b64">pipeinfo_t</a></td></tr>
+<tr class="separator:ac26d15f7a161e67a1245925bf9ec0b64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funzioni</h2></td></tr>
+<tr class="memitem:acd58301025c57832d88e9303748a4990"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pipe_8c.html#acd58301025c57832d88e9303748a4990">pipe_read</a> (<a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *<a class="el" href="structinode.html">inode</a>, char *ptr, int len)</td></tr>
+<tr class="separator:acd58301025c57832d88e9303748a4990"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb255ec0586d3ec2fb72fde723b9f058"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pipe_8c.html#afb255ec0586d3ec2fb72fde723b9f058">pipe_write</a> (<a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *<a class="el" href="structinode.html">inode</a>, char *ptr, int len)</td></tr>
+<tr class="separator:afb255ec0586d3ec2fb72fde723b9f058"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf87459626267621da125c794e573354"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pipe_8c.html#acf87459626267621da125c794e573354">pipe_flush</a> (<a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *<a class="el" href="structinode.html">inode</a>)</td></tr>
+<tr class="separator:acf87459626267621da125c794e573354"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d87f2f91d56a198bbf85f4773868765"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pipe_8c.html#a8d87f2f91d56a198bbf85f4773868765">pipe_create</a> (<a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> inodes[2])</td></tr>
+<tr class="separator:a8d87f2f91d56a198bbf85f4773868765"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variabili</h2></td></tr>
+<tr class="memitem:a4743b3673a8794b8e7bd0b6c91a63cd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="task_8h.html#a8aeef2cdb643462b97cd459a8e68cad3">task_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pipe_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></td></tr>
+<tr class="separator:a4743b3673a8794b8e7bd0b6c91a63cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Documentazione delle ridefinizioni di tipo (typedef)</h2>
+<a class="anchor" id="ac26d15f7a161e67a1245925bf9ec0b64"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structpipeinfo.html">pipeinfo</a>  <a class="el" href="pipe_8c.html#ac26d15f7a161e67a1245925bf9ec0b64">pipeinfo_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle funzioni</h2>
+<a class="anchor" id="a8d87f2f91d56a198bbf85f4773868765"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pipe_create </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a>&#160;</td>
+          <td class="paramname"><em>inodes</em>[2]</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pipe_8c_source.html#l00063">63</a> del file <a class="el" href="pipe_8c_source.html">pipe.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00045">bufio_alloc()</a>, <a class="el" href="fs_8h_source.html#l00065">inode::flush</a>, <a class="el" href="fs_8h_source.html#l00044">inode::gid</a>, <a class="el" href="task_8h_source.html#l00083">task::gid</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="fs_8h_source.html#l00041">inode::mode</a>, <a class="el" href="attribute_8h_source.html#l00082">name</a>, <a class="el" href="pipe_8c_source.html#l00054">pipe_flush()</a>, <a class="el" href="pipe_8c_source.html#l00027">pipe_read()</a>, <a class="el" href="pipe_8c_source.html#l00042">pipe_write()</a>, <a class="el" href="fs_8h_source.html#l00055">inode::read</a>, <a class="el" href="pipe_8c_source.html#l00022">pipeinfo::read_offset</a>, <a class="el" href="fs_8h_source.html#l00046">inode::size</a>, <a class="el" href="pipe_8c_source.html#l00021">pipeinfo::stream</a>, <a class="el" href="fs_8h_source.html#l00043">inode::uid</a>, <a class="el" href="task_8h_source.html#l00082">task::uid</a>, <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>, <a class="el" href="fs_8h_source.html#l00056">inode::write</a>, e <a class="el" href="pipe_8c_source.html#l00023">pipeinfo::write_offset</a>.</p>
+<div class="fragment"><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                                   {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="structpipeinfo.html">pipeinfo_t</a>* pipe = (<a class="code" href="structpipeinfo.html">pipeinfo_t</a>*) <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keyword">sizeof</span>(<a class="code" href="structpipeinfo.html">pipeinfo_t</a>));</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a> = (<a class="code" href="structbufio.html">bufio_t</a>*) <a class="code" href="bufio_8c.html#a788d5286cd4a5a1d4aed02c319aaf030">bufio_alloc</a>(BUFSIZ);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    pipe-&gt;<a class="code" href="structpipeinfo.html#a88940cfea171abbf28b2b96bc87054ca">read_offset</a> = 0;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    pipe-&gt;<a class="code" href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">write_offset</a> = 0;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; 2; i++) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        memset((<span class="keywordtype">void</span>*) &amp;inodes[i], 0, <span class="keyword">sizeof</span>(<a class="code" href="structinode.html">inode_t</a>));</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        </div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//inodes[i].atime = inodes[i].mtime = inodes[i].ctime = time(NULL);</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        inodes[i].<a class="code" href="structinode.html#ae2c5e8a0a372334b97024fbd9ef694c1">read</a> = <a class="code" href="pipe_8c.html#acd58301025c57832d88e9303748a4990">pipe_read</a>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        inodes[i].<a class="code" href="structinode.html#a53a123d38834fa17e7ef5c1e5f47bba2">write</a> = <a class="code" href="pipe_8c.html#afb255ec0586d3ec2fb72fde723b9f058">pipe_write</a>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        inodes[i].<a class="code" href="structinode.html#ae2972ef183f5c39aac7cb83b9f8a04a8">flush</a> = <a class="code" href="pipe_8c.html#acf87459626267621da125c794e573354">pipe_flush</a>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        inodes[i].<a class="code" href="structinode.html#a0eac94e96ded19029e871d5cce815bcb">uid</a> = <a class="code" href="pipe_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#ade8fc4c414bce856dacf9efee3031be8">uid</a>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        inodes[i].<a class="code" href="structinode.html#a8434fb9dd05057d00b37ed713713835d">gid</a> = <a class="code" href="pipe_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#aaf3b6e15445e766a5c4823b815bca630">gid</a>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        inodes[i].<a class="code" href="structinode.html#a4902d9f6a1d7bd79c6f1bb73d83ce8e3">mode</a> = S_IFIFO;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        inodes[i].<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a> = (<span class="keywordtype">void</span>*) pipe;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        inodes[i].<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a> = (size_t) BUFSIZ;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    strcpy(inodes[0].<a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>, <span class="stringliteral">&quot;[pipe:read]&quot;</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    strcpy(inodes[1].<a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>, <span class="stringliteral">&quot;[pipe:write]&quot;</span>);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}<div class="ttc" id="structinode_html_a0eac94e96ded19029e871d5cce815bcb"><div class="ttname"><a href="structinode.html#a0eac94e96ded19029e871d5cce815bcb">inode::uid</a></div><div class="ttdeci">uid_t uid</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00043">fs.h:43</a></div></div>
+<div class="ttc" id="pipe_8c_html_acf87459626267621da125c794e573354"><div class="ttname"><a href="pipe_8c.html#acf87459626267621da125c794e573354">pipe_flush</a></div><div class="ttdeci">void pipe_flush(inode_t *inode)</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00054">pipe.c:54</a></div></div>
+<div class="ttc" id="structpipeinfo_html_abb510c9ed7b4d0bc60432bcc04e3962b"><div class="ttname"><a href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">pipeinfo::write_offset</a></div><div class="ttdeci">off_t write_offset</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00023">pipe.c:23</a></div></div>
+<div class="ttc" id="structbufio_html"><div class="ttname"><a href="structbufio.html">bufio</a></div><div class="ttdef"><b>Definition:</b> <a href="bufio_8h_source.html#l00032">bufio.h:32</a></div></div>
+<div class="ttc" id="attribute_8h_html_aae08e5b919f01beb6c69d2859e0dfc27"><div class="ttname"><a href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a></div><div class="ttdeci">char name[0x80]</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00082">attribute.h:82</a></div></div>
+<div class="ttc" id="structpipeinfo_html_add2e1b264654f589da8c98cd502c3fbc"><div class="ttname"><a href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">pipeinfo::stream</a></div><div class="ttdeci">bufio_t * stream</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00021">pipe.c:21</a></div></div>
+<div class="ttc" id="structinode_html"><div class="ttname"><a href="structinode.html">inode</a></div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00036">fs.h:36</a></div></div>
+<div class="ttc" id="structinode_html_ae2972ef183f5c39aac7cb83b9f8a04a8"><div class="ttname"><a href="structinode.html#ae2972ef183f5c39aac7cb83b9f8a04a8">inode::flush</a></div><div class="ttdeci">void(* flush)(struct inode *inode)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00065">fs.h:65</a></div></div>
+<div class="ttc" id="structtask_html_aaf3b6e15445e766a5c4823b815bca630"><div class="ttname"><a href="structtask.html#aaf3b6e15445e766a5c4823b815bca630">task::gid</a></div><div class="ttdeci">gid_t gid</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00083">task.h:83</a></div></div>
+<div class="ttc" id="mm_8h_html_a1f5d4240b2decc62c0e6eae06c72916c"><div class="ttname"><a href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a></div><div class="ttdeci">void * kmalloc(size_t)</div></div>
+<div class="ttc" id="structinode_html_a53722b1b60b7136ce0204b66527bb400"><div class="ttname"><a href="structinode.html#a53722b1b60b7136ce0204b66527bb400">inode::size</a></div><div class="ttdeci">off_t size</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00046">fs.h:46</a></div></div>
+<div class="ttc" id="bufio_8c_html_a788d5286cd4a5a1d4aed02c319aaf030"><div class="ttname"><a href="bufio_8c.html#a788d5286cd4a5a1d4aed02c319aaf030">bufio_alloc</a></div><div class="ttdeci">bufio_t * bufio_alloc(size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00045">bufio.c:45</a></div></div>
+<div class="ttc" id="pipe_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="pipe_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00033">sched.c:33</a></div></div>
+<div class="ttc" id="structinode_html_ae2c5e8a0a372334b97024fbd9ef694c1"><div class="ttname"><a href="structinode.html#ae2c5e8a0a372334b97024fbd9ef694c1">inode::read</a></div><div class="ttdeci">int(* read)(struct inode *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00055">fs.h:55</a></div></div>
+<div class="ttc" id="structpipeinfo_html_a88940cfea171abbf28b2b96bc87054ca"><div class="ttname"><a href="structpipeinfo.html#a88940cfea171abbf28b2b96bc87054ca">pipeinfo::read_offset</a></div><div class="ttdeci">off_t read_offset</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00022">pipe.c:22</a></div></div>
+<div class="ttc" id="structinode_html_a4902d9f6a1d7bd79c6f1bb73d83ce8e3"><div class="ttname"><a href="structinode.html#a4902d9f6a1d7bd79c6f1bb73d83ce8e3">inode::mode</a></div><div class="ttdeci">mode_t mode</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00041">fs.h:41</a></div></div>
+<div class="ttc" id="structpipeinfo_html"><div class="ttname"><a href="structpipeinfo.html">pipeinfo</a></div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00020">pipe.c:20</a></div></div>
+<div class="ttc" id="pipe_8c_html_acd58301025c57832d88e9303748a4990"><div class="ttname"><a href="pipe_8c.html#acd58301025c57832d88e9303748a4990">pipe_read</a></div><div class="ttdeci">int pipe_read(inode_t *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00027">pipe.c:27</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+<div class="ttc" id="structinode_html_a53a123d38834fa17e7ef5c1e5f47bba2"><div class="ttname"><a href="structinode.html#a53a123d38834fa17e7ef5c1e5f47bba2">inode::write</a></div><div class="ttdeci">int(* write)(struct inode *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00056">fs.h:56</a></div></div>
+<div class="ttc" id="structinode_html_a8434fb9dd05057d00b37ed713713835d"><div class="ttname"><a href="structinode.html#a8434fb9dd05057d00b37ed713713835d">inode::gid</a></div><div class="ttdeci">gid_t gid</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00044">fs.h:44</a></div></div>
+<div class="ttc" id="structtask_html_ade8fc4c414bce856dacf9efee3031be8"><div class="ttname"><a href="structtask.html#ade8fc4c414bce856dacf9efee3031be8">task::uid</a></div><div class="ttdeci">uid_t uid</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00082">task.h:82</a></div></div>
+<div class="ttc" id="pipe_8c_html_afb255ec0586d3ec2fb72fde723b9f058"><div class="ttname"><a href="pipe_8c.html#afb255ec0586d3ec2fb72fde723b9f058">pipe_write</a></div><div class="ttdeci">int pipe_write(inode_t *inode, char *ptr, int len)</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00042">pipe.c:42</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="acf87459626267621da125c794e573354"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pipe_flush </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *&#160;</td>
+          <td class="paramname"><em>inode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pipe_8c_source.html#l00054">54</a> del file <a class="el" href="pipe_8c_source.html">pipe.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00090">bufio_free()</a>, <a class="el" href="mm_8c_source.html#l00066">kfree()</a>, <a class="el" href="pipe_8c_source.html#l00021">pipeinfo::stream</a>, e <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>.</p>
+<div class="fragment"><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                                {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="structpipeinfo.html">pipeinfo_t</a>* pipe = inode-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="bufio_8c.html#a2a92ff5d9427e2d5d88b4c95247b0f64">bufio_free</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a>(pipe);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
+<div class="ttc" id="structpipeinfo_html_add2e1b264654f589da8c98cd502c3fbc"><div class="ttname"><a href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">pipeinfo::stream</a></div><div class="ttdeci">bufio_t * stream</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00021">pipe.c:21</a></div></div>
+<div class="ttc" id="bufio_8c_html_a2a92ff5d9427e2d5d88b4c95247b0f64"><div class="ttname"><a href="bufio_8c.html#a2a92ff5d9427e2d5d88b4c95247b0f64">bufio_free</a></div><div class="ttdeci">void bufio_free(bufio_t *buf)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00090">bufio.c:90</a></div></div>
+<div class="ttc" id="structpipeinfo_html"><div class="ttname"><a href="structpipeinfo.html">pipeinfo</a></div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00020">pipe.c:20</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+<div class="ttc" id="mm_8h_html_acee1960bdb3a19cb495341ec725cafef"><div class="ttname"><a href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a></div><div class="ttdeci">void kfree(void *)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00066">mm.c:66</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="acd58301025c57832d88e9303748a4990"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pipe_read </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pipe_8c_source.html#l00027">27</a> del file <a class="el" href="pipe_8c_source.html">pipe.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00141">bufio_read()</a>, <a class="el" href="bufio_8c_source.html#l00103">bufio_seek()</a>, <a class="el" href="bufio_8c_source.html#l00131">bufio_tell()</a>, <a class="el" href="pipe_8c_source.html#l00022">pipeinfo::read_offset</a>, <a class="el" href="bufio_8h_source.html#l00034">bufio::size</a>, <a class="el" href="spinlock_8h_source.html#l00047">spinlock_waiton</a>, <a class="el" href="pipe_8c_source.html#l00021">pipeinfo::stream</a>, <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>, e <a class="el" href="pipe_8c_source.html#l00023">pipeinfo::write_offset</a>.</p>
+<div class="fragment"><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                                                  {</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="structpipeinfo.html">pipeinfo_t</a>* pipe = inode-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="spinlock_8h.html#a9fd2288887ae3bf29520677b29e010a3">spinlock_waiton</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#a88940cfea171abbf28b2b96bc87054ca">read_offset</a> + len &gt; pipe-&gt;<a class="code" href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">write_offset</a>);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="bufio_8c.html#a1fa3475774b4a60a2e8a1b10f202d7f8">bufio_seek</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>, pipe-&gt;<a class="code" href="structpipeinfo.html#a88940cfea171abbf28b2b96bc87054ca">read_offset</a> % pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>-&gt;<a class="code" href="structbufio.html#a233f5f8090a3f39d9471333db439e2bb">size</a>, SEEK_SET);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">size_t</span> tolen = 0;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">while</span>((tolen = <a class="code" href="bufio_8c.html#a75016850df49d95e52a5508d22ff79e8">bufio_read</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>, (<span class="keywordtype">void</span>*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="bufio_8c.html#a1fa3475774b4a60a2e8a1b10f202d7f8">bufio_seek</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>, 0, SEEK_SET);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    pipe-&gt;<a class="code" href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">write_offset</a> = <a class="code" href="bufio_8c.html#a9fdd7357844210dfdb4fd10f6868bbf3">bufio_tell</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> (<span class="keywordtype">int</span>) len;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
+<div class="ttc" id="structpipeinfo_html_abb510c9ed7b4d0bc60432bcc04e3962b"><div class="ttname"><a href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">pipeinfo::write_offset</a></div><div class="ttdeci">off_t write_offset</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00023">pipe.c:23</a></div></div>
+<div class="ttc" id="bufio_8c_html_a9fdd7357844210dfdb4fd10f6868bbf3"><div class="ttname"><a href="bufio_8c.html#a9fdd7357844210dfdb4fd10f6868bbf3">bufio_tell</a></div><div class="ttdeci">int bufio_tell(bufio_t *buf)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00131">bufio.c:131</a></div></div>
+<div class="ttc" id="structpipeinfo_html_add2e1b264654f589da8c98cd502c3fbc"><div class="ttname"><a href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">pipeinfo::stream</a></div><div class="ttdeci">bufio_t * stream</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00021">pipe.c:21</a></div></div>
+<div class="ttc" id="structpipeinfo_html_a88940cfea171abbf28b2b96bc87054ca"><div class="ttname"><a href="structpipeinfo.html#a88940cfea171abbf28b2b96bc87054ca">pipeinfo::read_offset</a></div><div class="ttdeci">off_t read_offset</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00022">pipe.c:22</a></div></div>
+<div class="ttc" id="spinlock_8h_html_a9fd2288887ae3bf29520677b29e010a3"><div class="ttname"><a href="spinlock_8h.html#a9fd2288887ae3bf29520677b29e010a3">spinlock_waiton</a></div><div class="ttdeci">#define spinlock_waiton(cond)</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8h_source.html#l00047">spinlock.h:47</a></div></div>
+<div class="ttc" id="bufio_8c_html_a1fa3475774b4a60a2e8a1b10f202d7f8"><div class="ttname"><a href="bufio_8c.html#a1fa3475774b4a60a2e8a1b10f202d7f8">bufio_seek</a></div><div class="ttdeci">int bufio_seek(bufio_t *buf, off_t offset, int dir)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00103">bufio.c:103</a></div></div>
+<div class="ttc" id="structpipeinfo_html"><div class="ttname"><a href="structpipeinfo.html">pipeinfo</a></div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00020">pipe.c:20</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+<div class="ttc" id="structbufio_html_a233f5f8090a3f39d9471333db439e2bb"><div class="ttname"><a href="structbufio.html#a233f5f8090a3f39d9471333db439e2bb">bufio::size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8h_source.html#l00034">bufio.h:34</a></div></div>
+<div class="ttc" id="bufio_8c_html_a75016850df49d95e52a5508d22ff79e8"><div class="ttname"><a href="bufio_8c.html#a75016850df49d95e52a5508d22ff79e8">bufio_read</a></div><div class="ttdeci">int bufio_read(bufio_t *buf, void *ptr, size_t len)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00141">bufio.c:141</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="afb255ec0586d3ec2fb72fde723b9f058"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int pipe_write </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="fs_8h.html#a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</a> *&#160;</td>
+          <td class="paramname"><em>inode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="pipe_8c_source.html#l00042">42</a> del file <a class="el" href="pipe_8c_source.html">pipe.c</a>.</p>
+
+<p>Referenzia <a class="el" href="bufio_8c_source.html#l00103">bufio_seek()</a>, <a class="el" href="bufio_8c_source.html#l00131">bufio_tell()</a>, <a class="el" href="bufio_8c_source.html#l00154">bufio_write()</a>, <a class="el" href="bufio_8h_source.html#l00034">bufio::size</a>, <a class="el" href="pipe_8c_source.html#l00021">pipeinfo::stream</a>, <a class="el" href="fs_8h_source.html#l00053">inode::userdata</a>, e <a class="el" href="pipe_8c_source.html#l00023">pipeinfo::write_offset</a>.</p>
+<div class="fragment"><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                                   {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="structpipeinfo.html">pipeinfo_t</a>* pipe = inode-&gt;<a class="code" href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">userdata</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="bufio_8c.html#a1fa3475774b4a60a2e8a1b10f202d7f8">bufio_seek</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>, pipe-&gt;<a class="code" href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">write_offset</a> % pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>-&gt;<a class="code" href="structbufio.html#a233f5f8090a3f39d9471333db439e2bb">size</a>, SEEK_SET);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">size_t</span> tolen = 0;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">while</span>((tolen = <a class="code" href="bufio_8c.html#a8db791aa56b168544d7666a723af32de">bufio_write</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>, (<span class="keywordtype">void</span>*) ((off_t) ptr + (off_t) tolen), len)) &lt; len)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="bufio_8c.html#a1fa3475774b4a60a2e8a1b10f202d7f8">bufio_seek</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>, 0, SEEK_SET);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    pipe-&gt;<a class="code" href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">write_offset</a> = <a class="code" href="bufio_8c.html#a9fdd7357844210dfdb4fd10f6868bbf3">bufio_tell</a>(pipe-&gt;<a class="code" href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">stream</a>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> (<span class="keywordtype">int</span>) len;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="ttc" id="bufio_8c_html_a8db791aa56b168544d7666a723af32de"><div class="ttname"><a href="bufio_8c.html#a8db791aa56b168544d7666a723af32de">bufio_write</a></div><div class="ttdeci">int bufio_write(bufio_t *buf, void *ptr, size_t len)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00154">bufio.c:154</a></div></div>
+<div class="ttc" id="structpipeinfo_html_abb510c9ed7b4d0bc60432bcc04e3962b"><div class="ttname"><a href="structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b">pipeinfo::write_offset</a></div><div class="ttdeci">off_t write_offset</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00023">pipe.c:23</a></div></div>
+<div class="ttc" id="bufio_8c_html_a9fdd7357844210dfdb4fd10f6868bbf3"><div class="ttname"><a href="bufio_8c.html#a9fdd7357844210dfdb4fd10f6868bbf3">bufio_tell</a></div><div class="ttdeci">int bufio_tell(bufio_t *buf)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00131">bufio.c:131</a></div></div>
+<div class="ttc" id="structpipeinfo_html_add2e1b264654f589da8c98cd502c3fbc"><div class="ttname"><a href="structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc">pipeinfo::stream</a></div><div class="ttdeci">bufio_t * stream</div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00021">pipe.c:21</a></div></div>
+<div class="ttc" id="bufio_8c_html_a1fa3475774b4a60a2e8a1b10f202d7f8"><div class="ttname"><a href="bufio_8c.html#a1fa3475774b4a60a2e8a1b10f202d7f8">bufio_seek</a></div><div class="ttdeci">int bufio_seek(bufio_t *buf, off_t offset, int dir)</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00103">bufio.c:103</a></div></div>
+<div class="ttc" id="structpipeinfo_html"><div class="ttname"><a href="structpipeinfo.html">pipeinfo</a></div><div class="ttdef"><b>Definition:</b> <a href="pipe_8c_source.html#l00020">pipe.c:20</a></div></div>
+<div class="ttc" id="structinode_html_a8ba627a7ebbacc723e8452fbf8dd3670"><div class="ttname"><a href="structinode.html#a8ba627a7ebbacc723e8452fbf8dd3670">inode::userdata</a></div><div class="ttdeci">void * userdata</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00053">fs.h:53</a></div></div>
+<div class="ttc" id="structbufio_html_a233f5f8090a3f39d9471333db439e2bb"><div class="ttname"><a href="structbufio.html#a233f5f8090a3f39d9471333db439e2bb">bufio::size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8h_source.html#l00034">bufio.h:34</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Documentazione delle variabili</h2>
+<a class="anchor" id="a4743b3673a8794b8e7bd0b6c91a63cd5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="task_8h.html#a8aeef2cdb643462b97cd459a8e68cad3">task_t</a>* current_task</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definizione alla linea <a class="el" href="src_2sched_8c_source.html#l00033">33</a> del file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_67dd5697b37f207f225bbd7a2e3631fb.html">fs</a></li><li class="navelem"><a class="el" href="pipe_8c.html">pipe.c</a></li>
+    <li class="footer">Generato Dom 9 Nov 2014 00:22:04 per aPlus da
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
+  </ul>
+</div>
+</body>
+</html>

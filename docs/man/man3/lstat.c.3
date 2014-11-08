@@ -1,0 +1,43 @@
+.TH "usr/src/libposix/src/lstat.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/lstat.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBlstat\fP (const char *filename, struct stat *st)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int lstat (const char *filename, struct stat *st)"
+
+.PP
+Definizione alla linea 5 del file lstat\&.c\&.
+.PP
+Referenzia O_NOFOLLOW\&.
+.PP
+.nf
+5                                                  {
+6     int fd = open(filename, O_RDONLY | O_NOFOLLOW, 0644);
+7     if(fd < 0)
+8         return -1;
+9 
+10     int ret = fstat(fd, st);
+11     close(fd);
+12     return ret;
+13 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

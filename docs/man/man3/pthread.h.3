@@ -1,0 +1,2357 @@
+.TH "usr/src/libpthread/include/pthread.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libpthread/include/pthread.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/time\&.h>\fP
+.br
+\fC#include <sched\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+
+.SS "Strutture dati"
+
+.in +1c
+.ti -1c
+.RI "struct \fBpthread_attr\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_once\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_mutexattr\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_mutex\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_condattr\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_cond\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_barrierattr\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_barrier\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_rwlockattr\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_rwlock\fP"
+.br
+.ti -1c
+.RI "struct \fBpthread_spinlock\fP"
+.br
+.in -1c
+.SS "Definizioni"
+
+.in +1c
+.ti -1c
+.RI "#define \fB_POSIX_THREADS\fP"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_CREATE_JOINABLE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_CREATE_DETACHED\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_INHERIT_SCHED\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_EXPLICIT_SCHED\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_SCOPE_PROCESS\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_SCOPE_SYSTEM\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_CANCEL_ENABLE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_CANCEL_DISABLE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_PROCESS_PRIVATE\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_PROCESS_SHARED\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_ONCE_INIT\fP   { 0, -1 }"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_MUTEX_NORMAL\fP   0"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_MUTEX_RECURSIVE\fP   1"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_MUTEX_ERRORCHECK\fP   2"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_MUTEX_DEFAULT\fP   \fBPTHREAD_MUTEX_NORMAL\fP"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_MUTEX_INITIALIZER\fP   { 0, 0, -1, -1, -1 }"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP\fP   { 0, 0, -1, -1, -1 }"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_COND_INITIALIZER\fP   ((\fBpthread_cond_t\fP) -1)"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_BARRIER_SERIAL_THREAD\fP   ~0"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_RWLOCK_INITIALIZER\fP   { \fBPTHREAD_MUTEX_INITIALIZER\fP, 0, 0, 0, 0, 0, 0 }"
+.br
+.ti -1c
+.RI "#define \fBSPINLOCK_UNLOCKED\fP   1"
+.br
+.ti -1c
+.RI "#define \fBSPINLOCK_LOCKED\fP   2"
+.br
+.ti -1c
+.RI "#define \fBSPINLOCK_USEMUTEX\fP   3"
+.br
+.ti -1c
+.RI "#define \fBPTHREAD_SPINLOCK_INITIALIZER\fP   { 0, 0 }"
+.br
+.in -1c
+.SS "Ridefinizioni di tipo (typedef)"
+
+.in +1c
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBtls_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBuint32_t\fP \fBhandle_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBhandle_t\fP \fBpthread_t\fP"
+.br
+.ti -1c
+.RI "typedef \fBtls_t\fP \fBpthread_key_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_attr\fP \fBpthread_attr_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_once\fP \fBpthread_once_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_mutexattr\fP \fBpthread_mutexattr_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_mutex\fP \fBpthread_mutex_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_condattr\fP \fBpthread_condattr_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_cond\fP \fBpthread_cond_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_barrierattr\fP \fBpthread_barrierattr_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_barrier\fP \fBpthread_barrier_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_rwlockattr\fP \fBpthread_rwlockattr_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_rwlock\fP \fBpthread_rwlock_t\fP"
+.br
+.ti -1c
+.RI "typedef struct \fBpthread_spinlock\fP \fBpthread_spinlock_t\fP"
+.br
+.in -1c
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBpthread_attr_init\fP (\fBpthread_attr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_destroy\fP (\fBpthread_attr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_getdetachstate\fP (const \fBpthread_attr_t\fP *attr, int *detachstate)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_setdetachstate\fP (\fBpthread_attr_t\fP *attr, int detachstate)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_getstackaddr\fP (const \fBpthread_attr_t\fP *attr, void **stackaddr)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_setstackaddr\fP (\fBpthread_attr_t\fP *attr, void *stackaddr)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_getstacksize\fP (const \fBpthread_attr_t\fP *attr, size_t *stacksize)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_setstacksize\fP (\fBpthread_attr_t\fP *attr, size_t stacksize)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_getschedparam\fP (const \fBpthread_attr_t\fP *attr, struct sched_param *param)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_setschedparam\fP (\fBpthread_attr_t\fP *attr, const struct sched_param *param)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_getschedpolicy\fP (\fBpthread_attr_t\fP *attr, int *policy)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_setschedpolicy\fP (\fBpthread_attr_t\fP *attr, int policy)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_getinheritsched\fP (\fBpthread_attr_t\fP *attr, int *inheritsched)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_setinheritsched\fP (\fBpthread_attr_t\fP *attr, int inheritsched)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_getscope\fP (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
+.br
+.ti -1c
+.RI "int \fBpthread_attr_setscope\fP (\fBpthread_attr_t\fP *attr, int contentionscope)"
+.br
+.ti -1c
+.RI "int \fBpthread_create\fP (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*start)(void *), void *arg)"
+.br
+.ti -1c
+.RI "int \fBpthread_detach\fP (\fBpthread_t\fP thread)"
+.br
+.ti -1c
+.RI "int \fBpthread_equal\fP (\fBpthread_t\fP t1, \fBpthread_t\fP t2)"
+.br
+.ti -1c
+.RI "void \fBpthread_exit\fP (void *value_ptr)"
+.br
+.ti -1c
+.RI "int \fBpthread_join\fP (\fBpthread_t\fP thread, void **value_ptr)"
+.br
+.ti -1c
+.RI "\fBpthread_t\fP \fBpthread_self\fP (void)"
+.br
+.ti -1c
+.RI "int \fBpthread_cancel\fP (\fBpthread_t\fP thread)"
+.br
+.ti -1c
+.RI "int \fBpthread_setcancelstate\fP (int state, int *oldstate)"
+.br
+.ti -1c
+.RI "int \fBpthread_setcanceltype\fP (int \fBtype\fP, int *oldtype)"
+.br
+.ti -1c
+.RI "void \fBpthread_testcancel\fP (void)"
+.br
+.ti -1c
+.RI "int \fBpthread_once\fP (\fBpthread_once_t\fP *once_control, void(*init_routine)(void))"
+.br
+.ti -1c
+.RI "int \fBpthread_setschedparam\fP (\fBpthread_t\fP thread, int policy, const struct sched_param *param)"
+.br
+.ti -1c
+.RI "int \fBpthread_getschedparam\fP (\fBpthread_t\fP thread, int *policy, struct sched_param *param)"
+.br
+.ti -1c
+.RI "int \fBpthread_setconcurrency\fP (int level)"
+.br
+.ti -1c
+.RI "int \fBpthread_getconcurrency\fP (void)"
+.br
+.ti -1c
+.RI "int \fBpthread_key_create\fP (\fBpthread_key_t\fP *key, void(*destructor)(void *))"
+.br
+.ti -1c
+.RI "int \fBpthread_key_delete\fP (\fBpthread_key_t\fP key)"
+.br
+.ti -1c
+.RI "int \fBpthread_setspecific\fP (\fBpthread_key_t\fP key, const void *\fBvalue\fP)"
+.br
+.ti -1c
+.RI "void * \fBpthread_getspecific\fP (\fBpthread_key_t\fP key)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutexattr_init\fP (\fBpthread_mutexattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutexattr_destroy\fP (\fBpthread_mutexattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutexattr_getpshared\fP (const \fBpthread_mutexattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutexattr_setpshared\fP (\fBpthread_mutexattr_t\fP *attr, int pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutexattr_gettype\fP (\fBpthread_mutexattr_t\fP *attr, int *kind)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutexattr_settype\fP (\fBpthread_mutexattr_t\fP *attr, int kind)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutex_init\fP (\fBpthread_mutex_t\fP *mutex, const \fBpthread_mutexattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutex_destroy\fP (\fBpthread_mutex_t\fP *mutex)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutex_lock\fP (\fBpthread_mutex_t\fP *mutex)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutex_timedlock\fP (\fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutex_trylock\fP (\fBpthread_mutex_t\fP *mutex)"
+.br
+.ti -1c
+.RI "int \fBpthread_mutex_unlock\fP (\fBpthread_mutex_t\fP *mutex)"
+.br
+.ti -1c
+.RI "int \fBpthread_condattr_init\fP (\fBpthread_condattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_condattr_destroy\fP (\fBpthread_condattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_condattr_getpshared\fP (const \fBpthread_condattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_condattr_setpshared\fP (\fBpthread_condattr_t\fP *attr, int pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_cond_init\fP (\fBpthread_cond_t\fP *cond, const \fBpthread_condattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_cond_destroy\fP (\fBpthread_cond_t\fP *cond)"
+.br
+.ti -1c
+.RI "int \fBpthread_cond_wait\fP (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex)"
+.br
+.ti -1c
+.RI "int \fBpthread_cond_timedwait\fP (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
+.br
+.ti -1c
+.RI "int \fBpthread_cond_signal\fP (\fBpthread_cond_t\fP *cond)"
+.br
+.ti -1c
+.RI "int \fBpthread_cond_broadcast\fP (\fBpthread_cond_t\fP *cond)"
+.br
+.ti -1c
+.RI "int \fBpthread_barrierattr_init\fP (\fBpthread_barrierattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_barrierattr_destroy\fP (\fBpthread_barrierattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_barrierattr_getpshared\fP (const \fBpthread_barrierattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_barrierattr_setpshared\fP (\fBpthread_barrierattr_t\fP *attr, int pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_barrier_init\fP (\fBpthread_barrier_t\fP *barrier, const \fBpthread_barrierattr_t\fP *attr, unsigned int count)"
+.br
+.ti -1c
+.RI "int \fBpthread_barrier_destroy\fP (\fBpthread_barrier_t\fP *barrier)"
+.br
+.ti -1c
+.RI "int \fBpthread_barrier_wait\fP (\fBpthread_barrier_t\fP *barrier)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlockattr_init\fP (\fBpthread_rwlockattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlockattr_destroy\fP (\fBpthread_rwlockattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlockattr_getpshared\fP (const \fBpthread_rwlockattr_t\fP *attr, int *pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlockattr_setpshared\fP (\fBpthread_rwlockattr_t\fP *attr, int pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_init\fP (\fBpthread_rwlock_t\fP *\fBlock\fP, const \fBpthread_rwlockattr_t\fP *attr)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_destroy\fP (\fBpthread_rwlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_tryrdlock\fP (\fBpthread_rwlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_trywrlock\fP (\fBpthread_rwlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_rdlock\fP (\fBpthread_rwlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_timedrdlock\fP (\fBpthread_rwlock_t\fP *\fBlock\fP, const struct timespec *abstime)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_wrlock\fP (\fBpthread_rwlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_timedwrlock\fP (\fBpthread_rwlock_t\fP *\fBlock\fP, const struct timespec *abstime)"
+.br
+.ti -1c
+.RI "int \fBpthread_rwlock_unlock\fP (\fBpthread_rwlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_spin_init\fP (\fBpthread_spinlock_t\fP *\fBlock\fP, int pshared)"
+.br
+.ti -1c
+.RI "int \fBpthread_spin_destroy\fP (\fBpthread_spinlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_spin_lock\fP (\fBpthread_spinlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_spin_trylock\fP (\fBpthread_spinlock_t\fP *\fBlock\fP)"
+.br
+.ti -1c
+.RI "int \fBpthread_spin_unlock\fP (\fBpthread_spinlock_t\fP *\fBlock\fP)"
+.br
+.in -1c
+.SH "Documentazione delle definizioni"
+.PP 
+.SS "#define _POSIX_THREADS"
+
+.PP
+Definizione alla linea 32 del file pthread\&.h\&.
+.SS "#define PTHREAD_BARRIER_SERIAL_THREAD   ~0"
+
+.PP
+Definizione alla linea 114 del file pthread\&.h\&.
+.SS "#define PTHREAD_CANCEL_DISABLE   1"
+
+.PP
+Definizione alla linea 50 del file pthread\&.h\&.
+.SS "#define PTHREAD_CANCEL_ENABLE   0"
+
+.PP
+Definizione alla linea 49 del file pthread\&.h\&.
+.SS "#define PTHREAD_COND_INITIALIZER   ((\fBpthread_cond_t\fP) -1)"
+
+.PP
+Definizione alla linea 110 del file pthread\&.h\&.
+.SS "#define PTHREAD_CREATE_DETACHED   1"
+
+.PP
+Definizione alla linea 41 del file pthread\&.h\&.
+.SS "#define PTHREAD_CREATE_JOINABLE   0"
+
+.PP
+Definizione alla linea 40 del file pthread\&.h\&.
+.SS "#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP   { 0, 0, -1, -1, -1 }"
+
+.PP
+Definizione alla linea 98 del file pthread\&.h\&.
+.SS "#define PTHREAD_EXPLICIT_SCHED   1"
+
+.PP
+Definizione alla linea 44 del file pthread\&.h\&.
+.SS "#define PTHREAD_INHERIT_SCHED   0"
+
+.PP
+Definizione alla linea 43 del file pthread\&.h\&.
+.SS "#define PTHREAD_MUTEX_DEFAULT   \fBPTHREAD_MUTEX_NORMAL\fP"
+
+.PP
+Definizione alla linea 79 del file pthread\&.h\&.
+.SS "#define PTHREAD_MUTEX_ERRORCHECK   2"
+
+.PP
+Definizione alla linea 78 del file pthread\&.h\&.
+.SS "#define PTHREAD_MUTEX_INITIALIZER   { 0, 0, -1, -1, -1 }"
+
+.PP
+Definizione alla linea 97 del file pthread\&.h\&.
+.SS "#define PTHREAD_MUTEX_NORMAL   0"
+
+.PP
+Definizione alla linea 76 del file pthread\&.h\&.
+.SS "#define PTHREAD_MUTEX_RECURSIVE   1"
+
+.PP
+Definizione alla linea 77 del file pthread\&.h\&.
+.SS "#define PTHREAD_ONCE_INIT   { 0, -1 }"
+
+.PP
+Definizione alla linea 72 del file pthread\&.h\&.
+.SS "#define PTHREAD_PROCESS_PRIVATE   0"
+
+.PP
+Definizione alla linea 52 del file pthread\&.h\&.
+.SS "#define PTHREAD_PROCESS_SHARED   1"
+
+.PP
+Definizione alla linea 53 del file pthread\&.h\&.
+.SS "#define PTHREAD_RWLOCK_INITIALIZER   { \fBPTHREAD_MUTEX_INITIALIZER\fP, 0, 0, 0, 0, 0, 0 }"
+
+.PP
+Definizione alla linea 142 del file pthread\&.h\&.
+.SS "#define PTHREAD_SCOPE_PROCESS   0"
+
+.PP
+Definizione alla linea 46 del file pthread\&.h\&.
+.SS "#define PTHREAD_SCOPE_SYSTEM   1"
+
+.PP
+Definizione alla linea 47 del file pthread\&.h\&.
+.SS "#define PTHREAD_SPINLOCK_INITIALIZER   { 0, 0 }"
+
+.PP
+Definizione alla linea 154 del file pthread\&.h\&.
+.SS "#define SPINLOCK_LOCKED   2"
+
+.PP
+Definizione alla linea 146 del file pthread\&.h\&.
+.SS "#define SPINLOCK_UNLOCKED   1"
+
+.PP
+Definizione alla linea 145 del file pthread\&.h\&.
+.SS "#define SPINLOCK_USEMUTEX   3"
+
+.PP
+Definizione alla linea 147 del file pthread\&.h\&.
+.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.PP 
+.SS "typedef \fBuint32_t\fP \fBhandle_t\fP"
+
+.PP
+Definizione alla linea 36 del file pthread\&.h\&.
+.SS "typedef struct \fBpthread_attr\fP  \fBpthread_attr_t\fP"
+
+.SS "typedef struct \fBpthread_barrier\fP  \fBpthread_barrier_t\fP"
+
+.SS "typedef struct \fBpthread_barrierattr\fP  \fBpthread_barrierattr_t\fP"
+
+.SS "typedef struct \fBpthread_cond\fP  \fBpthread_cond_t\fP"
+
+.SS "typedef struct \fBpthread_condattr\fP  \fBpthread_condattr_t\fP"
+
+.SS "typedef \fBtls_t\fP \fBpthread_key_t\fP"
+
+.PP
+Definizione alla linea 38 del file pthread\&.h\&.
+.SS "typedef struct \fBpthread_mutex\fP  \fBpthread_mutex_t\fP"
+
+.SS "typedef struct \fBpthread_mutexattr\fP  \fBpthread_mutexattr_t\fP"
+
+.SS "typedef struct \fBpthread_once\fP  \fBpthread_once_t\fP"
+
+.SS "typedef struct \fBpthread_rwlock\fP  \fBpthread_rwlock_t\fP"
+
+.SS "typedef struct \fBpthread_rwlockattr\fP  \fBpthread_rwlockattr_t\fP"
+
+.SS "typedef struct \fBpthread_spinlock\fP  \fBpthread_spinlock_t\fP"
+
+.SS "typedef \fBhandle_t\fP \fBpthread_t\fP"
+
+.PP
+Definizione alla linea 37 del file pthread\&.h\&.
+.SS "typedef \fBuint32_t\fP \fBtls_t\fP"
+
+.PP
+Definizione alla linea 35 del file pthread\&.h\&.
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int pthread_attr_destroy (\fBpthread_attr_t\fP *attr)"
+
+.PP
+Definizione alla linea 28 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+28                                                       {
+29     if(!attr) {
+30         errno = EINVAL;
+31         return 1;
+32     }
+33 
+34     memset(attr, 0, sizeof(pthread_attr_t));
+35     return 0;
+36 }
+.fi
+.SS "int pthread_attr_getdetachstate (const \fBpthread_attr_t\fP *attr, int *detachstate)"
+
+.PP
+Definizione alla linea 38 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::detachstate, e errno\&.
+.PP
+.nf
+38                                                                                      {
+39     if(!attr) {
+40         errno = EINVAL;
+41         return 1;
+42     }
+43 
+44     *detachstate = attr->detachstate;
+45     return 0;
+46 }
+.fi
+.SS "int pthread_attr_getinheritsched (\fBpthread_attr_t\fP *attr, int *inheritsched)"
+
+.PP
+Definizione alla linea 133 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::inheritsched\&.
+.PP
+.nf
+133                                                                                  {
+134     if(!attr) {
+135         errno = EINVAL;
+136         return 1;
+137     }
+138 
+139     *inheritsched = attr->inheritsched;
+140     return 0;
+141 }
+.fi
+.SS "int pthread_attr_getschedparam (const \fBpthread_attr_t\fP *attr, struct sched_param *param)"
+
+.PP
+Definizione alla linea 100 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::param\&.
+.PP
+.nf
+100                                                                                              {
+101     if(!attr) {
+102         errno = EINVAL;
+103         return 1;
+104     }
+105 
+106     memcpy(param, &attr->param, sizeof(struct sched_param));
+107     return 0; 
+108 }
+.fi
+.SS "int pthread_attr_getschedpolicy (\fBpthread_attr_t\fP *attr, int *policy)"
+
+.PP
+Definizione alla linea 123 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+123                                                                           {
+124     errno = ENOSYS;
+125     return 1;
+126 }
+.fi
+.SS "int pthread_attr_getscope (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
+
+.PP
+Definizione alla linea 153 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::contentionscope, e errno\&.
+.PP
+.nf
+153                                                                                    {
+154     if(!attr) {
+155         errno = EINVAL;
+156         return 1;
+157     }
+158 
+159     *contentionscope = attr->contentionscope;
+160     return 0;
+161 }
+.fi
+.SS "int pthread_attr_getstackaddr (const \fBpthread_attr_t\fP *attr, void **stackaddr)"
+
+.PP
+Definizione alla linea 58 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stackaddr\&.
+.PP
+.nf
+58                                                                                    {
+59     if(!attr) {
+60         errno = EINVAL;
+61         return 1;
+62     }
+63 
+64     *stackaddr = attr->stackaddr;
+65     return 0;
+66 }
+.fi
+.SS "int pthread_attr_getstacksize (const \fBpthread_attr_t\fP *attr, size_t *stacksize)"
+
+.PP
+Definizione alla linea 79 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stacksize\&.
+.PP
+.nf
+79                                                                                     {
+80     if(!attr) {
+81         errno = EINVAL;
+82         return 1;
+83     }
+84 
+85     *stacksize = attr->stacksize;
+86     return 0;
+87 }
+.fi
+.SS "int pthread_attr_init (\fBpthread_attr_t\fP *attr)"
+
+.PP
+Definizione alla linea 12 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthread_attr::inheritsched, pthread_attr::param, PTHREAD_STACK_MIN, pthread_attr::stackaddr, e pthread_attr::stacksize\&.
+.PP
+.nf
+12                                                    {
+13     if(!attr) {
+14         errno = EINVAL;
+15         return 1;
+16     }
+17 
+18     attr->stackaddr = 0;
+19     attr->stacksize = PTHREAD_STACK_MIN;
+20     attr->detachstate = 0;
+21     attr->param\&.sched_priority = 0;
+22     attr->inheritsched = 0;
+23     attr->contentionscope = 0;
+24     
+25     return 0;
+26 }
+.fi
+.SS "int pthread_attr_setdetachstate (\fBpthread_attr_t\fP *attr, intdetachstate)"
+
+.PP
+Definizione alla linea 48 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::detachstate, e errno\&.
+.PP
+.nf
+48                                                                               {
+49     if(!attr) {
+50         errno = EINVAL;
+51         return 1;
+52     }
+53 
+54     attr->detachstate = detachstate;
+55     return 0;
+56 }
+.fi
+.SS "int pthread_attr_setinheritsched (\fBpthread_attr_t\fP *attr, intinheritsched)"
+
+.PP
+Definizione alla linea 143 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::inheritsched\&.
+.PP
+.nf
+143                                                                                 {
+144     if(!attr) {
+145         errno = EINVAL;
+146         return 1;
+147     }
+148 
+149     attr->inheritsched = inheritsched;
+150     return 0;
+151 }
+.fi
+.SS "int pthread_attr_setschedparam (\fBpthread_attr_t\fP *attr, const struct sched_param *param)"
+
+.PP
+Definizione alla linea 112 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::param\&.
+.PP
+.nf
+112                                                                                              {
+113     if(!attr) {
+114         errno = EINVAL;
+115         return 1;
+116     }
+117 
+118     memcpy(&attr->param, param, sizeof(struct sched_param));
+119     return 0; 
+120 }
+.fi
+.SS "int pthread_attr_setschedpolicy (\fBpthread_attr_t\fP *attr, intpolicy)"
+
+.PP
+Definizione alla linea 128 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+128                                                                          {
+129     errno = ENOSYS;
+130     return 1;
+131 }
+.fi
+.SS "int pthread_attr_setscope (\fBpthread_attr_t\fP *attr, intcontentionscope)"
+
+.PP
+Definizione alla linea 163 del file pthread_attr\&.c\&.
+.PP
+Referenzia pthread_attr::contentionscope, e errno\&.
+.PP
+.nf
+163                                                                             {
+164     if(!attr) {
+165         errno = EINVAL;
+166         return 1;
+167     }
+168 
+169     attr->contentionscope = contentionscope;
+170     return 0;
+171 }
+.fi
+.SS "int pthread_attr_setstackaddr (\fBpthread_attr_t\fP *attr, void *stackaddr)"
+
+.PP
+Definizione alla linea 68 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stackaddr\&.
+.PP
+.nf
+68                                                                             {
+69     if(!attr) {
+70         errno = EINVAL;
+71         return 1;
+72     }
+73 
+74     attr->stackaddr = stackaddr;
+75     return 0;
+76 }
+.fi
+.SS "int pthread_attr_setstacksize (\fBpthread_attr_t\fP *attr, size_tstacksize)"
+
+.PP
+Definizione alla linea 89 del file pthread_attr\&.c\&.
+.PP
+Referenzia errno, e pthread_attr::stacksize\&.
+.PP
+.nf
+89                                                                              {
+90     if(!attr) {
+91         errno = EINVAL;
+92         return 1;
+93     }
+94 
+95     attr->stacksize = stacksize;
+96     return 0;
+97 }
+.fi
+.SS "int pthread_barrier_destroy (\fBpthread_barrier_t\fP *barrier)"
+
+.PP
+Definizione alla linea 28 del file pthread_barrier\&.c\&.
+.PP
+Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&.
+.PP
+.nf
+28                                                                {
+29     if(barrier == NULL) {
+30         errno = EINVAL;
+31         return 1;
+32     }
+33 
+34     barrier->curr_height = 0;
+35     barrier->init_height = 0;
+36     
+37 
+38     return 0;
+39 }
+.fi
+.SS "int pthread_barrier_init (\fBpthread_barrier_t\fP *barrier, const \fBpthread_barrierattr_t\fP *attr, unsigned intcount)"
+
+.PP
+Definizione alla linea 9 del file pthread_barrier\&.c\&.
+.PP
+Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&.
+.PP
+.nf
+9                                                                                                                    {
+10     if(barrier == NULL) {
+11         errno = EINVAL;
+12         return 1;
+13     }
+14 
+15     if(count == 0) {
+16         errno = EINVAL;
+17         return 1;
+18     }
+19 
+20     barrier->curr_height = 0;
+21     barrier->init_height = count;
+22     
+23 
+24     return 0;
+25 }
+.fi
+.SS "int pthread_barrier_wait (\fBpthread_barrier_t\fP *barrier)"
+
+.PP
+Definizione alla linea 42 del file pthread_barrier\&.c\&.
+.PP
+Referenzia pthread_barrier::curr_height, errno, pthread_barrier::init_height, e sched_yield()\&.
+.PP
+.nf
+42                                                             {
+43     if(barrier == NULL) {
+44         errno = EINVAL;
+45         return 1;
+46     }
+47 
+48     barrier->curr_height += 1;
+49 
+50     while(barrier->curr_height < barrier->init_height)
+51         sched_yield();
+52 
+53     return 0;
+54 }
+.fi
+.SS "int pthread_barrierattr_destroy (\fBpthread_barrierattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 20 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+20                                                                     {
+21     if(attr == NULL) {
+22         errno = EINVAL;
+23         return 1;
+24     }
+25 
+26     attr->pshared = 0;
+27     return 0;
+28 }
+.fi
+.SS "int pthread_barrierattr_getpshared (const \fBpthread_barrierattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 31 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+31                                                                                            {
+32     if(attr == NULL) {
+33         errno = EINVAL;
+34         return 1;
+35     }
+36 
+37     if(pshared == NULL) {
+38         errno = EINVAL;
+39         return 1;
+40     }
+41     
+42     *pshared = attr->pshared;
+43     return 0;
+44 }
+.fi
+.SS "int pthread_barrierattr_init (\fBpthread_barrierattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 9 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+9                                                                  {
+10     if(attr == NULL) {
+11         errno = EINVAL;
+12         return 1;
+13     }
+14 
+15     attr->pshared = 0;
+16     return 0;
+17 }
+.fi
+.SS "int pthread_barrierattr_setpshared (\fBpthread_barrierattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 47 del file pthread_barrierattr\&.c\&.
+.PP
+Referenzia errno, e pthread_barrierattr::pshared\&.
+.PP
+.nf
+47                                                                                     {
+48     if(attr == NULL) {
+49         errno = EINVAL;
+50         return 1;
+51     }
+52 
+53     attr->pshared = pshared;
+54     return 0;
+55 }
+.fi
+.SS "int pthread_cancel (\fBpthread_t\fPthread)"
+
+.PP
+Definizione alla linea 7 del file pthread_cancel\&.c\&.
+.PP
+Referenzia pthread_detach()\&.
+.PP
+.nf
+7                                             {
+8     return pthread_detach(thread);
+9 }
+.fi
+.SS "int pthread_cond_broadcast (\fBpthread_cond_t\fP *cond)"
+
+.PP
+Definizione alla linea 116 del file pthread_cond\&.c\&.
+.PP
+Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+116                                                         {
+117     if(!__pthread_queue) {
+118         errno = ESRCH;
+119         return -1;
+120     }
+121 
+122 
+123     pthread_context_t* tmp = __pthread_queue;
+124     while(tmp) {
+125         if(tmp->cond == cond) {
+126             if(tmp->cond->waiting) {
+127                 tmp->cond->semaphore = 0;       
+128             }
+129         }
+130 
+131         tmp = tmp->next;
+132     }
+133 
+134 
+135     return 0;
+136 }
+.fi
+.SS "int pthread_cond_destroy (\fBpthread_cond_t\fP *cond)"
+
+.PP
+Definizione alla linea 25 del file pthread_cond\&.c\&.
+.PP
+Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+25                                                       {
+26     if(!cond) {
+27         errno = EINVAL;
+28         return 1;
+29     }
+30 
+31     if(cond->waiting) {
+32         errno = EBUSY;
+33         return 1;
+34     }
+35 
+36 
+37     cond->waiting = 0;
+38     cond->semaphore = 0;        
+39     
+40     return 0;
+41 }
+.fi
+.SS "int pthread_cond_init (\fBpthread_cond_t\fP *cond, const \fBpthread_condattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 13 del file pthread_cond\&.c\&.
+.PP
+Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+13                                                                                    {
+14     if(!cond) {
+15         errno = EINVAL;
+16         return 1;
+17     }
+18 
+19     cond->waiting = 0;
+20     cond->semaphore = 0;
+21 
+22     return 0;
+23 }
+.fi
+.SS "int pthread_cond_signal (\fBpthread_cond_t\fP *cond)"
+
+.PP
+Definizione alla linea 93 del file pthread_cond\&.c\&.
+.PP
+Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+93                                                      {
+94     if(!__pthread_queue) {
+95         errno = ESRCH;
+96         return -1;
+97     }
+98 
+99 
+100     pthread_context_t* tmp = __pthread_queue;
+101     while(tmp) {
+102         if(tmp->cond == cond) {
+103             if(tmp->cond->waiting) {
+104                 tmp->cond->semaphore = 0;
+105                 return 0;           
+106             }
+107         }
+108 
+109         tmp = tmp->next;
+110     }
+111 
+112     errno = ESRCH;
+113     return -1;
+114 }
+.fi
+.SS "int pthread_cond_timedwait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
+
+.PP
+Definizione alla linea 44 del file pthread_cond\&.c\&.
+.PP
+Referenzia pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unlock(), pthread_self(), sched_yield(), pthread_cond::semaphore, e pthread_cond::waiting\&.
+.PP
+.nf
+44                                                                                                                 {
+45         if(!cond) {
+46         errno = EINVAL;
+47         return 1;
+48     }
+49 
+50     if(!mutex) {
+51         errno = EINVAL;
+52         return 1;
+53     }
+54 
+55     if(mutex->owner != pthread_self()) {
+56         errno = EINVAL;
+57         return 1;
+58     }
+59 
+60     pthread_context_t* ctx = (pthread_context_t*) pthread_self();
+61     if(!ctx) {
+62         errno = EINVAL;
+63         return -1;
+64     }
+65 
+66     ctx->cond = cond;
+67     ctx->cond->waiting = 1;
+68     ctx->cond->semaphore = 1;
+69 
+70     int t0;
+71     if(abstime)
+72         t0 = time(NULL) + abstime->tv_sec;
+73     else
+74         t0 = ~0;
+75 
+76     while(ctx->cond->semaphore == 1 && (time(NULL) < t0))
+77         sched_yield();
+78 
+79     ctx->cond->waiting = 0;
+80     ctx->cond->semaphore = 0;
+81     ctx->cond = 0;
+82 
+83     pthread_mutex_unlock(mutex);
+84 
+85     return 0;
+86 }
+.fi
+.SS "int pthread_cond_wait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex)"
+
+.PP
+Definizione alla linea 88 del file pthread_cond\&.c\&.
+.PP
+Referenzia pthread_cond_timedwait()\&.
+.PP
+.nf
+88                                                                            {
+89     return pthread_cond_timedwait(cond, mutex, NULL);
+90 }
+.fi
+.SS "int pthread_condattr_destroy (\fBpthread_condattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 18 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+18                                                               {
+19     if(!attr) {
+20         errno = EINVAL;
+21         return 1;
+22     }
+23 
+24     attr->pshared = 0;
+25     return 0;
+26 }
+.fi
+.SS "int pthread_condattr_getpshared (const \fBpthread_condattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 29 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+29                                                                                      {
+30     if(!attr) {
+31         errno = EINVAL;
+32         return 1;
+33     }
+34 
+35     
+36     *pshared = attr->pshared;
+37     return 0;
+38 }
+.fi
+.SS "int pthread_condattr_init (\fBpthread_condattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 7 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+7                                                            {
+8     if(!attr) {
+9         errno = EINVAL;
+10         return 1;
+11     }
+12 
+13     attr->pshared = 0;
+14     return 0;
+15 }
+.fi
+.SS "int pthread_condattr_setpshared (\fBpthread_condattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 41 del file pthread_condattr\&.c\&.
+.PP
+Referenzia errno, e pthread_condattr::pshared\&.
+.PP
+.nf
+41                                                                               {
+42     if(!attr) {
+43         errno = EINVAL;
+44         return 1;
+45     }
+46 
+47     attr->pshared = pshared;
+48     return 0;
+49 }
+.fi
+.SS "int pthread_create (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*)(void *)start, void *arg)"
+
+.PP
+Definizione alla linea 37 del file pthread_create\&.c\&.
+.PP
+Referenzia __os_thread_create, __pthread_counts, __pthread_handler__(), __pthread_init_queue(), __pthread_queue, pthread_context::attr, pthread_once::done, pthread_context::entry, errno, pthread_attr::inheritsched, pthread_context::next, pthread_context::once, pthread_context::param, pthread_attr::param, pthread_attr_setschedparam(), PTHREAD_INHERIT_SCHED, pthread_self(), PTHREAD_THREADS_MAX, pthread_once::started, e pthread_context::tid\&.
+.PP
+.nf
+37                                                                                                            {
+38 
+39     __pthread_init_queue();
+40 
+41     if(!thread) {
+42         errno = EINVAL;
+43         return 1;
+44     }
+45 
+46     if(__pthread_counts > PTHREAD_THREADS_MAX) {
+47         errno = EAGAIN;
+48         return 1;
+49     }
+50 
+51     pthread_context_t* ctx = malloc(sizeof(pthread_context_t));
+52     memset(ctx, 0, sizeof(pthread_context_t));
+53 
+54     ctx->entry = start;
+55     ctx->param = arg;
+56     ctx->once\&.done = 0;
+57     ctx->once\&.started = -1;
+58     ctx->next = 0;
+59 
+60     if(attr)
+61         memcpy(&ctx->attr, attr, sizeof(pthread_attr_t));
+62 
+63     if(ctx->attr\&.inheritsched == PTHREAD_INHERIT_SCHED) {
+64         pthread_t px = pthread_self();
+65         if(px) {
+66             pthread_context_t* inh = (pthread_context_t*) px;
+67             pthread_attr_setschedparam(&ctx->attr, &inh->attr\&.param);
+68         }
+69     }
+70 
+71 
+72     __pthread_counts += 1;
+73     *thread = (pthread_t) ctx;
+74     
+75     
+76     ctx->next = __pthread_queue;
+77     __pthread_queue = ctx;
+78         
+79 
+80 
+81     ctx->tid = __os_thread_create(__pthread_handler__, ctx, ctx->attr\&.param\&.sched_priority);
+82     return 0;
+83 }
+.fi
+.SS "int pthread_detach (\fBpthread_t\fPthread)"
+
+.PP
+Definizione alla linea 12 del file pthread_detach\&.c\&.
+.PP
+Referenzia __os_thread_kill, __pthread_queue, pthread_once::done, errno, pthread_context::once, e pthread_context::tid\&.
+.PP
+.nf
+12                                             {
+13     if(!thread) {
+14         errno = EINVAL;
+15         return 1;
+16     }
+17 
+18     if(!__pthread_queue) {
+19         errno = ESRCH;
+20         return 1;
+21     }
+22 
+23     pthread_context_t* ctx = (pthread_context_t*) thread;
+24     if(__os_thread_kill(ctx->tid, SIGKILL) == 0)
+25         ctx->once\&.done = 1;
+26     else {
+27         errno = ESRCH;
+28         return 1;
+29     }
+30 
+31     __pthread_counts -= 1;
+32     pthread_context_t* tmp = __pthread_queue;
+33 
+34     if(tmp->next) {
+35         while(tmp->next) {
+36             if(tmp->next == ctx) {
+37                 tmp->next = ctx->next;
+38                 break;
+39             }
+40 
+41             tmp = tmp->next;
+42         }
+43     } else {
+44         if(__pthread_queue == ctx)
+45             __pthread_queue = 0;
+46     }
+47 
+48     return 0;
+49 }
+.fi
+.SS "int pthread_equal (\fBpthread_t\fPt1, \fBpthread_t\fPt2)"
+
+.PP
+Definizione alla linea 7 del file pthread_equal\&.c\&.
+.PP
+Referenzia pthread_context::tid\&.
+.PP
+.nf
+7                                                      {
+8     pthread_context_t* c1 = (pthread_context_t*) t1;
+9     pthread_context_t* c2 = (pthread_context_t*) t2;
+10 
+11     return (c1->tid == c2->tid);
+12 }
+.fi
+.SS "void pthread_exit (void *value_ptr)"
+
+.PP
+Definizione alla linea 8 del file pthread_exit\&.c\&.
+.PP
+Referenzia pthread_context::exitval, pthread_detach(), e pthread_self()\&.
+.PP
+.nf
+8                                           {
+9     pthread_t ptx = pthread_self();
+10     pthread_context_t* ctx = (pthread_context_t*) ptx;
+11 
+12     if(ptx) {
+13         ctx->exitval = value_ptr;
+14         pthread_detach(ptx);
+15     }else
+16         abort();
+17 
+18     for(;;);
+19 }
+.fi
+.SS "int pthread_getconcurrency (void)"
+
+.PP
+Definizione alla linea 57 del file pthread_sched\&.c\&.
+.PP
+Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&.
+.PP
+.nf
+57                                         {
+58     pthread_t thread = pthread_self();
+59     if(!thread) {
+60         errno = ESRCH;
+61         return 1;
+62     }
+63 
+64     pthread_context_t* ctx = (pthread_context_t*) thread;
+65     return ctx->attr\&.param\&.sched_priority;
+66 }
+.fi
+.SS "int pthread_getschedparam (\fBpthread_t\fPthread, int *policy, struct sched_param *param)"
+
+.PP
+Definizione alla linea 26 del file pthread_sched\&.c\&.
+.PP
+Referenzia errno, sched_getparam(), e pthread_context::tid\&.
+.PP
+.nf
+26                                                                                            {
+27     if(!thread) {
+28         errno = EINVAL;
+29         return 1;
+30     }
+31 
+32     if(param == NULL) {
+33         errno = EINVAL;
+34         return 1;
+35     }
+36     
+37     pthread_context_t* ctx = (pthread_context_t*) thread;
+38     if((*policy = sched_getparam(ctx->tid, param)) != -1)
+39         return 0;
+40     
+41     return 1;
+42 }
+.fi
+.SS "void* pthread_getspecific (\fBpthread_key_t\fPkey)"
+
+.PP
+Definizione alla linea 65 del file pthread_key\&.c\&.
+.PP
+Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
+.PP
+.nf
+65                                                     {
+66     if(key > PTHREAD_KEYS_MAX) {
+67         errno = EINVAL;
+68         return 0;
+69     }
+70 
+71     if(__pthread_keys[key]\&.used == 0) {
+72         errno = EINVAL;
+73         return 0;
+74     }
+75 
+76     return __pthread_keys[key]\&.value;
+77 }
+.fi
+.SS "int pthread_join (\fBpthread_t\fPthread, void **value_ptr)"
+
+.PP
+Definizione alla linea 8 del file pthread_join\&.c\&.
+.PP
+Referenzia pthread_once::done, errno, pthread_context::exitval, pthread_context::once, e sched_yield()\&.
+.PP
+.nf
+8                                                             {
+9     if(!thread) {
+10         errno = EINVAL;
+11         return 1;
+12     }
+13 
+14     pthread_context_t* ctx = (pthread_context_t*) thread;
+15     while(ctx->once\&.done == 0)
+16         sched_yield();
+17 
+18     if(value_ptr)
+19         *value_ptr = ctx->exitval;
+20 
+21     return 0;
+22 }
+.fi
+.SS "int pthread_key_create (\fBpthread_key_t\fP *key, void(*)(void *)destructor)"
+
+.PP
+Definizione alla linea 9 del file pthread_key\&.c\&.
+.PP
+Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, e __pthread_key::value\&.
+.PP
+.nf
+9                                                                               {
+10     if(!key) {
+11         errno = EINVAL;
+12         return 1;
+13     }
+14 
+15     int i;
+16     for(i = 0; i < PTHREAD_KEYS_MAX; i++) {
+17         if(__pthread_keys[i]\&.used == 0) {
+18             __pthread_keys[i]\&.used = 1;
+19             __pthread_keys[i]\&.dtor = destructor;
+20             __pthread_keys[i]\&.value = NULL;
+21 
+22             *key = i;
+23             return 0;
+24         }
+25     }
+26 
+27     errno = EAGAIN;
+28     return 1;
+29 }
+.fi
+.SS "int pthread_key_delete (\fBpthread_key_t\fPkey)"
+
+.PP
+Definizione alla linea 32 del file pthread_key\&.c\&.
+.PP
+Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, __pthread_key::value, e value\&.
+.PP
+.nf
+32                                                  {
+33     if(key > PTHREAD_KEYS_MAX) {
+34         errno = EINVAL;
+35         return 1;
+36     }
+37 
+38     if(__pthread_keys[key]\&.dtor)
+39         __pthread_keys[key]\&.dtor(__pthread_keys[key]\&.value);
+40 
+41     __pthread_keys[key]\&.used = 0;
+42     __pthread_keys[key]\&.dtor = 0;
+43     __pthread_keys[key]\&.value = NULL;
+44     
+45     return 0;
+46 }
+.fi
+.SS "int pthread_mutex_destroy (\fBpthread_mutex_t\fP *mutex)"
+
+.PP
+Definizione alla linea 46 del file pthread_mutex\&.c\&.
+.PP
+Referenzia errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, pthread_mutex::recursion, e pthread_mutex::time\&.
+.PP
+.nf
+46                                                          {
+47     if(!mutex) {
+48         errno = EINVAL;
+49         return 1;
+50     }
+51 
+52     if(mutex->lock == 1) {
+53         errno = EBUSY;
+54         return 1;
+55     }
+56 
+57     mutex->lock = 0;
+58     mutex->recursion = 0;
+59     mutex->kind = 0;
+60     mutex->owner = 0;
+61     mutex->event = 0;
+62     mutex->time = 0;
+63 
+64     return 0;
+65 }
+.fi
+.SS "int pthread_mutex_init (\fBpthread_mutex_t\fP *mutex, const \fBpthread_mutexattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 26 del file pthread_mutex\&.c\&.
+.PP
+Referenzia errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_DEFAULT, pthread_mutex::recursion, e pthread_mutex::time\&.
+.PP
+.nf
+26                                                                                        {
+27     if(!mutex) {
+28         errno = EINVAL;
+29         return 1;
+30     }
+31 
+32     mutex->lock = 0;
+33     mutex->recursion = 0;
+34     mutex->kind = PTHREAD_MUTEX_DEFAULT;
+35     mutex->owner = 0;
+36     mutex->event = 0;
+37     mutex->time = 0;
+38 
+39     if(attr)
+40         mutex->kind = attr->kind;
+41 
+42     return 0;
+43 }
+.fi
+.SS "int pthread_mutex_lock (\fBpthread_mutex_t\fP *mutex)"
+
+.PP
+Definizione alla linea 67 del file pthread_mutex\&.c\&.
+.PP
+Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), pthread_mutex::recursion, e sched_yield()\&.
+.PP
+.nf
+67                                                       {
+68     if(!mutex) {
+69         errno = EINVAL;
+70         return 1;
+71     }
+72 
+73     if(mutex->owner != pthread_self()) {
+74         while(__locked_mtx(mutex))
+75             sched_yield();
+76         
+77         mutex->owner = pthread_self();
+78         mutex->recursion = 0;
+79         mutex->lock = 1;
+80     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
+81         errno = EDEADLK;
+82         return 1;
+83     }
+84 
+85     if(mutex->kind == PTHREAD_MUTEX_RECURSIVE)
+86         mutex->recursion += 1;
+87 
+88     return 0;
+89 }
+.fi
+.SS "int pthread_mutex_timedlock (\fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
+
+.PP
+Definizione alla linea 92 del file pthread_mutex\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_lock(), e pthread_mutex::time\&.
+.PP
+.nf
+92                                                                                            {
+93     if(abstime == NULL) {
+94         errno = EINVAL;
+95         return 1;
+96     }
+97 
+98     if(pthread_mutex_lock(mutex) == 0)
+99         mutex->time = time(NULL) + abstime->tv_sec;
+100     else
+101         return 1;
+102 
+103     return 0;
+104 }
+.fi
+.SS "int pthread_mutex_trylock (\fBpthread_mutex_t\fP *mutex)"
+
+.PP
+Definizione alla linea 107 del file pthread_mutex\&.c\&.
+.PP
+Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), e pthread_mutex::recursion\&.
+.PP
+.nf
+107                                                          {
+108     if(!mutex) {
+109         errno = EINVAL;
+110         return 1;
+111     }
+112 
+113     if(mutex->owner != pthread_self()) {
+114         if(__locked_mtx(mutex)) {
+115             errno = EBUSY;
+116             return 1;
+117         }
+118 
+119         mutex->owner = pthread_self();
+120         mutex->recursion = 0;
+121         mutex->lock = 1;
+122     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
+123         errno = EDEADLK;
+124         return 1;
+125     }
+126 
+127     if(mutex->kind == PTHREAD_MUTEX_RECURSIVE)
+128         mutex->recursion += 1;
+129 
+130     return 0;
+131 }
+.fi
+.SS "int pthread_mutex_unlock (\fBpthread_mutex_t\fP *mutex)"
+
+.PP
+Definizione alla linea 133 del file pthread_mutex\&.c\&.
+.PP
+Referenzia errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), e pthread_mutex::recursion\&.
+.PP
+.nf
+133                                                         {
+134     if(!mutex) {
+135         errno = EINVAL;
+136         return 1;
+137     }
+138 
+139     if(mutex->owner == pthread_self()) {
+140         if(mutex->kind == PTHREAD_MUTEX_RECURSIVE) {
+141             if(--(mutex->recursion))
+142                 return 0;
+143         }
+144 
+145         mutex->owner = 0;
+146         mutex->lock = 0;
+147     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
+148         errno = EPERM;
+149         return 1;
+150     }
+151 
+152     return 0;
+153 }
+.fi
+.SS "int pthread_mutexattr_destroy (\fBpthread_mutexattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 20 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, pthread_mutexattr::kind, e pthread_mutexattr::pshared\&.
+.PP
+.nf
+20                                                                 {
+21     if(!attr) {
+22         errno = EINVAL;
+23         return 1;
+24     }
+25 
+26     attr->pshared = 0;
+27     attr->kind = 0;
+28     
+29     return 0;
+30 }
+.fi
+.SS "int pthread_mutexattr_getpshared (const \fBpthread_mutexattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 32 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::pshared\&.
+.PP
+.nf
+32                                                                                        {
+33     if(!attr) {
+34         errno = EINVAL;
+35         return 1;
+36     }
+37 
+38     *pshared = attr->pshared;
+39     return 0;
+40 }
+.fi
+.SS "int pthread_mutexattr_gettype (\fBpthread_mutexattr_t\fP *attr, int *kind)"
+
+.PP
+Definizione alla linea 52 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::kind\&.
+.PP
+.nf
+52                                                                            {
+53     if(!attr) {
+54         errno = EINVAL;
+55         return 1;
+56     }
+57 
+58     *kind = attr->kind;
+59     return 0;
+60 }
+.fi
+.SS "int pthread_mutexattr_init (\fBpthread_mutexattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 8 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, pthread_mutexattr::kind, pthread_mutexattr::pshared, e PTHREAD_MUTEX_DEFAULT\&.
+.PP
+.nf
+8                                                              {
+9     if(!attr) {
+10         errno = EINVAL;
+11         return 1;
+12     }
+13 
+14     attr->pshared = 0;
+15     attr->kind = PTHREAD_MUTEX_DEFAULT;
+16     
+17     return 0;
+18 }
+.fi
+.SS "int pthread_mutexattr_setpshared (\fBpthread_mutexattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 42 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::pshared\&.
+.PP
+.nf
+42                                                                                 {
+43     if(!attr) {
+44         errno = EINVAL;
+45         return 1;
+46     }
+47 
+48     attr->pshared = pshared;
+49     return 0;
+50 }
+.fi
+.SS "int pthread_mutexattr_settype (\fBpthread_mutexattr_t\fP *attr, intkind)"
+
+.PP
+Definizione alla linea 62 del file pthread_mutexattr\&.c\&.
+.PP
+Referenzia errno, e pthread_mutexattr::kind\&.
+.PP
+.nf
+62                                                                           {
+63     if(!attr) {
+64         errno = EINVAL;
+65         return 1;
+66     }
+67 
+68     attr->kind = kind;
+69     return 0;
+70 }
+.fi
+.SS "int \fBpthread_once\fP (\fBpthread_once_t\fP *once_control, void(*)(void)init_routine)"
+
+.PP
+Definizione alla linea 7 del file pthread_once\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+7                                                                                   {
+8     errno = ENOSYS;
+9     return 1;
+10 }
+.fi
+.SS "int pthread_rwlock_destroy (\fBpthread_rwlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 34 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusive_waiters, pthread_rwlock::num_shared_waiters, pthread_rwlock::owner, pthread_mutex_destroy(), pthread_self(), pthread_rwlock::rdmutex, pthread_rwlock::shared_waiters, e pthread_rwlock::wrmutex\&.
+.PP
+.nf
+34                                                           {
+35     if(lock == NULL) {
+36         errno = EINVAL;
+37         return 1;
+38     }
+39 
+40     pthread_t thread = pthread_self();
+41     if(!thread) {
+42         errno = EFAULT;
+43         return 1;
+44     }
+45 
+46     if(thread != lock->owner) {
+47         errno = EPERM;
+48         return 1;
+49     }
+50 
+51     pthread_mutex_destroy(&lock->rdmutex);
+52     pthread_mutex_destroy(&lock->wrmutex);
+53 
+54     lock->shared_waiters = (handle_t) 0;
+55     lock->exclusive_waiters = (handle_t) 0;
+56     lock->num_shared_waiters = 0;
+57     lock->num_exclusive_waiters = 0;
+58     lock->owner = 0;
+59     
+60     return 0;
+61 }
+.fi
+.SS "int pthread_rwlock_init (\fBpthread_rwlock_t\fP *lock, const \fBpthread_rwlockattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 10 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusive_waiters, pthread_rwlock::num_shared_waiters, pthread_rwlock::owner, pthread_mutex_init(), pthread_self(), pthread_rwlock::rdmutex, pthread_rwlock::shared_waiters, e pthread_rwlock::wrmutex\&.
+.PP
+.nf
+10                                                                                          {
+11     if(lock == NULL) {
+12         errno = EINVAL;
+13         return 1;
+14     }
+15 
+16     pthread_t thread = pthread_self();
+17     if(!thread) {
+18         errno = EFAULT;
+19         return 1;
+20     }
+21 
+22     pthread_mutex_init(&lock->rdmutex, NULL);
+23     pthread_mutex_init(&lock->wrmutex, NULL);
+24 
+25     lock->shared_waiters = (handle_t) 0;
+26     lock->exclusive_waiters = (handle_t) 0;
+27     lock->num_shared_waiters = 0;
+28     lock->num_exclusive_waiters = 0;
+29     lock->owner = thread;
+30 
+31     return 0;
+32 }
+.fi
+.SS "int pthread_rwlock_rdlock (\fBpthread_rwlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 81 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_lock(), e pthread_rwlock::rdmutex\&.
+.PP
+.nf
+81                                                          {
+82     if(lock == NULL) {
+83         errno = EINVAL;
+84         return 1;
+85     }
+86 
+87     return pthread_mutex_lock(&lock->rdmutex);
+88 }
+.fi
+.SS "int pthread_rwlock_timedrdlock (\fBpthread_rwlock_t\fP *lock, const struct timespec *abstime)"
+
+.PP
+Definizione alla linea 90 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_timedlock(), e pthread_rwlock::rdmutex\&.
+.PP
+.nf
+90                                                                                               {
+91     if(lock == NULL) {
+92         errno = EINVAL;
+93         return 1;
+94     }
+95 
+96     return pthread_mutex_timedlock(&lock->rdmutex, abstime);
+97 }
+.fi
+.SS "int pthread_rwlock_timedwrlock (\fBpthread_rwlock_t\fP *lock, const struct timespec *abstime)"
+
+.PP
+Definizione alla linea 108 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_timedlock(), e pthread_rwlock::wrmutex\&.
+.PP
+.nf
+108                                                                                               {
+109     if(lock == NULL) {
+110         errno = EINVAL;
+111         return 1;
+112     }
+113 
+114     return pthread_mutex_timedlock(&lock->wrmutex, abstime);
+115 }
+.fi
+.SS "int pthread_rwlock_tryrdlock (\fBpthread_rwlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 63 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_trylock(), e pthread_rwlock::rdmutex\&.
+.PP
+.nf
+63                                                             {
+64     if(lock == NULL) {
+65         errno = EINVAL;
+66         return 1;
+67     }
+68 
+69     return pthread_mutex_trylock(&lock->rdmutex);
+70 }
+.fi
+.SS "int pthread_rwlock_trywrlock (\fBpthread_rwlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 72 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_trylock(), e pthread_rwlock::wrmutex\&.
+.PP
+.nf
+72                                                             {
+73     if(lock == NULL) {
+74         errno = EINVAL;
+75         return 1;
+76     }
+77 
+78     return pthread_mutex_trylock(&lock->wrmutex);
+79 }
+.fi
+.SS "int pthread_rwlock_unlock (\fBpthread_rwlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 117 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_unlock(), pthread_rwlock::rdmutex, e pthread_rwlock::wrmutex\&.
+.PP
+.nf
+117                                                          {
+118     if(lock == NULL) {
+119         errno = EINVAL;
+120         return 1;
+121     }
+122 
+123     if(pthread_mutex_unlock(&lock->rdmutex) != 0)
+124         return 1;
+125 
+126     if(pthread_mutex_unlock(&lock->wrmutex) != 0)
+127         return 1;
+128 
+129     return 0;
+130 }
+.fi
+.SS "int pthread_rwlock_wrlock (\fBpthread_rwlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 99 del file pthread_rwlock\&.c\&.
+.PP
+Referenzia errno, pthread_mutex_lock(), e pthread_rwlock::wrmutex\&.
+.PP
+.nf
+99                                                          {
+100     if(lock == NULL) {
+101         errno = EINVAL;
+102         return 1;
+103     }
+104 
+105     return pthread_mutex_lock(&lock->wrmutex);
+106 }
+.fi
+.SS "int pthread_rwlockattr_destroy (\fBpthread_rwlockattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 19 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+19                                                                   {
+20     if(attr == NULL) {
+21         errno = EINVAL;
+22         return 1;
+23     }
+24 
+25     attr->pshared = 0;
+26     return 0;
+27 }
+.fi
+.SS "int pthread_rwlockattr_getpshared (const \fBpthread_rwlockattr_t\fP *attr, int *pshared)"
+
+.PP
+Definizione alla linea 29 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+29                                                                                          {
+30     if(attr == NULL) {
+31         errno = EINVAL;
+32         return 1;
+33     }
+34 
+35     if(pshared == NULL) {
+36         errno = EINVAL;
+37         return 1;
+38     }
+39 
+40     *pshared = attr->pshared;
+41     return 0;
+42 }
+.fi
+.SS "int pthread_rwlockattr_init (\fBpthread_rwlockattr_t\fP *attr)"
+
+.PP
+Definizione alla linea 9 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+9                                                                {
+10     if(attr == NULL) {
+11         errno = EINVAL;
+12         return 1;
+13     }
+14 
+15     attr->pshared = 0;
+16     return 0;
+17 }
+.fi
+.SS "int pthread_rwlockattr_setpshared (\fBpthread_rwlockattr_t\fP *attr, intpshared)"
+
+.PP
+Definizione alla linea 44 del file pthread_rwlockattr\&.c\&.
+.PP
+Referenzia errno, e pthread_rwlockattr::pshared\&.
+.PP
+.nf
+44                                                                                   {
+45     if(attr == NULL) {
+46         errno = EINVAL;
+47         return 1;
+48     }
+49 
+50     attr->pshared = pshared;
+51     return 0;
+52 }
+.fi
+.SS "\fBpthread_t\fP pthread_self (void)"
+
+.PP
+Definizione alla linea 10 del file pthread_self\&.c\&.
+.PP
+Referenzia __os_gettid, __pthread_queue, errno, pthread_context::next, e pthread_context::tid\&.
+.PP
+.nf
+10                                     {
+11     if(!__pthread_queue) {
+12         errno = ESRCH;
+13         return 0;
+14     }
+15 
+16     int tid = __os_gettid();
+17     pthread_context_t* tmp = __pthread_queue;
+18     while(tmp) {
+19         if(tmp->tid == tid)
+20             return (pthread_t) tmp;
+21 
+22         tmp = tmp->next;
+23     }
+24 
+25     errno = ESRCH;
+26     return 0;
+27 }
+.fi
+.SS "int pthread_setcancelstate (intstate, int *oldstate)"
+
+.PP
+Definizione alla linea 12 del file pthread_cancel\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+12                                                             {
+13     errno = ENOSYS;
+14     return 1;
+15 }
+.fi
+.SS "int pthread_setcanceltype (inttype, int *oldtype)"
+
+.PP
+Definizione alla linea 18 del file pthread_cancel\&.c\&.
+.PP
+Referenzia errno\&.
+.PP
+.nf
+18                                                          {
+19     errno = ENOSYS;
+20     return 1;
+21 }
+.fi
+.SS "int pthread_setconcurrency (intlevel)"
+
+.PP
+Definizione alla linea 44 del file pthread_sched\&.c\&.
+.PP
+Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&.
+.PP
+.nf
+44                                              {
+45     pthread_t thread = pthread_self();
+46     if(!thread) {
+47         errno = ESRCH;
+48         return 1;
+49     }
+50 
+51     pthread_context_t* ctx = (pthread_context_t*) thread;
+52     ctx->attr\&.param\&.sched_priority = level;
+53 
+54     return 0;
+55 }
+.fi
+.SS "int pthread_setschedparam (\fBpthread_t\fPthread, intpolicy, const struct sched_param *param)"
+
+.PP
+Definizione alla linea 11 del file pthread_sched\&.c\&.
+.PP
+Referenzia errno, sched_setparam(), e pthread_context::tid\&.
+.PP
+.nf
+11                                                                                                 {
+12     if(!thread) {
+13         errno = EINVAL;
+14         return 1;
+15     }
+16 
+17     if(param == NULL) {
+18         errno = EINVAL;
+19         return 1;
+20     }
+21 
+22     pthread_context_t* ctx = (pthread_context_t*) thread;
+23     return sched_setparam(ctx->tid, param);
+24 }
+.fi
+.SS "int pthread_setspecific (\fBpthread_key_t\fPkey, const void *value)"
+
+.PP
+Definizione alla linea 49 del file pthread_key\&.c\&.
+.PP
+Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
+.PP
+.nf
+49                                                                      {
+50     if(key > PTHREAD_KEYS_MAX) {
+51         errno = EINVAL;
+52         return 1;
+53     }
+54 
+55     if(__pthread_keys[key]\&.used == 0) {
+56         errno = EINVAL;
+57         return 1;
+58     }
+59 
+60     __pthread_keys[key]\&.value = (void*) value;
+61     return 0;
+62 }
+.fi
+.SS "int pthread_spin_destroy (\fBpthread_spinlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 19 del file pthread_spin\&.c\&.
+.PP
+Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_destroy()\&.
+.PP
+.nf
+19                                                           {
+20     if(!lock) {
+21         errno = EINVAL;
+22         return 1;
+23     }
+24 
+25     lock->interlock = 0;
+26     pthread_mutex_destroy(&lock->mutex);
+27 
+28     return 0;
+29 }
+.fi
+.SS "int pthread_spin_init (\fBpthread_spinlock_t\fP *lock, intpshared)"
+
+.PP
+Definizione alla linea 7 del file pthread_spin\&.c\&.
+.PP
+Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_init()\&.
+.PP
+.nf
+7                                                                     {
+8     if(!lock) {
+9         errno = EINVAL;
+10         return 1;
+11     }
+12 
+13     lock->interlock = 0;
+14     pthread_mutex_init(&lock->mutex, NULL);
+15 
+16     return 0;
+17 }
+.fi
+.SS "int pthread_spin_lock (\fBpthread_spinlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 31 del file pthread_spin\&.c\&.
+.PP
+Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_lock()\&.
+.PP
+.nf
+31                                                        {
+32     if(!lock) {
+33         errno = EINVAL;
+34         return 1;
+35     }
+36 
+37     if(pthread_mutex_lock(&lock->mutex) == 0)
+38         lock->interlock = 1;
+39     else
+40         return 1; /* errno already setted */
+41 
+42     return 0;
+43 }
+.fi
+.SS "int pthread_spin_trylock (\fBpthread_spinlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 45 del file pthread_spin\&.c\&.
+.PP
+Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_trylock()\&.
+.PP
+.nf
+45                                                           {
+46     if(!lock) {
+47         errno = EINVAL;
+48         return 1;
+49     }
+50 
+51     if(pthread_mutex_trylock(&lock->mutex) == 0)
+52         lock->interlock = 1;
+53     else
+54         return 1; /* errno already setted */
+55 
+56     return 0;
+57 }
+.fi
+.SS "int pthread_spin_unlock (\fBpthread_spinlock_t\fP *lock)"
+
+.PP
+Definizione alla linea 59 del file pthread_spin\&.c\&.
+.PP
+Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_unlock()\&.
+.PP
+.nf
+59                                                          {
+60     if(!lock) {
+61         errno = EINVAL;
+62         return 1;
+63     }
+64 
+65     if(pthread_mutex_unlock(&lock->mutex) == 0)
+66         lock->interlock = 0;
+67     else
+68         return 1; /* errno already setted */
+69     
+70     return 0;
+71 }
+.fi
+.SS "void pthread_testcancel (void)"
+
+.PP
+Definizione alla linea 23 del file pthread_cancel\&.c\&.
+.PP
+.nf
+23                                      {
+24     /* Boh ?? */
+25 }
+.fi
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

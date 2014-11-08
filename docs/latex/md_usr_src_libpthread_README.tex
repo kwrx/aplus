@@ -1,0 +1,33 @@
+P\+O\+S\+I\+X Threads, usually referred to as Pthreads, is a P\+O\+S\+I\+X standard for threads. The standard, P\+O\+S\+I\+X.\+1c, Threads extensions (I\+E\+E\+E Std 1003.\+1c-\/1995), defines an A\+P\+I for creating and manipulating threads.
+
+\paragraph*{Required function}
+
+
+\begin{DoxyItemize}
+\item Create a Thread;
+\item Terminate a Thread;
+\item Get Thread I\+D.
+\end{DoxyItemize}
+
+``` tid\+\_\+t \hyperlink{win32_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}{\+\_\+\+\_\+os\+\_\+thread\+\_\+create(void$\ast$ entrypoint, void$\ast$ params, int priority)}; int \hyperlink{win32_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill(int killid, int exitcode)}; tid\+\_\+t \hyperlink{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\+\_\+\+\_\+os\+\_\+gettid()};
+
+See \char`\"{}/platform/win32/hooks.\+h\char`\"{} as example. ```
+
+\paragraph*{Current status}
+
+
+\begin{DoxyItemize}
+\item \mbox{[}X\mbox{]} Thread functions
+\item \mbox{[}X\mbox{]} Thread attribute functions
+\item \mbox{[}X\mbox{]} Scheduling functions
+\item \mbox{[}X\mbox{]} Thread specific data functions
+\item \mbox{[}X\mbox{]} Mutex attribute functions
+\item \mbox{[}X\mbox{]} Mutex functions
+\item \mbox{[}X\mbox{]} Condition variable attribute functions
+\item \mbox{[}X\mbox{]} Condition variable functions
+\item \mbox{[}X\mbox{]} Barrier attribute functions
+\item \mbox{[}X\mbox{]} Barrier functions
+\item \mbox{[}X\mbox{]} Read-\/write lock attribute functions
+\item \mbox{[}X\mbox{]} Read-\/write lock functions
+\item \mbox{[}X\mbox{]} Spinlock functions 
+\end{DoxyItemize}

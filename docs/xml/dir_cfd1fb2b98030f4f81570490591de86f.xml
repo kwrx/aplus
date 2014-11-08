@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_cfd1fb2b98030f4f81570490591de86f" kind="dir">
+    <compoundname>src/include/aplus</compoundname>
+    <innerdir refid="dir_b8ca20df803ef84e5c6a3ca32d69d2c8">src/include/aplus/net</innerdir>
+    <innerfile refid="attribute_8h">attribute.h</innerfile>
+    <innerfile refid="bufio_8h">bufio.h</innerfile>
+    <innerfile refid="fs_8h">fs.h</innerfile>
+    <innerfile refid="list_8h">list.h</innerfile>
+    <innerfile refid="mm_8h">mm.h</innerfile>
+    <innerfile refid="netif_8h">netif.h</innerfile>
+    <innerfile refid="pci_8h">pci.h</innerfile>
+    <innerfile refid="spinlock_8h">spinlock.h</innerfile>
+    <innerfile refid="syscall_8h">syscall.h</innerfile>
+    <innerfile refid="task_8h">task.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/include/aplus/"/>
+  </compounddef>
+</doxygen>

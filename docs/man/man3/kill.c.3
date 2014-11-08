@@ -1,0 +1,57 @@
+.TH "src/syscall/kill.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/kill.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Funzioni"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_kill\fP (pid_t pid, int signal)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_kill\fP, 7)"
+.br
+.in -1c
+.SH "Documentazione delle funzioni"
+.PP 
+.SS "int sys_kill (pid_tpid, intsignal)"
+
+.PP
+Definizione alla linea 10 del file kill\&.c\&.
+.PP
+Referenzia errno, schedule_getbypid(), e task::signal_sig\&.
+.PP
+.nf
+10                                     {
+11     task_t* task = (task_t*) schedule_getbypid(pid);
+12     if(!task) {
+13         errno = ESRCH;
+14         return -1;
+15     }
+16     
+17     task->signal_sig = signal;
+18     return 0;
+19 }
+.fi
+.SS "SYSCALL (\fBsys_kill\fP, 7)"
+
+.SH "Autore"
+.PP 
+Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.

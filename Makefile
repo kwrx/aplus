@@ -41,6 +41,7 @@ aplus : $(OFILES)
 	
 
 iso: aplus
+	@genisoimage -o $(TOP)/bin/initrd initrd
 	@grub-mkrescue $(TOP)/bin -o $(TOP)/aplus.iso
 	@$(RM) *.pcap
 	@qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump
@@ -49,6 +50,13 @@ iso: aplus
 
 clean:
 	-@$(RM) $(OFILES)
+
+
+doc:
+	-@mkdir ./usr
+	-@cp -r $(CROSSLIB)/src ./usr
+	@doxygen docs/Doxyfile
+	-@$(RM) -r usr
 	
 git: clean
 	-@mkdir ./usr

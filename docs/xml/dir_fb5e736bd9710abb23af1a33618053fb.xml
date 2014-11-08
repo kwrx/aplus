@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_fb5e736bd9710abb23af1a33618053fb" kind="dir">
+    <compoundname>src/syscall</compoundname>
+    <innerfile refid="__exit_8c">_exit.c</innerfile>
+    <innerfile refid="chown_8c">chown.c</innerfile>
+    <innerfile refid="clone_8c">clone.c</innerfile>
+    <innerfile refid="close_8c">close.c</innerfile>
+    <innerfile refid="execve_8c">execve.c</innerfile>
+    <innerfile refid="fcntl_8c">fcntl.c</innerfile>
+    <innerfile refid="fork_8c">fork.c</innerfile>
+    <innerfile refid="fstat_8c">fstat.c</innerfile>
+    <innerfile refid="getgroups_8c">getgroups.c</innerfile>
+    <innerfile refid="getpid_8c">getpid.c</innerfile>
+    <innerfile refid="gettimeofday_8c">gettimeofday.c</innerfile>
+    <innerfile refid="ioctl_8c">ioctl.c</innerfile>
+    <innerfile refid="isatty_8c">isatty.c</innerfile>
+    <innerfile refid="kill_8c">kill.c</innerfile>
+    <innerfile refid="link_8c">link.c</innerfile>
+    <innerfile refid="lseek_8c">lseek.c</innerfile>
+    <innerfile refid="mount_8c">mount.c</innerfile>
+    <innerfile refid="open_8c">open.c</innerfile>
+    <innerfile refid="read_8c">read.c</innerfile>
+    <innerfile refid="src_2syscall_2readdir_8c">readdir.c</innerfile>
+    <innerfile refid="sbrk_8c">sbrk.c</innerfile>
+    <innerfile refid="stat_8c">stat.c</innerfile>
+    <innerfile refid="test_8c">test.c</innerfile>
+    <innerfile refid="times_8c">times.c</innerfile>
+    <innerfile refid="umount_8c">umount.c</innerfile>
+    <innerfile refid="unlink_8c">unlink.c</innerfile>
+    <innerfile refid="wait_8c">wait.c</innerfile>
+    <innerfile refid="write_8c">write.c</innerfile>
+    <innerfile refid="yield_8c">yield.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/syscall/"/>
+  </compounddef>
+</doxygen>

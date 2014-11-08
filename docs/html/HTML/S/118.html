@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>src/syscall/link.c</title>
+<meta name='robots' content='noindex,nofollow'>
+<meta name='generator' content='GLOBAL-5.7.1'>
+</head>
+<body text='#191970' bgcolor='#f5f5dc' vlink='gray'>
+<a name='TOP'><h2><a href='../mains.html'>root</a>/<a href='../files/164.html'>src</a>/<a href='../files/175.html'>syscall</a>/link.c</h2>
+<i><font color='green'>/* [&lt;][&gt;]<a href='#L14'>[^]</a>[v][top]<a href='#BOTTOM'>[bottom]</a><a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+<hr>
+<h2>DEFINITIONS</h2>
+This source file includes following definitions.
+<ol>
+<li><a href='#L14' title='Defined at 14.'>sys_link</a>
+</ol>
+<hr>
+<pre>
+<a name='L1'>   1 
+<a name='L2'>   2 <font color='darkred'>#include</font> &lt;<a href='102.html'>aplus.h</a>&gt;
+<a name='L3'>   3 <font color='darkred'>#include</font> &lt;<a href='86.html'>aplus/syscall.h</a>&gt;
+<a name='L4'>   4 <font color='darkred'>#include</font> &lt;<a href='90.html'>aplus/task.h</a>&gt;
+<a name='L5'>   5 <font color='darkred'>#include</font> &lt;<a href='97.html'>aplus/fs.h</a>&gt;
+<a name='L6'>   6 
+<a name='L7'>   7 <font color='darkred'>#include</font> &lt;unistd.h&gt;
+<a name='L8'>   8 <font color='darkred'>#include</font> &lt;fcntl.h&gt;
+<a name='L9'>   9 <font color='darkred'>#include</font> &lt;errno.h&gt;
+<a name='L10'>  10 
+<a name='L11'>  11 <font color='darkred'>#include</font> &lt;sys/stat.h&gt;
+<a name='L12'>  12 <font color='darkred'>#include</font> &lt;<a href='10.html'>dirent.h</a>&gt;
+<a name='L13'>  13 
+<a name='L14'>  14 <b>int</b> sys_link(<b>char</b>* <a href='../Y/263.html' title='Multiple used in 24 places.'>filename</a>, <b>char</b>* <a href='../Y/360.html' title='Multiple used in 11 places.'>link</a>) <font color='red'>{</font>
+<a name='L15'>  15         <i><font color='green'>/* TODO */</font></i>
+<a name='L16'>  16         <a href='../D/429.html' title='Multiple defined in 2 places.'>kprintf</a>("sys_link: TODO");
+<a name='L17'>  17 
+<a name='L18'>  18         <a href='../S/38.html#L2' title='Defined at 2 in usr/src/libposix/src/errno.c.'>errno</a> = <a href='../Y/21.html' title='Multiple used in 28 places.'>ENOSYS</a>;
+<a name='L19'>  19         <b>return</b> -1;
+<a name='L20'>  20 <font color='red'>}</font>
+<a name='L21'>  21 
+<a name='L22'>  22 <a href='../S/86.html#L15' title='Defined at 15 in src/include/aplus/syscall.h.'>SYSCALL</a>(sys_link, 8);
+</pre>
+<hr>
+<a name='BOTTOM'>
+<i><font color='green'>/* [&lt;][&gt;][^]<a href='#L14'>[v]</a><a href='#TOP'>[top]</a>[bottom]<a href='../mains.html'>[index]</a><a href='../help.html'>[help]</a> */</font></i>
+</body>
+</html>
