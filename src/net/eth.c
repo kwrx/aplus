@@ -69,7 +69,6 @@ static int eth_send_packet(netif_t* netif, void* buf, size_t length, int type) {
 
 	
 	length += sizeof(eth_header_t);
-
 	
 	int ret = netif->send(netif, ethpkt, length, NETIF_ETH);
 	kfree(ethpkt);

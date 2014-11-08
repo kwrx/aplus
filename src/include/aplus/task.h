@@ -95,6 +95,9 @@ typedef struct task {
 	void (*signal_handler) (int);
 	int signal_sig;
 	
+
+	char** argv;
+	char** envp;
 	
 	uint32_t state;
 	uint32_t priority;

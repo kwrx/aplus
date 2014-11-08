@@ -122,6 +122,9 @@ volatile heap_t* mm_getheap() {
 int mm_init() {
 
 	memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
+	if(memsize > VMM_MAX_MEMORY)
+		memsize = VMM_MAX_MEMORY;
+
 
 	kheap_init();
 	vmm_init();

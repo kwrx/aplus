@@ -285,9 +285,6 @@ netif_packet_t* netif_packets_create(netif_t* netif, int protocol, int tot_lengt
 	memcpy(pkt->header, data, head_length);
 	memcpy(pkt->data, (void*) ((uint32_t) data + head_length), pkt->length);
 
-	if(netif_packets_add(pkt) != 0)
-		panic("netif: failed to push packet into stack");
-
 	return pkt;
 }
 

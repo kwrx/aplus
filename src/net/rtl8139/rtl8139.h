@@ -23,6 +23,7 @@
 #define CR_BUFFER_IS_EMPTY						(1 << 0)
 
 #define TCR_IFG_STANDARD						(3 << 24)
+#define TCR_MXDMA_256							(4 << 8)
 #define TCR_MXDMA_512							(5 << 8)
 #define TCR_MXDMA_1024							(6 << 8)
 #define TCR_MXDMA_2048							(7 << 8)

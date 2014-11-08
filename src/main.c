@@ -58,9 +58,9 @@ int main() {
 	syscall_init();
 	vfs_init();
 	schedule_init();
-	//bufio_init();
-	//pci_init();
-	//netif_init();
+	bufio_init();
+	pci_init();
+	netif_init();
 	
 	vfs_map(devfs_mount());
 

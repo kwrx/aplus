@@ -127,10 +127,17 @@ void vmm_umap(uint32_t* pd, void* addr, size_t len) {
 }
 
 
+void* vmm_alloc(void* vaddr, size_t size, int flags) {
+	void* paddr = (void*) halloc(current_heap, size);
+
+	vmm_map(current_vmm, paddr, vaddr, size, flags);
+
+	return paddr;
+}
 
 void vmm_mapkernel(uint32_t* dest) {
 	// Map 8MB to low area (kernel reserved)
-	vmm_map(dest, (void*) 0, (void*) 0, MM_LBASE, VMM_FLAGS_DEFAULT);
+	vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);
 
 	// Map all high-memory (kernel reserved)
 	vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT);

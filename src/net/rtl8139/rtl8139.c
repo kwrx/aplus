@@ -33,8 +33,12 @@ typedef struct card {
 
 
 static card_t* card = NULL;
-static uint8_t rtl8139_rxbuffer[RX_BUFFER_SIZE + 16] = { };
-static uint8_t rtl8139_txbuffer[TX_BUFFER_SIZE + 16] = { }; 
+
+__attribute__ ((align(0x1000)))
+uint8_t rtl8139_rxbuffer[RX_BUFFER_SIZE + 16];
+
+__attribute__ ((align(0x1000)))
+uint8_t rtl8139_txbuffer[TX_BUFFER_SIZE * 4 + 16]; 
 
 
 int rtl8139_ifup(netif_t* netif) {
@@ -71,8 +75,9 @@ int rtl8139_send(netif_t* netif, void* buf, size_t len, int type) {
 	uint8_t curBuffer = card->curBuffer++;
 	card->curBuffer %= 4;
 
-	int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card->txBuffer);
-	int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), len);
+
+	int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card->txBuffer + (TX_BUFFER_SIZE * curBuffer));
+	int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), ((256 << 11) & 0x003F0000) | len);
 
 	netif->state.tx_packets += 1;
 	netif->state.tx_bytes += len;
@@ -93,8 +98,6 @@ static void recvdata(card_t* card) {
 
 		uint16_t* rxBuffer = (uint16_t*) ((uint32_t) card->rxBuffer + card->rxBufferOffset);
 		uint16_t head = *rxBuffer++;
-
-		kprintf("head: %x\n", head);
 
 		if((head & 1) == 0)
 			break;
@@ -178,7 +181,7 @@ int rtl8139_init() {
 
 	while((int_in8(card, REG_COMMAND) & REG_COMMAND) == CR_RESET);
 
-	memset(&card->macaddr, 0, 6);
+	memset(card->macaddr, 0, 6);
 	for(int i = 0; i < 6; i++)
 		card->macaddr[i] = int_in8(card, i);
 	
@@ -204,27 +207,34 @@ int rtl8139_init() {
 		return -1;
 	}
 
+	card->rxBuffer = (char*) rtl8139_rxbuffer;
+	card->txBuffer = (char*) rtl8139_txbuffer;
+
+	card->rxBufferOffset = 0;
+	card->curBuffer = 0;
+	card->txBufferUsed = 0;
+
+	memset(card->rxBuffer, 0, RX_BUFFER_SIZE + 16);
+	memset(card->txBuffer, 0, TX_BUFFER_SIZE * 4 + 16);
+
+
 	irq_set(card->device->intr_line, rtl8139_handler);
 
 	int_out16(card, REG_INTERRUPT_MASK, 0x0005);
 	int_out16(card, REG_INTERRUPT_STATUS, 0);
 
-	int_out32(card, REG_RECEIVE_CONFIGURATION, RCR_MXDMA_UNLIMITED | RCR_ACCEPT_BROADCAST | RCR_ACCEPT_PHYS_MATCH);
-	int_out32(card, REG_TRANSMIT_CONFIGURATION, TCR_IFG_STANDARD | TCR_MXDMA_2048);
+	int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
 
-	card->rxBuffer = (char*) rtl8139_rxbuffer;
-	memset(card->rxBuffer, 0, RX_BUFFER_SIZE + 16);
-
-	card->rxBufferOffset = 0;
 	int_out32(card, REG_RECEIVE_BUFFER, (uint32_t) card->rxBuffer);
 
-	card->txBuffer = (char*) rtl8139_txbuffer;
-	memset(card->txBuffer, 0, TX_BUFFER_SIZE + 16);
+	for(int i = 0; i < 4; i++)
+		int_out32(card, REG_TRANSMIT_ADDR0 + (4 * i), (uint32_t) card->txBuffer + (TX_BUFFER_SIZE * i));
 
-	card->curBuffer = 0;
-	card->txBufferUsed = 0;
+	int_out32(card, REG_RECEIVE_CONFIGURATION, RCR_MXDMA_UNLIMITED | RCR_ACCEPT_BROADCAST | RCR_ACCEPT_PHYS_MATCH);
+	int_out32(card, REG_TRANSMIT_CONFIGURATION, TCR_IFG_STANDARD | TCR_MXDMA_256);
 
 	int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
+
 
 	card->netif = (netif_t*) kmalloc(sizeof(netif_t));
 	memset(card->netif, 0, sizeof(netif_t));
@@ -286,6 +296,18 @@ int rtl8139_init() {
 	card->netif->ifup = rtl8139_ifup;
 	card->netif->ifdown = rtl8139_ifdown;
 	card->netif->data = (void*) card;
+
+#ifdef RTL8139_DEBUG
+	kprintf("rtl8139: sending data for test (512 Bytes)\n");
+	
+	void* tmpbuf = kmalloc(512);
+	memset(tmpbuf, 0xFF, 512);
+
+	rtl8139_ifup(card->netif);
+	eth_send(card->netif, tmpbuf, 512, NETIF_RAW); 
+	rtl8139_ifdown(card->netif);
+
+#endif
 
 	netif_add(card->netif);
 	return 0;

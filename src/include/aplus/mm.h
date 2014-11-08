@@ -25,6 +25,40 @@
 #include <stdint.h>
 #include <aplus/task.h>
 
+
+/*
+ * 0x00000000 - 0x00800000:		Kernel Reserved
+ * 0x00800000 - 0x00A00000:		Not available
+ * 0x00A00000 - 0x40000000: 	User executable
+ * 0x40000000 - 0xE0000000:		Kernel Heap
+ * 0xE0000000 - 0xF0000000;		Linear Frame Buffer (User)
+ * 0xF0000000 - 0xFFFFFFFF;		Kernel Heap
+*/
+
+#define MM_VBASE			0x40000000
+#define MM_VSIZE			(0xFFFFFFFF - MM_VBASE)
+
+#define MM_LBASE			0x00000000
+#define MM_LSIZE			0x00800000
+
+#define MM_UBASE			0x00A00000
+#define MM_USIZE			(MM_VBASE - MM_UBASE)
+
+
+
+#define VMM_FLAGS_PRESENT	0x01
+#define VMM_FLAGS_RDWR		0x02
+#define VMM_FLAGS_USER		0x04
+#define VMM_FLAGS_DEFAULT	(VMM_FLAGS_PRESENT | VMM_FLAGS_RDWR)
+
+#define VMM_MAX_MEMORY		(0xFFFFFFFF - MM_VBASE)
+
+
+#define BLKSIZE				0x1000
+#define BLKMAGIC			0x1234
+
+
+
 typedef struct heap {
 	uint32_t* bitmap;
 	uint32_t size;
@@ -33,24 +67,6 @@ typedef struct heap {
 	void* (*alloc) (struct heap*, size_t);
 	void (*free) (struct heap*, void*, size_t);
 } heap_t;
-
-
-
-#define MM_VBASE			0x40000000
-#define MM_LBASE			0x00800000
-
-#define MM_VSTACK			0xF0000000
-
-
-#define VMM_FLAGS_PRESENT	0x01
-#define VMM_FLAGS_RDWR		0x02
-#define VMM_FLAGS_USER		0x04
-#define VMM_FLAGS_DEFAULT	(VMM_FLAGS_PRESENT | VMM_FLAGS_RDWR)
-
-#define BLKSIZE				0x1000
-#define BLKMAGIC			0x1234
-
-
 
 static inline void* mm_paddr(void* vaddr) {
 	if((uint32_t) vaddr > MM_VBASE)
