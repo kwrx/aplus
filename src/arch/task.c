@@ -129,11 +129,13 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	return child;
 }
 
+
 void task_switch(task_t* newtask) {
 	
 	task_t* old = current_task;
 	current_task = newtask;
 
+	kprintf("task new is: %d\n", newtask->pid);
 
 	vmm_switch(current_task->context.cr3);
 	outb(0x20, 0x20);
@@ -156,12 +158,7 @@ static int __fork_child() {
 		((uint8_t*) stack)[i] = ((uint8_t*) (oldesp & ~0xFFF)) [i];
 
 
-	uint32_t cr3 = current_task->context.cr3;
-
-	
-	vmm_map(cr3, mm_paddr(stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-	vmm_switch(cr3);	
-	
+	vmm_map(current_task->context.cr3, mm_paddr(stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);	
 
 	longjmp(__fork_buf, 1);
 	return 0;
@@ -175,9 +172,8 @@ task_t* task_fork() {
 	schedule_disable();
 	task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);		
 
-
 	if(setjmp(__fork_buf) == 1) {
-		schedule_enable();	
+		schedule_enable();
 		return NULL;
 	}
 
