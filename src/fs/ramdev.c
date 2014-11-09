@@ -31,6 +31,7 @@ int ramdev_read(inode_t* ino, char* buf, int size) {
 	if(!size)
 		return 0;
 
+	bufio_seek(ino->userdata, ino->position, SEEK_SET);
 	size = bufio_read(ino->userdata, buf, size);
 	ino->position += size;
 	return size;
@@ -55,7 +56,7 @@ int ramdev_write(inode_t* ino, char* buf, int size) {
 	if(!size)
 		return 0;
 
-	
+	bufio_seek(ino->userdata, ino->position, SEEK_SET);
 	size = bufio_write(ino->userdata, buf, size);
 	ino->position += size;
 	return size;

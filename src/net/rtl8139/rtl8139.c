@@ -34,10 +34,8 @@ typedef struct card {
 
 static card_t* card = NULL;
 
-__attribute__ ((align(0x1000)))
-uint8_t rtl8139_rxbuffer[RX_BUFFER_SIZE + 16];
 
-__attribute__ ((align(0x1000)))
+uint8_t rtl8139_rxbuffer[RX_BUFFER_SIZE + 16];
 uint8_t rtl8139_txbuffer[TX_BUFFER_SIZE * 4 + 16]; 
 
 

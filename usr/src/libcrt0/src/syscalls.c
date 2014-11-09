@@ -102,6 +102,9 @@ syscall3(20, ioctl)
 syscall3(21, chown)
 syscall4(22, clone)
 syscall0(23, sched_yield)
+syscall5(24, mount)
+syscall1(25, umount)
+syscall2(26, umount2)
 
 #ifdef __aplus__
 syscall2(80, aplus_readdir)

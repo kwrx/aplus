@@ -71,7 +71,7 @@ int pipe_create(inode_t inodes[2]) {
 	for(int i = 0; i < 2; i++) {
 		memset((void*) &inodes[i], 0, sizeof(inode_t));
 		
-		//inodes[i].atime = inodes[i].mtime = inodes[i].ctime = time(NULL);
+		inodes[i].atime = inodes[i].mtime = inodes[i].ctime = sys_time(NULL);
 		inodes[i].read = pipe_read;
 		inodes[i].write = pipe_write;
 		inodes[i].flush = pipe_flush;

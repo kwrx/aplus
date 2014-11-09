@@ -20,6 +20,17 @@ extern task_t* current_task;
 inode_t* devfs; 
 
 
+inode_t* devfs_getdevice(dev_t dev) {
+	int index = 0;
+	inode_t* map = NULL;
+
+	while((map = (inode_t*) vfs_mapped_at_index(devfs, index++)) != NULL)
+		if(map->ino == dev)
+			return map;
+	
+	return NULL;
+}
+
 
 struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
 	if((void*) vfs_mapped(inode, name) != NULL)
@@ -36,7 +47,7 @@ struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
 	ino->gid = current_task->gid;
 	ino->rdev = ino->rdev;
 	ino->size = (size_t) 0;
-	//ino->atime = ino->ctime = ino->mtime = time(NULL);
+	ino->atime = ino->ctime = ino->mtime = sys_time(NULL);
 	ino->parent = inode;
 	ino->link = NULL;
 	
@@ -70,7 +81,7 @@ inode_t* devfs_mount() {
 	devfs->gid = GID_ROOT;
 	devfs->rdev = (dev_t) 0;
 	devfs->size = (size_t) 0;
-	//devfs->atime = devfs->ctime = devfs->mtime = time(NULL);
+	devfs->atime = devfs->ctime = devfs->mtime = sys_time(NULL);
 	devfs->parent = vfs_root;
 	devfs->link = NULL;
 	

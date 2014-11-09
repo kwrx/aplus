@@ -94,7 +94,7 @@ int vfs_init() {
 	vfs_root->gid = GID_ROOT;
 	vfs_root->rdev = (dev_t) 0;
 	vfs_root->size = (size_t) 0;
-	//vfs_root->atime = vfs_root->ctime = vfs_root->mtime = time(NULL);
+	vfs_root->atime = vfs_root->ctime = vfs_root->mtime = sys_time(NULL);
 	vfs_root->parent = (inode_t*) NULL;
 	vfs_root->link = (inode_t*) NULL;
 	

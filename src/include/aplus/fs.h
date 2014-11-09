@@ -33,6 +33,7 @@
 #include <sys/stat.h>
 #include <sys/dirent.h>
 
+
 typedef struct inode {
 	char name[255];
 
@@ -70,19 +71,6 @@ typedef struct inode {
 	struct inode* parent;
 	struct inode* link;
 } inode_t;
-
-
-typedef struct fs {
-	char name[255];
-	int (*mount) (struct inode* idev, struct inode* idir, int flags);
-} fs_t;
-
-#define FS(name, mount)														\
-	fs_t fs_##name = {														\
-		#name, mount														\
-	}; ATTRIBUTE("fs", fs_##name)
-
-
 
 
 #endif

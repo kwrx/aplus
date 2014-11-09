@@ -3,6 +3,8 @@
 #include <aplus/task.h>
 #include <aplus/list.h>
 #include <aplus/attribute.h>
+#include <aplus/syscall.h>
+#include <aplus/fsys.h>
 
 
 #include <stdint.h>
@@ -65,10 +67,10 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 	}
 	
 
-	fs_t* found = NULL;
+	fsys_t* found = NULL;
 
 	list_foreach(value, fs) {
-		fs_t* f = (fs_t*) value;
+		fsys_t* f = (fsys_t*) value;
 
 		if(strcmp(f->name, fstype) == 0)
 			found = f;
@@ -84,6 +86,17 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 	idir->mode |= S_IFMT;
 	idir->dev = idev->ino;
 
-	return found->mount(idev, idir, options);
+	if(found->mount(idev, idir, options) < 0) {
+
+		idir->mode &= ~S_IFMT;
+		idir->dev = 0;		
+
+		errno = ENODEV;
+		return -1;
+	}
+
+	return 0;
 }
+
+SYSCALL(sys_mount, 24);
 

@@ -164,7 +164,7 @@ void vmm_destroy(uint32_t* vmm) {
 
 int vmm_init() {
 
-	kernel_vmm = halloc(current_heap, PDSIZE * sizeof(uint32_t));
+	kernel_vmm = (uint32_t*) halloc(current_heap, PDSIZE * sizeof(uint32_t));
 	if(!kernel_vmm)
 		panic("Could not initialize VMM");
 	

@@ -3,6 +3,7 @@
 #include <aplus/task.h>
 #include <aplus/list.h>
 #include <aplus/attribute.h>
+#include <aplus/syscall.h>
 
 
 #include <stdint.h>
@@ -47,3 +48,7 @@ int sys_umount2(const char* file, int flags) {
 int sys_umount(const char* file) {
 	return sys_umount2(file, 0);
 }
+
+
+SYSCALL(sys_umount, 25);
+SYSCALL(sys_umount2, 26);

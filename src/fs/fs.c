@@ -30,6 +30,7 @@ int fs_write (struct inode* inode, char* ptr, int len) {
 }
 	
 struct dirent* fs_readdir (struct inode* inode, int index) {
+
 	inode_t* map = NULL;
 	if((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL) {
 		struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
@@ -47,6 +48,12 @@ struct dirent* fs_readdir (struct inode* inode, int index) {
 }
 
 struct inode* fs_finddir (struct inode* inode, char* name) {
+
+	if(strcmp(name, ".") == 0)
+		return inode;
+
+	if(strcmp(name, "..") == 0)
+		return inode->parent;
 
 	inode_t* map = NULL;
 	if((map = (inode_t*) vfs_mapped(inode, name)) != NULL)

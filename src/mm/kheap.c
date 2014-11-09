@@ -130,9 +130,8 @@ void bitmap_free(heap_t* heap, void* addr, size_t size) {
 
 
 int kheap_init() {
-	extern uint32_t end;
 
-	kheap.bitmap = __bitmap;
+	kheap.bitmap = (uint32_t*) __bitmap;
 	kheap.size = memsize / BLKSIZE;
 	kheap.alloc = bitmap_alloc;
 	kheap.free = bitmap_free;

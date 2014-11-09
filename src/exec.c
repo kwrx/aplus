@@ -53,6 +53,8 @@ typedef uint32_t Elf32_Word;
 #define SHF_MASK			0xF0000000
 
 
+#define ELF_DEBUG
+
 typedef struct elf32_hdr {
 	uint8_t e_ident[EI_NIDENT];
 	Elf32_Half e_type;
@@ -124,15 +126,18 @@ void* elf32_load(void* image) {
 	int ss = hdr->e_shentsize;
 	 
 	for(int i = 0; i < sn; i++) {
-		if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
-			panic("elf section overflow");
-			
-
-#ifdef ELF_DEBUG
-		kprintf("elf: copy section to 0x%8x (%d KB)\n", sec->sh_addr, sh->sh_size / 1024);
-#endif
 		
 		if(sec->sh_addr && sec->sh_offset) {
+
+#ifdef ELF_DEBUG
+			kprintf("elf: copy section to 0x%8x (%d Bytes)\n", sec->sh_addr, sec->sh_size);
+#endif
+
+
+			if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
+				panic("elf section overflow");
+			
+
 			if(vmm_alloc((void*) sec->sh_addr, sec->sh_size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER))
 				memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
 			else
@@ -141,6 +146,10 @@ void* elf32_load(void* image) {
 
 		sec = (elf32_shdr_t*) ((uint32_t) sec + ss);
 	}
+
+#ifdef ELF_DEBUG
+	kprintf("elf: entrypoint at 0x%8x\n", hdr->e_entry);
+#endif
 
 	return (void*) hdr->e_entry;
 }

@@ -29,6 +29,8 @@
 #include <aplus/mm.h>
 
 #include <stddef.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <sys/times.h>
 #include <time.h>
 
@@ -72,7 +74,6 @@ int main() {
 	uint32_t addr = ((uint32_t*) mbd->mods_addr) [0];
 	uint32_t endp = ((uint32_t*) mbd->mods_addr) [1];
 
-
 	kprintf("initrd: module found at addess: 0x%x (%d KB)\n", addr, (endp - addr) / 1024);
 
 
@@ -80,15 +81,14 @@ int main() {
 		panic("initrd: cannot create /dev/ram0");
 
 
-	//if(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0)
-	//	panic("initrd: cannot mount ramdisk");
+	if(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0)
+		panic("initrd: cannot mount ramdisk");
 
 
-
-	/* TODO: iso9660 support */
-
-
-
+	char* argv[] = { 0 };
+	char* envp[] = { 0 };
+	sys_execve("/dev/ramdisk/test", argv, envp);
+	kprintf("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW--------------");
 /*
 	if(fork() == 0)
 		execl("/bin/init", "/bin/init", 0);

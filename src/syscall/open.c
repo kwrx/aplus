@@ -16,6 +16,14 @@ extern task_t* current_task;
 extern inode_t* vfs_root;
 
 
+static char* dupstr(char* s) {
+	char* p = (char*) kmalloc(strlen(s));
+	strcpy(p, s);
+
+	return p;
+}
+
+
 static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 	inode_t* cwd = NULL;
 
@@ -61,12 +69,6 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 					cwd = cwd->link;
 				else
 					break;
-
-
-			if(!(S_ISDIR(cwd->mode))) {
-				errno = ENOTDIR;
-				return NULL;
-			}
 
 			s = p;
 		} else
@@ -119,15 +121,18 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 		}
 	}
 
-
 	return ent;
 }
 
 int sys_open(char* filename, int flags, mode_t mode) {
 	if(!current_task)
 		return -1;
-		
-	inode_t* ino = ino_open(filename, flags, mode);
+
+	char* p = dupstr(filename);
+	inode_t* ino = ino_open(p, flags, mode);
+
+	kfree(p);
+
 	if(!ino)
 		return -1;
 	
