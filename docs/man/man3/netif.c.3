@@ -1,4 +1,4 @@
-.TH "src/net/netif.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/net/netif.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -23,7 +23,7 @@ src/net/netif.c \-
 \fC#include <aplus/net/arp\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -78,10 +78,10 @@ src/net/netif.c \-
 .RI "\fBlist_t\fP * \fBnetif_packets_find_by_protocol\fP (int \fBprotocol\fP)"
 .br
 .ti -1c
-.RI "\fBnetif_packet_t\fP * \fBnetif_packets_create\fP (\fBnetif_t\fP *\fBnetif\fP, int \fBprotocol\fP, int tot_length, int head_length, void *data)"
+.RI "\fBnetif_packet_t\fP * \fBnetif_packets_create\fP (\fBnetif_t\fP *\fBnetif\fP, int \fBprotocol\fP, int tot_length, int head_length, void *\fBdata\fP)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -91,14 +91,14 @@ src/net/netif.c \-
 .RI "static \fBlist_t\fP * \fBlst_packets\fP = NULL"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int netif_add (\fBnetif_t\fP *netdev)"
 
 .PP
-Definizione alla linea 124 del file netif\&.c\&.
+Definition at line 124 of file netif\&.c\&.
 .PP
-Referenzia netif::dns, netif::ipv4, netif::ipv6, kprintf, list_add(), list_init, netif::macaddr, netif::mtu, netif::name, netif_find_by_ipv4(), netif_find_by_ipv6(), netif_find_by_macaddr(), netif::netmask, netif::primary, e netif::secondary\&.
+References netif::dns, netif::ipv4, netif::ipv6, kprintf(), list_add(), list_init, netif::macaddr, netif::mtu, netif::name, netif_find_by_ipv4(), netif_find_by_ipv6(), netif_find_by_macaddr(), netif::netmask, netif::primary, and netif::secondary\&.
 .PP
 .nf
 124                                {
@@ -194,9 +194,9 @@ Referenzia netif::dns, netif::ipv4, netif::ipv6, kprintf, list_add(), list_init,
 .SS "\fBnetif_t\fP* netif_find_by_ipv4 (\fBipv4_t\fP *ipv4)"
 
 .PP
-Definizione alla linea 36 del file netif\&.c\&.
+Definition at line 36 of file netif\&.c\&.
 .PP
-Referenzia netif::ipv4, list_foreach, e value\&.
+References netif::ipv4, list_foreach, and value\&.
 .PP
 .nf
 36                                           {
@@ -216,9 +216,9 @@ Referenzia netif::ipv4, list_foreach, e value\&.
 .SS "\fBnetif_t\fP* netif_find_by_ipv6 (\fBipv6_t\fP *ipv6)"
 
 .PP
-Definizione alla linea 50 del file netif\&.c\&.
+Definition at line 50 of file netif\&.c\&.
 .PP
-Referenzia netif::ipv6, list_foreach, e value\&.
+References netif::ipv6, list_foreach, and value\&.
 .PP
 .nf
 50                                           {
@@ -238,9 +238,9 @@ Referenzia netif::ipv6, list_foreach, e value\&.
 .SS "\fBnetif_t\fP* netif_find_by_macaddr (\fBmacaddr_t\fP *macaddr)"
 
 .PP
-Definizione alla linea 66 del file netif\&.c\&.
+Definition at line 66 of file netif\&.c\&.
 .PP
-Referenzia list_foreach, netif::macaddr, e value\&.
+References list_foreach, netif::macaddr, and value\&.
 .PP
 .nf
 66                                                    {
@@ -260,9 +260,9 @@ Referenzia list_foreach, netif::macaddr, e value\&.
 .SS "\fBnetif_t\fP* netif_find_by_name (char *name)"
 
 .PP
-Definizione alla linea 80 del file netif\&.c\&.
+Definition at line 80 of file netif\&.c\&.
 .PP
-Referenzia list_foreach, netif::name, e value\&.
+References list_foreach, netif::name, and value\&.
 .PP
 .nf
 80                                         {
@@ -282,7 +282,7 @@ Referenzia list_foreach, netif::name, e value\&.
 .SS "\fBuint32_t\fP netif_htonl (\fBuint32_t\fPh)"
 
 .PP
-Definizione alla linea 18 del file netif\&.c\&.
+Definition at line 18 of file netif\&.c\&.
 .PP
 .nf
 18                                  {
@@ -293,7 +293,7 @@ Definizione alla linea 18 del file netif\&.c\&.
 .SS "\fBuint16_t\fP netif_htons (\fBuint16_t\fPh)"
 
 .PP
-Definizione alla linea 23 del file netif\&.c\&.
+Definition at line 23 of file netif\&.c\&.
 .PP
 .nf
 23                                  {
@@ -303,9 +303,9 @@ Definizione alla linea 23 del file netif\&.c\&.
 .SS "int netif_ifdown ()"
 
 .PP
-Definizione alla linea 110 del file netif\&.c\&.
+Definition at line 110 of file netif\&.c\&.
 .PP
-Referenzia netif::ifdown, list_foreach, e value\&.
+References netif::ifdown, list_foreach, and value\&.
 .PP
 .nf
 110                    {
@@ -325,9 +325,9 @@ Referenzia netif::ifdown, list_foreach, e value\&.
 .SS "int netif_ifup ()"
 
 .PP
-Definizione alla linea 94 del file netif\&.c\&.
+Definition at line 94 of file netif\&.c\&.
 .PP
-Referenzia arp_send(), netif::ifup, list_foreach, e value\&.
+References arp_send(), netif::ifup, list_foreach, and value\&.
 .PP
 .nf
 94                  {
@@ -349,9 +349,9 @@ Referenzia arp_send(), netif::ifup, list_foreach, e value\&.
 .SS "int netif_init ()"
 
 .PP
-Definizione alla linea 221 del file netif\&.c\&.
+Definition at line 221 of file netif\&.c\&.
 .PP
-Referenzia attribute(), list_destroy, list_empty(), list_foreach, list_init, netif_ifup(), e value\&.
+References attribute(), list_destroy, list_empty(), list_foreach, list_init, netif_ifup(), and value\&.
 .PP
 .nf
 221                  {
@@ -377,7 +377,7 @@ Referenzia attribute(), list_destroy, list_empty(), list_foreach, list_init, net
 .SS "\fBuint32_t\fP netif_ntohl (\fBuint32_t\fPh)"
 
 .PP
-Definizione alla linea 27 del file netif\&.c\&.
+Definition at line 27 of file netif\&.c\&.
 .PP
 .nf
 27                                  {
@@ -388,7 +388,7 @@ Definizione alla linea 27 del file netif\&.c\&.
 .SS "\fBuint32_t\fP netif_ntohs (\fBuint32_t\fPh)"
 
 .PP
-Definizione alla linea 32 del file netif\&.c\&.
+Definition at line 32 of file netif\&.c\&.
 .PP
 .nf
 32                                  {
@@ -398,9 +398,9 @@ Definizione alla linea 32 del file netif\&.c\&.
 .SS "int netif_packets_add (\fBnetif_packet_t\fP *packet)"
 
 .PP
-Definizione alla linea 242 del file netif\&.c\&.
+Definition at line 242 of file netif\&.c\&.
 .PP
-Referenzia netif_packet::id, e list_add()\&.
+References netif_packet::id, and list_add()\&.
 .PP
 .nf
 242                                               {
@@ -413,9 +413,9 @@ Referenzia netif_packet::id, e list_add()\&.
 .SS "\fBnetif_packet_t\fP* netif_packets_create (\fBnetif_t\fP *netif, intprotocol, inttot_length, inthead_length, void *data)"
 
 .PP
-Definizione alla linea 279 del file netif\&.c\&.
+Definition at line 279 of file netif\&.c\&.
 .PP
-Referenzia netif_packet::data, netif_packet::header, kmalloc(), netif_packet::length, netif_packet::netif, protocol, netif_packet::protocol, e uint32_t\&.
+References netif_packet::data, netif_packet::header, kmalloc(), netif_packet::length, netif_packet::netif, protocol, netif_packet::protocol, and uint32_t\&.
 .PP
 .nf
 279                                                                                                                 {
@@ -433,9 +433,9 @@ Referenzia netif_packet::data, netif_packet::header, kmalloc(), netif_packet::le
 .SS "\fBnetif_packet_t\fP* netif_packets_find_by_id (uint64_tid)"
 
 .PP
-Definizione alla linea 253 del file netif\&.c\&.
+Definition at line 253 of file netif\&.c\&.
 .PP
-Referenzia netif_packet::id, list_foreach, e value\&.
+References netif_packet::id, list_foreach, and value\&.
 .PP
 .nf
 253                                                       {
@@ -452,9 +452,9 @@ Referenzia netif_packet::id, list_foreach, e value\&.
 .SS "\fBlist_t\fP* netif_packets_find_by_protocol (intprotocol)"
 
 .PP
-Definizione alla linea 264 del file netif\&.c\&.
+Definition at line 264 of file netif\&.c\&.
 .PP
-Referenzia list_add(), list_foreach, list_init, netif_packet::protocol, e value\&.
+References list_add(), list_foreach, list_init, netif_packet::protocol, and value\&.
 .PP
 .nf
 264                                                      {
@@ -475,9 +475,9 @@ Referenzia list_add(), list_foreach, list_init, netif_packet::protocol, e value\
 .SS "int netif_packets_remove (\fBnetif_packet_t\fP *packet)"
 
 .PP
-Definizione alla linea 249 del file netif\&.c\&.
+Definition at line 249 of file netif\&.c\&.
 .PP
-Referenzia list_remove()\&.
+References list_remove()\&.
 .PP
 .nf
 249                                                  {
@@ -487,9 +487,9 @@ Referenzia list_remove()\&.
 .SS "int netif_remove (\fBnetif_t\fP *netdev)"
 
 .PP
-Definizione alla linea 214 del file netif\&.c\&.
+Definition at line 214 of file netif\&.c\&.
 .PP
-Referenzia list_remove()\&.
+References list_remove()\&.
 .PP
 .nf
 214                                   {
@@ -499,16 +499,16 @@ Referenzia list_remove()\&.
 218     return list_remove(lst_netif, (listval_t) netdev);
 219 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBlist_t\fP* lst_netif = NULL\fC [static]\fP"
 
 .PP
-Definizione alla linea 13 del file netif\&.c\&.
+Definition at line 13 of file netif\&.c\&.
 .SS "\fBlist_t\fP* lst_packets = NULL\fC [static]\fP"
 
 .PP
-Definizione alla linea 14 del file netif\&.c\&.
-.SH "Autore"
+Definition at line 14 of file netif\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

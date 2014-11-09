@@ -1,4 +1,4 @@
-\hypertarget{write_8c}{\section{Riferimenti per il file src/syscall/write.c}
+\hypertarget{write_8c}{\section{src/syscall/write.c File Reference}
 \label{write_8c}\index{src/syscall/write.\+c@{src/syscall/write.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -11,23 +11,23 @@
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
 {\ttfamily \#include $<$stdio.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{write_8c_a0d770d346dc0c93e695fcb8a0a0f5295}{sys\+\_\+write} (int fd, void $\ast$ptr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
 \item 
 \hyperlink{write_8c_ac98021d255ccf030a8cbe505a788031f}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{write_8c_a0d770d346dc0c93e695fcb8a0a0f5295}{sys\+\_\+write}, 17)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{write_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
 \hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ \hyperlink{write_8c_a9af8258c3554800f6613f8147544225f}{vfs\+\_\+root}
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{write_8c_a0d770d346dc0c93e695fcb8a0a0f5295}{\index{write.\+c@{write.\+c}!sys\+\_\+write@{sys\+\_\+write}}
 \index{sys\+\_\+write@{sys\+\_\+write}!write.\+c@{write.\+c}}
 \subsubsection[{sys\+\_\+write}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+write (
@@ -39,11 +39,11 @@ int \hyperlink{write_8c_a0d770d346dc0c93e695fcb8a0a0f5295}{sys\+\_\+write} (int 
 )}}\label{write_8c_a0d770d346dc0c93e695fcb8a0a0f5295}
 
 
-Definizione alla linea 19 del file write.\+c.
+Definition at line 19 of file write.\+c.
 
 
 
-Referenzia errno, task\+::fd, e fs\+\_\+write().
+References errno, task\+::fd, and fs\+\_\+write().
 
 
 \begin{DoxyCode}
@@ -59,7 +59,7 @@ Referenzia errno, task\+::fd, e fs\+\_\+write().
 28     \}
 29 
 30 
-31     \textcolor{keywordflow}{return} \hyperlink{fs_8c_a7d87cba454ac1212bfc2277b5792bf95}{fs\_write}(ino, ptr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+31     \textcolor{keywordflow}{return} \hyperlink{fs_8c_a7d87cba454ac1212bfc2277b5792bf95}{fs\_write}(ino, ptr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
 32 \}
 \end{DoxyCode}
 \hypertarget{write_8c_ac98021d255ccf030a8cbe505a788031f}{\index{write.\+c@{write.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
@@ -72,18 +72,22 @@ Referenzia errno, task\+::fd, e fs\+\_\+write().
 )}}\label{write_8c_ac98021d255ccf030a8cbe505a788031f}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{write_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{write.\+c@{write.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!write.\+c@{write.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{write_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 
 \hypertarget{write_8c_a9af8258c3554800f6613f8147544225f}{\index{write.\+c@{write.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
 \index{vfs\+\_\+root@{vfs\+\_\+root}!write.\+c@{write.\+c}}
 \subsubsection[{vfs\+\_\+root}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ vfs\+\_\+root}}\label{write_8c_a9af8258c3554800f6613f8147544225f}
 
 
-Definizione alla linea 19 del file vfs.\+c.
+Definition at line 19 of file vfs.\+c.
 

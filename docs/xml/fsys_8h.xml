@@ -1,0 +1,210 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="fsys_8h" kind="file">
+    <compoundname>fsys.h</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="attribute_8h" local="no">aplus/attribute.h</includes>
+    <includedby refid="iso9660__mount_8c" local="no">src/fs/iso9660/iso9660_mount.c</includedby>
+    <includedby refid="mount_8c" local="no">src/syscall/mount.c</includedby>
+    <incdepgraph>
+      <node id="603">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="593">
+        <label>stdarg.h</label>
+      </node>
+      <node id="595">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="591" relation="include">
+        </childnode>
+        <childnode refid="596" relation="include">
+        </childnode>
+        <childnode refid="592" relation="include">
+        </childnode>
+        <childnode refid="594" relation="include">
+        </childnode>
+        <childnode refid="598" relation="include">
+        </childnode>
+      </node>
+      <node id="602">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="592" relation="include">
+        </childnode>
+        <childnode refid="597" relation="include">
+        </childnode>
+        <childnode refid="598" relation="include">
+        </childnode>
+        <childnode refid="603" relation="include">
+        </childnode>
+        <childnode refid="604" relation="include">
+        </childnode>
+      </node>
+      <node id="592">
+        <label>stdint.h</label>
+      </node>
+      <node id="607">
+        <label>setjmp.h</label>
+      </node>
+      <node id="601">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="592" relation="include">
+        </childnode>
+        <childnode refid="591" relation="include">
+        </childnode>
+        <childnode refid="602" relation="include">
+        </childnode>
+        <childnode refid="606" relation="include">
+        </childnode>
+        <childnode refid="598" relation="include">
+        </childnode>
+        <childnode refid="607" relation="include">
+        </childnode>
+      </node>
+      <node id="597">
+        <label>stddef.h</label>
+      </node>
+      <node id="596">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="597" relation="include">
+        </childnode>
+        <childnode refid="592" relation="include">
+        </childnode>
+        <childnode refid="598" relation="include">
+        </childnode>
+        <childnode refid="599" relation="include">
+        </childnode>
+        <childnode refid="600" relation="include">
+        </childnode>
+      </node>
+      <node id="591">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="592" relation="include">
+        </childnode>
+        <childnode refid="593" relation="include">
+        </childnode>
+        <childnode refid="594" relation="include">
+        </childnode>
+      </node>
+      <node id="598">
+        <label>sys/types.h</label>
+      </node>
+      <node id="594">
+        <label>string.h</label>
+      </node>
+      <node id="605">
+        <label>unistd.h</label>
+      </node>
+      <node id="606">
+        <label>signal.h</label>
+      </node>
+      <node id="600">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="592" relation="include">
+        </childnode>
+        <childnode refid="601" relation="include">
+        </childnode>
+      </node>
+      <node id="604">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="605" relation="include">
+        </childnode>
+        <childnode refid="598" relation="include">
+        </childnode>
+      </node>
+      <node id="599">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="590">
+        <label>src/include/aplus/fsys.h</label>
+        <link refid="fsys.h"/>
+        <childnode refid="591" relation="include">
+        </childnode>
+        <childnode refid="595" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="610">
+        <label>src/syscall/mount.c</label>
+        <link refid="mount_8c"/>
+      </node>
+      <node id="609">
+        <label>src/fs/iso9660/iso9660_mount.c</label>
+        <link refid="iso9660__mount_8c"/>
+      </node>
+      <node id="608">
+        <label>src/include/aplus/fsys.h</label>
+        <link refid="fsys.h"/>
+        <childnode refid="609" relation="include">
+        </childnode>
+        <childnode refid="610" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structfsys" prot="public">fsys</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="fsys_8h_1a21463ca997e1f7e340e85fc8b65f7eb6" prot="public" static="no">
+        <name>FSYS</name>
+        <param><defname>name</defname></param>
+        <param><defname>mount</defname></param>
+        <initializer>static <ref refid="fsys_8h_1acb8db2fb3f178fd1a25c759bdfc50d17" kindref="member">fsys_t</ref> fs_##<ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref> = {												\
+		#<ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref>, mount														\
+	}; <ref refid="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae" kindref="member">ATTRIBUTE</ref>(&quot;fs&quot;, fs_##<ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref>)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fsys.h" line="12" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/fsys.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="fsys_8h_1acb8db2fb3f178fd1a25c759bdfc50d17" prot="public" static="no">
+        <type>struct <ref refid="structfsys" kindref="compound">fsys</ref></type>
+        <definition>typedef struct fsys  fsys_t</definition>
+        <argsstring></argsstring>
+        <name>fsys_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fsys.h" line="10" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_FSYS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_FSYS_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="attribute_8h" kindref="compound">aplus/attribute.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="structfsys" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structfsys" kindref="compound">fsys</ref><sp/>{</highlight></codeline>
+<codeline lineno="8" refid="structfsys_1a8c3f03ed1ac90dac03da844178857891" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structfsys_1a8c3f03ed1ac90dac03da844178857891" kindref="member">name</ref>[255];</highlight></codeline>
+<codeline lineno="9" refid="structfsys_1ae6e5dcfb76d76f9636b95525ac63f4cb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int<sp/>(*<ref refid="structfsys_1ae6e5dcfb76d76f9636b95525ac63f4cb" kindref="member">mount</ref>)<sp/>(</highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structinode" kindref="compound">inode</ref>*<sp/>idev,<sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structinode" kindref="compound">inode</ref>*<sp/>idir,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" kindref="member">flags</ref>);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal">}<sp/><ref refid="fsys_8h_1acb8db2fb3f178fd1a25c759bdfc50d17" kindref="member">fsys_t</ref>;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="fsys_8h_1a21463ca997e1f7e340e85fc8b65f7eb6" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FSYS(name,<sp/>mount)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="13"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>static<sp/>fsys_t<sp/>fs_##name<sp/>=<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="14"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>#name,<sp/>mount<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>};<sp/>ATTRIBUTE(&quot;fs&quot;,<sp/>fs_##name)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/fsys.h"/>
+  </compounddef>
+</doxygen>

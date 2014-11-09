@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_sched.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_sched.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -15,7 +15,7 @@ usr/src/libpthread/src/pthread_sched.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -37,14 +37,14 @@ usr/src/libpthread/src/pthread_sched.c \-
 .RI "\fBPUBLIC\fP int \fBpthread_getconcurrency\fP (void)"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP int pthread_getconcurrency (void)"
 
 .PP
-Definizione alla linea 57 del file pthread_sched\&.c\&.
+Definition at line 57 of file pthread_sched\&.c\&.
 .PP
-Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&.
+References pthread_context::attr, errno, pthread_attr::param, and pthread_self()\&.
 .PP
 .nf
 57                                         {
@@ -61,9 +61,9 @@ Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&
 .SS "\fBPUBLIC\fP int pthread_getschedparam (\fBpthread_t\fPthread, int *policy, struct sched_param *param)"
 
 .PP
-Definizione alla linea 26 del file pthread_sched\&.c\&.
+Definition at line 26 of file pthread_sched\&.c\&.
 .PP
-Referenzia errno, sched_getparam(), e pthread_context::tid\&.
+References errno, sched_getparam(), and pthread_context::tid\&.
 .PP
 .nf
 26                                                                                            {
@@ -87,9 +87,9 @@ Referenzia errno, sched_getparam(), e pthread_context::tid\&.
 .SS "\fBPUBLIC\fP int pthread_setconcurrency (intlevel)"
 
 .PP
-Definizione alla linea 44 del file pthread_sched\&.c\&.
+Definition at line 44 of file pthread_sched\&.c\&.
 .PP
-Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&.
+References pthread_context::attr, errno, pthread_attr::param, and pthread_self()\&.
 .PP
 .nf
 44                                              {
@@ -108,9 +108,9 @@ Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&
 .SS "\fBPUBLIC\fP int pthread_setschedparam (\fBpthread_t\fPthread, intpolicy, const struct sched_param *param)"
 
 .PP
-Definizione alla linea 11 del file pthread_sched\&.c\&.
+Definition at line 11 of file pthread_sched\&.c\&.
 .PP
-Referenzia errno, sched_setparam(), e pthread_context::tid\&.
+References errno, sched_setparam(), and pthread_context::tid\&.
 .PP
 .nf
 11                                                                                                 {
@@ -133,9 +133,9 @@ Referenzia errno, sched_setparam(), e pthread_context::tid\&.
 .SS "\fBEXTERN\fP int sched_setparam (pid_tpid, const struct sched_param *param)"
 
 .PP
-Definizione alla linea 35 del file sched\&.c\&.
+Definition at line 35 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 35                                                                {
@@ -153,6 +153,6 @@ Referenzia errno\&.
 47     return -1;
 48 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

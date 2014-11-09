@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['gapsize',['gapsize',['../structiso9660__dir.html#a358fa7ee0501266c9006e7b037027ee6',1,'iso9660_dir::gapsize()'],['../iso9660_8h.html#a90b488a6d4e2a35f363b5029ff562f28',1,'gapsize():&#160;iso9660.h']]],
   ['gdt_5fe',['gdt_e',['../desc_8c.html#a243b9f88d2a68b2d2daff1dd77773e08',1,'desc.c']]],
   ['gdt_5fp',['gdt_p',['../desc_8c.html#af67a6154264e775ccf3c976fefe43618',1,'desc.c']]],
   ['gid',['gid',['../structinode.html#a8434fb9dd05057d00b37ed713713835d',1,'inode::gid()'],['../structtask.html#aaf3b6e15445e766a5c4823b815bca630',1,'task::gid()']]],

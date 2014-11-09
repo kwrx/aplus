@@ -1,25 +1,27 @@
-\hypertarget{clone_8c}{\section{Riferimenti per il file src/syscall/clone.c}
+\hypertarget{clone_8c}{\section{src/syscall/clone.c File Reference}
 \label{clone_8c}\index{src/syscall/clone.\+c@{src/syscall/clone.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/task.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \hyperlink{clone_8c_a14a069ba6b991078484ac2b7573a5f23}{sys\+\_\+clone} (int($\ast$fn)(void $\ast$), void $\ast$child\+\_\+stack, int flags, void $\ast$arg)
-\item 
+int \hyperlink{clone_8c_a14a069ba6b991078484ac2b7573a5f23}{sys\+\_\+clone} (int($\ast$fn)(void $\ast$), void $\ast$child\+\_\+stack, int \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags}, void $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Creates a new process.~\newline
+Unlike fork(2), these calls allow the child process to share parts of its execution context with the calling process, such as the memory space, the table of file descriptors, and the table of signal handlers.~\newline
+The main use of \hyperlink{clone_8c_a14a069ba6b991078484ac2b7573a5f23}{sys\+\_\+clone()} is to implement threads\+: multiple threads of control in a program that run concurrently in a shared memory space. \end{DoxyCompactList}\item 
 \hyperlink{clone_8c_adeb0bff3f02079d3e65a1229d6161490}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{clone_8c_a14a069ba6b991078484ac2b7573a5f23}{sys\+\_\+clone}, 22)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{clone_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{clone_8c_a14a069ba6b991078484ac2b7573a5f23}{\index{clone.\+c@{clone.\+c}!sys\+\_\+clone@{sys\+\_\+clone}}
 \index{sys\+\_\+clone@{sys\+\_\+clone}!clone.\+c@{clone.\+c}}
 \subsubsection[{sys\+\_\+clone}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+clone (
@@ -32,32 +34,63 @@ int \hyperlink{clone_8c_a14a069ba6b991078484ac2b7573a5f23}{sys\+\_\+clone} (int(
 )}}\label{clone_8c_a14a069ba6b991078484ac2b7573a5f23}
 
 
-Definizione alla linea 8 del file clone.\+c.
+Creates a new process.~\newline
+Unlike fork(2), these calls allow the child process to share parts of its execution context with the calling process, such as the memory space, the table of file descriptors, and the table of signal handlers.~\newline
+The main use of \hyperlink{clone_8c_a14a069ba6b991078484ac2b7573a5f23}{sys\+\_\+clone()} is to implement threads\+: multiple threads of control in a program that run concurrently in a shared memory space. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fn} & Is a pointer to a function that is called by the child process at the beginning of its execution. \\
+\hline
+{\em child\+\_\+stack} & specifies the location of the stack used by the child process.~\newline
+ Since the child and calling process may share memory, it is not possible for the child process to execute in the same stack as the calling process. \\
+\hline
+{\em flags} & ~\newline
+
+\begin{DoxyItemize}
+\item C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S~\newline
+ The calling process and the child process share the same file descriptor table.
+\item C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D~\newline
+ The calling process and the child process share the same table of signal handlers.
+\item \hyperlink{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}{C\+L\+O\+N\+E\+\_\+\+V\+M}~\newline
+ The calling process and the child process run in the same memory space. 
+\end{DoxyItemize}\\
+\hline
+{\em arg} & Argument is passed to the fn function. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+On success, the thread I\+D of the child process is returned in the caller's thread of execution.~\newline
+ On failure, -\/1 is returned in the caller's context, no child process will be created, and errno will be set appropriately. 
+\end{DoxyReturn}
+
+
+Definition at line 32 of file clone.\+c.
 
 
 
-Referenzia errno, task\+::pid, e task\+\_\+clone().
+References errno, task\+::pid, and task\+\_\+clone().
 
 
 \begin{DoxyCode}
-8                                                                          \{
-9     \textcolor{keywordflow}{if}(!\hyperlink{clone_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-10         \textcolor{keywordflow}{return} -1;
-11     
-12     \textcolor{keywordflow}{if}(fn == NULL) \{
-13         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-14         \textcolor{keywordflow}{return} -1;
-15     \}
-16 
-17 
-18     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{task_8c_aa274b7334aace961395fdb788126712d}{task\_clone}(fn, arg, child\_stack);
-19     \textcolor{keywordflow}{if}(!child) \{
-20         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EFAULT;
-21         \textcolor{keywordflow}{return} -1;
-22     \}
-23 
-24     \textcolor{keywordflow}{return} child->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
-25 \}
+32                                                                          \{
+33     \textcolor{keywordflow}{if}(!\hyperlink{clone_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+34         \textcolor{keywordflow}{return} -1;
+35     
+36     \textcolor{keywordflow}{if}(fn == NULL) \{
+37         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+38         \textcolor{keywordflow}{return} -1;
+39     \}
+40 
+41 
+42     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{task_8c_aa274b7334aace961395fdb788126712d}{task\_clone}(fn, arg, child\_stack);
+43     \textcolor{keywordflow}{if}(!child) \{
+44         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EFAULT;
+45         \textcolor{keywordflow}{return} -1;
+46     \}
+47 
+48     \textcolor{keywordflow}{return} child->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
+49 \}
 \end{DoxyCode}
 \hypertarget{clone_8c_adeb0bff3f02079d3e65a1229d6161490}{\index{clone.\+c@{clone.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!clone.\+c@{clone.\+c}}
@@ -69,11 +102,15 @@ Referenzia errno, task\+::pid, e task\+\_\+clone().
 )}}\label{clone_8c_adeb0bff3f02079d3e65a1229d6161490}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{clone_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{clone.\+c@{clone.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!clone.\+c@{clone.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{clone_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

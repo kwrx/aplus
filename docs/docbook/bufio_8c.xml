@@ -117,14 +117,6 @@ void * raw, size_t size)</para>
                     </listitem>
                 </itemizedlist>
             </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para><link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link> * <link linkend="bufio_8c_1ab4a60d54cf7a99daf16f558781a99334">bufio_find_by_type</link> (
-<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> type)</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
         </simplesect>
     <simplesect>
         <title>Detailed Description</title>

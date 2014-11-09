@@ -1,4 +1,4 @@
-.TH "src/include/aplus/net/ipv6.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/net/ipv6.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -11,14 +11,14 @@ src/include/aplus/net/ipv6.h \-
 \fC#include <aplus/netif\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBipv6_header\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -37,14 +37,14 @@ src/include/aplus/net/ipv6.h \-
 .RI "#define \fBIPV6_PROTO_UDP\fP   17"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "struct \fBipv6_header\fP \fB__attribute__\fP ((packed)) ipv6_header_t"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -72,34 +72,34 @@ src/include/aplus/net/ipv6.h \-
 .RI "\fBipv6_t\fP \fBdest\fP"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define IPV6_CHECK_VERSION(head)   (head->\fBversion\fP == 6)"
 
 .PP
-Definizione alla linea 8 del file ipv6\&.h\&.
+Definition at line 8 of file ipv6\&.h\&.
 .SS "#define IPV6_PROTO_ICMP   1"
 
 .PP
-Definizione alla linea 11 del file ipv6\&.h\&.
+Definition at line 11 of file ipv6\&.h\&.
 .SS "#define IPV6_PROTO_RAW   0"
 
 .PP
-Definizione alla linea 10 del file ipv6\&.h\&.
+Definition at line 10 of file ipv6\&.h\&.
 .SS "#define IPV6_PROTO_TCP   6"
 
 .PP
-Definizione alla linea 12 del file ipv6\&.h\&.
+Definition at line 12 of file ipv6\&.h\&.
 .SS "#define IPV6_PROTO_UDP   17"
 
 .PP
-Definizione alla linea 13 del file ipv6\&.h\&.
-.SH "Documentazione delle funzioni"
+Definition at line 13 of file ipv6\&.h\&.
+.SH "Function Documentation"
 .PP 
 .SS "struct \fBipv6_header\fP __attribute__ ((packed))"
 
 .PP
-Definizione alla linea 44 del file desc\&.c\&.
+Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
 46                        {
@@ -107,40 +107,40 @@ Definizione alla linea 44 del file desc\&.c\&.
 48     uint32_t base;
 49 } __attribute__((packed)) gdt_ptr_t;
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBipv6_t\fP dest"
 
 .PP
-Definizione alla linea 67 del file ipv6\&.h\&.
+Definition at line 67 of file ipv6\&.h\&.
 .SS "\fBuint32_t\fP flow"
 
 .PP
-Definizione alla linea 60 del file ipv6\&.h\&.
+Definition at line 60 of file ipv6\&.h\&.
 .SS "\fBuint16_t\fP length"
 
 .PP
-Definizione alla linea 62 del file ipv6\&.h\&.
+Definition at line 62 of file ipv6\&.h\&.
 .SS "\fBuint8_t\fP protocol"
 
 .PP
-Definizione alla linea 63 del file ipv6\&.h\&.
+Definition at line 63 of file ipv6\&.h\&.
 .SS "\fBipv6_t\fP source"
 
 .PP
-Definizione alla linea 66 del file ipv6\&.h\&.
+Definition at line 66 of file ipv6\&.h\&.
 .SS "\fBuint32_t\fP traffic"
 
 .PP
-Definizione alla linea 59 del file ipv6\&.h\&.
+Definition at line 59 of file ipv6\&.h\&.
 .SS "\fBuint8_t\fP ttl"
 
 .PP
-Definizione alla linea 64 del file ipv6\&.h\&.
+Definition at line 64 of file ipv6\&.h\&.
 .SS "\fBuint32_t\fP version"
 
 .PP
-Definizione alla linea 58 del file ipv6\&.h\&.
-.SH "Autore"
+Definition at line 58 of file ipv6\&.h\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

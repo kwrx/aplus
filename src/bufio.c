@@ -12,11 +12,22 @@
 #include <stdio.h>
 
 
+/**
+ *	\brief List of allocated buffers.
+ */
 static list_t* list_buffers;
+
+/**
+ *	\brief Allocated RAM of all buffers.
+ */
 static uint64_t buffers_length;
 
 extern task_t* current_task;
 
+
+/**
+ *	\brief BufIO initialization.
+ */
 int bufio_init() {
 	list_init(list_buffers);
 	
@@ -24,7 +35,9 @@ int bufio_init() {
 }
 
 
-
+/**
+ *	\brief Free al unused buffers.
+ */
 void bufio_free_unused() {
 
 	list_t* tmp;
@@ -42,6 +55,11 @@ void bufio_free_unused() {
 }
 
 
+/**
+ *	\brief Alloc new buffer for current task.
+ *	\param size Size in Bytes of data.
+ *	\return bufio descriptor.
+ */
 bufio_t* bufio_alloc(size_t size) {
 	void* addr = (void*) kmalloc(size);
 	if(!addr)
@@ -65,6 +83,12 @@ bufio_t* bufio_alloc(size_t size) {
 	return buf;
 }
 
+/**
+ *	\brief Create new buffer from allocated data for current task.
+ *	\param raw Buffer allocated address.
+ *	\param size Size in Bytes of data.
+ *	\return bufio descriptor.
+ */
 bufio_t* bufio_alloc_raw(void* raw, size_t size) {
 	if(!raw)
 		return 0;
@@ -87,6 +111,10 @@ bufio_t* bufio_alloc_raw(void* raw, size_t size) {
 	return buf;
 }
 
+/**
+ *	\brief Free and remove buffer.
+ *	\param buf bufio descriptor.
+ */
 void bufio_free(bufio_t* buf) {
 	lock();
 	buffers_length -= buf->size;
@@ -100,6 +128,17 @@ void bufio_free(bufio_t* buf) {
 	unlock();
 }
 
+
+/**
+ *	\brief Sets the position indicator associated with the bufio descriptor to a new position.
+ *	\param buf Pointer to a bufio descriptor.
+ *	\param offset Number of bytes to offset from dir.
+ *	\param dir Position used as reference for the offset\n
+	+	SEEK_SET: Beginning of stream.\n
+	+	SEEK_CUR: Current position of stream.\n
+	+	SEEK_END: End of stream.\n
+ *	\return If successful return current position of stream, otherwise, it returns non-zero value.
+ */
 int bufio_seek(bufio_t* buf, off_t offset, int dir) {
 
 	if(offset > buf->size)
@@ -128,16 +167,39 @@ int bufio_seek(bufio_t* buf, off_t offset, int dir) {
 	return buf->offset;
 }
 
+/**
+ *	\brief Returns the current value of the position indicator of the stream.\n
+ *	\param buf Pointer to a bufio descriptor.
+ *	\return On success, the current value of the position indicator is returned.\n
+			On failure, -1L is returned.
+ */
+
 int bufio_tell(bufio_t* buf) {
 	return bufio_seek(buf, 0, SEEK_CUR);
 }
 
+
+/**
+ *	\brief Clear entire stream of the buffer descriptor.
+ *	\param buf Pointer to a bufio descriptor.
+ */ 
 void bufio_clear(bufio_t* buf) {
 	spinlock_lock(&buf->lock);
 	memset(buf->raw, 0, buf->size);
 	spinlock_unlock(&buf->lock);
 }
 
+
+/**
+ *	\brief This function shall attempt to read nbyte bytes from the stream associated with the bufio descriptor, buf, into the buffer pointed to by ptr
+ *	\param buf Pointer to a bufio descriptor.
+ *	\param ptr Pointer to output buffer.
+ *	\param len Size of data to read.
+ *	\return Upon successful completion, shall return a 
+			non-negative integer indicating the number of bytes actually read.\n 
+			Otherwise, the functions shall return -1 and set errno to indicate 
+			the error.
+ */
 int bufio_read(bufio_t* buf, void* ptr, size_t len) {		
 	spinlock_lock(&buf->lock);
 	
@@ -151,6 +213,17 @@ int bufio_read(bufio_t* buf, void* ptr, size_t len) {
 	return (int) len;
 }
 
+
+/**
+ *	\brief This function shall attempt to write nbyte bytes into the stream associated with the bufio descriptor, buf, from the buffer pointed to by ptr
+ *	\param buf Pointer to a bufio descriptor.
+ *	\param ptr Pointer to input buffer.
+ *	\param len Size of data to write.
+ *	\return Upon successful completion, shall return a 
+			non-negative integer indicating the number of bytes actually write.\n 
+			Otherwise, the functions shall return -1 and set errno to indicate 
+			the error.
+ */
 int bufio_write(bufio_t* buf, void* ptr, size_t len) {		
 	
 	spinlock_lock(&buf->lock);
@@ -165,16 +238,3 @@ int bufio_write(bufio_t* buf, void* ptr, size_t len) {
 	return (int) len;
 }
 
-list_t* bufio_find_by_type(uint32_t type) {
-	list_t* tmp;
-	list_init(tmp);
-	
-	list_foreach(value, list_buffers) {
-		bufio_t* buf = (bufio_t*) value;
-
-		if(buf->type == type)
-			list_add(tmp, (listval_t) buf);
-	}
-	
-	return tmp;
-}

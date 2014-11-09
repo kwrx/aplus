@@ -1,4 +1,4 @@
-.TH "src/syscall/wait.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/wait.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,7 +21,7 @@ src/syscall/wait.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -31,21 +31,22 @@ src/syscall/wait.c \-
 .RI "\fBSYSCALL\fP (\fBsys_wait\fP, 16)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int sys_wait (int *status)"
 
 .PP
-Definizione alla linea 12 del file wait\&.c\&.
+Definition at line 12 of file wait\&.c\&.
 .PP
-Referenzia errno, task::pid, schedule_child(), e schedule_wait()\&.
+References errno, task::pid, schedule_child(), and schedule_wait()\&.
 .PP
 .nf
 12                           {
@@ -70,12 +71,14 @@ Referenzia errno, task::pid, schedule_child(), e schedule_wait()\&.
 .fi
 .SS "SYSCALL (\fBsys_wait\fP, 16)"
 
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
-.SH "Autore"
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

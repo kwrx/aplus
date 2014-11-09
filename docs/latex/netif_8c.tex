@@ -1,4 +1,4 @@
-\hypertarget{netif_8c}{\section{Riferimenti per il file src/net/netif.c}
+\hypertarget{netif_8c}{\section{src/net/netif.c File Reference}
 \label{netif_8c}\index{src/net/netif.\+c@{src/net/netif.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -9,7 +9,7 @@
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$string.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/net/arp.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{netif_8c_ac75c28e791563771b563d670aeebd552}{netif\+\_\+htonl} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} h)
@@ -46,9 +46,9 @@ int \hyperlink{netif_8c_ae9331f4834a47cc6f7c9edf6490046cf}{netif\+\_\+packets\+\
 \item 
 \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{netif_8c_ae6bde7bab4c04cc235035e789ae2854b}{netif\+\_\+packets\+\_\+find\+\_\+by\+\_\+protocol} (int \hyperlink{ipv6_8h_ad124d3d2e02c729afa303c775295278e}{protocol})
 \item 
-\hyperlink{netif_8h_a258b0bd35563d9af265d975f94bdbd4c}{netif\+\_\+packet\+\_\+t} $\ast$ \hyperlink{netif_8c_aa14a95992efbcac98c16a43724dc0942}{netif\+\_\+packets\+\_\+create} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, int \hyperlink{ipv6_8h_ad124d3d2e02c729afa303c775295278e}{protocol}, int tot\+\_\+length, int head\+\_\+length, void $\ast$data)
+\hyperlink{netif_8h_a258b0bd35563d9af265d975f94bdbd4c}{netif\+\_\+packet\+\_\+t} $\ast$ \hyperlink{netif_8c_aa14a95992efbcac98c16a43724dc0942}{netif\+\_\+packets\+\_\+create} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, int \hyperlink{ipv6_8h_ad124d3d2e02c729afa303c775295278e}{protocol}, int tot\+\_\+length, int head\+\_\+length, void $\ast$\hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data})
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{lst\+\_\+netif} = N\+U\+L\+L
@@ -57,7 +57,7 @@ static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{netif_8c_a01bed7c80274b7830923cdde25b1d48a}{\index{netif.\+c@{netif.\+c}!netif\+\_\+add@{netif\+\_\+add}}
 \index{netif\+\_\+add@{netif\+\_\+add}!netif.\+c@{netif.\+c}}
 \subsubsection[{netif\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int netif\+\_\+add (
@@ -67,11 +67,11 @@ static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$
 )}}\label{netif_8c_a01bed7c80274b7830923cdde25b1d48a}
 
 
-Definizione alla linea 124 del file netif.\+c.
+Definition at line 124 of file netif.\+c.
 
 
 
-Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(), list\+\_\+init, netif\+::macaddr, netif\+::mtu, netif\+::name, netif\+\_\+find\+\_\+by\+\_\+ipv4(), netif\+\_\+find\+\_\+by\+\_\+ipv6(), netif\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::netmask, netif\+::primary, e netif\+::secondary.
+References netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf(), list\+\_\+add(), list\+\_\+init, netif\+::macaddr, netif\+::mtu, netif\+::name, netif\+\_\+find\+\_\+by\+\_\+ipv4(), netif\+\_\+find\+\_\+by\+\_\+ipv6(), netif\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::netmask, netif\+::primary, and netif\+::secondary.
 
 
 \begin{DoxyCode}
@@ -82,24 +82,24 @@ Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(),
 128 
 129 
 130     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_a7a9fee228b8774a921b2d7ea567a0006}{netif\_find\_by\_ipv4}(&netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}) != NULL) \{
-131         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di ipv4\(\backslash\)n"});
+131         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di ipv4\(\backslash\)n"});
 132         \textcolor{keywordflow}{return} -1;
 133     \}
 134 
 135     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_a9f5e5c9b8dab074ad69fa4991dbe1898}{netif\_find\_by\_ipv6}(&netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}) != NULL) \{
-136         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di ipv6\(\backslash\)n"});
+136         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di ipv6\(\backslash\)n"});
 137         \textcolor{keywordflow}{return} -1;
 138     \}
 139 
 140 
 141     \textcolor{keywordflow}{if}(\hyperlink{netif_8c_aa9fb3336f90a384ee5a2bdd22f1c084b}{netif\_find\_by\_macaddr}(&netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}) != NULL) \{
-142         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di macaddr\(\backslash\)n"});
+142         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"netif: conflitto di macaddr\(\backslash\)n"});
 143         \textcolor{keywordflow}{return} -1;
 144     \}
 145 
 146 
 147 
-148     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)n%s:\(\backslash\)tipv4\(\backslash\)t%d.%d.%d.%d\(\backslash\)n\(\backslash\)tnetmask\(\backslash\)t%d.%d.%d.%d\(\backslash\)n"},
+148     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)n%s:\(\backslash\)tipv4\(\backslash\)t%d.%d.%d.%d\(\backslash\)n\(\backslash\)tnetmask\(\backslash\)t%d.%d.%d.%d\(\backslash\)n"},
 149             netdev->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name},
 150             netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[0],
 151             netdev->\hyperlink{structnetif_a312a8e870ce8803f02f5b09012ce6bc6}{ipv4}[1],
@@ -111,7 +111,7 @@ Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(),
 157             netdev->\hyperlink{structnetif_a36ef3cfb5f0403df355dc6db0ddc2426}{netmask}[3]
 158     );
 159 
-160     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tipv6\(\backslash\)t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n"},
+160     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tipv6\(\backslash\)t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n"},
 161             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[0],
 162             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[1],
 163             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[2],
@@ -122,7 +122,7 @@ Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(),
 168             netdev->\hyperlink{structnetif_aced1ed63f6f33dd3987a06deee6a2292}{ipv6}[7]
 169     );
 170 
-171     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tmacaddr\(\backslash\)t%02x:%02x:%02x:%02x:%02x:%02x\(\backslash\)n\(\backslash\)tmtu\(\backslash\)t%d bytes\(\backslash\)n"},
+171     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tmacaddr\(\backslash\)t%02x:%02x:%02x:%02x:%02x:%02x\(\backslash\)n\(\backslash\)tmtu\(\backslash\)t%d bytes\(\backslash\)n"},
 172             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[0],
 173             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[1],
 174             netdev->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}[2],
@@ -132,7 +132,7 @@ Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(),
 178             netdev->\hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu}
 179     );
 180 
-181     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tdns\(\backslash\)t%d.%d.%d.%d\(\backslash\)n\(\backslash\)t\(\backslash\)t%d.%d.%d.%d\(\backslash\)n"},
+181     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)tdns\(\backslash\)t%d.%d.%d.%d\(\backslash\)n\(\backslash\)t\(\backslash\)t%d.%d.%d.%d\(\backslash\)n"},
 182             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[0],
 183             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[1],
 184             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv4[2],
@@ -143,7 +143,7 @@ Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(),
 189             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a793ad0cb27997bfa7874a2097a77b0e2}{secondary}.ipv4[3]
 190     );
 191 
-192     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n\(\backslash\)t\(\backslash\)t
+192     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)t\(\backslash\)t%04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n\(\backslash\)t\(\backslash\)t
       %04x:%04x:%04x:%04x:%04x:%04x:%04x:%04x\(\backslash\)n"},
 193             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[0],
 194             netdev->\hyperlink{structnetif_a30f1247e8e2ef8ac954833c81873608e}{dns}.\hyperlink{structnetif_a367e7d85725497d7703bfc0424f472cf}{primary}.ipv6[1],
@@ -175,11 +175,11 @@ Referenzia netif\+::dns, netif\+::ipv4, netif\+::ipv6, kprintf, list\+\_\+add(),
 )}}\label{netif_8c_a7a9fee228b8774a921b2d7ea567a0006}
 
 
-Definizione alla linea 36 del file netif.\+c.
+Definition at line 36 of file netif.\+c.
 
 
 
-Referenzia netif\+::ipv4, list\+\_\+foreach, e value.
+References netif\+::ipv4, list\+\_\+foreach, and value.
 
 
 \begin{DoxyCode}
@@ -206,11 +206,11 @@ Referenzia netif\+::ipv4, list\+\_\+foreach, e value.
 )}}\label{netif_8c_a9f5e5c9b8dab074ad69fa4991dbe1898}
 
 
-Definizione alla linea 50 del file netif.\+c.
+Definition at line 50 of file netif.\+c.
 
 
 
-Referenzia netif\+::ipv6, list\+\_\+foreach, e value.
+References netif\+::ipv6, list\+\_\+foreach, and value.
 
 
 \begin{DoxyCode}
@@ -237,11 +237,11 @@ Referenzia netif\+::ipv6, list\+\_\+foreach, e value.
 )}}\label{netif_8c_aa9fb3336f90a384ee5a2bdd22f1c084b}
 
 
-Definizione alla linea 66 del file netif.\+c.
+Definition at line 66 of file netif.\+c.
 
 
 
-Referenzia list\+\_\+foreach, netif\+::macaddr, e value.
+References list\+\_\+foreach, netif\+::macaddr, and value.
 
 
 \begin{DoxyCode}
@@ -268,11 +268,11 @@ Referenzia list\+\_\+foreach, netif\+::macaddr, e value.
 )}}\label{netif_8c_a0de3666f699d7d9cc7ec52171b844fa0}
 
 
-Definizione alla linea 80 del file netif.\+c.
+Definition at line 80 of file netif.\+c.
 
 
 
-Referenzia list\+\_\+foreach, netif\+::name, e value.
+References list\+\_\+foreach, netif\+::name, and value.
 
 
 \begin{DoxyCode}
@@ -299,7 +299,7 @@ Referenzia list\+\_\+foreach, netif\+::name, e value.
 )}}\label{netif_8c_ac75c28e791563771b563d670aeebd552}
 
 
-Definizione alla linea 18 del file netif.\+c.
+Definition at line 18 of file netif.\+c.
 
 
 \begin{DoxyCode}
@@ -317,7 +317,7 @@ Definizione alla linea 18 del file netif.\+c.
 )}}\label{netif_8c_aa915d67e8c3d0b0e1beed32f3ee21749}
 
 
-Definizione alla linea 23 del file netif.\+c.
+Definition at line 23 of file netif.\+c.
 
 
 \begin{DoxyCode}
@@ -334,11 +334,11 @@ Definizione alla linea 23 del file netif.\+c.
 )}}\label{netif_8c_a801ea0d4582b551b79c186cd1023180c}
 
 
-Definizione alla linea 110 del file netif.\+c.
+Definition at line 110 of file netif.\+c.
 
 
 
-Referenzia netif\+::ifdown, list\+\_\+foreach, e value.
+References netif\+::ifdown, list\+\_\+foreach, and value.
 
 
 \begin{DoxyCode}
@@ -365,11 +365,11 @@ Referenzia netif\+::ifdown, list\+\_\+foreach, e value.
 )}}\label{netif_8c_aa233de3d4ae3825f0beafd81d10fbe36}
 
 
-Definizione alla linea 94 del file netif.\+c.
+Definition at line 94 of file netif.\+c.
 
 
 
-Referenzia arp\+\_\+send(), netif\+::ifup, list\+\_\+foreach, e value.
+References arp\+\_\+send(), netif\+::ifup, list\+\_\+foreach, and value.
 
 
 \begin{DoxyCode}
@@ -398,11 +398,11 @@ Referenzia arp\+\_\+send(), netif\+::ifup, list\+\_\+foreach, e value.
 )}}\label{netif_8c_af7c3254022249b2dfa78151c8f345e77}
 
 
-Definizione alla linea 221 del file netif.\+c.
+Definition at line 221 of file netif.\+c.
 
 
 
-Referenzia attribute(), list\+\_\+destroy, list\+\_\+empty(), list\+\_\+foreach, list\+\_\+init, netif\+\_\+ifup(), e value.
+References attribute(), list\+\_\+destroy, list\+\_\+empty(), list\+\_\+foreach, list\+\_\+init, netif\+\_\+ifup(), and value.
 
 
 \begin{DoxyCode}
@@ -435,7 +435,7 @@ Referenzia attribute(), list\+\_\+destroy, list\+\_\+empty(), list\+\_\+foreach,
 )}}\label{netif_8c_a5e9c3efca67d84bdcfffdbbdfe70711b}
 
 
-Definizione alla linea 27 del file netif.\+c.
+Definition at line 27 of file netif.\+c.
 
 
 \begin{DoxyCode}
@@ -453,7 +453,7 @@ Definizione alla linea 27 del file netif.\+c.
 )}}\label{netif_8c_ae01b55d09345802921e2a0348cfeb9a0}
 
 
-Definizione alla linea 32 del file netif.\+c.
+Definition at line 32 of file netif.\+c.
 
 
 \begin{DoxyCode}
@@ -470,11 +470,11 @@ Definizione alla linea 32 del file netif.\+c.
 )}}\label{netif_8c_a3edf21f1cc51e87714ea8911236d896c}
 
 
-Definizione alla linea 242 del file netif.\+c.
+Definition at line 242 of file netif.\+c.
 
 
 
-Referenzia netif\+\_\+packet\+::id, e list\+\_\+add().
+References netif\+\_\+packet\+::id, and list\+\_\+add().
 
 
 \begin{DoxyCode}
@@ -498,11 +498,11 @@ Referenzia netif\+\_\+packet\+::id, e list\+\_\+add().
 )}}\label{netif_8c_aa14a95992efbcac98c16a43724dc0942}
 
 
-Definizione alla linea 279 del file netif.\+c.
+Definition at line 279 of file netif.\+c.
 
 
 
-Referenzia netif\+\_\+packet\+::data, netif\+\_\+packet\+::header, kmalloc(), netif\+\_\+packet\+::length, netif\+\_\+packet\+::netif, protocol, netif\+\_\+packet\+::protocol, e uint32\+\_\+t.
+References netif\+\_\+packet\+::data, netif\+\_\+packet\+::header, kmalloc(), netif\+\_\+packet\+::length, netif\+\_\+packet\+::netif, protocol, netif\+\_\+packet\+::protocol, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -514,8 +514,8 @@ Referenzia netif\+\_\+packet\+::data, netif\+\_\+packet\+::header, kmalloc(), ne
 282     pkt->\hyperlink{structnetif__packet_a2517358f8125e0a674a0628a77f1095d}{protocol} = \hyperlink{ipv4_8h_ad124d3d2e02c729afa303c775295278e}{protocol};
 283     pkt->\hyperlink{structnetif__packet_a244620016b7d377fd2558f5ccfc85d18}{length} = tot\_length - head\_length;
 284     
-285     memcpy(pkt->\hyperlink{structnetif__packet_a3733c55855518d575eea678f5a2815e8}{header}, data, head\_length);
-286     memcpy(pkt->\hyperlink{structnetif__packet_a3b4b8603d752944ba4360db33c5870b5}{data}, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) data + head\_length), pkt->
+285     memcpy(pkt->\hyperlink{structnetif__packet_a3733c55855518d575eea678f5a2815e8}{header}, \hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data}, head\_length);
+286     memcpy(pkt->\hyperlink{structnetif__packet_a3b4b8603d752944ba4360db33c5870b5}{data}, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data} + head\_length), pkt->
       \hyperlink{structnetif__packet_a244620016b7d377fd2558f5ccfc85d18}{length});
 287 
 288     \textcolor{keywordflow}{return} pkt;
@@ -530,11 +530,11 @@ Referenzia netif\+\_\+packet\+::data, netif\+\_\+packet\+::header, kmalloc(), ne
 )}}\label{netif_8c_a298d555d31337e14e76688ecdbf08ef6}
 
 
-Definizione alla linea 253 del file netif.\+c.
+Definition at line 253 of file netif.\+c.
 
 
 
-Referenzia netif\+\_\+packet\+::id, list\+\_\+foreach, e value.
+References netif\+\_\+packet\+::id, list\+\_\+foreach, and value.
 
 
 \begin{DoxyCode}
@@ -559,11 +559,11 @@ Referenzia netif\+\_\+packet\+::id, list\+\_\+foreach, e value.
 )}}\label{netif_8c_ae6bde7bab4c04cc235035e789ae2854b}
 
 
-Definizione alla linea 264 del file netif.\+c.
+Definition at line 264 of file netif.\+c.
 
 
 
-Referenzia list\+\_\+add(), list\+\_\+foreach, list\+\_\+init, netif\+\_\+packet\+::protocol, e value.
+References list\+\_\+add(), list\+\_\+foreach, list\+\_\+init, netif\+\_\+packet\+::protocol, and value.
 
 
 \begin{DoxyCode}
@@ -592,11 +592,11 @@ Referenzia list\+\_\+add(), list\+\_\+foreach, list\+\_\+init, netif\+\_\+packet
 )}}\label{netif_8c_ae9331f4834a47cc6f7c9edf6490046cf}
 
 
-Definizione alla linea 249 del file netif.\+c.
+Definition at line 249 of file netif.\+c.
 
 
 
-Referenzia list\+\_\+remove().
+References list\+\_\+remove().
 
 
 \begin{DoxyCode}
@@ -613,11 +613,11 @@ Referenzia list\+\_\+remove().
 )}}\label{netif_8c_a9c8fb9469b40267eb50031f262587eab}
 
 
-Definizione alla linea 214 del file netif.\+c.
+Definition at line 214 of file netif.\+c.
 
 
 
-Referenzia list\+\_\+remove().
+References list\+\_\+remove().
 
 
 \begin{DoxyCode}
@@ -630,18 +630,18 @@ Referenzia list\+\_\+remove().
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{netif_8c_aa7d07620133cc2243295b0c03ac8436e}{\index{netif.\+c@{netif.\+c}!lst\+\_\+netif@{lst\+\_\+netif}}
 \index{lst\+\_\+netif@{lst\+\_\+netif}!netif.\+c@{netif.\+c}}
 \subsubsection[{lst\+\_\+netif}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ lst\+\_\+netif = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{netif_8c_aa7d07620133cc2243295b0c03ac8436e}
 
 
-Definizione alla linea 13 del file netif.\+c.
+Definition at line 13 of file netif.\+c.
 
 \hypertarget{netif_8c_accbe476fec12cec39066f558e3040ef6}{\index{netif.\+c@{netif.\+c}!lst\+\_\+packets@{lst\+\_\+packets}}
 \index{lst\+\_\+packets@{lst\+\_\+packets}!netif.\+c@{netif.\+c}}
 \subsubsection[{lst\+\_\+packets}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ lst\+\_\+packets = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{netif_8c_accbe476fec12cec39066f558e3040ef6}
 
 
-Definizione alla linea 14 del file netif.\+c.
+Definition at line 14 of file netif.\+c.
 

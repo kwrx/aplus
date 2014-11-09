@@ -52,9 +52,15 @@ typedef uint32_t Elf32_Word;
 #define SHF_EXECINSTR		4
 #define SHF_MASK			0xF0000000
 
-
+/**
+ *	\brief Enable or disable debug for ELF.
+ */
 #define ELF_DEBUG
 
+
+/**
+ *	\brief ELF32 Header.
+ */
 typedef struct elf32_hdr {
 	uint8_t e_ident[EI_NIDENT];
 	Elf32_Half e_type;
@@ -72,7 +78,9 @@ typedef struct elf32_hdr {
 	Elf32_Half e_shstrndx;
 } elf32_hdr_t;
 
-
+/**
+ *	\brief ELF32 Section Header.
+ */
 typedef struct elf32_shdr {
 	Elf32_Word sh_name;
 	Elf32_Word sh_type;
@@ -88,6 +96,11 @@ typedef struct elf32_shdr {
 
 
 
+/**
+ *	\brief Check for valid ELF32 header.
+ *	\param hdr ELF32 Header.
+ * 	\return 0 for valid header or -1 in case of errors.
+ */
 int elf32_check(elf32_hdr_t* hdr) {
 
 	#define check(cond)				\
@@ -110,6 +123,11 @@ int elf32_check(elf32_hdr_t* hdr) {
 }
 
 
+/**
+ *	\brief Load a ELF32 Executable image.
+ *	\param image pointer to buffer address of a executable loaded in memory.
+ *	\return Entry Point address.
+ */
 void* elf32_load(void* image) {
 	if(image == NULL) {
 		errno = EINVAL;

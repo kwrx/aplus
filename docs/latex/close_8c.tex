@@ -1,4 +1,4 @@
-\hypertarget{close_8c}{\section{Riferimenti per il file src/syscall/close.c}
+\hypertarget{close_8c}{\section{src/syscall/close.c File Reference}
 \label{close_8c}\index{src/syscall/close.\+c@{src/syscall/close.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -10,21 +10,23 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\+\_\+close} (int fd)
-\item 
+\begin{DoxyCompactList}\small\item\em This function shall deallocate the file descriptor indicated by fildes.~\newline
+To deallocate means to make the file descriptor available for return by subsequent calls to open() or other functions that allocate file descriptors.~\newline
+All outstanding record locks owned by the process on the file associated with the file descriptor shall be removed (that is, unlocked). \end{DoxyCompactList}\item 
 \hyperlink{close_8c_af50bb9113581b84b91cad26990c7caa4}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\+\_\+close}, 1)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{\index{close.\+c@{close.\+c}!sys\+\_\+close@{sys\+\_\+close}}
 \index{sys\+\_\+close@{sys\+\_\+close}!close.\+c@{close.\+c}}
 \subsubsection[{sys\+\_\+close}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+close (
@@ -34,28 +36,42 @@ int \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\+\_\+close} (int 
 )}}\label{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}
 
 
-Definizione alla linea 16 del file close.\+c.
+This function shall deallocate the file descriptor indicated by fildes.~\newline
+To deallocate means to make the file descriptor available for return by subsequent calls to open() or other functions that allocate file descriptors.~\newline
+All outstanding record locks owned by the process on the file associated with the file descriptor shall be removed (that is, unlocked). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fd} & File descriptor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Upon successful completion, 0 shall be returned; otherwise, -\/1 shall be returned and errno set to indicate the error. 
+\end{DoxyReturn}
+
+
+Definition at line 26 of file close.\+c.
 
 
 
-Referenzia errno, task\+::fd, e kprintf.
+References errno, task\+::fd, and kprintf().
 
 
 \begin{DoxyCode}
-16                       \{
-17     \textcolor{keywordflow}{if}(!\hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-18         \textcolor{keywordflow}{return} -1;
-19         
-20     \textcolor{keywordflow}{if}(\hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] == 0) \{
-21         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"sys\_close: fd %d not exist."}, fd);
-22         
-23         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
-24         \textcolor{keywordflow}{return} -1;
-25     \}
-26     
-27     \hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] = 0;
-28     \textcolor{keywordflow}{return} 0;
-29 \}
+26                       \{
+27     \textcolor{keywordflow}{if}(!\hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+28         \textcolor{keywordflow}{return} -1;
+29         
+30     \textcolor{keywordflow}{if}(\hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] == 0) \{
+31         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_close: fd %d not exist."}, fd);
+32         
+33         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+34         \textcolor{keywordflow}{return} -1;
+35     \}
+36     
+37     \hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] = 0;
+38     \textcolor{keywordflow}{return} 0;
+39 \}
 \end{DoxyCode}
 \hypertarget{close_8c_af50bb9113581b84b91cad26990c7caa4}{\index{close.\+c@{close.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!close.\+c@{close.\+c}}
@@ -67,11 +83,15 @@ Referenzia errno, task\+::fd, e kprintf.
 )}}\label{close_8c_af50bb9113581b84b91cad26990c7caa4}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{close.\+c@{close.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!close.\+c@{close.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

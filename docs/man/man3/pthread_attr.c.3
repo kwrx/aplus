@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_attr.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_attr.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,14 +17,14 @@ usr/src/libpthread/src/pthread_attr.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
 .RI "#define \fBSTACK_DEFAULT_SIZE\fP   \fBPTHREAD_STACK_MIN\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -76,20 +76,20 @@ usr/src/libpthread/src/pthread_attr.c \-
 .RI "\fBPUBLIC\fP int \fBpthread_attr_setscope\fP (\fBpthread_attr_t\fP *attr, int contentionscope)"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define STACK_DEFAULT_SIZE   \fBPTHREAD_STACK_MIN\fP"
 
 .PP
-Definizione alla linea 10 del file pthread_attr\&.c\&.
-.SH "Documentazione delle funzioni"
+Definition at line 10 of file pthread_attr\&.c\&.
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP int pthread_attr_destroy (\fBpthread_attr_t\fP *attr)"
 
 .PP
-Definizione alla linea 28 del file pthread_attr\&.c\&.
+Definition at line 28 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 28                                                       {
@@ -105,9 +105,9 @@ Referenzia errno\&.
 .SS "\fBPUBLIC\fP int pthread_attr_getdetachstate (const \fBpthread_attr_t\fP *attr, int *detachstate)"
 
 .PP
-Definizione alla linea 38 del file pthread_attr\&.c\&.
+Definition at line 38 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::detachstate, e errno\&.
+References pthread_attr::detachstate, and errno\&.
 .PP
 .nf
 38                                                                                      {
@@ -123,9 +123,9 @@ Referenzia pthread_attr::detachstate, e errno\&.
 .SS "\fBPUBLIC\fP int pthread_attr_getinheritsched (\fBpthread_attr_t\fP *attr, int *inheritsched)"
 
 .PP
-Definizione alla linea 133 del file pthread_attr\&.c\&.
+Definition at line 133 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::inheritsched\&.
+References errno, and pthread_attr::inheritsched\&.
 .PP
 .nf
 133                                                                                  {
@@ -141,9 +141,9 @@ Referenzia errno, e pthread_attr::inheritsched\&.
 .SS "\fBPUBLIC\fP int pthread_attr_getschedparam (const \fBpthread_attr_t\fP *attr, struct sched_param *param)"
 
 .PP
-Definizione alla linea 100 del file pthread_attr\&.c\&.
+Definition at line 100 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::param\&.
+References errno, and pthread_attr::param\&.
 .PP
 .nf
 100                                                                                              {
@@ -159,9 +159,9 @@ Referenzia errno, e pthread_attr::param\&.
 .SS "\fBPUBLIC\fP int pthread_attr_getschedpolicy (\fBpthread_attr_t\fP *attr, int *policy)"
 
 .PP
-Definizione alla linea 123 del file pthread_attr\&.c\&.
+Definition at line 123 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 123                                                                           {
@@ -172,9 +172,9 @@ Referenzia errno\&.
 .SS "\fBPUBLIC\fP int pthread_attr_getscope (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
 
 .PP
-Definizione alla linea 153 del file pthread_attr\&.c\&.
+Definition at line 153 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::contentionscope, e errno\&.
+References pthread_attr::contentionscope, and errno\&.
 .PP
 .nf
 153                                                                                    {
@@ -190,9 +190,9 @@ Referenzia pthread_attr::contentionscope, e errno\&.
 .SS "\fBPUBLIC\fP int pthread_attr_getstackaddr (const \fBpthread_attr_t\fP *attr, void **stackaddr)"
 
 .PP
-Definizione alla linea 58 del file pthread_attr\&.c\&.
+Definition at line 58 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stackaddr\&.
+References errno, and pthread_attr::stackaddr\&.
 .PP
 .nf
 58                                                                                    {
@@ -208,9 +208,9 @@ Referenzia errno, e pthread_attr::stackaddr\&.
 .SS "\fBPUBLIC\fP int pthread_attr_getstacksize (const \fBpthread_attr_t\fP *attr, size_t *stacksize)"
 
 .PP
-Definizione alla linea 79 del file pthread_attr\&.c\&.
+Definition at line 79 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stacksize\&.
+References errno, and pthread_attr::stacksize\&.
 .PP
 .nf
 79                                                                                     {
@@ -226,9 +226,9 @@ Referenzia errno, e pthread_attr::stacksize\&.
 .SS "\fBPUBLIC\fP int pthread_attr_init (\fBpthread_attr_t\fP *attr)"
 
 .PP
-Definizione alla linea 12 del file pthread_attr\&.c\&.
+Definition at line 12 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthread_attr::inheritsched, pthread_attr::param, PTHREAD_STACK_MIN, pthread_attr::stackaddr, e pthread_attr::stacksize\&.
+References pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthread_attr::inheritsched, pthread_attr::param, PTHREAD_STACK_MIN, pthread_attr::stackaddr, and pthread_attr::stacksize\&.
 .PP
 .nf
 12                                                    {
@@ -250,9 +250,9 @@ Referenzia pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthr
 .SS "\fBPUBLIC\fP int pthread_attr_setdetachstate (\fBpthread_attr_t\fP *attr, intdetachstate)"
 
 .PP
-Definizione alla linea 48 del file pthread_attr\&.c\&.
+Definition at line 48 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::detachstate, e errno\&.
+References pthread_attr::detachstate, and errno\&.
 .PP
 .nf
 48                                                                               {
@@ -268,9 +268,9 @@ Referenzia pthread_attr::detachstate, e errno\&.
 .SS "\fBPUBLIC\fP int pthread_attr_setinheritsched (\fBpthread_attr_t\fP *attr, intinheritsched)"
 
 .PP
-Definizione alla linea 143 del file pthread_attr\&.c\&.
+Definition at line 143 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::inheritsched\&.
+References errno, and pthread_attr::inheritsched\&.
 .PP
 .nf
 143                                                                                 {
@@ -286,9 +286,9 @@ Referenzia errno, e pthread_attr::inheritsched\&.
 .SS "\fBPUBLIC\fP int pthread_attr_setschedparam (\fBpthread_attr_t\fP *attr, const struct sched_param *param)"
 
 .PP
-Definizione alla linea 112 del file pthread_attr\&.c\&.
+Definition at line 112 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::param\&.
+References errno, and pthread_attr::param\&.
 .PP
 .nf
 112                                                                                              {
@@ -304,9 +304,9 @@ Referenzia errno, e pthread_attr::param\&.
 .SS "\fBPUBLIC\fP int pthread_attr_setschedpolicy (\fBpthread_attr_t\fP *attr, intpolicy)"
 
 .PP
-Definizione alla linea 128 del file pthread_attr\&.c\&.
+Definition at line 128 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 128                                                                          {
@@ -317,9 +317,9 @@ Referenzia errno\&.
 .SS "\fBPUBLIC\fP int pthread_attr_setscope (\fBpthread_attr_t\fP *attr, intcontentionscope)"
 
 .PP
-Definizione alla linea 163 del file pthread_attr\&.c\&.
+Definition at line 163 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::contentionscope, e errno\&.
+References pthread_attr::contentionscope, and errno\&.
 .PP
 .nf
 163                                                                             {
@@ -335,9 +335,9 @@ Referenzia pthread_attr::contentionscope, e errno\&.
 .SS "\fBPUBLIC\fP int pthread_attr_setstackaddr (\fBpthread_attr_t\fP *attr, void *stackaddr)"
 
 .PP
-Definizione alla linea 68 del file pthread_attr\&.c\&.
+Definition at line 68 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stackaddr\&.
+References errno, and pthread_attr::stackaddr\&.
 .PP
 .nf
 68                                                                             {
@@ -353,9 +353,9 @@ Referenzia errno, e pthread_attr::stackaddr\&.
 .SS "\fBPUBLIC\fP int pthread_attr_setstacksize (\fBpthread_attr_t\fP *attr, size_tstacksize)"
 
 .PP
-Definizione alla linea 89 del file pthread_attr\&.c\&.
+Definition at line 89 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stacksize\&.
+References errno, and pthread_attr::stacksize\&.
 .PP
 .nf
 89                                                                              {
@@ -368,6 +368,6 @@ Referenzia errno, e pthread_attr::stacksize\&.
 96     return 0;
 97 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

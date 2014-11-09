@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_create.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_create.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ usr/src/libpthread/src/pthread_create.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -30,7 +30,7 @@ usr/src/libpthread/src/pthread_create.c \-
 .RI "\fBPUBLIC\fP int \fBpthread_create\fP (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*start)(void *), void *arg)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -40,14 +40,14 @@ usr/src/libpthread/src/pthread_create.c \-
 .RI "\fBEXTERN\fP \fBpthread_context_t\fP * \fB__pthread_queue\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPRIVATE\fP void __pthread_handler__ (\fBpthread_context_t\fP *ctx)"
 
 .PP
-Definizione alla linea 24 del file pthread_create\&.c\&.
+Definition at line 24 of file pthread_create\&.c\&.
 .PP
-Referenzia pthread_context::entry, pthread_context::param, e pthread_exit()\&.
+References pthread_context::entry, pthread_context::param, and pthread_exit()\&.
 .PP
 .nf
 24                                                          {
@@ -65,9 +65,9 @@ Referenzia pthread_context::entry, pthread_context::param, e pthread_exit()\&.
 .SS "\fBEXTERN\fP void __pthread_init_queue (void)"
 
 .PP
-Definizione alla linea 12 del file pthread_queue\&.c\&.
+Definition at line 12 of file pthread_queue\&.c\&.
 .PP
-Referenzia __current_thread, __os_gettid, pthread_context::attr, pthread_context::cond, pthread_once::done, pthread_context::entry, pthread_context::exitval, pthread_context::next, pthread_context::once, pthread_context::param, pthread_once::started, e pthread_context::tid\&.
+References __current_thread, __os_gettid, pthread_context::attr, pthread_context::cond, pthread_once::done, pthread_context::entry, pthread_context::exitval, pthread_context::next, pthread_context::once, pthread_context::param, pthread_once::started, and pthread_context::tid\&.
 .PP
 .nf
 12                                    {
@@ -89,9 +89,9 @@ Referenzia __current_thread, __os_gettid, pthread_context::attr, pthread_context
 .SS "\fBPUBLIC\fP int pthread_create (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*)(void *)start, void *arg)"
 
 .PP
-Definizione alla linea 37 del file pthread_create\&.c\&.
+Definition at line 37 of file pthread_create\&.c\&.
 .PP
-Referenzia __os_thread_create, __pthread_counts, __pthread_handler__(), __pthread_init_queue(), __pthread_queue, pthread_context::attr, pthread_once::done, pthread_context::entry, errno, pthread_attr::inheritsched, pthread_context::next, pthread_context::once, pthread_context::param, pthread_attr::param, pthread_attr_setschedparam(), PTHREAD_INHERIT_SCHED, pthread_self(), PTHREAD_THREADS_MAX, pthread_once::started, e pthread_context::tid\&.
+References __os_thread_create, __pthread_counts, __pthread_handler__(), __pthread_init_queue(), __pthread_queue, pthread_context::attr, pthread_once::done, pthread_context::entry, errno, pthread_attr::inheritsched, pthread_context::next, pthread_context::once, pthread_context::param, pthread_attr::param, pthread_attr_setschedparam(), PTHREAD_INHERIT_SCHED, pthread_self(), PTHREAD_THREADS_MAX, pthread_once::started, and pthread_context::tid\&.
 .PP
 .nf
 37                                                                                                            {
@@ -142,16 +142,16 @@ Referenzia __os_thread_create, __pthread_counts, __pthread_handler__(), __pthrea
 82     return 0;
 83 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBEXTERN\fP \fBuint32_t\fP __pthread_counts"
 
 .PP
-Definizione alla linea 10 del file pthread_create\&.c\&.
+Definition at line 10 of file pthread_create\&.c\&.
 .SS "\fBEXTERN\fP \fBpthread_context_t\fP* __pthread_queue"
 
 .PP
-Definizione alla linea 11 del file pthread_create\&.c\&.
-.SH "Autore"
+Definition at line 11 of file pthread_create\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

@@ -4,22 +4,22 @@ var NAVTREE =
     [ "README", "md_README.html", null ],
     [ "C Posix library", "md_usr_src_libposix_README.html", null ],
     [ "Posix Thread library", "md_usr_src_libpthread_README.html", null ],
-    [ "Strutture dati", null, [
-      [ "Strutture dati", "annotated.html", "annotated" ],
-      [ "Indice delle strutture dati", "classes.html", null ],
-      [ "Campi dei dati", "functions.html", [
-        [ "Tutto", "functions.html", "functions_dup" ],
-        [ "Variabili", "functions_vars.html", "functions_vars" ]
+    [ "Data Structures", null, [
+      [ "Data Structures", "annotated.html", "annotated" ],
+      [ "Data Structure Index", "classes.html", null ],
+      [ "Data Fields", "functions.html", [
+        [ "All", "functions.html", "functions_dup" ],
+        [ "Variables", "functions_vars.html", "functions_vars" ]
       ] ]
     ] ],
-    [ "File", null, [
-      [ "Elenco dei file", "files.html", "files" ],
-      [ "Elementi globali", "globals.html", [
-        [ "Tutto", "globals.html", "globals_dup" ],
-        [ "Funzioni", "globals_func.html", "globals_func" ],
-        [ "Variabili", "globals_vars.html", "globals_vars" ],
-        [ "Ridefinizioni di tipo (typedef)", "globals_type.html", null ],
-        [ "Definizioni", "globals_defs.html", "globals_defs" ]
+    [ "Files", null, [
+      [ "File List", "files.html", "files" ],
+      [ "Globals", "globals.html", [
+        [ "All", "globals.html", "globals_dup" ],
+        [ "Functions", "globals_func.html", "globals_func" ],
+        [ "Variables", "globals_vars.html", "globals_vars" ],
+        [ "Typedefs", "globals_type.html", null ],
+        [ "Macros", "globals_defs.html", "globals_defs" ]
       ] ]
     ] ]
   ] ]
@@ -28,13 +28,14 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "__execve_8c.html",
-"eth_8c.html#ae59b4f0e6c4a9e21facbf96b628f0832",
-"globals_k.html",
-"mm_8h.html#a61d9fae3cb95715f92171f153d9ff018",
-"pthread_8h.html#aae9850b3759769c748727e171c4c6e61",
-"rtl8139_8h.html#ab4c18def6442e5a12813bff4707a95f4",
-"structinode.html#ab6c5e2d912fdbd506086e53185cd370d",
-"syscall_8h.html"
+"environ_8c.html#ad96f10121a8a5c2d5d642d9aad140684",
+"globals_func_o.html",
+"iso9660__finddir_8c_source.html",
+"pci_8h.html#aeb32c363b03ebf8389c32c3a8c4f44f6",
+"pthread__mutexattr_8c_source.html",
+"struct____syscall.html",
+"structpthread__attr.html#ab6bef83bc858c0ffb3c8d0b461ba4396",
+"usleep_8c.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

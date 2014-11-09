@@ -1,4 +1,4 @@
-.TH "src/net/eth.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/net/eth.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,14 +21,14 @@ src/net/eth.c \-
 \fC#include <aplus/net/eth\&.h>\fP
 .br
 
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
 .RI "#define \fB__params\fP   \fBnetif\fP, (void*) ((\fBuint32_t\fP) buf + sizeof(eth_header_t)), \fBlength\fP - sizeof(eth_header_t)"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -41,18 +41,18 @@ src/net/eth.c \-
 .RI "int \fBeth_send\fP (\fBnetif_t\fP *\fBnetif\fP, void *buf, size_t \fBlength\fP, int \fBtype\fP)"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define __params   \fBnetif\fP, (void*) ((\fBuint32_t\fP) buf + sizeof(eth_header_t)), \fBlength\fP - sizeof(eth_header_t)"
 
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int eth_recv (\fBnetif_t\fP *netif, void *buf, size_tlength)"
 
 .PP
-Definizione alla linea 11 del file eth\&.c\&.
+Definition at line 11 of file eth\&.c\&.
 .PP
-Referenzia __params, arp_recv(), ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ipv4_recv(), ipv6_recv(), length, NETIF_ETH, netif_packets_add(), e netif_packets_create()\&.
+References __params, arp_recv(), ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ipv4_recv(), ipv6_recv(), length, NETIF_ETH, netif_packets_add(), and netif_packets_create()\&.
 .PP
 .nf
 11                                                        {
@@ -95,9 +95,9 @@ Referenzia __params, arp_recv(), ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ipv
 .SS "int eth_send (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype)"
 
 .PP
-Definizione alla linea 79 del file eth\&.c\&.
+Definition at line 79 of file eth\&.c\&.
 .PP
-Referenzia eth_send_packet(), length, netif::mtu, type, e uint32_t\&.
+References eth_send_packet(), length, netif::mtu, type, and uint32_t\&.
 .PP
 .nf
 79                                                                  {
@@ -129,9 +129,9 @@ Referenzia eth_send_packet(), length, netif::mtu, type, e uint32_t\&.
 .SS "static int eth_send_packet (\fBnetif_t\fP *netif, void *buf, size_tlength, inttype)\fC [static]\fP"
 
 .PP
-Definizione alla linea 49 del file eth\&.c\&.
+Definition at line 49 of file eth\&.c\&.
 .PP
-Referenzia ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ETH_TYPE_RAW, kfree(), kmalloc(), netif::macaddr, NETIF_ARP, NETIF_ETH, NETIF_INET, NETIF_INET6, netif::send, e uint32_t\&.
+References ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ETH_TYPE_RAW, kfree(), kmalloc(), netif::macaddr, NETIF_ARP, NETIF_ETH, NETIF_INET, NETIF_INET6, netif::send, and uint32_t\&.
 .PP
 .nf
 49                                                                                {
@@ -164,6 +164,6 @@ Referenzia ETH_TYPE_ARP, ETH_TYPE_IPV4, ETH_TYPE_IPV6, ETH_TYPE_RAW, kfree(), km
 76     return ret;
 77 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

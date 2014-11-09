@@ -1,3 +1,335 @@
-\hypertarget{debug_8c}{\section{Riferimenti per il file src/debug.c}
+\hypertarget{debug_8c}{\section{src/debug.c File Reference}
 \label{debug_8c}\index{src/debug.\+c@{src/debug.\+c}}
 }
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{debug_8c_a6a6c93f71258d258dd8085e206f11265}{debug\+\_\+putc} (char ch)
+\begin{DoxyCompactList}\small\item\em Send a character to serial debug port. \end{DoxyCompactList}\item 
+void \hyperlink{debug_8c_a611fa7b9d919dbea95733c7a8d44a1eb}{debug\+\_\+puts} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Send a string to serial debug port. \end{DoxyCompactList}\item 
+static void \hyperlink{debug_8c_aaef6c9284815d5abe4204817030e6d25}{print\+\_\+dec} (unsigned int \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, unsigned int width, char $\ast$buf, int $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Print a number in base 10 into buffer. \end{DoxyCompactList}\item 
+static void \hyperlink{debug_8c_af7ebaa29342754a0f7c49a20495b2160}{print\+\_\+hex} (unsigned int \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, unsigned int width, char $\ast$buf, int $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Print a number in base 16 into buffer. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{vasprintf} (char $\ast$buf, const char $\ast$fmt, va\+\_\+list args)
+\begin{DoxyCompactList}\small\item\em Print to allocated string.~\newline
+The functions asprintf() and \hyperlink{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{vasprintf()} are analogs of sprintf(3) and vsprintf(3), except that they allocate a string large enough to hold the output including the terminating null byte, and return a pointer to it via the first argument. This pointer should be passed to free(3) to release the allocated storage when it is no longer needed. \end{DoxyCompactList}\item 
+void \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf} (char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Formatted output conversion and print to Debug Standard Output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{debug_8c_a6a6c93f71258d258dd8085e206f11265}{\index{debug.\+c@{debug.\+c}!debug\+\_\+putc@{debug\+\_\+putc}}
+\index{debug\+\_\+putc@{debug\+\_\+putc}!debug.\+c@{debug.\+c}}
+\subsubsection[{debug\+\_\+putc}]{\setlength{\rightskip}{0pt plus 5cm}void debug\+\_\+putc (
+\begin{DoxyParamCaption}
+\item[{char}]{ch}
+\end{DoxyParamCaption}
+)}}\label{debug_8c_a6a6c93f71258d258dd8085e206f11265}
+
+
+Send a character to serial debug port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ch} & Character to send. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 9 of file debug.\+c.
+
+
+
+References serial\+\_\+send().
+
+
+\begin{DoxyCode}
+9                          \{
+10     \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(0, ch);
+11 \}
+\end{DoxyCode}
+\hypertarget{debug_8c_a611fa7b9d919dbea95733c7a8d44a1eb}{\index{debug.\+c@{debug.\+c}!debug\+\_\+puts@{debug\+\_\+puts}}
+\index{debug\+\_\+puts@{debug\+\_\+puts}!debug.\+c@{debug.\+c}}
+\subsubsection[{debug\+\_\+puts}]{\setlength{\rightskip}{0pt plus 5cm}void debug\+\_\+puts (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{str}
+\end{DoxyParamCaption}
+)}}\label{debug_8c_a611fa7b9d919dbea95733c7a8d44a1eb}
+
+
+Send a string to serial debug port. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & String to send. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{debug_8c_a6a6c93f71258d258dd8085e206f11265}{debug\+\_\+putc} 
+\end{DoxySeeAlso}
+
+
+Definition at line 19 of file debug.\+c.
+
+
+
+References debug\+\_\+putc(), lock, and unlock.
+
+
+\begin{DoxyCode}
+19                            \{
+20     \hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}();
+21     
+22     \textcolor{keywordflow}{while}(*str)
+23         \hyperlink{debug_8c_a6a6c93f71258d258dd8085e206f11265}{debug\_putc}(*str++);
+24     
+25     \hyperlink{spinlock_8h_a5f543d9add4a39382826f0d7ff9e94d8}{unlock}();
+26 \}
+\end{DoxyCode}
+\hypertarget{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{\index{debug.\+c@{debug.\+c}!kprintf@{kprintf}}
+\index{kprintf@{kprintf}!debug.\+c@{debug.\+c}}
+\subsubsection[{kprintf}]{\setlength{\rightskip}{0pt plus 5cm}void kprintf (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{fmt, }
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}}\label{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}
+
+
+Formatted output conversion and print to Debug Standard Output. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fmt} & Format of string. \\
+\hline
+{\em ...} & Arguments. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 167 of file debug.\+c.
+
+
+
+References debug\+\_\+puts(), and vasprintf().
+
+
+\begin{DoxyCode}
+167                              \{
+168     \textcolor{keyword}{static} \textcolor{keywordtype}{char} \_\_kprintf\_buf[1024];
+169     memset(\_\_kprintf\_buf, 0, 1024);
+170     
+171     va\_list lst;
+172     va\_start(lst, fmt);
+173     \hyperlink{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{vasprintf}(\_\_kprintf\_buf, fmt, lst);
+174     va\_end(lst);
+175     
+176     \hyperlink{debug_8c_a611fa7b9d919dbea95733c7a8d44a1eb}{debug\_puts}(\_\_kprintf\_buf);
+177 \}
+\end{DoxyCode}
+\hypertarget{debug_8c_aaef6c9284815d5abe4204817030e6d25}{\index{debug.\+c@{debug.\+c}!print\+\_\+dec@{print\+\_\+dec}}
+\index{print\+\_\+dec@{print\+\_\+dec}!debug.\+c@{debug.\+c}}
+\subsubsection[{print\+\_\+dec}]{\setlength{\rightskip}{0pt plus 5cm}static void print\+\_\+dec (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{value, }
+\item[{unsigned int}]{width, }
+\item[{char $\ast$}]{buf, }
+\item[{int $\ast$}]{ptr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{debug_8c_aaef6c9284815d5abe4204817030e6d25}
+
+
+Print a number in base 10 into buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Number to convert as string. \\
+\hline
+{\em width} & Padding. \\
+\hline
+{\em buf} & Buffer output. \\
+\hline
+{\em ptr} & Size of returned string. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 36 of file debug.\+c.
+
+
+\begin{DoxyCode}
+36                                                                                     \{
+37     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n\_width = 1;
+38     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i = 9;
+39     \textcolor{keywordflow}{while} (\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} > i && i < UINT32\_MAX) \{
+40         n\_width += 1;
+41         i *= 10;
+42         i += 9;
+43     \}
+44 
+45     \textcolor{keywordtype}{int} printed = 0;
+46     \textcolor{keywordflow}{while} (n\_width + printed < width) \{
+47         buf[*ptr] = \textcolor{charliteral}{'0'};
+48         *ptr += 1;
+49         printed += 1;
+50     \}
+51 
+52     i = n\_width;
+53     \textcolor{keywordflow}{while} (i > 0) \{
+54         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n = \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} / 10;
+55         \textcolor{keywordtype}{int} r = \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} % 10;
+56         buf[*ptr + i - 1] = r + \textcolor{charliteral}{'0'};
+57         i--;
+58         \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} = n;
+59     \}
+60     *ptr += n\_width;
+61 \}
+\end{DoxyCode}
+\hypertarget{debug_8c_af7ebaa29342754a0f7c49a20495b2160}{\index{debug.\+c@{debug.\+c}!print\+\_\+hex@{print\+\_\+hex}}
+\index{print\+\_\+hex@{print\+\_\+hex}!debug.\+c@{debug.\+c}}
+\subsubsection[{print\+\_\+hex}]{\setlength{\rightskip}{0pt plus 5cm}static void print\+\_\+hex (
+\begin{DoxyParamCaption}
+\item[{unsigned int}]{value, }
+\item[{unsigned int}]{width, }
+\item[{char $\ast$}]{buf, }
+\item[{int $\ast$}]{ptr}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{debug_8c_af7ebaa29342754a0f7c49a20495b2160}
+
+
+Print a number in base 16 into buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Number to convert as string. \\
+\hline
+{\em width} & Padding. \\
+\hline
+{\em buf} & Buffer output. \\
+\hline
+{\em ptr} & Size of returned string. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 70 of file debug.\+c.
+
+
+\begin{DoxyCode}
+70                                                                                    \{
+71     \textcolor{keywordtype}{int} i = width;
+72 
+73     \textcolor{keywordflow}{if} (i == 0) i = 8;
+74 
+75     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} n\_width = 1;
+76     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} j = 0x0F;
+77     \textcolor{keywordflow}{while} (\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} > j && j < UINT32\_MAX) \{
+78         n\_width += 1;
+79         j *= 0x10;
+80         j += 0x0F;
+81     \}
+82 
+83     \textcolor{keywordflow}{while} (i > (\textcolor{keywordtype}{int})n\_width) \{
+84         buf[*ptr] = \textcolor{charliteral}{'0'};
+85         *ptr += 1;
+86         i--;
+87     \}
+88 
+89     i = (int)n\_width;
+90     \textcolor{keywordflow}{while} (i-- > 0) \{
+91         buf[*ptr] = \textcolor{stringliteral}{"0123456789abcdef"}[(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}>>(i*4))&0xF];
+92         *ptr += + 1;
+93     \}
+94 \}
+\end{DoxyCode}
+\hypertarget{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{\index{debug.\+c@{debug.\+c}!vasprintf@{vasprintf}}
+\index{vasprintf@{vasprintf}!debug.\+c@{debug.\+c}}
+\subsubsection[{vasprintf}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t vasprintf (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buf, }
+\item[{const char $\ast$}]{fmt, }
+\item[{va\+\_\+list}]{args}
+\end{DoxyParamCaption}
+)}}\label{debug_8c_a1c492cd47880cc15e2274cd13f62f617}
+
+
+Print to allocated string.~\newline
+The functions asprintf() and \hyperlink{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{vasprintf()} are analogs of sprintf(3) and vsprintf(3), except that they allocate a string large enough to hold the output including the terminating null byte, and return a pointer to it via the first argument. This pointer should be passed to free(3) to release the allocated storage when it is no longer needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Output buffer just allocated. \\
+\hline
+{\em fmt} & Format of string. \\
+\hline
+{\em args} & Arguments. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+When successful, these functions return the number of bytes printed, just like sprintf(3). If memory allocation wasn't possible, or some other error occurs, these functions will return -\/1, and the contents of strp is undefined. 
+\end{DoxyReturn}
+
+
+Definition at line 110 of file debug.\+c.
+
+
+
+References print\+\_\+dec(), and print\+\_\+hex().
+
+
+\begin{DoxyCode}
+110                                                             \{
+111     \textcolor{keywordtype}{int} i = 0;
+112     \textcolor{keywordtype}{char} *s;
+113     \textcolor{keywordtype}{int} ptr = 0;
+114     \textcolor{keywordtype}{int} len = strlen(fmt);
+115     \textcolor{keywordflow}{for} ( ; i < len && fmt[i]; ++i) \{
+116         \textcolor{keywordflow}{if} (fmt[i] != \textcolor{charliteral}{'%'}) \{
+117             buf[ptr++] = fmt[i];
+118             \textcolor{keywordflow}{continue};
+119         \}
+120         ++i;
+121         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} arg\_width = 0;
+122         \textcolor{keywordflow}{while} (fmt[i] >= \textcolor{charliteral}{'0'} && fmt[i] <= \textcolor{charliteral}{'9'}) \{
+123             arg\_width *= 10;
+124             arg\_width += fmt[i] - \textcolor{charliteral}{'0'};
+125             ++i;
+126         \}
+127         \textcolor{comment}{/* fmt[i] == '%' */}
+128         \textcolor{keywordflow}{switch} (fmt[i]) \{
+129             \textcolor{keywordflow}{case} \textcolor{charliteral}{'s'}: \textcolor{comment}{/* String pointer -> String */}
+130                 s = (\textcolor{keywordtype}{char} *)va\_arg(args, \textcolor{keywordtype}{char} *);
+131                 \textcolor{keywordflow}{if} (s == NULL) \{
+132                     s = \textcolor{stringliteral}{"(null)"};
+133                 \}
+134                 \textcolor{keywordflow}{while} (*s) \{
+135                     buf[ptr++] = *s++;
+136                 \}
+137                 \textcolor{keywordflow}{break};
+138             \textcolor{keywordflow}{case} \textcolor{charliteral}{'c'}: \textcolor{comment}{/* Single character */}
+139                 buf[ptr++] = (char)va\_arg(args, \textcolor{keywordtype}{int});
+140                 \textcolor{keywordflow}{break};
+141             \textcolor{keywordflow}{case} \textcolor{charliteral}{'x'}: \textcolor{comment}{/* Hexadecimal number */}
+142                 \hyperlink{debug_8c_af7ebaa29342754a0f7c49a20495b2160}{print\_hex}((\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long})va\_arg(args, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long}), arg\_width, buf, &ptr);
+143                 \textcolor{keywordflow}{break};
+144             \textcolor{keywordflow}{case} \textcolor{charliteral}{'d'}: \textcolor{comment}{/* Decimal number */}
+145                 \hyperlink{debug_8c_aaef6c9284815d5abe4204817030e6d25}{print\_dec}((\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long})va\_arg(args, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{long}), arg\_width, buf, &ptr);
+146                 \textcolor{keywordflow}{break};
+147             \textcolor{keywordflow}{case} \textcolor{charliteral}{'%'}: \textcolor{comment}{/* Escape */}
+148                 buf[ptr++] = \textcolor{charliteral}{'%'};
+149                 \textcolor{keywordflow}{break};
+150             \textcolor{keywordflow}{default}: \textcolor{comment}{/* Nothing at all, just dump it */}
+151                 buf[ptr++] = fmt[i];
+152                 \textcolor{keywordflow}{break};
+153         \}
+154     \}
+155     \textcolor{comment}{/* Ensure the buffer ends in a null */}
+156     buf[ptr] = \textcolor{charliteral}{'\(\backslash\)0'};
+157     \textcolor{keywordflow}{return} ptr;
+158 
+159 \}
+\end{DoxyCode}

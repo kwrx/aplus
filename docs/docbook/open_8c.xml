@@ -33,6 +33,14 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para>static char * <link linkend="open_8c_1a6fae53653306206ed481c3589c7aa51b">dupstr</link> (
+char * s)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para>static <link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * <link linkend="open_8c_1a8b5a87d8a01e3e89bd9be45a8e177cb1">ino_open</link> (
 char * filename, int flags, mode_t mode)</para>
                     </listitem>

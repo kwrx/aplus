@@ -1,4 +1,4 @@
-\hypertarget{getgroups_8c}{\section{Riferimenti per il file src/syscall/getgroups.c}
+\hypertarget{getgroups_8c}{\section{src/syscall/getgroups.c File Reference}
 \label{getgroups_8c}\index{src/syscall/getgroups.\+c@{src/syscall/getgroups.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -10,23 +10,23 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{getgroups_8c_a4c13ff0868630ec89b5148b58bcaf9db}{sys\+\_\+getgroups} (int \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, gid\+\_\+t $\ast$\hyperlink{structlist}{list})
 \item 
 \hyperlink{getgroups_8c_ab7992f4bd1543b490f49298451a680e3}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{getgroups_8c_a4c13ff0868630ec89b5148b58bcaf9db}{sys\+\_\+getgroups}, 81)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{getgroups_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
 static gid\+\_\+t \hyperlink{getgroups_8c_aab455defff8fa5fdd0fd0b6f64377979}{\+\_\+\+\_\+groups} \mbox{[}$\,$\mbox{]}
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{getgroups_8c_a4c13ff0868630ec89b5148b58bcaf9db}{\index{getgroups.\+c@{getgroups.\+c}!sys\+\_\+getgroups@{sys\+\_\+getgroups}}
 \index{sys\+\_\+getgroups@{sys\+\_\+getgroups}!getgroups.\+c@{getgroups.\+c}}
 \subsubsection[{sys\+\_\+getgroups}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+getgroups (
@@ -37,16 +37,16 @@ static gid\+\_\+t \hyperlink{getgroups_8c_aab455defff8fa5fdd0fd0b6f64377979}{\+\
 )}}\label{getgroups_8c_a4c13ff0868630ec89b5148b58bcaf9db}
 
 
-Definizione alla linea 18 del file getgroups.\+c.
+Definition at line 18 of file getgroups.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+groups, e errno.
+References \+\_\+\+\_\+groups, and errno.
 
 
 \begin{DoxyCode}
 18                                            \{
-19     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} < 0) \{
+19     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length} < 0) \{
 20         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
 21         \textcolor{keywordflow}{return} -1;
 22     \}
@@ -56,12 +56,12 @@ Referenzia \+\_\+\+\_\+groups, e errno.
 26         \textcolor{keywordflow}{return} -1;
 27     \}
 28 
-29     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} == 0)
+29     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length} == 0)
 30         \textcolor{keywordflow}{return} \textcolor{keyword}{sizeof}(\hyperlink{getgroups_8c_aab455defff8fa5fdd0fd0b6f64377979}{\_\_groups});
 31 
 32     \textcolor{keywordtype}{int} i = 0;
 33     \textcolor{keywordflow}{for}(i = 0; i < \textcolor{keyword}{sizeof}(\hyperlink{getgroups_8c_aab455defff8fa5fdd0fd0b6f64377979}{\_\_groups}); i++) \{
-34         \textcolor{keywordflow}{if}(i >= \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length})
+34         \textcolor{keywordflow}{if}(i >= \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length})
 35             \textcolor{keywordflow}{break};
 36 
 37         \hyperlink{structlist}{list}[i] = \hyperlink{getgroups_8c_aab455defff8fa5fdd0fd0b6f64377979}{\_\_groups}[i];
@@ -80,11 +80,11 @@ Referenzia \+\_\+\+\_\+groups, e errno.
 )}}\label{getgroups_8c_ab7992f4bd1543b490f49298451a680e3}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{getgroups_8c_aab455defff8fa5fdd0fd0b6f64377979}{\index{getgroups.\+c@{getgroups.\+c}!\+\_\+\+\_\+groups@{\+\_\+\+\_\+groups}}
 \index{\+\_\+\+\_\+groups@{\+\_\+\+\_\+groups}!getgroups.\+c@{getgroups.\+c}}
 \subsubsection[{\+\_\+\+\_\+groups}]{\setlength{\rightskip}{0pt plus 5cm}gid\+\_\+t \+\_\+\+\_\+groups\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}}\label{getgroups_8c_aab455defff8fa5fdd0fd0b6f64377979}
-{\bfseries Valore iniziale\+:}
+{\bfseries Initial value\+:}
 \begin{DoxyCode}
 = \{
     \hyperlink{task_8h_a6120fde6185466f2810fd0457009aaf0}{GID\_SUPERUSER}, 0
@@ -92,12 +92,16 @@ Referenzia \+\_\+\+\_\+groups, e errno.
 \end{DoxyCode}
 
 
-Definizione alla linea 14 del file getgroups.\+c.
+Definition at line 14 of file getgroups.\+c.
 
 \hypertarget{getgroups_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{getgroups.\+c@{getgroups.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!getgroups.\+c@{getgroups.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{getgroups_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

@@ -6,56 +6,56 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2248">
+      <node id="2453">
         <label>stdint.h</label>
       </node>
-      <node id="2255">
+      <node id="2460">
         <label>errno.h</label>
       </node>
-      <node id="2254">
+      <node id="2459">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2255" relation="include">
+        <childnode refid="2460" relation="include">
         </childnode>
-        <childnode refid="2248" relation="include">
+        <childnode refid="2453" relation="include">
         </childnode>
-        <childnode refid="2249" relation="include">
+        <childnode refid="2454" relation="include">
         </childnode>
       </node>
-      <node id="2249">
+      <node id="2454">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2248" relation="include">
+        <childnode refid="2453" relation="include">
         </childnode>
-        <childnode refid="2250" relation="include">
+        <childnode refid="2455" relation="include">
         </childnode>
-        <childnode refid="2251" relation="include">
+        <childnode refid="2456" relation="include">
         </childnode>
-        <childnode refid="2252" relation="include">
+        <childnode refid="2457" relation="include">
         </childnode>
-        <childnode refid="2253" relation="include">
+        <childnode refid="2458" relation="include">
         </childnode>
       </node>
-      <node id="2250">
+      <node id="2455">
         <label>sys/types.h</label>
       </node>
-      <node id="2247">
+      <node id="2452">
         <label>usr/src/libpthread/src/pthread_cancel.c</label>
         <link refid="pthread_cancel.c"/>
-        <childnode refid="2248" relation="include">
+        <childnode refid="2453" relation="include">
         </childnode>
-        <childnode refid="2249" relation="include">
+        <childnode refid="2454" relation="include">
         </childnode>
-        <childnode refid="2254" relation="include">
+        <childnode refid="2459" relation="include">
         </childnode>
       </node>
-      <node id="2253">
+      <node id="2458">
         <label>unistd.h</label>
       </node>
-      <node id="2251">
+      <node id="2456">
         <label>sys/time.h</label>
       </node>
-      <node id="2252">
+      <node id="2457">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -161,7 +161,7 @@
 <codeline lineno="15"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="16"><highlight class="normal"></highlight></codeline>
 <codeline lineno="17"><highlight class="normal"></highlight></codeline>
-<codeline lineno="18" refid="pthread__cancel_8c_1a440eefe8962f370346a3cbb73f69d5bf" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__cancel_8c_1a440eefe8962f370346a3cbb73f69d5bf" kindref="member">pthread_setcanceltype</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*oldtype)<sp/>{</highlight></codeline>
+<codeline lineno="18" refid="pthread__cancel_8c_1a440eefe8962f370346a3cbb73f69d5bf" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__cancel_8c_1a440eefe8962f370346a3cbb73f69d5bf" kindref="member">pthread_setcanceltype</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a6def72cbab7e986d0ac5dc7291e1394a" kindref="member">type</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*oldtype)<sp/>{</highlight></codeline>
 <codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
 <codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
 <codeline lineno="21"><highlight class="normal">}</highlight></codeline>

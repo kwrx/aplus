@@ -1,4 +1,4 @@
-.TH "src/spinlock.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/spinlock.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,96 +13,151 @@ src/spinlock.c \-
 \fC#include <aplus/list\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "void \fBspinlock_lock\fP (\fBspinlock_t\fP *spin)"
 .br
+.RI "\fIAcquire a spinlock\&. \fP"
 .ti -1c
 .RI "void \fBspinlock_unlock\fP (\fBspinlock_t\fP *spin)"
 .br
+.RI "\fIUnlock a spinlock\&. \fP"
 .ti -1c
 .RI "int \fBspinlock_trylock\fP (\fBspinlock_t\fP *spin)"
 .br
+.RI "\fITry to acquire a spinlock\&. \fP"
 .ti -1c
 .RI "void \fB__spinlock_waiton\fP ()"
 .br
+.RI "\fIYield current task if a false condition was given by \fBspinlock_waiton()\fP\&. \fP"
 .ti -1c
 .RI "void \fB__fastlock_waiton\fP ()"
 .br
+.RI "\fIPut CPU in pause for a while if a false condition was given by \fBfastlock_waiton()\fP\&. \fP"
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "void __fastlock_waiton ()"
 
 .PP
-Definizione alla linea 53 del file spinlock\&.c\&.
+Put CPU in pause for a while if a false condition was given by \fBfastlock_waiton()\fP\&. 
 .PP
-Referenzia __asm__()\&.
+\fBSee also:\fP
+.RS 4
+\fBfastlock_waiton\fP 
+.RE
+.PP
+
+.PP
+Definition at line 76 of file spinlock\&.c\&.
+.PP
+References __asm__()\&.
 .PP
 .nf
-53                          {
-54     __asm__ __volatile__("pause");
-55 }
+76                          {
+77     __asm__ __volatile__("pause");
+78 }
 .fi
 .SS "void __spinlock_waiton ()"
 
 .PP
-Definizione alla linea 49 del file spinlock\&.c\&.
+Yield current task if a false condition was given by \fBspinlock_waiton()\fP\&. 
 .PP
-Referenzia schedule_yield()\&.
+\fBSee also:\fP
+.RS 4
+\fBspinlock_waiton\fP 
+.RE
+.PP
+
+.PP
+Definition at line 68 of file spinlock\&.c\&.
+.PP
+References schedule_yield()\&.
 .PP
 .nf
-49                          {
-50     schedule_yield();
-51 }
+68                          {
+69     schedule_yield();
+70 }
 .fi
 .SS "void spinlock_lock (\fBspinlock_t\fP *spin)"
 
 .PP
-Definizione alla linea 27 del file spinlock\&.c\&.
+Acquire a spinlock\&. 
 .PP
-Referenzia fastlock_waiton, SPINLOCK_FLAGS_FASTLOCK, SPINLOCK_FLAGS_LOCKED, e spinlock_waiton\&.
+\fBParameters:\fP
+.RS 4
+\fIspin\fP Spinlock address\&. 
+.RE
+.PP
+
+.PP
+Definition at line 31 of file spinlock\&.c\&.
+.PP
+References fastlock_waiton, SPINLOCK_FLAGS_FASTLOCK, SPINLOCK_FLAGS_LOCKED, and spinlock_waiton\&.
 .PP
 .nf
-27                                      {
-28     if((*spin & SPINLOCK_FLAGS_FASTLOCK) == 0)
-29         spinlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
-30     else
-31         fastlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
-32 
-33     *spin |= SPINLOCK_FLAGS_LOCKED;
-34 }
+31                                      {
+32     if((*spin & SPINLOCK_FLAGS_FASTLOCK) == 0)
+33         spinlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
+34     else
+35         fastlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
+36 
+37     *spin |= SPINLOCK_FLAGS_LOCKED;
+38 }
 .fi
 .SS "int spinlock_trylock (\fBspinlock_t\fP *spin)"
 
 .PP
-Definizione alla linea 41 del file spinlock\&.c\&.
+Try to acquire a spinlock\&. 
 .PP
-Referenzia SPINLOCK_FLAGS_LOCKED\&.
+\fBParameters:\fP
+.RS 4
+\fIspin\fP Spinlock address\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 for success else -1\&. 
+.RE
+.PP
+
+.PP
+Definition at line 55 of file spinlock\&.c\&.
+.PP
+References SPINLOCK_FLAGS_LOCKED\&.
 .PP
 .nf
-41                                        {
-42     if(*spin & SPINLOCK_FLAGS_LOCKED)
-43         return -1;
-44         
-45     *spin |= SPINLOCK_FLAGS_LOCKED;
-46     return 0;
-47 }
+55                                        {
+56     if(*spin & SPINLOCK_FLAGS_LOCKED)
+57         return -1;
+58         
+59     *spin |= SPINLOCK_FLAGS_LOCKED;
+60     return 0;
+61 }
 .fi
 .SS "void spinlock_unlock (\fBspinlock_t\fP *spin)"
 
 .PP
-Definizione alla linea 37 del file spinlock\&.c\&.
+Unlock a spinlock\&. 
 .PP
-Referenzia SPINLOCK_FLAGS_LOCKED\&.
+\fBParameters:\fP
+.RS 4
+\fIspin\fP Spinlock address\&. 
+.RE
+.PP
+
+.PP
+Definition at line 45 of file spinlock\&.c\&.
+.PP
+References SPINLOCK_FLAGS_LOCKED\&.
 .PP
 .nf
-37                                        {
-38     *spin &= ~SPINLOCK_FLAGS_LOCKED;
-39 }
+45                                        {
+46     *spin &= ~SPINLOCK_FLAGS_LOCKED;
+47 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

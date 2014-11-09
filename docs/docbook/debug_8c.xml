@@ -1,6 +1,59 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="debug_8c">
     <title>debug.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="debug_8c_1a6a6c93f71258d258dd8085e206f11265">debug_putc</link> (
+char ch)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="debug_8c_1a611fa7b9d919dbea95733c7a8d44a1eb">debug_puts</link> (
+char * str)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void <link linkend="debug_8c_1aaef6c9284815d5abe4204817030e6d25">print_dec</link> (
+unsigned int value, unsigned int width, char * buf, int * ptr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void <link linkend="debug_8c_1af7ebaa29342754a0f7c49a20495b2160">print_hex</link> (
+unsigned int value, unsigned int width, char * buf, int * ptr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>size_t <link linkend="debug_8c_1a1c492cd47880cc15e2274cd13f62f617">vasprintf</link> (
+char * buf, const char * fmt, va_list args)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a">kprintf</link> (
+char * fmt, ... )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
     <simplesect>
         <title>Detailed Description</title>
     <para>Definition in file /opt/prj/aPlus/src/debug.c</para>

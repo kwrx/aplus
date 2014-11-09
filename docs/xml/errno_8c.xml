@@ -4,13 +4,13 @@
     <compoundname>errno.c</compoundname>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="2054">
+      <node id="2259">
         <label>errno.h</label>
       </node>
-      <node id="2053">
+      <node id="2258">
         <label>usr/src/libposix/src/errno.c</label>
         <link refid="errno.c"/>
-        <childnode refid="2054" relation="include">
+        <childnode refid="2259" relation="include">
         </childnode>
       </node>
     </incdepgraph>

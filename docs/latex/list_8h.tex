@@ -1,4 +1,4 @@
-\hypertarget{list_8h}{\section{Riferimenti per il file src/include/aplus/list.h}
+\hypertarget{list_8h}{\section{src/include/aplus/list.h File Reference}
 \label{list_8h}\index{src/include/aplus/list.\+h@{src/include/aplus/list.\+h}}
 }
 {\ttfamily \#include $<$stddef.\+h$>$}\\*
@@ -6,14 +6,14 @@
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structlist__body}{list\+\_\+body}
 \item 
 struct \hyperlink{structlist}{list}
 \end{DoxyCompactItemize}
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{list_8h_a22853dfff2d59e6a8ea2d77eeed5f293}{list\+\_\+safe\+\_\+begin}(\hyperlink{structlist}{list})~\hyperlink{spinlock_8c_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\+\_\+lock}(\&\hyperlink{structlist}{list}-\/$>$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock})
@@ -28,7 +28,7 @@ struct \hyperlink{structlist}{list}
 \item 
 \#define \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\+\_\+destroy}(\hyperlink{structlist}{list})
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t}
@@ -37,7 +37,7 @@ typedef struct \hyperlink{structlist__body}{list\+\_\+body} \hyperlink{list_8h_a
 \item 
 typedef struct \hyperlink{structlist}{list} \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 static int \hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\+\_\+empty} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list})
@@ -60,7 +60,7 @@ static \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} \hy
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{\index{list.\+h@{list.\+h}!list\+\_\+destroy@{list\+\_\+destroy}}
 \index{list\+\_\+destroy@{list\+\_\+destroy}!list.\+h@{list.\+h}}
 \subsubsection[{list\+\_\+destroy}]{\setlength{\rightskip}{0pt plus 5cm}\#define list\+\_\+destroy(
@@ -68,14 +68,14 @@ static \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} \hy
 \item[{}]{{\bf list}}
 \end{DoxyParamCaption}
 )}}\label{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \hyperlink{list_8h_ae055500d6fc23c82c45b2e5926df3b40}{list\_clear}(\hyperlink{structlist}{list});                                     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{\(\backslash\)}
 \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{    kfree}(\hyperlink{structlist}{list})
 \end{DoxyCode}
 
 
-Definizione alla linea 193 del file list.\+h.
+Definition at line 193 of file list.\+h.
 
 \hypertarget{list_8h_a1f44c976d2c698407a17fef984a5b232}{\index{list.\+h@{list.\+h}!list\+\_\+foreach@{list\+\_\+foreach}}
 \index{list\+\_\+foreach@{list\+\_\+foreach}!list.\+h@{list.\+h}}
@@ -85,7 +85,7 @@ Definizione alla linea 193 del file list.\+h.
 \item[{}]{{\bf list}}
 \end{DoxyParamCaption}
 )}}\label{list_8h_a1f44c976d2c698407a17fef984a5b232}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \textcolor{keywordflow}{for}(\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t} \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} = \hyperlink{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}{list\_head}(\hyperlink{structlist}{list});                   
       \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{\(\backslash\)}
@@ -95,7 +95,7 @@ Definizione alla linea 193 del file list.\+h.
 \end{DoxyCode}
 
 
-Definizione alla linea 175 del file list.\+h.
+Definition at line 175 of file list.\+h.
 
 \hypertarget{list_8h_a6e172d1395eb664ce14adbb6ab82abf3}{\index{list.\+h@{list.\+h}!list\+\_\+foreach\+\_\+inverse@{list\+\_\+foreach\+\_\+inverse}}
 \index{list\+\_\+foreach\+\_\+inverse@{list\+\_\+foreach\+\_\+inverse}!list.\+h@{list.\+h}}
@@ -105,7 +105,7 @@ Definizione alla linea 175 del file list.\+h.
 \item[{}]{{\bf list}}
 \end{DoxyParamCaption}
 )}}\label{list_8h_a6e172d1395eb664ce14adbb6ab82abf3}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \textcolor{keywordflow}{for}(\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t} \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} = \hyperlink{list_8h_aea7ba4088b37f0bd303771d71a066a90}{list\_tail}(\hyperlink{structlist}{list});                   
       \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{\(\backslash\)}
@@ -115,7 +115,7 @@ Definizione alla linea 175 del file list.\+h.
 \end{DoxyCode}
 
 
-Definizione alla linea 181 del file list.\+h.
+Definition at line 181 of file list.\+h.
 
 \hypertarget{list_8h_aa288c0785df071ed8643763202928c82}{\index{list.\+h@{list.\+h}!list\+\_\+init@{list\+\_\+init}}
 \index{list\+\_\+init@{list\+\_\+init}!list.\+h@{list.\+h}}
@@ -124,7 +124,7 @@ Definizione alla linea 181 del file list.\+h.
 \item[{}]{{\bf list}}
 \end{DoxyParamCaption}
 )}}\label{list_8h_aa288c0785df071ed8643763202928c82}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \hyperlink{structlist}{list} = (\hyperlink{structlist}{list\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structlist}{list\_t}));                \(\backslash\)
     list->body = 0;                                         \(\backslash\)
@@ -133,7 +133,7 @@ Definizione alla linea 181 del file list.\+h.
 \end{DoxyCode}
 
 
-Definizione alla linea 187 del file list.\+h.
+Definition at line 187 of file list.\+h.
 
 \hypertarget{list_8h_a22853dfff2d59e6a8ea2d77eeed5f293}{\index{list.\+h@{list.\+h}!list\+\_\+safe\+\_\+begin@{list\+\_\+safe\+\_\+begin}}
 \index{list\+\_\+safe\+\_\+begin@{list\+\_\+safe\+\_\+begin}!list.\+h@{list.\+h}}
@@ -144,7 +144,7 @@ Definizione alla linea 187 del file list.\+h.
 )~{\bf spinlock\+\_\+lock}(\&{\bf list}-\/$>${\bf lock})}}\label{list_8h_a22853dfff2d59e6a8ea2d77eeed5f293}
 
 
-Definizione alla linea 169 del file list.\+h.
+Definition at line 169 of file list.\+h.
 
 \hypertarget{list_8h_a55d0a2f3e6dcbf7213b13e9e0dd9d981}{\index{list.\+h@{list.\+h}!list\+\_\+safe\+\_\+end@{list\+\_\+safe\+\_\+end}}
 \index{list\+\_\+safe\+\_\+end@{list\+\_\+safe\+\_\+end}!list.\+h@{list.\+h}}
@@ -155,11 +155,11 @@ Definizione alla linea 169 del file list.\+h.
 )~{\bf spinlock\+\_\+unlock}(\&{\bf list}-\/$>${\bf lock})}}\label{list_8h_a55d0a2f3e6dcbf7213b13e9e0dd9d981}
 
 
-Definizione alla linea 172 del file list.\+h.
+Definition at line 172 of file list.\+h.
 
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\subsection{Typedef Documentation}
 \hypertarget{list_8h_a26009b16c17e2336df1025f49f3ebd7e}{\index{list.\+h@{list.\+h}!list\+\_\+body\+\_\+t@{list\+\_\+body\+\_\+t}}
 \index{list\+\_\+body\+\_\+t@{list\+\_\+body\+\_\+t}!list.\+h@{list.\+h}}
 \subsubsection[{list\+\_\+body\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf list\+\_\+body}  {\bf list\+\_\+body\+\_\+t}}}\label{list_8h_a26009b16c17e2336df1025f49f3ebd7e}
@@ -171,11 +171,11 @@ Definizione alla linea 172 del file list.\+h.
 \subsubsection[{listval\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint32\+\_\+t} {\bf listval\+\_\+t}}}\label{list_8h_a83bc1af7566502e08756b8d8c425972e}
 
 
-Definizione alla linea 33 del file list.\+h.
+Definition at line 33 of file list.\+h.
 
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{\index{list.\+h@{list.\+h}!list\+\_\+add@{list\+\_\+add}}
 \index{list\+\_\+add@{list\+\_\+add}!list.\+h@{list.\+h}}
 \subsubsection[{list\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}static int list\+\_\+add (
@@ -186,11 +186,11 @@ Definizione alla linea 33 del file list.\+h.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}
 
 
-Definizione alla linea 56 del file list.\+h.
+Definition at line 56 of file list.\+h.
 
 
 
-Referenzia list\+::body, kmalloc(), list\+::lock, list\+\_\+body\+::next, list\+::size, spinlock\+\_\+lock(), spinlock\+\_\+unlock(), e list\+\_\+body\+::value.
+References list\+::body, kmalloc(), list\+::lock, list\+\_\+body\+::next, list\+::size, spinlock\+\_\+lock(), spinlock\+\_\+unlock(), and list\+\_\+body\+::value.
 
 
 \begin{DoxyCode}
@@ -221,11 +221,11 @@ Referenzia list\+::body, kmalloc(), list\+::lock, list\+\_\+body\+::next, list\+
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_ae055500d6fc23c82c45b2e5926df3b40}
 
 
-Definizione alla linea 99 del file list.\+h.
+Definition at line 99 of file list.\+h.
 
 
 
-Referenzia list\+::body, kfree(), list\+::lock, list\+\_\+body\+::next, list\+::size, spinlock\+\_\+lock(), e spinlock\+\_\+unlock().
+References list\+::body, kfree(), list\+::lock, list\+\_\+body\+::next, list\+::size, spinlock\+\_\+lock(), and spinlock\+\_\+unlock().
 
 
 \begin{DoxyCode}
@@ -258,11 +258,11 @@ Referenzia list\+::body, kfree(), list\+::lock, list\+\_\+body\+::next, list\+::
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_ad29245eda34d4cdac400323a1bd63cdd}
 
 
-Definizione alla linea 119 del file list.\+h.
+Definition at line 119 of file list.\+h.
 
 
 
-Referenzia list\+::body, list\+\_\+add(), list\+::lock, list\+\_\+body\+::next, spinlock\+\_\+lock(), e spinlock\+\_\+unlock().
+References list\+::body, list\+\_\+add(), list\+::lock, list\+\_\+body\+::next, spinlock\+\_\+lock(), and spinlock\+\_\+unlock().
 
 
 \begin{DoxyCode}
@@ -285,11 +285,11 @@ Referenzia list\+::body, list\+\_\+add(), list\+::lock, list\+\_\+body\+::next, 
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}
 
 
-Definizione alla linea 49 del file list.\+h.
+Definition at line 49 of file list.\+h.
 
 
 
-Referenzia list\+::size.
+References list\+::size.
 
 
 \begin{DoxyCode}
@@ -309,11 +309,11 @@ Referenzia list\+::size.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}
 
 
-Definizione alla linea 156 del file list.\+h.
+Definition at line 156 of file list.\+h.
 
 
 
-Referenzia list\+::body, list\+\_\+body\+::next, e list\+\_\+body\+::value.
+References list\+::body, list\+\_\+body\+::next, and list\+\_\+body\+::value.
 
 
 \begin{DoxyCode}
@@ -339,11 +339,11 @@ Referenzia list\+::body, list\+\_\+body\+::next, e list\+\_\+body\+::value.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_abcd4418be12b04265c44dd69a1cfee1f}
 
 
-Definizione alla linea 139 del file list.\+h.
+Definition at line 139 of file list.\+h.
 
 
 
-Referenzia list\+::body, e list\+\_\+body\+::next.
+References list\+::body, and list\+\_\+body\+::next.
 
 
 \begin{DoxyCode}
@@ -367,11 +367,11 @@ Referenzia list\+::body, e list\+\_\+body\+::next.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_ae9b833d2dc140368303ecffecce7fe3f}
 
 
-Definizione alla linea 129 del file list.\+h.
+Definition at line 129 of file list.\+h.
 
 
 
-Referenzia list\+::body, e list\+\_\+body\+::next.
+References list\+::body, and list\+\_\+body\+::next.
 
 
 \begin{DoxyCode}
@@ -395,11 +395,11 @@ Referenzia list\+::body, e list\+\_\+body\+::next.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a4470c240b622941415ae5250067699b5}
 
 
-Definizione alla linea 73 del file list.\+h.
+Definition at line 73 of file list.\+h.
 
 
 
-Referenzia list\+::body, kfree(), list\+::lock, list\+\_\+body\+::next, spinlock\+\_\+lock(), spinlock\+\_\+unlock(), e list\+\_\+body\+::value.
+References list\+::body, kfree(), list\+::lock, list\+\_\+body\+::next, spinlock\+\_\+lock(), spinlock\+\_\+unlock(), and list\+\_\+body\+::value.
 
 
 \begin{DoxyCode}
@@ -438,11 +438,11 @@ Referenzia list\+::body, kfree(), list\+::lock, list\+\_\+body\+::next, spinlock
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_aea7ba4088b37f0bd303771d71a066a90}
 
 
-Definizione alla linea 149 del file list.\+h.
+Definition at line 149 of file list.\+h.
 
 
 
-Referenzia list\+::body, e list\+\_\+body\+::value.
+References list\+::body, and list\+\_\+body\+::value.
 
 
 \begin{DoxyCode}

@@ -51,7 +51,7 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="spinlock_8h_1acd6ac4ef62853a9d5afdaf765d219ff6">spinlock_init</link> *(spin) = flags</para>
+                            <para>#define <link linkend="spinlock_8h_1acd6ac4ef62853a9d5afdaf765d219ff6">spinlock_init</link> *(spin) = <link linkend="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe">flags</link></para>
                     </listitem>
                 </itemizedlist>
             </para>

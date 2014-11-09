@@ -16,6 +16,7 @@ var exec_8c =
     [ "ELF_CLASS_64", "exec_8c.html#a24ed2e132c3545d8d8d680f2ca2cd7fb", null ],
     [ "ELF_DATA_LSB", "exec_8c.html#a2746b48aac96a65735bed83598d5d68a", null ],
     [ "ELF_DATA_MSB", "exec_8c.html#a716af0ca966a3f918b82c4a4a8a73f9e", null ],
+    [ "ELF_DEBUG", "exec_8c.html#aa3ea57d3d539b6618daaaaf7af4bec80", null ],
     [ "ELF_MAG0", "exec_8c.html#a8d944947af59b67d47a445ae2bef32e3", null ],
     [ "ELF_MAG1", "exec_8c.html#abdd5eae694123f4e5e0a5449b3591cc9", null ],
     [ "ELF_MAG2", "exec_8c.html#a60668f0dfd2613d5ccccac355f147726", null ],

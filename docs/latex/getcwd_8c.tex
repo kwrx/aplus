@@ -1,4 +1,4 @@
-\hypertarget{getcwd_8c}{\section{Riferimenti per il file usr/src/libposix/src/getcwd.c}
+\hypertarget{getcwd_8c}{\section{usr/src/libposix/src/getcwd.c File Reference}
 \label{getcwd_8c}\index{usr/src/libposix/src/getcwd.\+c@{usr/src/libposix/src/getcwd.\+c}}
 }
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
@@ -6,7 +6,7 @@
 {\ttfamily \#include $<$string.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 static char $\ast$ \hyperlink{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}{strcat\+\_\+inv} (char $\ast$\hyperlink{ipv6_8h_ab4bf83701631abccacef4ebedf8db65e}{dest}, char $\ast$str)
@@ -15,7 +15,7 @@ char $\ast$ \hyperlink{getcwd_8c_a3284211bd28346254245c9d4fd071d7f}{getcwd} (cha
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{getcwd_8c_a3284211bd28346254245c9d4fd071d7f}{\index{getcwd.\+c@{getcwd.\+c}!getcwd@{getcwd}}
 \index{getcwd@{getcwd}!getcwd.\+c@{getcwd.\+c}}
 \subsubsection[{getcwd}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ getcwd (
@@ -26,11 +26,11 @@ char $\ast$ \hyperlink{getcwd_8c_a3284211bd28346254245c9d4fd071d7f}{getcwd} (cha
 )}}\label{getcwd_8c_a3284211bd28346254245c9d4fd071d7f}
 
 
-Definizione alla linea 17 del file getcwd.\+c.
+Definition at line 17 of file getcwd.\+c.
 
 
 
-Referenzia closedir(), dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, opendir(), readdir(), e strcat\+\_\+inv().
+References closedir(), dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, opendir(), readdir(), and strcat\+\_\+inv().
 
 
 \begin{DoxyCode}
@@ -50,7 +50,7 @@ Referenzia closedir(), dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, opendir(), r
 30     curr\_ino = st.st\_ino;
 31 
 32 
-33     memset(buf, 0, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+33     memset(buf, 0, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
 34     memset(tmpbuf, 0, 1024);
 35     strcat(tmpbuf, \textcolor{stringliteral}{"."});
 36 
@@ -100,11 +100,11 @@ Referenzia closedir(), dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, opendir(), r
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{getcwd_8c_a04d342c0c21b5bdcc777d0b7dda928ac}
 
 
-Definizione alla linea 7 del file getcwd.\+c.
+Definition at line 7 of file getcwd.\+c.
 
 
 
-Referenzia dest.
+References dest.
 
 
 \begin{DoxyCode}

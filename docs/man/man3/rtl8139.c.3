@@ -1,4 +1,4 @@
-.TH "src/net/rtl8139/rtl8139.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/net/rtl8139/rtl8139.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,25 +33,25 @@ src/net/rtl8139/rtl8139.c \-
 \fC#include 'rtl8139\&.h'\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBcard\fP"
 .br
 .in -1c
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
 .RI "typedef struct \fBcard\fP \fBcard_t\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "\fB__attribute__\fP ((align(0x1000)))"
+.RI "int \fBrtl8139_ifup\fP (\fBnetif_t\fP *\fBnetif\fP)"
 .br
 .ti -1c
 .RI "int \fBrtl8139_ifdown\fP (\fBnetif_t\fP *\fBnetif\fP)"
@@ -63,7 +63,7 @@ src/net/rtl8139/rtl8139.c \-
 .RI "static void \fBrecvdata\fP (\fBcard_t\fP *\fBcard\fP)"
 .br
 .ti -1c
-.RI "static void \fBrtl8139_handler\fP (void *unused)"
+.RI "static void \fBrtl8139_handler\fP (void *\fBunused\fP)"
 .br
 .ti -1c
 .RI "int \fBrtl8139_init\fP ()"
@@ -72,345 +72,359 @@ src/net/rtl8139/rtl8139.c \-
 .RI "\fBATTRIBUTE\fP ('netif', rtl8139_init)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "static \fBcard_t\fP * \fBcard\fP = NULL"
 .br
+.ti -1c
+.RI "\fBuint8_t\fP \fBrtl8139_rxbuffer\fP [\fBRX_BUFFER_SIZE\fP+16]"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBrtl8139_txbuffer\fP [\fBTX_BUFFER_SIZE\fP *4+16]"
+.br
 .in -1c
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef struct \fBcard\fP  \fBcard_t\fP"
 
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
-.SS "__attribute__ ((align(0x1000)))"
-
-.PP
-Definizione alla linea 37 del file rtl8139\&.c\&.
-.PP
-Referenzia NETIF_FLAGS_ENABLE\&.
-.PP
-.nf
-44                                  {
-45     netif->flags |= NETIF_FLAGS_ENABLE;
-46     return 0;
-47 }
-.fi
 .SS "ATTRIBUTE ('netif', \fBrtl8139_init\fP)"
 
 .SS "static void recvdata (\fBcard_t\fP *card)\fC [static]\fP"
 
 .PP
-Definizione alla linea 89 del file rtl8139\&.c\&.
+Definition at line 87 of file rtl8139\&.c\&.
 .PP
-Referenzia CR_BUFFER_IS_EMPTY, eth_recv(), netif::flags, int_in8, int_out16, kmalloc(), kprintf, length, card::netif, NETIF_FLAGS_ENABLE, REG_COMMAND, REG_CUR_READ_ADDR, RX_BUFFER_SIZE, netif::rx_bytes, netif::rx_errors, netif::rx_packets, card::rxBuffer, card::rxBufferOffset, netif::state, udp_recv(), uint16_t, uint32_t, e uint8_t\&.
+References CR_BUFFER_IS_EMPTY, data, eth_recv(), netif::flags, int_in8, int_out16, kmalloc(), kprintf(), length, card::netif, NETIF_FLAGS_ENABLE, REG_COMMAND, REG_CUR_READ_ADDR, RX_BUFFER_SIZE, netif::rx_bytes, netif::rx_errors, netif::rx_packets, card::rxBuffer, card::rxBufferOffset, netif::state, udp_recv(), uint16_t, uint32_t, and uint8_t\&.
 .PP
 .nf
-89                                    {
-90     if((card->netif->flags & NETIF_FLAGS_ENABLE) == 0)
-91         return;
-92 
-93     while(1) {
-94         uint8_t cmd = int_in8(card, REG_COMMAND);
-95     
-96         if(cmd & CR_BUFFER_IS_EMPTY)
-97             break;
-98 
-99         uint16_t* rxBuffer = (uint16_t*) ((uint32_t) card->rxBuffer + card->rxBufferOffset);
-100         uint16_t head = *rxBuffer++;
-101 
-102         if((head & 1) == 0)
-103             break;
-104 
-105         uint16_t length = *rxBuffer++;
-106         length -= 4;
+87                                    {
+88     if((card->netif->flags & NETIF_FLAGS_ENABLE) == 0)
+89         return;
+90 
+91     while(1) {
+92         uint8_t cmd = int_in8(card, REG_COMMAND);
+93     
+94         if(cmd & CR_BUFFER_IS_EMPTY)
+95             break;
+96 
+97         uint16_t* rxBuffer = (uint16_t*) ((uint32_t) card->rxBuffer + card->rxBufferOffset);
+98         uint16_t head = *rxBuffer++;
+99 
+100         if((head & 1) == 0)
+101             break;
+102 
+103         uint16_t length = *rxBuffer++;
+104         length -= 4;
+105 
+106         card->rxBufferOffset += 4;
 107 
-108         card->rxBufferOffset += 4;
-109 
-110 
-111         void* data = kmalloc(length);
-112         if((card->rxBufferOffset + length) >= RX_BUFFER_SIZE) {
-113             memcpy(data, rxBuffer, RX_BUFFER_SIZE - card->rxBufferOffset);
-114             memcpy((void*) ((uint32_t) data + RX_BUFFER_SIZE - card->rxBufferOffset), card->rxBuffer, length - (RX_BUFFER_SIZE - card->rxBufferOffset));
-115         } else
-116             memcpy(data, rxBuffer, length);
-117 
-118 #ifdef RTL8139_DEBUG
-119         kprintf("rtl8139: receveid %d bytes\n", length);
-120 #endif
-121 
-122 #ifdef USERNET
-123         if(udp_recv(card->netif, data, length) > 0) {
-124 #else
-125         if(eth_recv(card->netif, data, length) > 0) {
-126 #endif
-127             card->netif->state\&.rx_packets += 1;
-128             card->netif->state\&.rx_bytes += length;
-129         } else
-130             card->netif->state\&.rx_errors += 1;
-131         
-132 
-133         card->rxBufferOffset += length + 4;
-134         card->rxBufferOffset = (card->rxBufferOffset + 3) & ~3;
-135         card->rxBufferOffset %= RX_BUFFER_SIZE;
-136 
-137         int_out16(card, REG_CUR_READ_ADDR, card->rxBufferOffset - 0x10);
-138     }
-139 }
+108 
+109         void* data = kmalloc(length);
+110         if((card->rxBufferOffset + length) >= RX_BUFFER_SIZE) {
+111             memcpy(data, rxBuffer, RX_BUFFER_SIZE - card->rxBufferOffset);
+112             memcpy((void*) ((uint32_t) data + RX_BUFFER_SIZE - card->rxBufferOffset), card->rxBuffer, length - (RX_BUFFER_SIZE - card->rxBufferOffset));
+113         } else
+114             memcpy(data, rxBuffer, length);
+115 
+116 #ifdef RTL8139_DEBUG
+117         kprintf("rtl8139: receveid %d bytes\n", length);
+118 #endif
+119 
+120 #ifdef USERNET
+121         if(udp_recv(card->netif, data, length) > 0) {
+122 #else
+123         if(eth_recv(card->netif, data, length) > 0) {
+124 #endif
+125             card->netif->state\&.rx_packets += 1;
+126             card->netif->state\&.rx_bytes += length;
+127         } else
+128             card->netif->state\&.rx_errors += 1;
+129         
+130 
+131         card->rxBufferOffset += length + 4;
+132         card->rxBufferOffset = (card->rxBufferOffset + 3) & ~3;
+133         card->rxBufferOffset %= RX_BUFFER_SIZE;
+134 
+135         int_out16(card, REG_CUR_READ_ADDR, card->rxBufferOffset - 0x10);
+136     }
+137 }
 .fi
 .SS "static void rtl8139_handler (void *unused)\fC [static]\fP"
 
 .PP
-Definizione alla linea 141 del file rtl8139\&.c\&.
+Definition at line 139 of file rtl8139\&.c\&.
 .PP
-Referenzia int_in16, int_out16, ISR_RECEIVE_OK, ISR_TRANSMIT_OK, kprintf, recvdata(), REG_INTERRUPT_STATUS, card::txBufferUsed, e uint16_t\&.
+References int_in16, int_out16, ISR_RECEIVE_OK, ISR_TRANSMIT_OK, kprintf(), recvdata(), REG_INTERRUPT_STATUS, card::txBufferUsed, and uint16_t\&.
 .PP
 .nf
-141                                           {
-142     uint16_t isr = int_in16(card, REG_INTERRUPT_STATUS);
-143     uint16_t nsr = 0;
-144 
-145     if(isr & ISR_TRANSMIT_OK) {
-146 #ifdef RTL8139_DEBUG
-147         kprintf("rtl8139: Transmitted data successfully\n");
-148 #endif
-149 
-150         card->txBufferUsed = 0;
-151         nsr |= ISR_TRANSMIT_OK;
-152     }
-153 
-154     if(isr & ISR_RECEIVE_OK) {
-155 #ifdef RTL8139_DEBUG
-156         kprintf("rtl8139: Received data\n");
-157 #endif
-158         recvdata(card);
-159         nsr |= ISR_RECEIVE_OK;
-160     }
-161 
-162     int_out16(card, REG_INTERRUPT_STATUS, nsr);
-163 }
+139                                           {
+140     uint16_t isr = int_in16(card, REG_INTERRUPT_STATUS);
+141     uint16_t nsr = 0;
+142 
+143     if(isr & ISR_TRANSMIT_OK) {
+144 #ifdef RTL8139_DEBUG
+145         kprintf("rtl8139: Transmitted data successfully\n");
+146 #endif
+147 
+148         card->txBufferUsed = 0;
+149         nsr |= ISR_TRANSMIT_OK;
+150     }
+151 
+152     if(isr & ISR_RECEIVE_OK) {
+153 #ifdef RTL8139_DEBUG
+154         kprintf("rtl8139: Received data\n");
+155 #endif
+156         recvdata(card);
+157         nsr |= ISR_RECEIVE_OK;
+158     }
+159 
+160     int_out16(card, REG_INTERRUPT_STATUS, nsr);
+161 }
 .fi
 .SS "int rtl8139_ifdown (\fBnetif_t\fP *netif)"
 
 .PP
-Definizione alla linea 49 del file rtl8139\&.c\&.
+Definition at line 47 of file rtl8139\&.c\&.
 .PP
-Referenzia netif::flags, e NETIF_FLAGS_ENABLE\&.
+References netif::flags, and NETIF_FLAGS_ENABLE\&.
 .PP
 .nf
-49                                    {
-50     netif->flags &= ~NETIF_FLAGS_ENABLE;
-51     return 0;
-52 }
+47                                    {
+48     netif->flags &= ~NETIF_FLAGS_ENABLE;
+49     return 0;
+50 }
+.fi
+.SS "int rtl8139_ifup (\fBnetif_t\fP *netif)"
+
+.PP
+Definition at line 42 of file rtl8139\&.c\&.
+.PP
+References netif::flags, and NETIF_FLAGS_ENABLE\&.
+.PP
+.nf
+42                                  {
+43     netif->flags |= NETIF_FLAGS_ENABLE;
+44     return 0;
+45 }
 .fi
 .SS "int rtl8139_init ()"
 
 .PP
-Definizione alla linea 166 del file rtl8139\&.c\&.
+Definition at line 164 of file rtl8139\&.c\&.
 .PP
-Referenzia pci_device::bus, CR_RECEIVER_ENABLE, CR_RESET, CR_TRANSMITTER_ENABLE, card::curBuffer, netif::data, pci_device::dev, card::device, netif::dns, eth_send(), pci_device::func, netif::ifdown, netif::ifup, int_in8, int_out16, int_out32, int_out8, pci_device::intr_line, pci_device::iobase, netif::ipv4, netif::ipv6, irq_set(), kmalloc(), kprintf, card::macaddr, netif::macaddr, card::magic, netif::mtu, netif::name, card::netif, netif_add(), NETIF_RAW, netif::netmask, pci_find_by_id(), netif::primary, RCR_ACCEPT_BROADCAST, RCR_ACCEPT_PHYS_MATCH, RCR_MXDMA_UNLIMITED, REG_COMMAND, REG_CONFIG1, REG_INTERRUPT_MASK, REG_INTERRUPT_STATUS, REG_RECEIVE_BUFFER, REG_RECEIVE_CONFIGURATION, REG_TRANSMIT_ADDR0, REG_TRANSMIT_CONFIGURATION, rtl8139_handler(), rtl8139_ifdown(), RTL8139_MAGIC, rtl8139_send(), RX_BUFFER_SIZE, card::rxBuffer, card::rxBufferOffset, netif::secondary, netif::send, TCR_IFG_STANDARD, TCR_MXDMA_256, TX_BUFFER_SIZE, card::txBuffer, card::txBufferUsed, e uint32_t\&.
+References pci_device::bus, CR_RECEIVER_ENABLE, CR_RESET, CR_TRANSMITTER_ENABLE, card::curBuffer, netif::data, pci_device::dev, card::device, netif::dns, eth_send(), pci_device::func, netif::ifdown, netif::ifup, int_in8, int_out16, int_out32, int_out8, pci_device::intr_line, pci_device::iobase, netif::ipv4, netif::ipv6, irq_set(), kmalloc(), kprintf(), card::macaddr, netif::macaddr, card::magic, netif::mtu, netif::name, card::netif, netif_add(), NETIF_RAW, netif::netmask, pci_find_by_id(), netif::primary, RCR_ACCEPT_BROADCAST, RCR_ACCEPT_PHYS_MATCH, RCR_MXDMA_UNLIMITED, REG_COMMAND, REG_CONFIG1, REG_INTERRUPT_MASK, REG_INTERRUPT_STATUS, REG_RECEIVE_BUFFER, REG_RECEIVE_CONFIGURATION, REG_TRANSMIT_ADDR0, REG_TRANSMIT_CONFIGURATION, rtl8139_handler(), rtl8139_ifdown(), rtl8139_ifup(), RTL8139_MAGIC, rtl8139_rxbuffer, rtl8139_send(), rtl8139_txbuffer, RX_BUFFER_SIZE, card::rxBuffer, card::rxBufferOffset, netif::secondary, netif::send, TCR_IFG_STANDARD, TCR_MXDMA_256, TX_BUFFER_SIZE, card::txBuffer, card::txBufferUsed, and uint32_t\&.
 .PP
 .nf
-166                    {
-167     pci_device_t* device = (pci_device_t*) pci_find_by_id(0x10EC, 0x8139);
-168     if(device == NULL) {
-169 #ifdef RTL8139_DEBUG
-170         kprintf("rtl8139: no device found\n");
-171 #endif
-172         return -1;
-173     }
-174     
-175     card = kmalloc(sizeof(card_t));
-176     card->magic = RTL8139_MAGIC;
-177     card->device = device;
-178 
-179     int_out8(card, REG_CONFIG1, 0);
-180     int_out8(card, REG_COMMAND, CR_RESET);
+164                    {
+165     pci_device_t* device = (pci_device_t*) pci_find_by_id(0x10EC, 0x8139);
+166     if(device == NULL) {
+167 #ifdef RTL8139_DEBUG
+168         kprintf("rtl8139: no device found\n");
+169 #endif
+170         return -1;
+171     }
+172     
+173     card = kmalloc(sizeof(card_t));
+174     card->magic = RTL8139_MAGIC;
+175     card->device = device;
+176 
+177     int_out8(card, REG_CONFIG1, 0);
+178     int_out8(card, REG_COMMAND, CR_RESET);
+179 
+180     while((int_in8(card, REG_COMMAND) & REG_COMMAND) == CR_RESET);
 181 
-182     while((int_in8(card, REG_COMMAND) & REG_COMMAND) == CR_RESET);
-183 
-184     memset(card->macaddr, 0, 6);
-185     for(int i = 0; i < 6; i++)
-186         card->macaddr[i] = int_in8(card, i);
-187     
-188 
-189 #ifdef RTL8139_DEBUG
-190     kprintf("rtl8139: %d:%d\&.%d, iobase 0x%x, irq %d, MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n",
-191         card->device->bus,
-192         card->device->dev,
-193         card->device->func,
-194         card->device->iobase,
-195         card->device->intr_line,
-196         card->macaddr[0],
-197         card->macaddr[1],
-198         card->macaddr[2],
-199         card->macaddr[3],
-200         card->macaddr[4],
-201         card->macaddr[5]
-202     );
-203 #endif
-204 
-205     if(card->device->intr_line == 0xFF) {
-206         kprintf("rtl8139: network card isn't connected to the PIC\n");
-207         return -1;
-208     }
-209 
-210     card->rxBuffer = (char*) rtl8139_rxbuffer;
-211     card->txBuffer = (char*) rtl8139_txbuffer;
-212 
-213     card->rxBufferOffset = 0;
-214     card->curBuffer = 0;
-215     card->txBufferUsed = 0;
-216 
-217     memset(card->rxBuffer, 0, RX_BUFFER_SIZE + 16);
-218     memset(card->txBuffer, 0, TX_BUFFER_SIZE * 4 + 16);
-219 
+182     memset(card->macaddr, 0, 6);
+183     for(int i = 0; i < 6; i++)
+184         card->macaddr[i] = int_in8(card, i);
+185     
+186 
+187 #ifdef RTL8139_DEBUG
+188     kprintf("rtl8139: %d:%d\&.%d, iobase 0x%x, irq %d, MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n",
+189         card->device->bus,
+190         card->device->dev,
+191         card->device->func,
+192         card->device->iobase,
+193         card->device->intr_line,
+194         card->macaddr[0],
+195         card->macaddr[1],
+196         card->macaddr[2],
+197         card->macaddr[3],
+198         card->macaddr[4],
+199         card->macaddr[5]
+200     );
+201 #endif
+202 
+203     if(card->device->intr_line == 0xFF) {
+204         kprintf("rtl8139: network card isn't connected to the PIC\n");
+205         return -1;
+206     }
+207 
+208     card->rxBuffer = (char*) rtl8139_rxbuffer;
+209     card->txBuffer = (char*) rtl8139_txbuffer;
+210 
+211     card->rxBufferOffset = 0;
+212     card->curBuffer = 0;
+213     card->txBufferUsed = 0;
+214 
+215     memset(card->rxBuffer, 0, RX_BUFFER_SIZE + 16);
+216     memset(card->txBuffer, 0, TX_BUFFER_SIZE * 4 + 16);
+217 
+218 
+219     irq_set(card->device->intr_line, rtl8139_handler);
 220 
-221     irq_set(card->device->intr_line, rtl8139_handler);
-222 
-223     int_out16(card, REG_INTERRUPT_MASK, 0x0005);
-224     int_out16(card, REG_INTERRUPT_STATUS, 0);
+221     int_out16(card, REG_INTERRUPT_MASK, 0x0005);
+222     int_out16(card, REG_INTERRUPT_STATUS, 0);
+223 
+224     int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
 225 
-226     int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
+226     int_out32(card, REG_RECEIVE_BUFFER, (uint32_t) card->rxBuffer);
 227 
-228     int_out32(card, REG_RECEIVE_BUFFER, (uint32_t) card->rxBuffer);
-229 
-230     for(int i = 0; i < 4; i++)
-231         int_out32(card, REG_TRANSMIT_ADDR0 + (4 * i), (uint32_t) card->txBuffer + (TX_BUFFER_SIZE * i));
-232 
-233     int_out32(card, REG_RECEIVE_CONFIGURATION, RCR_MXDMA_UNLIMITED | RCR_ACCEPT_BROADCAST | RCR_ACCEPT_PHYS_MATCH);
-234     int_out32(card, REG_TRANSMIT_CONFIGURATION, TCR_IFG_STANDARD | TCR_MXDMA_256);
+228     for(int i = 0; i < 4; i++)
+229         int_out32(card, REG_TRANSMIT_ADDR0 + (4 * i), (uint32_t) card->txBuffer + (TX_BUFFER_SIZE * i));
+230 
+231     int_out32(card, REG_RECEIVE_CONFIGURATION, RCR_MXDMA_UNLIMITED | RCR_ACCEPT_BROADCAST | RCR_ACCEPT_PHYS_MATCH);
+232     int_out32(card, REG_TRANSMIT_CONFIGURATION, TCR_IFG_STANDARD | TCR_MXDMA_256);
+233 
+234     int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
 235 
-236     int_out8(card, REG_COMMAND, CR_RECEIVER_ENABLE | CR_TRANSMITTER_ENABLE);
-237 
-238 
-239     card->netif = (netif_t*) kmalloc(sizeof(netif_t));
-240     memset(card->netif, 0, sizeof(netif_t));
-241 
-242 
-243     strcpy(card->netif->name, "eth0");
-244     memcpy(card->netif->macaddr, card->macaddr, sizeof(macaddr_t));
-245 
-246     card->netif->ipv4[0] = 192;
-247     card->netif->ipv4[1] = 168;
-248     card->netif->ipv4[2] = 1;
-249     card->netif->ipv4[3] = 80;
-250 
-251     card->netif->netmask[0] = 255;
-252     card->netif->netmask[1] = 255;
-253     card->netif->netmask[2] = 255;
-254     card->netif->netmask[3] = 0;
-255 
-256     card->netif->ipv6[0] = 0xfe80;
-257     card->netif->ipv6[1] = 0x0000;
-258     card->netif->ipv6[2] = 0x0000;
-259     card->netif->ipv6[3] = 0x0000;
-260     card->netif->ipv6[4] = 0x021d;
-261     card->netif->ipv6[5] = 0x72ff;
-262     card->netif->ipv6[6] = 0xfef9;
-263     card->netif->ipv6[7] = 0x9b71;
-264 
-265     card->netif->dns\&.primary\&.ipv4[0] = 8;
-266     card->netif->dns\&.primary\&.ipv4[1] = 8;
-267     card->netif->dns\&.primary\&.ipv4[2] = 8;
-268     card->netif->dns\&.primary\&.ipv4[3] = 8;
-269 
-270     card->netif->dns\&.secondary\&.ipv4[0] = 8;
-271     card->netif->dns\&.secondary\&.ipv4[1] = 8;
-272     card->netif->dns\&.secondary\&.ipv4[2] = 4;
-273     card->netif->dns\&.secondary\&.ipv4[3] = 4;
-274     
-275 
-276     card->netif->dns\&.primary\&.ipv6[0] = 0x2001;
-277     card->netif->dns\&.primary\&.ipv6[1] = 0x4860;
-278     card->netif->dns\&.primary\&.ipv6[2] = 0x4860;
-279     card->netif->dns\&.primary\&.ipv6[3] = 0x0000;
-280     card->netif->dns\&.primary\&.ipv6[4] = 0x0000;
-281     card->netif->dns\&.primary\&.ipv6[5] = 0x0000;
-282     card->netif->dns\&.primary\&.ipv6[6] = 0x0000;
-283     card->netif->dns\&.primary\&.ipv6[7] = 0x8888;
-284     card->netif->dns\&.secondary\&.ipv6[0] = 0x2001;
-285     card->netif->dns\&.secondary\&.ipv6[1] = 0x4860;
-286     card->netif->dns\&.secondary\&.ipv6[2] = 0x4860;
-287     card->netif->dns\&.secondary\&.ipv6[3] = 0x0000;
-288     card->netif->dns\&.secondary\&.ipv6[4] = 0x0000;
-289     card->netif->dns\&.secondary\&.ipv6[5] = 0x0000;
-290     card->netif->dns\&.secondary\&.ipv6[6] = 0x0000;
-291     card->netif->dns\&.secondary\&.ipv6[7] = 0x8844;
-292 
-293 
-294     card->netif->mtu = 1500;
-295     card->netif->send = rtl8139_send;
-296     card->netif->ifup = rtl8139_ifup;
-297     card->netif->ifdown = rtl8139_ifdown;
-298     card->netif->data = (void*) card;
-299 
-300 #ifdef RTL8139_DEBUG
-301     kprintf("rtl8139: sending data for test (512 Bytes)\n");
-302     
-303     void* tmpbuf = kmalloc(512);
-304     memset(tmpbuf, 0xFF, 512);
-305 
-306     rtl8139_ifup(card->netif);
-307     eth_send(card->netif, tmpbuf, 512, NETIF_RAW); 
-308     rtl8139_ifdown(card->netif);
+236 
+237     card->netif = (netif_t*) kmalloc(sizeof(netif_t));
+238     memset(card->netif, 0, sizeof(netif_t));
+239 
+240 
+241     strcpy(card->netif->name, "eth0");
+242     memcpy(card->netif->macaddr, card->macaddr, sizeof(macaddr_t));
+243 
+244     card->netif->ipv4[0] = 192;
+245     card->netif->ipv4[1] = 168;
+246     card->netif->ipv4[2] = 1;
+247     card->netif->ipv4[3] = 80;
+248 
+249     card->netif->netmask[0] = 255;
+250     card->netif->netmask[1] = 255;
+251     card->netif->netmask[2] = 255;
+252     card->netif->netmask[3] = 0;
+253 
+254     card->netif->ipv6[0] = 0xfe80;
+255     card->netif->ipv6[1] = 0x0000;
+256     card->netif->ipv6[2] = 0x0000;
+257     card->netif->ipv6[3] = 0x0000;
+258     card->netif->ipv6[4] = 0x021d;
+259     card->netif->ipv6[5] = 0x72ff;
+260     card->netif->ipv6[6] = 0xfef9;
+261     card->netif->ipv6[7] = 0x9b71;
+262 
+263     card->netif->dns\&.primary\&.ipv4[0] = 8;
+264     card->netif->dns\&.primary\&.ipv4[1] = 8;
+265     card->netif->dns\&.primary\&.ipv4[2] = 8;
+266     card->netif->dns\&.primary\&.ipv4[3] = 8;
+267 
+268     card->netif->dns\&.secondary\&.ipv4[0] = 8;
+269     card->netif->dns\&.secondary\&.ipv4[1] = 8;
+270     card->netif->dns\&.secondary\&.ipv4[2] = 4;
+271     card->netif->dns\&.secondary\&.ipv4[3] = 4;
+272     
+273 
+274     card->netif->dns\&.primary\&.ipv6[0] = 0x2001;
+275     card->netif->dns\&.primary\&.ipv6[1] = 0x4860;
+276     card->netif->dns\&.primary\&.ipv6[2] = 0x4860;
+277     card->netif->dns\&.primary\&.ipv6[3] = 0x0000;
+278     card->netif->dns\&.primary\&.ipv6[4] = 0x0000;
+279     card->netif->dns\&.primary\&.ipv6[5] = 0x0000;
+280     card->netif->dns\&.primary\&.ipv6[6] = 0x0000;
+281     card->netif->dns\&.primary\&.ipv6[7] = 0x8888;
+282     card->netif->dns\&.secondary\&.ipv6[0] = 0x2001;
+283     card->netif->dns\&.secondary\&.ipv6[1] = 0x4860;
+284     card->netif->dns\&.secondary\&.ipv6[2] = 0x4860;
+285     card->netif->dns\&.secondary\&.ipv6[3] = 0x0000;
+286     card->netif->dns\&.secondary\&.ipv6[4] = 0x0000;
+287     card->netif->dns\&.secondary\&.ipv6[5] = 0x0000;
+288     card->netif->dns\&.secondary\&.ipv6[6] = 0x0000;
+289     card->netif->dns\&.secondary\&.ipv6[7] = 0x8844;
+290 
+291 
+292     card->netif->mtu = 1500;
+293     card->netif->send = rtl8139_send;
+294     card->netif->ifup = rtl8139_ifup;
+295     card->netif->ifdown = rtl8139_ifdown;
+296     card->netif->data = (void*) card;
+297 
+298 #ifdef RTL8139_DEBUG
+299     kprintf("rtl8139: sending data for test (512 Bytes)\n");
+300     
+301     void* tmpbuf = kmalloc(512);
+302     memset(tmpbuf, 0xFF, 512);
+303 
+304     rtl8139_ifup(card->netif);
+305     eth_send(card->netif, tmpbuf, 512, NETIF_RAW); 
+306     rtl8139_ifdown(card->netif);
+307 
+308 #endif
 309 
-310 #endif
-311 
-312     netif_add(card->netif);
-313     return 0;
-314 }
+310     netif_add(card->netif);
+311     return 0;
+312 }
 .fi
 .SS "int rtl8139_send (\fBnetif_t\fP *netif, void *buf, size_tlen, inttype)"
 
 .PP
-Definizione alla linea 54 del file rtl8139\&.c\&.
+Definition at line 52 of file rtl8139\&.c\&.
 .PP
-Referenzia card::curBuffer, netif::data, fastlock_waiton, netif::flags, int_out32, card::magic, NETIF_FLAGS_ENABLE, REG_TRANSMIT_ADDR0, REG_TRANSMIT_STATUS0, RTL8139_MAGIC, netif::state, TX_BUFFER_SIZE, netif::tx_bytes, netif::tx_errors, netif::tx_packets, card::txBuffer, card::txBufferUsed, uint32_t, e uint8_t\&.
+References card::curBuffer, netif::data, fastlock_waiton, netif::flags, int_out32, card::magic, NETIF_FLAGS_ENABLE, REG_TRANSMIT_ADDR0, REG_TRANSMIT_STATUS0, RTL8139_MAGIC, netif::state, TX_BUFFER_SIZE, netif::tx_bytes, netif::tx_errors, netif::tx_packets, card::txBuffer, card::txBufferUsed, uint32_t, and uint8_t\&.
 .PP
 .nf
-54                                                                   {
-55     if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
-56         return 0;
-57 
-58     card_t* card = (card_t*) netif->data;
-59     if(card->magic != RTL8139_MAGIC)
-60         return 0;
-61 
-62     if(len > 1500) {
-63         netif->state\&.tx_errors += 1;
-64         return 0;
-65     }
+52                                                                   {
+53     if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
+54         return 0;
+55 
+56     card_t* card = (card_t*) netif->data;
+57     if(card->magic != RTL8139_MAGIC)
+58         return 0;
+59 
+60     if(len > 1500) {
+61         netif->state\&.tx_errors += 1;
+62         return 0;
+63     }
+64 
+65     fastlock_waiton(card->txBufferUsed);
 66 
-67     fastlock_waiton(card->txBufferUsed);
-68 
-69     memcpy(card->txBuffer, buf, len);
-70     if(len < 60) {
-71         memset((void*) ((uint32_t) card->txBuffer + len), 0, 60 - len);
-72         len = 60;
-73     }
-74 
-75     uint8_t curBuffer = card->curBuffer++;
-76     card->curBuffer %= 4;
-77 
-78 
-79     int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card->txBuffer + (TX_BUFFER_SIZE * curBuffer));
-80     int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), ((256 << 11) & 0x003F0000) | len);
-81 
-82     netif->state\&.tx_packets += 1;
-83     netif->state\&.tx_bytes += len;
-84 
-85     return len;
-86 }
+67     memcpy(card->txBuffer, buf, len);
+68     if(len < 60) {
+69         memset((void*) ((uint32_t) card->txBuffer + len), 0, 60 - len);
+70         len = 60;
+71     }
+72 
+73     uint8_t curBuffer = card->curBuffer++;
+74     card->curBuffer %= 4;
+75 
+76 
+77     int_out32(card, REG_TRANSMIT_ADDR0 + (4 * curBuffer), (uint32_t) card->txBuffer + (TX_BUFFER_SIZE * curBuffer));
+78     int_out32(card, REG_TRANSMIT_STATUS0 + (4 * curBuffer), ((256 << 11) & 0x003F0000) | len);
+79 
+80     netif->state\&.tx_packets += 1;
+81     netif->state\&.tx_bytes += len;
+82 
+83     return len;
+84 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBcard_t\fP* \fBcard\fP = NULL\fC [static]\fP"
 
 .PP
-Definizione alla linea 35 del file rtl8139\&.c\&.
-.SH "Autore"
+Definition at line 35 of file rtl8139\&.c\&.
+.SS "\fBuint8_t\fP rtl8139_rxbuffer[\fBRX_BUFFER_SIZE\fP+16]"
+
+.PP
+Definition at line 38 of file rtl8139\&.c\&.
+.SS "\fBuint8_t\fP rtl8139_txbuffer[\fBTX_BUFFER_SIZE\fP *4+16]"
+
+.PP
+Definition at line 39 of file rtl8139\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

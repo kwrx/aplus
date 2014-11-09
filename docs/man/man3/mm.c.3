@@ -1,4 +1,4 @@
-.TH "src/mm/mm.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/mm/mm.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,14 +21,14 @@ src/mm/mm.c \-
 \fC#include <grub\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBblock\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -50,7 +50,7 @@ src/mm/mm.c \-
 .RI "int \fBmm_init\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -75,12 +75,12 @@ src/mm/mm.c \-
 .RI "size_t \fBsize\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "struct \fBblock\fP __attribute__ ((packed))"
 
 .PP
-Definizione alla linea 47 del file mm\&.c\&.
+Definition at line 47 of file mm\&.c\&.
 .PP
 .nf
 50                            {
@@ -101,9 +101,9 @@ Definizione alla linea 47 del file mm\&.c\&.
 .SS "void kfree (void *ptr)"
 
 .PP
-Definizione alla linea 66 del file mm\&.c\&.
+Definition at line 66 of file mm\&.c\&.
 .PP
-Referenzia BLKMAGIC, hfree(), mm_align(), mm_paddr(), e size\&.
+References BLKMAGIC, hfree(), mm_align(), mm_paddr(), and size\&.
 .PP
 .nf
 66                       {
@@ -126,9 +126,9 @@ Referenzia BLKMAGIC, hfree(), mm_align(), mm_paddr(), e size\&.
 .SS "void* krealloc (void *ptr, size_tsize)"
 
 .PP
-Definizione alla linea 84 del file mm\&.c\&.
+Definition at line 84 of file mm\&.c\&.
 .PP
-Referenzia BLKMAGIC, kfree(), e kmalloc()\&.
+References BLKMAGIC, kfree(), and kmalloc()\&.
 .PP
 .nf
 84                                        {
@@ -160,9 +160,9 @@ Referenzia BLKMAGIC, kfree(), e kmalloc()\&.
 .SS "volatile \fBheap_t\fP* mm_getheap ()"
 
 .PP
-Definizione alla linea 117 del file mm\&.c\&.
+Definition at line 117 of file mm\&.c\&.
 .PP
-Referenzia current_heap\&.
+References current_heap\&.
 .PP
 .nf
 117                               {
@@ -172,9 +172,9 @@ Referenzia current_heap\&.
 .SS "int mm_init ()"
 
 .PP
-Definizione alla linea 122 del file mm\&.c\&.
+Definition at line 122 of file mm\&.c\&.
 .PP
-Referenzia kheap_init(), mbd, BootInfo_t::mem_lower, BootInfo_t::mem_upper, memsize, vmm_init(), e VMM_MAX_MEMORY\&.
+References kheap_init(), mbd, BootInfo_t::mem_lower, BootInfo_t::mem_upper, memsize, vmm_init(), and VMM_MAX_MEMORY\&.
 .PP
 .nf
 122               {
@@ -193,43 +193,43 @@ Referenzia kheap_init(), mbd, BootInfo_t::mem_lower, BootInfo_t::mem_upper, mems
 .SS "void mm_setheap (\fBheap_t\fP *heap)"
 
 .PP
-Definizione alla linea 113 del file mm\&.c\&.
+Definition at line 113 of file mm\&.c\&.
 .PP
 .nf
 113                               {
 114     current_heap = heap;
 115 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "volatile \fBheap_t\fP* current_heap"
 
 .PP
-Definizione alla linea 36 del file mm\&.c\&.
+Definition at line 36 of file mm\&.c\&.
 .SS "\fBuint32_t\fP* current_vmm"
 
 .PP
-Definizione alla linea 46 del file paging\&.c\&.
+Definition at line 46 of file paging\&.c\&.
 .SS "\fBuint32_t\fP* kernel_vmm"
 
 .PP
-Definizione alla linea 47 del file paging\&.c\&.
+Definition at line 47 of file paging\&.c\&.
 .SS "\fBuint16_t\fP magic"
 
 .PP
-Definizione alla linea 42 del file mm\&.c\&.
+Definition at line 42 of file mm\&.c\&.
 .SS "\fBuint32_t\fP memsize"
 
 .PP
-Definizione alla linea 35 del file mm\&.c\&.
+Definition at line 35 of file mm\&.c\&.
 .SS "size_t size"
 
 .PP
-Definizione alla linea 43 del file mm\&.c\&.
+Definition at line 43 of file mm\&.c\&.
 .SS "\fBlist_t\fP* vmm_queue"
 
 .PP
-Definizione alla linea 49 del file paging\&.c\&.
-.SH "Autore"
+Definition at line 49 of file paging\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

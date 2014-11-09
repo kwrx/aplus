@@ -1,0 +1,463 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="iso9660_8h">
+    <title>iso9660.h File Reference</title>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structiso9660__volume__descriptor">iso9660_volume_descriptor</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structiso9660__pvd">iso9660_pvd</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structiso9660__dir">iso9660_dir</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a00bbe26a634a966bc30429348a713ede">ISO9660_SECTOR_SIZE</link> 2048</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a46d3c45c595db51113eb469111f8f47e">ISO9660_PVD</link> (0x10 * ISO9660_SECTOR_SIZE)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1adb9a0b19d37ea681279fbc2fd12e78e9">ISO9660_ID</link> &quot;CD001&quot;</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a686d0298670c8a960432fedea108a4ee">ISO9660_VERSION</link> 0x01</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a4e26a4252a467603b5109045780288f9">ISO9660_VOLDESC_BOOTRECORD</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a0a08c0312b4131176a26747f23c7298d">ISO9660_VOLDESC_PRIMARY</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1ab73cb7a03004d39b3f8d63bd23278c32">ISO9660_VOLDESC_SUPPLEMENTARY</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1ae3fe9bc425a2c8ef674454fbfbff24a6">ISO9660_VOLDESC_PARTITION</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a2dc133b03085eb478dcb5453ae3c8a8f">ISO9660_VOLDESC_TERMINATOR</link> 255</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1aa140ca7b27f39439a142a564aa47c06b">ISO9660_VOLDESC_SIZE</link> <link linkend="iso9660_8h_1a00bbe26a634a966bc30429348a713ede">ISO9660_SECTOR_SIZE</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a47c2721a8c2f9deb18f162d013378032">ISO9660_FLAGS_HIDDEN</link> (1 &lt;&lt; 0)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a3a1a377e9111d5e7b6a9f668943281b0">ISO9660_FLAGS_DIRECTORY</link> (1 &lt;&lt; 1)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1aef272dce8d7ba456a460020f84a1f93f">ISO9660_FLAGS_FILE</link> (1 &lt;&lt; 2)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a2efe9dd2b4643cc3dce01afff69b956a">ISO9660_FLAGS_EXTATTR</link> (1 &lt;&lt; 3)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1a2c9a6a3d061d953ac5feef15702e6ba2">ISO9660_FLAGS_EXTFLAGS</link> (1 &lt;&lt; 4)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="iso9660_8h_1abc9ef8ec75a1700690ab76b3075cd9d9">ISO9660_FLAGS_NOTLAST</link> (1 &lt;&lt; 7)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int8_t <link linkend="iso9660_8h_1a6def72cbab7e986d0ac5dc7291e1394a">type</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a6250618cd0f2f1fd5e27398c85114505">id</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int8_t <link linkend="iso9660_8h_1a0e5db10466cf0146cf761aaaafe090d0">version</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b">data</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int8_t <link linkend="iso9660_8h_1a1b319c7708ab2832a7c18a65b8a255e0">unused</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1ab8e767113a48de5ab0a016ea7cf699b6">sysid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a2b7479a4e3f7892e26f5494b5fb31450">volid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a0e06fd66e6b5d18c6e37304bfbc72b42">null0</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>uint64_t <link linkend="iso9660_8h_1a235617b58403d22d4bc5db3fb50cbd29">volsize</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a9cd7dbef0facac2c0fdaad0215a6993f">null1</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="iso9660_8h_1ae3322c95eca6f054a776fb60fce636b3">volsetsize</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="iso9660_8h_1a98f0ee0957a15520bcfc6bbce92c9160">volnumber</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="iso9660_8h_1a0e7274df7510929be162a941cb2f0e79">logical_blksize</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>uint64_t <link linkend="iso9660_8h_1ad7fa99366995bb86dc6a3a299643c329">path_size</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="iso9660_8h_1af3f290d3b974c05653a86a04e51f64af">path_lba</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="iso9660_8h_1aec6b44e04e2fdb7b36c8b62099a5f1e8">optpath_lba</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="iso9660_8h_1aee2dd1d9b05c479cdce439c36f488077">path_lba_msb</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> <link linkend="iso9660_8h_1ab2a2664b9d342350a49a56ada9321bad">optpath_lba_msb</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1ac27411f3d37b72468123427ccb542011">rootdir</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1ae9cdf688def5af819e736cd2a11533f7">volsetid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a57b4122d9219d77a475ec2aaaa0c196d">pubid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a461a2ff96f8a888c2182c388bc9b4355">dataid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a3ac8e8d02e75c9cefda147606975418f">appid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a3104efb0fb2ca6c2e2d4ec755b184cca">copyid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a909223f1fddfd94b119bfac5e3543a10">abstractfileid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1aa0f3126ac69ede6984bec36f3078aec1">bibid</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a7a3d70624a24b670dca0a6c6eea3a997">cdate</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1acd712a06b00249933092c83e0bee6561">mdate</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1ac3c57348cfd4a724eb12b15ac5c0759c">edate</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a38f14123ce557d8ee00ad08b15db0b83">efdate</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int8_t <link linkend="iso9660_8h_1a87b6275b2c86cfb8f12c6d33ac3b3394">fileversion</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int8_t <link linkend="iso9660_8h_1a619d439b6d2f397ef9e7c690dc9a9422">unused0</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a20d9a797c46021a1fddee15207dbf682">null2</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1a5827fd9642b17ceecd56a53b297aa9b8">reserved</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0">size</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="iso9660_8h_1aa4106187b3ff93308ee98eaa09402586">exattr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>uint64_t <link linkend="iso9660_8h_1aafa9f203f0abc59a4b08b3833f39b92c">lba</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>uint64_t <link linkend="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b">length</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char <link linkend="iso9660_8h_1ad217ba16d0b42c0e3c986247572e9ec8">date</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe">flags</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="iso9660_8h_1ac752f796c7827cddfc93b945c67bb54b">unitsize</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="iso9660_8h_1a90b488a6d4e2a35f363b5029ff562f28">gapsize</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="iso9660_8h_1a2da202efdeac0cce10457fe1cc6051db">idlen</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structiso9660__volume__descriptor">iso9660_volume_descriptor</link> <link linkend="iso9660_8h_1a11b1fe8d934cf9dd11e83e3a093b68db">__attribute__</link> (
+(packed) )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/fs/iso9660/iso9660.h</para>
+    </simplesect>
+</section>

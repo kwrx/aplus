@@ -1,4 +1,4 @@
-\hypertarget{pipe_8c}{\section{Riferimenti per il file src/fs/pipe.c}
+\hypertarget{pipe_8c}{\section{src/fs/pipe.c File Reference}
 \label{pipe_8c}\index{src/fs/pipe.\+c@{src/fs/pipe.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -13,17 +13,17 @@
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
 {\ttfamily \#include $<$fcntl.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structpipeinfo}{pipeinfo}
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef struct \hyperlink{structpipeinfo}{pipeinfo} \hyperlink{pipe_8c_ac26d15f7a161e67a1245925bf9ec0b64}{pipeinfo\+\_\+t}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{pipe_8c_acd58301025c57832d88e9303748a4990}{pipe\+\_\+read} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$\hyperlink{structinode}{inode}, char $\ast$ptr, int len)
@@ -34,20 +34,20 @@ void \hyperlink{pipe_8c_acf87459626267621da125c794e573354}{pipe\+\_\+flush} (\hy
 \item 
 int \hyperlink{pipe_8c_a8d87f2f91d56a198bbf85f4773868765}{pipe\+\_\+create} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} inodes\mbox{[}2\mbox{]})
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\subsection{Typedef Documentation}
 \hypertarget{pipe_8c_ac26d15f7a161e67a1245925bf9ec0b64}{\index{pipe.\+c@{pipe.\+c}!pipeinfo\+\_\+t@{pipeinfo\+\_\+t}}
 \index{pipeinfo\+\_\+t@{pipeinfo\+\_\+t}!pipe.\+c@{pipe.\+c}}
 \subsubsection[{pipeinfo\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf pipeinfo}  {\bf pipeinfo\+\_\+t}}}\label{pipe_8c_ac26d15f7a161e67a1245925bf9ec0b64}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{pipe_8c_a8d87f2f91d56a198bbf85f4773868765}{\index{pipe.\+c@{pipe.\+c}!pipe\+\_\+create@{pipe\+\_\+create}}
 \index{pipe\+\_\+create@{pipe\+\_\+create}!pipe.\+c@{pipe.\+c}}
 \subsubsection[{pipe\+\_\+create}]{\setlength{\rightskip}{0pt plus 5cm}int pipe\+\_\+create (
@@ -57,11 +57,11 @@ int \hyperlink{pipe_8c_a8d87f2f91d56a198bbf85f4773868765}{pipe\+\_\+create} (\hy
 )}}\label{pipe_8c_a8d87f2f91d56a198bbf85f4773868765}
 
 
-Definizione alla linea 63 del file pipe.\+c.
+Definition at line 63 of file pipe.\+c.
 
 
 
-Referenzia bufio\+\_\+alloc(), inode\+::flush, inode\+::gid, task\+::gid, kmalloc(), inode\+::mode, name, pipe\+\_\+flush(), pipe\+\_\+read(), pipe\+\_\+write(), inode\+::read, pipeinfo\+::read\+\_\+offset, inode\+::size, pipeinfo\+::stream, inode\+::uid, task\+::uid, inode\+::userdata, inode\+::write, e pipeinfo\+::write\+\_\+offset.
+References inode\+::atime, bufio\+\_\+alloc(), inode\+::ctime, inode\+::flush, inode\+::gid, task\+::gid, kmalloc(), inode\+::mode, inode\+::mtime, name, pipe\+\_\+flush(), pipe\+\_\+read(), pipe\+\_\+write(), inode\+::read, pipeinfo\+::read\+\_\+offset, inode\+::size, pipeinfo\+::stream, sys\+\_\+time(), inode\+::uid, task\+::uid, inode\+::userdata, inode\+::write, and pipeinfo\+::write\+\_\+offset.
 
 
 \begin{DoxyCode}
@@ -77,7 +77,8 @@ Referenzia bufio\+\_\+alloc(), inode\+::flush, inode\+::gid, task\+::gid, kmallo
 71     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 2; i++) \{
 72         memset((\textcolor{keywordtype}{void}*) &inodes[i], 0, \textcolor{keyword}{sizeof}(\hyperlink{structinode}{inode\_t}));
 73         
-74         \textcolor{comment}{//inodes[i].atime = inodes[i].mtime = inodes[i].ctime = time(NULL);}
+74         inodes[i].\hyperlink{structinode_a7e52661a115f6def97778566f2be0d80}{atime} = inodes[i].\hyperlink{structinode_a19f0d407fa2962c942e406d3e00c1da4}{mtime} = inodes[i].\hyperlink{structinode_a27334a9d3c25fbac1c134ed5b9cbc566}{ctime} = 
+      \hyperlink{time_8c_a4b6eba92722ec1e5446f676e95e4cddf}{sys\_time}(NULL);
 75         inodes[i].\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read} = \hyperlink{pipe_8c_acd58301025c57832d88e9303748a4990}{pipe\_read};
 76         inodes[i].\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write} = \hyperlink{pipe_8c_afb255ec0586d3ec2fb72fde723b9f058}{pipe\_write};
 77         inodes[i].\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = \hyperlink{pipe_8c_acf87459626267621da125c794e573354}{pipe\_flush};
@@ -93,7 +94,8 @@ Referenzia bufio\+\_\+alloc(), inode\+::flush, inode\+::gid, task\+::gid, kmallo
 87     strcpy(inodes[1].\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, \textcolor{stringliteral}{"[pipe:write]"});
 88     
 89     \textcolor{keywordflow}{return} 0;
-90 \}\end{DoxyCode}
+90 \}
+\end{DoxyCode}
 \hypertarget{pipe_8c_acf87459626267621da125c794e573354}{\index{pipe.\+c@{pipe.\+c}!pipe\+\_\+flush@{pipe\+\_\+flush}}
 \index{pipe\+\_\+flush@{pipe\+\_\+flush}!pipe.\+c@{pipe.\+c}}
 \subsubsection[{pipe\+\_\+flush}]{\setlength{\rightskip}{0pt plus 5cm}void pipe\+\_\+flush (
@@ -103,11 +105,11 @@ Referenzia bufio\+\_\+alloc(), inode\+::flush, inode\+::gid, task\+::gid, kmallo
 )}}\label{pipe_8c_acf87459626267621da125c794e573354}
 
 
-Definizione alla linea 54 del file pipe.\+c.
+Definition at line 54 of file pipe.\+c.
 
 
 
-Referenzia bufio\+\_\+free(), kfree(), pipeinfo\+::stream, e inode\+::userdata.
+References bufio\+\_\+free(), kfree(), pipeinfo\+::stream, and inode\+::userdata.
 
 
 \begin{DoxyCode}
@@ -129,11 +131,11 @@ Referenzia bufio\+\_\+free(), kfree(), pipeinfo\+::stream, e inode\+::userdata.
 )}}\label{pipe_8c_acd58301025c57832d88e9303748a4990}
 
 
-Definizione alla linea 27 del file pipe.\+c.
+Definition at line 27 of file pipe.\+c.
 
 
 
-Referenzia bufio\+\_\+read(), bufio\+\_\+seek(), bufio\+\_\+tell(), pipeinfo\+::read\+\_\+offset, bufio\+::size, spinlock\+\_\+waiton, pipeinfo\+::stream, inode\+::userdata, e pipeinfo\+::write\+\_\+offset.
+References bufio\+\_\+read(), bufio\+\_\+seek(), bufio\+\_\+tell(), pipeinfo\+::read\+\_\+offset, bufio\+::size, spinlock\+\_\+waiton, pipeinfo\+::stream, inode\+::userdata, and pipeinfo\+::write\+\_\+offset.
 
 
 \begin{DoxyCode}
@@ -166,11 +168,11 @@ Referenzia bufio\+\_\+read(), bufio\+\_\+seek(), bufio\+\_\+tell(), pipeinfo\+::
 )}}\label{pipe_8c_afb255ec0586d3ec2fb72fde723b9f058}
 
 
-Definizione alla linea 42 del file pipe.\+c.
+Definition at line 42 of file pipe.\+c.
 
 
 
-Referenzia bufio\+\_\+seek(), bufio\+\_\+tell(), bufio\+\_\+write(), bufio\+::size, pipeinfo\+::stream, inode\+::userdata, e pipeinfo\+::write\+\_\+offset.
+References bufio\+\_\+seek(), bufio\+\_\+tell(), bufio\+\_\+write(), bufio\+::size, pipeinfo\+::stream, inode\+::userdata, and pipeinfo\+::write\+\_\+offset.
 
 
 \begin{DoxyCode}
@@ -190,11 +192,15 @@ Referenzia bufio\+\_\+seek(), bufio\+\_\+tell(), bufio\+\_\+write(), bufio\+::si
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{pipe.\+c@{pipe.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!pipe.\+c@{pipe.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

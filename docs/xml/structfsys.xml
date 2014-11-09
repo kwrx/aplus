@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structfsys" kind="struct" prot="public">
+    <compoundname>fsys</compoundname>
+    <includes refid="fsys_8h" local="no">fsys.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structfsys_1a8c3f03ed1ac90dac03da844178857891" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char fsys::name[255]</definition>
+        <argsstring>[255]</argsstring>
+        <name>name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fsys.h" line="8" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fsys.h" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structfsys_1ae6e5dcfb76d76f9636b95525ac63f4cb" prot="public" static="no" mutable="no">
+        <type>int(*</type>
+        <definition>int(* fsys::mount)(struct inode *idev, struct inode *idir, int flags)</definition>
+        <argsstring>)(struct inode *idev, struct inode *idir, int flags)</argsstring>
+        <name>mount</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/fsys.h" line="9" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fsys.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="35">
+        <label>fsys</label>
+        <link refid="structfsys"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/fsys.h" line="7" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fsys.h" bodystart="7" bodyend="10"/>
+    <listofallmembers>
+      <member refid="structfsys_1ae6e5dcfb76d76f9636b95525ac63f4cb" prot="public" virt="non-virtual"><scope>fsys</scope><name>mount</name></member>
+      <member refid="structfsys_1a8c3f03ed1ac90dac03da844178857891" prot="public" virt="non-virtual"><scope>fsys</scope><name>name</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

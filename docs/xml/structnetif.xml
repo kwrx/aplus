@@ -322,14 +322,14 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="54">
+      <node id="60">
         <label>pci_device</label>
         <link refid="structpci__device"/>
       </node>
-      <node id="53">
+      <node id="59">
         <label>netif</label>
         <link refid="structnetif"/>
-        <childnode refid="54" relation="usage">
+        <childnode refid="60" relation="usage">
           <edgelabel>+device</edgelabel>
         </childnode>
       </node>

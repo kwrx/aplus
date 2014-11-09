@@ -1,4 +1,4 @@
-.TH "src/include/aplus/list.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/list.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ src/include/aplus/list.h \-
 \fC#include <aplus/mm\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -27,7 +27,7 @@ src/include/aplus/list.h \-
 .RI "struct \fBlist\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -49,7 +49,7 @@ src/include/aplus/list.h \-
 .RI "#define \fBlist_destroy\fP(\fBlist\fP)"
 .br
 .in -1c
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
@@ -62,7 +62,7 @@ src/include/aplus/list.h \-
 .RI "typedef struct \fBlist\fP \fBlist_t\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -93,19 +93,19 @@ src/include/aplus/list.h \-
 .RI "static \fBlistval_t\fP \fBlist_head\fP (\fBlist_t\fP *\fBlist\fP)"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define list_destroy(\fBlist\fP)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
-list_clear(list);                                        \\
+list_clear(list);                                       \\
 	kfree(list)
 .fi
 .PP
-Definizione alla linea 193 del file list\&.h\&.
+Definition at line 193 of file list\&.h\&.
 .SS "#define list_foreach(\fBvalue\fP, \fBlist\fP)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 for(listval_t value = list_head(list);                     \\
@@ -114,9 +114,9 @@ for(listval_t value = list_head(list);                     \\
         )
 .fi
 .PP
-Definizione alla linea 175 del file list\&.h\&.
+Definition at line 175 of file list\&.h\&.
 .SS "#define list_foreach_inverse(\fBvalue\fP, \fBlist\fP)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 for(listval_t value = list_tail(list);                     \\
@@ -125,9 +125,9 @@ for(listval_t value = list_tail(list);                     \\
         )
 .fi
 .PP
-Definizione alla linea 181 del file list\&.h\&.
+Definition at line 181 of file list\&.h\&.
 .SS "#define list_init(\fBlist\fP)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 list = (list_t*) kmalloc(sizeof(list_t));                \
@@ -136,16 +136,16 @@ list = (list_t*) kmalloc(sizeof(list_t));                \
     list->lock = 0
 .fi
 .PP
-Definizione alla linea 187 del file list\&.h\&.
+Definition at line 187 of file list\&.h\&.
 .SS "#define list_safe_begin(\fBlist\fP)   \fBspinlock_lock\fP(&\fBlist\fP->\fBlock\fP)"
 
 .PP
-Definizione alla linea 169 del file list\&.h\&.
+Definition at line 169 of file list\&.h\&.
 .SS "#define list_safe_end(\fBlist\fP)   \fBspinlock_unlock\fP(&\fBlist\fP->\fBlock\fP)"
 
 .PP
-Definizione alla linea 172 del file list\&.h\&.
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+Definition at line 172 of file list\&.h\&.
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef struct \fBlist_body\fP  \fBlist_body_t\fP"
 
@@ -154,15 +154,15 @@ Definizione alla linea 172 del file list\&.h\&.
 .SS "typedef \fBuint32_t\fP \fBlistval_t\fP"
 
 .PP
-Definizione alla linea 33 del file list\&.h\&.
-.SH "Documentazione delle funzioni"
+Definition at line 33 of file list\&.h\&.
+.SH "Function Documentation"
 .PP 
 .SS "static int list_add (\fBlist_t\fP *list, \fBlistval_t\fPv)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 56 del file list\&.h\&.
+Definition at line 56 of file list\&.h\&.
 .PP
-Referenzia list::body, kmalloc(), list::lock, list_body::next, list::size, spinlock_lock(), spinlock_unlock(), e list_body::value\&.
+References list::body, kmalloc(), list::lock, list_body::next, list::size, spinlock_lock(), spinlock_unlock(), and list_body::value\&.
 .PP
 .nf
 56                                                       {
@@ -185,9 +185,9 @@ Referenzia list::body, kmalloc(), list::lock, list_body::next, list::size, spinl
 .SS "static int list_clear (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 99 del file list\&.h\&.
+Definition at line 99 of file list\&.h\&.
 .PP
-Referenzia list::body, kfree(), list::lock, list_body::next, list::size, spinlock_lock(), e spinlock_unlock()\&.
+References list::body, kfree(), list::lock, list_body::next, list::size, spinlock_lock(), and spinlock_unlock()\&.
 .PP
 .nf
 99                                            {
@@ -212,9 +212,9 @@ Referenzia list::body, kfree(), list::lock, list_body::next, list::size, spinloc
 .SS "static void list_clone (\fBlist_t\fP *dest, \fBlist_t\fP *src)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 119 del file list\&.h\&.
+Definition at line 119 of file list\&.h\&.
 .PP
-Referenzia list::body, list_add(), list::lock, list_body::next, spinlock_lock(), e spinlock_unlock()\&.
+References list::body, list_add(), list::lock, list_body::next, spinlock_lock(), and spinlock_unlock()\&.
 .PP
 .nf
 119                                                          {
@@ -230,9 +230,9 @@ Referenzia list::body, list_add(), list::lock, list_body::next, spinlock_lock(),
 .SS "static int list_empty (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 49 del file list\&.h\&.
+Definition at line 49 of file list\&.h\&.
 .PP
-Referenzia list::size\&.
+References list::size\&.
 .PP
 .nf
 49                                            {
@@ -245,9 +245,9 @@ Referenzia list::size\&.
 .SS "static \fBlistval_t\fP list_head (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 156 del file list\&.h\&.
+Definition at line 156 of file list\&.h\&.
 .PP
-Referenzia list::body, list_body::next, e list_body::value\&.
+References list::body, list_body::next, and list_body::value\&.
 .PP
 .nf
 156                                                 {
@@ -265,9 +265,9 @@ Referenzia list::body, list_body::next, e list_body::value\&.
 .SS "static \fBlistval_t\fP list_next (\fBlist_t\fP *list, \fBlistval_t\fPval)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 139 del file list\&.h\&.
+Definition at line 139 of file list\&.h\&.
 .PP
-Referenzia list::body, e list_body::next\&.
+References list::body, and list_body::next\&.
 .PP
 .nf
 139                                                                {
@@ -283,9 +283,9 @@ Referenzia list::body, e list_body::next\&.
 .SS "static \fBlistval_t\fP list_prev (\fBlist_t\fP *list, \fBlistval_t\fPval)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 129 del file list\&.h\&.
+Definition at line 129 of file list\&.h\&.
 .PP
-Referenzia list::body, e list_body::next\&.
+References list::body, and list_body::next\&.
 .PP
 .nf
 129                                                                {
@@ -301,9 +301,9 @@ Referenzia list::body, e list_body::next\&.
 .SS "static int list_remove (\fBlist_t\fP *list, \fBlistval_t\fPv)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 73 del file list\&.h\&.
+Definition at line 73 of file list\&.h\&.
 .PP
-Referenzia list::body, kfree(), list::lock, list_body::next, spinlock_lock(), spinlock_unlock(), e list_body::value\&.
+References list::body, kfree(), list::lock, list_body::next, spinlock_lock(), spinlock_unlock(), and list_body::value\&.
 .PP
 .nf
 73                                                          {
@@ -335,9 +335,9 @@ Referenzia list::body, kfree(), list::lock, list_body::next, spinlock_lock(), sp
 .SS "static \fBlistval_t\fP list_tail (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 149 del file list\&.h\&.
+Definition at line 149 of file list\&.h\&.
 .PP
-Referenzia list::body, e list_body::value\&.
+References list::body, and list_body::value\&.
 .PP
 .nf
 149                                                 {
@@ -347,6 +347,6 @@ Referenzia list::body, e list_body::value\&.
 153     return (listval_t) NULL;
 154 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

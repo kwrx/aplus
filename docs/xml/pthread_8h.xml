@@ -30,216 +30,216 @@
     <includedby refid="pthread__spin_8c" local="no">usr/src/libpthread/src/pthread_spin.c</includedby>
     <includedby refid="usr_2src_2libpthread_2test_2main_8c" local="no">usr/src/libpthread/test/main.c</includedby>
     <incdepgraph>
-      <node id="2177">
+      <node id="2382">
         <label>stdint.h</label>
       </node>
-      <node id="2176">
+      <node id="2381">
         <label>usr/src/libpthread/include/pthread.h</label>
         <link refid="pthread.h"/>
-        <childnode refid="2177" relation="include">
+        <childnode refid="2382" relation="include">
         </childnode>
-        <childnode refid="2178" relation="include">
+        <childnode refid="2383" relation="include">
         </childnode>
-        <childnode refid="2179" relation="include">
+        <childnode refid="2384" relation="include">
         </childnode>
-        <childnode refid="2180" relation="include">
+        <childnode refid="2385" relation="include">
         </childnode>
-        <childnode refid="2181" relation="include">
+        <childnode refid="2386" relation="include">
         </childnode>
       </node>
-      <node id="2178">
+      <node id="2383">
         <label>sys/types.h</label>
       </node>
-      <node id="2181">
+      <node id="2386">
         <label>unistd.h</label>
       </node>
-      <node id="2179">
+      <node id="2384">
         <label>sys/time.h</label>
       </node>
-      <node id="2180">
+      <node id="2385">
         <label>sched.h</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="2190">
+      <node id="2395">
         <label>usr/src/libpthread/src/pthread_create.c</label>
         <link refid="pthread__create_8c"/>
       </node>
-      <node id="2194">
+      <node id="2399">
         <label>usr/src/libpthread/src/pthread_join.c</label>
         <link refid="pthread__join_8c"/>
       </node>
-      <node id="2204">
+      <node id="2409">
         <label>usr/src/libpthread/src/pthread_spin.c</label>
         <link refid="pthread__spin_8c"/>
       </node>
-      <node id="2192">
+      <node id="2397">
         <label>usr/src/libpthread/src/pthread_equal.c</label>
         <link refid="pthread__equal_8c"/>
       </node>
-      <node id="2203">
+      <node id="2408">
         <label>usr/src/libpthread/src/pthread_self.c</label>
         <link refid="pthread__self_8c"/>
       </node>
-      <node id="2184">
+      <node id="2389">
         <label>usr/src/libpthread/src/pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2183" relation="include">
+        <childnode refid="2388" relation="include">
         </childnode>
-        <childnode refid="2185" relation="include">
+        <childnode refid="2390" relation="include">
         </childnode>
-        <childnode refid="2186" relation="include">
+        <childnode refid="2391" relation="include">
         </childnode>
-        <childnode refid="2187" relation="include">
+        <childnode refid="2392" relation="include">
         </childnode>
-        <childnode refid="2188" relation="include">
+        <childnode refid="2393" relation="include">
         </childnode>
-        <childnode refid="2189" relation="include">
+        <childnode refid="2394" relation="include">
         </childnode>
-        <childnode refid="2190" relation="include">
+        <childnode refid="2395" relation="include">
         </childnode>
-        <childnode refid="2191" relation="include">
+        <childnode refid="2396" relation="include">
         </childnode>
-        <childnode refid="2192" relation="include">
+        <childnode refid="2397" relation="include">
         </childnode>
-        <childnode refid="2193" relation="include">
+        <childnode refid="2398" relation="include">
         </childnode>
-        <childnode refid="2194" relation="include">
+        <childnode refid="2399" relation="include">
         </childnode>
-        <childnode refid="2195" relation="include">
+        <childnode refid="2400" relation="include">
         </childnode>
-        <childnode refid="2196" relation="include">
+        <childnode refid="2401" relation="include">
         </childnode>
-        <childnode refid="2197" relation="include">
+        <childnode refid="2402" relation="include">
         </childnode>
-        <childnode refid="2198" relation="include">
+        <childnode refid="2403" relation="include">
         </childnode>
-        <childnode refid="2199" relation="include">
+        <childnode refid="2404" relation="include">
         </childnode>
-        <childnode refid="2200" relation="include">
+        <childnode refid="2405" relation="include">
         </childnode>
-        <childnode refid="2201" relation="include">
+        <childnode refid="2406" relation="include">
         </childnode>
-        <childnode refid="2202" relation="include">
+        <childnode refid="2407" relation="include">
         </childnode>
-        <childnode refid="2203" relation="include">
+        <childnode refid="2408" relation="include">
         </childnode>
-        <childnode refid="2204" relation="include">
+        <childnode refid="2409" relation="include">
         </childnode>
       </node>
-      <node id="2197">
+      <node id="2402">
         <label>usr/src/libpthread/src/pthread_mutexattr.c</label>
         <link refid="pthread__mutexattr_8c"/>
       </node>
-      <node id="2205">
+      <node id="2410">
         <label>usr/src/libpthread/test/main.c</label>
         <link refid="usr_2src_2libpthread_2test_2main_8c"/>
       </node>
-      <node id="2196">
+      <node id="2401">
         <label>usr/src/libpthread/src/pthread_mutex.c</label>
         <link refid="pthread__mutex_8c"/>
       </node>
-      <node id="2182">
+      <node id="2387">
         <label>usr/src/libpthread/include/pthread.h</label>
         <link refid="pthread.h"/>
-        <childnode refid="2183" relation="include">
+        <childnode refid="2388" relation="include">
         </childnode>
-        <childnode refid="2184" relation="include">
+        <childnode refid="2389" relation="include">
         </childnode>
-        <childnode refid="2185" relation="include">
+        <childnode refid="2390" relation="include">
         </childnode>
-        <childnode refid="2186" relation="include">
+        <childnode refid="2391" relation="include">
         </childnode>
-        <childnode refid="2187" relation="include">
+        <childnode refid="2392" relation="include">
         </childnode>
-        <childnode refid="2188" relation="include">
+        <childnode refid="2393" relation="include">
         </childnode>
-        <childnode refid="2189" relation="include">
+        <childnode refid="2394" relation="include">
         </childnode>
-        <childnode refid="2190" relation="include">
+        <childnode refid="2395" relation="include">
         </childnode>
-        <childnode refid="2191" relation="include">
+        <childnode refid="2396" relation="include">
         </childnode>
-        <childnode refid="2192" relation="include">
+        <childnode refid="2397" relation="include">
         </childnode>
-        <childnode refid="2193" relation="include">
+        <childnode refid="2398" relation="include">
         </childnode>
-        <childnode refid="2194" relation="include">
+        <childnode refid="2399" relation="include">
         </childnode>
-        <childnode refid="2195" relation="include">
+        <childnode refid="2400" relation="include">
         </childnode>
-        <childnode refid="2196" relation="include">
+        <childnode refid="2401" relation="include">
         </childnode>
-        <childnode refid="2197" relation="include">
+        <childnode refid="2402" relation="include">
         </childnode>
-        <childnode refid="2198" relation="include">
+        <childnode refid="2403" relation="include">
         </childnode>
-        <childnode refid="2200" relation="include">
+        <childnode refid="2405" relation="include">
         </childnode>
-        <childnode refid="2201" relation="include">
+        <childnode refid="2406" relation="include">
         </childnode>
-        <childnode refid="2202" relation="include">
+        <childnode refid="2407" relation="include">
         </childnode>
-        <childnode refid="2203" relation="include">
+        <childnode refid="2408" relation="include">
         </childnode>
-        <childnode refid="2204" relation="include">
+        <childnode refid="2409" relation="include">
         </childnode>
-        <childnode refid="2205" relation="include">
+        <childnode refid="2410" relation="include">
         </childnode>
       </node>
-      <node id="2199">
+      <node id="2404">
         <label>usr/src/libpthread/src/pthread_queue.c</label>
         <link refid="pthread__queue_8c"/>
       </node>
-      <node id="2202">
+      <node id="2407">
         <label>usr/src/libpthread/src/pthread_sched.c</label>
         <link refid="pthread__sched_8c"/>
       </node>
-      <node id="2187">
+      <node id="2392">
         <label>usr/src/libpthread/src/pthread_cancel.c</label>
         <link refid="pthread__cancel_8c"/>
       </node>
-      <node id="2183">
+      <node id="2388">
         <label>usr/src/libpthread/src/pthread_attr.c</label>
         <link refid="pthread__attr_8c"/>
       </node>
-      <node id="2186">
+      <node id="2391">
         <label>usr/src/libpthread/src/pthread_barrierattr.c</label>
         <link refid="pthread__barrierattr_8c"/>
       </node>
-      <node id="2201">
+      <node id="2406">
         <label>usr/src/libpthread/src/pthread_rwlockattr.c</label>
         <link refid="pthread__rwlockattr_8c"/>
       </node>
-      <node id="2193">
+      <node id="2398">
         <label>usr/src/libpthread/src/pthread_exit.c</label>
         <link refid="pthread__exit_8c"/>
       </node>
-      <node id="2189">
+      <node id="2394">
         <label>usr/src/libpthread/src/pthread_condattr.c</label>
         <link refid="pthread__condattr_8c"/>
       </node>
-      <node id="2198">
+      <node id="2403">
         <label>usr/src/libpthread/src/pthread_once.c</label>
         <link refid="pthread__once_8c"/>
       </node>
-      <node id="2188">
+      <node id="2393">
         <label>usr/src/libpthread/src/pthread_cond.c</label>
         <link refid="pthread__cond_8c"/>
       </node>
-      <node id="2195">
+      <node id="2400">
         <label>usr/src/libpthread/src/pthread_key.c</label>
         <link refid="pthread__key_8c"/>
       </node>
-      <node id="2185">
+      <node id="2390">
         <label>usr/src/libpthread/src/pthread_barrier.c</label>
         <link refid="pthread__barrier_8c"/>
       </node>
-      <node id="2191">
+      <node id="2396">
         <label>usr/src/libpthread/src/pthread_detach.c</label>
         <link refid="pthread__detach_8c"/>
       </node>
-      <node id="2200">
+      <node id="2405">
         <label>usr/src/libpthread/src/pthread_rwlock.c</label>
         <link refid="pthread__rwlock_8c"/>
       </node>
@@ -2817,7 +2817,7 @@
 <codeline lineno="191"><highlight class="normal"><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="192"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a9e77a80c073787bf9a593e9c619dce27" kindref="member">pthread_cancel</ref>(<ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/>thread);</highlight></codeline>
 <codeline lineno="193"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a37075410fbbaad7ee93c95375fc86e0e" kindref="member">pthread_setcancelstate</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>state,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*oldstate);</highlight></codeline>
-<codeline lineno="194"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1aab579bcfcf0662a0c1e35fd82162e61d" kindref="member">pthread_setcanceltype</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*oldtype);</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1aab579bcfcf0662a0c1e35fd82162e61d" kindref="member">pthread_setcanceltype</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a6def72cbab7e986d0ac5dc7291e1394a" kindref="member">type</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*oldtype);</highlight></codeline>
 <codeline lineno="195"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1af1c95282ab2bea25f0888a19652cd41f" kindref="member">pthread_testcancel</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="196"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a196103ac97710dad7a93fd6c188cc999" kindref="member">pthread_once</ref>(<ref refid="structpthread__once" kindref="compound">pthread_once_t</ref><sp/>*once_control,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*init_routine)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">));</highlight></codeline>
 <codeline lineno="197"><highlight class="normal"></highlight></codeline>

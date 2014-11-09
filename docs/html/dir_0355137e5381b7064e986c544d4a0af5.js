@@ -7,7 +7,7 @@ var dir_0355137e5381b7064e986c544d4a0af5 =
     [ "net", "dir_de1174607f3963ac728b77de3c75e290.html", "dir_de1174607f3963ac728b77de3c75e290" ],
     [ "syscall", "dir_fb5e736bd9710abb23af1a33618053fb.html", "dir_fb5e736bd9710abb23af1a33618053fb" ],
     [ "bufio.c", "bufio_8c.html", "bufio_8c" ],
-    [ "debug.c", "debug_8c.html", null ],
+    [ "debug.c", "debug_8c.html", "debug_8c" ],
     [ "exec.c", "exec_8c.html", "exec_8c" ],
     [ "main.c", "src_2main_8c.html", "src_2main_8c" ],
     [ "panic.c", "panic_8c.html", "panic_8c" ],

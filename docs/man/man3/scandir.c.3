@@ -1,4 +1,4 @@
-.TH "usr/src/libposix/src/scandir.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libposix/src/scandir.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,21 +21,21 @@ usr/src/libposix/src/scandir.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "int \fBscandir\fP (const char *pathname, struct \fBdirent\fP ***namelist, int(*select)(const struct \fBdirent\fP *), int(*compar)(const struct \fBdirent\fP **, const struct \fBdirent\fP **))"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int scandir (const char *pathname, struct \fBdirent\fP ***namelist, int(*)(const struct \fBdirent\fP *)select, int(*)(const struct \fBdirent\fP **, const struct \fBdirent\fP **)compar)"
 
 .PP
-Definizione alla linea 11 del file scandir\&.c\&.
+Definition at line 11 of file scandir\&.c\&.
 .PP
-Referenzia d, errno, opendir(), e readdir()\&.
+References d, errno, opendir(), and readdir()\&.
 .PP
 .nf
 11                                                                                                                                                                   {
@@ -74,6 +74,6 @@ Referenzia d, errno, opendir(), e readdir()\&.
 44     return index;
 45 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

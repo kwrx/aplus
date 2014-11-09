@@ -13,6 +13,7 @@ var searchData=
   ['elf_5fclass_5f64',['ELF_CLASS_64',['../exec_8c.html#a24ed2e132c3545d8d8d680f2ca2cd7fb',1,'exec.c']]],
   ['elf_5fdata_5flsb',['ELF_DATA_LSB',['../exec_8c.html#a2746b48aac96a65735bed83598d5d68a',1,'exec.c']]],
   ['elf_5fdata_5fmsb',['ELF_DATA_MSB',['../exec_8c.html#a716af0ca966a3f918b82c4a4a8a73f9e',1,'exec.c']]],
+  ['elf_5fdebug',['ELF_DEBUG',['../exec_8c.html#aa3ea57d3d539b6618daaaaf7af4bec80',1,'exec.c']]],
   ['elf_5fmag0',['ELF_MAG0',['../exec_8c.html#a8d944947af59b67d47a445ae2bef32e3',1,'exec.c']]],
   ['elf_5fmag1',['ELF_MAG1',['../exec_8c.html#abdd5eae694123f4e5e0a5449b3591cc9',1,'exec.c']]],
   ['elf_5fmag2',['ELF_MAG2',['../exec_8c.html#a60668f0dfd2613d5ccccac355f147726',1,'exec.c']]],

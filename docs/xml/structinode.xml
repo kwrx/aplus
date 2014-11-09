@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="37" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="37" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="38" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="38" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a127a2eb030df332fa64a81188731ad6b" prot="public" static="no" mutable="no">
         <type>dev_t</type>
@@ -28,7 +28,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="39" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="39" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="40" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" prot="public" static="no" mutable="no">
         <type>ino_t</type>
@@ -41,7 +41,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="40" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="40" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="41" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="41" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" prot="public" static="no" mutable="no">
         <type>mode_t</type>
@@ -54,7 +54,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="41" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="41" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="42" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a1daedc820c86b5af32f0a137419f7a8f" prot="public" static="no" mutable="no">
         <type>nlink_t</type>
@@ -67,7 +67,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="42" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="42" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="43" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="43" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a0eac94e96ded19029e871d5cce815bcb" prot="public" static="no" mutable="no">
         <type>uid_t</type>
@@ -80,7 +80,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="43" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="43" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="44" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="44" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a8434fb9dd05057d00b37ed713713835d" prot="public" static="no" mutable="no">
         <type>gid_t</type>
@@ -93,7 +93,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="44" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="44" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="45" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="45" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a3e7613383954ff7b5faf7c2188e1f61b" prot="public" static="no" mutable="no">
         <type>dev_t</type>
@@ -106,7 +106,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="45" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="45" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="46" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="46" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a53722b1b60b7136ce0204b66527bb400" prot="public" static="no" mutable="no">
         <type>off_t</type>
@@ -119,7 +119,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="46" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="46" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="47" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="47" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a5756f61233e40d01652094d29b5daf6c" prot="public" static="no" mutable="no">
         <type>off_t</type>
@@ -132,7 +132,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="47" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="47" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="48" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a7e52661a115f6def97778566f2be0d80" prot="public" static="no" mutable="no">
         <type>time_t</type>
@@ -145,7 +145,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="49" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="49" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="50" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="50" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a19f0d407fa2962c942e406d3e00c1da4" prot="public" static="no" mutable="no">
         <type>time_t</type>
@@ -158,7 +158,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="50" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="50" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="51" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="51" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" prot="public" static="no" mutable="no">
         <type>time_t</type>
@@ -171,7 +171,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="51" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="51" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="52" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="52" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" prot="public" static="no" mutable="no">
         <type>void *</type>
@@ -184,7 +184,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="53" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="53" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="54" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="54" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1ae2c5e8a0a372334b97024fbd9ef694c1" prot="public" static="no" mutable="no">
         <type>int(*</type>
@@ -197,7 +197,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="55" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="55" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="56" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a53a123d38834fa17e7ef5c1e5f47bba2" prot="public" static="no" mutable="no">
         <type>int(*</type>
@@ -210,7 +210,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="56" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="57" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="57" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a0a54c11571f19f23322f3e6ad3ecb113" prot="public" static="no" mutable="no">
         <type>struct <ref refid="structdirent" kindref="compound">dirent</ref> *(*</type>
@@ -223,7 +223,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="58" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="57" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="59" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1ab6c5e2d912fdbd506086e53185cd370d" prot="public" static="no" mutable="no">
         <type>struct <ref refid="structinode" kindref="compound">inode</ref> *(*</type>
@@ -236,7 +236,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="59" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="57" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="60" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1ad622a049b34780786d9ba4311b06b3b4" prot="public" static="no" mutable="no">
         <type>struct <ref refid="structinode" kindref="compound">inode</ref> *(*</type>
@@ -249,7 +249,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="56" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="60" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="57" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="61" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a5a309a9c4ada7e4d062162b06125a929" prot="public" static="no" mutable="no">
         <type>int(*</type>
@@ -262,7 +262,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="62" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="62" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="63" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="63" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1adf65bac80736631b8000d3d34e953aaa" prot="public" static="no" mutable="no">
         <type>int(*</type>
@@ -275,7 +275,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="63" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="63" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="64" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="64" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a8221183a697c9f2b4e0e295f5a9d8afd" prot="public" static="no" mutable="no">
         <type>int(*</type>
@@ -288,7 +288,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="64" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="64" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="65" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="65" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1ae2972ef183f5c39aac7cb83b9f8a04a8" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -301,7 +301,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="65" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="65" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="66" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="66" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a636843da203574bc338b016758bf8c7e" prot="public" static="no" mutable="no">
         <type>int(*</type>
@@ -314,7 +314,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="67" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="67" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="68" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="68" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" prot="public" static="no" mutable="no">
         <type>struct <ref refid="structinode" kindref="compound">inode</ref> *</type>
@@ -327,7 +327,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="70" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="70" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="71" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structinode_1a3533c53c5391601c66b3ae0f389c0843" prot="public" static="no" mutable="no">
         <type>struct <ref refid="structinode" kindref="compound">inode</ref> *</type>
@@ -340,7 +340,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="71" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="72" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="72" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -366,7 +366,7 @@
         <link refid="structdirent"/>
       </node>
     </collaborationgraph>
-    <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="36" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="36" bodyend="72"/>
+    <location file="/opt/prj/aPlus/src/include/aplus/fs.h" line="37" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/fs.h" bodystart="37" bodyend="73"/>
     <listofallmembers>
       <member refid="structinode_1a7e52661a115f6def97778566f2be0d80" prot="public" virt="non-virtual"><scope>inode</scope><name>atime</name></member>
       <member refid="structinode_1a8221183a697c9f2b4e0e295f5a9d8afd" prot="public" virt="non-virtual"><scope>inode</scope><name>chown</name></member>

@@ -1,4 +1,4 @@
-\hypertarget{kheap_8c}{\section{Riferimenti per il file src/mm/kheap.c}
+\hypertarget{kheap_8c}{\section{src/mm/kheap.c File Reference}
 \label{kheap_8c}\index{src/mm/kheap.\+c@{src/mm/kheap.\+c}}
 }
 {\ttfamily \#include $<$stddef.\+h$>$}\\*
@@ -7,7 +7,7 @@
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
 {\ttfamily \#include $<$grub.\+h$>$}\\*
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{kheap_8c_a74db82a3840a04b119ef68ace44be19a}{B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T}(bmp, bit)~bmp\mbox{[}bit / 32\mbox{]} $\vert$= (1 $<$$<$ (bit \% 32))
@@ -18,7 +18,7 @@
 \item 
 \#define \hyperlink{kheap_8c_a112c287ac25c656c889838c3629d822b}{G\+E\+T\+B\+I\+T}(addr)~((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t}) addr / \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{B\+L\+K\+S\+I\+Z\+E})
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 static int \hyperlink{kheap_8c_a74ba44118238191dbc2c0aa8cb715b2a}{bitmap\+\_\+first} (\hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$\hyperlink{structheap}{heap}, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
@@ -29,7 +29,7 @@ void \hyperlink{kheap_8c_ae9ee37909a7c84b79ce0d7d0414ebeee}{bitmap\+\_\+free} (\
 \item 
 int \hyperlink{kheap_8c_ab761c0c9768623b035f3fd5c98f77b08}{kheap\+\_\+init} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 static \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}
@@ -40,7 +40,7 @@ static \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyp
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{kheap_8c_a117b3288a72c30a6c9be0e2773332705}{\index{kheap.\+c@{kheap.\+c}!B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R@{B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R}}
 \index{B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R@{B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R}!kheap.\+c@{kheap.\+c}}
 \subsubsection[{B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R(
@@ -51,7 +51,7 @@ static \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyp
 )~bmp\mbox{[}bit / 32\mbox{]} \&= $\sim$(1 $<$$<$ (bit \% 32))}}\label{kheap_8c_a117b3288a72c30a6c9be0e2773332705}
 
 
-Definizione alla linea 35 del file kheap.\+c.
+Definition at line 35 of file kheap.\+c.
 
 \hypertarget{kheap_8c_a74db82a3840a04b119ef68ace44be19a}{\index{kheap.\+c@{kheap.\+c}!B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T@{B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T}}
 \index{B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T@{B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T}!kheap.\+c@{kheap.\+c}}
@@ -63,7 +63,7 @@ Definizione alla linea 35 del file kheap.\+c.
 )~bmp\mbox{[}bit / 32\mbox{]} $\vert$= (1 $<$$<$ (bit \% 32))}}\label{kheap_8c_a74db82a3840a04b119ef68ace44be19a}
 
 
-Definizione alla linea 32 del file kheap.\+c.
+Definition at line 32 of file kheap.\+c.
 
 \hypertarget{kheap_8c_a47df99630658921f6898646851230983}{\index{kheap.\+c@{kheap.\+c}!B\+I\+T\+M\+A\+P\+\_\+\+T\+S\+T@{B\+I\+T\+M\+A\+P\+\_\+\+T\+S\+T}}
 \index{B\+I\+T\+M\+A\+P\+\_\+\+T\+S\+T@{B\+I\+T\+M\+A\+P\+\_\+\+T\+S\+T}!kheap.\+c@{kheap.\+c}}
@@ -75,7 +75,7 @@ Definizione alla linea 32 del file kheap.\+c.
 )~(bmp\mbox{[}bit / 32\mbox{]} \& (1 $<$$<$ (bit \% 32)))}}\label{kheap_8c_a47df99630658921f6898646851230983}
 
 
-Definizione alla linea 38 del file kheap.\+c.
+Definition at line 38 of file kheap.\+c.
 
 \hypertarget{kheap_8c_a112c287ac25c656c889838c3629d822b}{\index{kheap.\+c@{kheap.\+c}!G\+E\+T\+B\+I\+T@{G\+E\+T\+B\+I\+T}}
 \index{G\+E\+T\+B\+I\+T@{G\+E\+T\+B\+I\+T}!kheap.\+c@{kheap.\+c}}
@@ -86,11 +86,11 @@ Definizione alla linea 38 del file kheap.\+c.
 )~(({\bf uint32\+\_\+t}) addr / {\bf B\+L\+K\+S\+I\+Z\+E})}}\label{kheap_8c_a112c287ac25c656c889838c3629d822b}
 
 
-Definizione alla linea 42 del file kheap.\+c.
+Definition at line 42 of file kheap.\+c.
 
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{kheap_8c_a5091f353b0ceafc7134382b4386d206c}{\index{kheap.\+c@{kheap.\+c}!bitmap\+\_\+alloc@{bitmap\+\_\+alloc}}
 \index{bitmap\+\_\+alloc@{bitmap\+\_\+alloc}!kheap.\+c@{kheap.\+c}}
 \subsubsection[{bitmap\+\_\+alloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ bitmap\+\_\+alloc (
@@ -101,11 +101,11 @@ Definizione alla linea 42 del file kheap.\+c.
 )}}\label{kheap_8c_a5091f353b0ceafc7134382b4386d206c}
 
 
-Definizione alla linea 75 del file kheap.\+c.
+Definition at line 75 of file kheap.\+c.
 
 
 
-Referenzia heap\+::bitmap, bitmap\+\_\+first(), B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T, B\+L\+K\+S\+I\+Z\+E, size, heap\+::size, e heap\+::used.
+References heap\+::bitmap, bitmap\+\_\+first(), B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T, B\+L\+K\+S\+I\+Z\+E, heap\+::size, size, and heap\+::used.
 
 
 \begin{DoxyCode}
@@ -120,22 +120,22 @@ Referenzia heap\+::bitmap, bitmap\+\_\+first(), B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T,
 83         \textcolor{keywordflow}{return} 0;
 84         
 85     
-86     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} % \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE}) \{
-87         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
-88         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} += 1;
+86     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} % \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE}) \{
+87         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
+88         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} += 1;
 89     \}\textcolor{keywordflow}{else} \{
-90         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
+90         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
 91     \}   
 92         
-93     \textcolor{keywordtype}{int} index = \hyperlink{kheap_8c_a74ba44118238191dbc2c0aa8cb715b2a}{bitmap\_first}(heap, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+93     \textcolor{keywordtype}{int} index = \hyperlink{kheap_8c_a74ba44118238191dbc2c0aa8cb715b2a}{bitmap\_first}(heap, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
 94     \textcolor{keywordflow}{if}(index == -1)
 95         \textcolor{keywordflow}{return} 0;
 96                 
-97     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}; i++)
+97     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}; i++)
 98         \hyperlink{kheap_8c_a74db82a3840a04b119ef68ace44be19a}{BITMAP\_SET}(heap->\hyperlink{structheap_a5243ef46c552fc0968aa2bcdaf6725d1}{bitmap}, (index + i));
 99     
 100     
-101     heap->\hyperlink{structheap_a37f3f6d6d39562f3cca452eafebcd7ac}{used} += \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
+101     heap->\hyperlink{structheap_a37f3f6d6d39562f3cca452eafebcd7ac}{used} += \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
 102     
 103     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) (index * \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE});
 104 \}
@@ -150,20 +150,20 @@ Referenzia heap\+::bitmap, bitmap\+\_\+first(), B\+I\+T\+M\+A\+P\+\_\+\+S\+E\+T,
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{kheap_8c_a74ba44118238191dbc2c0aa8cb715b2a}
 
 
-Definizione alla linea 55 del file kheap.\+c.
+Definition at line 55 of file kheap.\+c.
 
 
 
-Referenzia heap\+::bitmap, B\+I\+T\+M\+A\+P\+\_\+\+T\+S\+T, size, e heap\+::size.
+References heap\+::bitmap, B\+I\+T\+M\+A\+P\+\_\+\+T\+S\+T, heap\+::size, and size.
 
 
 \begin{DoxyCode}
 55                                                    \{
-56     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} == 0)
+56     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} == 0)
 57         \textcolor{keywordflow}{return} -1;
 58         
 59     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < heap->\hyperlink{structheap_a486fb531d24b9ee5f17b7ffe96689705}{size}; i++) \{   
-60         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} j = 0, f = 0; j < \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}; j++) \{
+60         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} j = 0, f = 0; j < \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}; j++) \{
 61             \textcolor{keywordflow}{if}(\hyperlink{kheap_8c_a47df99630658921f6898646851230983}{BITMAP\_TST}(heap->\hyperlink{structheap_a5243ef46c552fc0968aa2bcdaf6725d1}{bitmap}, (i + j)))
 62                 \textcolor{keywordflow}{continue};
 63             
@@ -187,11 +187,11 @@ Referenzia heap\+::bitmap, B\+I\+T\+M\+A\+P\+\_\+\+T\+S\+T, size, e heap\+::size
 )}}\label{kheap_8c_ae9ee37909a7c84b79ce0d7d0414ebeee}
 
 
-Definizione alla linea 106 del file kheap.\+c.
+Definition at line 106 of file kheap.\+c.
 
 
 
-Referenzia heap\+::bitmap, B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R, B\+L\+K\+S\+I\+Z\+E, G\+E\+T\+B\+I\+T, size, e heap\+::used.
+References heap\+::bitmap, B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R, B\+L\+K\+S\+I\+Z\+E, G\+E\+T\+B\+I\+T, size, and heap\+::used.
 
 
 \begin{DoxyCode}
@@ -203,20 +203,20 @@ Referenzia heap\+::bitmap, B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R, B\+L\+K\+S\+I\+Z\+E,
 111         \textcolor{keywordflow}{return};
 112         
 113         
-114     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} % \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE}) \{
-115         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
-116         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} += 1;
+114     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} % \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE}) \{
+115         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
+116         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} += 1;
 117     \}\textcolor{keywordflow}{else} \{
-118         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
+118         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} /= \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
 119     \}   
 120         
 121     
 122     \textcolor{keywordtype}{int} index = \hyperlink{kheap_8c_a112c287ac25c656c889838c3629d822b}{GETBIT}(addr);
-123     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}; i++)
+123     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}; i++)
 124         \hyperlink{kheap_8c_a117b3288a72c30a6c9be0e2773332705}{BITMAP\_CLR}(heap->\hyperlink{structheap_a5243ef46c552fc0968aa2bcdaf6725d1}{bitmap}, (index + i));
 125         
 126         
-127     heap->\hyperlink{structheap_a37f3f6d6d39562f3cca452eafebcd7ac}{used} -= \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
+127     heap->\hyperlink{structheap_a37f3f6d6d39562f3cca452eafebcd7ac}{used} -= \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
 128 \}
 \end{DoxyCode}
 \hypertarget{kheap_8c_ab761c0c9768623b035f3fd5c98f77b08}{\index{kheap.\+c@{kheap.\+c}!kheap\+\_\+init@{kheap\+\_\+init}}
@@ -228,54 +228,53 @@ Referenzia heap\+::bitmap, B\+I\+T\+M\+A\+P\+\_\+\+C\+L\+R, B\+L\+K\+S\+I\+Z\+E,
 )}}\label{kheap_8c_ab761c0c9768623b035f3fd5c98f77b08}
 
 
-Definizione alla linea 132 del file kheap.\+c.
+Definition at line 132 of file kheap.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+bitmap, heap\+::alloc, heap\+::bitmap, bitmap\+\_\+alloc(), bitmap\+\_\+free(), B\+L\+K\+S\+I\+Z\+E, heap\+::free, halloc(), memsize, mm\+\_\+setheap(), heap\+::size, e uint32\+\_\+t.
+References \+\_\+\+\_\+bitmap, heap\+::alloc, heap\+::bitmap, bitmap\+\_\+alloc(), bitmap\+\_\+free(), B\+L\+K\+S\+I\+Z\+E, heap\+::free, halloc(), memsize, mm\+\_\+setheap(), heap\+::size, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
 132                  \{
-133     \textcolor{keyword}{extern} \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} end;
-134 
-135     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a5243ef46c552fc0968aa2bcdaf6725d1}{bitmap} = \hyperlink{kheap_8c_ab27b0e2ca68753b0298fd591615a6592}{\_\_bitmap};
-136     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a486fb531d24b9ee5f17b7ffe96689705}{size} = \hyperlink{kheap_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} / \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
-137     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a8b4bc8c3f0ed79efd52d61a27a62a130}{alloc} = \hyperlink{kheap_8c_a5091f353b0ceafc7134382b4386d206c}{bitmap\_alloc};
-138     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_ae53b14c50bbb9daab4346cd0873bda02}{free} = \hyperlink{kheap_8c_ae9ee37909a7c84b79ce0d7d0414ebeee}{bitmap\_free};
-139     
-140     memset(\hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a5243ef46c552fc0968aa2bcdaf6725d1}{bitmap}, 0, \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a486fb531d24b9ee5f17b7ffe96689705}{size});
-141     
-142     \hyperlink{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}{mm\_setheap}(&\hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap});
-143     
-144     \textcolor{comment}{// Alloc first 4MB (reserved physical kernel area)}
-145     \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc}(&\hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}, (\textcolor{keywordtype}{size\_t}) 0x400000);
-146     
-147 
-148     \textcolor{keywordflow}{return} 0;
-149 \}
+133 
+134     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a5243ef46c552fc0968aa2bcdaf6725d1}{bitmap} = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{kheap_8c_ab27b0e2ca68753b0298fd591615a6592}{\_\_bitmap};
+135     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a486fb531d24b9ee5f17b7ffe96689705}{size} = \hyperlink{kheap_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} / \hyperlink{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{BLKSIZE};
+136     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a8b4bc8c3f0ed79efd52d61a27a62a130}{alloc} = \hyperlink{kheap_8c_a5091f353b0ceafc7134382b4386d206c}{bitmap\_alloc};
+137     \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_ae53b14c50bbb9daab4346cd0873bda02}{free} = \hyperlink{kheap_8c_ae9ee37909a7c84b79ce0d7d0414ebeee}{bitmap\_free};
+138     
+139     memset(\hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a5243ef46c552fc0968aa2bcdaf6725d1}{bitmap}, 0, \hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}.\hyperlink{structheap_a486fb531d24b9ee5f17b7ffe96689705}{size});
+140     
+141     \hyperlink{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}{mm\_setheap}(&\hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap});
+142     
+143     \textcolor{comment}{// Alloc first 4MB (reserved physical kernel area)}
+144     \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc}(&\hyperlink{kheap_8c_ab18276b758b671778bcef772dee38c85}{kheap}, (\textcolor{keywordtype}{size\_t}) 0x400000);
+145     
+146 
+147     \textcolor{keywordflow}{return} 0;
+148 \}
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{kheap_8c_ab27b0e2ca68753b0298fd591615a6592}{\index{kheap.\+c@{kheap.\+c}!\+\_\+\+\_\+bitmap@{\+\_\+\+\_\+bitmap}}
 \index{\+\_\+\+\_\+bitmap@{\+\_\+\+\_\+bitmap}!kheap.\+c@{kheap.\+c}}
 \subsubsection[{\+\_\+\+\_\+bitmap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} \+\_\+\+\_\+bitmap\mbox{[}131072\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}}\label{kheap_8c_ab27b0e2ca68753b0298fd591615a6592}
 
 
-Definizione alla linea 52 del file kheap.\+c.
+Definition at line 52 of file kheap.\+c.
 
 \hypertarget{kheap_8c_ab18276b758b671778bcef772dee38c85}{\index{kheap.\+c@{kheap.\+c}!kheap@{kheap}}
 \index{kheap@{kheap}!kheap.\+c@{kheap.\+c}}
 \subsubsection[{kheap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf heap\+\_\+t} kheap\hspace{0.3cm}{\ttfamily [static]}}}\label{kheap_8c_ab18276b758b671778bcef772dee38c85}
 
 
-Definizione alla linea 48 del file kheap.\+c.
+Definition at line 48 of file kheap.\+c.
 
 \hypertarget{kheap_8c_a8ffb348d372acd38099f16b08bdaf4b5}{\index{kheap.\+c@{kheap.\+c}!memsize@{memsize}}
 \index{memsize@{memsize}!kheap.\+c@{kheap.\+c}}
 \subsubsection[{memsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} memsize}}\label{kheap_8c_a8ffb348d372acd38099f16b08bdaf4b5}
 
 
-Definizione alla linea 35 del file mm.\+c.
+Definition at line 35 of file mm.\+c.
 

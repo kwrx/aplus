@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_6abfe60f94b658ae213b16cf8cd9748f" kind="dir">
+    <compoundname>src/fs/iso9660</compoundname>
+    <innerfile refid="iso9660_8c">iso9660.c</innerfile>
+    <innerfile refid="iso9660_8h">iso9660.h</innerfile>
+    <innerfile refid="iso9660__finddir_8c">iso9660_finddir.c</innerfile>
+    <innerfile refid="iso9660__mount_8c">iso9660_mount.c</innerfile>
+    <innerfile refid="iso9660__read_8c">iso9660_read.c</innerfile>
+    <innerfile refid="iso9660__readdir_8c">iso9660_readdir.c</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/src/fs/iso9660/"/>
+  </compounddef>
+</doxygen>

@@ -1,12 +1,15 @@
-.TH "elf32_hdr" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "elf32_hdr" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
 elf32_hdr \- 
+.PP
+ELF32 Header\&.  
+
 .SH SYNOPSIS
 .br
 .PP
-.SS "Campi"
+.SS "Data Fields"
 
 .in +1c
 .ti -1c
@@ -52,68 +55,70 @@ elf32_hdr \-
 .RI "\fBElf32_Half\fP \fBe_shstrndx\fP"
 .br
 .in -1c
-.SH "Descrizione dettagliata"
+.SH "Detailed Description"
 .PP 
-Definizione alla linea 56 del file exec\&.c\&.
-.SH "Documentazione dei campi"
+ELF32 Header\&. 
+.PP
+Definition at line 64 of file exec\&.c\&.
+.SH "Field Documentation"
 .PP 
 .SS "\fBElf32_Half\fP elf32_hdr::e_ehsize"
 
 .PP
-Definizione alla linea 65 del file exec\&.c\&.
+Definition at line 73 of file exec\&.c\&.
 .SS "\fBElf32_Addr\fP elf32_hdr::e_entry"
 
 .PP
-Definizione alla linea 61 del file exec\&.c\&.
+Definition at line 69 of file exec\&.c\&.
 .SS "\fBElf32_Word\fP elf32_hdr::e_flags"
 
 .PP
-Definizione alla linea 64 del file exec\&.c\&.
+Definition at line 72 of file exec\&.c\&.
 .SS "\fBuint8_t\fP elf32_hdr::e_ident[\fBEI_NIDENT\fP]"
 
 .PP
-Definizione alla linea 57 del file exec\&.c\&.
+Definition at line 65 of file exec\&.c\&.
 .SS "\fBElf32_Half\fP elf32_hdr::e_machine"
 
 .PP
-Definizione alla linea 59 del file exec\&.c\&.
+Definition at line 67 of file exec\&.c\&.
 .SS "\fBElf32_Half\fP elf32_hdr::e_phentsize"
 
 .PP
-Definizione alla linea 66 del file exec\&.c\&.
+Definition at line 74 of file exec\&.c\&.
 .SS "\fBElf32_Half\fP elf32_hdr::e_phnum"
 
 .PP
-Definizione alla linea 67 del file exec\&.c\&.
+Definition at line 75 of file exec\&.c\&.
 .SS "\fBElf32_Off\fP elf32_hdr::e_phoff"
 
 .PP
-Definizione alla linea 62 del file exec\&.c\&.
+Definition at line 70 of file exec\&.c\&.
 .SS "\fBElf32_Half\fP elf32_hdr::e_shentsize"
 
 .PP
-Definizione alla linea 68 del file exec\&.c\&.
+Definition at line 76 of file exec\&.c\&.
 .SS "\fBElf32_Half\fP elf32_hdr::e_shnum"
 
 .PP
-Definizione alla linea 69 del file exec\&.c\&.
+Definition at line 77 of file exec\&.c\&.
 .SS "\fBElf32_Off\fP elf32_hdr::e_shoff"
 
 .PP
-Definizione alla linea 63 del file exec\&.c\&.
+Definition at line 71 of file exec\&.c\&.
 .SS "\fBElf32_Half\fP elf32_hdr::e_shstrndx"
 
 .PP
-Definizione alla linea 70 del file exec\&.c\&.
+Definition at line 78 of file exec\&.c\&.
 .SS "\fBElf32_Half\fP elf32_hdr::e_type"
 
 .PP
-Definizione alla linea 58 del file exec\&.c\&.
+Definition at line 66 of file exec\&.c\&.
 .SS "\fBElf32_Word\fP elf32_hdr::e_version"
 
 .PP
-Definizione alla linea 60 del file exec\&.c\&.
+Definition at line 68 of file exec\&.c\&.
 
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

@@ -9,120 +9,120 @@
     <includes refid="list_8h" local="no">aplus/list.h</includes>
     <includes refid="fs_8h" local="no">aplus/fs.h</includes>
     <incdepgraph>
-      <node id="83">
+      <node id="106">
         <label>sys/stat.h</label>
       </node>
-      <node id="76">
+      <node id="99">
         <label>stdarg.h</label>
       </node>
-      <node id="80">
+      <node id="103">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="75" relation="include">
+        <childnode refid="98" relation="include">
         </childnode>
-        <childnode refid="81" relation="include">
+        <childnode refid="104" relation="include">
         </childnode>
-        <childnode refid="82" relation="include">
+        <childnode refid="105" relation="include">
         </childnode>
-        <childnode refid="83" relation="include">
+        <childnode refid="106" relation="include">
         </childnode>
-        <childnode refid="84" relation="include">
+        <childnode refid="107" relation="include">
         </childnode>
       </node>
-      <node id="75">
+      <node id="98">
         <label>stdint.h</label>
       </node>
-      <node id="87">
+      <node id="110">
         <label>setjmp.h</label>
       </node>
-      <node id="79">
+      <node id="102">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="75" relation="include">
+        <childnode refid="98" relation="include">
         </childnode>
-        <childnode refid="74" relation="include">
+        <childnode refid="97" relation="include">
         </childnode>
-        <childnode refid="80" relation="include">
+        <childnode refid="103" relation="include">
         </childnode>
-        <childnode refid="86" relation="include">
+        <childnode refid="109" relation="include">
         </childnode>
-        <childnode refid="82" relation="include">
+        <childnode refid="105" relation="include">
         </childnode>
-        <childnode refid="87" relation="include">
+        <childnode refid="110" relation="include">
         </childnode>
       </node>
-      <node id="81">
+      <node id="104">
         <label>stddef.h</label>
       </node>
-      <node id="73">
+      <node id="96">
         <label>src/arch/task.c</label>
         <link refid="task.c"/>
-        <childnode refid="74" relation="include">
+        <childnode refid="97" relation="include">
         </childnode>
-        <childnode refid="78" relation="include">
+        <childnode refid="101" relation="include">
         </childnode>
-        <childnode refid="79" relation="include">
+        <childnode refid="102" relation="include">
         </childnode>
-        <childnode refid="88" relation="include">
+        <childnode refid="111" relation="include">
         </childnode>
-        <childnode refid="89" relation="include">
+        <childnode refid="112" relation="include">
         </childnode>
-        <childnode refid="80" relation="include">
+        <childnode refid="103" relation="include">
         </childnode>
       </node>
-      <node id="89">
+      <node id="112">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="81" relation="include">
+        <childnode refid="104" relation="include">
         </childnode>
-        <childnode refid="75" relation="include">
+        <childnode refid="98" relation="include">
         </childnode>
-        <childnode refid="82" relation="include">
+        <childnode refid="105" relation="include">
         </childnode>
-        <childnode refid="78" relation="include">
+        <childnode refid="101" relation="include">
         </childnode>
-        <childnode refid="88" relation="include">
+        <childnode refid="111" relation="include">
         </childnode>
       </node>
-      <node id="74">
+      <node id="97">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="75" relation="include">
+        <childnode refid="98" relation="include">
         </childnode>
-        <childnode refid="76" relation="include">
+        <childnode refid="99" relation="include">
         </childnode>
-        <childnode refid="77" relation="include">
+        <childnode refid="100" relation="include">
         </childnode>
       </node>
-      <node id="82">
+      <node id="105">
         <label>sys/types.h</label>
       </node>
-      <node id="77">
+      <node id="100">
         <label>string.h</label>
       </node>
-      <node id="85">
+      <node id="108">
         <label>unistd.h</label>
       </node>
-      <node id="86">
+      <node id="109">
         <label>signal.h</label>
       </node>
-      <node id="88">
+      <node id="111">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="75" relation="include">
+        <childnode refid="98" relation="include">
         </childnode>
-        <childnode refid="79" relation="include">
+        <childnode refid="102" relation="include">
         </childnode>
       </node>
-      <node id="84">
+      <node id="107">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="85" relation="include">
+        <childnode refid="108" relation="include">
         </childnode>
-        <childnode refid="82" relation="include">
+        <childnode refid="105" relation="include">
         </childnode>
       </node>
-      <node id="78">
+      <node id="101">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -134,12 +134,12 @@
         <argsstring></argsstring>
         <name>current_task</name>
         <briefdescription>
-        </briefdescription>
+<para>Current task address. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/task.c" line="38" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="33" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/task.c" line="38" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="task_8c_1ac08620610e2419aca3878305400a96b7" prot="public" static="no" mutable="no">
         <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
@@ -147,12 +147,12 @@
         <argsstring></argsstring>
         <name>kernel_task</name>
         <briefdescription>
-        </briefdescription>
+<para>Kernel task address. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/task.c" line="39" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="34" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/task.c" line="39" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="task_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" prot="public" static="no" mutable="no">
         <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
@@ -160,12 +160,12 @@
         <argsstring></argsstring>
         <name>task_queue</name>
         <briefdescription>
-        </briefdescription>
+<para>List of all Task. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/task.c" line="40" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="36" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/task.c" line="40" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="46" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="task_8c_1afac53891df03c313fc0b5b24e0acc8a9" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref> *</type>
@@ -284,7 +284,7 @@
         <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="104">task::clock</references>
         <references refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1">task::context</references>
         <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="78">task::cr3</references>
-        <references refid="task_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="33">current_task</references>
+        <references refid="task_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
         <references refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" compoundref="task_8h" startline="85">task::cwd</references>
         <references refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" compoundref="task_8h" startline="76">task::env</references>
         <references refid="structtask_1a22a59fcfc18d5f671340669f96571768" compoundref="task_8h" startline="86">task::exe</references>
@@ -300,7 +300,7 @@
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="73">task::pid</references>
         <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="103">task::priority</references>
         <references refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" compoundref="task_8h" startline="91">task::ptr</references>
-        <references refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" compoundref="src_2sched_8c" startline="62" endline="65">schedule_nextpid</references>
+        <references refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" compoundref="src_2sched_8c" startline="89" endline="92">schedule_nextpid</references>
         <references refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" compoundref="task_8h" startline="95">task::signal_handler</references>
         <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="96">task::signal_sig</references>
         <references refid="structtask_1a71232ebd31259f41c057b3e789b44587" compoundref="task_8h" startline="77">task::stack</references>
@@ -345,7 +345,7 @@
         <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="104">task::clock</references>
         <references refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1">task::context</references>
         <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="78">task::cr3</references>
-        <references refid="task_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="33">current_task</references>
+        <references refid="task_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
         <references refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" compoundref="task_8h" startline="85">task::cwd</references>
         <references refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" compoundref="task_8h" startline="76">task::env</references>
         <references refid="structtask_1a22a59fcfc18d5f671340669f96571768" compoundref="task_8h" startline="86">task::exe</references>
@@ -360,7 +360,7 @@
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="73">task::pid</references>
         <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="103">task::priority</references>
         <references refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" compoundref="task_8h" startline="91">task::ptr</references>
-        <references refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" compoundref="src_2sched_8c" startline="62" endline="65">schedule_nextpid</references>
+        <references refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" compoundref="src_2sched_8c" startline="89" endline="92">schedule_nextpid</references>
         <references refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" compoundref="task_8h" startline="95">task::signal_handler</references>
         <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="96">task::signal_sig</references>
         <references refid="structtask_1a71232ebd31259f41c057b3e789b44587" compoundref="task_8h" startline="77">task::stack</references>
@@ -390,7 +390,7 @@
         <location file="/opt/prj/aPlus/src/arch/task.c" line="165" column="1" bodyfile="/opt/prj/aPlus/src/arch/task.c" bodystart="165" bodyend="175"/>
         <references refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1">task::context</references>
         <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="78">task::cr3</references>
-        <references refid="task_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="33">current_task</references>
+        <references refid="task_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
         <references refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" compoundref="task_8h" startline="76">task::env</references>
         <references refid="task_8c_1a82b2dfd3955cf0689cda053f3dc24481">task_context_switch</references>
         <references refid="paging_8c_1aa525b2cea53b39f8fdd94edd4730cff2" compoundref="paging_8c" startline="54" endline="58">vmm_switch</references>
@@ -418,7 +418,7 @@
         <references refid="structtask_1a34c6613744820a1e8127756fb6a5392c" compoundref="task_8h" startline="108">task::parent</references>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="73">task::pid</references>
         <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="103">task::priority</references>
-        <references refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" compoundref="src_2sched_8c" startline="62" endline="65">schedule_nextpid</references>
+        <references refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" compoundref="src_2sched_8c" startline="89" endline="92">schedule_nextpid</references>
         <references refid="structtask_1a71232ebd31259f41c057b3e789b44587" compoundref="task_8h" startline="77">task::stack</references>
         <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="102">task::state</references>
         <references refid="task_8h_1a11aa236ab974b14186e8acc385470c13" compoundref="task_8h" startline="46">TASK_PRIORITY_REGULAR</references>

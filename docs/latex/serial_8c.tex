@@ -1,10 +1,10 @@
-\hypertarget{serial_8c}{\section{Riferimenti per il file src/arch/serial.c}
+\hypertarget{serial_8c}{\section{src/arch/serial.c File Reference}
 \label{serial_8c}\index{src/arch/serial.\+c@{src/arch/serial.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\+\_\+send} (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} port, \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value})
@@ -13,14 +13,14 @@ void \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\+\_\+send} (
 \item 
 int \hyperlink{serial_8c_a459999cfa35c788b64284953a93c4b57}{serial\+\_\+init} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 static \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{serial_8c_aaad9ee4d2adfe35b53820a6ac8b5636d}{serial} \mbox{[}$\,$\mbox{]}
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{serial_8c_a459999cfa35c788b64284953a93c4b57}{\index{serial.\+c@{serial.\+c}!serial\+\_\+init@{serial\+\_\+init}}
 \index{serial\+\_\+init@{serial\+\_\+init}!serial.\+c@{serial.\+c}}
 \subsubsection[{serial\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int serial\+\_\+init (
@@ -30,11 +30,11 @@ static \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hy
 )}}\label{serial_8c_a459999cfa35c788b64284953a93c4b57}
 
 
-Definizione alla linea 22 del file serial.\+c.
+Definition at line 22 of file serial.\+c.
 
 
 
-Referenzia serial.
+References serial.
 
 
 \begin{DoxyCode}
@@ -61,11 +61,11 @@ Referenzia serial.
 )}}\label{serial_8c_abfa1d9231846e7f9820b4609e32f8f7c}
 
 
-Definizione alla linea 16 del file serial.\+c.
+Definition at line 16 of file serial.\+c.
 
 
 
-Referenzia fastlock\+\_\+waiton, e serial.
+References fastlock\+\_\+waiton, and serial.
 
 
 \begin{DoxyCode}
@@ -85,11 +85,11 @@ Referenzia fastlock\+\_\+waiton, e serial.
 )}}\label{serial_8c_a554c0b79338d298c39a06027b790edb5}
 
 
-Definizione alla linea 11 del file serial.\+c.
+Definition at line 11 of file serial.\+c.
 
 
 
-Referenzia fastlock\+\_\+waiton, e serial.
+References fastlock\+\_\+waiton, and serial.
 
 
 \begin{DoxyCode}
@@ -100,11 +100,11 @@ Referenzia fastlock\+\_\+waiton, e serial.
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{serial_8c_aaad9ee4d2adfe35b53820a6ac8b5636d}{\index{serial.\+c@{serial.\+c}!serial@{serial}}
 \index{serial@{serial}!serial.\+c@{serial.\+c}}
 \subsubsection[{serial}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} serial\mbox{[}$\,$\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}}\label{serial_8c_aaad9ee4d2adfe35b53820a6ac8b5636d}
-{\bfseries Valore iniziale\+:}
+{\bfseries Initial value\+:}
 \begin{DoxyCode}
 = \{
     0x3F8, 0x2F8, 0x3E8, 0x2E8
@@ -112,5 +112,5 @@ Referenzia fastlock\+\_\+waiton, e serial.
 \end{DoxyCode}
 
 
-Definizione alla linea 7 del file serial.\+c.
+Definition at line 7 of file serial.\+c.
 

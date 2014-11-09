@@ -1,4 +1,4 @@
-.TH "usr/src/libcrt0/src/crt0.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libcrt0/src/crt0.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,7 +13,7 @@ usr/src/libcrt0/src/crt0.c \-
 \fC#include <signal\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -32,7 +32,7 @@ usr/src/libcrt0/src/crt0.c \-
 .RI "\fB__attribute__\fP ((noreturn))"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -45,14 +45,14 @@ usr/src/libcrt0/src/crt0.c \-
 .RI "int \fB_end\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "__attribute__ ((noreturn))"
 
 .PP
-Definizione alla linea 61 del file crt0\&.c\&.
+Definition at line 61 of file crt0\&.c\&.
 .PP
-Referenzia __bss_start, __init_traps(), __sigtramp(), _end, environ, e main()\&.
+References __bss_start, __init_traps(), __sigtramp(), _end, environ, and main()\&.
 .PP
 .nf
 62               {
@@ -90,7 +90,7 @@ Referenzia __bss_start, __init_traps(), __sigtramp(), _end, environ, e main()\&.
 .SS "static int __default_sighandler__ (intsig)\fC [static]\fP"
 
 .PP
-Definizione alla linea 17 del file crt0\&.c\&.
+Definition at line 17 of file crt0\&.c\&.
 .PP
 .nf
 17                                            {
@@ -101,9 +101,9 @@ Definizione alla linea 17 del file crt0\&.c\&.
 .SS "static void __init_traps ()\fC [static]\fP"
 
 .PP
-Definizione alla linea 51 del file crt0\&.c\&.
+Definition at line 51 of file crt0\&.c\&.
 .PP
-Referenzia __default_sighandler__()\&.
+References __default_sighandler__()\&.
 .PP
 .nf
 51                            {
@@ -119,7 +119,7 @@ Referenzia __default_sighandler__()\&.
 
 .SS "int main (int, char **, char **)"
 
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "int __bss_start"
 
@@ -128,7 +128,7 @@ Referenzia __default_sighandler__()\&.
 .SS "char** environ"
 
 .PP
-Definizione alla linea 3 del file environ\&.c\&.
-.SH "Autore"
+Definition at line 3 of file environ\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

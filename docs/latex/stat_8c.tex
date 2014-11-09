@@ -1,4 +1,4 @@
-\hypertarget{stat_8c}{\section{Riferimenti per il file src/syscall/stat.c}
+\hypertarget{stat_8c}{\section{src/syscall/stat.c File Reference}
 \label{stat_8c}\index{src/syscall/stat.\+c@{src/syscall/stat.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -10,21 +10,21 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{stat_8c_a9c87666780aa51f709d34f50e05f1ef9}{sys\+\_\+stat} (const char $\ast$filename, struct stat $\ast$st)
 \item 
 \hyperlink{stat_8c_ab45af51509d61db3d12d130a3dbc84b2}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{stat_8c_a9c87666780aa51f709d34f50e05f1ef9}{sys\+\_\+stat}, 13)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{stat_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{stat_8c_a9c87666780aa51f709d34f50e05f1ef9}{\index{stat.\+c@{stat.\+c}!sys\+\_\+stat@{sys\+\_\+stat}}
 \index{sys\+\_\+stat@{sys\+\_\+stat}!stat.\+c@{stat.\+c}}
 \subsubsection[{sys\+\_\+stat}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+stat (
@@ -35,18 +35,18 @@ int \hyperlink{stat_8c_a9c87666780aa51f709d34f50e05f1ef9}{sys\+\_\+stat} (const 
 )}}\label{stat_8c_a9c87666780aa51f709d34f50e05f1ef9}
 
 
-Definizione alla linea 15 del file stat.\+c.
+Definition at line 15 of file stat.\+c.
 
 
 
-Referenzia errno, kprintf, sys\+\_\+close(), sys\+\_\+fstat(), e sys\+\_\+open().
+References errno, kprintf(), sys\+\_\+close(), sys\+\_\+fstat(), and sys\+\_\+open().
 
 
 \begin{DoxyCode}
 15                                                     \{
 16     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(filename, O\_RDONLY, 0644);
 17     \textcolor{keywordflow}{if}(fd < 0) \{
-18         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"sys\_stat: %s."}, strerror(\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}));      
+18         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_stat: %s."}, strerror(\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}));      
 19         \textcolor{keywordflow}{return} -1;
 20     \}
 21     \textcolor{keywordtype}{int} ret = \hyperlink{fstat_8c_a37940479e5cc923a96785a82989b7974}{sys\_fstat}(fd, st);
@@ -65,11 +65,15 @@ Referenzia errno, kprintf, sys\+\_\+close(), sys\+\_\+fstat(), e sys\+\_\+open()
 )}}\label{stat_8c_ab45af51509d61db3d12d130a3dbc84b2}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{stat_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{stat.\+c@{stat.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!stat.\+c@{stat.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{stat_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

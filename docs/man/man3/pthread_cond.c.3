@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_cond.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_cond.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ usr/src/libpthread/src/pthread_cond.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -39,21 +39,21 @@ usr/src/libpthread/src/pthread_cond.c \-
 .RI "\fBPUBLIC\fP int \fBpthread_cond_broadcast\fP (\fBpthread_cond_t\fP *cond)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBEXTERN\fP \fBpthread_context_t\fP * \fB__pthread_queue\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP int pthread_cond_broadcast (\fBpthread_cond_t\fP *cond)"
 
 .PP
-Definizione alla linea 116 del file pthread_cond\&.c\&.
+Definition at line 116 of file pthread_cond\&.c\&.
 .PP
-Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 116                                                         {
@@ -81,9 +81,9 @@ Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next,
 .SS "\fBPUBLIC\fP int pthread_cond_destroy (\fBpthread_cond_t\fP *cond)"
 
 .PP
-Definizione alla linea 25 del file pthread_cond\&.c\&.
+Definition at line 25 of file pthread_cond\&.c\&.
 .PP
-Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References errno, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 25                                                       {
@@ -107,9 +107,9 @@ Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
 .SS "\fBPUBLIC\fP int pthread_cond_init (\fBpthread_cond_t\fP *cond, const \fBpthread_condattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 13 del file pthread_cond\&.c\&.
+Definition at line 13 of file pthread_cond\&.c\&.
 .PP
-Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References errno, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 13                                                                                    {
@@ -127,9 +127,9 @@ Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
 .SS "\fBPUBLIC\fP int pthread_cond_signal (\fBpthread_cond_t\fP *cond)"
 
 .PP
-Definizione alla linea 93 del file pthread_cond\&.c\&.
+Definition at line 93 of file pthread_cond\&.c\&.
 .PP
-Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 93                                                      {
@@ -158,9 +158,9 @@ Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next,
 .SS "\fBPUBLIC\fP int pthread_cond_timedwait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
 
 .PP
-Definizione alla linea 44 del file pthread_cond\&.c\&.
+Definition at line 44 of file pthread_cond\&.c\&.
 .PP
-Referenzia pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unlock(), pthread_self(), sched_yield(), pthread_cond::semaphore, e pthread_cond::waiting\&.
+References pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unlock(), pthread_self(), sched_yield(), pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 44                                                                                                                 {
@@ -210,21 +210,21 @@ Referenzia pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unl
 .SS "\fBPUBLIC\fP int pthread_cond_wait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 88 del file pthread_cond\&.c\&.
+Definition at line 88 of file pthread_cond\&.c\&.
 .PP
-Referenzia pthread_cond_timedwait()\&.
+References pthread_cond_timedwait()\&.
 .PP
 .nf
 88                                                                            {
 89     return pthread_cond_timedwait(cond, mutex, NULL);
 90 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBEXTERN\fP \fBpthread_context_t\fP* __pthread_queue"
 
 .PP
-Definizione alla linea 9 del file pthread_cond\&.c\&.
-.SH "Autore"
+Definition at line 9 of file pthread_cond\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

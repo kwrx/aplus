@@ -1,4 +1,4 @@
-.TH "src/mm/heap.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/mm/heap.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,7 +13,7 @@ src/mm/heap.c \-
 \fC#include <aplus/mm\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -23,14 +23,14 @@ src/mm/heap.c \-
 .RI "void \fBhfree\fP (\fBheap_t\fP *\fBheap\fP, void *addr, size_t \fBsize\fP)"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "void* halloc (\fBheap_t\fP *heap, size_tsize)"
 
 .PP
-Definizione alla linea 28 del file heap\&.c\&.
+Definition at line 28 of file heap\&.c\&.
 .PP
-Referenzia heap::alloc\&.
+References heap::alloc\&.
 .PP
 .nf
 28                                         {
@@ -44,9 +44,9 @@ Referenzia heap::alloc\&.
 .SS "void hfree (\fBheap_t\fP *heap, void *addr, size_tsize)"
 
 .PP
-Definizione alla linea 36 del file heap\&.c\&.
+Definition at line 36 of file heap\&.c\&.
 .PP
-Referenzia heap::free\&.
+References heap::free\&.
 .PP
 .nf
 36                                                   {
@@ -55,6 +55,6 @@ Referenzia heap::free\&.
 39             heap->free(heap, addr, size);
 40 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

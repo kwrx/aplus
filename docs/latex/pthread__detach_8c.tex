@@ -1,16 +1,16 @@
-\hypertarget{pthread__detach_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+detach.c}
+\hypertarget{pthread__detach_8c}{\section{usr/src/libpthread/src/pthread\+\_\+detach.c File Reference}
 \label{pthread__detach_8c}\index{usr/src/libpthread/src/pthread\+\_\+detach.\+c@{usr/src/libpthread/src/pthread\+\_\+detach.\+c}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$signal.\+h$>$}\\*
 {\ttfamily \#include $<$pthread.\+h$>$}\\*
 {\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__detach_8c_ae8ebd859fcbfcbf79753b6a9f07ec2ee}{pthread\+\_\+detach} (\hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\+\_\+t} thread)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{pthread__internal_8h_a77366c1bd428629dc898e188bfd182a3}{E\+X\+T\+E\+R\+N} \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{pthread__detach_8c_ac693b080a510247dfaf444249c2e78b2}{\+\_\+\+\_\+pthread\+\_\+counts}
@@ -19,7 +19,7 @@
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{pthread__detach_8c_ae8ebd859fcbfcbf79753b6a9f07ec2ee}{\index{pthread\+\_\+detach.\+c@{pthread\+\_\+detach.\+c}!pthread\+\_\+detach@{pthread\+\_\+detach}}
 \index{pthread\+\_\+detach@{pthread\+\_\+detach}!pthread\+\_\+detach.\+c@{pthread\+\_\+detach.\+c}}
 \subsubsection[{pthread\+\_\+detach}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} int pthread\+\_\+detach (
@@ -29,11 +29,11 @@
 )}}\label{pthread__detach_8c_ae8ebd859fcbfcbf79753b6a9f07ec2ee}
 
 
-Definizione alla linea 12 del file pthread\+\_\+detach.\+c.
+Definition at line 12 of file pthread\+\_\+detach.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+kill, \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::once, e pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+os\+\_\+thread\+\_\+kill, \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::once, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -78,18 +78,18 @@ Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+kill, \+\_\+\+\_\+pthread\+\_\+queue,
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{pthread__detach_8c_ac693b080a510247dfaf444249c2e78b2}{\index{pthread\+\_\+detach.\+c@{pthread\+\_\+detach.\+c}!\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}}
 \index{\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}!pthread\+\_\+detach.\+c@{pthread\+\_\+detach.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+counts}]{\setlength{\rightskip}{0pt plus 5cm}{\bf E\+X\+T\+E\+R\+N} {\bf uint32\+\_\+t} \+\_\+\+\_\+pthread\+\_\+counts}}\label{pthread__detach_8c_ac693b080a510247dfaf444249c2e78b2}
 
 
-Definizione alla linea 9 del file pthread\+\_\+detach.\+c.
+Definition at line 9 of file pthread\+\_\+detach.\+c.
 
 \hypertarget{pthread__detach_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}{\index{pthread\+\_\+detach.\+c@{pthread\+\_\+detach.\+c}!\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}}
 \index{\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}!pthread\+\_\+detach.\+c@{pthread\+\_\+detach.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf E\+X\+T\+E\+R\+N} {\bf pthread\+\_\+context\+\_\+t}$\ast$ \+\_\+\+\_\+pthread\+\_\+queue}}\label{pthread__detach_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}
 
 
-Definizione alla linea 10 del file pthread\+\_\+detach.\+c.
+Definition at line 10 of file pthread\+\_\+detach.\+c.
 

@@ -1,0 +1,258 @@
+.TH "src/fs/iso9660/iso9660_finddir.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/fs/iso9660/iso9660_finddir.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include 'iso9660\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBiso9660_read\fP (\fBinode_t\fP *, char *, int)"
+.br
+.ti -1c
+.RI "struct \fBdirent\fP * \fBiso9660_readdir\fP (\fBinode_t\fP *, int)"
+.br
+.ti -1c
+.RI "\fBinode_t\fP * \fBiso9660_finddir\fP (\fBinode_t\fP *ino, char *\fBname\fP)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "\fBinode_t\fP* iso9660_finddir (\fBinode_t\fP *ino, char *name)"
+
+.PP
+Definition at line 20 of file iso9660_finddir\&.c\&.
+.PP
+References inode::atime, inode::chown, inode::creat, inode::ctime, inode::dev, devfs_getdevice(), inode::finddir, inode::flush, fs_read(), inode::gid, inode::ino, inode::ioctl, iso9660_checkname(), iso9660_finddir(), ISO9660_FLAGS_DIRECTORY, iso9660_getlsb32(), iso9660_read(), iso9660_readdir(), ISO9660_SECTOR_SIZE, kfree(), kmalloc(), inode::link, inode::mode, inode::mtime, inode::name, inode::nlink, inode::parent, inode::position, inode::rdev, inode::read, inode::readdir, inode::rename, inode::size, sys_time(), inode::uid, uint32_t, inode::unlink, inode::userdata, and inode::write\&.
+.PP
+.nf
+20                                                    {
+21     if(!ino)
+22         return NULL;
+23         
+24     if(!ino->dev)
+25         return NULL;
+26 
+27     if(!ino->userdata)
+28         return NULL;
+29 
+30     if(!name || strlen(name) == 0)
+31         return NULL;
+32 
+33 
+34     inode_t* dev = (inode_t*) devfs_getdevice(ino->dev);
+35     if(!dev)
+36         return NULL;
+37 
+38     iso9660_dir_t* dir = (iso9660_dir_t*) ino->userdata;
+39     iso9660_dir_t* nodes = (iso9660_dir_t*) kmalloc(iso9660_getlsb32(dir->length));
+40     iso9660_dir_t* snodes = nodes;
+41 
+42     dev->position = iso9660_getlsb32(dir->lba) * ISO9660_SECTOR_SIZE;
+43     if(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length)) {
+44         kfree(nodes);
+45         return NULL;
+46     }
+47 
+48     for(;;) {
+49         if(nodes->size == 0) {
+50             kfree(snodes);
+51             return 0;
+52         }
+53 
+54         char* nodename = (char*) kmalloc(nodes->idlen);
+55         memset(nodename, 0, nodes->idlen);
+56 
+57         strncpy(nodename, nodes->reserved, nodes->idlen);
+58         iso9660_checkname(nodename);
+59 
+60         if(strcmp(nodename, name) == 0)
+61             break;
+62 
+63         kfree(nodename);
+64         nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
+65     }
+66 
+67 
+68     inode_t* f = (inode_t*) kmalloc(sizeof(inode_t));
+69     memset(f, 0, sizeof(inode_t));
+70 
+71     strcpy(f->name, name);
+72     
+73     f->dev = ino->dev;
+74     f->ino = 0;
+75     f->nlink = 0;
+76     f->uid = ino->uid;
+77     f->gid = ino->gid;
+78     f->rdev = ino->rdev;
+79     f->size = (size_t) iso9660_getlsb32(nodes->length);
+80     f->atime = f->ctime = f->mtime = sys_time(NULL);
+81     f->parent = ino;
+82     f->link = NULL;
+83     
+84     if(nodes->flags & ISO9660_FLAGS_DIRECTORY) {
+85         f->readdir = iso9660_readdir;
+86         f->finddir = iso9660_finddir;
+87         f->mode = S_IFDIR;
+88 
+89         iso9660_dir_t* entry = (iso9660_dir_t*) kmalloc(ISO9660_SECTOR_SIZE);
+90         memset(entry, 0, ISO9660_SECTOR_SIZE);
+91 
+92         dev->position = iso9660_getlsb32(nodes->lba) * ISO9660_SECTOR_SIZE;
+93         fs_read(dev, entry, ISO9660_SECTOR_SIZE);
+94 
+95         f->userdata = (void*) entry;
+96     } else {
+97         f->read = iso9660_read;
+98         f->write = NULL;    /* Read Only */
+99 
+100         f->mode = S_IFREG;
+101         f->userdata = (void*) (iso9660_getlsb32(nodes->lba) * ISO9660_SECTOR_SIZE);
+102     }
+103 
+104 
+105 
+106     f->creat = NULL;
+107     f->rename = NULL;
+108     f->unlink = NULL;
+109     f->chown = NULL;
+110     f->flush = NULL;
+111     f->ioctl = NULL;
+112 
+113     
+114     kfree(snodes);
+115     return f;
+116 }
+.fi
+.SS "int iso9660_read (\fBinode_t\fP *, char *, int)"
+
+.PP
+Definition at line 16 of file iso9660_read\&.c\&.
+.PP
+References inode::dev, devfs_getdevice(), fs_read(), ISO9660_SECTOR_SIZE, kfree(), kmalloc(), inode::position, inode::size, size, uint32_t, and inode::userdata\&.
+.PP
+.nf
+16                                                     {
+17     if(!ino)
+18         return 0;
+19         
+20     if(!buf)
+21         return 0;
+22         
+23     if(size > ino->size)
+24         size = ino->size;
+25         
+26     if(ino->position > ino->size)
+27         ino->position = ino->size;
+28         
+29     if(ino->position + size > ino->size)
+30         size = ino->size - ino->position;
+31         
+32     if(!size)
+33         return 0;
+34 
+35     inode_t* dev = (inode_t*) devfs_getdevice(ino->dev);
+36     if(!dev)
+37         return 0;
+38 
+39     void* tbuf = (void*) kmalloc(((size / ISO9660_SECTOR_SIZE) + 1) * ISO9660_SECTOR_SIZE);
+40     
+41     dev->position = (off_t) ino->userdata + (ino->position / ISO9660_SECTOR_SIZE);
+42     fs_read(dev, tbuf, ((size / ISO9660_SECTOR_SIZE) + 1) * ISO9660_SECTOR_SIZE);
+43 
+44     memcpy(buf, (void*) ((uint32_t) tbuf + (ino->position % ISO9660_SECTOR_SIZE)), size);
+45     kfree(tbuf);
+46 
+47     return size;
+48 }
+.fi
+.SS "struct \fBdirent\fP* iso9660_readdir (\fBinode_t\fP *, int)"
+
+.PP
+Definition at line 15 of file iso9660_readdir\&.c\&.
+.PP
+.nf
+15                                                         {
+16     if(!ino)
+17         return NULL;
+18         
+19     if(!ino->dev)
+20         return NULL;
+21 
+22     if(!ino->userdata)
+23         return NULL;
+24 
+25     inode_t* dev = (inode_t*) devfs_getdevice(ino->dev);
+26     if(!dev)
+27         return NULL;
+28 
+29     iso9660_dir_t* dir = (iso9660_dir_t*) ino->userdata;
+30     iso9660_dir_t* nodes = (iso9660_dir_t*) kmalloc(iso9660_getlsb32(dir->length));
+31     iso9660_dir_t* snodes = nodes;
+32 
+33     dev->position = iso9660_getlsb32(dir->lba) * ISO9660_SECTOR_SIZE;
+34     if(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length)) {
+35         kfree(nodes);
+36         return NULL;
+37     }
+38 
+39     /* Skip dots ("\&.", "\&.\&.") */
+40     nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
+41     nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
+42 
+43     for(int i = 0; i < index; i++) {        
+44         if(nodes->size == 0) {      
+45             kfree(snodes);
+46             return NULL;
+47         }
+48         
+49         nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
+50     }
+51 
+52 
+53     if(nodes->size == 0) {
+54         kfree(snodes);
+55         return NULL;
+56     }
+57 
+58     struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
+59     memset(ent, 0, sizeof(struct dirent));
+60     
+61     strncpy(ent->d_name, nodes->reserved, nodes->idlen);    
+62     iso9660_checkname(ent->d_name);
+63 
+64     ent->d_ino = 0;
+65 
+66     kfree(snodes);
+67     return ent;
+68 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

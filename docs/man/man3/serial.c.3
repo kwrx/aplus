@@ -1,4 +1,4 @@
-.TH "src/arch/serial.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/serial.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,7 +13,7 @@ src/arch/serial.c \-
 \fC#include <stdint\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -26,21 +26,21 @@ src/arch/serial.c \-
 .RI "int \fBserial_init\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "static \fBuint16_t\fP \fBserial\fP []"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int serial_init ()"
 
 .PP
-Definizione alla linea 22 del file serial\&.c\&.
+Definition at line 22 of file serial\&.c\&.
 .PP
-Referenzia serial\&.
+References serial\&.
 .PP
 .nf
 22                   {
@@ -60,9 +60,9 @@ Referenzia serial\&.
 .SS "\fBuint8_t\fP serial_recv (\fBuint8_t\fPport)"
 
 .PP
-Definizione alla linea 16 del file serial\&.c\&.
+Definition at line 16 of file serial\&.c\&.
 .PP
-Referenzia fastlock_waiton, e serial\&.
+References fastlock_waiton, and serial\&.
 .PP
 .nf
 16                                   {
@@ -74,9 +74,9 @@ Referenzia fastlock_waiton, e serial\&.
 .SS "void serial_send (\fBuint8_t\fPport, \fBuint8_t\fPvalue)"
 
 .PP
-Definizione alla linea 11 del file serial\&.c\&.
+Definition at line 11 of file serial\&.c\&.
 .PP
-Referenzia fastlock_waiton, e serial\&.
+References fastlock_waiton, and serial\&.
 .PP
 .nf
 11                                               {
@@ -84,10 +84,10 @@ Referenzia fastlock_waiton, e serial\&.
 13     outb(serial[port], value);
 14 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBuint16_t\fP serial[]\fC [static]\fP"
-\fBValore iniziale:\fP
+\fBInitial value:\fP
 .PP
 .nf
 = {
@@ -95,7 +95,7 @@ Referenzia fastlock_waiton, e serial\&.
 }
 .fi
 .PP
-Definizione alla linea 7 del file serial\&.c\&.
-.SH "Autore"
+Definition at line 7 of file serial\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

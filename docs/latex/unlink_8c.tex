@@ -1,4 +1,4 @@
-\hypertarget{unlink_8c}{\section{Riferimenti per il file src/syscall/unlink.c}
+\hypertarget{unlink_8c}{\section{src/syscall/unlink.c File Reference}
 \label{unlink_8c}\index{src/syscall/unlink.\+c@{src/syscall/unlink.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -10,7 +10,7 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}{sys\+\_\+unlink} (const char $\ast$pathname)
@@ -19,7 +19,7 @@ int \hyperlink{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}{sys\+\_\+unlink} (co
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}{\index{unlink.\+c@{unlink.\+c}!sys\+\_\+unlink@{sys\+\_\+unlink}}
 \index{sys\+\_\+unlink@{sys\+\_\+unlink}!unlink.\+c@{unlink.\+c}}
 \subsubsection[{sys\+\_\+unlink}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+unlink (
@@ -29,17 +29,17 @@ int \hyperlink{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}{sys\+\_\+unlink} (co
 )}}\label{unlink_8c_a1f6398df52f7ff1425ea46d566e6d406}
 
 
-Definizione alla linea 13 del file unlink.\+c.
+Definition at line 13 of file unlink.\+c.
 
 
 
-Referenzia errno, e kprintf.
+References errno, and kprintf().
 
 
 \begin{DoxyCode}
 13                                      \{
 14     \textcolor{comment}{/* TODO */}
-15     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"sys\_unlink: TODO"});
+15     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_unlink: TODO"});
 16 
 17     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
 18     \textcolor{keywordflow}{return} -1;

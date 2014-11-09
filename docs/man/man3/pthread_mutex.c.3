@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_mutex.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_mutex.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -15,7 +15,7 @@ usr/src/libpthread/src/pthread_mutex.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -40,14 +40,14 @@ usr/src/libpthread/src/pthread_mutex.c \-
 .RI "\fBPUBLIC\fP int \fBpthread_mutex_unlock\fP (\fBpthread_mutex_t\fP *mutex)"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPRIVATE\fP int __locked_mtx (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 9 del file pthread_mutex\&.c\&.
+Definition at line 9 of file pthread_mutex\&.c\&.
 .PP
-Referenzia pthread_mutex::lock, pthread_mutex_unlock(), e pthread_mutex::time\&.
+References pthread_mutex::lock, pthread_mutex_unlock(), and pthread_mutex::time\&.
 .PP
 .nf
 9                                                  {
@@ -70,9 +70,9 @@ Referenzia pthread_mutex::lock, pthread_mutex_unlock(), e pthread_mutex::time\&.
 .SS "\fBPUBLIC\fP int pthread_mutex_destroy (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 46 del file pthread_mutex\&.c\&.
+Definition at line 46 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, pthread_mutex::recursion, e pthread_mutex::time\&.
+References errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, pthread_mutex::recursion, and pthread_mutex::time\&.
 .PP
 .nf
 46                                                          {
@@ -99,9 +99,9 @@ Referenzia errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock
 .SS "\fBPUBLIC\fP int pthread_mutex_init (\fBpthread_mutex_t\fP *mutex, const \fBpthread_mutexattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 26 del file pthread_mutex\&.c\&.
+Definition at line 26 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_DEFAULT, pthread_mutex::recursion, e pthread_mutex::time\&.
+References errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_DEFAULT, pthread_mutex::recursion, and pthread_mutex::time\&.
 .PP
 .nf
 26                                                                                        {
@@ -126,9 +126,9 @@ Referenzia errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::
 .SS "\fBPUBLIC\fP int pthread_mutex_lock (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 67 del file pthread_mutex\&.c\&.
+Definition at line 67 of file pthread_mutex\&.c\&.
 .PP
-Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), pthread_mutex::recursion, e sched_yield()\&.
+References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), pthread_mutex::recursion, and sched_yield()\&.
 .PP
 .nf
 67                                                       {
@@ -158,9 +158,9 @@ Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 .SS "\fBPUBLIC\fP int pthread_mutex_timedlock (\fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
 
 .PP
-Definizione alla linea 92 del file pthread_mutex\&.c\&.
+Definition at line 92 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_lock(), e pthread_mutex::time\&.
+References errno, pthread_mutex_lock(), and pthread_mutex::time\&.
 .PP
 .nf
 92                                                                                            {
@@ -180,9 +180,9 @@ Referenzia errno, pthread_mutex_lock(), e pthread_mutex::time\&.
 .SS "\fBPUBLIC\fP int pthread_mutex_trylock (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 107 del file pthread_mutex\&.c\&.
+Definition at line 107 of file pthread_mutex\&.c\&.
 .PP
-Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), e pthread_mutex::recursion\&.
+References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), and pthread_mutex::recursion\&.
 .PP
 .nf
 107                                                          {
@@ -214,9 +214,9 @@ Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 .SS "\fBPUBLIC\fP int pthread_mutex_unlock (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 133 del file pthread_mutex\&.c\&.
+Definition at line 133 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), e pthread_mutex::recursion\&.
+References errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), and pthread_mutex::recursion\&.
 .PP
 .nf
 133                                                         {
@@ -241,6 +241,6 @@ Referenzia errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner
 152     return 0;
 153 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

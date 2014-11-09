@@ -11,168 +11,168 @@
     <includes refid="eth_8h" local="no">aplus/net/eth.h</includes>
     <includes refid="arp_8h" local="no">aplus/net/arp.h</includes>
     <incdepgraph>
-      <node id="1005">
+      <node id="1197">
         <label>sys/stat.h</label>
       </node>
-      <node id="996">
+      <node id="1188">
         <label>stdarg.h</label>
       </node>
-      <node id="1004">
+      <node id="1196">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="999" relation="include">
+        <childnode refid="1191" relation="include">
         </childnode>
-        <childnode refid="1000" relation="include">
+        <childnode refid="1192" relation="include">
         </childnode>
-        <childnode refid="1005" relation="include">
+        <childnode refid="1197" relation="include">
         </childnode>
-        <childnode refid="1006" relation="include">
+        <childnode refid="1198" relation="include">
         </childnode>
       </node>
-      <node id="995">
+      <node id="1187">
         <label>stdint.h</label>
       </node>
-      <node id="1009">
+      <node id="1201">
         <label>setjmp.h</label>
       </node>
-      <node id="1003">
+      <node id="1195">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="994" relation="include">
+        <childnode refid="1186" relation="include">
         </childnode>
-        <childnode refid="1004" relation="include">
+        <childnode refid="1196" relation="include">
         </childnode>
-        <childnode refid="1008" relation="include">
+        <childnode refid="1200" relation="include">
         </childnode>
-        <childnode refid="1000" relation="include">
+        <childnode refid="1192" relation="include">
         </childnode>
-        <childnode refid="1009" relation="include">
+        <childnode refid="1201" relation="include">
         </childnode>
       </node>
-      <node id="1011">
+      <node id="1203">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="994" relation="include">
+        <childnode refid="1186" relation="include">
         </childnode>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
       </node>
-      <node id="999">
+      <node id="1191">
         <label>stddef.h</label>
       </node>
-      <node id="998">
+      <node id="1190">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="999" relation="include">
+        <childnode refid="1191" relation="include">
         </childnode>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="1000" relation="include">
+        <childnode refid="1192" relation="include">
         </childnode>
-        <childnode refid="1001" relation="include">
+        <childnode refid="1193" relation="include">
         </childnode>
-        <childnode refid="1002" relation="include">
+        <childnode refid="1194" relation="include">
         </childnode>
       </node>
-      <node id="1012">
+      <node id="1204">
         <label>aplus/net/eth.h</label>
         <link refid="eth_8h"/>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="1010" relation="include">
+        <childnode refid="1202" relation="include">
         </childnode>
       </node>
-      <node id="1013">
+      <node id="1205">
         <label>aplus/net/arp.h</label>
         <link refid="arp_8h"/>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="1010" relation="include">
+        <childnode refid="1202" relation="include">
         </childnode>
-        <childnode refid="1012" relation="include">
+        <childnode refid="1204" relation="include">
         </childnode>
-        <childnode refid="1014" relation="include">
+        <childnode refid="1206" relation="include">
         </childnode>
       </node>
-      <node id="994">
+      <node id="1186">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="996" relation="include">
+        <childnode refid="1188" relation="include">
         </childnode>
-        <childnode refid="997" relation="include">
+        <childnode refid="1189" relation="include">
         </childnode>
       </node>
-      <node id="1000">
+      <node id="1192">
         <label>sys/types.h</label>
       </node>
-      <node id="997">
+      <node id="1189">
         <label>string.h</label>
       </node>
-      <node id="1007">
+      <node id="1199">
         <label>unistd.h</label>
       </node>
-      <node id="1008">
+      <node id="1200">
         <label>signal.h</label>
       </node>
-      <node id="1010">
+      <node id="1202">
         <label>aplus/netif.h</label>
         <link refid="netif_8h"/>
-        <childnode refid="994" relation="include">
+        <childnode refid="1186" relation="include">
         </childnode>
-        <childnode refid="1011" relation="include">
+        <childnode refid="1203" relation="include">
         </childnode>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="999" relation="include">
+        <childnode refid="1191" relation="include">
         </childnode>
       </node>
-      <node id="1002">
+      <node id="1194">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="1003" relation="include">
+        <childnode refid="1195" relation="include">
         </childnode>
       </node>
-      <node id="1014">
+      <node id="1206">
         <label>time.h</label>
       </node>
-      <node id="1006">
+      <node id="1198">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1007" relation="include">
+        <childnode refid="1199" relation="include">
         </childnode>
-        <childnode refid="1000" relation="include">
+        <childnode refid="1192" relation="include">
         </childnode>
       </node>
-      <node id="1001">
+      <node id="1193">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
-      <node id="993">
+      <node id="1185">
         <label>src/net/arp.c</label>
         <link refid="arp.c"/>
-        <childnode refid="994" relation="include">
+        <childnode refid="1186" relation="include">
         </childnode>
-        <childnode refid="998" relation="include">
+        <childnode refid="1190" relation="include">
         </childnode>
-        <childnode refid="1010" relation="include">
+        <childnode refid="1202" relation="include">
         </childnode>
-        <childnode refid="999" relation="include">
+        <childnode refid="1191" relation="include">
         </childnode>
-        <childnode refid="995" relation="include">
+        <childnode refid="1187" relation="include">
         </childnode>
-        <childnode refid="997" relation="include">
+        <childnode refid="1189" relation="include">
         </childnode>
-        <childnode refid="1012" relation="include">
+        <childnode refid="1204" relation="include">
         </childnode>
-        <childnode refid="1013" relation="include">
+        <childnode refid="1205" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -237,7 +237,7 @@
         <references refid="arp_8c_1adfa3881c2f0f72ec135119b5260a5039" compoundref="arp_8c" startline="16" endline="31">arp_cache_find_by_macaddr</references>
         <references refid="structnetif_1a312a8e870ce8803f02f5b09012ce6bc6" compoundref="netif_8h" startline="38">netif::ipv4</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
-        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
         <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
         <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
         <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
@@ -269,7 +269,7 @@
         <location file="/opt/prj/aPlus/src/net/arp.c" line="67" column="1" bodyfile="/opt/prj/aPlus/src/net/arp.c" bodystart="67" bodyend="76"/>
         <references refid="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65" compoundref="arp_8c" startline="33" endline="65">arp_cache_add</references>
         <references refid="arp_8h_1ad32703851a1b58336c54dbe3f4e4f8ee" compoundref="arp_8h" startline="19">ARP_OPERATION_REPLY</references>
-        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" compoundref="iso9660_8h" startline="77">length</references>
         <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
       </memberdef>
       <memberdef kind="function" id="arp_8c_1a0494cc7052a3d81efd628c0e4cc98f97" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -296,7 +296,7 @@
         <references refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" compoundref="eth_8c" startline="79" endline="103">eth_send</references>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
-        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
         <references refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" compoundref="netif_8h" startline="40">netif::macaddr</references>
         <references refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" compoundref="netif_8h" startline="34">netif::name</references>
         <references refid="netif_8h_1ae9935405723cb9caabff3f18b66446ca" compoundref="netif_8h" startline="18">NETIF_ARP</references>
@@ -358,7 +358,7 @@
 <codeline lineno="49"><highlight class="normal"></highlight></codeline>
 <codeline lineno="50"><highlight class="normal"></highlight></codeline>
 <codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ARP_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;arp:<sp/>added<sp/>new<sp/>cache<sp/>entry<sp/>(%02x.%02x.%02x.%02x)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;arp:<sp/>added<sp/>new<sp/>cache<sp/>entry<sp/>(%02x.%02x.%02x.%02x)\n&quot;</highlight><highlight class="normal">,</highlight></codeline>
 <codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arp-&gt;ipv4[0],</highlight></codeline>
 <codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arp-&gt;ipv4[1],</highlight></codeline>
 <codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>arp-&gt;ipv4[2],</highlight></codeline>
@@ -373,7 +373,7 @@
 <codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(arp_cache,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>arp);</highlight></codeline>
 <codeline lineno="65"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="66"><highlight class="normal"></highlight></codeline>
-<codeline lineno="67" refid="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c" kindref="member">arp_recv</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="67" refid="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="arp_8c_1ad8cef1da8ee381336f1c3bbfa015525c" kindref="member">arp_recv</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" kindref="member">length</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>arp_header_t*<sp/>arp<sp/>=<sp/>(arp_header_t*)<sp/>buf;</highlight></codeline>
 <codeline lineno="69"><highlight class="normal"></highlight></codeline>
 <codeline lineno="70"><highlight class="normal"></highlight></codeline>
@@ -381,7 +381,7 @@
 <codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(memcmp(netif-&gt;<ref refid="structnetif_1a7a5c433a646e2b4424fe8ebf12db535c" kindref="member">macaddr</ref>,<sp/>arp-&gt;tha,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref>))<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="arp_8c_1af1d8473c2adafe1f2bd1df51167c6b65" kindref="member">arp_cache_add</ref>(arp-&gt;tha,<sp/>arp-&gt;tpa);</highlight></codeline>
 <codeline lineno="74"><highlight class="normal"></highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" kindref="member">length</ref>;</highlight></codeline>
 <codeline lineno="76"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="77"><highlight class="normal"></highlight></codeline>
 <codeline lineno="78"><highlight class="normal"></highlight></codeline>
@@ -399,7 +399,7 @@
 <codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(arp-&gt;tpa,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref>));</highlight></codeline>
 <codeline lineno="91"><highlight class="normal"></highlight></codeline>
 <codeline lineno="92"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ARP_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;arp:<sp/>sending<sp/>request<sp/>for<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>netif-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>);</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;arp:<sp/>sending<sp/>request<sp/>for<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>netif-&gt;<ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>);</highlight></codeline>
 <codeline lineno="94"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="95"><highlight class="normal"></highlight></codeline>
 <codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ret<sp/>=<sp/><ref refid="eth_8c_1ae59b4f0e6c4a9e21facbf96b628f0832" kindref="member">eth_send</ref>(netif,<sp/>arp,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(arp_header_t),<sp/><ref refid="netif_8h_1ae9935405723cb9caabff3f18b66446ca" kindref="member">NETIF_ARP</ref>);</highlight></codeline>

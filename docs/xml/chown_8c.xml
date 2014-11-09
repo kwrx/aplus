@@ -10,152 +10,152 @@
     <includes local="no">unistd.h</includes>
     <includes local="no">fcntl.h</includes>
     <incdepgraph>
-      <node id="1310">
+      <node id="1502">
         <label>sys/stat.h</label>
       </node>
-      <node id="1299">
+      <node id="1491">
         <label>stdarg.h</label>
       </node>
-      <node id="1302">
+      <node id="1494">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1297" relation="include">
+        <childnode refid="1489" relation="include">
         </childnode>
-        <childnode refid="1303" relation="include">
+        <childnode refid="1495" relation="include">
         </childnode>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1490" relation="include">
         </childnode>
-        <childnode refid="1300" relation="include">
+        <childnode refid="1492" relation="include">
         </childnode>
-        <childnode refid="1305" relation="include">
+        <childnode refid="1497" relation="include">
         </childnode>
       </node>
-      <node id="1309">
+      <node id="1501">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1490" relation="include">
         </childnode>
-        <childnode refid="1304" relation="include">
+        <childnode refid="1496" relation="include">
         </childnode>
-        <childnode refid="1305" relation="include">
+        <childnode refid="1497" relation="include">
         </childnode>
-        <childnode refid="1310" relation="include">
+        <childnode refid="1502" relation="include">
         </childnode>
-        <childnode refid="1311" relation="include">
+        <childnode refid="1503" relation="include">
         </childnode>
       </node>
-      <node id="1298">
+      <node id="1490">
         <label>stdint.h</label>
       </node>
-      <node id="1301">
+      <node id="1493">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1297" relation="include">
+        <childnode refid="1489" relation="include">
         </childnode>
-        <childnode refid="1302" relation="include">
+        <childnode refid="1494" relation="include">
         </childnode>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1490" relation="include">
         </childnode>
       </node>
-      <node id="1314">
+      <node id="1506">
         <label>setjmp.h</label>
       </node>
-      <node id="1308">
+      <node id="1500">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1490" relation="include">
         </childnode>
-        <childnode refid="1297" relation="include">
+        <childnode refid="1489" relation="include">
         </childnode>
-        <childnode refid="1309" relation="include">
+        <childnode refid="1501" relation="include">
         </childnode>
-        <childnode refid="1313" relation="include">
+        <childnode refid="1505" relation="include">
         </childnode>
-        <childnode refid="1305" relation="include">
+        <childnode refid="1497" relation="include">
         </childnode>
-        <childnode refid="1314" relation="include">
+        <childnode refid="1506" relation="include">
         </childnode>
       </node>
-      <node id="1315">
+      <node id="1507">
         <label>errno.h</label>
       </node>
-      <node id="1316">
+      <node id="1508">
         <label>fcntl.h</label>
       </node>
-      <node id="1304">
+      <node id="1496">
         <label>stddef.h</label>
       </node>
-      <node id="1303">
+      <node id="1495">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1304" relation="include">
+        <childnode refid="1496" relation="include">
         </childnode>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1490" relation="include">
         </childnode>
-        <childnode refid="1305" relation="include">
+        <childnode refid="1497" relation="include">
         </childnode>
-        <childnode refid="1306" relation="include">
+        <childnode refid="1498" relation="include">
         </childnode>
-        <childnode refid="1307" relation="include">
+        <childnode refid="1499" relation="include">
         </childnode>
       </node>
-      <node id="1297">
+      <node id="1489">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1490" relation="include">
         </childnode>
-        <childnode refid="1299" relation="include">
+        <childnode refid="1491" relation="include">
         </childnode>
-        <childnode refid="1300" relation="include">
+        <childnode refid="1492" relation="include">
         </childnode>
       </node>
-      <node id="1305">
+      <node id="1497">
         <label>sys/types.h</label>
       </node>
-      <node id="1300">
+      <node id="1492">
         <label>string.h</label>
       </node>
-      <node id="1312">
+      <node id="1504">
         <label>unistd.h</label>
       </node>
-      <node id="1313">
+      <node id="1505">
         <label>signal.h</label>
       </node>
-      <node id="1307">
+      <node id="1499">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1490" relation="include">
         </childnode>
-        <childnode refid="1308" relation="include">
+        <childnode refid="1500" relation="include">
         </childnode>
       </node>
-      <node id="1311">
+      <node id="1503">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1312" relation="include">
+        <childnode refid="1504" relation="include">
         </childnode>
-        <childnode refid="1305" relation="include">
+        <childnode refid="1497" relation="include">
         </childnode>
       </node>
-      <node id="1296">
+      <node id="1488">
         <label>src/syscall/chown.c</label>
         <link refid="chown.c"/>
-        <childnode refid="1297" relation="include">
+        <childnode refid="1489" relation="include">
         </childnode>
-        <childnode refid="1301" relation="include">
+        <childnode refid="1493" relation="include">
         </childnode>
-        <childnode refid="1308" relation="include">
+        <childnode refid="1500" relation="include">
         </childnode>
-        <childnode refid="1309" relation="include">
+        <childnode refid="1501" relation="include">
         </childnode>
-        <childnode refid="1315" relation="include">
+        <childnode refid="1507" relation="include">
         </childnode>
-        <childnode refid="1312" relation="include">
+        <childnode refid="1504" relation="include">
         </childnode>
-        <childnode refid="1316" relation="include">
+        <childnode refid="1508" relation="include">
         </childnode>
       </node>
-      <node id="1306">
+      <node id="1498">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -167,12 +167,12 @@
         <argsstring></argsstring>
         <name>current_task</name>
         <briefdescription>
-        </briefdescription>
+<para>Current task address. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/chown.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="33" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/chown.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -194,18 +194,41 @@
           <declname>group</declname>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Changes the ownership of the file specified by pathname, which is dereferenced if it is a symbolic link. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>filename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>owner</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>group</parametername>
+</parameternamelist>
+<parameterdescription>
+<para></para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>On success, zero is returned. On error, −1 is returned, and errno is set appropriately. </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/chown.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/syscall/chown.c" bodystart="13" bodyend="30"/>
+        <location file="/opt/prj/aPlus/src/syscall/chown.c" line="21" column="1" bodyfile="/opt/prj/aPlus/src/syscall/chown.c" bodystart="21" bodyend="38"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="87">task::fd</references>
-        <references refid="fs_8c_1a2928203c42eba392963b57bfed7b65c4" compoundref="fs_8c" startline="86" endline="92">fs_chown</references>
-        <references refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" compoundref="src_2sched_8c" startline="41" endline="52">im_superuser</references>
-        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
-        <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="126" endline="150">sys_open</references>
+        <references refid="fs_8c_1a2928203c42eba392963b57bfed7b65c4" compoundref="fs_8c" startline="93" endline="99">fs_chown</references>
+        <references refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" compoundref="src_2sched_8c" startline="58" endline="69">im_superuser</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="127" endline="155">sys_open</references>
       </memberdef>
       <memberdef kind="function" id="chown_8c_1a72db0d5fe4733e59ef6b0dd96495a4d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -224,7 +247,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/chown.c" line="33" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/chown.c" line="41" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -244,27 +267,28 @@
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>
 <codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="chown_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
-<codeline lineno="13" refid="chown_8c_1a20e2eec32e2e19fd93c7ecbe00277a89" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="chown_8c_1a20e2eec32e2e19fd93c7ecbe00277a89" kindref="member">sys_chown</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filename,<sp/>uid_t<sp/>owner,<sp/>gid_t<sp/>group)<sp/>{</highlight></codeline>
-<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!<ref refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" kindref="member">im_superuser</ref>())<sp/>{</highlight></codeline>
-<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_chown:<sp/>only<sp/>superuser<sp/>allow<sp/>to<sp/>use<sp/>this<sp/>function.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EACCES;</highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd<sp/>=<sp/><ref refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kindref="member">sys_open</ref>(filename,<sp/>O_RDONLY,<sp/>0644);</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fd<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_chown:<sp/>%s.&quot;</highlight><highlight class="normal">,<sp/>strerror(<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>));</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="fs_8c_1a2928203c42eba392963b57bfed7b65c4" kindref="member">fs_chown</ref>(ino,<sp/>owner,<sp/>group);</highlight></codeline>
-<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><ref refid="chown_8c_1a72db0d5fe4733e59ef6b0dd96495a4d1" kindref="member">SYSCALL</ref>(<ref refid="chown_8c_1a20e2eec32e2e19fd93c7ecbe00277a89" kindref="member">sys_chown</ref>,<sp/>21);</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="chown_8c_1a20e2eec32e2e19fd93c7ecbe00277a89" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="chown_8c_1a20e2eec32e2e19fd93c7ecbe00277a89" kindref="member">sys_chown</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>filename,<sp/>uid_t<sp/>owner,<sp/>gid_t<sp/>group)<sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!<ref refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" kindref="member">im_superuser</ref>())<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_chown:<sp/>only<sp/>superuser<sp/>allow<sp/>to<sp/>use<sp/>this<sp/>function.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EACCES;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd<sp/>=<sp/><ref refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kindref="member">sys_open</ref>(filename,<sp/>O_RDONLY,<sp/>0644);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fd<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_chown:<sp/>%s.&quot;</highlight><highlight class="normal">,<sp/>strerror(<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>));</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="fs_8c_1a2928203c42eba392963b57bfed7b65c4" kindref="member">fs_chown</ref>(ino,<sp/>owner,<sp/>group);</highlight></codeline>
+<codeline lineno="38"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><ref refid="chown_8c_1a72db0d5fe4733e59ef6b0dd96495a4d1" kindref="member">SYSCALL</ref>(<ref refid="chown_8c_1a20e2eec32e2e19fd93c7ecbe00277a89" kindref="member">sys_chown</ref>,<sp/>21);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/chown.c"/>
   </compounddef>

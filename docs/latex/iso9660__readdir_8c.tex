@@ -1,0 +1,99 @@
+\hypertarget{iso9660__readdir_8c}{\section{src/fs/iso9660/iso9660\+\_\+readdir.c File Reference}
+\label{iso9660__readdir_8c}\index{src/fs/iso9660/iso9660\+\_\+readdir.\+c@{src/fs/iso9660/iso9660\+\_\+readdir.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}iso9660.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structdirent}{dirent} $\ast$ \hyperlink{iso9660__readdir_8c_af42ce9ccc832430f26878d3e36db0303}{iso9660\+\_\+readdir} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ino, int index)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{iso9660__readdir_8c_af42ce9ccc832430f26878d3e36db0303}{\index{iso9660\+\_\+readdir.\+c@{iso9660\+\_\+readdir.\+c}!iso9660\+\_\+readdir@{iso9660\+\_\+readdir}}
+\index{iso9660\+\_\+readdir@{iso9660\+\_\+readdir}!iso9660\+\_\+readdir.\+c@{iso9660\+\_\+readdir.\+c}}
+\subsubsection[{iso9660\+\_\+readdir}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf dirent}$\ast$ iso9660\+\_\+readdir (
+\begin{DoxyParamCaption}
+\item[{{\bf inode\+\_\+t} $\ast$}]{ino, }
+\item[{int}]{index}
+\end{DoxyParamCaption}
+)}}\label{iso9660__readdir_8c_af42ce9ccc832430f26878d3e36db0303}
+
+
+Definition at line 15 of file iso9660\+\_\+readdir.\+c.
+
+
+
+References dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, inode\+::dev, devfs\+\_\+getdevice(), fs\+\_\+read(), iso9660\+\_\+checkname(), iso9660\+\_\+getlsb32(), I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E, kfree(), kmalloc(), inode\+::position, uint32\+\_\+t, and inode\+::userdata.
+
+
+\begin{DoxyCode}
+15                                                         \{
+16     \textcolor{keywordflow}{if}(!ino)
+17         \textcolor{keywordflow}{return} NULL;
+18         
+19     \textcolor{keywordflow}{if}(!ino->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev})
+20         \textcolor{keywordflow}{return} NULL;
+21 
+22     \textcolor{keywordflow}{if}(!ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata})
+23         \textcolor{keywordflow}{return} NULL;
+24 
+25     \hyperlink{structinode}{inode\_t}* dev = (\hyperlink{structinode}{inode\_t}*) \hyperlink{devfs_8c_a226c953aff43f9b1e9736908bb6802f3}{devfs\_getdevice}(ino->
+      \hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev});
+26     \textcolor{keywordflow}{if}(!dev)
+27         \textcolor{keywordflow}{return} NULL;
+28 
+29     iso9660\_dir\_t* dir = (iso9660\_dir\_t*) ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata};
+30     iso9660\_dir\_t* nodes = (iso9660\_dir\_t*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8c_a0e3f94f923e7f615525349cee099f701}{iso9660\_getlsb32}(dir->length));
+31     iso9660\_dir\_t* snodes = nodes;
+32 
+33     dev->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = \hyperlink{iso9660_8c_a0e3f94f923e7f615525349cee099f701}{iso9660\_getlsb32}(dir->lba) * 
+      \hyperlink{iso9660_8h_a00bbe26a634a966bc30429348a713ede}{ISO9660\_SECTOR\_SIZE};
+34     \textcolor{keywordflow}{if}(\hyperlink{fs_8c_a8e53a98b93e6b136196b2ebd99e43dcd}{fs\_read}(dev, nodes, \hyperlink{iso9660_8c_a0e3f94f923e7f615525349cee099f701}{iso9660\_getlsb32}(dir->length)) != 
+      \hyperlink{iso9660_8c_a0e3f94f923e7f615525349cee099f701}{iso9660\_getlsb32}(dir->length)) \{
+35         \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(nodes);
+36         \textcolor{keywordflow}{return} NULL;
+37     \}
+38 
+39     \textcolor{comment}{/* Skip dots (".", "..") */}
+40     nodes = (iso9660\_dir\_t*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) nodes + nodes->size);
+41     nodes = (iso9660\_dir\_t*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) nodes + nodes->size);
+42 
+43     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < index; i++) \{        
+44         \textcolor{keywordflow}{if}(nodes->size == 0) \{      
+45             \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(snodes);
+46             \textcolor{keywordflow}{return} NULL;
+47         \}
+48         
+49         nodes = (iso9660\_dir\_t*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) nodes + nodes->size);
+50     \}
+51 
+52 
+53     \textcolor{keywordflow}{if}(nodes->size == 0) \{
+54         \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(snodes);
+55         \textcolor{keywordflow}{return} NULL;
+56     \}
+57 
+58     \textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}* ent = (\textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} 
+      \hyperlink{structdirent}{dirent}));
+59     memset(ent, 0, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} \hyperlink{structdirent}{dirent}));
+60     
+61     strncpy(ent->\hyperlink{structdirent_a39a9af609c1808f0bdf90155bd3f55ed}{d\_name}, nodes->reserved, nodes->idlen);  
+62     \hyperlink{iso9660_8c_a42e767e05480219cfb4878964b4f0192}{iso9660\_checkname}(ent->\hyperlink{structdirent_a39a9af609c1808f0bdf90155bd3f55ed}{d\_name});
+63 
+64     ent->\hyperlink{structdirent_aef01e92a29cba347e6e6a5f22d4908a2}{d\_ino} = 0;
+65 
+66     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(snodes);
+67     \textcolor{keywordflow}{return} ent;
+68 \}
+\end{DoxyCode}

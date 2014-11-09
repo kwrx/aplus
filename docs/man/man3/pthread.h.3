@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/include/pthread.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/include/pthread.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ usr/src/libpthread/include/pthread.h \-
 \fC#include <unistd\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -54,7 +54,7 @@ usr/src/libpthread/include/pthread.h \-
 .RI "struct \fBpthread_spinlock\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -133,7 +133,7 @@ usr/src/libpthread/include/pthread.h \-
 .RI "#define \fBPTHREAD_SPINLOCK_INITIALIZER\fP   { 0, 0 }"
 .br
 .in -1c
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
@@ -182,7 +182,7 @@ usr/src/libpthread/include/pthread.h \-
 .RI "typedef struct \fBpthread_spinlock\fP \fBpthread_spinlock_t\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -432,114 +432,114 @@ usr/src/libpthread/include/pthread.h \-
 .RI "int \fBpthread_spin_unlock\fP (\fBpthread_spinlock_t\fP *\fBlock\fP)"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define _POSIX_THREADS"
 
 .PP
-Definizione alla linea 32 del file pthread\&.h\&.
+Definition at line 32 of file pthread\&.h\&.
 .SS "#define PTHREAD_BARRIER_SERIAL_THREAD   ~0"
 
 .PP
-Definizione alla linea 114 del file pthread\&.h\&.
+Definition at line 114 of file pthread\&.h\&.
 .SS "#define PTHREAD_CANCEL_DISABLE   1"
 
 .PP
-Definizione alla linea 50 del file pthread\&.h\&.
+Definition at line 50 of file pthread\&.h\&.
 .SS "#define PTHREAD_CANCEL_ENABLE   0"
 
 .PP
-Definizione alla linea 49 del file pthread\&.h\&.
+Definition at line 49 of file pthread\&.h\&.
 .SS "#define PTHREAD_COND_INITIALIZER   ((\fBpthread_cond_t\fP) -1)"
 
 .PP
-Definizione alla linea 110 del file pthread\&.h\&.
+Definition at line 110 of file pthread\&.h\&.
 .SS "#define PTHREAD_CREATE_DETACHED   1"
 
 .PP
-Definizione alla linea 41 del file pthread\&.h\&.
+Definition at line 41 of file pthread\&.h\&.
 .SS "#define PTHREAD_CREATE_JOINABLE   0"
 
 .PP
-Definizione alla linea 40 del file pthread\&.h\&.
+Definition at line 40 of file pthread\&.h\&.
 .SS "#define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP   { 0, 0, -1, -1, -1 }"
 
 .PP
-Definizione alla linea 98 del file pthread\&.h\&.
+Definition at line 98 of file pthread\&.h\&.
 .SS "#define PTHREAD_EXPLICIT_SCHED   1"
 
 .PP
-Definizione alla linea 44 del file pthread\&.h\&.
+Definition at line 44 of file pthread\&.h\&.
 .SS "#define PTHREAD_INHERIT_SCHED   0"
 
 .PP
-Definizione alla linea 43 del file pthread\&.h\&.
+Definition at line 43 of file pthread\&.h\&.
 .SS "#define PTHREAD_MUTEX_DEFAULT   \fBPTHREAD_MUTEX_NORMAL\fP"
 
 .PP
-Definizione alla linea 79 del file pthread\&.h\&.
+Definition at line 79 of file pthread\&.h\&.
 .SS "#define PTHREAD_MUTEX_ERRORCHECK   2"
 
 .PP
-Definizione alla linea 78 del file pthread\&.h\&.
+Definition at line 78 of file pthread\&.h\&.
 .SS "#define PTHREAD_MUTEX_INITIALIZER   { 0, 0, -1, -1, -1 }"
 
 .PP
-Definizione alla linea 97 del file pthread\&.h\&.
+Definition at line 97 of file pthread\&.h\&.
 .SS "#define PTHREAD_MUTEX_NORMAL   0"
 
 .PP
-Definizione alla linea 76 del file pthread\&.h\&.
+Definition at line 76 of file pthread\&.h\&.
 .SS "#define PTHREAD_MUTEX_RECURSIVE   1"
 
 .PP
-Definizione alla linea 77 del file pthread\&.h\&.
+Definition at line 77 of file pthread\&.h\&.
 .SS "#define PTHREAD_ONCE_INIT   { 0, -1 }"
 
 .PP
-Definizione alla linea 72 del file pthread\&.h\&.
+Definition at line 72 of file pthread\&.h\&.
 .SS "#define PTHREAD_PROCESS_PRIVATE   0"
 
 .PP
-Definizione alla linea 52 del file pthread\&.h\&.
+Definition at line 52 of file pthread\&.h\&.
 .SS "#define PTHREAD_PROCESS_SHARED   1"
 
 .PP
-Definizione alla linea 53 del file pthread\&.h\&.
+Definition at line 53 of file pthread\&.h\&.
 .SS "#define PTHREAD_RWLOCK_INITIALIZER   { \fBPTHREAD_MUTEX_INITIALIZER\fP, 0, 0, 0, 0, 0, 0 }"
 
 .PP
-Definizione alla linea 142 del file pthread\&.h\&.
+Definition at line 142 of file pthread\&.h\&.
 .SS "#define PTHREAD_SCOPE_PROCESS   0"
 
 .PP
-Definizione alla linea 46 del file pthread\&.h\&.
+Definition at line 46 of file pthread\&.h\&.
 .SS "#define PTHREAD_SCOPE_SYSTEM   1"
 
 .PP
-Definizione alla linea 47 del file pthread\&.h\&.
+Definition at line 47 of file pthread\&.h\&.
 .SS "#define PTHREAD_SPINLOCK_INITIALIZER   { 0, 0 }"
 
 .PP
-Definizione alla linea 154 del file pthread\&.h\&.
+Definition at line 154 of file pthread\&.h\&.
 .SS "#define SPINLOCK_LOCKED   2"
 
 .PP
-Definizione alla linea 146 del file pthread\&.h\&.
+Definition at line 146 of file pthread\&.h\&.
 .SS "#define SPINLOCK_UNLOCKED   1"
 
 .PP
-Definizione alla linea 145 del file pthread\&.h\&.
+Definition at line 145 of file pthread\&.h\&.
 .SS "#define SPINLOCK_USEMUTEX   3"
 
 .PP
-Definizione alla linea 147 del file pthread\&.h\&.
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+Definition at line 147 of file pthread\&.h\&.
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef \fBuint32_t\fP \fBhandle_t\fP"
 
 .PP
-Definizione alla linea 36 del file pthread\&.h\&.
+Definition at line 36 of file pthread\&.h\&.
 .SS "typedef struct \fBpthread_attr\fP  \fBpthread_attr_t\fP"
 
 .SS "typedef struct \fBpthread_barrier\fP  \fBpthread_barrier_t\fP"
@@ -553,7 +553,7 @@ Definizione alla linea 36 del file pthread\&.h\&.
 .SS "typedef \fBtls_t\fP \fBpthread_key_t\fP"
 
 .PP
-Definizione alla linea 38 del file pthread\&.h\&.
+Definition at line 38 of file pthread\&.h\&.
 .SS "typedef struct \fBpthread_mutex\fP  \fBpthread_mutex_t\fP"
 
 .SS "typedef struct \fBpthread_mutexattr\fP  \fBpthread_mutexattr_t\fP"
@@ -569,19 +569,19 @@ Definizione alla linea 38 del file pthread\&.h\&.
 .SS "typedef \fBhandle_t\fP \fBpthread_t\fP"
 
 .PP
-Definizione alla linea 37 del file pthread\&.h\&.
+Definition at line 37 of file pthread\&.h\&.
 .SS "typedef \fBuint32_t\fP \fBtls_t\fP"
 
 .PP
-Definizione alla linea 35 del file pthread\&.h\&.
-.SH "Documentazione delle funzioni"
+Definition at line 35 of file pthread\&.h\&.
+.SH "Function Documentation"
 .PP 
 .SS "int pthread_attr_destroy (\fBpthread_attr_t\fP *attr)"
 
 .PP
-Definizione alla linea 28 del file pthread_attr\&.c\&.
+Definition at line 28 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 28                                                       {
@@ -597,9 +597,9 @@ Referenzia errno\&.
 .SS "int pthread_attr_getdetachstate (const \fBpthread_attr_t\fP *attr, int *detachstate)"
 
 .PP
-Definizione alla linea 38 del file pthread_attr\&.c\&.
+Definition at line 38 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::detachstate, e errno\&.
+References pthread_attr::detachstate, and errno\&.
 .PP
 .nf
 38                                                                                      {
@@ -615,9 +615,9 @@ Referenzia pthread_attr::detachstate, e errno\&.
 .SS "int pthread_attr_getinheritsched (\fBpthread_attr_t\fP *attr, int *inheritsched)"
 
 .PP
-Definizione alla linea 133 del file pthread_attr\&.c\&.
+Definition at line 133 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::inheritsched\&.
+References errno, and pthread_attr::inheritsched\&.
 .PP
 .nf
 133                                                                                  {
@@ -633,9 +633,9 @@ Referenzia errno, e pthread_attr::inheritsched\&.
 .SS "int pthread_attr_getschedparam (const \fBpthread_attr_t\fP *attr, struct sched_param *param)"
 
 .PP
-Definizione alla linea 100 del file pthread_attr\&.c\&.
+Definition at line 100 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::param\&.
+References errno, and pthread_attr::param\&.
 .PP
 .nf
 100                                                                                              {
@@ -651,9 +651,9 @@ Referenzia errno, e pthread_attr::param\&.
 .SS "int pthread_attr_getschedpolicy (\fBpthread_attr_t\fP *attr, int *policy)"
 
 .PP
-Definizione alla linea 123 del file pthread_attr\&.c\&.
+Definition at line 123 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 123                                                                           {
@@ -664,9 +664,9 @@ Referenzia errno\&.
 .SS "int pthread_attr_getscope (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
 
 .PP
-Definizione alla linea 153 del file pthread_attr\&.c\&.
+Definition at line 153 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::contentionscope, e errno\&.
+References pthread_attr::contentionscope, and errno\&.
 .PP
 .nf
 153                                                                                    {
@@ -682,9 +682,9 @@ Referenzia pthread_attr::contentionscope, e errno\&.
 .SS "int pthread_attr_getstackaddr (const \fBpthread_attr_t\fP *attr, void **stackaddr)"
 
 .PP
-Definizione alla linea 58 del file pthread_attr\&.c\&.
+Definition at line 58 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stackaddr\&.
+References errno, and pthread_attr::stackaddr\&.
 .PP
 .nf
 58                                                                                    {
@@ -700,9 +700,9 @@ Referenzia errno, e pthread_attr::stackaddr\&.
 .SS "int pthread_attr_getstacksize (const \fBpthread_attr_t\fP *attr, size_t *stacksize)"
 
 .PP
-Definizione alla linea 79 del file pthread_attr\&.c\&.
+Definition at line 79 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stacksize\&.
+References errno, and pthread_attr::stacksize\&.
 .PP
 .nf
 79                                                                                     {
@@ -718,9 +718,9 @@ Referenzia errno, e pthread_attr::stacksize\&.
 .SS "int pthread_attr_init (\fBpthread_attr_t\fP *attr)"
 
 .PP
-Definizione alla linea 12 del file pthread_attr\&.c\&.
+Definition at line 12 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthread_attr::inheritsched, pthread_attr::param, PTHREAD_STACK_MIN, pthread_attr::stackaddr, e pthread_attr::stacksize\&.
+References pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthread_attr::inheritsched, pthread_attr::param, PTHREAD_STACK_MIN, pthread_attr::stackaddr, and pthread_attr::stacksize\&.
 .PP
 .nf
 12                                                    {
@@ -742,9 +742,9 @@ Referenzia pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthr
 .SS "int pthread_attr_setdetachstate (\fBpthread_attr_t\fP *attr, intdetachstate)"
 
 .PP
-Definizione alla linea 48 del file pthread_attr\&.c\&.
+Definition at line 48 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::detachstate, e errno\&.
+References pthread_attr::detachstate, and errno\&.
 .PP
 .nf
 48                                                                               {
@@ -760,9 +760,9 @@ Referenzia pthread_attr::detachstate, e errno\&.
 .SS "int pthread_attr_setinheritsched (\fBpthread_attr_t\fP *attr, intinheritsched)"
 
 .PP
-Definizione alla linea 143 del file pthread_attr\&.c\&.
+Definition at line 143 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::inheritsched\&.
+References errno, and pthread_attr::inheritsched\&.
 .PP
 .nf
 143                                                                                 {
@@ -778,9 +778,9 @@ Referenzia errno, e pthread_attr::inheritsched\&.
 .SS "int pthread_attr_setschedparam (\fBpthread_attr_t\fP *attr, const struct sched_param *param)"
 
 .PP
-Definizione alla linea 112 del file pthread_attr\&.c\&.
+Definition at line 112 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::param\&.
+References errno, and pthread_attr::param\&.
 .PP
 .nf
 112                                                                                              {
@@ -796,9 +796,9 @@ Referenzia errno, e pthread_attr::param\&.
 .SS "int pthread_attr_setschedpolicy (\fBpthread_attr_t\fP *attr, intpolicy)"
 
 .PP
-Definizione alla linea 128 del file pthread_attr\&.c\&.
+Definition at line 128 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 128                                                                          {
@@ -809,9 +809,9 @@ Referenzia errno\&.
 .SS "int pthread_attr_setscope (\fBpthread_attr_t\fP *attr, intcontentionscope)"
 
 .PP
-Definizione alla linea 163 del file pthread_attr\&.c\&.
+Definition at line 163 of file pthread_attr\&.c\&.
 .PP
-Referenzia pthread_attr::contentionscope, e errno\&.
+References pthread_attr::contentionscope, and errno\&.
 .PP
 .nf
 163                                                                             {
@@ -827,9 +827,9 @@ Referenzia pthread_attr::contentionscope, e errno\&.
 .SS "int pthread_attr_setstackaddr (\fBpthread_attr_t\fP *attr, void *stackaddr)"
 
 .PP
-Definizione alla linea 68 del file pthread_attr\&.c\&.
+Definition at line 68 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stackaddr\&.
+References errno, and pthread_attr::stackaddr\&.
 .PP
 .nf
 68                                                                             {
@@ -845,9 +845,9 @@ Referenzia errno, e pthread_attr::stackaddr\&.
 .SS "int pthread_attr_setstacksize (\fBpthread_attr_t\fP *attr, size_tstacksize)"
 
 .PP
-Definizione alla linea 89 del file pthread_attr\&.c\&.
+Definition at line 89 of file pthread_attr\&.c\&.
 .PP
-Referenzia errno, e pthread_attr::stacksize\&.
+References errno, and pthread_attr::stacksize\&.
 .PP
 .nf
 89                                                                              {
@@ -863,9 +863,9 @@ Referenzia errno, e pthread_attr::stacksize\&.
 .SS "int pthread_barrier_destroy (\fBpthread_barrier_t\fP *barrier)"
 
 .PP
-Definizione alla linea 28 del file pthread_barrier\&.c\&.
+Definition at line 28 of file pthread_barrier\&.c\&.
 .PP
-Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&.
+References pthread_barrier::curr_height, errno, and pthread_barrier::init_height\&.
 .PP
 .nf
 28                                                                {
@@ -884,9 +884,9 @@ Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&
 .SS "int pthread_barrier_init (\fBpthread_barrier_t\fP *barrier, const \fBpthread_barrierattr_t\fP *attr, unsigned intcount)"
 
 .PP
-Definizione alla linea 9 del file pthread_barrier\&.c\&.
+Definition at line 9 of file pthread_barrier\&.c\&.
 .PP
-Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&.
+References pthread_barrier::curr_height, errno, and pthread_barrier::init_height\&.
 .PP
 .nf
 9                                                                                                                    {
@@ -910,9 +910,9 @@ Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&
 .SS "int pthread_barrier_wait (\fBpthread_barrier_t\fP *barrier)"
 
 .PP
-Definizione alla linea 42 del file pthread_barrier\&.c\&.
+Definition at line 42 of file pthread_barrier\&.c\&.
 .PP
-Referenzia pthread_barrier::curr_height, errno, pthread_barrier::init_height, e sched_yield()\&.
+References pthread_barrier::curr_height, errno, pthread_barrier::init_height, and sched_yield()\&.
 .PP
 .nf
 42                                                             {
@@ -932,9 +932,9 @@ Referenzia pthread_barrier::curr_height, errno, pthread_barrier::init_height, e 
 .SS "int pthread_barrierattr_destroy (\fBpthread_barrierattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 20 del file pthread_barrierattr\&.c\&.
+Definition at line 20 of file pthread_barrierattr\&.c\&.
 .PP
-Referenzia errno, e pthread_barrierattr::pshared\&.
+References errno, and pthread_barrierattr::pshared\&.
 .PP
 .nf
 20                                                                     {
@@ -950,9 +950,9 @@ Referenzia errno, e pthread_barrierattr::pshared\&.
 .SS "int pthread_barrierattr_getpshared (const \fBpthread_barrierattr_t\fP *attr, int *pshared)"
 
 .PP
-Definizione alla linea 31 del file pthread_barrierattr\&.c\&.
+Definition at line 31 of file pthread_barrierattr\&.c\&.
 .PP
-Referenzia errno, e pthread_barrierattr::pshared\&.
+References errno, and pthread_barrierattr::pshared\&.
 .PP
 .nf
 31                                                                                            {
@@ -973,9 +973,9 @@ Referenzia errno, e pthread_barrierattr::pshared\&.
 .SS "int pthread_barrierattr_init (\fBpthread_barrierattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 9 del file pthread_barrierattr\&.c\&.
+Definition at line 9 of file pthread_barrierattr\&.c\&.
 .PP
-Referenzia errno, e pthread_barrierattr::pshared\&.
+References errno, and pthread_barrierattr::pshared\&.
 .PP
 .nf
 9                                                                  {
@@ -991,9 +991,9 @@ Referenzia errno, e pthread_barrierattr::pshared\&.
 .SS "int pthread_barrierattr_setpshared (\fBpthread_barrierattr_t\fP *attr, intpshared)"
 
 .PP
-Definizione alla linea 47 del file pthread_barrierattr\&.c\&.
+Definition at line 47 of file pthread_barrierattr\&.c\&.
 .PP
-Referenzia errno, e pthread_barrierattr::pshared\&.
+References errno, and pthread_barrierattr::pshared\&.
 .PP
 .nf
 47                                                                                     {
@@ -1009,9 +1009,9 @@ Referenzia errno, e pthread_barrierattr::pshared\&.
 .SS "int pthread_cancel (\fBpthread_t\fPthread)"
 
 .PP
-Definizione alla linea 7 del file pthread_cancel\&.c\&.
+Definition at line 7 of file pthread_cancel\&.c\&.
 .PP
-Referenzia pthread_detach()\&.
+References pthread_detach()\&.
 .PP
 .nf
 7                                             {
@@ -1021,9 +1021,9 @@ Referenzia pthread_detach()\&.
 .SS "int pthread_cond_broadcast (\fBpthread_cond_t\fP *cond)"
 
 .PP
-Definizione alla linea 116 del file pthread_cond\&.c\&.
+Definition at line 116 of file pthread_cond\&.c\&.
 .PP
-Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 116                                                         {
@@ -1051,9 +1051,9 @@ Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next,
 .SS "int pthread_cond_destroy (\fBpthread_cond_t\fP *cond)"
 
 .PP
-Definizione alla linea 25 del file pthread_cond\&.c\&.
+Definition at line 25 of file pthread_cond\&.c\&.
 .PP
-Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References errno, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 25                                                       {
@@ -1077,9 +1077,9 @@ Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
 .SS "int pthread_cond_init (\fBpthread_cond_t\fP *cond, const \fBpthread_condattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 13 del file pthread_cond\&.c\&.
+Definition at line 13 of file pthread_cond\&.c\&.
 .PP
-Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References errno, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 13                                                                                    {
@@ -1097,9 +1097,9 @@ Referenzia errno, pthread_cond::semaphore, e pthread_cond::waiting\&.
 .SS "int pthread_cond_signal (\fBpthread_cond_t\fP *cond)"
 
 .PP
-Definizione alla linea 93 del file pthread_cond\&.c\&.
+Definition at line 93 of file pthread_cond\&.c\&.
 .PP
-Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, e pthread_cond::waiting\&.
+References __pthread_queue, pthread_context::cond, errno, pthread_context::next, pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 93                                                      {
@@ -1128,9 +1128,9 @@ Referenzia __pthread_queue, pthread_context::cond, errno, pthread_context::next,
 .SS "int pthread_cond_timedwait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
 
 .PP
-Definizione alla linea 44 del file pthread_cond\&.c\&.
+Definition at line 44 of file pthread_cond\&.c\&.
 .PP
-Referenzia pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unlock(), pthread_self(), sched_yield(), pthread_cond::semaphore, e pthread_cond::waiting\&.
+References pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unlock(), pthread_self(), sched_yield(), pthread_cond::semaphore, and pthread_cond::waiting\&.
 .PP
 .nf
 44                                                                                                                 {
@@ -1180,9 +1180,9 @@ Referenzia pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unl
 .SS "int pthread_cond_wait (\fBpthread_cond_t\fP *cond, \fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 88 del file pthread_cond\&.c\&.
+Definition at line 88 of file pthread_cond\&.c\&.
 .PP
-Referenzia pthread_cond_timedwait()\&.
+References pthread_cond_timedwait()\&.
 .PP
 .nf
 88                                                                            {
@@ -1192,9 +1192,9 @@ Referenzia pthread_cond_timedwait()\&.
 .SS "int pthread_condattr_destroy (\fBpthread_condattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 18 del file pthread_condattr\&.c\&.
+Definition at line 18 of file pthread_condattr\&.c\&.
 .PP
-Referenzia errno, e pthread_condattr::pshared\&.
+References errno, and pthread_condattr::pshared\&.
 .PP
 .nf
 18                                                               {
@@ -1210,9 +1210,9 @@ Referenzia errno, e pthread_condattr::pshared\&.
 .SS "int pthread_condattr_getpshared (const \fBpthread_condattr_t\fP *attr, int *pshared)"
 
 .PP
-Definizione alla linea 29 del file pthread_condattr\&.c\&.
+Definition at line 29 of file pthread_condattr\&.c\&.
 .PP
-Referenzia errno, e pthread_condattr::pshared\&.
+References errno, and pthread_condattr::pshared\&.
 .PP
 .nf
 29                                                                                      {
@@ -1229,9 +1229,9 @@ Referenzia errno, e pthread_condattr::pshared\&.
 .SS "int pthread_condattr_init (\fBpthread_condattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 7 del file pthread_condattr\&.c\&.
+Definition at line 7 of file pthread_condattr\&.c\&.
 .PP
-Referenzia errno, e pthread_condattr::pshared\&.
+References errno, and pthread_condattr::pshared\&.
 .PP
 .nf
 7                                                            {
@@ -1247,9 +1247,9 @@ Referenzia errno, e pthread_condattr::pshared\&.
 .SS "int pthread_condattr_setpshared (\fBpthread_condattr_t\fP *attr, intpshared)"
 
 .PP
-Definizione alla linea 41 del file pthread_condattr\&.c\&.
+Definition at line 41 of file pthread_condattr\&.c\&.
 .PP
-Referenzia errno, e pthread_condattr::pshared\&.
+References errno, and pthread_condattr::pshared\&.
 .PP
 .nf
 41                                                                               {
@@ -1265,9 +1265,9 @@ Referenzia errno, e pthread_condattr::pshared\&.
 .SS "int pthread_create (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*)(void *)start, void *arg)"
 
 .PP
-Definizione alla linea 37 del file pthread_create\&.c\&.
+Definition at line 37 of file pthread_create\&.c\&.
 .PP
-Referenzia __os_thread_create, __pthread_counts, __pthread_handler__(), __pthread_init_queue(), __pthread_queue, pthread_context::attr, pthread_once::done, pthread_context::entry, errno, pthread_attr::inheritsched, pthread_context::next, pthread_context::once, pthread_context::param, pthread_attr::param, pthread_attr_setschedparam(), PTHREAD_INHERIT_SCHED, pthread_self(), PTHREAD_THREADS_MAX, pthread_once::started, e pthread_context::tid\&.
+References __os_thread_create, __pthread_counts, __pthread_handler__(), __pthread_init_queue(), __pthread_queue, pthread_context::attr, pthread_once::done, pthread_context::entry, errno, pthread_attr::inheritsched, pthread_context::next, pthread_context::once, pthread_context::param, pthread_attr::param, pthread_attr_setschedparam(), PTHREAD_INHERIT_SCHED, pthread_self(), PTHREAD_THREADS_MAX, pthread_once::started, and pthread_context::tid\&.
 .PP
 .nf
 37                                                                                                            {
@@ -1321,9 +1321,9 @@ Referenzia __os_thread_create, __pthread_counts, __pthread_handler__(), __pthrea
 .SS "int pthread_detach (\fBpthread_t\fPthread)"
 
 .PP
-Definizione alla linea 12 del file pthread_detach\&.c\&.
+Definition at line 12 of file pthread_detach\&.c\&.
 .PP
-Referenzia __os_thread_kill, __pthread_queue, pthread_once::done, errno, pthread_context::once, e pthread_context::tid\&.
+References __os_thread_kill, __pthread_queue, pthread_once::done, errno, pthread_context::once, and pthread_context::tid\&.
 .PP
 .nf
 12                                             {
@@ -1368,9 +1368,9 @@ Referenzia __os_thread_kill, __pthread_queue, pthread_once::done, errno, pthread
 .SS "int pthread_equal (\fBpthread_t\fPt1, \fBpthread_t\fPt2)"
 
 .PP
-Definizione alla linea 7 del file pthread_equal\&.c\&.
+Definition at line 7 of file pthread_equal\&.c\&.
 .PP
-Referenzia pthread_context::tid\&.
+References pthread_context::tid\&.
 .PP
 .nf
 7                                                      {
@@ -1383,9 +1383,9 @@ Referenzia pthread_context::tid\&.
 .SS "void pthread_exit (void *value_ptr)"
 
 .PP
-Definizione alla linea 8 del file pthread_exit\&.c\&.
+Definition at line 8 of file pthread_exit\&.c\&.
 .PP
-Referenzia pthread_context::exitval, pthread_detach(), e pthread_self()\&.
+References pthread_context::exitval, pthread_detach(), and pthread_self()\&.
 .PP
 .nf
 8                                           {
@@ -1404,9 +1404,9 @@ Referenzia pthread_context::exitval, pthread_detach(), e pthread_self()\&.
 .SS "int pthread_getconcurrency (void)"
 
 .PP
-Definizione alla linea 57 del file pthread_sched\&.c\&.
+Definition at line 57 of file pthread_sched\&.c\&.
 .PP
-Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&.
+References pthread_context::attr, errno, pthread_attr::param, and pthread_self()\&.
 .PP
 .nf
 57                                         {
@@ -1423,9 +1423,9 @@ Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&
 .SS "int pthread_getschedparam (\fBpthread_t\fPthread, int *policy, struct sched_param *param)"
 
 .PP
-Definizione alla linea 26 del file pthread_sched\&.c\&.
+Definition at line 26 of file pthread_sched\&.c\&.
 .PP
-Referenzia errno, sched_getparam(), e pthread_context::tid\&.
+References errno, sched_getparam(), and pthread_context::tid\&.
 .PP
 .nf
 26                                                                                            {
@@ -1449,9 +1449,9 @@ Referenzia errno, sched_getparam(), e pthread_context::tid\&.
 .SS "void* pthread_getspecific (\fBpthread_key_t\fPkey)"
 
 .PP
-Definizione alla linea 65 del file pthread_key\&.c\&.
+Definition at line 65 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
+References __pthread_keys, errno, PTHREAD_KEYS_MAX, and __pthread_key::value\&.
 .PP
 .nf
 65                                                     {
@@ -1471,9 +1471,9 @@ Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
 .SS "int pthread_join (\fBpthread_t\fPthread, void **value_ptr)"
 
 .PP
-Definizione alla linea 8 del file pthread_join\&.c\&.
+Definition at line 8 of file pthread_join\&.c\&.
 .PP
-Referenzia pthread_once::done, errno, pthread_context::exitval, pthread_context::once, e sched_yield()\&.
+References pthread_once::done, errno, pthread_context::exitval, pthread_context::once, and sched_yield()\&.
 .PP
 .nf
 8                                                             {
@@ -1495,9 +1495,9 @@ Referenzia pthread_once::done, errno, pthread_context::exitval, pthread_context:
 .SS "int pthread_key_create (\fBpthread_key_t\fP *key, void(*)(void *)destructor)"
 
 .PP
-Definizione alla linea 9 del file pthread_key\&.c\&.
+Definition at line 9 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, e __pthread_key::value\&.
+References __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, and __pthread_key::value\&.
 .PP
 .nf
 9                                                                               {
@@ -1525,9 +1525,9 @@ Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthre
 .SS "int pthread_key_delete (\fBpthread_key_t\fPkey)"
 
 .PP
-Definizione alla linea 32 del file pthread_key\&.c\&.
+Definition at line 32 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, __pthread_key::value, e value\&.
+References __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, __pthread_key::value, and value\&.
 .PP
 .nf
 32                                                  {
@@ -1549,9 +1549,9 @@ Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthre
 .SS "int pthread_mutex_destroy (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 46 del file pthread_mutex\&.c\&.
+Definition at line 46 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, pthread_mutex::recursion, e pthread_mutex::time\&.
+References errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, pthread_mutex::recursion, and pthread_mutex::time\&.
 .PP
 .nf
 46                                                          {
@@ -1578,9 +1578,9 @@ Referenzia errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock
 .SS "int pthread_mutex_init (\fBpthread_mutex_t\fP *mutex, const \fBpthread_mutexattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 26 del file pthread_mutex\&.c\&.
+Definition at line 26 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_DEFAULT, pthread_mutex::recursion, e pthread_mutex::time\&.
+References errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_DEFAULT, pthread_mutex::recursion, and pthread_mutex::time\&.
 .PP
 .nf
 26                                                                                        {
@@ -1605,9 +1605,9 @@ Referenzia errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::
 .SS "int pthread_mutex_lock (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 67 del file pthread_mutex\&.c\&.
+Definition at line 67 of file pthread_mutex\&.c\&.
 .PP
-Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), pthread_mutex::recursion, e sched_yield()\&.
+References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), pthread_mutex::recursion, and sched_yield()\&.
 .PP
 .nf
 67                                                       {
@@ -1637,9 +1637,9 @@ Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 .SS "int pthread_mutex_timedlock (\fBpthread_mutex_t\fP *mutex, const struct timespec *abstime)"
 
 .PP
-Definizione alla linea 92 del file pthread_mutex\&.c\&.
+Definition at line 92 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_lock(), e pthread_mutex::time\&.
+References errno, pthread_mutex_lock(), and pthread_mutex::time\&.
 .PP
 .nf
 92                                                                                            {
@@ -1659,9 +1659,9 @@ Referenzia errno, pthread_mutex_lock(), e pthread_mutex::time\&.
 .SS "int pthread_mutex_trylock (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 107 del file pthread_mutex\&.c\&.
+Definition at line 107 of file pthread_mutex\&.c\&.
 .PP
-Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), e pthread_mutex::recursion\&.
+References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), and pthread_mutex::recursion\&.
 .PP
 .nf
 107                                                          {
@@ -1693,9 +1693,9 @@ Referenzia __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 .SS "int pthread_mutex_unlock (\fBpthread_mutex_t\fP *mutex)"
 
 .PP
-Definizione alla linea 133 del file pthread_mutex\&.c\&.
+Definition at line 133 of file pthread_mutex\&.c\&.
 .PP
-Referenzia errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), e pthread_mutex::recursion\&.
+References errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner, PTHREAD_MUTEX_ERRORCHECK, PTHREAD_MUTEX_RECURSIVE, pthread_self(), and pthread_mutex::recursion\&.
 .PP
 .nf
 133                                                         {
@@ -1723,9 +1723,9 @@ Referenzia errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner
 .SS "int pthread_mutexattr_destroy (\fBpthread_mutexattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 20 del file pthread_mutexattr\&.c\&.
+Definition at line 20 of file pthread_mutexattr\&.c\&.
 .PP
-Referenzia errno, pthread_mutexattr::kind, e pthread_mutexattr::pshared\&.
+References errno, pthread_mutexattr::kind, and pthread_mutexattr::pshared\&.
 .PP
 .nf
 20                                                                 {
@@ -1743,9 +1743,9 @@ Referenzia errno, pthread_mutexattr::kind, e pthread_mutexattr::pshared\&.
 .SS "int pthread_mutexattr_getpshared (const \fBpthread_mutexattr_t\fP *attr, int *pshared)"
 
 .PP
-Definizione alla linea 32 del file pthread_mutexattr\&.c\&.
+Definition at line 32 of file pthread_mutexattr\&.c\&.
 .PP
-Referenzia errno, e pthread_mutexattr::pshared\&.
+References errno, and pthread_mutexattr::pshared\&.
 .PP
 .nf
 32                                                                                        {
@@ -1761,9 +1761,9 @@ Referenzia errno, e pthread_mutexattr::pshared\&.
 .SS "int pthread_mutexattr_gettype (\fBpthread_mutexattr_t\fP *attr, int *kind)"
 
 .PP
-Definizione alla linea 52 del file pthread_mutexattr\&.c\&.
+Definition at line 52 of file pthread_mutexattr\&.c\&.
 .PP
-Referenzia errno, e pthread_mutexattr::kind\&.
+References errno, and pthread_mutexattr::kind\&.
 .PP
 .nf
 52                                                                            {
@@ -1779,9 +1779,9 @@ Referenzia errno, e pthread_mutexattr::kind\&.
 .SS "int pthread_mutexattr_init (\fBpthread_mutexattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 8 del file pthread_mutexattr\&.c\&.
+Definition at line 8 of file pthread_mutexattr\&.c\&.
 .PP
-Referenzia errno, pthread_mutexattr::kind, pthread_mutexattr::pshared, e PTHREAD_MUTEX_DEFAULT\&.
+References errno, pthread_mutexattr::kind, pthread_mutexattr::pshared, and PTHREAD_MUTEX_DEFAULT\&.
 .PP
 .nf
 8                                                              {
@@ -1799,9 +1799,9 @@ Referenzia errno, pthread_mutexattr::kind, pthread_mutexattr::pshared, e PTHREAD
 .SS "int pthread_mutexattr_setpshared (\fBpthread_mutexattr_t\fP *attr, intpshared)"
 
 .PP
-Definizione alla linea 42 del file pthread_mutexattr\&.c\&.
+Definition at line 42 of file pthread_mutexattr\&.c\&.
 .PP
-Referenzia errno, e pthread_mutexattr::pshared\&.
+References errno, and pthread_mutexattr::pshared\&.
 .PP
 .nf
 42                                                                                 {
@@ -1817,9 +1817,9 @@ Referenzia errno, e pthread_mutexattr::pshared\&.
 .SS "int pthread_mutexattr_settype (\fBpthread_mutexattr_t\fP *attr, intkind)"
 
 .PP
-Definizione alla linea 62 del file pthread_mutexattr\&.c\&.
+Definition at line 62 of file pthread_mutexattr\&.c\&.
 .PP
-Referenzia errno, e pthread_mutexattr::kind\&.
+References errno, and pthread_mutexattr::kind\&.
 .PP
 .nf
 62                                                                           {
@@ -1835,9 +1835,9 @@ Referenzia errno, e pthread_mutexattr::kind\&.
 .SS "int \fBpthread_once\fP (\fBpthread_once_t\fP *once_control, void(*)(void)init_routine)"
 
 .PP
-Definizione alla linea 7 del file pthread_once\&.c\&.
+Definition at line 7 of file pthread_once\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 7                                                                                   {
@@ -1848,9 +1848,9 @@ Referenzia errno\&.
 .SS "int pthread_rwlock_destroy (\fBpthread_rwlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 34 del file pthread_rwlock\&.c\&.
+Definition at line 34 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusive_waiters, pthread_rwlock::num_shared_waiters, pthread_rwlock::owner, pthread_mutex_destroy(), pthread_self(), pthread_rwlock::rdmutex, pthread_rwlock::shared_waiters, e pthread_rwlock::wrmutex\&.
+References errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusive_waiters, pthread_rwlock::num_shared_waiters, pthread_rwlock::owner, pthread_mutex_destroy(), pthread_self(), pthread_rwlock::rdmutex, pthread_rwlock::shared_waiters, and pthread_rwlock::wrmutex\&.
 .PP
 .nf
 34                                                           {
@@ -1885,9 +1885,9 @@ Referenzia errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusi
 .SS "int pthread_rwlock_init (\fBpthread_rwlock_t\fP *lock, const \fBpthread_rwlockattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 10 del file pthread_rwlock\&.c\&.
+Definition at line 10 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusive_waiters, pthread_rwlock::num_shared_waiters, pthread_rwlock::owner, pthread_mutex_init(), pthread_self(), pthread_rwlock::rdmutex, pthread_rwlock::shared_waiters, e pthread_rwlock::wrmutex\&.
+References errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusive_waiters, pthread_rwlock::num_shared_waiters, pthread_rwlock::owner, pthread_mutex_init(), pthread_self(), pthread_rwlock::rdmutex, pthread_rwlock::shared_waiters, and pthread_rwlock::wrmutex\&.
 .PP
 .nf
 10                                                                                          {
@@ -1917,9 +1917,9 @@ Referenzia errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusi
 .SS "int pthread_rwlock_rdlock (\fBpthread_rwlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 81 del file pthread_rwlock\&.c\&.
+Definition at line 81 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_lock(), e pthread_rwlock::rdmutex\&.
+References errno, pthread_mutex_lock(), and pthread_rwlock::rdmutex\&.
 .PP
 .nf
 81                                                          {
@@ -1934,9 +1934,9 @@ Referenzia errno, pthread_mutex_lock(), e pthread_rwlock::rdmutex\&.
 .SS "int pthread_rwlock_timedrdlock (\fBpthread_rwlock_t\fP *lock, const struct timespec *abstime)"
 
 .PP
-Definizione alla linea 90 del file pthread_rwlock\&.c\&.
+Definition at line 90 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_timedlock(), e pthread_rwlock::rdmutex\&.
+References errno, pthread_mutex_timedlock(), and pthread_rwlock::rdmutex\&.
 .PP
 .nf
 90                                                                                               {
@@ -1951,9 +1951,9 @@ Referenzia errno, pthread_mutex_timedlock(), e pthread_rwlock::rdmutex\&.
 .SS "int pthread_rwlock_timedwrlock (\fBpthread_rwlock_t\fP *lock, const struct timespec *abstime)"
 
 .PP
-Definizione alla linea 108 del file pthread_rwlock\&.c\&.
+Definition at line 108 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_timedlock(), e pthread_rwlock::wrmutex\&.
+References errno, pthread_mutex_timedlock(), and pthread_rwlock::wrmutex\&.
 .PP
 .nf
 108                                                                                               {
@@ -1968,9 +1968,9 @@ Referenzia errno, pthread_mutex_timedlock(), e pthread_rwlock::wrmutex\&.
 .SS "int pthread_rwlock_tryrdlock (\fBpthread_rwlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 63 del file pthread_rwlock\&.c\&.
+Definition at line 63 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_trylock(), e pthread_rwlock::rdmutex\&.
+References errno, pthread_mutex_trylock(), and pthread_rwlock::rdmutex\&.
 .PP
 .nf
 63                                                             {
@@ -1985,9 +1985,9 @@ Referenzia errno, pthread_mutex_trylock(), e pthread_rwlock::rdmutex\&.
 .SS "int pthread_rwlock_trywrlock (\fBpthread_rwlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 72 del file pthread_rwlock\&.c\&.
+Definition at line 72 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_trylock(), e pthread_rwlock::wrmutex\&.
+References errno, pthread_mutex_trylock(), and pthread_rwlock::wrmutex\&.
 .PP
 .nf
 72                                                             {
@@ -2002,9 +2002,9 @@ Referenzia errno, pthread_mutex_trylock(), e pthread_rwlock::wrmutex\&.
 .SS "int pthread_rwlock_unlock (\fBpthread_rwlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 117 del file pthread_rwlock\&.c\&.
+Definition at line 117 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_unlock(), pthread_rwlock::rdmutex, e pthread_rwlock::wrmutex\&.
+References errno, pthread_mutex_unlock(), pthread_rwlock::rdmutex, and pthread_rwlock::wrmutex\&.
 .PP
 .nf
 117                                                          {
@@ -2025,9 +2025,9 @@ Referenzia errno, pthread_mutex_unlock(), pthread_rwlock::rdmutex, e pthread_rwl
 .SS "int pthread_rwlock_wrlock (\fBpthread_rwlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 99 del file pthread_rwlock\&.c\&.
+Definition at line 99 of file pthread_rwlock\&.c\&.
 .PP
-Referenzia errno, pthread_mutex_lock(), e pthread_rwlock::wrmutex\&.
+References errno, pthread_mutex_lock(), and pthread_rwlock::wrmutex\&.
 .PP
 .nf
 99                                                          {
@@ -2042,9 +2042,9 @@ Referenzia errno, pthread_mutex_lock(), e pthread_rwlock::wrmutex\&.
 .SS "int pthread_rwlockattr_destroy (\fBpthread_rwlockattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 19 del file pthread_rwlockattr\&.c\&.
+Definition at line 19 of file pthread_rwlockattr\&.c\&.
 .PP
-Referenzia errno, e pthread_rwlockattr::pshared\&.
+References errno, and pthread_rwlockattr::pshared\&.
 .PP
 .nf
 19                                                                   {
@@ -2060,9 +2060,9 @@ Referenzia errno, e pthread_rwlockattr::pshared\&.
 .SS "int pthread_rwlockattr_getpshared (const \fBpthread_rwlockattr_t\fP *attr, int *pshared)"
 
 .PP
-Definizione alla linea 29 del file pthread_rwlockattr\&.c\&.
+Definition at line 29 of file pthread_rwlockattr\&.c\&.
 .PP
-Referenzia errno, e pthread_rwlockattr::pshared\&.
+References errno, and pthread_rwlockattr::pshared\&.
 .PP
 .nf
 29                                                                                          {
@@ -2083,9 +2083,9 @@ Referenzia errno, e pthread_rwlockattr::pshared\&.
 .SS "int pthread_rwlockattr_init (\fBpthread_rwlockattr_t\fP *attr)"
 
 .PP
-Definizione alla linea 9 del file pthread_rwlockattr\&.c\&.
+Definition at line 9 of file pthread_rwlockattr\&.c\&.
 .PP
-Referenzia errno, e pthread_rwlockattr::pshared\&.
+References errno, and pthread_rwlockattr::pshared\&.
 .PP
 .nf
 9                                                                {
@@ -2101,9 +2101,9 @@ Referenzia errno, e pthread_rwlockattr::pshared\&.
 .SS "int pthread_rwlockattr_setpshared (\fBpthread_rwlockattr_t\fP *attr, intpshared)"
 
 .PP
-Definizione alla linea 44 del file pthread_rwlockattr\&.c\&.
+Definition at line 44 of file pthread_rwlockattr\&.c\&.
 .PP
-Referenzia errno, e pthread_rwlockattr::pshared\&.
+References errno, and pthread_rwlockattr::pshared\&.
 .PP
 .nf
 44                                                                                   {
@@ -2119,9 +2119,9 @@ Referenzia errno, e pthread_rwlockattr::pshared\&.
 .SS "\fBpthread_t\fP pthread_self (void)"
 
 .PP
-Definizione alla linea 10 del file pthread_self\&.c\&.
+Definition at line 10 of file pthread_self\&.c\&.
 .PP
-Referenzia __os_gettid, __pthread_queue, errno, pthread_context::next, e pthread_context::tid\&.
+References __os_gettid, __pthread_queue, errno, pthread_context::next, and pthread_context::tid\&.
 .PP
 .nf
 10                                     {
@@ -2146,9 +2146,9 @@ Referenzia __os_gettid, __pthread_queue, errno, pthread_context::next, e pthread
 .SS "int pthread_setcancelstate (intstate, int *oldstate)"
 
 .PP
-Definizione alla linea 12 del file pthread_cancel\&.c\&.
+Definition at line 12 of file pthread_cancel\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 12                                                             {
@@ -2159,9 +2159,9 @@ Referenzia errno\&.
 .SS "int pthread_setcanceltype (inttype, int *oldtype)"
 
 .PP
-Definizione alla linea 18 del file pthread_cancel\&.c\&.
+Definition at line 18 of file pthread_cancel\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 18                                                          {
@@ -2172,9 +2172,9 @@ Referenzia errno\&.
 .SS "int pthread_setconcurrency (intlevel)"
 
 .PP
-Definizione alla linea 44 del file pthread_sched\&.c\&.
+Definition at line 44 of file pthread_sched\&.c\&.
 .PP
-Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&.
+References pthread_context::attr, errno, pthread_attr::param, and pthread_self()\&.
 .PP
 .nf
 44                                              {
@@ -2193,9 +2193,9 @@ Referenzia pthread_context::attr, errno, pthread_attr::param, e pthread_self()\&
 .SS "int pthread_setschedparam (\fBpthread_t\fPthread, intpolicy, const struct sched_param *param)"
 
 .PP
-Definizione alla linea 11 del file pthread_sched\&.c\&.
+Definition at line 11 of file pthread_sched\&.c\&.
 .PP
-Referenzia errno, sched_setparam(), e pthread_context::tid\&.
+References errno, sched_setparam(), and pthread_context::tid\&.
 .PP
 .nf
 11                                                                                                 {
@@ -2216,9 +2216,9 @@ Referenzia errno, sched_setparam(), e pthread_context::tid\&.
 .SS "int pthread_setspecific (\fBpthread_key_t\fPkey, const void *value)"
 
 .PP
-Definizione alla linea 49 del file pthread_key\&.c\&.
+Definition at line 49 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
+References __pthread_keys, errno, PTHREAD_KEYS_MAX, and __pthread_key::value\&.
 .PP
 .nf
 49                                                                      {
@@ -2239,9 +2239,9 @@ Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
 .SS "int pthread_spin_destroy (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 19 del file pthread_spin\&.c\&.
+Definition at line 19 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_destroy()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_destroy()\&.
 .PP
 .nf
 19                                                           {
@@ -2259,9 +2259,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "int pthread_spin_init (\fBpthread_spinlock_t\fP *lock, intpshared)"
 
 .PP
-Definizione alla linea 7 del file pthread_spin\&.c\&.
+Definition at line 7 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_init()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_init()\&.
 .PP
 .nf
 7                                                                     {
@@ -2279,9 +2279,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "int pthread_spin_lock (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 31 del file pthread_spin\&.c\&.
+Definition at line 31 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_lock()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_lock()\&.
 .PP
 .nf
 31                                                        {
@@ -2301,9 +2301,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "int pthread_spin_trylock (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 45 del file pthread_spin\&.c\&.
+Definition at line 45 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_trylock()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_trylock()\&.
 .PP
 .nf
 45                                                           {
@@ -2323,9 +2323,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "int pthread_spin_unlock (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 59 del file pthread_spin\&.c\&.
+Definition at line 59 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_unlock()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_unlock()\&.
 .PP
 .nf
 59                                                          {
@@ -2345,13 +2345,13 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "void pthread_testcancel (void)"
 
 .PP
-Definizione alla linea 23 del file pthread_cancel\&.c\&.
+Definition at line 23 of file pthread_cancel\&.c\&.
 .PP
 .nf
 23                                      {
 24     /* Boh ?? */
 25 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

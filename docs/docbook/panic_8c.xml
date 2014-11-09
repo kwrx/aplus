@@ -12,7 +12,7 @@
                 <itemizedlist>
                     <listitem>
                             <para>#define <link linkend="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</link> ;								\
-		<link linkend="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1">kprintf</link>(#reg &quot;: 0x%x\t\t&quot;, read_##reg());</para>
+		<link linkend="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a">kprintf</link>(#reg &quot;: 0x%x\t\t&quot;, read_##reg());</para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -20,7 +20,7 @@
                 <itemizedlist>
                     <listitem>
                             <para>#define <link linkend="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724">_d</link> ;								\
-		<link linkend="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1">kprintf</link>(&quot;\n&quot;);</para>
+		<link linkend="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a">kprintf</link>(&quot;\n&quot;);</para>
                     </listitem>
                 </itemizedlist>
             </para>

@@ -1,4 +1,4 @@
-\hypertarget{panic_8c}{\section{Riferimenti per il file src/panic.c}
+\hypertarget{panic_8c}{\section{src/panic.c File Reference}
 \label{panic_8c}\index{src/panic.\+c@{src/panic.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -6,38 +6,38 @@
 {\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/list.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(reg)
 \item 
 \#define \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\+\_\+d}()
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 static void \hyperlink{panic_8c_afe580dc91d724ef0ff6f71f122933170}{dump\+\_\+errno} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Print last error number. \end{DoxyCompactList}\item 
 static void \hyperlink{panic_8c_ad829ba2d1c19b556fd15c8eda84f06fa}{dump\+\_\+registers} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Print current registers. \end{DoxyCompactList}\item 
 static void \hyperlink{panic_8c_aa5d4017b67388f3d72b18d307dae1627}{dump\+\_\+stacktrace} (int count)
 \item 
 static void \hyperlink{panic_8c_a47abc582d3a8eb4889d5dafb009bdc20}{dump\+\_\+task} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Print all and current task. \end{DoxyCompactList}\item 
 void \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic} (char $\ast$msg)
-\end{DoxyCompactItemize}
-\subsection*{Variabili}
+\begin{DoxyCompactList}\small\item\em Go in Kernel Panic, halt system. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{panic_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\+\_\+queue}
-\item 
+\begin{DoxyCompactList}\small\item\em List of all Task. \end{DoxyCompactList}\item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{panic_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{panic_8c_ac08620610e2419aca3878305400a96b7}{kernel\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Kernel task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\index{panic.\+c@{panic.\+c}!\+\_\+d@{\+\_\+d}}
 \index{\+\_\+d@{\+\_\+d}!panic.\+c@{panic.\+c}}
 \subsubsection[{\+\_\+d}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+d(
@@ -45,10 +45,10 @@ void \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic} (char $\ast$m
 {}
 \end{DoxyParamCaption}
 )}}\label{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
-;                               \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{\(\backslash\)}
-\hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{        kprintf}(\textcolor{stringliteral}{"\(\backslash\)n"});
+;                               \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{\(\backslash\)}
+\hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{        kprintf}(\textcolor{stringliteral}{"\(\backslash\)n"});
 \end{DoxyCode}
 \hypertarget{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{\index{panic.\+c@{panic.\+c}!d@{d}}
 \index{d@{d}!panic.\+c@{panic.\+c}}
@@ -57,14 +57,14 @@ void \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic} (char $\ast$m
 \item[{}]{reg}
 \end{DoxyParamCaption}
 )}}\label{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
-;                               \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{\(\backslash\)}
-\hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{        kprintf}(#reg \textcolor{stringliteral}{": 0x%x\(\backslash\)t\(\backslash\)t"}, read\_##reg());
+;                               \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{\(\backslash\)}
+\hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{        kprintf}(#reg \textcolor{stringliteral}{": 0x%x\(\backslash\)t\(\backslash\)t"}, read\_##reg());
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{panic_8c_afe580dc91d724ef0ff6f71f122933170}{\index{panic.\+c@{panic.\+c}!dump\+\_\+errno@{dump\+\_\+errno}}
 \index{dump\+\_\+errno@{dump\+\_\+errno}!panic.\+c@{panic.\+c}}
 \subsubsection[{dump\+\_\+errno}]{\setlength{\rightskip}{0pt plus 5cm}static void dump\+\_\+errno (
@@ -74,17 +74,21 @@ void \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic} (char $\ast$m
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{panic_8c_afe580dc91d724ef0ff6f71f122933170}
 
 
-Definizione alla linea 13 del file panic.\+c.
+Print last error number. 
 
 
 
-Referenzia errno, e kprintf.
+Definition at line 16 of file panic.\+c.
+
+
+
+References errno, and kprintf().
 
 
 \begin{DoxyCode}
-13                          \{
-14     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"errno: %d - %s\(\backslash\)n"}, \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}, strerror(\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}));
-15 \}
+16                          \{
+17     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"errno: %d - %s\(\backslash\)n"}, \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}, strerror(\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}));
+18 \}
 \end{DoxyCode}
 \hypertarget{panic_8c_ad829ba2d1c19b556fd15c8eda84f06fa}{\index{panic.\+c@{panic.\+c}!dump\+\_\+registers@{dump\+\_\+registers}}
 \index{dump\+\_\+registers@{dump\+\_\+registers}!panic.\+c@{panic.\+c}}
@@ -95,52 +99,56 @@ Referenzia errno, e kprintf.
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{panic_8c_ad829ba2d1c19b556fd15c8eda84f06fa}
 
 
-Definizione alla linea 17 del file panic.\+c.
+Print current registers. 
 
 
 
-Referenzia \+\_\+d, cs, d, ds, eax, ebp, ebx, ecx, edi, edx, eflags, eip, es, esi, esp, gs, e kprintf.
+Definition at line 24 of file panic.\+c.
+
+
+
+References \+\_\+d, cs, d, ds, eax, ebp, ebx, ecx, edi, edx, eflags, eip, es, esi, esp, fs, gs, and kprintf().
 
 
 \begin{DoxyCode}
-17                              \{
-18 
-19     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"Registers:\(\backslash\)n"});
-20 
-21 \textcolor{preprocessor}{    #define d(reg);                             \(\backslash\)}
-22 \textcolor{preprocessor}{        kprintf(#reg ": 0x%x\(\backslash\)t\(\backslash\)t", read\_##reg());}
-23         
-24 \textcolor{preprocessor}{    #define \_d();                               \(\backslash\)}
-25 \textcolor{preprocessor}{        kprintf("\(\backslash\)n");  }
-26             
-27     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax});
-28     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx});
-29     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_af2b16bef95c844028dd145264d1d3875}{ecx});
-30     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx});
-31     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi});
-32     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi});
-33     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
-34     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_a1588906901fc3015e0865574669a56a6}{eip});
-35     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_aeedfc39703ec8e0a1f052a832e74acd3}{eflags});
-36     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp});
-37     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp});
-38     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
-39     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a8519dc239502dfcbac171b3128dc7054}{cs});
-40     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a6fe20edd854a1a653ae71ccf541a6b8b}{ds});
-41     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a0dacdc927bbcc6457b629ad88119cdc2}{es});
-42     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{structfs}{fs});
-43     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a85904ecbf7b717abe738645b4ff2f4ff}{gs});
-44     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
-45     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr0);
-46     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr2);
-47     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr3);
-48     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr4);
-49     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
-50     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
-51     
-52 \textcolor{preprocessor}{    #undef d}
-53 \textcolor{preprocessor}{    #undef \_d}
-54 \}
+24                              \{
+25 
+26     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"Registers:\(\backslash\)n"});
+27 
+28 \textcolor{preprocessor}{    #define d(reg);                             \(\backslash\)}
+29 \textcolor{preprocessor}{        kprintf(#reg ": 0x%x\(\backslash\)t\(\backslash\)t", read\_##reg());}
+30         
+31 \textcolor{preprocessor}{    #define \_d();                               \(\backslash\)}
+32 \textcolor{preprocessor}{        kprintf("\(\backslash\)n");  }
+33             
+34     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax});
+35     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx});
+36     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_af2b16bef95c844028dd145264d1d3875}{ecx});
+37     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx});
+38     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi});
+39     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi});
+40     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
+41     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_a1588906901fc3015e0865574669a56a6}{eip});
+42     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_aeedfc39703ec8e0a1f052a832e74acd3}{eflags});
+43     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp});
+44     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{task_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp});
+45     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
+46     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a8519dc239502dfcbac171b3128dc7054}{cs});
+47     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a6fe20edd854a1a653ae71ccf541a6b8b}{ds});
+48     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a0dacdc927bbcc6457b629ad88119cdc2}{es});
+49     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a2ffb5cf275c124e8f8ff30e1d4449f80}{fs});
+50     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(\hyperlink{aplus_8h_a85904ecbf7b717abe738645b4ff2f4ff}{gs});
+51     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
+52     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr0);
+53     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr2);
+54     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr3);
+55     \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}(cr4);
+56     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
+57     \hyperlink{panic_8c_ab3c4239b206cb78bc5b3daeafbc15724}{\_d}();
+58     
+59 \textcolor{preprocessor}{    #undef d}
+60 \textcolor{preprocessor}{    #undef \_d}
+61 \}
 \end{DoxyCode}
 \hypertarget{panic_8c_aa5d4017b67388f3d72b18d307dae1627}{\index{panic.\+c@{panic.\+c}!dump\+\_\+stacktrace@{dump\+\_\+stacktrace}}
 \index{dump\+\_\+stacktrace@{dump\+\_\+stacktrace}!panic.\+c@{panic.\+c}}
@@ -149,20 +157,20 @@ Referenzia \+\_\+d, cs, d, ds, eax, ebp, ebx, ecx, edi, edx, eflags, eip, es, es
 \item[{int}]{count}
 \end{DoxyParamCaption}
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{panic_8c_aa5d4017b67388f3d72b18d307dae1627}
+Print a stacktrace. 
+
+Definition at line 67 of file panic.\+c.
 
 
-Definizione alla linea 57 del file panic.\+c.
 
-
-
-Referenzia kprintf.
+References kprintf().
 
 
 \begin{DoxyCode}
-57                                        \{
-58     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"Stack trace:\(\backslash\)n"});
-59     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"TODO\(\backslash\)n\(\backslash\)n"});
-60 \}
+67                                        \{
+68     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"Stack trace:\(\backslash\)n"});
+69     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"TODO\(\backslash\)n\(\backslash\)n"});
+70 \}
 \end{DoxyCode}
 \hypertarget{panic_8c_a47abc582d3a8eb4889d5dafb009bdc20}{\index{panic.\+c@{panic.\+c}!dump\+\_\+task@{dump\+\_\+task}}
 \index{dump\+\_\+task@{dump\+\_\+task}!panic.\+c@{panic.\+c}}
@@ -173,35 +181,39 @@ Referenzia kprintf.
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{panic_8c_a47abc582d3a8eb4889d5dafb009bdc20}
 
 
-Definizione alla linea 62 del file panic.\+c.
+Print all and current task. 
 
 
 
-Referenzia task\+::exe, kprintf, list\+\_\+foreach, inode\+::name, task\+::pid, e value.
+Definition at line 76 of file panic.\+c.
+
+
+
+References task\+::exe, kprintf(), list\+\_\+foreach, inode\+::name, task\+::pid, and value.
 
 
 \begin{DoxyCode}
-62                         \{
-63     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"Task:\(\backslash\)n"});
-64     
-65     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{panic_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}) \{
-66         \hyperlink{structtask}{task\_t}* \hyperlink{structtask}{task} = (\hyperlink{structtask}{task\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
-67         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{" # %d: "}, task->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid});
-68         
-69         \textcolor{keywordflow}{if}(task->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe})
-70             \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"%s "}, task->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe}->\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name});
-71         \textcolor{keywordflow}{else}
-72             \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"unknown "});
-73             
-74         \textcolor{keywordflow}{if}(task == \hyperlink{panic_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-75             \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"(current) "});
-76             
-77         \textcolor{keywordflow}{if}(task == \hyperlink{panic_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task})
-78             \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"(kernel) "});
-79             
-80         \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)n\(\backslash\)n"});
-81     \}
-82 \}
+76                         \{
+77     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"Task:\(\backslash\)n"});
+78     
+79     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{panic_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}) \{
+80         \hyperlink{structtask}{task\_t}* \hyperlink{structtask}{task} = (\hyperlink{structtask}{task\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+81         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{" # %d: "}, task->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid});
+82         
+83         \textcolor{keywordflow}{if}(task->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe})
+84             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"%s "}, task->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe}->\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name});
+85         \textcolor{keywordflow}{else}
+86             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"unknown "});
+87             
+88         \textcolor{keywordflow}{if}(task == \hyperlink{panic_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+89             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"(current) "});
+90             
+91         \textcolor{keywordflow}{if}(task == \hyperlink{panic_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task})
+92             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"(kernel) "});
+93             
+94         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)n\(\backslash\)n"});
+95     \}
+96 \}
 \end{DoxyCode}
 \hypertarget{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{\index{panic.\+c@{panic.\+c}!panic@{panic}}
 \index{panic@{panic}!panic.\+c@{panic.\+c}}
@@ -212,48 +224,64 @@ Referenzia task\+::exe, kprintf, list\+\_\+foreach, inode\+::name, task\+::pid, 
 )}}\label{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}
 
 
-Definizione alla linea 84 del file panic.\+c.
+Go in Kernel Panic, halt system. 
 
 
 
-Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), dump\+\_\+errno(), dump\+\_\+registers(), dump\+\_\+stacktrace(), dump\+\_\+task(), e kprintf.
+Definition at line 102 of file panic.\+c.
+
+
+
+References \+\_\+\+\_\+asm\+\_\+\+\_\+(), dump\+\_\+errno(), dump\+\_\+registers(), dump\+\_\+stacktrace(), dump\+\_\+task(), and kprintf().
 
 
 \begin{DoxyCode}
-84                       \{
-85     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"cli"});
-86     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"panic: \(\backslash\)"%s\(\backslash\)"\(\backslash\)n"}, msg);
-87     
-88     
-89     \hyperlink{panic_8c_ad829ba2d1c19b556fd15c8eda84f06fa}{dump\_registers}();
-90     \hyperlink{panic_8c_aa5d4017b67388f3d72b18d307dae1627}{dump\_stacktrace}(6);
-91     \hyperlink{panic_8c_a47abc582d3a8eb4889d5dafb009bdc20}{dump\_task}();
-92     \hyperlink{panic_8c_afe580dc91d724ef0ff6f71f122933170}{dump\_errno}();
-93     
-94     \textcolor{keywordflow}{for}(;;);
-95 \}
+102                       \{
+103     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"cli"});
+104     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"panic: \(\backslash\)"%s\(\backslash\)"\(\backslash\)n"}, msg);
+105     
+106     
+107     \hyperlink{panic_8c_ad829ba2d1c19b556fd15c8eda84f06fa}{dump\_registers}();
+108     \hyperlink{panic_8c_aa5d4017b67388f3d72b18d307dae1627}{dump\_stacktrace}(6);
+109     \hyperlink{panic_8c_a47abc582d3a8eb4889d5dafb009bdc20}{dump\_task}();
+110     \hyperlink{panic_8c_afe580dc91d724ef0ff6f71f122933170}{dump\_errno}();
+111     
+112     \textcolor{keywordflow}{for}(;;);
+113 \}
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{panic_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{panic.\+c@{panic.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!panic.\+c@{panic.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{panic_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 
 \hypertarget{panic_8c_ac08620610e2419aca3878305400a96b7}{\index{panic.\+c@{panic.\+c}!kernel\+\_\+task@{kernel\+\_\+task}}
 \index{kernel\+\_\+task@{kernel\+\_\+task}!panic.\+c@{panic.\+c}}
 \subsubsection[{kernel\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ kernel\+\_\+task}}\label{panic_8c_ac08620610e2419aca3878305400a96b7}
 
 
-Definizione alla linea 34 del file sched.\+c.
+Kernel task address. 
+
+
+
+Definition at line 40 of file sched.\+c.
 
 \hypertarget{panic_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{\index{panic.\+c@{panic.\+c}!task\+\_\+queue@{task\+\_\+queue}}
 \index{task\+\_\+queue@{task\+\_\+queue}!panic.\+c@{panic.\+c}}
 \subsubsection[{task\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ task\+\_\+queue}}\label{panic_8c_acb74842176b48d2ab29b1a74b0ca4ef1}
 
 
-Definizione alla linea 36 del file sched.\+c.
+List of all Task. 
+
+
+
+Definition at line 46 of file sched.\+c.
 

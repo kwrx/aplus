@@ -1,4 +1,4 @@
-.TH "src/syscall/umount.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/umount.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -16,6 +16,8 @@ src/syscall/umount.c \-
 .br
 \fC#include <aplus/attribute\&.h>\fP
 .br
+\fC#include <aplus/syscall\&.h>\fP
+.br
 \fC#include <stdint\&.h>\fP
 .br
 \fC#include <unistd\&.h>\fP
@@ -29,79 +31,92 @@ src/syscall/umount.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "int \fBsys_umount2\fP (const char *file, int flags)"
+.RI "int \fBsys_umount2\fP (const char *file, int \fBflags\fP)"
 .br
 .ti -1c
 .RI "int \fBsys_umount\fP (const char *file)"
 .br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_umount\fP, 25)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_umount2\fP, 26)"
+.br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int sys_umount (const char *file)"
 
 .PP
-Definizione alla linea 47 del file umount\&.c\&.
+Definition at line 48 of file umount\&.c\&.
 .PP
-Referenzia sys_umount2()\&.
+References sys_umount2()\&.
 .PP
 .nf
-47                                  {
-48     return sys_umount2(file, 0);
-49 }
+48                                  {
+49     return sys_umount2(file, 0);
+50 }
 .fi
 .SS "int sys_umount2 (const char *file, intflags)"
 
 .PP
-Definizione alla linea 19 del file umount\&.c\&.
+Definition at line 20 of file umount\&.c\&.
 .PP
-Referenzia inode::chown, inode::creat, inode::dev, errno, task::fd, inode::finddir, inode::flush, inode::mode, inode::readdir, sys_close(), sys_open(), e inode::unlink\&.
+References inode::chown, inode::creat, inode::dev, errno, task::fd, inode::finddir, inode::flush, inode::mode, inode::readdir, sys_close(), sys_open(), and inode::unlink\&.
 .PP
 .nf
-19                                              {
-20     if(!file) {
-21         errno = EINVAL;
-22         return -1;
-23     }
-24 
-25     int fd = sys_open(file, O_RDONLY, 0644);
-26     if(fd < 0) {
-27         errno = ENOENT;
-28         return -1;
-29     }
-30 
-31     inode_t* ino = current_task->fd[fd];
-32     sys_close(fd);
-33 
-34     ino->readdir = NULL;
-35     ino->finddir = NULL;
-36     ino->creat = NULL;
-37     ino->unlink = NULL;
-38     ino->flush = NULL;
-39     ino->chown = NULL;
-40 
-41     ino->dev = (dev_t) 0;
-42     ino->mode &= ~S_IFMT;
-43 
-44     return 0;
-45 }
+20                                              {
+21     if(!file) {
+22         errno = EINVAL;
+23         return -1;
+24     }
+25 
+26     int fd = sys_open(file, O_RDONLY, 0644);
+27     if(fd < 0) {
+28         errno = ENOENT;
+29         return -1;
+30     }
+31 
+32     inode_t* ino = current_task->fd[fd];
+33     sys_close(fd);
+34 
+35     ino->readdir = NULL;
+36     ino->finddir = NULL;
+37     ino->creat = NULL;
+38     ino->unlink = NULL;
+39     ino->flush = NULL;
+40     ino->chown = NULL;
+41 
+42     ino->dev = (dev_t) 0;
+43     ino->mode &= ~S_IFMT;
+44 
+45     return 0;
+46 }
 .fi
-.SH "Documentazione delle variabili"
+.SS "SYSCALL (\fBsys_umount\fP, 25)"
+
+.SS "SYSCALL (\fBsys_umount2\fP, 26)"
+
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
-.SH "Autore"
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

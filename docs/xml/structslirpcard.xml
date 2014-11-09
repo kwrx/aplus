@@ -87,21 +87,21 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="101">
+      <node id="107">
         <label>slirpcard</label>
         <link refid="structslirpcard"/>
-        <childnode refid="102" relation="usage">
+        <childnode refid="108" relation="usage">
           <edgelabel>+netif</edgelabel>
         </childnode>
       </node>
-      <node id="103">
+      <node id="109">
         <label>pci_device</label>
         <link refid="structpci__device"/>
       </node>
-      <node id="102">
+      <node id="108">
         <label>netif</label>
         <link refid="structnetif"/>
-        <childnode refid="103" relation="usage">
+        <childnode refid="109" relation="usage">
           <edgelabel>+device</edgelabel>
         </childnode>
       </node>

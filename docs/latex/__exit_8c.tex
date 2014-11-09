@@ -1,19 +1,20 @@
-\hypertarget{__exit_8c}{\section{Riferimenti per il file src/syscall/\+\_\+exit.c}
+\hypertarget{__exit_8c}{\section{src/syscall/\+\_\+exit.c File Reference}
 \label{__exit_8c}\index{src/syscall/\+\_\+exit.\+c@{src/syscall/\+\_\+exit.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/task.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \hyperlink{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}{sys\+\_\+exit} (int status)
-\item 
+\begin{DoxyCompactList}\small\item\em Terminates the process normally by returning control to the host environment, but without performing any of the regular cleanup tasks for terminating processes (as function exit does).~\newline
+ No object destructors, nor functions registered by atexit or at\+\_\+quick\+\_\+exit are called. \end{DoxyCompactList}\item 
 \hyperlink{__exit_8c_ac6f9574edcf881d9f332eb02f79f40e6}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}{sys\+\_\+exit}, 0)
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}{\index{\+\_\+exit.\+c@{\+\_\+exit.\+c}!sys\+\_\+exit@{sys\+\_\+exit}}
 \index{sys\+\_\+exit@{sys\+\_\+exit}!\+\_\+exit.\+c@{\+\_\+exit.\+c}}
 \subsubsection[{sys\+\_\+exit}]{\setlength{\rightskip}{0pt plus 5cm}void sys\+\_\+exit (
@@ -23,17 +24,30 @@ void \hyperlink{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}{sys\+\_\+exit} (int
 )}}\label{__exit_8c_a1c0b6529c2b4ef268480a55f1314a400}
 
 
-Definizione alla linea 6 del file \+\_\+exit.\+c.
+Terminates the process normally by returning control to the host environment, but without performing any of the regular cleanup tasks for terminating processes (as function exit does).~\newline
+ No object destructors, nor functions registered by atexit or at\+\_\+quick\+\_\+exit are called. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em status} & Status code.~\newline
+ If this is 0 or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S, it indicates success.~\newline
+ If it is E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E, it indicates failure.~\newline
+\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 16 of file \+\_\+exit.\+c.
 
 
 
-Referenzia schedule\+\_\+exit().
+References schedule\+\_\+exit().
 
 
 \begin{DoxyCode}
-6                           \{
-7     \hyperlink{src_2sched_8c_a38866ec6f9b163355973a41f15248ab1}{schedule\_exit}(status);
-8 \}
+16                           \{
+17     \hyperlink{src_2sched_8c_a38866ec6f9b163355973a41f15248ab1}{schedule\_exit}(status);
+18 \}
 \end{DoxyCode}
 \hypertarget{__exit_8c_ac6f9574edcf881d9f332eb02f79f40e6}{\index{\+\_\+exit.\+c@{\+\_\+exit.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!\+\_\+exit.\+c@{\+\_\+exit.\+c}}

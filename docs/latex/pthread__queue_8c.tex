@@ -1,15 +1,15 @@
-\hypertarget{pthread__queue_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+queue.c}
+\hypertarget{pthread__queue_8c}{\section{usr/src/libpthread/src/pthread\+\_\+queue.c File Reference}
 \label{pthread__queue_8c}\index{usr/src/libpthread/src/pthread\+\_\+queue.\+c@{usr/src/libpthread/src/pthread\+\_\+queue.\+c}}
 }
 {\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$string.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} void \hyperlink{pthread__queue_8c_a524e53db3985af45990760ed9068c0a9}{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{pthread__internal_8h_a5e151c615eda34903514212f05a5ccf8}{P\+R\+I\+V\+A\+T\+E} \hyperlink{pthread__internal_8h_acef1d04f94658c4052cd87213538f7e4}{pthread\+\_\+context\+\_\+t} \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\+\_\+\+\_\+current\+\_\+thread}
@@ -20,7 +20,7 @@
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{pthread__queue_8c_a524e53db3985af45990760ed9068c0a9}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue}}
 \index{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} void \+\_\+\+\_\+pthread\+\_\+init\+\_\+queue (
@@ -30,11 +30,11 @@
 )}}\label{pthread__queue_8c_a524e53db3985af45990760ed9068c0a9}
 
 
-Definizione alla linea 12 del file pthread\+\_\+queue.\+c.
+Definition at line 12 of file pthread\+\_\+queue.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\+\_\+context\+::attr, pthread\+\_\+context\+::cond, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+once\+::started, e pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\+\_\+context\+::attr, pthread\+\_\+context\+::cond, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+once\+::started, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -56,25 +56,25 @@ Referenzia \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+current\+\_\+thread@{\+\_\+\+\_\+current\+\_\+thread}}
 \index{\+\_\+\+\_\+current\+\_\+thread@{\+\_\+\+\_\+current\+\_\+thread}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
 \subsubsection[{\+\_\+\+\_\+current\+\_\+thread}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+R\+I\+V\+A\+T\+E} {\bf pthread\+\_\+context\+\_\+t} \+\_\+\+\_\+current\+\_\+thread}}\label{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}
 
 
-Definizione alla linea 6 del file pthread\+\_\+queue.\+c.
+Definition at line 6 of file pthread\+\_\+queue.\+c.
 
 \hypertarget{pthread__queue_8c_a0b13cae1b0e7848f7d9689241f8f93a8}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}}
 \index{\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+counts}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} {\bf uint32\+\_\+t} \+\_\+\+\_\+pthread\+\_\+counts = 1}}\label{pthread__queue_8c_a0b13cae1b0e7848f7d9689241f8f93a8}
 
 
-Definizione alla linea 9 del file pthread\+\_\+queue.\+c.
+Definition at line 9 of file pthread\+\_\+queue.\+c.
 
 \hypertarget{pthread__queue_8c_af5e1770b9b68ff239d3c16cb3587ce64}{\index{pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}!\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}}
 \index{\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}!pthread\+\_\+queue.\+c@{pthread\+\_\+queue.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+U\+B\+L\+I\+C} {\bf pthread\+\_\+context\+\_\+t}$\ast$ \+\_\+\+\_\+pthread\+\_\+queue = \&{\bf \+\_\+\+\_\+current\+\_\+thread}}}\label{pthread__queue_8c_af5e1770b9b68ff239d3c16cb3587ce64}
 
 
-Definizione alla linea 8 del file pthread\+\_\+queue.\+c.
+Definition at line 8 of file pthread\+\_\+queue.\+c.
 

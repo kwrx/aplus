@@ -1,4 +1,4 @@
-.TH "src/syscall/open.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/open.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -27,192 +27,210 @@ src/syscall/open.c \-
 \fC#include <stdio\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "static \fBinode_t\fP * \fBino_open\fP (char *filename, int flags, mode_t mode)"
+.RI "static char * \fBdupstr\fP (char *s)"
 .br
 .ti -1c
-.RI "int \fBsys_open\fP (char *filename, int flags, mode_t mode)"
+.RI "static \fBinode_t\fP * \fBino_open\fP (char *filename, int \fBflags\fP, mode_t mode)"
+.br
+.ti -1c
+.RI "int \fBsys_open\fP (char *filename, int \fBflags\fP, mode_t mode)"
 .br
 .ti -1c
 .RI "\fBSYSCALL\fP (\fBsys_open\fP, 10)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .ti -1c
 .RI "\fBinode_t\fP * \fBvfs_root\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
+.SS "static char* dupstr (char *s)\fC [static]\fP"
+
+.PP
+Definition at line 19 of file open\&.c\&.
+.PP
+References kmalloc()\&.
+.PP
+.nf
+19                              {
+20     char* p = (char*) kmalloc(strlen(s));
+21     strcpy(p, s);
+22 
+23     return p;
+24 }
+.fi
 .SS "static \fBinode_t\fP* ino_open (char *filename, intflags, mode_tmode)\fC [static]\fP"
 
 .PP
-Definizione alla linea 19 del file open\&.c\&.
+Definition at line 27 of file open\&.c\&.
 .PP
-Referenzia task::cwd, errno, fs_creat(), fs_finddir(), kprintf, inode::link, inode::mode, O_DIRECTORY, O_NOFOLLOW, e vfs_root\&.
+References task::cwd, errno, fs_creat(), fs_finddir(), kprintf(), inode::link, inode::mode, O_DIRECTORY, O_NOFOLLOW, and vfs_root\&.
 .PP
 .nf
-19                                                                  {
-20     inode_t* cwd = NULL;
-21 
-22     if(filename[0] == '/')
-23         cwd = vfs_root;
-24     else
-25         cwd = current_task->cwd;
-26     
-27     if(!cwd) {
-28         if(!vfs_root) {
-29             kprintf("sys_open: no root found for cwd\&.");
-30         
-31             errno = ENOENT;
-32             return NULL;
-33         }
-34         
-35         cwd = vfs_root;
-36     }
-37     
-38     
-39     if(filename[0] == '/')
-40         filename++;
-41         
-42     if(filename[0] == 0)
-43         return cwd;
-44         
+27                                                                  {
+28     inode_t* cwd = NULL;
+29 
+30     if(filename[0] == '/')
+31         cwd = vfs_root;
+32     else
+33         cwd = current_task->cwd;
+34     
+35     if(!cwd) {
+36         if(!vfs_root) {
+37             kprintf("sys_open: no root found for cwd\&.");
+38         
+39             errno = ENOENT;
+40             return NULL;
+41         }
+42         
+43         cwd = vfs_root;
+44     }
 45     
-46     char* s = filename;
-47     char* p = s;
-48     
-49     while(*s) {
-50         if((p = strchr(s, '/'))) {
-51             *p++ = 0;
+46     
+47     if(filename[0] == '/')
+48         filename++;
+49         
+50     if(filename[0] == 0)
+51         return cwd;
 52         
-53             cwd = (inode_t*) fs_finddir(cwd, s);
-54             if(!cwd) {
-55                 errno = ENOENT;
-56                 return NULL;
-57             }
-58 
-59             while(S_ISLNK(cwd->mode))
-60                 if(cwd->link)
-61                     cwd = cwd->link;
-62                 else
-63                     break;
-64 
-65 
-66             if(!(S_ISDIR(cwd->mode))) {
-67                 errno = ENOTDIR;
-68                 return NULL;
-69             }
-70 
-71             s = p;
-72         } else
-73             break;
-74     }
-75 
-76     if(*s == 0) {
-77         errno = ENOENT;
-78         return NULL;
-79     }
-80 
-81     inode_t* ent = (inode_t*) fs_finddir(cwd, s);
+53     
+54     char* s = filename;
+55     char* p = s;
+56     
+57     while(*s) {
+58         if((p = strchr(s, '/'))) {
+59             *p++ = 0;
+60         
+61             cwd = (inode_t*) fs_finddir(cwd, s);
+62             if(!cwd) {
+63                 errno = ENOENT;
+64                 return NULL;
+65             }
+66 
+67             while(S_ISLNK(cwd->mode))
+68                 if(cwd->link)
+69                     cwd = cwd->link;
+70                 else
+71                     break;
+72 
+73             s = p;
+74         } else
+75             break;
+76     }
+77 
+78     if(*s == 0) {
+79         errno = ENOENT;
+80         return NULL;
+81     }
 82 
-83     if(flags & O_EXCL) {
-84         if(ent) {
-85             errno = EEXIST;
-86             return NULL;
-87         }
-88     }
-89 
-90 
-91     if(flags & O_CREAT)
-92         if(!ent)
-93             ent = (inode_t*) fs_creat(cwd, s, mode);
-94         
-95 
-96     if(!ent) {
-97         errno = ENOENT;
-98         return NULL;
-99     }
-100 
-101     if(!(flags & O_NOFOLLOW)) {
-102         while(S_ISLNK(ent->mode)) {
-103             if(ent == ent->link) {
-104                 errno = ELOOP;
-105                 return NULL;
-106             }           
-107 
-108             if(ent->link)
-109                 ent = ent->link;
-110             else
-111                 break;
-112         }
-113     }
-114 
-115     if(flags & O_DIRECTORY) {
-116         if(!(S_ISDIR(ent->mode))) {
-117             errno = ENOTDIR;
-118             return NULL;
-119         }
-120     }
-121 
-122 
-123     return ent;
-124 }
+83     inode_t* ent = (inode_t*) fs_finddir(cwd, s);
+84 
+85     if(flags & O_EXCL) {
+86         if(ent) {
+87             errno = EEXIST;
+88             return NULL;
+89         }
+90     }
+91 
+92 
+93     if(flags & O_CREAT)
+94         if(!ent)
+95             ent = (inode_t*) fs_creat(cwd, s, mode);
+96         
+97 
+98     if(!ent) {
+99         errno = ENOENT;
+100         return NULL;
+101     }
+102 
+103     if(!(flags & O_NOFOLLOW)) {
+104         while(S_ISLNK(ent->mode)) {
+105             if(ent == ent->link) {
+106                 errno = ELOOP;
+107                 return NULL;
+108             }           
+109 
+110             if(ent->link)
+111                 ent = ent->link;
+112             else
+113                 break;
+114         }
+115     }
+116 
+117     if(flags & O_DIRECTORY) {
+118         if(!(S_ISDIR(ent->mode))) {
+119             errno = ENOTDIR;
+120             return NULL;
+121         }
+122     }
+123 
+124     return ent;
+125 }
 .fi
 .SS "int sys_open (char *filename, intflags, mode_tmode)"
 
 .PP
-Definizione alla linea 126 del file open\&.c\&.
+Definition at line 127 of file open\&.c\&.
 .PP
-Referenzia errno, task::fd, ino_open(), e TASK_MAX_FD\&.
+References dupstr(), errno, task::fd, ino_open(), kfree(), and TASK_MAX_FD\&.
 .PP
 .nf
-126                                                      {
-127     if(!current_task)
-128         return -1;
-129         
-130     inode_t* ino = ino_open(filename, flags, mode);
-131     if(!ino)
-132         return -1;
-133     
-134     
-135     inode_t** fd = NULL;
-136     for(int i = 0; i < TASK_MAX_FD; i++) {
-137         if(current_task->fd[i] == 0) {
-138             fd = &current_task->fd[i];
-139             break;
-140         }
-141     }
-142     
-143     if(fd == NULL) {
-144         errno = EMFILE;
-145         return -1;
+127                                                      {
+128     if(!current_task)
+129         return -1;
+130 
+131     char* p = dupstr(filename);
+132     inode_t* ino = ino_open(p, flags, mode);
+133 
+134     kfree(p);
+135 
+136     if(!ino)
+137         return -1;
+138     
+139     
+140     inode_t** fd = NULL;
+141     for(int i = 0; i < TASK_MAX_FD; i++) {
+142         if(current_task->fd[i] == 0) {
+143             fd = &current_task->fd[i];
+144             break;
+145         }
 146     }
 147     
-148     *fd = ino;
-149     return 0;
-150 }
+148     if(fd == NULL) {
+149         errno = EMFILE;
+150         return -1;
+151     }
+152     
+153     *fd = ino;
+154     return 0;
+155 }
 .fi
 .SS "SYSCALL (\fBsys_open\fP, 10)"
 
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
 .SS "\fBinode_t\fP* vfs_root"
 
 .PP
-Definizione alla linea 19 del file vfs\&.c\&.
-.SH "Autore"
+Definition at line 19 of file vfs\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

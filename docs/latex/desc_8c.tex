@@ -1,4 +1,4 @@
-\hypertarget{desc_8c}{\section{Riferimenti per il file src/arch/desc.c}
+\hypertarget{desc_8c}{\section{src/arch/desc.c File Reference}
 \label{desc_8c}\index{src/arch/desc.\+c@{src/arch/desc.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -9,12 +9,12 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$time.\+h$>$}\\*
 {\ttfamily \#include $<$sys/times.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structgdt__entry}{gdt\+\_\+entry}
 \end{DoxyCompactItemize}
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{desc_8c_aeef7411226f7c2a6d1328386a2b3832d}{F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K}~0x3\+F\+F\+F\+F\+F\+E3
@@ -33,13 +33,13 @@ struct \hyperlink{structgdt__entry}{gdt\+\_\+entry}
 \item 
 \#define \hyperlink{desc_8c_a33200b25f91bf4cf6a4ec73ef292b207}{B\+C\+D2\+B\+I\+N2}(bcd)~(((((bcd) \& 0x0\+F) + ((bcd \& 0x70) / 16) $\ast$ 10)) $\vert$ (bcd \& 0x80))
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-struct \hyperlink{structgdt__entry}{gdt\+\_\+entry} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed))
+struct \hyperlink{structgdt__entry}{gdt\+\_\+entry} \hyperlink{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed))
 \item 
 void \hyperlink{desc_8c_a7d06701ac073c331c83519e3909b7fce}{schedule} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Perform a scheduling and check T\+T\+L (Time To Live) for current task. \end{DoxyCompactList}\item 
 void \hyperlink{desc_8c_ab36b30e25787b3f4887160064ba2f43a}{syscall\+\_\+handler} (regs\+\_\+t $\ast$)
 \item 
 \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\+\_\+\+\_\+asm\+\_\+\+\_\+} (\char`\"{}.section .text		\textbackslash{}n\textbackslash{}
@@ -90,7 +90,7 @@ static \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyp
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{desc_8c_affef3cc40072321b8d54e4c00aa4de85}{pit\+\_\+getticks} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{desc_8c_aea6d44db9dbbcd64642fcb7904f41d9a}{limit\+\_\+l}
@@ -125,7 +125,7 @@ static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hy
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}{\index{desc.\+c@{desc.\+c}!\+\_\+i@{\+\_\+i}}
 \index{\+\_\+i@{\+\_\+i}!desc.\+c@{desc.\+c}}
 \subsubsection[{\+\_\+i}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+i(
@@ -133,7 +133,7 @@ static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hy
 \item[{}]{n}
 \end{DoxyParamCaption}
 )}}\label{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} isr##n();                       \hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{\(\backslash\)}
 \hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{        idt\_set}(n, (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t})isr##n, 0x08, 0x8E)
@@ -145,7 +145,7 @@ static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hy
 \item[{}]{n}
 \end{DoxyParamCaption}
 )}}\label{desc_8c_a7baf6caa9795e4df7fb416e88b75c296}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} irq##n();                           \hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{\(\backslash\)}
 \hyperlink{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}{        idt\_set}(n + 32, (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t})irq##n, 0x08, 0x8E)
@@ -169,7 +169,7 @@ static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hy
 \subsubsection[{F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+A\+U\+L\+T\+\_\+\+M\+A\+S\+K~0x3\+F\+F\+F\+F\+F\+E3}}\label{desc_8c_aeef7411226f7c2a6d1328386a2b3832d}
 
 
-Definizione alla linea 37 del file desc.\+c.
+Definition at line 37 of file desc.\+c.
 
 \hypertarget{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}{\index{desc.\+c@{desc.\+c}!gdt\+\_\+set@{gdt\+\_\+set}}
 \index{gdt\+\_\+set@{gdt\+\_\+set}!desc.\+c@{desc.\+c}}
@@ -182,7 +182,7 @@ Definizione alla linea 37 del file desc.\+c.
 \item[{}]{g}
 \end{DoxyParamCaption}
 )}}\label{desc_8c_ac84b9fa6258a307e74ee3e6b8019d6c2}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{gdt\_e}[n].base\_l = (b & 0xFFFF);                \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
 \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{        gdt\_e}[n].base\_m = (b >> 16) & 0xFF;          \hyperlink{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\(\backslash\)}
@@ -202,7 +202,7 @@ Definizione alla linea 37 del file desc.\+c.
 \item[{}]{f}
 \end{DoxyParamCaption}
 )}}\label{desc_8c_a57d9d99abdf93e1b7d838f47efc6af1c}
-{\bfseries Valore\+:}
+{\bfseries Value\+:}
 \begin{DoxyCode}
 \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{idt\_e}[i].base\_l = b & 0xFFFF;              \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\(\backslash\)}
 \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{        idt\_e}[i].base\_h = (b >> 16) & 0xFFFF;        \hyperlink{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\(\backslash\)}
@@ -215,11 +215,11 @@ Definizione alla linea 37 del file desc.\+c.
 \subsubsection[{P\+I\+T\+\_\+\+F\+R\+E\+Q}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+I\+T\+\_\+\+F\+R\+E\+Q~(C\+L\+O\+C\+K\+S\+\_\+\+P\+E\+R\+\_\+\+S\+E\+C)}}\label{desc_8c_aaad9208d1f30cc40267fdeb44f593a35}
 
 
-Definizione alla linea 38 del file desc.\+c.
+Definition at line 38 of file desc.\+c.
 
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\index{desc.\+c@{desc.\+c}!\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}!desc.\+c@{desc.\+c}}
 \subsubsection[{\+\_\+\+\_\+asm\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+asm\+\_\+\+\_\+ (
@@ -233,23 +233,23 @@ Definizione alla linea 38 del file desc.\+c.
 \item[{ax\textbackslash{}n\textbackslash{}jmp 0x08\+:.\+done\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}.\+done\+:\textbackslash{}n\textbackslash{}ret\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}.\+global idt\+\_\+load\textbackslash{}n\textbackslash{}idt\+\_\+load\+:\textbackslash{}n\textbackslash{}lidt\textbackslash{}n\textbackslash{}ret\textbackslash{}n\textbackslash{}\textbackslash{}n\textbackslash{}\textbackslash{}n\char`\"{}}]{\mbox{[}idt\+\_\+p\mbox{]}}
 \end{DoxyParamCaption}
 )}}\label{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}
-\hypertarget{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\index{desc.\+c@{desc.\+c}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\hypertarget{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\index{desc.\+c@{desc.\+c}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!desc.\+c@{desc.\+c}}
-\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf iso9660\+\_\+dir} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
 \begin{DoxyParamCaption}
 \item[{(packed)}]{}
 \end{DoxyParamCaption}
-)}}\label{desc_8c_a88d6351e81fa254cec37b8a9a1353401}
+)}}\label{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}
 
 
-Definizione alla linea 44 del file desc.\+c.
+Definition at line 44 of file desc.\+c.
 
 
 \begin{DoxyCode}
 46                        \{
 47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
 48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
-49 \} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+49 \} \hyperlink{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
 \end{DoxyCode}
 \hypertarget{desc_8c_a6a369f578313199f231869f97e16802d}{\index{desc.\+c@{desc.\+c}!desc\+\_\+init@{desc\+\_\+init}}
 \index{desc\+\_\+init@{desc\+\_\+init}!desc.\+c@{desc.\+c}}
@@ -260,11 +260,11 @@ Definizione alla linea 44 del file desc.\+c.
 )}}\label{desc_8c_a6a369f578313199f231869f97e16802d}
 
 
-Definizione alla linea 195 del file desc.\+c.
+Definition at line 195 of file desc.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), \+\_\+i, gdt\+\_\+set, irq\+\_\+set(), P\+I\+T\+\_\+\+F\+R\+E\+Q, pit\+\_\+handler(), uint32\+\_\+t, e uint8\+\_\+t.
+References \+\_\+\+\_\+asm\+\_\+\+\_\+(), \+\_\+i, gdt\+\_\+set, irq\+\_\+set(), P\+I\+T\+\_\+\+F\+R\+E\+Q, pit\+\_\+handler(), uint32\+\_\+t, and uint8\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -414,11 +414,11 @@ Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), \+\_\+i, gdt\+\_\+set, irq\+\_\+set(),
 )}}\label{desc_8c_ae5e75d23e9ca091bdf2f1c5007481202}
 
 
-Definizione alla linea 354 del file desc.\+c.
+Definition at line 354 of file desc.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -440,7 +440,7 @@ Referenzia errno.
 )}}\label{desc_8c_a16eb17da95d62143431a37e9381af3ee}
 
 
-Definizione alla linea 155 del file desc.\+c.
+Definition at line 155 of file desc.\+c.
 
 
 \begin{DoxyCode}
@@ -465,11 +465,11 @@ Definizione alla linea 155 del file desc.\+c.
 )}}\label{desc_8c_a47adfd20d4b7265f3e5c95c08d6bdace}
 
 
-Definizione alla linea 334 del file desc.\+c.
+Definition at line 334 of file desc.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -492,11 +492,11 @@ Referenzia errno.
 )}}\label{desc_8c_a4992b098d3d233475016a0288e6cc918}
 
 
-Definizione alla linea 344 del file desc.\+c.
+Definition at line 344 of file desc.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -519,11 +519,11 @@ Referenzia errno.
 )}}\label{desc_8c_a5ec693d5682a18cbeb87ae5c5ea25c03}
 
 
-Definizione alla linea 151 del file desc.\+c.
+Definition at line 151 of file desc.\+c.
 
 
 
-Referenzia panic().
+References panic().
 
 
 \begin{DoxyCode}
@@ -540,11 +540,11 @@ Referenzia panic().
 )}}\label{desc_8c_a4f2dd94350b058e8e8ba473a2822cf7a}
 
 
-Definizione alla linea 183 del file desc.\+c.
+Definition at line 183 of file desc.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf, panic(), e uint32\+\_\+t.
+References \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf(), panic(), and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -552,7 +552,7 @@ Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf, panic(), e uint32\+\_\+t.
 184     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} faultaddr;
 185     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} \_\_volatile\_\_(\textcolor{stringliteral}{"mov eax, cr2"} : \textcolor{stringliteral}{"=a"}(faultaddr));
 186 
-187     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"Page fault at address: 0x%x\(\backslash\)n"}, faultaddr);
+187     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"Page fault at address: 0x%x\(\backslash\)n"}, faultaddr);
 188     \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"Page Fault"});
 189 \}
 \end{DoxyCode}
@@ -565,7 +565,7 @@ Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf, panic(), e uint32\+\_\+t.
 )}}\label{desc_8c_affef3cc40072321b8d54e4c00aa4de85}
 
 
-Definizione alla linea 393 del file desc.\+c.
+Definition at line 393 of file desc.\+c.
 
 
 \begin{DoxyCode}
@@ -583,11 +583,11 @@ Definizione alla linea 393 del file desc.\+c.
 )}}\label{desc_8c_a0c9b7a41bf04c15de2b484df54fcb62b}
 
 
-Definizione alla linea 373 del file desc.\+c.
+Definition at line 373 of file desc.\+c.
 
 
 
-Referenzia B\+C\+D2\+B\+I\+N, B\+C\+D2\+B\+I\+N2, rtc(), e uint32\+\_\+t.
+References B\+C\+D2\+B\+I\+N, B\+C\+D2\+B\+I\+N2, rtc(), and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -620,11 +620,11 @@ Referenzia B\+C\+D2\+B\+I\+N, B\+C\+D2\+B\+I\+N2, rtc(), e uint32\+\_\+t.
 )}}\label{desc_8c_a28c9747160a8526a5272ea44e68f45b6}
 
 
-Definizione alla linea 166 del file desc.\+c.
+Definition at line 166 of file desc.\+c.
 
 
 
-Referenzia P\+I\+T\+\_\+\+F\+R\+E\+Q, e schedule().
+References P\+I\+T\+\_\+\+F\+R\+E\+Q, and schedule().
 
 
 \begin{DoxyCode}
@@ -653,11 +653,11 @@ Referenzia P\+I\+T\+\_\+\+F\+R\+E\+Q, e schedule().
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a1d44575d1f90766872fc87b63171102b}
 
 
-Definizione alla linea 365 del file desc.\+c.
+Definition at line 365 of file desc.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), e uint8\+\_\+t.
+References \+\_\+\+\_\+asm\+\_\+\+\_\+(), and uint8\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -678,29 +678,33 @@ Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), e uint8\+\_\+t.
 )}}\label{desc_8c_a7d06701ac073c331c83519e3909b7fce}
 
 
-Definizione alla linea 93 del file sched.\+c.
+Perform a scheduling and check T\+T\+L (Time To Live) for current task. 
 
 
 
-Referenzia task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enabled, schedule\+\_\+next(), e task\+\_\+switch().
+Definition at line 133 of file sched.\+c.
+
+
+
+References task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enabled, schedule\+\_\+next(), and task\+\_\+switch().
 
 
 \begin{DoxyCode}
-93                 \{
-94     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
-95         \textcolor{keywordflow}{return};
-96         
-97     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
-98         \textcolor{keywordflow}{return};
-99 
-100         
-101     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} += 1;
-102     
-103     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} % \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority})
-104         \textcolor{keywordflow}{return};
-105         
-106     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
-107 \}
+133                 \{
+134     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
+135         \textcolor{keywordflow}{return};
+136         
+137     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
+138         \textcolor{keywordflow}{return};
+139 
+140         
+141     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} += 1;
+142     
+143     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} % \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority})
+144         \textcolor{keywordflow}{return};
+145         
+146     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
+147 \}
 \end{DoxyCode}
 \hypertarget{desc_8c_ab36b30e25787b3f4887160064ba2f43a}{\index{desc.\+c@{desc.\+c}!syscall\+\_\+handler@{syscall\+\_\+handler}}
 \index{syscall\+\_\+handler@{syscall\+\_\+handler}!desc.\+c@{desc.\+c}}
@@ -711,11 +715,11 @@ Referenzia task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enable
 )}}\label{desc_8c_ab36b30e25787b3f4887160064ba2f43a}
 
 
-Definizione alla linea 53 del file syscall.\+c.
+Definition at line 53 of file syscall.\+c.
 
 
 
-Referenzia syscall\+\_\+handlers, e syscall\+\_\+invoke().
+References syscall\+\_\+handlers, and syscall\+\_\+invoke().
 
 
 \begin{DoxyCode}
@@ -726,109 +730,109 @@ Referenzia syscall\+\_\+handlers, e syscall\+\_\+invoke().
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{desc_8c_a8b0d6200bc639dd37ff68847a0adde5f}{\index{desc.\+c@{desc.\+c}!access@{access}}
 \index{access@{access}!desc.\+c@{desc.\+c}}
 \subsubsection[{access}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} access}}\label{desc_8c_a8b0d6200bc639dd37ff68847a0adde5f}
 
 
-Definizione alla linea 3 del file desc.\+c.
+Definition at line 6 of file desc.\+c.
 
 \hypertarget{desc_8c_a8fef9c987f038778feaf85edfcc9c060}{\index{desc.\+c@{desc.\+c}!base\+\_\+h@{base\+\_\+h}}
 \index{base\+\_\+h@{base\+\_\+h}!desc.\+c@{desc.\+c}}
 \subsubsection[{base\+\_\+h}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} base\+\_\+h}}\label{desc_8c_a8fef9c987f038778feaf85edfcc9c060}
 
 
-Definizione alla linea 3 del file desc.\+c.
+Definition at line 6 of file desc.\+c.
 
 \hypertarget{desc_8c_af2ca1e64dc7ef22ee1082a58403166ec}{\index{desc.\+c@{desc.\+c}!base\+\_\+l@{base\+\_\+l}}
 \index{base\+\_\+l@{base\+\_\+l}!desc.\+c@{desc.\+c}}
 \subsubsection[{base\+\_\+l}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} base\+\_\+l}}\label{desc_8c_af2ca1e64dc7ef22ee1082a58403166ec}
 
 
-Definizione alla linea 2 del file desc.\+c.
+Definition at line 5 of file desc.\+c.
 
 \hypertarget{desc_8c_a98fb2af33fad804398328d56ccf01ec2}{\index{desc.\+c@{desc.\+c}!base\+\_\+m@{base\+\_\+m}}
 \index{base\+\_\+m@{base\+\_\+m}!desc.\+c@{desc.\+c}}
 \subsubsection[{base\+\_\+m}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} base\+\_\+m}}\label{desc_8c_a98fb2af33fad804398328d56ccf01ec2}
 
 
-Definizione alla linea 3 del file desc.\+c.
+Definition at line 6 of file desc.\+c.
 
 \hypertarget{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}{\index{desc.\+c@{desc.\+c}!gdt\+\_\+e@{gdt\+\_\+e}}
 \index{gdt\+\_\+e@{gdt\+\_\+e}!desc.\+c@{desc.\+c}}
 \subsubsection[{gdt\+\_\+e}]{\setlength{\rightskip}{0pt plus 5cm}gdt\+\_\+entry\+\_\+t gdt\+\_\+e\mbox{[}5\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a243b9f88d2a68b2d2daff1dd77773e08}
 
 
-Definizione alla linea 104 del file desc.\+c.
+Definition at line 104 of file desc.\+c.
 
 \hypertarget{desc_8c_af67a6154264e775ccf3c976fefe43618}{\index{desc.\+c@{desc.\+c}!gdt\+\_\+p@{gdt\+\_\+p}}
 \index{gdt\+\_\+p@{gdt\+\_\+p}!desc.\+c@{desc.\+c}}
 \subsubsection[{gdt\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}gdt\+\_\+ptr\+\_\+t gdt\+\_\+p\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_af67a6154264e775ccf3c976fefe43618}
 
 
-Definizione alla linea 105 del file desc.\+c.
+Definition at line 105 of file desc.\+c.
 
 \hypertarget{desc_8c_acfea365f69e71368a2db03333d4afd6f}{\index{desc.\+c@{desc.\+c}!granularity@{granularity}}
 \index{granularity@{granularity}!desc.\+c@{desc.\+c}}
 \subsubsection[{granularity}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} granularity}}\label{desc_8c_acfea365f69e71368a2db03333d4afd6f}
 
 
-Definizione alla linea 3 del file desc.\+c.
+Definition at line 6 of file desc.\+c.
 
 \hypertarget{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}{\index{desc.\+c@{desc.\+c}!idt\+\_\+e@{idt\+\_\+e}}
 \index{idt\+\_\+e@{idt\+\_\+e}!desc.\+c@{desc.\+c}}
 \subsubsection[{idt\+\_\+e}]{\setlength{\rightskip}{0pt plus 5cm}idt\+\_\+entry\+\_\+t idt\+\_\+e\mbox{[}256\mbox{]}\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a248e57c601e50474a60c9d42c6ac8fb3}
 
 
-Definizione alla linea 107 del file desc.\+c.
+Definition at line 107 of file desc.\+c.
 
 \hypertarget{desc_8c_acd81c3f56ebae00c0f2af978d2b48d42}{\index{desc.\+c@{desc.\+c}!idt\+\_\+p@{idt\+\_\+p}}
 \index{idt\+\_\+p@{idt\+\_\+p}!desc.\+c@{desc.\+c}}
 \subsubsection[{idt\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}idt\+\_\+ptr\+\_\+t idt\+\_\+p\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_acd81c3f56ebae00c0f2af978d2b48d42}
 
 
-Definizione alla linea 108 del file desc.\+c.
+Definition at line 108 of file desc.\+c.
 
 \hypertarget{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}{\index{desc.\+c@{desc.\+c}!irqs@{irqs}}
 \index{irqs@{irqs}!desc.\+c@{desc.\+c}}
 \subsubsection[{irqs}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ irqs\mbox{[}16\mbox{]} = \{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \}\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a8e2066f75678ef3cb314db1e33fe5e4d}
 
 
-Definizione alla linea 102 del file desc.\+c.
+Definition at line 102 of file desc.\+c.
 
 \hypertarget{desc_8c_ab391065c3b916fa1704b6bfb7b099d04}{\index{desc.\+c@{desc.\+c}!keyboard\+\_\+ready@{keyboard\+\_\+ready}}
 \index{keyboard\+\_\+ready@{keyboard\+\_\+ready}!desc.\+c@{desc.\+c}}
 \subsubsection[{keyboard\+\_\+ready}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} keyboard\+\_\+ready = 0}}\label{desc_8c_ab391065c3b916fa1704b6bfb7b099d04}
 
 
-Definizione alla linea 115 del file desc.\+c.
+Definition at line 115 of file desc.\+c.
 
 \hypertarget{desc_8c_aea6d44db9dbbcd64642fcb7904f41d9a}{\index{desc.\+c@{desc.\+c}!limit\+\_\+l@{limit\+\_\+l}}
 \index{limit\+\_\+l@{limit\+\_\+l}!desc.\+c@{desc.\+c}}
 \subsubsection[{limit\+\_\+l}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} limit\+\_\+l}}\label{desc_8c_aea6d44db9dbbcd64642fcb7904f41d9a}
 
 
-Definizione alla linea 2 del file desc.\+c.
+Definition at line 5 of file desc.\+c.
 
 \hypertarget{desc_8c_adbf6021113d80f4e06464449823d18ca}{\index{desc.\+c@{desc.\+c}!pit\+\_\+days@{pit\+\_\+days}}
 \index{pit\+\_\+days@{pit\+\_\+days}!desc.\+c@{desc.\+c}}
 \subsubsection[{pit\+\_\+days}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+days\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_adbf6021113d80f4e06464449823d18ca}
 
 
-Definizione alla linea 113 del file desc.\+c.
+Definition at line 113 of file desc.\+c.
 
 \hypertarget{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}{\index{desc.\+c@{desc.\+c}!pit\+\_\+seconds@{pit\+\_\+seconds}}
 \index{pit\+\_\+seconds@{pit\+\_\+seconds}!desc.\+c@{desc.\+c}}
 \subsubsection[{pit\+\_\+seconds}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+seconds\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_aa40e578d683608caf3c7cd5c43ed9499}
 
 
-Definizione alla linea 112 del file desc.\+c.
+Definition at line 112 of file desc.\+c.
 
 \hypertarget{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}{\index{desc.\+c@{desc.\+c}!pit\+\_\+ticks@{pit\+\_\+ticks}}
 \index{pit\+\_\+ticks@{pit\+\_\+ticks}!desc.\+c@{desc.\+c}}
 \subsubsection[{pit\+\_\+ticks}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} pit\+\_\+ticks\hspace{0.3cm}{\ttfamily [static]}}}\label{desc_8c_a41bc65b4bc7d5a5211de47d1f5c2758a}
 
 
-Definizione alla linea 111 del file desc.\+c.
+Definition at line 111 of file desc.\+c.
 

@@ -40,6 +40,14 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para><link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * <link linkend="devfs_8c_1a226c953aff43f9b1e9736908bb6802f3">devfs_getdevice</link> (
+dev_t dev)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para>struct <link linkend="structinode">inode</link> * <link linkend="devfs_8c_1a268e4d56ebd88b1227eb40d20b247c03">devfs_creat</link> (
 struct <link linkend="structinode">inode</link> * inode, char * name, mode_t mode)</para>
                     </listitem>

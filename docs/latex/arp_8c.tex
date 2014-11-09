@@ -1,4 +1,4 @@
-\hypertarget{arp_8c}{\section{Riferimenti per il file src/net/arp.c}
+\hypertarget{arp_8c}{\section{src/net/arp.c File Reference}
 \label{arp_8c}\index{src/net/arp.\+c@{src/net/arp.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -9,7 +9,7 @@
 {\ttfamily \#include $<$string.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/net/arp.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{arp_8h_a9b4be1be5ee1e2531c81fa075b4f55d1}{arp\+\_\+cache\+\_\+entry\+\_\+t} $\ast$ \hyperlink{arp_8c_adfa3881c2f0f72ec135119b5260a5039}{arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr} (\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\+\_\+t} macaddr)
@@ -20,14 +20,14 @@ int \hyperlink{arp_8c_ad8cef1da8ee381336f1c3bbfa015525c}{arp\+\_\+recv} (\hyperl
 \item 
 int \hyperlink{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}{arp\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif})
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{arp_8c_af0c8c4708050f018c061291a0b18275f}{arp\+\_\+cache} = N\+U\+L\+L
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{arp_8c_af1d8473c2adafe1f2bd1df51167c6b65}{\index{arp.\+c@{arp.\+c}!arp\+\_\+cache\+\_\+add@{arp\+\_\+cache\+\_\+add}}
 \index{arp\+\_\+cache\+\_\+add@{arp\+\_\+cache\+\_\+add}!arp.\+c@{arp.\+c}}
 \subsubsection[{arp\+\_\+cache\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int arp\+\_\+cache\+\_\+add (
@@ -38,11 +38,11 @@ int \hyperlink{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}{arp\+\_\+send} (\hyperl
 )}}\label{arp_8c_af1d8473c2adafe1f2bd1df51167c6b65}
 
 
-Definizione alla linea 33 del file arp.\+c.
+Definition at line 33 of file arp.\+c.
 
 
 
-Referenzia arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::ipv4, kmalloc(), kprintf, list\+\_\+add(), list\+\_\+init, list\+\_\+remove(), e netif\+\_\+find\+\_\+by\+\_\+macaddr().
+References arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::ipv4, kmalloc(), kprintf(), list\+\_\+add(), list\+\_\+init, list\+\_\+remove(), and netif\+\_\+find\+\_\+by\+\_\+macaddr().
 
 
 \begin{DoxyCode}
@@ -65,7 +65,7 @@ Referenzia arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::ipv4, kmall
 49 
 50 
 51 \textcolor{preprocessor}{#ifdef ARP\_DEBUG}
-52     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"arp: added new cache entry (%02x.%02x.%02x.%02x)\(\backslash\)n"},
+52     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"arp: added new cache entry (%02x.%02x.%02x.%02x)\(\backslash\)n"},
 53         arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}[0],
 54         arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}[1],
 55         arp->\hyperlink{structarp__cache__entry_a0347c9b0b7ec01ff4b5a2fb258ffc9d5}{ipv4}[2],
@@ -90,11 +90,11 @@ Referenzia arp\+\_\+cache\+\_\+find\+\_\+by\+\_\+macaddr(), netif\+::ipv4, kmall
 )}}\label{arp_8c_adfa3881c2f0f72ec135119b5260a5039}
 
 
-Definizione alla linea 16 del file arp.\+c.
+Definition at line 16 of file arp.\+c.
 
 
 
-Referenzia list\+\_\+empty(), list\+\_\+foreach, arp\+\_\+cache\+\_\+entry\+::macaddr, e value.
+References list\+\_\+empty(), list\+\_\+foreach, arp\+\_\+cache\+\_\+entry\+::macaddr, and value.
 
 
 \begin{DoxyCode}
@@ -127,11 +127,11 @@ Referenzia list\+\_\+empty(), list\+\_\+foreach, arp\+\_\+cache\+\_\+entry\+::ma
 )}}\label{arp_8c_ad8cef1da8ee381336f1c3bbfa015525c}
 
 
-Definizione alla linea 67 del file arp.\+c.
+Definition at line 67 of file arp.\+c.
 
 
 
-Referenzia arp\+\_\+cache\+\_\+add(), A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y, length, e netif\+::macaddr.
+References arp\+\_\+cache\+\_\+add(), A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y, length, and netif\+::macaddr.
 
 
 \begin{DoxyCode}
@@ -143,7 +143,7 @@ Referenzia arp\+\_\+cache\+\_\+add(), A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+
 72         \textcolor{keywordflow}{if}(memcmp(netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}, arp->tha, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t})) == 0)
 73             \hyperlink{arp_8c_af1d8473c2adafe1f2bd1df51167c6b65}{arp\_cache\_add}(arp->tha, arp->tpa);
 74 
-75     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+75     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 76 \}
 \end{DoxyCode}
 \hypertarget{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}{\index{arp.\+c@{arp.\+c}!arp\+\_\+send@{arp\+\_\+send}}
@@ -155,11 +155,11 @@ Referenzia arp\+\_\+cache\+\_\+add(), A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+
 )}}\label{arp_8c_a0494cc7052a3d81efd628c0e4cc98f97}
 
 
-Definizione alla linea 79 del file arp.\+c.
+Definition at line 79 of file arp.\+c.
 
 
 
-Referenzia A\+R\+P\+\_\+\+H\+W\+L\+E\+N, A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E, A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T, A\+R\+P\+\_\+\+P\+R\+L\+E\+N, A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E, eth\+\_\+send(), kfree(), kmalloc(), kprintf, netif\+::macaddr, netif\+::name, e N\+E\+T\+I\+F\+\_\+\+A\+R\+P.
+References A\+R\+P\+\_\+\+H\+W\+L\+E\+N, A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E, A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T, A\+R\+P\+\_\+\+P\+R\+L\+E\+N, A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E, eth\+\_\+send(), kfree(), kmalloc(), kprintf(), netif\+::macaddr, netif\+::name, and N\+E\+T\+I\+F\+\_\+\+A\+R\+P.
 
 
 \begin{DoxyCode}
@@ -177,7 +177,7 @@ Referenzia A\+R\+P\+\_\+\+H\+W\+L\+E\+N, A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E, A\+R\+
 90     memset(arp->tpa, 0, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_aea29db0d4ae23303ff7591af75c7b74a}{ipv4\_t}));
 91 
 92 \textcolor{preprocessor}{#ifdef ARP\_DEBUG}
-93     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"arp: sending request for %s\(\backslash\)n"}, netif->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name});
+93     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"arp: sending request for %s\(\backslash\)n"}, netif->\hyperlink{structnetif_ad113ca0a458623939eec5ce7fe2b6eef}{name});
 94 \textcolor{preprocessor}{#endif}
 95 
 96     \textcolor{keywordtype}{int} ret = \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\_send}(netif, arp, \textcolor{keyword}{sizeof}(arp\_header\_t), \hyperlink{netif_8h_ae9935405723cb9caabff3f18b66446ca}{NETIF\_ARP});
@@ -188,11 +188,11 @@ Referenzia A\+R\+P\+\_\+\+H\+W\+L\+E\+N, A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E, A\+R\+
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{arp_8c_af0c8c4708050f018c061291a0b18275f}{\index{arp.\+c@{arp.\+c}!arp\+\_\+cache@{arp\+\_\+cache}}
 \index{arp\+\_\+cache@{arp\+\_\+cache}!arp.\+c@{arp.\+c}}
 \subsubsection[{arp\+\_\+cache}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ arp\+\_\+cache = N\+U\+L\+L}}\label{arp_8c_af0c8c4708050f018c061291a0b18275f}
 
 
-Definizione alla linea 13 del file arp.\+c.
+Definition at line 13 of file arp.\+c.
 

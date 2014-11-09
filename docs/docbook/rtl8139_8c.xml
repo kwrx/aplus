@@ -43,14 +43,28 @@
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="rtl8139_8c_1ae7e889e51f6eff4c4e42cfb7907c4d08">rtl8139_rxbuffer</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</link> <link linkend="rtl8139_8c_1ae907e2e0d101e6942a58d381530937c2">rtl8139_txbuffer</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
         <simplesect>
             <title>Functions</title>
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para> <link linkend="rtl8139_8c_1af88d9433833650f4c4ff826564aa87d2">__attribute__</link> (
-(align(0x1000)) )</para>
+                        <para>int <link linkend="rtl8139_8c_1a0bd9820ac84b3f71a195a7e3a1c0763c">rtl8139_ifup</link> (
+<link linkend="netif_8h_1af6c73b8fa12396c0382f58d63e895008">netif_t</link> * netif)</para>
                     </listitem>
                 </itemizedlist>
             </para>

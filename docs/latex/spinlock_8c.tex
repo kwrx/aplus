@@ -1,25 +1,25 @@
-\hypertarget{spinlock_8c}{\section{Riferimenti per il file src/spinlock.c}
+\hypertarget{spinlock_8c}{\section{src/spinlock.c File Reference}
 \label{spinlock_8c}\index{src/spinlock.\+c@{src/spinlock.\+c}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/list.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \hyperlink{spinlock_8c_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\+\_\+lock} (\hyperlink{spinlock_8h_a7d562148dafb0dacf0ee876d482ed090}{spinlock\+\_\+t} $\ast$spin)
-\item 
+\begin{DoxyCompactList}\small\item\em Acquire a spinlock. \end{DoxyCompactList}\item 
 void \hyperlink{spinlock_8c_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\+\_\+unlock} (\hyperlink{spinlock_8h_a7d562148dafb0dacf0ee876d482ed090}{spinlock\+\_\+t} $\ast$spin)
-\item 
+\begin{DoxyCompactList}\small\item\em Unlock a spinlock. \end{DoxyCompactList}\item 
 int \hyperlink{spinlock_8c_aef8280bb43eb7eecb8a7903f70af1906}{spinlock\+\_\+trylock} (\hyperlink{spinlock_8h_a7d562148dafb0dacf0ee876d482ed090}{spinlock\+\_\+t} $\ast$spin)
-\item 
+\begin{DoxyCompactList}\small\item\em Try to acquire a spinlock. \end{DoxyCompactList}\item 
 void \hyperlink{spinlock_8c_aa40e1417e8410d92c2ffc313e57560e8}{\+\_\+\+\_\+spinlock\+\_\+waiton} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Yield current task if a false condition was given by \hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\+\_\+waiton()}. \end{DoxyCompactList}\item 
 void \hyperlink{spinlock_8c_a2bf717efcda7e5189e3192e09e49c249}{\+\_\+\+\_\+fastlock\+\_\+waiton} ()
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Put C\+P\+U in pause for a while if a false condition was given by \hyperlink{spinlock_8h_a34b538b8c053bec1d149f9a4258aca89}{fastlock\+\_\+waiton()}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{spinlock_8c_a2bf717efcda7e5189e3192e09e49c249}{\index{spinlock.\+c@{spinlock.\+c}!\+\_\+\+\_\+fastlock\+\_\+waiton@{\+\_\+\+\_\+fastlock\+\_\+waiton}}
 \index{\+\_\+\+\_\+fastlock\+\_\+waiton@{\+\_\+\+\_\+fastlock\+\_\+waiton}!spinlock.\+c@{spinlock.\+c}}
 \subsubsection[{\+\_\+\+\_\+fastlock\+\_\+waiton}]{\setlength{\rightskip}{0pt plus 5cm}void \+\_\+\+\_\+fastlock\+\_\+waiton (
@@ -29,17 +29,24 @@ void \hyperlink{spinlock_8c_a2bf717efcda7e5189e3192e09e49c249}{\+\_\+\+\_\+fastl
 )}}\label{spinlock_8c_a2bf717efcda7e5189e3192e09e49c249}
 
 
-Definizione alla linea 53 del file spinlock.\+c.
+Put C\+P\+U in pause for a while if a false condition was given by \hyperlink{spinlock_8h_a34b538b8c053bec1d149f9a4258aca89}{fastlock\+\_\+waiton()}. 
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{spinlock_8h_a34b538b8c053bec1d149f9a4258aca89}{fastlock\+\_\+waiton} 
+\end{DoxySeeAlso}
+
+
+Definition at line 76 of file spinlock.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+().
+References \+\_\+\+\_\+asm\+\_\+\+\_\+().
 
 
 \begin{DoxyCode}
-53                          \{
-54     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} \_\_volatile\_\_(\textcolor{stringliteral}{"pause"});
-55 \}
+76                          \{
+77     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} \_\_volatile\_\_(\textcolor{stringliteral}{"pause"});
+78 \}
 \end{DoxyCode}
 \hypertarget{spinlock_8c_aa40e1417e8410d92c2ffc313e57560e8}{\index{spinlock.\+c@{spinlock.\+c}!\+\_\+\+\_\+spinlock\+\_\+waiton@{\+\_\+\+\_\+spinlock\+\_\+waiton}}
 \index{\+\_\+\+\_\+spinlock\+\_\+waiton@{\+\_\+\+\_\+spinlock\+\_\+waiton}!spinlock.\+c@{spinlock.\+c}}
@@ -50,17 +57,24 @@ Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+().
 )}}\label{spinlock_8c_aa40e1417e8410d92c2ffc313e57560e8}
 
 
-Definizione alla linea 49 del file spinlock.\+c.
+Yield current task if a false condition was given by \hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\+\_\+waiton()}. 
+
+\begin{DoxySeeAlso}{See also}
+\hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\+\_\+waiton} 
+\end{DoxySeeAlso}
+
+
+Definition at line 68 of file spinlock.\+c.
 
 
 
-Referenzia schedule\+\_\+yield().
+References schedule\+\_\+yield().
 
 
 \begin{DoxyCode}
-49                          \{
-50     \hyperlink{src_2sched_8c_a4002881c26790c4390e314ce0e1ef1e8}{schedule\_yield}();
-51 \}
+68                          \{
+69     \hyperlink{src_2sched_8c_a4002881c26790c4390e314ce0e1ef1e8}{schedule\_yield}();
+70 \}
 \end{DoxyCode}
 \hypertarget{spinlock_8c_ab01e311f21f78fc3c2bd0bdf74ef85c4}{\index{spinlock.\+c@{spinlock.\+c}!spinlock\+\_\+lock@{spinlock\+\_\+lock}}
 \index{spinlock\+\_\+lock@{spinlock\+\_\+lock}!spinlock.\+c@{spinlock.\+c}}
@@ -71,22 +85,31 @@ Referenzia schedule\+\_\+yield().
 )}}\label{spinlock_8c_ab01e311f21f78fc3c2bd0bdf74ef85c4}
 
 
-Definizione alla linea 27 del file spinlock.\+c.
+Acquire a spinlock. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em spin} & Spinlock address. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 31 of file spinlock.\+c.
 
 
 
-Referenzia fastlock\+\_\+waiton, S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+A\+S\+T\+L\+O\+C\+K, S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+L\+O\+C\+K\+E\+D, e spinlock\+\_\+waiton.
+References fastlock\+\_\+waiton, S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+A\+S\+T\+L\+O\+C\+K, S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+L\+O\+C\+K\+E\+D, and spinlock\+\_\+waiton.
 
 
 \begin{DoxyCode}
-27                                      \{
-28     \textcolor{keywordflow}{if}((*spin & \hyperlink{spinlock_8h_acf8c39cdbeaaab5ea8c011c77d5bca8b}{SPINLOCK\_FLAGS\_FASTLOCK}) == 0)
-29         \hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\_waiton}(*spin & \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED});
-30     \textcolor{keywordflow}{else}
-31         \hyperlink{spinlock_8h_a34b538b8c053bec1d149f9a4258aca89}{fastlock\_waiton}(*spin & \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED});
-32 
-33     *spin |= \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED};
-34 \}
+31                                      \{
+32     \textcolor{keywordflow}{if}((*spin & \hyperlink{spinlock_8h_acf8c39cdbeaaab5ea8c011c77d5bca8b}{SPINLOCK\_FLAGS\_FASTLOCK}) == 0)
+33         \hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\_waiton}(*spin & \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED});
+34     \textcolor{keywordflow}{else}
+35         \hyperlink{spinlock_8h_a34b538b8c053bec1d149f9a4258aca89}{fastlock\_waiton}(*spin & \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED});
+36 
+37     *spin |= \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED};
+38 \}
 \end{DoxyCode}
 \hypertarget{spinlock_8c_aef8280bb43eb7eecb8a7903f70af1906}{\index{spinlock.\+c@{spinlock.\+c}!spinlock\+\_\+trylock@{spinlock\+\_\+trylock}}
 \index{spinlock\+\_\+trylock@{spinlock\+\_\+trylock}!spinlock.\+c@{spinlock.\+c}}
@@ -97,21 +120,33 @@ Referenzia fastlock\+\_\+waiton, S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_
 )}}\label{spinlock_8c_aef8280bb43eb7eecb8a7903f70af1906}
 
 
-Definizione alla linea 41 del file spinlock.\+c.
+Try to acquire a spinlock. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em spin} & Spinlock address. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 for success else -\/1. 
+\end{DoxyReturn}
+
+
+Definition at line 55 of file spinlock.\+c.
 
 
 
-Referenzia S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+L\+O\+C\+K\+E\+D.
+References S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+L\+O\+C\+K\+E\+D.
 
 
 \begin{DoxyCode}
-41                                        \{
-42     \textcolor{keywordflow}{if}(*spin & \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED})
-43         \textcolor{keywordflow}{return} -1;
-44         
-45     *spin |= \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED};
-46     \textcolor{keywordflow}{return} 0;
-47 \}
+55                                        \{
+56     \textcolor{keywordflow}{if}(*spin & \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED})
+57         \textcolor{keywordflow}{return} -1;
+58         
+59     *spin |= \hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED};
+60     \textcolor{keywordflow}{return} 0;
+61 \}
 \end{DoxyCode}
 \hypertarget{spinlock_8c_a4ca6e661fa1b704d39d834ac7341b360}{\index{spinlock.\+c@{spinlock.\+c}!spinlock\+\_\+unlock@{spinlock\+\_\+unlock}}
 \index{spinlock\+\_\+unlock@{spinlock\+\_\+unlock}!spinlock.\+c@{spinlock.\+c}}
@@ -122,15 +157,24 @@ Referenzia S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+L\+O\+C\+K\+E\+D.
 )}}\label{spinlock_8c_a4ca6e661fa1b704d39d834ac7341b360}
 
 
-Definizione alla linea 37 del file spinlock.\+c.
+Unlock a spinlock. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em spin} & Spinlock address. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 45 of file spinlock.\+c.
 
 
 
-Referenzia S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+L\+O\+C\+K\+E\+D.
+References S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+F\+L\+A\+G\+S\+\_\+\+L\+O\+C\+K\+E\+D.
 
 
 \begin{DoxyCode}
-37                                        \{
-38     *spin &= ~\hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED};
-39 \}
+45                                        \{
+46     *spin &= ~\hyperlink{spinlock_8h_aad28f3f1b6783cd56871b611ca2bcd97}{SPINLOCK\_FLAGS\_LOCKED};
+47 \}
 \end{DoxyCode}

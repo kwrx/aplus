@@ -1,4 +1,4 @@
-.TH "src/arch/desc.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/desc.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -23,14 +23,14 @@ src/arch/desc.c \-
 \fC#include <sys/times\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBgdt_entry\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -58,7 +58,7 @@ src/arch/desc.c \-
 .RI "#define \fBBCD2BIN2\fP(bcd)   (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -67,6 +67,7 @@ src/arch/desc.c \-
 .ti -1c
 .RI "void \fBschedule\fP ()"
 .br
+.RI "\fIPerform a scheduling and check TTL (Time To Live) for current task\&. \fP"
 .ti -1c
 .RI "void \fBsyscall_handler\fP (regs_t *)"
 .br
@@ -131,7 +132,7 @@ src/arch/desc.c \-
 .RI "\fBuint32_t\fP \fBpit_getticks\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -180,17 +181,17 @@ src/arch/desc.c \-
 .RI "\fBuint8_t\fP \fBkeyboard_ready\fP = 0"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define _i(n)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 extern void isr##n();                     \\
 		idt_set(n, (uint32_t)isr##n, 0x08, 0x8E)
 .fi
 .SS "#define _i(n)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 extern void irq##n();                          \\
@@ -203,9 +204,9 @@ extern void irq##n();                          \\
 .SS "#define FAULT_MASK   0x3FFFFFE3"
 
 .PP
-Definizione alla linea 37 del file desc\&.c\&.
+Definition at line 37 of file desc\&.c\&.
 .SS "#define gdt_set(n, b, l, a, g)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 gdt_e[n]\&.base_l = (b & 0xFFFF);                \\
@@ -217,7 +218,7 @@ gdt_e[n]\&.base_l = (b & 0xFFFF);                \\
 		gdt_e[n]\&.access = a
 .fi
 .SS "#define idt_set(i, b, s, f)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 idt_e[i]\&.base_l = b & 0xFFFF;             \\
@@ -229,15 +230,15 @@ idt_e[i]\&.base_l = b & 0xFFFF;             \\
 .SS "#define PIT_FREQ   (CLOCKS_PER_SEC)"
 
 .PP
-Definizione alla linea 38 del file desc\&.c\&.
-.SH "Documentazione delle funzioni"
+Definition at line 38 of file desc\&.c\&.
+.SH "Function Documentation"
 .PP 
 .SS "__asm__ ('\&.section \&.text \\n\\ \&.global gdt_load \\n\\ gdt_load: \\n\\ lgdt  \\n\\ \\n\\ movax[gdt_p], 0x10\\n\\movds, ax\\n\\moves, ax\\n\\movfs, ax\\n\\movgs, ax\\n\\movss, ax\\n\\jmp 0x08:\&.done\\n\\\\n\\\&.done:\\n\\ret\\n\\\\n\\\\n\\\\n\\\\n\\\&.global idt_load\\n\\idt_load:\\n\\lidt\\n\\ret\\n\\\\n\\\\n'[idt_p])"
 
-.SS "__attribute__ ((packed))"
+.SS "struct \fBiso9660_dir\fP __attribute__ ((packed))"
 
 .PP
-Definizione alla linea 44 del file desc\&.c\&.
+Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
 46                        {
@@ -248,9 +249,9 @@ Definizione alla linea 44 del file desc\&.c\&.
 .SS "int desc_init ()"
 
 .PP
-Definizione alla linea 195 del file desc\&.c\&.
+Definition at line 195 of file desc\&.c\&.
 .PP
-Referenzia __asm__(), _i, gdt_set, irq_set(), PIT_FREQ, pit_handler(), uint32_t, e uint8_t\&.
+References __asm__(), _i, gdt_set, irq_set(), PIT_FREQ, pit_handler(), uint32_t, and uint8_t\&.
 .PP
 .nf
 195                 {
@@ -393,9 +394,9 @@ Referenzia __asm__(), _i, gdt_set, irq_set(), PIT_FREQ, pit_handler(), uint32_t,
 .SS "void* irq_get (intn)"
 
 .PP
-Definizione alla linea 354 del file desc\&.c\&.
+Definition at line 354 of file desc\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 354                      {
@@ -410,7 +411,7 @@ Referenzia errno\&.
 .SS "void irq_handler (regs_t *r)"
 
 .PP
-Definizione alla linea 155 del file desc\&.c\&.
+Definition at line 155 of file desc\&.c\&.
 .PP
 .nf
 155                             {
@@ -427,9 +428,9 @@ Definizione alla linea 155 del file desc\&.c\&.
 .SS "int irq_set (intn, void *handler)"
 
 .PP
-Definizione alla linea 334 del file desc\&.c\&.
+Definition at line 334 of file desc\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 334                                   {
@@ -445,9 +446,9 @@ Referenzia errno\&.
 .SS "int irq_unset (intn)"
 
 .PP
-Definizione alla linea 344 del file desc\&.c\&.
+Definition at line 344 of file desc\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 344                      {
@@ -463,9 +464,9 @@ Referenzia errno\&.
 .SS "void isr_handler (regs_t *r)"
 
 .PP
-Definizione alla linea 151 del file desc\&.c\&.
+Definition at line 151 of file desc\&.c\&.
 .PP
-Referenzia panic()\&.
+References panic()\&.
 .PP
 .nf
 151                             {
@@ -475,9 +476,9 @@ Referenzia panic()\&.
 .SS "void pagefault_handler (regs_t *r)"
 
 .PP
-Definizione alla linea 183 del file desc\&.c\&.
+Definition at line 183 of file desc\&.c\&.
 .PP
-Referenzia __asm__(), kprintf, panic(), e uint32_t\&.
+References __asm__(), kprintf(), panic(), and uint32_t\&.
 .PP
 .nf
 183                                   {
@@ -491,7 +492,7 @@ Referenzia __asm__(), kprintf, panic(), e uint32_t\&.
 .SS "\fBuint32_t\fP pit_getticks ()"
 
 .PP
-Definizione alla linea 393 del file desc\&.c\&.
+Definition at line 393 of file desc\&.c\&.
 .PP
 .nf
 393                         {
@@ -501,9 +502,9 @@ Definizione alla linea 393 del file desc\&.c\&.
 .SS "\fBuint32_t\fP pit_gettime ()"
 
 .PP
-Definizione alla linea 373 del file desc\&.c\&.
+Definition at line 373 of file desc\&.c\&.
 .PP
-Referenzia BCD2BIN, BCD2BIN2, rtc(), e uint32_t\&.
+References BCD2BIN, BCD2BIN2, rtc(), and uint32_t\&.
 .PP
 .nf
 373                        {
@@ -529,9 +530,9 @@ Referenzia BCD2BIN, BCD2BIN2, rtc(), e uint32_t\&.
 .SS "void pit_handler (regs_t *r)"
 
 .PP
-Definizione alla linea 166 del file desc\&.c\&.
+Definition at line 166 of file desc\&.c\&.
 .PP
-Referenzia PIT_FREQ, e schedule()\&.
+References PIT_FREQ, and schedule()\&.
 .PP
 .nf
 166                             {
@@ -553,9 +554,9 @@ Referenzia PIT_FREQ, e schedule()\&.
 .SS "static \fBuint8_t\fP rtc (\fBuint8_t\fPaddr)\fC [static]\fP"
 
 .PP
-Definizione alla linea 365 del file desc\&.c\&.
+Definition at line 365 of file desc\&.c\&.
 .PP
-Referenzia __asm__(), e uint8_t\&.
+References __asm__(), and uint8_t\&.
 .PP
 .nf
 365                                  {
@@ -569,101 +570,103 @@ Referenzia __asm__(), e uint8_t\&.
 .SS "void schedule ()"
 
 .PP
-Definizione alla linea 93 del file sched\&.c\&.
+Perform a scheduling and check TTL (Time To Live) for current task\&. 
 .PP
-Referenzia task::clock, list_empty(), task::priority, sched_enabled, schedule_next(), e task_switch()\&.
+Definition at line 133 of file sched\&.c\&.
+.PP
+References task::clock, list_empty(), task::priority, sched_enabled, schedule_next(), and task_switch()\&.
 .PP
 .nf
-93                 {
-94     if(sched_enabled == 0)
-95         return;
-96         
-97     if(list_empty(task_queue))
-98         return;
-99 
-100         
-101     current_task->clock += 1;
-102     
-103     if(current_task->clock % current_task->priority)
-104         return;
-105         
-106     task_switch(schedule_next());
-107 }
+133                 {
+134     if(sched_enabled == 0)
+135         return;
+136         
+137     if(list_empty(task_queue))
+138         return;
+139 
+140         
+141     current_task->clock += 1;
+142     
+143     if(current_task->clock % current_task->priority)
+144         return;
+145         
+146     task_switch(schedule_next());
+147 }
 .fi
 .SS "void syscall_handler (regs_t *)"
 
 .PP
-Definizione alla linea 53 del file syscall\&.c\&.
+Definition at line 53 of file syscall\&.c\&.
 .PP
-Referenzia syscall_handlers, e syscall_invoke()\&.
+References syscall_handlers, and syscall_invoke()\&.
 .PP
 .nf
 53                                {
 54     return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
 55 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBuint8_t\fP access"
 
 .PP
-Definizione alla linea 3 del file desc\&.c\&.
+Definition at line 6 of file desc\&.c\&.
 .SS "\fBuint8_t\fP base_h"
 
 .PP
-Definizione alla linea 3 del file desc\&.c\&.
+Definition at line 6 of file desc\&.c\&.
 .SS "\fBuint16_t\fP base_l"
 
 .PP
-Definizione alla linea 2 del file desc\&.c\&.
+Definition at line 5 of file desc\&.c\&.
 .SS "\fBuint8_t\fP base_m"
 
 .PP
-Definizione alla linea 3 del file desc\&.c\&.
+Definition at line 6 of file desc\&.c\&.
 .SS "gdt_entry_t gdt_e[5]\fC [static]\fP"
 
 .PP
-Definizione alla linea 104 del file desc\&.c\&.
+Definition at line 104 of file desc\&.c\&.
 .SS "gdt_ptr_t gdt_p\fC [static]\fP"
 
 .PP
-Definizione alla linea 105 del file desc\&.c\&.
+Definition at line 105 of file desc\&.c\&.
 .SS "\fBuint8_t\fP granularity"
 
 .PP
-Definizione alla linea 3 del file desc\&.c\&.
+Definition at line 6 of file desc\&.c\&.
 .SS "idt_entry_t idt_e[256]\fC [static]\fP"
 
 .PP
-Definizione alla linea 107 del file desc\&.c\&.
+Definition at line 107 of file desc\&.c\&.
 .SS "idt_ptr_t idt_p\fC [static]\fP"
 
 .PP
-Definizione alla linea 108 del file desc\&.c\&.
+Definition at line 108 of file desc\&.c\&.
 .SS "void* irqs[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }\fC [static]\fP"
 
 .PP
-Definizione alla linea 102 del file desc\&.c\&.
+Definition at line 102 of file desc\&.c\&.
 .SS "\fBuint8_t\fP keyboard_ready = 0"
 
 .PP
-Definizione alla linea 115 del file desc\&.c\&.
+Definition at line 115 of file desc\&.c\&.
 .SS "\fBuint16_t\fP limit_l"
 
 .PP
-Definizione alla linea 2 del file desc\&.c\&.
+Definition at line 5 of file desc\&.c\&.
 .SS "\fBuint32_t\fP pit_days\fC [static]\fP"
 
 .PP
-Definizione alla linea 113 del file desc\&.c\&.
+Definition at line 113 of file desc\&.c\&.
 .SS "\fBuint32_t\fP pit_seconds\fC [static]\fP"
 
 .PP
-Definizione alla linea 112 del file desc\&.c\&.
+Definition at line 112 of file desc\&.c\&.
 .SS "\fBuint32_t\fP pit_ticks\fC [static]\fP"
 
 .PP
-Definizione alla linea 111 del file desc\&.c\&.
-.SH "Autore"
+Definition at line 111 of file desc\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

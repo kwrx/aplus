@@ -1,4 +1,4 @@
-.TH "usr/src/libposix/src/sched.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libposix/src/sched.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -21,14 +21,14 @@ usr/src/libposix/src/sched.c \-
 \fC#include <time\&.h>\fP
 .br
 
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
 .RI "typedef int \fBcpu_set_t\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -59,20 +59,20 @@ usr/src/libposix/src/sched.c \-
 .RI "int \fBsched_getaffinity\fP (pid_t pid, size_t cpusetsize, \fBcpu_set_t\fP *mask)"
 .br
 .in -1c
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef int \fBcpu_set_t\fP"
 
 .PP
-Definizione alla linea 11 del file sched\&.c\&.
-.SH "Documentazione delle funzioni"
+Definition at line 11 of file sched\&.c\&.
+.SH "Function Documentation"
 .PP 
 .SS "int sched_get_priority_max (intpolicy)"
 
 .PP
-Definizione alla linea 60 del file sched\&.c\&.
+Definition at line 60 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 60                                        {
@@ -83,9 +83,9 @@ Referenzia errno\&.
 .SS "int sched_get_priority_min (intpolicy)"
 
 .PP
-Definizione alla linea 65 del file sched\&.c\&.
+Definition at line 65 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 65                                        {
@@ -96,9 +96,9 @@ Referenzia errno\&.
 .SS "int sched_getaffinity (pid_tpid, size_tcpusetsize, \fBcpu_set_t\fP *mask)"
 
 .PP
-Definizione alla linea 93 del file sched\&.c\&.
+Definition at line 93 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 93                                                                      {
@@ -109,9 +109,9 @@ Referenzia errno\&.
 .SS "int sched_getparam (pid_tpid, struct sched_param *param)"
 
 .PP
-Definizione alla linea 50 del file sched\&.c\&.
+Definition at line 50 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 50                                                          {
@@ -127,9 +127,9 @@ Referenzia errno\&.
 .SS "int sched_getscheduler (pid_tpid)"
 
 .PP
-Definizione alla linea 29 del file sched\&.c\&.
+Definition at line 29 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 29                                   {
@@ -140,9 +140,9 @@ Referenzia errno\&.
 .SS "int sched_rr_get_interval (pid_tpid, struct timespec *tp)"
 
 .PP
-Definizione alla linea 70 del file sched\&.c\&.
+Definition at line 70 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 70                                                           {
@@ -165,9 +165,9 @@ Referenzia errno\&.
 .SS "int sched_setaffinity (pid_tpid, size_tcpusetsize, const \fBcpu_set_t\fP *mask)"
 
 .PP
-Definizione alla linea 88 del file sched\&.c\&.
+Definition at line 88 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 88                                                                            {
@@ -178,9 +178,9 @@ Referenzia errno\&.
 .SS "int sched_setparam (pid_tpid, const struct sched_param *param)"
 
 .PP
-Definizione alla linea 35 del file sched\&.c\&.
+Definition at line 35 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 35                                                                {
@@ -201,9 +201,9 @@ Referenzia errno\&.
 .SS "int sched_setscheduler (pid_tpid, intpolicy, const struct sched_param *param)"
 
 .PP
-Definizione alla linea 14 del file sched\&.c\&.
+Definition at line 14 of file sched\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 14                                                                                {
@@ -221,6 +221,6 @@ Referenzia errno\&.
 26     return -1;
 27 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

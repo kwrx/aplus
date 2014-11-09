@@ -1,4 +1,4 @@
-\hypertarget{task_8h}{\section{Riferimenti per il file src/include/aplus/task.h}
+\hypertarget{task_8h}{\section{src/include/aplus/task.h File Reference}
 \label{task_8h}\index{src/include/aplus/task.\+h@{src/include/aplus/task.\+h}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
@@ -7,14 +7,14 @@
 {\ttfamily \#include $<$signal.\+h$>$}\\*
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
 {\ttfamily \#include $<$setjmp.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structtask__env}{task\+\_\+env}
 \item 
 struct \hyperlink{structtask}{task}
 \end{DoxyCompactItemize}
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D}~512
@@ -43,17 +43,17 @@ struct \hyperlink{structtask}{task}
 \item 
 \#define \hyperlink{task_8h_a6120fde6185466f2810fd0457009aaf0}{G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R}~1000
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef struct \hyperlink{structtask}{task} \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structtask__env}{task\+\_\+env} \hyperlink{task_8h_a82ac5a61b16740abc5cceaaff721c5c8}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) task\+\_\+env\+\_\+t
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{task_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}
@@ -76,107 +76,107 @@ struct \hyperlink{structtask__env}{task\+\_\+env} \hyperlink{task_8h_a82ac5a61b1
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{task_8h_a6120fde6185466f2810fd0457009aaf0}{\index{task.\+h@{task.\+h}!G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R@{G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R}}
 \index{G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R@{G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R}!task.\+h@{task.\+h}}
 \subsubsection[{G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R~1000}}\label{task_8h_a6120fde6185466f2810fd0457009aaf0}
 
 
-Definizione alla linea 52 del file task.\+h.
+Definition at line 52 of file task.\+h.
 
 \hypertarget{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D@{T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D}}
 \index{T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D@{T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D~512}}\label{task_8h_aa0beab24d02a2ccd5d273dea188af93d}
 
 
-Definizione alla linea 35 del file task.\+h.
+Definition at line 35 of file task.\+h.
 
 \hypertarget{task_8h_a32e4a0ac1f8e5ab8306c04d96de330ed}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+G\+H@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+G\+H}}
 \index{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+G\+H@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+G\+H}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+G\+H}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+H\+I\+G\+H~30}}\label{task_8h_a32e4a0ac1f8e5ab8306c04d96de330ed}
 
 
-Definizione alla linea 47 del file task.\+h.
+Definition at line 47 of file task.\+h.
 
 \hypertarget{task_8h_a00a0568927a39311236b718f2018c0ab}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+O\+W@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+O\+W}}
 \index{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+O\+W@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+O\+W}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+O\+W}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+O\+W~5}}\label{task_8h_a00a0568927a39311236b718f2018c0ab}
 
 
-Definizione alla linea 45 del file task.\+h.
+Definition at line 45 of file task.\+h.
 
 \hypertarget{task_8h_a87892f18571e88eba7fbe758759cac05}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+A\+X@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+A\+X}}
 \index{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+A\+X@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+A\+X}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+A\+X}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+A\+X~50}}\label{task_8h_a87892f18571e88eba7fbe758759cac05}
 
 
-Definizione alla linea 48 del file task.\+h.
+Definition at line 48 of file task.\+h.
 
 \hypertarget{task_8h_ae35baef65db45cef90a74266acb31b10}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+I\+N@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+I\+N}}
 \index{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+I\+N@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+I\+N}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+I\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+M\+I\+N~1}}\label{task_8h_ae35baef65db45cef90a74266acb31b10}
 
 
-Definizione alla linea 44 del file task.\+h.
+Definition at line 44 of file task.\+h.
 
 \hypertarget{task_8h_a11aa236ab974b14186e8acc385470c13}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R}}
 \index{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R@{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R~15}}\label{task_8h_a11aa236ab974b14186e8acc385470c13}
 
 
-Definizione alla linea 46 del file task.\+h.
+Definition at line 46 of file task.\+h.
 
 \hypertarget{task_8h_a54d6e16c718c3f77fbfc7e96cf35f660}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+A\+D\+D\+R@{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+A\+D\+D\+R}}
 \index{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+A\+D\+D\+R@{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+A\+D\+D\+R}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+A\+D\+D\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+A\+D\+D\+R~0x\+F0000000}}\label{task_8h_a54d6e16c718c3f77fbfc7e96cf35f660}
 
 
-Definizione alla linea 38 del file task.\+h.
+Definition at line 38 of file task.\+h.
 
 \hypertarget{task_8h_a29d957dceca9653f89e5190113c09d38}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E@{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E}}
 \index{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E@{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E~0x1000}}\label{task_8h_a29d957dceca9653f89e5190113c09d38}
 
 
-Definizione alla linea 37 del file task.\+h.
+Definition at line 37 of file task.\+h.
 
 \hypertarget{task_8h_a447252ba92918fc13f5b6fd120b2656f}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E@{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E}}
 \index{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E@{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E~0}}\label{task_8h_a447252ba92918fc13f5b6fd120b2656f}
 
 
-Definizione alla linea 40 del file task.\+h.
+Definition at line 40 of file task.\+h.
 
 \hypertarget{task_8h_aea18b04c3c7d46195bab375efc1f61b6}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D@{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D}}
 \index{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D@{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D~2}}\label{task_8h_aea18b04c3c7d46195bab375efc1f61b6}
 
 
-Definizione alla linea 42 del file task.\+h.
+Definition at line 42 of file task.\+h.
 
 \hypertarget{task_8h_a37b9f24588301f9f8b85d344166b457c}{\index{task.\+h@{task.\+h}!T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+Z\+O\+M\+B\+I\+E@{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+Z\+O\+M\+B\+I\+E}}
 \index{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+Z\+O\+M\+B\+I\+E@{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+Z\+O\+M\+B\+I\+E}!task.\+h@{task.\+h}}
 \subsubsection[{T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+Z\+O\+M\+B\+I\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+Z\+O\+M\+B\+I\+E~1}}\label{task_8h_a37b9f24588301f9f8b85d344166b457c}
 
 
-Definizione alla linea 41 del file task.\+h.
+Definition at line 41 of file task.\+h.
 
 \hypertarget{task_8h_a14338e391bef80aa10d476348d085c5c}{\index{task.\+h@{task.\+h}!U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R@{U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R}}
 \index{U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R@{U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R}!task.\+h@{task.\+h}}
 \subsubsection[{U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R~1000}}\label{task_8h_a14338e391bef80aa10d476348d085c5c}
 
 
-Definizione alla linea 51 del file task.\+h.
+Definition at line 51 of file task.\+h.
 
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\subsection{Typedef Documentation}
 \hypertarget{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{\index{task.\+h@{task.\+h}!task\+\_\+t@{task\+\_\+t}}
 \index{task\+\_\+t@{task\+\_\+t}!task.\+h@{task.\+h}}
 \subsubsection[{task\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf task}  {\bf task\+\_\+t}}}\label{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{task_8h_a82ac5a61b16740abc5cceaaff721c5c8}{\index{task.\+h@{task.\+h}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!task.\+h@{task.\+h}}
 \subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf task\+\_\+env} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
@@ -186,78 +186,78 @@ Definizione alla linea 51 del file task.\+h.
 )}}\label{task_8h_a82ac5a61b16740abc5cceaaff721c5c8}
 
 
-Definizione alla linea 44 del file desc.\+c.
+Definition at line 44 of file desc.\+c.
 
 
 \begin{DoxyCode}
 46                        \{
 47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
 48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
-49 \} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+49 \} \hyperlink{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{task_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{\index{task.\+h@{task.\+h}!eax@{eax}}
 \index{eax@{eax}!task.\+h@{task.\+h}}
 \subsubsection[{eax}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} eax}}\label{task_8h_a93d929ad1fc57af9d4f1793c361fb4f2}
 
 
-Definizione alla linea 16 del file task.\+h.
+Definition at line 16 of file task.\+h.
 
 \hypertarget{task_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{\index{task.\+h@{task.\+h}!ebp@{ebp}}
 \index{ebp@{ebp}!task.\+h@{task.\+h}}
 \subsubsection[{ebp}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} ebp}}\label{task_8h_aaba2ad0ff8ba480934feabfdab02b1e7}
 
 
-Definizione alla linea 19 del file task.\+h.
+Definition at line 19 of file task.\+h.
 
 \hypertarget{task_8h_ae7c1e3339e4dead200cab41010e9127c}{\index{task.\+h@{task.\+h}!ebx@{ebx}}
 \index{ebx@{ebx}!task.\+h@{task.\+h}}
 \subsubsection[{ebx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} ebx}}\label{task_8h_ae7c1e3339e4dead200cab41010e9127c}
 
 
-Definizione alla linea 14 del file task.\+h.
+Definition at line 14 of file task.\+h.
 
 \hypertarget{task_8h_af2b16bef95c844028dd145264d1d3875}{\index{task.\+h@{task.\+h}!ecx@{ecx}}
 \index{ecx@{ecx}!task.\+h@{task.\+h}}
 \subsubsection[{ecx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} ecx}}\label{task_8h_af2b16bef95c844028dd145264d1d3875}
 
 
-Definizione alla linea 15 del file task.\+h.
+Definition at line 15 of file task.\+h.
 
 \hypertarget{task_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{\index{task.\+h@{task.\+h}!edi@{edi}}
 \index{edi@{edi}!task.\+h@{task.\+h}}
 \subsubsection[{edi}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} edi}}\label{task_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}
 
 
-Definizione alla linea 12 del file task.\+h.
+Definition at line 12 of file task.\+h.
 
 \hypertarget{task_8h_ae6db045cebe7b4cf979120dccdee0d01}{\index{task.\+h@{task.\+h}!edx@{edx}}
 \index{edx@{edx}!task.\+h@{task.\+h}}
 \subsubsection[{edx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} edx}}\label{task_8h_ae6db045cebe7b4cf979120dccdee0d01}
 
 
-Definizione alla linea 17 del file task.\+h.
+Definition at line 17 of file task.\+h.
 
 \hypertarget{task_8h_aeedfc39703ec8e0a1f052a832e74acd3}{\index{task.\+h@{task.\+h}!eflags@{eflags}}
 \index{eflags@{eflags}!task.\+h@{task.\+h}}
 \subsubsection[{eflags}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} eflags}}\label{task_8h_aeedfc39703ec8e0a1f052a832e74acd3}
 
 
-Definizione alla linea 18 del file task.\+h.
+Definition at line 18 of file task.\+h.
 
 \hypertarget{task_8h_a1588906901fc3015e0865574669a56a6}{\index{task.\+h@{task.\+h}!eip@{eip}}
 \index{eip@{eip}!task.\+h@{task.\+h}}
 \subsubsection[{eip}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} eip}}\label{task_8h_a1588906901fc3015e0865574669a56a6}
 
 
-Definizione alla linea 20 del file task.\+h.
+Definition at line 20 of file task.\+h.
 
 \hypertarget{task_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{\index{task.\+h@{task.\+h}!esi@{esi}}
 \index{esi@{esi}!task.\+h@{task.\+h}}
 \subsubsection[{esi}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} esi}}\label{task_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}
 
 
-Definizione alla linea 13 del file task.\+h.
+Definition at line 13 of file task.\+h.
 

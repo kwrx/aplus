@@ -1,12 +1,21 @@
-#ifdef DEBUG
 #include <aplus.h>
 #include <aplus/spinlock.h>
 
 
+/**
+ *	\brief Send a character to serial debug port.
+ *	\param ch Character to send.
+ */
 void debug_putc(char ch) {
 	serial_send(0, ch);
 }
 
+
+/**
+ *	\brief Send a string to serial debug port.
+ *	\param str String to send.
+ *	\see debug_putc
+ */
 void debug_puts(char* str) {
 	lock();
 	
@@ -16,7 +25,15 @@ void debug_puts(char* str) {
 	unlock();
 }
 
-static void print_dec(unsigned int value, unsigned int width, char * buf, int * ptr ) {
+
+/**
+ *	\brief Print a number in base 10 into buffer.
+ *	\param value Number to convert as string.
+ *	\param width Padding.
+ *	\param buf Buffer output.
+ *	\param ptr Size of returned string.
+ */
+static void print_dec(unsigned int value, unsigned int width, char* buf, int* ptr ) {
 	unsigned int n_width = 1;
 	unsigned int i = 9;
 	while (value > i && i < UINT32_MAX) {
@@ -43,8 +60,14 @@ static void print_dec(unsigned int value, unsigned int width, char * buf, int * 
 	*ptr += n_width;
 }
 
-
-static void print_hex(unsigned int value, unsigned int width, char * buf, int * ptr) {
+/**
+ *	\brief Print a number in base 16 into buffer.
+ *	\param value Number to convert as string.
+ *	\param width Padding.
+ *	\param buf Buffer output.
+ *	\param ptr Size of returned string.
+ */
+static void print_hex(unsigned int value, unsigned int width, char* buf, int* ptr) {
 	int i = width;
 
 	if (i == 0) i = 8;
@@ -70,7 +93,20 @@ static void print_hex(unsigned int value, unsigned int width, char * buf, int * 
 	}
 }
 
-
+/**
+ *	\brief Print to allocated string.\n
+ *	The functions asprintf() and vasprintf() are analogs of sprintf(3) and vsprintf(3), 
+	except that they allocate a string large enough to hold the output including the 	
+	terminating null byte, and return a pointer to it via the first argument. 			
+	This pointer should be passed to free(3) to release the allocated storage when it 	
+	is no longer needed.
+ * 	\param buf Output buffer just allocated.
+ *	\param fmt Format of string.
+ *	\param args Arguments.
+ *	\return When successful, these functions return the number of bytes printed, just 	
+	like sprintf(3). If memory allocation wasn't possible, or some other error occurs, 	
+	these functions will return -1, and the contents of strp is undefined.
+ */
 size_t vasprintf(char * buf, const char *fmt, va_list args) {
 	int i = 0;
 	char *s;
@@ -123,6 +159,11 @@ size_t vasprintf(char * buf, const char *fmt, va_list args) {
 }
 
 
+/**
+ *	\brief Formatted output conversion and print to Debug Standard Output.
+ *	\param fmt Format of string.
+ *	\param ... Arguments.
+ */
 void kprintf(char* fmt, ...) {
 	static char __kprintf_buf[1024];
 	memset(__kprintf_buf, 0, 1024);
@@ -136,4 +177,3 @@ void kprintf(char* fmt, ...) {
 }
 
 
-#endif

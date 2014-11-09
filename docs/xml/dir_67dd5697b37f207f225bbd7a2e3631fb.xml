@@ -2,6 +2,7 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
   <compounddef id="dir_67dd5697b37f207f225bbd7a2e3631fb" kind="dir">
     <compoundname>src/fs</compoundname>
+    <innerdir refid="dir_6abfe60f94b658ae213b16cf8cd9748f">src/fs/iso9660</innerdir>
     <innerfile refid="devfs_8c">devfs.c</innerfile>
     <innerfile refid="fs_8c">fs.c</innerfile>
     <innerfile refid="pipe_8c">pipe.c</innerfile>

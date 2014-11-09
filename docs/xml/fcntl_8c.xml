@@ -13,162 +13,162 @@
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <includes local="no">stdio.h</includes>
     <incdepgraph>
-      <node id="1391">
+      <node id="1583">
         <label>sys/stat.h</label>
       </node>
-      <node id="1383">
+      <node id="1575">
         <label>src/syscall/fcntl.c</label>
         <link refid="fcntl.c"/>
-        <childnode refid="1384" relation="include">
+        <childnode refid="1576" relation="include">
         </childnode>
-        <childnode refid="1388" relation="include">
+        <childnode refid="1580" relation="include">
         </childnode>
-        <childnode refid="1394" relation="include">
+        <childnode refid="1586" relation="include">
         </childnode>
-        <childnode refid="1399" relation="include">
+        <childnode refid="1591" relation="include">
         </childnode>
-        <childnode refid="1393" relation="include">
+        <childnode refid="1585" relation="include">
         </childnode>
-        <childnode refid="1402" relation="include">
+        <childnode refid="1594" relation="include">
         </childnode>
-        <childnode refid="1403" relation="include">
+        <childnode refid="1595" relation="include">
         </childnode>
-        <childnode refid="1391" relation="include">
+        <childnode refid="1583" relation="include">
         </childnode>
-        <childnode refid="1392" relation="include">
+        <childnode refid="1584" relation="include">
         </childnode>
-        <childnode refid="1404" relation="include">
+        <childnode refid="1596" relation="include">
         </childnode>
       </node>
-      <node id="1386">
+      <node id="1578">
         <label>stdarg.h</label>
       </node>
-      <node id="1395">
+      <node id="1587">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1384" relation="include">
+        <childnode refid="1576" relation="include">
         </childnode>
-        <childnode refid="1396" relation="include">
+        <childnode refid="1588" relation="include">
         </childnode>
-        <childnode refid="1385" relation="include">
+        <childnode refid="1577" relation="include">
         </childnode>
-        <childnode refid="1387" relation="include">
+        <childnode refid="1579" relation="include">
         </childnode>
-        <childnode refid="1390" relation="include">
+        <childnode refid="1582" relation="include">
         </childnode>
       </node>
-      <node id="1388">
+      <node id="1580">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1385" relation="include">
+        <childnode refid="1577" relation="include">
         </childnode>
-        <childnode refid="1389" relation="include">
+        <childnode refid="1581" relation="include">
         </childnode>
-        <childnode refid="1390" relation="include">
+        <childnode refid="1582" relation="include">
         </childnode>
-        <childnode refid="1391" relation="include">
+        <childnode refid="1583" relation="include">
         </childnode>
-        <childnode refid="1392" relation="include">
+        <childnode refid="1584" relation="include">
         </childnode>
       </node>
-      <node id="1385">
+      <node id="1577">
         <label>stdint.h</label>
       </node>
-      <node id="1394">
+      <node id="1586">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1384" relation="include">
+        <childnode refid="1576" relation="include">
         </childnode>
-        <childnode refid="1395" relation="include">
+        <childnode refid="1587" relation="include">
         </childnode>
-        <childnode refid="1385" relation="include">
+        <childnode refid="1577" relation="include">
         </childnode>
       </node>
-      <node id="1401">
+      <node id="1593">
         <label>setjmp.h</label>
       </node>
-      <node id="1399">
+      <node id="1591">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1385" relation="include">
+        <childnode refid="1577" relation="include">
         </childnode>
-        <childnode refid="1384" relation="include">
+        <childnode refid="1576" relation="include">
         </childnode>
-        <childnode refid="1388" relation="include">
+        <childnode refid="1580" relation="include">
         </childnode>
-        <childnode refid="1400" relation="include">
+        <childnode refid="1592" relation="include">
         </childnode>
-        <childnode refid="1390" relation="include">
+        <childnode refid="1582" relation="include">
         </childnode>
-        <childnode refid="1401" relation="include">
+        <childnode refid="1593" relation="include">
         </childnode>
       </node>
-      <node id="1403">
+      <node id="1595">
         <label>errno.h</label>
       </node>
-      <node id="1402">
+      <node id="1594">
         <label>fcntl.h</label>
       </node>
-      <node id="1389">
+      <node id="1581">
         <label>stddef.h</label>
       </node>
-      <node id="1396">
+      <node id="1588">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1389" relation="include">
+        <childnode refid="1581" relation="include">
         </childnode>
-        <childnode refid="1385" relation="include">
+        <childnode refid="1577" relation="include">
         </childnode>
-        <childnode refid="1390" relation="include">
+        <childnode refid="1582" relation="include">
         </childnode>
-        <childnode refid="1397" relation="include">
+        <childnode refid="1589" relation="include">
         </childnode>
-        <childnode refid="1398" relation="include">
+        <childnode refid="1590" relation="include">
         </childnode>
       </node>
-      <node id="1384">
+      <node id="1576">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1385" relation="include">
+        <childnode refid="1577" relation="include">
         </childnode>
-        <childnode refid="1386" relation="include">
+        <childnode refid="1578" relation="include">
         </childnode>
-        <childnode refid="1387" relation="include">
+        <childnode refid="1579" relation="include">
         </childnode>
       </node>
-      <node id="1390">
+      <node id="1582">
         <label>sys/types.h</label>
       </node>
-      <node id="1387">
+      <node id="1579">
         <label>string.h</label>
       </node>
-      <node id="1393">
+      <node id="1585">
         <label>unistd.h</label>
       </node>
-      <node id="1400">
+      <node id="1592">
         <label>signal.h</label>
       </node>
-      <node id="1398">
+      <node id="1590">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1385" relation="include">
+        <childnode refid="1577" relation="include">
         </childnode>
-        <childnode refid="1399" relation="include">
+        <childnode refid="1591" relation="include">
         </childnode>
       </node>
-      <node id="1392">
+      <node id="1584">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1393" relation="include">
+        <childnode refid="1585" relation="include">
         </childnode>
-        <childnode refid="1390" relation="include">
+        <childnode refid="1582" relation="include">
         </childnode>
       </node>
-      <node id="1397">
+      <node id="1589">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
-      <node id="1404">
+      <node id="1596">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -179,12 +179,12 @@
         <argsstring></argsstring>
         <name>current_task</name>
         <briefdescription>
-        </briefdescription>
+<para>Current task address. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/fcntl.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="33" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/fcntl.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="fcntl_8c_1a9af8258c3554800f6613f8147544225f" prot="public" static="no" mutable="no">
         <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
@@ -219,15 +219,82 @@
           <declname>buf</declname>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>This function shall perform the operations described below on open files.<linebreak/>
+ The available values for cmd are defined in &lt;fcntl.h&gt; and are as follows. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><itemizedlist>
+<listitem><para>F_DUPFD<linebreak/>
+<itemizedlist>
+<listitem><para>Return a new file descriptor which shall be the lowest numbered available (that is, not already open) file descriptor greater than or equal to the third argument, arg, taken as an integer of type int.<linebreak/>
+ The new file descriptor shall refer to the same open file description as the original file descriptor, and shall share any locks.<linebreak/>
+ The FD_CLOEXEC flag associated with the new file descriptor shall be cleared to keep the file open across calls to one of the exec functions.<linebreak/>
+</para></listitem></itemizedlist>
+</para></listitem><listitem><para>F_GETFD<linebreak/>
+<itemizedlist>
+<listitem><para>Get the file descriptor flags defined in &lt;fcntl.h&gt; that are associated with the file descriptor fildes.<linebreak/>
+ File descriptor flags are associated with a single file descriptor and do not affect other file descriptors that refer to the same file.</para></listitem></itemizedlist>
+</para></listitem><listitem><para>F_SETFD<linebreak/>
+<itemizedlist>
+<listitem><para>Set the file descriptor flags defined in &lt;fcntl.h&gt;, that are associated with fildes, to the third argument, arg, taken as type int.<linebreak/>
+ If the FD_CLOEXEC flag in the third argument is 0, the file shall remain open across the exec functions; otherwise, the file shall be closed upon successful execution of one of the exec functions.<linebreak/>
+</para></listitem></itemizedlist>
+</para></listitem><listitem><para>F_GETFL<linebreak/>
+<itemizedlist>
+<listitem><para>Get the file status flags and file access modes, defined in &lt;fcntl.h&gt;, for the file description associated with fildes. The file access modes can be extracted from the return value using the mask O_ACCMODE, which is defined in &lt;fcntl.h&gt;.<linebreak/>
+ File status flags and file access modes are associated with the file description and do not affect other file descriptors that refer to the same file with different open file descriptions.<linebreak/>
+</para></listitem></itemizedlist>
+</para></listitem><listitem><para>F_SETFL<linebreak/>
+<itemizedlist>
+<listitem><para>Set the file status flags, defined in &lt;fcntl.h&gt;, for the file description associated with fildes from the corresponding bits in the third argument, arg, taken as type int.<linebreak/>
+ Bits corresponding to the file access mode and the file creation flags, as defined in &lt;fcntl.h&gt;, that are set in arg shall be ignored. If any bits in arg other than those mentioned here are changed by the application, the result is unspecified.<linebreak/>
+</para></listitem></itemizedlist>
+</para></listitem><listitem><para>F_GETOWN<linebreak/>
+<itemizedlist>
+<listitem><para>If fildes refers to a socket, get the process or process group ID specified to receive SIGURG signals when out-of-band data is available.<linebreak/>
+ Positive values indicate a process ID; negative values, other than -1, indicate a process group ID.<linebreak/>
+ If fildes does not refer to a socket, the results are unspecified.<linebreak/>
+</para></listitem></itemizedlist>
+</para></listitem><listitem><para>F_SETOWN<linebreak/>
+<itemizedlist>
+<listitem><para>If fildes refers to a socket, set the process or process group ID specified to receive SIGURG signals when out-of-band data is available, using the value of the third argument, arg, taken as type int.<linebreak/>
+ Positive values indicate a process ID; negative values, other than -1, indicate a process group ID.<linebreak/>
+ If fildes does not refer to a socket, the results are unspecified<linebreak/>
+<linebreak/>
+<linebreak/>
+<linebreak/>
+ <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fd</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>File descriptor. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>request</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Request operation. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional arguments. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Upon successful completion, the value returned shall depend on cmd.<linebreak/>
+ Otherwise, -1 shall be returned and errno set to indicate the error </para></simplesect>
+</para></listitem></itemizedlist>
+</para></listitem></itemizedlist>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/fcntl.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/syscall/fcntl.c" bodystart="19" bodyend="36"/>
+        <location file="/opt/prj/aPlus/src/syscall/fcntl.c" line="72" column="1" bodyfile="/opt/prj/aPlus/src/syscall/fcntl.c" bodystart="72" bodyend="89"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="87">task::fd</references>
-        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
       </memberdef>
       <memberdef kind="function" id="fcntl_8c_1a5f500fa48a3ec03f7c9627bc1abda1aa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -246,7 +313,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/fcntl.c" line="38" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/fcntl.c" line="91" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -272,26 +339,26 @@
 <codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="fcntl_8c_1a9af8258c3554800f6613f8147544225f" kindref="member">vfs_root</ref>;</highlight></codeline>
 <codeline lineno="17"><highlight class="normal"></highlight></codeline>
 <codeline lineno="18"><highlight class="normal"></highlight></codeline>
-<codeline lineno="19" refid="fcntl_8c_1a7d46f514aa7d9664ebd2baa4d61c4a37" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fcntl_8c_1a7d46f514aa7d9664ebd2baa4d61c4a37" kindref="member">sys_fcntl</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>request,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf)<sp/>{</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>TODO<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_chown:<sp/>TODO.&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="36"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"></highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><ref refid="fcntl_8c_1a5f500fa48a3ec03f7c9627bc1abda1aa" kindref="member">SYSCALL</ref>(<ref refid="fcntl_8c_1a7d46f514aa7d9664ebd2baa4d61c4a37" kindref="member">sys_fcntl</ref>,<sp/>19);</highlight></codeline>
+<codeline lineno="72" refid="fcntl_8c_1a7d46f514aa7d9664ebd2baa4d61c4a37" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fcntl_8c_1a7d46f514aa7d9664ebd2baa4d61c4a37" kindref="member">sys_fcntl</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>request,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf)<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">/*<sp/>TODO<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_chown:<sp/>TODO.&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><ref refid="fcntl_8c_1a5f500fa48a3ec03f7c9627bc1abda1aa" kindref="member">SYSCALL</ref>(<ref refid="fcntl_8c_1a7d46f514aa7d9664ebd2baa4d61c4a37" kindref="member">sys_fcntl</ref>,<sp/>19);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/fcntl.c"/>
   </compounddef>

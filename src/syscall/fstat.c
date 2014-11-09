@@ -12,6 +12,15 @@
 
 extern task_t* current_task;
 
+
+/**
+ * 	\brief This function shall obtain information about an open file associated with
+		the file descriptor fildes, and shall write it to the area pointed to by buf.
+ *	\param fd File descriptor
+ *	\param st Stat structure
+ *	\return Upon successful completion, 0 shall be returned.\n
+			Otherwise, -1 shall be returned and errno set to indicate the error.
+ */
 int sys_fstat(int fd, struct stat* st) {
 	if(!st) {
 		errno = EINVAL;

@@ -1,4 +1,4 @@
-.TH "src/include/aplus.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,14 +13,14 @@ src/include/aplus.h \-
 \fC#include <string\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBregs\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -45,7 +45,7 @@ src/include/aplus.h \-
 .RI "#define \fBkprintf\fP(a, b\&.\&.\&.)   ;"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -76,7 +76,7 @@ src/include/aplus.h \-
 .RI "ax al \fBeax\fP struct \fBregs\fP \fB__attribute__\fP ((packed)) regs_t"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -143,10 +143,10 @@ src/include/aplus.h \-
 .RI "\fBuint32_t\fP \fBuseresp\fP"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define insx(n, t, reg)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 static inline t* ins##n(uint16_t p, t* v, uint32_t len) {        \
@@ -157,7 +157,7 @@ static inline t* ins##n(uint16_t p, t* v, uint32_t len) {        \
     }
 .fi
 .SS "#define inx(n, t, reg)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 static inline t in##n(uint16_t p) {                               \
@@ -169,9 +169,9 @@ static inline t in##n(uint16_t p) {                               \
 .SS "#define kprintf(a, b\&.\&.\&.)   ;"
 
 .PP
-Definizione alla linea 147 del file aplus\&.h\&.
+Definition at line 147 of file aplus\&.h\&.
 .SS "#define outsx(n, t, reg)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 static inline void outs##n(uint16_t p, t* v, uint32_t len) { \
@@ -180,9 +180,9 @@ static inline void outs##n(uint16_t p, t* v, uint32_t len) { \
     }
 .fi
 .PP
-Definizione alla linea 117 del file aplus\&.h\&.
+Definition at line 117 of file aplus\&.h\&.
 .SS "#define outx(n, t, reg)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 static inline void out##n(uint16_t p, t v) {                    \\
@@ -190,9 +190,9 @@ static inline void out##n(uint16_t p, t v) {                    \\
     }
 .fi
 .PP
-Definizione alla linea 96 del file aplus\&.h\&.
+Definition at line 96 of file aplus\&.h\&.
 .SS "#define read_reg(n)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 static inline uint32_t read_##n() {                          \\
@@ -202,9 +202,9 @@ static inline uint32_t read_##n() {                          \\
     }
 .fi
 .PP
-Definizione alla linea 32 del file aplus\&.h\&.
+Definition at line 32 of file aplus\&.h\&.
 .SS "#define write_reg(n)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 static inline void write_##n(uint32_t val) {                \\
@@ -212,13 +212,13 @@ static inline void write_##n(uint32_t val) {                \\
     }
 .fi
 .PP
-Definizione alla linea 66 del file aplus\&.h\&.
-.SH "Documentazione delle funzioni"
+Definition at line 66 of file aplus\&.h\&.
+.SH "Function Documentation"
 .PP 
 .SS "ax al \fBeax\fP struct \fBregs\fP __attribute__ ((packed))"
 
 .PP
-Definizione alla linea 44 del file desc\&.c\&.
+Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
 46                        {
@@ -241,9 +241,9 @@ Definizione alla linea 44 del file desc\&.c\&.
 .SS "read_reg (\fBeax\fP)"
 
 .PP
-Definizione alla linea 39 del file aplus\&.h\&.
+Definition at line 39 of file aplus\&.h\&.
 .PP
-Referenzia __asm__(), e uint32_t\&.
+References __asm__(), and uint32_t\&.
 .PP
 .nf
 59                                      {
@@ -255,101 +255,101 @@ Referenzia __asm__(), e uint32_t\&.
 .SS "write_reg (\fBeax\fP)"
 
 .PP
-Definizione alla linea 72 del file aplus\&.h\&.
+Definition at line 72 of file aplus\&.h\&.
 .PP
-Referenzia __asm__()\&.
+References __asm__()\&.
 .PP
 .nf
 92                                               {
 93     __asm__ __volatile__("push eax; popfd" : : "a"(val));
 94 }   
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBuint32_t\fP cs"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP ds"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP eax"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP ebp"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP ebx"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP ecx"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP edi"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP edx"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP eflags"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP eip"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP err_code"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP es"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP esi"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP esp"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
-.SS "\fBuint32_t\fP \fBfs\fP"
+Definition at line 139 of file aplus\&.h\&.
+.SS "\fBuint32_t\fP fs"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP gs"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP int_no"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
+Definition at line 139 of file aplus\&.h\&.
 .SS "uint16_t"
 
 .PP
-Definizione alla linea 102 del file aplus\&.h\&.
+Definition at line 102 of file aplus\&.h\&.
 .SS "ax al uint32_t"
 
 .PP
-Definizione alla linea 115 del file aplus\&.h\&.
+Definition at line 115 of file aplus\&.h\&.
 .SS "ax uint8_t"
 
 .PP
-Definizione alla linea 113 del file aplus\&.h\&.
+Definition at line 113 of file aplus\&.h\&.
 .SS "\fBuint32_t\fP useresp"
 
 .PP
-Definizione alla linea 139 del file aplus\&.h\&.
-.SH "Autore"
+Definition at line 139 of file aplus\&.h\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

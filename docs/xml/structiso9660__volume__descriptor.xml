@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structiso9660__volume__descriptor" kind="struct" prot="public">
+    <compoundname>iso9660_volume_descriptor</compoundname>
+    <includes refid="iso9660_8h" local="no">iso9660.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structiso9660__volume__descriptor_1a4a6176bdba9bffc0ce8449819ea0607b" prot="public" static="no" mutable="no">
+        <type>int8_t</type>
+        <definition>int8_t iso9660_volume_descriptor::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="30" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__volume__descriptor_1a8f6d3d0d6c09036a09ba6236fcadef24" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char iso9660_volume_descriptor::id[5]</definition>
+        <argsstring>[5]</argsstring>
+        <name>id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="31" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__volume__descriptor_1a925c16dc5ba2782b30213c5bb5654f0d" prot="public" static="no" mutable="no">
+        <type>int8_t</type>
+        <definition>int8_t iso9660_volume_descriptor::version</definition>
+        <argsstring></argsstring>
+        <name>version</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="32" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__volume__descriptor_1aac66dd35d3b45b6e8eab687c935a912a" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char iso9660_volume_descriptor::data[2041]</definition>
+        <argsstring>[2041]</argsstring>
+        <name>data</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="33" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="52">
+        <label>iso9660_volume_descriptor</label>
+        <link refid="structiso9660__volume__descriptor"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="29" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="29" bodyend="34"/>
+    <listofallmembers>
+      <member refid="structiso9660__volume__descriptor_1aac66dd35d3b45b6e8eab687c935a912a" prot="public" virt="non-virtual"><scope>iso9660_volume_descriptor</scope><name>data</name></member>
+      <member refid="structiso9660__volume__descriptor_1a8f6d3d0d6c09036a09ba6236fcadef24" prot="public" virt="non-virtual"><scope>iso9660_volume_descriptor</scope><name>id</name></member>
+      <member refid="structiso9660__volume__descriptor_1a4a6176bdba9bffc0ce8449819ea0607b" prot="public" virt="non-virtual"><scope>iso9660_volume_descriptor</scope><name>type</name></member>
+      <member refid="structiso9660__volume__descriptor_1a925c16dc5ba2782b30213c5bb5654f0d" prot="public" virt="non-virtual"><scope>iso9660_volume_descriptor</scope><name>version</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

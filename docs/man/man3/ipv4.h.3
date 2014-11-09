@@ -1,4 +1,4 @@
-.TH "src/include/aplus/net/ipv4.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/net/ipv4.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -11,14 +11,14 @@ src/include/aplus/net/ipv4.h \-
 \fC#include <aplus/netif\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBipv4_header\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -70,14 +70,14 @@ src/include/aplus/net/ipv4.h \-
 .RI "#define \fBIPV4_MAX_LENGTH\fP   65536"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "struct \fBipv4_header\fP \fB__attribute__\fP ((packed)) ipv4_header_t"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -111,78 +111,78 @@ src/include/aplus/net/ipv4.h \-
 .RI "\fBipv4_t\fP \fBdest\fP"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define _IPV4_h"
 
 .PP
-Definizione alla linea 2 del file ipv4\&.h\&.
+Definition at line 2 of file ipv4\&.h\&.
 .SS "#define IPV4_CHECK_VERSION(head)   ((head->\fBinfo\fP & 0x0F) == 4)"
 
 .PP
-Definizione alla linea 11 del file ipv4\&.h\&.
+Definition at line 11 of file ipv4\&.h\&.
 .SS "#define IPV4_FLAGS(head)   (head->\fBoffset\fP & 3)"
 
 .PP
-Definizione alla linea 13 del file ipv4\&.h\&.
+Definition at line 13 of file ipv4\&.h\&.
 .SS "#define IPV4_FLAGS_DF   0x01	/* Don't fragment */"
 
 .PP
-Definizione alla linea 8 del file ipv4\&.h\&.
+Definition at line 8 of file ipv4\&.h\&.
 .SS "#define IPV4_FLAGS_MF   0x02	/* More fragment */"
 
 .PP
-Definizione alla linea 9 del file ipv4\&.h\&.
+Definition at line 9 of file ipv4\&.h\&.
 .SS "#define IPV4_HEADER_LENGTH(head)   (((head->\fBinfo\fP & 0xF0) >> 4) * 4)"
 
 .PP
-Definizione alla linea 12 del file ipv4\&.h\&.
+Definition at line 12 of file ipv4\&.h\&.
 .SS "#define IPV4_MAX_LENGTH   65536"
 
 .PP
-Definizione alla linea 27 del file ipv4\&.h\&.
+Definition at line 27 of file ipv4\&.h\&.
 .SS "#define IPV4_OFFSET(head)   ((head->\fBoffset\fP >> 2) * 8)"
 
 .PP
-Definizione alla linea 14 del file ipv4\&.h\&.
+Definition at line 14 of file ipv4\&.h\&.
 .SS "#define IPV4_PROTO_ICMP   1"
 
 .PP
-Definizione alla linea 23 del file ipv4\&.h\&.
+Definition at line 23 of file ipv4\&.h\&.
 .SS "#define IPV4_PROTO_RAW   0"
 
 .PP
-Definizione alla linea 22 del file ipv4\&.h\&.
+Definition at line 22 of file ipv4\&.h\&.
 .SS "#define IPV4_PROTO_TCP   6"
 
 .PP
-Definizione alla linea 24 del file ipv4\&.h\&.
+Definition at line 24 of file ipv4\&.h\&.
 .SS "#define IPV4_PROTO_UDP   17"
 
 .PP
-Definizione alla linea 25 del file ipv4\&.h\&.
+Definition at line 25 of file ipv4\&.h\&.
 .SS "#define IPV4_TOS_LATENCY(\fBtos\fP)   ((\fBtos\fP >> 2) & 1)"
 
 .PP
-Definizione alla linea 17 del file ipv4\&.h\&.
+Definition at line 17 of file ipv4\&.h\&.
 .SS "#define IPV4_TOS_PRIORITY(\fBtos\fP)   (\fBtos\fP & 3)"
 
 .PP
-Definizione alla linea 16 del file ipv4\&.h\&.
+Definition at line 16 of file ipv4\&.h\&.
 .SS "#define IPV4_TOS_RELIABILITY(\fBtos\fP)   ((\fBtos\fP >> 4) & 1)"
 
 .PP
-Definizione alla linea 19 del file ipv4\&.h\&.
+Definition at line 19 of file ipv4\&.h\&.
 .SS "#define IPV4_TOS_TROUGHPUT(\fBtos\fP)   ((\fBtos\fP >> 3) & 1)"
 
 .PP
-Definizione alla linea 18 del file ipv4\&.h\&.
-.SH "Documentazione delle funzioni"
+Definition at line 18 of file ipv4\&.h\&.
+.SH "Function Documentation"
 .PP 
 .SS "struct \fBipv4_header\fP __attribute__ ((packed))"
 
 .PP
-Definizione alla linea 44 del file desc\&.c\&.
+Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
 46                        {
@@ -190,48 +190,48 @@ Definizione alla linea 44 del file desc\&.c\&.
 48     uint32_t base;
 49 } __attribute__((packed)) gdt_ptr_t;
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBuint16_t\fP checksum"
 
 .PP
-Definizione alla linea 54 del file ipv4\&.h\&.
+Definition at line 54 of file ipv4\&.h\&.
 .SS "\fBipv4_t\fP dest"
 
 .PP
-Definizione alla linea 57 del file ipv4\&.h\&.
+Definition at line 57 of file ipv4\&.h\&.
 .SS "\fBuint16_t\fP id"
 
 .PP
-Definizione alla linea 50 del file ipv4\&.h\&.
+Definition at line 50 of file ipv4\&.h\&.
 .SS "\fBuint8_t\fP info"
 
 .PP
-Definizione alla linea 47 del file ipv4\&.h\&.
+Definition at line 47 of file ipv4\&.h\&.
 .SS "\fBuint16_t\fP length"
 
 .PP
-Definizione alla linea 49 del file ipv4\&.h\&.
+Definition at line 49 of file ipv4\&.h\&.
 .SS "\fBuint16_t\fP offset"
 
 .PP
-Definizione alla linea 51 del file ipv4\&.h\&.
+Definition at line 51 of file ipv4\&.h\&.
 .SS "\fBuint8_t\fP protocol"
 
 .PP
-Definizione alla linea 53 del file ipv4\&.h\&.
+Definition at line 53 of file ipv4\&.h\&.
 .SS "\fBipv4_t\fP source"
 
 .PP
-Definizione alla linea 56 del file ipv4\&.h\&.
+Definition at line 56 of file ipv4\&.h\&.
 .SS "\fBuint8_t\fP tos"
 
 .PP
-Definizione alla linea 48 del file ipv4\&.h\&.
+Definition at line 48 of file ipv4\&.h\&.
 .SS "\fBuint8_t\fP ttl"
 
 .PP
-Definizione alla linea 52 del file ipv4\&.h\&.
-.SH "Autore"
+Definition at line 52 of file ipv4\&.h\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

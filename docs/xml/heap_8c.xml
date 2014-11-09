@@ -6,97 +6,97 @@
     <includes local="no">sys/types.h</includes>
     <includes refid="mm_8h" local="no">aplus/mm.h</includes>
     <incdepgraph>
-      <node id="932">
+      <node id="1124">
         <label>sys/stat.h</label>
       </node>
-      <node id="929">
+      <node id="1121">
         <label>stdarg.h</label>
       </node>
-      <node id="922">
+      <node id="1114">
         <label>src/mm/heap.c</label>
         <link refid="heap.c"/>
-        <childnode refid="923" relation="include">
+        <childnode refid="1115" relation="include">
         </childnode>
-        <childnode refid="924" relation="include">
+        <childnode refid="1116" relation="include">
         </childnode>
-        <childnode refid="925" relation="include">
+        <childnode refid="1117" relation="include">
         </childnode>
       </node>
-      <node id="931">
+      <node id="1123">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="926" relation="include">
+        <childnode refid="1118" relation="include">
         </childnode>
-        <childnode refid="923" relation="include">
+        <childnode refid="1115" relation="include">
         </childnode>
-        <childnode refid="924" relation="include">
+        <childnode refid="1116" relation="include">
         </childnode>
-        <childnode refid="932" relation="include">
+        <childnode refid="1124" relation="include">
         </childnode>
-        <childnode refid="933" relation="include">
+        <childnode refid="1125" relation="include">
         </childnode>
       </node>
-      <node id="926">
+      <node id="1118">
         <label>stdint.h</label>
       </node>
-      <node id="936">
+      <node id="1128">
         <label>setjmp.h</label>
       </node>
-      <node id="927">
+      <node id="1119">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="926" relation="include">
+        <childnode refid="1118" relation="include">
         </childnode>
-        <childnode refid="928" relation="include">
+        <childnode refid="1120" relation="include">
         </childnode>
-        <childnode refid="931" relation="include">
+        <childnode refid="1123" relation="include">
         </childnode>
-        <childnode refid="935" relation="include">
+        <childnode refid="1127" relation="include">
         </childnode>
-        <childnode refid="924" relation="include">
+        <childnode refid="1116" relation="include">
         </childnode>
-        <childnode refid="936" relation="include">
+        <childnode refid="1128" relation="include">
         </childnode>
       </node>
-      <node id="923">
+      <node id="1115">
         <label>stddef.h</label>
       </node>
-      <node id="928">
+      <node id="1120">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="926" relation="include">
+        <childnode refid="1118" relation="include">
         </childnode>
-        <childnode refid="929" relation="include">
+        <childnode refid="1121" relation="include">
         </childnode>
-        <childnode refid="930" relation="include">
+        <childnode refid="1122" relation="include">
         </childnode>
       </node>
-      <node id="924">
+      <node id="1116">
         <label>sys/types.h</label>
       </node>
-      <node id="930">
+      <node id="1122">
         <label>string.h</label>
       </node>
-      <node id="934">
+      <node id="1126">
         <label>unistd.h</label>
       </node>
-      <node id="935">
+      <node id="1127">
         <label>signal.h</label>
       </node>
-      <node id="925">
+      <node id="1117">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="926" relation="include">
+        <childnode refid="1118" relation="include">
         </childnode>
-        <childnode refid="927" relation="include">
+        <childnode refid="1119" relation="include">
         </childnode>
       </node>
-      <node id="933">
+      <node id="1125">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="934" relation="include">
+        <childnode refid="1126" relation="include">
         </childnode>
-        <childnode refid="924" relation="include">
+        <childnode refid="1116" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -182,7 +182,7 @@
 <codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="26"><highlight class="normal"></highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28" refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="28" refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(heap)</highlight></codeline>
 <codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(heap-&gt;<ref refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" kindref="member">alloc</ref>)</highlight></codeline>
 <codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>heap-&gt;<ref refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" kindref="member">alloc</ref>(heap,<sp/>size);</highlight></codeline>
@@ -190,7 +190,7 @@
 <codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="34"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="35"><highlight class="normal"></highlight></codeline>
-<codeline lineno="36" refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" kindref="member">hfree</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="36" refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" kindref="member">hfree</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(heap)</highlight></codeline>
 <codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(heap-&gt;<ref refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" kindref="member">free</ref>)</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>heap-&gt;<ref refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" kindref="member">free</ref>(heap,<sp/>addr,<sp/>size);</highlight></codeline>

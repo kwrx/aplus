@@ -1,4 +1,4 @@
-.TH "usr/src/libposix/include/sys/dirent.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libposix/include/sys/dirent.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -11,7 +11,7 @@ usr/src/libposix/include/sys/dirent.h \-
 \fC#include <sys/types\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -21,7 +21,7 @@ usr/src/libposix/include/sys/dirent.h \-
 .RI "struct \fBdirent\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -31,14 +31,14 @@ usr/src/libposix/include/sys/dirent.h \-
 .RI "#define \fBO_NOFOLLOW\fP   00400000"
 .br
 .in -1c
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
 .RI "typedef struct \fB__DIR\fP \fBDIR\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -66,26 +66,26 @@ usr/src/libposix/include/sys/dirent.h \-
 .RI "off_t \fBtelldir\fP (\fBDIR\fP *\fBd\fP)"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define O_DIRECTORY   00200000"
 
 .PP
-Definizione alla linea 42 del file dirent\&.h\&.
+Definition at line 42 of file dirent\&.h\&.
 .SS "#define O_NOFOLLOW   00400000"
 
 .PP
-Definizione alla linea 46 del file dirent\&.h\&.
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+Definition at line 46 of file dirent\&.h\&.
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef struct \fB__DIR\fP  \fBDIR\fP"
 
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int alphasort (const struct \fBdirent\fP **a, const struct \fBdirent\fP **b)"
 
 .PP
-Definizione alla linea 12 del file alphasort\&.c\&.
+Definition at line 12 of file alphasort\&.c\&.
 .PP
 .nf
 12                                                                 {
@@ -95,9 +95,9 @@ Definizione alla linea 12 del file alphasort\&.c\&.
 .SS "int closedir (\fBDIR\fP *d)"
 
 .PP
-Definizione alla linea 11 del file closedir\&.c\&.
+Definition at line 11 of file closedir\&.c\&.
 .PP
-Referenzia errno, __DIR::fd, e __DIR::position\&.
+References errno, __DIR::fd, and __DIR::position\&.
 .PP
 .nf
 11                      {
@@ -117,9 +117,9 @@ Referenzia errno, __DIR::fd, e __DIR::position\&.
 .SS "\fBDIR\fP* opendir (const char *path)"
 
 .PP
-Definizione alla linea 13 del file opendir\&.c\&.
+Definition at line 13 of file opendir\&.c\&.
 .PP
-Referenzia d, errno, __DIR::fd, O_DIRECTORY, e __DIR::position\&.
+References d, errno, __DIR::fd, O_DIRECTORY, and __DIR::position\&.
 .PP
 .nf
 13                                {
@@ -139,9 +139,9 @@ Referenzia d, errno, __DIR::fd, O_DIRECTORY, e __DIR::position\&.
 .SS "struct \fBdirent\fP* readdir (\fBDIR\fP *d)"
 
 .PP
-Definizione alla linea 15 del file readdir\&.c\&.
+Definition at line 15 of file readdir\&.c\&.
 .PP
-Referenzia errno\&.
+References errno\&.
 .PP
 .nf
 15                                {
@@ -156,9 +156,9 @@ Referenzia errno\&.
 .SS "void rewinddir (\fBDIR\fP *d)"
 
 .PP
-Definizione alla linea 11 del file rewinddir\&.c\&.
+Definition at line 11 of file rewinddir\&.c\&.
 .PP
-Referenzia __DIR::position\&.
+References __DIR::position\&.
 .PP
 .nf
 11                        {
@@ -169,9 +169,9 @@ Referenzia __DIR::position\&.
 .SS "int scandir (const char *pathname, struct \fBdirent\fP ***namelist, int(*)(const struct \fBdirent\fP *)select, int(*)(const struct \fBdirent\fP **, const struct \fBdirent\fP **)compar)"
 
 .PP
-Definizione alla linea 11 del file scandir\&.c\&.
+Definition at line 11 of file scandir\&.c\&.
 .PP
-Referenzia d, errno, opendir(), e readdir()\&.
+References d, errno, opendir(), and readdir()\&.
 .PP
 .nf
 11                                                                                                                                                                   {
@@ -213,9 +213,9 @@ Referenzia d, errno, opendir(), e readdir()\&.
 .SS "void seekdir (\fBDIR\fP *d, off_toffset)"
 
 .PP
-Definizione alla linea 13 del file seekdir\&.c\&.
+Definition at line 13 of file seekdir\&.c\&.
 .PP
-Referenzia offset, e __DIR::position\&.
+References offset, and __DIR::position\&.
 .PP
 .nf
 13                                    {
@@ -226,9 +226,9 @@ Referenzia offset, e __DIR::position\&.
 .SS "off_t telldir (\fBDIR\fP *d)"
 
 .PP
-Definizione alla linea 11 del file telldir\&.c\&.
+Definition at line 11 of file telldir\&.c\&.
 .PP
-Referenzia errno, e __DIR::position\&.
+References errno, and __DIR::position\&.
 .PP
 .nf
 11                       {
@@ -240,6 +240,6 @@ Referenzia errno, e __DIR::position\&.
 17     return d->position;
 18 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

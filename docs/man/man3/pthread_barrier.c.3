@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_barrier.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_barrier.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ usr/src/libpthread/src/pthread_barrier.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -30,14 +30,14 @@ usr/src/libpthread/src/pthread_barrier.c \-
 .RI "\fBPUBLIC\fP int \fBpthread_barrier_wait\fP (\fBpthread_barrier_t\fP *barrier)"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP int pthread_barrier_destroy (\fBpthread_barrier_t\fP *barrier)"
 
 .PP
-Definizione alla linea 28 del file pthread_barrier\&.c\&.
+Definition at line 28 of file pthread_barrier\&.c\&.
 .PP
-Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&.
+References pthread_barrier::curr_height, errno, and pthread_barrier::init_height\&.
 .PP
 .nf
 28                                                                {
@@ -56,9 +56,9 @@ Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&
 .SS "\fBPUBLIC\fP int pthread_barrier_init (\fBpthread_barrier_t\fP *barrier, const \fBpthread_barrierattr_t\fP *attr, unsigned intcount)"
 
 .PP
-Definizione alla linea 9 del file pthread_barrier\&.c\&.
+Definition at line 9 of file pthread_barrier\&.c\&.
 .PP
-Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&.
+References pthread_barrier::curr_height, errno, and pthread_barrier::init_height\&.
 .PP
 .nf
 9                                                                                                                    {
@@ -82,9 +82,9 @@ Referenzia pthread_barrier::curr_height, errno, e pthread_barrier::init_height\&
 .SS "\fBPUBLIC\fP int pthread_barrier_wait (\fBpthread_barrier_t\fP *barrier)"
 
 .PP
-Definizione alla linea 42 del file pthread_barrier\&.c\&.
+Definition at line 42 of file pthread_barrier\&.c\&.
 .PP
-Referenzia pthread_barrier::curr_height, errno, pthread_barrier::init_height, e sched_yield()\&.
+References pthread_barrier::curr_height, errno, pthread_barrier::init_height, and sched_yield()\&.
 .PP
 .nf
 42                                                             {
@@ -101,6 +101,6 @@ Referenzia pthread_barrier::curr_height, errno, pthread_barrier::init_height, e 
 53     return 0;
 54 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

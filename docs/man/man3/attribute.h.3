@@ -1,4 +1,4 @@
-.TH "src/include/aplus/attribute.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/attribute.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,14 +17,14 @@ src/include/aplus/attribute.h \-
 \fC#include <sys/types\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBattribute\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -37,7 +37,7 @@ src/include/aplus/attribute.h \-
 .RI "#define \fBATTRIBUTE\fP(\fBname\fP, \fBvalue\fP)"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -47,7 +47,7 @@ src/include/aplus/attribute.h \-
 .RI "static \fBlist_t\fP * \fBattribute\fP (const char *\fBname\fP)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -57,18 +57,18 @@ src/include/aplus/attribute.h \-
 .RI "\fBuint32_t\fP \fBvalue\fP"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define __UNION(x, y, z)   \fB__UNION2\fP(x, y, z)"
 
 .PP
-Definizione alla linea 15 del file attribute\&.h\&.
+Definition at line 15 of file attribute\&.h\&.
 .SS "#define __UNION2(x, y, z)   x ## y ## z"
 
 .PP
-Definizione alla linea 12 del file attribute\&.h\&.
+Definition at line 12 of file attribute\&.h\&.
 .SS "#define ATTRIBUTE(\fBname\fP, \fBvalue\fP)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section("\&.attribute"))) = {   \\
@@ -76,17 +76,17 @@ attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section("\&.a
     }                                                                                               \
 .fi
 .PP
-Definizione alla linea 18 del file attribute\&.h\&.
-.SH "Documentazione delle funzioni"
+Definition at line 18 of file attribute\&.h\&.
+.SH "Function Documentation"
 .PP 
 .SS "struct \fBattribute\fP __attribute__ ((aligned(0x100)))"
 
 .SS "static \fBlist_t\fP* \fBattribute\fP (const char *name)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definizione alla linea 31 del file attribute\&.h\&.
+Definition at line 31 of file attribute\&.h\&.
 .PP
-Referenzia list_add(), list_init, e uint32_t\&.
+References list_add(), list_init, and uint32_t\&.
 .PP
 .nf
 31                                                   {
@@ -111,16 +111,16 @@ Referenzia list_add(), list_init, e uint32_t\&.
 50     return tmp;
 51 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "char name[0x80]"
 
 .PP
-Definizione alla linea 82 del file attribute\&.h\&.
+Definition at line 82 of file attribute\&.h\&.
 .SS "\fBuint32_t\fP value"
 
 .PP
-Definizione alla linea 83 del file attribute\&.h\&.
-.SH "Autore"
+Definition at line 83 of file attribute\&.h\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

@@ -1,0 +1,582 @@
+\hypertarget{iso9660_8h}{\section{src/fs/iso9660/iso9660.h File Reference}
+\label{iso9660_8h}\index{src/fs/iso9660/iso9660.\+h@{src/fs/iso9660/iso9660.\+h}}
+}
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structiso9660__volume__descriptor}{iso9660\+\_\+volume\+\_\+descriptor}
+\item 
+struct \hyperlink{structiso9660__pvd}{iso9660\+\_\+pvd}
+\item 
+struct \hyperlink{structiso9660__dir}{iso9660\+\_\+dir}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{iso9660_8h_a00bbe26a634a966bc30429348a713ede}{I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E}~2048
+\item 
+\#define \hyperlink{iso9660_8h_a46d3c45c595db51113eb469111f8f47e}{I\+S\+O9660\+\_\+\+P\+V\+D}~(0x10 $\ast$ I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E)
+\item 
+\#define \hyperlink{iso9660_8h_adb9a0b19d37ea681279fbc2fd12e78e9}{I\+S\+O9660\+\_\+\+I\+D}~\char`\"{}C\+D001\char`\"{}
+\item 
+\#define \hyperlink{iso9660_8h_a686d0298670c8a960432fedea108a4ee}{I\+S\+O9660\+\_\+\+V\+E\+R\+S\+I\+O\+N}~0x01
+\item 
+\#define \hyperlink{iso9660_8h_a4e26a4252a467603b5109045780288f9}{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+B\+O\+O\+T\+R\+E\+C\+O\+R\+D}~0
+\item 
+\#define \hyperlink{iso9660_8h_a0a08c0312b4131176a26747f23c7298d}{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+R\+I\+M\+A\+R\+Y}~1
+\item 
+\#define \hyperlink{iso9660_8h_ab73cb7a03004d39b3f8d63bd23278c32}{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+U\+P\+P\+L\+E\+M\+E\+N\+T\+A\+R\+Y}~2
+\item 
+\#define \hyperlink{iso9660_8h_ae3fe9bc425a2c8ef674454fbfbff24a6}{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+A\+R\+T\+I\+T\+I\+O\+N}~3
+\item 
+\#define \hyperlink{iso9660_8h_a2dc133b03085eb478dcb5453ae3c8a8f}{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+T\+E\+R\+M\+I\+N\+A\+T\+O\+R}~255
+\item 
+\#define \hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E}~\hyperlink{iso9660_8h_a00bbe26a634a966bc30429348a713ede}{I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E}
+\item 
+\#define \hyperlink{iso9660_8h_a47c2721a8c2f9deb18f162d013378032}{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+H\+I\+D\+D\+E\+N}~(1 $<$$<$ 0)
+\item 
+\#define \hyperlink{iso9660_8h_a3a1a377e9111d5e7b6a9f668943281b0}{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y}~(1 $<$$<$ 1)
+\item 
+\#define \hyperlink{iso9660_8h_aef272dce8d7ba456a460020f84a1f93f}{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+I\+L\+E}~(1 $<$$<$ 2)
+\item 
+\#define \hyperlink{iso9660_8h_a2efe9dd2b4643cc3dce01afff69b956a}{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+A\+T\+T\+R}~(1 $<$$<$ 3)
+\item 
+\#define \hyperlink{iso9660_8h_a2c9a6a3d061d953ac5feef15702e6ba2}{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+F\+L\+A\+G\+S}~(1 $<$$<$ 4)
+\item 
+\#define \hyperlink{iso9660_8h_abc9ef8ec75a1700690ab76b3075cd9d9}{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+N\+O\+T\+L\+A\+S\+T}~(1 $<$$<$ 7)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structiso9660__volume__descriptor}{iso9660\+\_\+volume\+\_\+descriptor} \hyperlink{iso9660_8h_a11b1fe8d934cf9dd11e83e3a093b68db}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) iso9660\+\_\+volume\+\_\+descriptor\+\_\+t
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int8\+\_\+t \hyperlink{iso9660_8h_a6def72cbab7e986d0ac5dc7291e1394a}{type}
+\item 
+char \hyperlink{iso9660_8h_a6250618cd0f2f1fd5e27398c85114505}{id} \mbox{[}5\mbox{]}
+\item 
+int8\+\_\+t \hyperlink{iso9660_8h_a0e5db10466cf0146cf761aaaafe090d0}{version}
+\item 
+char \hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data} \mbox{[}2041\mbox{]}
+\item 
+int8\+\_\+t \hyperlink{iso9660_8h_a1b319c7708ab2832a7c18a65b8a255e0}{unused}
+\item 
+char \hyperlink{iso9660_8h_ab8e767113a48de5ab0a016ea7cf699b6}{sysid} \mbox{[}32\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a2b7479a4e3f7892e26f5494b5fb31450}{volid} \mbox{[}32\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a0e06fd66e6b5d18c6e37304bfbc72b42}{null0} \mbox{[}8\mbox{]}
+\item 
+uint64\+\_\+t \hyperlink{iso9660_8h_a235617b58403d22d4bc5db3fb50cbd29}{volsize}
+\item 
+char \hyperlink{iso9660_8h_a9cd7dbef0facac2c0fdaad0215a6993f}{null1} \mbox{[}32\mbox{]}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8h_ae3322c95eca6f054a776fb60fce636b3}{volsetsize}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8h_a98f0ee0957a15520bcfc6bbce92c9160}{volnumber}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8h_a0e7274df7510929be162a941cb2f0e79}{logical\+\_\+blksize}
+\item 
+uint64\+\_\+t \hyperlink{iso9660_8h_ad7fa99366995bb86dc6a3a299643c329}{path\+\_\+size}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8h_af3f290d3b974c05653a86a04e51f64af}{path\+\_\+lba}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8h_aec6b44e04e2fdb7b36c8b62099a5f1e8}{optpath\+\_\+lba}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8h_aee2dd1d9b05c479cdce439c36f488077}{path\+\_\+lba\+\_\+msb}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8h_ab2a2664b9d342350a49a56ada9321bad}{optpath\+\_\+lba\+\_\+msb}
+\item 
+char \hyperlink{iso9660_8h_ac27411f3d37b72468123427ccb542011}{rootdir} \mbox{[}34\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_ae9cdf688def5af819e736cd2a11533f7}{volsetid} \mbox{[}128\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a57b4122d9219d77a475ec2aaaa0c196d}{pubid} \mbox{[}128\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a461a2ff96f8a888c2182c388bc9b4355}{dataid} \mbox{[}128\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a3ac8e8d02e75c9cefda147606975418f}{appid} \mbox{[}128\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a3104efb0fb2ca6c2e2d4ec755b184cca}{copyid} \mbox{[}38\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a909223f1fddfd94b119bfac5e3543a10}{abstractfileid} \mbox{[}36\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_aa0f3126ac69ede6984bec36f3078aec1}{bibid} \mbox{[}37\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a7a3d70624a24b670dca0a6c6eea3a997}{cdate} \mbox{[}17\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_acd712a06b00249933092c83e0bee6561}{mdate} \mbox{[}17\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_ac3c57348cfd4a724eb12b15ac5c0759c}{edate} \mbox{[}17\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a38f14123ce557d8ee00ad08b15db0b83}{efdate} \mbox{[}17\mbox{]}
+\item 
+int8\+\_\+t \hyperlink{iso9660_8h_a87b6275b2c86cfb8f12c6d33ac3b3394}{fileversion}
+\item 
+int8\+\_\+t \hyperlink{iso9660_8h_a619d439b6d2f397ef9e7c690dc9a9422}{unused0}
+\item 
+char \hyperlink{iso9660_8h_a20d9a797c46021a1fddee15207dbf682}{null2} \mbox{[}512\mbox{]}
+\item 
+char \hyperlink{iso9660_8h_a5827fd9642b17ceecd56a53b297aa9b8}{reserved} \mbox{[}653\mbox{]}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{iso9660_8h_aa4106187b3ff93308ee98eaa09402586}{exattr}
+\item 
+uint64\+\_\+t \hyperlink{iso9660_8h_aafa9f203f0abc59a4b08b3833f39b92c}{lba}
+\item 
+uint64\+\_\+t \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length}
+\item 
+char \hyperlink{iso9660_8h_ad217ba16d0b42c0e3c986247572e9ec8}{date} \mbox{[}7\mbox{]}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{iso9660_8h_ac752f796c7827cddfc93b945c67bb54b}{unitsize}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{iso9660_8h_a90b488a6d4e2a35f363b5029ff562f28}{gapsize}
+\item 
+\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{iso9660_8h_a2da202efdeac0cce10457fe1cc6051db}{idlen}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{iso9660_8h_a3a1a377e9111d5e7b6a9f668943281b0}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y}}
+\index{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y~(1 $<$$<$ 1)}}\label{iso9660_8h_a3a1a377e9111d5e7b6a9f668943281b0}
+
+
+Definition at line 23 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a2efe9dd2b4643cc3dce01afff69b956a}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+A\+T\+T\+R@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+A\+T\+T\+R}}
+\index{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+A\+T\+T\+R@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+A\+T\+T\+R}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+A\+T\+T\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+A\+T\+T\+R~(1 $<$$<$ 3)}}\label{iso9660_8h_a2efe9dd2b4643cc3dce01afff69b956a}
+
+
+Definition at line 25 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a2c9a6a3d061d953ac5feef15702e6ba2}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+F\+L\+A\+G\+S@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+F\+L\+A\+G\+S}}
+\index{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+F\+L\+A\+G\+S@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+F\+L\+A\+G\+S}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+F\+L\+A\+G\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+X\+T\+F\+L\+A\+G\+S~(1 $<$$<$ 4)}}\label{iso9660_8h_a2c9a6a3d061d953ac5feef15702e6ba2}
+
+
+Definition at line 26 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aef272dce8d7ba456a460020f84a1f93f}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+I\+L\+E@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+I\+L\+E}}
+\index{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+I\+L\+E@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+I\+L\+E}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+I\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+F\+I\+L\+E~(1 $<$$<$ 2)}}\label{iso9660_8h_aef272dce8d7ba456a460020f84a1f93f}
+
+
+Definition at line 24 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a47c2721a8c2f9deb18f162d013378032}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+H\+I\+D\+D\+E\+N@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+H\+I\+D\+D\+E\+N}}
+\index{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+H\+I\+D\+D\+E\+N@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+H\+I\+D\+D\+E\+N}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+H\+I\+D\+D\+E\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+H\+I\+D\+D\+E\+N~(1 $<$$<$ 0)}}\label{iso9660_8h_a47c2721a8c2f9deb18f162d013378032}
+
+
+Definition at line 22 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_abc9ef8ec75a1700690ab76b3075cd9d9}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+N\+O\+T\+L\+A\+S\+T@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+N\+O\+T\+L\+A\+S\+T}}
+\index{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+N\+O\+T\+L\+A\+S\+T@{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+N\+O\+T\+L\+A\+S\+T}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+N\+O\+T\+L\+A\+S\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+F\+L\+A\+G\+S\+\_\+\+N\+O\+T\+L\+A\+S\+T~(1 $<$$<$ 7)}}\label{iso9660_8h_abc9ef8ec75a1700690ab76b3075cd9d9}
+
+
+Definition at line 27 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_adb9a0b19d37ea681279fbc2fd12e78e9}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+I\+D@{I\+S\+O9660\+\_\+\+I\+D}}
+\index{I\+S\+O9660\+\_\+\+I\+D@{I\+S\+O9660\+\_\+\+I\+D}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+I\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+I\+D~\char`\"{}C\+D001\char`\"{}}}\label{iso9660_8h_adb9a0b19d37ea681279fbc2fd12e78e9}
+
+
+Definition at line 10 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a46d3c45c595db51113eb469111f8f47e}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+P\+V\+D@{I\+S\+O9660\+\_\+\+P\+V\+D}}
+\index{I\+S\+O9660\+\_\+\+P\+V\+D@{I\+S\+O9660\+\_\+\+P\+V\+D}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+P\+V\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+P\+V\+D~(0x10 $\ast$ I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E)}}\label{iso9660_8h_a46d3c45c595db51113eb469111f8f47e}
+
+
+Definition at line 9 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a00bbe26a634a966bc30429348a713ede}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E@{I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E}}
+\index{I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E@{I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E~2048}}\label{iso9660_8h_a00bbe26a634a966bc30429348a713ede}
+
+
+Definition at line 7 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a686d0298670c8a960432fedea108a4ee}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+V\+E\+R\+S\+I\+O\+N@{I\+S\+O9660\+\_\+\+V\+E\+R\+S\+I\+O\+N}}
+\index{I\+S\+O9660\+\_\+\+V\+E\+R\+S\+I\+O\+N@{I\+S\+O9660\+\_\+\+V\+E\+R\+S\+I\+O\+N}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+V\+E\+R\+S\+I\+O\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+V\+E\+R\+S\+I\+O\+N~0x01}}\label{iso9660_8h_a686d0298670c8a960432fedea108a4ee}
+
+
+Definition at line 11 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a4e26a4252a467603b5109045780288f9}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+B\+O\+O\+T\+R\+E\+C\+O\+R\+D@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+B\+O\+O\+T\+R\+E\+C\+O\+R\+D}}
+\index{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+B\+O\+O\+T\+R\+E\+C\+O\+R\+D@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+B\+O\+O\+T\+R\+E\+C\+O\+R\+D}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+B\+O\+O\+T\+R\+E\+C\+O\+R\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+B\+O\+O\+T\+R\+E\+C\+O\+R\+D~0}}\label{iso9660_8h_a4e26a4252a467603b5109045780288f9}
+
+
+Definition at line 13 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ae3fe9bc425a2c8ef674454fbfbff24a6}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+A\+R\+T\+I\+T\+I\+O\+N@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+A\+R\+T\+I\+T\+I\+O\+N}}
+\index{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+A\+R\+T\+I\+T\+I\+O\+N@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+A\+R\+T\+I\+T\+I\+O\+N}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+A\+R\+T\+I\+T\+I\+O\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+A\+R\+T\+I\+T\+I\+O\+N~3}}\label{iso9660_8h_ae3fe9bc425a2c8ef674454fbfbff24a6}
+
+
+Definition at line 16 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a0a08c0312b4131176a26747f23c7298d}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+R\+I\+M\+A\+R\+Y@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+R\+I\+M\+A\+R\+Y}}
+\index{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+R\+I\+M\+A\+R\+Y@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+R\+I\+M\+A\+R\+Y}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+R\+I\+M\+A\+R\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+P\+R\+I\+M\+A\+R\+Y~1}}\label{iso9660_8h_a0a08c0312b4131176a26747f23c7298d}
+
+
+Definition at line 14 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E}}
+\index{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E~{\bf I\+S\+O9660\+\_\+\+S\+E\+C\+T\+O\+R\+\_\+\+S\+I\+Z\+E}}}\label{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}
+
+
+Definition at line 19 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ab73cb7a03004d39b3f8d63bd23278c32}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+U\+P\+P\+L\+E\+M\+E\+N\+T\+A\+R\+Y@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+U\+P\+P\+L\+E\+M\+E\+N\+T\+A\+R\+Y}}
+\index{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+U\+P\+P\+L\+E\+M\+E\+N\+T\+A\+R\+Y@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+U\+P\+P\+L\+E\+M\+E\+N\+T\+A\+R\+Y}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+U\+P\+P\+L\+E\+M\+E\+N\+T\+A\+R\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+U\+P\+P\+L\+E\+M\+E\+N\+T\+A\+R\+Y~2}}\label{iso9660_8h_ab73cb7a03004d39b3f8d63bd23278c32}
+
+
+Definition at line 15 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a2dc133b03085eb478dcb5453ae3c8a8f}{\index{iso9660.\+h@{iso9660.\+h}!I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+T\+E\+R\+M\+I\+N\+A\+T\+O\+R@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+T\+E\+R\+M\+I\+N\+A\+T\+O\+R}}
+\index{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+T\+E\+R\+M\+I\+N\+A\+T\+O\+R@{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+T\+E\+R\+M\+I\+N\+A\+T\+O\+R}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+T\+E\+R\+M\+I\+N\+A\+T\+O\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+T\+E\+R\+M\+I\+N\+A\+T\+O\+R~255}}\label{iso9660_8h_a2dc133b03085eb478dcb5453ae3c8a8f}
+
+
+Definition at line 17 of file iso9660.\+h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{iso9660_8h_a11b1fe8d934cf9dd11e83e3a093b68db}{\index{iso9660.\+h@{iso9660.\+h}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf iso9660\+\_\+volume\+\_\+descriptor} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
+\begin{DoxyParamCaption}
+\item[{(packed)}]{}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8h_a11b1fe8d934cf9dd11e83e3a093b68db}
+
+
+Definition at line 44 of file desc.\+c.
+
+
+\begin{DoxyCode}
+46                        \{
+47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
+48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
+49 \} \hyperlink{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\hypertarget{iso9660_8h_a909223f1fddfd94b119bfac5e3543a10}{\index{iso9660.\+h@{iso9660.\+h}!abstractfileid@{abstractfileid}}
+\index{abstractfileid@{abstractfileid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{abstractfileid}]{\setlength{\rightskip}{0pt plus 5cm}char abstractfileid\mbox{[}36\mbox{]}}}\label{iso9660_8h_a909223f1fddfd94b119bfac5e3543a10}
+
+
+Definition at line 102 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a3ac8e8d02e75c9cefda147606975418f}{\index{iso9660.\+h@{iso9660.\+h}!appid@{appid}}
+\index{appid@{appid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{appid}]{\setlength{\rightskip}{0pt plus 5cm}char appid\mbox{[}128\mbox{]}}}\label{iso9660_8h_a3ac8e8d02e75c9cefda147606975418f}
+
+
+Definition at line 100 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aa0f3126ac69ede6984bec36f3078aec1}{\index{iso9660.\+h@{iso9660.\+h}!bibid@{bibid}}
+\index{bibid@{bibid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{bibid}]{\setlength{\rightskip}{0pt plus 5cm}char bibid\mbox{[}37\mbox{]}}}\label{iso9660_8h_aa0f3126ac69ede6984bec36f3078aec1}
+
+
+Definition at line 103 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a7a3d70624a24b670dca0a6c6eea3a997}{\index{iso9660.\+h@{iso9660.\+h}!cdate@{cdate}}
+\index{cdate@{cdate}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{cdate}]{\setlength{\rightskip}{0pt plus 5cm}char cdate\mbox{[}17\mbox{]}}}\label{iso9660_8h_a7a3d70624a24b670dca0a6c6eea3a997}
+
+
+Definition at line 104 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a3104efb0fb2ca6c2e2d4ec755b184cca}{\index{iso9660.\+h@{iso9660.\+h}!copyid@{copyid}}
+\index{copyid@{copyid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{copyid}]{\setlength{\rightskip}{0pt plus 5cm}char copyid\mbox{[}38\mbox{]}}}\label{iso9660_8h_a3104efb0fb2ca6c2e2d4ec755b184cca}
+
+
+Definition at line 101 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{\index{iso9660.\+h@{iso9660.\+h}!data@{data}}
+\index{data@{data}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{data}]{\setlength{\rightskip}{0pt plus 5cm}char data\mbox{[}2041\mbox{]}}}\label{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}
+
+
+Definition at line 77 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a461a2ff96f8a888c2182c388bc9b4355}{\index{iso9660.\+h@{iso9660.\+h}!dataid@{dataid}}
+\index{dataid@{dataid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{dataid}]{\setlength{\rightskip}{0pt plus 5cm}char dataid\mbox{[}128\mbox{]}}}\label{iso9660_8h_a461a2ff96f8a888c2182c388bc9b4355}
+
+
+Definition at line 99 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ad217ba16d0b42c0e3c986247572e9ec8}{\index{iso9660.\+h@{iso9660.\+h}!date@{date}}
+\index{date@{date}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{date}]{\setlength{\rightskip}{0pt plus 5cm}char date\mbox{[}7\mbox{]}}}\label{iso9660_8h_ad217ba16d0b42c0e3c986247572e9ec8}
+
+
+Definition at line 78 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ac3c57348cfd4a724eb12b15ac5c0759c}{\index{iso9660.\+h@{iso9660.\+h}!edate@{edate}}
+\index{edate@{edate}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{edate}]{\setlength{\rightskip}{0pt plus 5cm}char edate\mbox{[}17\mbox{]}}}\label{iso9660_8h_ac3c57348cfd4a724eb12b15ac5c0759c}
+
+
+Definition at line 106 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a38f14123ce557d8ee00ad08b15db0b83}{\index{iso9660.\+h@{iso9660.\+h}!efdate@{efdate}}
+\index{efdate@{efdate}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{efdate}]{\setlength{\rightskip}{0pt plus 5cm}char efdate\mbox{[}17\mbox{]}}}\label{iso9660_8h_a38f14123ce557d8ee00ad08b15db0b83}
+
+
+Definition at line 107 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aa4106187b3ff93308ee98eaa09402586}{\index{iso9660.\+h@{iso9660.\+h}!exattr@{exattr}}
+\index{exattr@{exattr}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{exattr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} exattr}}\label{iso9660_8h_aa4106187b3ff93308ee98eaa09402586}
+
+
+Definition at line 75 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a87b6275b2c86cfb8f12c6d33ac3b3394}{\index{iso9660.\+h@{iso9660.\+h}!fileversion@{fileversion}}
+\index{fileversion@{fileversion}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{fileversion}]{\setlength{\rightskip}{0pt plus 5cm}int8\+\_\+t fileversion}}\label{iso9660_8h_a87b6275b2c86cfb8f12c6d33ac3b3394}
+
+
+Definition at line 108 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{\index{iso9660.\+h@{iso9660.\+h}!flags@{flags}}
+\index{flags@{flags}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{flags}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} flags}}\label{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}
+
+
+Definition at line 79 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a90b488a6d4e2a35f363b5029ff562f28}{\index{iso9660.\+h@{iso9660.\+h}!gapsize@{gapsize}}
+\index{gapsize@{gapsize}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{gapsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} gapsize}}\label{iso9660_8h_a90b488a6d4e2a35f363b5029ff562f28}
+
+
+Definition at line 81 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a6250618cd0f2f1fd5e27398c85114505}{\index{iso9660.\+h@{iso9660.\+h}!id@{id}}
+\index{id@{id}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{id}]{\setlength{\rightskip}{0pt plus 5cm}char id}}\label{iso9660_8h_a6250618cd0f2f1fd5e27398c85114505}
+
+
+Definition at line 75 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a2da202efdeac0cce10457fe1cc6051db}{\index{iso9660.\+h@{iso9660.\+h}!idlen@{idlen}}
+\index{idlen@{idlen}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{idlen}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} idlen}}\label{iso9660_8h_a2da202efdeac0cce10457fe1cc6051db}
+
+
+Definition at line 83 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aafa9f203f0abc59a4b08b3833f39b92c}{\index{iso9660.\+h@{iso9660.\+h}!lba@{lba}}
+\index{lba@{lba}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{lba}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t lba}}\label{iso9660_8h_aafa9f203f0abc59a4b08b3833f39b92c}
+
+
+Definition at line 76 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{\index{iso9660.\+h@{iso9660.\+h}!length@{length}}
+\index{length@{length}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{length}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t length}}\label{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}
+
+
+Definition at line 77 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a0e7274df7510929be162a941cb2f0e79}{\index{iso9660.\+h@{iso9660.\+h}!logical\+\_\+blksize@{logical\+\_\+blksize}}
+\index{logical\+\_\+blksize@{logical\+\_\+blksize}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{logical\+\_\+blksize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} logical\+\_\+blksize}}\label{iso9660_8h_a0e7274df7510929be162a941cb2f0e79}
+
+
+Definition at line 89 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_acd712a06b00249933092c83e0bee6561}{\index{iso9660.\+h@{iso9660.\+h}!mdate@{mdate}}
+\index{mdate@{mdate}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{mdate}]{\setlength{\rightskip}{0pt plus 5cm}char mdate\mbox{[}17\mbox{]}}}\label{iso9660_8h_acd712a06b00249933092c83e0bee6561}
+
+
+Definition at line 105 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a0e06fd66e6b5d18c6e37304bfbc72b42}{\index{iso9660.\+h@{iso9660.\+h}!null0@{null0}}
+\index{null0@{null0}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{null0}]{\setlength{\rightskip}{0pt plus 5cm}char null0\mbox{[}8\mbox{]}}}\label{iso9660_8h_a0e06fd66e6b5d18c6e37304bfbc72b42}
+
+
+Definition at line 81 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a9cd7dbef0facac2c0fdaad0215a6993f}{\index{iso9660.\+h@{iso9660.\+h}!null1@{null1}}
+\index{null1@{null1}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{null1}]{\setlength{\rightskip}{0pt plus 5cm}char null1\mbox{[}32\mbox{]}}}\label{iso9660_8h_a9cd7dbef0facac2c0fdaad0215a6993f}
+
+
+Definition at line 85 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a20d9a797c46021a1fddee15207dbf682}{\index{iso9660.\+h@{iso9660.\+h}!null2@{null2}}
+\index{null2@{null2}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{null2}]{\setlength{\rightskip}{0pt plus 5cm}char null2\mbox{[}512\mbox{]}}}\label{iso9660_8h_a20d9a797c46021a1fddee15207dbf682}
+
+
+Definition at line 110 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aec6b44e04e2fdb7b36c8b62099a5f1e8}{\index{iso9660.\+h@{iso9660.\+h}!optpath\+\_\+lba@{optpath\+\_\+lba}}
+\index{optpath\+\_\+lba@{optpath\+\_\+lba}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{optpath\+\_\+lba}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} optpath\+\_\+lba}}\label{iso9660_8h_aec6b44e04e2fdb7b36c8b62099a5f1e8}
+
+
+Definition at line 92 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ab2a2664b9d342350a49a56ada9321bad}{\index{iso9660.\+h@{iso9660.\+h}!optpath\+\_\+lba\+\_\+msb@{optpath\+\_\+lba\+\_\+msb}}
+\index{optpath\+\_\+lba\+\_\+msb@{optpath\+\_\+lba\+\_\+msb}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{optpath\+\_\+lba\+\_\+msb}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} optpath\+\_\+lba\+\_\+msb}}\label{iso9660_8h_ab2a2664b9d342350a49a56ada9321bad}
+
+
+Definition at line 94 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_af3f290d3b974c05653a86a04e51f64af}{\index{iso9660.\+h@{iso9660.\+h}!path\+\_\+lba@{path\+\_\+lba}}
+\index{path\+\_\+lba@{path\+\_\+lba}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{path\+\_\+lba}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} path\+\_\+lba}}\label{iso9660_8h_af3f290d3b974c05653a86a04e51f64af}
+
+
+Definition at line 91 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_aee2dd1d9b05c479cdce439c36f488077}{\index{iso9660.\+h@{iso9660.\+h}!path\+\_\+lba\+\_\+msb@{path\+\_\+lba\+\_\+msb}}
+\index{path\+\_\+lba\+\_\+msb@{path\+\_\+lba\+\_\+msb}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{path\+\_\+lba\+\_\+msb}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} path\+\_\+lba\+\_\+msb}}\label{iso9660_8h_aee2dd1d9b05c479cdce439c36f488077}
+
+
+Definition at line 93 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ad7fa99366995bb86dc6a3a299643c329}{\index{iso9660.\+h@{iso9660.\+h}!path\+\_\+size@{path\+\_\+size}}
+\index{path\+\_\+size@{path\+\_\+size}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{path\+\_\+size}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t path\+\_\+size}}\label{iso9660_8h_ad7fa99366995bb86dc6a3a299643c329}
+
+
+Definition at line 90 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a57b4122d9219d77a475ec2aaaa0c196d}{\index{iso9660.\+h@{iso9660.\+h}!pubid@{pubid}}
+\index{pubid@{pubid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{pubid}]{\setlength{\rightskip}{0pt plus 5cm}char pubid\mbox{[}128\mbox{]}}}\label{iso9660_8h_a57b4122d9219d77a475ec2aaaa0c196d}
+
+
+Definition at line 98 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a5827fd9642b17ceecd56a53b297aa9b8}{\index{iso9660.\+h@{iso9660.\+h}!reserved@{reserved}}
+\index{reserved@{reserved}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{reserved}]{\setlength{\rightskip}{0pt plus 5cm}char reserved}}\label{iso9660_8h_a5827fd9642b17ceecd56a53b297aa9b8}
+
+
+Definition at line 111 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ac27411f3d37b72468123427ccb542011}{\index{iso9660.\+h@{iso9660.\+h}!rootdir@{rootdir}}
+\index{rootdir@{rootdir}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{rootdir}]{\setlength{\rightskip}{0pt plus 5cm}char rootdir\mbox{[}34\mbox{]}}}\label{iso9660_8h_ac27411f3d37b72468123427ccb542011}
+
+
+Definition at line 96 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{\index{iso9660.\+h@{iso9660.\+h}!size@{size}}
+\index{size@{size}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} size}}\label{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}
+
+
+Definition at line 74 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ab8e767113a48de5ab0a016ea7cf699b6}{\index{iso9660.\+h@{iso9660.\+h}!sysid@{sysid}}
+\index{sysid@{sysid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{sysid}]{\setlength{\rightskip}{0pt plus 5cm}char sysid\mbox{[}32\mbox{]}}}\label{iso9660_8h_ab8e767113a48de5ab0a016ea7cf699b6}
+
+
+Definition at line 79 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a6def72cbab7e986d0ac5dc7291e1394a}{\index{iso9660.\+h@{iso9660.\+h}!type@{type}}
+\index{type@{type}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{type}]{\setlength{\rightskip}{0pt plus 5cm}int8\+\_\+t type}}\label{iso9660_8h_a6def72cbab7e986d0ac5dc7291e1394a}
+
+
+Definition at line 74 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ac752f796c7827cddfc93b945c67bb54b}{\index{iso9660.\+h@{iso9660.\+h}!unitsize@{unitsize}}
+\index{unitsize@{unitsize}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{unitsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} unitsize}}\label{iso9660_8h_ac752f796c7827cddfc93b945c67bb54b}
+
+
+Definition at line 80 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a1b319c7708ab2832a7c18a65b8a255e0}{\index{iso9660.\+h@{iso9660.\+h}!unused@{unused}}
+\index{unused@{unused}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{unused}]{\setlength{\rightskip}{0pt plus 5cm}int8\+\_\+t unused}}\label{iso9660_8h_a1b319c7708ab2832a7c18a65b8a255e0}
+
+
+Definition at line 77 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a619d439b6d2f397ef9e7c690dc9a9422}{\index{iso9660.\+h@{iso9660.\+h}!unused0@{unused0}}
+\index{unused0@{unused0}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{unused0}]{\setlength{\rightskip}{0pt plus 5cm}int8\+\_\+t unused0}}\label{iso9660_8h_a619d439b6d2f397ef9e7c690dc9a9422}
+
+
+Definition at line 109 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a0e5db10466cf0146cf761aaaafe090d0}{\index{iso9660.\+h@{iso9660.\+h}!version@{version}}
+\index{version@{version}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{version}]{\setlength{\rightskip}{0pt plus 5cm}int8\+\_\+t version}}\label{iso9660_8h_a0e5db10466cf0146cf761aaaafe090d0}
+
+
+Definition at line 76 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a2b7479a4e3f7892e26f5494b5fb31450}{\index{iso9660.\+h@{iso9660.\+h}!volid@{volid}}
+\index{volid@{volid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{volid}]{\setlength{\rightskip}{0pt plus 5cm}char volid\mbox{[}32\mbox{]}}}\label{iso9660_8h_a2b7479a4e3f7892e26f5494b5fb31450}
+
+
+Definition at line 80 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a98f0ee0957a15520bcfc6bbce92c9160}{\index{iso9660.\+h@{iso9660.\+h}!volnumber@{volnumber}}
+\index{volnumber@{volnumber}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{volnumber}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} volnumber}}\label{iso9660_8h_a98f0ee0957a15520bcfc6bbce92c9160}
+
+
+Definition at line 88 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ae9cdf688def5af819e736cd2a11533f7}{\index{iso9660.\+h@{iso9660.\+h}!volsetid@{volsetid}}
+\index{volsetid@{volsetid}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{volsetid}]{\setlength{\rightskip}{0pt plus 5cm}char volsetid\mbox{[}128\mbox{]}}}\label{iso9660_8h_ae9cdf688def5af819e736cd2a11533f7}
+
+
+Definition at line 97 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_ae3322c95eca6f054a776fb60fce636b3}{\index{iso9660.\+h@{iso9660.\+h}!volsetsize@{volsetsize}}
+\index{volsetsize@{volsetsize}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{volsetsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} volsetsize}}\label{iso9660_8h_ae3322c95eca6f054a776fb60fce636b3}
+
+
+Definition at line 87 of file iso9660.\+h.
+
+\hypertarget{iso9660_8h_a235617b58403d22d4bc5db3fb50cbd29}{\index{iso9660.\+h@{iso9660.\+h}!volsize@{volsize}}
+\index{volsize@{volsize}!iso9660.\+h@{iso9660.\+h}}
+\subsubsection[{volsize}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t volsize}}\label{iso9660_8h_a235617b58403d22d4bc5db3fb50cbd29}
+
+
+Definition at line 83 of file iso9660.\+h.
+

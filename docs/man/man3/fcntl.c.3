@@ -1,4 +1,4 @@
-.TH "src/syscall/fcntl.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/fcntl.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -27,67 +27,184 @@ src/syscall/fcntl.c \-
 \fC#include <stdio\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "int \fBsys_fcntl\fP (int fd, int request, void *buf)"
 .br
+.RI "\fIThis function shall perform the operations described below on open files\&.
+.br
+ The available values for cmd are defined in <fcntl\&.h> and are as follows\&. \fP"
 .ti -1c
 .RI "\fBSYSCALL\fP (\fBsys_fcntl\fP, 19)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .ti -1c
 .RI "\fBinode_t\fP * \fBvfs_root\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int sys_fcntl (intfd, intrequest, void *buf)"
 
 .PP
-Definizione alla linea 19 del file fcntl\&.c\&.
+This function shall perform the operations described below on open files\&.
+.br
+ The available values for cmd are defined in <fcntl\&.h> and are as follows\&. 
+.IP "\(bu" 2
+F_DUPFD
+.br
+.IP "  \(bu" 4
+Return a new file descriptor which shall be the lowest numbered available (that is, not already open) file descriptor greater than or equal to the third argument, arg, taken as an integer of type int\&.
+.br
+ The new file descriptor shall refer to the same open file description as the original file descriptor, and shall share any locks\&.
+.br
+ The FD_CLOEXEC flag associated with the new file descriptor shall be cleared to keep the file open across calls to one of the exec functions\&.
+.br
+
 .PP
-Referenzia errno, task::fd, e kprintf\&.
+
+.IP "\(bu" 2
+F_GETFD
+.br
+.IP "  \(bu" 4
+Get the file descriptor flags defined in <fcntl\&.h> that are associated with the file descriptor fildes\&.
+.br
+ File descriptor flags are associated with a single file descriptor and do not affect other file descriptors that refer to the same file\&.
+.PP
+
+.IP "\(bu" 2
+F_SETFD
+.br
+.IP "  \(bu" 4
+Set the file descriptor flags defined in <fcntl\&.h>, that are associated with fildes, to the third argument, arg, taken as type int\&.
+.br
+ If the FD_CLOEXEC flag in the third argument is 0, the file shall remain open across the exec functions; otherwise, the file shall be closed upon successful execution of one of the exec functions\&.
+.br
+
+.PP
+
+.IP "\(bu" 2
+F_GETFL
+.br
+.IP "  \(bu" 4
+Get the file status flags and file access modes, defined in <fcntl\&.h>, for the file description associated with fildes\&. The file access modes can be extracted from the return value using the mask O_ACCMODE, which is defined in <fcntl\&.h>\&.
+.br
+ File status flags and file access modes are associated with the file description and do not affect other file descriptors that refer to the same file with different open file descriptions\&.
+.br
+
+.PP
+
+.IP "\(bu" 2
+F_SETFL
+.br
+.IP "  \(bu" 4
+Set the file status flags, defined in <fcntl\&.h>, for the file description associated with fildes from the corresponding bits in the third argument, arg, taken as type int\&.
+.br
+ Bits corresponding to the file access mode and the file creation flags, as defined in <fcntl\&.h>, that are set in arg shall be ignored\&. If any bits in arg other than those mentioned here are changed by the application, the result is unspecified\&.
+.br
+
+.PP
+
+.IP "\(bu" 2
+F_GETOWN
+.br
+.IP "  \(bu" 4
+If fildes refers to a socket, get the process or process group ID specified to receive SIGURG signals when out-of-band data is available\&.
+.br
+ Positive values indicate a process ID; negative values, other than -1, indicate a process group ID\&.
+.br
+ If fildes does not refer to a socket, the results are unspecified\&.
+.br
+
+.PP
+
+.IP "\(bu" 2
+F_SETOWN
+.br
+.IP "  \(bu" 4
+If fildes refers to a socket, set the process or process group ID specified to receive SIGURG signals when out-of-band data is available, using the value of the third argument, arg, taken as type int\&.
+.br
+ Positive values indicate a process ID; negative values, other than -1, indicate a process group ID\&.
+.br
+ If fildes does not refer to a socket, the results are unspecified
+.br
+
+.br
+
+.br
+
+.br
+ 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfd\fP File descriptor\&. 
+.br
+\fIrequest\fP Request operation\&. 
+.br
+\fIbuf\fP Optional arguments\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Upon successful completion, the value returned shall depend on cmd\&.
+.br
+ Otherwise, -1 shall be returned and errno set to indicate the error 
+.RE
+.PP
+
+.PP
+
+.PP
+
+.PP
+Definition at line 72 of file fcntl\&.c\&.
+.PP
+References errno, task::fd, and kprintf()\&.
 .PP
 .nf
-19                                               {
-20     if(!current_task)
-21         return -1;
-22         
-23     
-24     inode_t* ino = current_task->fd[fd];
-25     if(!ino) {
-26         errno = EBADF;
-27         return -1;
-28     }
-29 
-30 
-31     /* TODO */
-32     kprintf("sys_chown: TODO\&.");
-33 
-34     errno = ENOSYS;
-35     return -1;
-36 }
+72                                               {
+73     if(!current_task)
+74         return -1;
+75         
+76     
+77     inode_t* ino = current_task->fd[fd];
+78     if(!ino) {
+79         errno = EBADF;
+80         return -1;
+81     }
+82 
+83 
+84     /* TODO */
+85     kprintf("sys_chown: TODO\&.");
+86 
+87     errno = ENOSYS;
+88     return -1;
+89 }
 .fi
 .SS "SYSCALL (\fBsys_fcntl\fP, 19)"
 
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
 .SS "\fBinode_t\fP* vfs_root"
 
 .PP
-Definizione alla linea 19 del file vfs\&.c\&.
-.SH "Autore"
+Definition at line 19 of file vfs\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

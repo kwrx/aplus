@@ -11,6 +11,6 @@ var searchData=
   ['kill_2ec',['kill.c',['../kill_8c.html',1,'']]],
   ['kind',['kind',['../structpthread__mutexattr.html#a8f33b94daf83faf08982414db0b16a0c',1,'pthread_mutexattr::kind()'],['../structpthread__mutex.html#a0a817c827021f648ceba78fb34b61f62',1,'pthread_mutex::kind()']]],
   ['kmalloc',['kmalloc',['../mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c',1,'mm.h']]],
-  ['kprintf',['kprintf',['../aplus_8h.html#af0b53ac0b8d6868da6396b11b30519c1',1,'aplus.h']]],
+  ['kprintf',['kprintf',['../aplus_8h.html#af0b53ac0b8d6868da6396b11b30519c1',1,'kprintf():&#160;aplus.h'],['../debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a',1,'kprintf(char *fmt,...):&#160;debug.c']]],
   ['krealloc',['krealloc',['../mm_8h.html#a2e2878c4e9b542b6e68d7ceccfdcfc86',1,'krealloc(void *, size_t):&#160;mm.c'],['../mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e',1,'krealloc(void *ptr, size_t size):&#160;mm.c']]]
 ];

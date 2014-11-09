@@ -1,4 +1,4 @@
-\hypertarget{pci_8c}{\section{Riferimenti per il file src/arch/pci.c}
+\hypertarget{pci_8c}{\section{src/arch/pci.c File Reference}
 \label{pci_8c}\index{src/arch/pci.\+c@{src/arch/pci.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -7,7 +7,7 @@
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$string.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{pci_8c_aaa58db8af2d00af66c78624104e1016b}{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S}~0x0\+C\+F8
@@ -22,7 +22,7 @@
 \item 
 \#define \hyperlink{pci_8c_a2bce7569c5c260ac10180736ab9b682e}{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C}~8
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 static int \hyperlink{pci_8c_a1f15494ac7091ae892b6fc408c999699}{pci\+\_\+get\+\_\+address} (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} bus, \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} dev, \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} func, \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\+\_\+t} \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset})
@@ -57,59 +57,59 @@ int \hyperlink{pci_8c_a127a79107e9fe2fee41f36dd3d88afca}{pci\+\_\+find\+\_\+by\+
 \item 
 int \hyperlink{pci_8c_a5c450b9e2534226b162a16de0ef6b434}{pci\+\_\+init} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{pci_8h_ab3c98ba0de1f963ef2f46200b090815b}{pci\+\_\+device\+\_\+t} $\ast$ \hyperlink{pci_8c_ab5a39d7e293f00b1c80deef6c287520d}{pci\+\_\+devices} = N\+U\+L\+L
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{pci_8c_aaa58db8af2d00af66c78624104e1016b}{\index{pci.\+c@{pci.\+c}!P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S@{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S}}
 \index{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S@{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S}!pci.\+c@{pci.\+c}}
 \subsubsection[{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S~0x0\+C\+F8}}\label{pci_8c_aaa58db8af2d00af66c78624104e1016b}
 
 
-Definizione alla linea 11 del file pci.\+c.
+Definition at line 11 of file pci.\+c.
 
 \hypertarget{pci_8c_ad1fedcf5fe37518ccc1ddfcb880d1b01}{\index{pci.\+c@{pci.\+c}!P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A@{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A}}
 \index{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A@{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A}!pci.\+c@{pci.\+c}}
 \subsubsection[{P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A~0x0\+C\+F\+C}}\label{pci_8c_ad1fedcf5fe37518ccc1ddfcb880d1b01}
 
 
-Definizione alla linea 12 del file pci.\+c.
+Definition at line 12 of file pci.\+c.
 
 \hypertarget{pci_8c_acbd6d3799929b7d4f20ba7ca9c7a273b}{\index{pci.\+c@{pci.\+c}!P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S}}
 \index{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S}!pci.\+c@{pci.\+c}}
 \subsubsection[{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S~255}}\label{pci_8c_acbd6d3799929b7d4f20ba7ca9c7a273b}
 
 
-Definizione alla linea 14 del file pci.\+c.
+Definition at line 14 of file pci.\+c.
 
 \hypertarget{pci_8c_ab4541880e38c018ddbf49bb81e3b01f2}{\index{pci.\+c@{pci.\+c}!P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V}}
 \index{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V}!pci.\+c@{pci.\+c}}
 \subsubsection[{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V~32}}\label{pci_8c_ab4541880e38c018ddbf49bb81e3b01f2}
 
 
-Definizione alla linea 15 del file pci.\+c.
+Definition at line 15 of file pci.\+c.
 
 \hypertarget{pci_8c_ac92b961e4ae0fbfdb814592b74fa3229}{\index{pci.\+c@{pci.\+c}!P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S}}
 \index{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S}!pci.\+c@{pci.\+c}}
 \subsubsection[{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S~65536}}\label{pci_8c_ac92b961e4ae0fbfdb814592b74fa3229}
 
 
-Definizione alla linea 13 del file pci.\+c.
+Definition at line 13 of file pci.\+c.
 
 \hypertarget{pci_8c_a2bce7569c5c260ac10180736ab9b682e}{\index{pci.\+c@{pci.\+c}!P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C}}
 \index{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C@{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C}!pci.\+c@{pci.\+c}}
 \subsubsection[{P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C~8}}\label{pci_8c_a2bce7569c5c260ac10180736ab9b682e}
 
 
-Definizione alla linea 16 del file pci.\+c.
+Definition at line 16 of file pci.\+c.
 
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{pci_8c_af20e26337824fd3df0f10cf0230fa35d}{\index{pci.\+c@{pci.\+c}!pci\+\_\+config\+\_\+read@{pci\+\_\+config\+\_\+read}}
 \index{pci\+\_\+config\+\_\+read@{pci\+\_\+config\+\_\+read}!pci.\+c@{pci.\+c}}
 \subsubsection[{pci\+\_\+config\+\_\+read}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf uint32\+\_\+t} pci\+\_\+config\+\_\+read (
@@ -122,11 +122,11 @@ Definizione alla linea 16 del file pci.\+c.
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_af20e26337824fd3df0f10cf0230fa35d}
 
 
-Definizione alla linea 26 del file pci.\+c.
+Definition at line 26 of file pci.\+c.
 
 
 
-Referenzia P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S, P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A, e pci\+\_\+get\+\_\+address().
+References P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S, P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+D\+A\+T\+A, and pci\+\_\+get\+\_\+address().
 
 
 \begin{DoxyCode}
@@ -151,17 +151,17 @@ Referenzia P\+C\+I\+\_\+\+C\+O\+N\+F\+I\+G\+\_\+\+A\+D\+D\+R\+E\+S\+S, P\+C\+I\+
 )}}\label{pci_8c_a127a79107e9fe2fee41f36dd3d88afca}
 
 
-Definizione alla linea 131 del file pci.\+c.
+Definition at line 131 of file pci.\+c.
 
 
 
-Referenzia length, e P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S.
+References length, and P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S.
 
 
 \begin{DoxyCode}
 131                                                                              \{
 132     \textcolor{keywordtype}{int} j = 0;  
-133     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{pci_8c_ac92b961e4ae0fbfdb814592b74fa3229}{PCI\_MAX\_DEVICES} && j < \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}; i++) \{
+133     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{pci_8c_ac92b961e4ae0fbfdb814592b74fa3229}{PCI\_MAX\_DEVICES} && j < \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length}; i++) \{
 134         \textcolor{keywordflow}{if}(\hyperlink{pci_8c_ab5a39d7e293f00b1c80deef6c287520d}{pci\_devices}[i].pci\_class != \textcolor{keyword}{class})
 135             \textcolor{keywordflow}{continue};
 136 
@@ -181,11 +181,11 @@ Referenzia length, e P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S.
 )}}\label{pci_8c_abca1ff85a7e4d518a83cc17348aa39cb}
 
 
-Definizione alla linea 120 del file pci.\+c.
+Definition at line 120 of file pci.\+c.
 
 
 
-Referenzia P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S.
+References P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S.
 
 
 \begin{DoxyCode}
@@ -213,7 +213,7 @@ Referenzia P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S.
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a1f15494ac7091ae892b6fc408c999699}
 
 
-Definizione alla linea 22 del file pci.\+c.
+Definition at line 22 of file pci.\+c.
 
 
 \begin{DoxyCode}
@@ -231,11 +231,11 @@ Definizione alla linea 22 del file pci.\+c.
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a92f6eec12aecf89f39763ac81d228baa}
 
 
-Definizione alla linea 65 del file pci.\+c.
+Definition at line 65 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, pci\+\_\+config\+\_\+read(), pci\+\_\+get\+\_\+header\+\_\+type(), e uint8\+\_\+t.
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, pci\+\_\+config\+\_\+read(), pci\+\_\+get\+\_\+header\+\_\+type(), and uint8\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -261,11 +261,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a0bf83fd9b109cd41e61258f3e53208d1}
 
 
-Definizione alla linea 56 del file pci.\+c.
+Definition at line 56 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, e pci\+\_\+config\+\_\+read().
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, and pci\+\_\+config\+\_\+read().
 
 
 \begin{DoxyCode}
@@ -283,11 +283,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a02860d0ea7db7586ef23e70dbc430f4e}
 
 
-Definizione alla linea 36 del file pci.\+c.
+Definition at line 36 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, e pci\+\_\+config\+\_\+read().
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, and pci\+\_\+config\+\_\+read().
 
 
 \begin{DoxyCode}
@@ -305,11 +305,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_aa37c8495a1905ebd6ffcc66b84954cb0}
 
 
-Definizione alla linea 60 del file pci.\+c.
+Definition at line 60 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, e pci\+\_\+config\+\_\+read().
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, and pci\+\_\+config\+\_\+read().
 
 
 \begin{DoxyCode}
@@ -327,11 +327,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a5748eddc8acf29743a4645494086bfe8}
 
 
-Definizione alla linea 48 del file pci.\+c.
+Definition at line 48 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, e pci\+\_\+config\+\_\+read().
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, and pci\+\_\+config\+\_\+read().
 
 
 \begin{DoxyCode}
@@ -349,11 +349,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a35471c72465a2387209cd9f8c61cbabf}
 
 
-Definizione alla linea 44 del file pci.\+c.
+Definition at line 44 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, e pci\+\_\+config\+\_\+read().
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, and pci\+\_\+config\+\_\+read().
 
 
 \begin{DoxyCode}
@@ -371,11 +371,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a68ef7c33e8d461fff6df3e147d8dfd7a}
 
 
-Definizione alla linea 77 del file pci.\+c.
+Definition at line 77 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+get\+\_\+bar(), pci\+\_\+get\+\_\+header\+\_\+type(), uint32\+\_\+t, e uint8\+\_\+t.
+References pci\+\_\+get\+\_\+bar(), pci\+\_\+get\+\_\+header\+\_\+type(), uint32\+\_\+t, and uint8\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -401,11 +401,11 @@ Referenzia pci\+\_\+get\+\_\+bar(), pci\+\_\+get\+\_\+header\+\_\+type(), uint32
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_aa6863ddfaf14fac909640bfa31bbbc4a}
 
 
-Definizione alla linea 90 del file pci.\+c.
+Definition at line 90 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+get\+\_\+bar(), pci\+\_\+get\+\_\+header\+\_\+type(), uint32\+\_\+t, e uint8\+\_\+t.
+References pci\+\_\+get\+\_\+bar(), pci\+\_\+get\+\_\+header\+\_\+type(), uint32\+\_\+t, and uint8\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -431,11 +431,11 @@ Referenzia pci\+\_\+get\+\_\+bar(), pci\+\_\+get\+\_\+header\+\_\+type(), uint32
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_aaaed0e6f955935cd6436ddaf221c74dd}
 
 
-Definizione alla linea 52 del file pci.\+c.
+Definition at line 52 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, e pci\+\_\+config\+\_\+read().
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, and pci\+\_\+config\+\_\+read().
 
 
 \begin{DoxyCode}
@@ -453,11 +453,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_a8943deffb283d480c4721e9504363db9}
 
 
-Definizione alla linea 40 del file pci.\+c.
+Definition at line 40 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, e pci\+\_\+config\+\_\+read().
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::func, and pci\+\_\+config\+\_\+read().
 
 
 \begin{DoxyCode}
@@ -475,11 +475,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::fu
 )}}\label{pci_8c_a5c450b9e2534226b162a16de0ef6b434}
 
 
-Definizione alla linea 144 del file pci.\+c.
+Definition at line 144 of file pci.\+c.
 
 
 
-Referenzia kmalloc(), kprintf, pci\+\_\+config\+\_\+read(), pci\+\_\+load\+\_\+device(), P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S, P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V, P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S, P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C, e uint32\+\_\+t.
+References kmalloc(), kprintf(), pci\+\_\+config\+\_\+read(), pci\+\_\+load\+\_\+device(), P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+B\+U\+S, P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V, P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+D\+E\+V\+I\+C\+E\+S, P\+C\+I\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -501,7 +501,7 @@ Referenzia kmalloc(), kprintf, pci\+\_\+config\+\_\+read(), pci\+\_\+load\+\_\+d
 157                 \hyperlink{pci_8c_af7ca9409f4548bab8e35404085f62a6b}{pci\_load\_device}(&\hyperlink{pci_8c_ab5a39d7e293f00b1c80deef6c287520d}{pci\_devices}[i], bus, dev, func);
 158 
 159 \textcolor{preprocessor}{#if 1}
-160                 \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"pci: %d:%d.%d: [%x:%x] (rev %x class %x iobase %x mmio %x type %x int %d
+160                 \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"pci: %d:%d.%d: [%x:%x] (rev %x class %x iobase %x mmio %x type %x int %d
        pin %d)\(\backslash\)n"},
 161                             \hyperlink{pci_8c_ab5a39d7e293f00b1c80deef6c287520d}{pci\_devices}[i].bus,
 162                             \hyperlink{pci_8c_ab5a39d7e293f00b1c80deef6c287520d}{pci\_devices}[i].dev,
@@ -523,7 +523,7 @@ Referenzia kmalloc(), kprintf, pci\+\_\+config\+\_\+read(), pci\+\_\+load\+\_\+d
 178     \}
 179 
 180 
-181     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"pci: loaded %d devices\(\backslash\)n"}, i);
+181     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"pci: loaded %d devices\(\backslash\)n"}, i);
 182 
 183     \textcolor{keywordflow}{return} 0;
 184 \}
@@ -540,11 +540,11 @@ Referenzia kmalloc(), kprintf, pci\+\_\+config\+\_\+read(), pci\+\_\+load\+\_\+d
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{pci_8c_af7ca9409f4548bab8e35404085f62a6b}
 
 
-Definizione alla linea 103 del file pci.\+c.
+Definition at line 103 of file pci.\+c.
 
 
 
-Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::device\+I\+D, pci\+\_\+device\+::func, pci\+\_\+device\+::header, pci\+\_\+device\+::intr\+\_\+line, pci\+\_\+device\+::intr\+\_\+pin, pci\+\_\+device\+::iobase, pci\+\_\+device\+::membase, pci\+\_\+device\+::pci\+\_\+class, pci\+\_\+get\+\_\+class(), pci\+\_\+get\+\_\+device\+\_\+id(), pci\+\_\+get\+\_\+header\+\_\+type(), pci\+\_\+get\+\_\+intr\+\_\+line(), pci\+\_\+get\+\_\+intr\+\_\+pin(), pci\+\_\+get\+\_\+iobase(), pci\+\_\+get\+\_\+membase(), pci\+\_\+get\+\_\+revision(), pci\+\_\+get\+\_\+vendor\+\_\+id(), pci\+\_\+device\+::revision, e pci\+\_\+device\+::vendor\+I\+D.
+References pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::device\+I\+D, pci\+\_\+device\+::func, pci\+\_\+device\+::header, pci\+\_\+device\+::intr\+\_\+line, pci\+\_\+device\+::intr\+\_\+pin, pci\+\_\+device\+::iobase, pci\+\_\+device\+::membase, pci\+\_\+device\+::pci\+\_\+class, pci\+\_\+get\+\_\+class(), pci\+\_\+get\+\_\+device\+\_\+id(), pci\+\_\+get\+\_\+header\+\_\+type(), pci\+\_\+get\+\_\+intr\+\_\+line(), pci\+\_\+get\+\_\+intr\+\_\+pin(), pci\+\_\+get\+\_\+iobase(), pci\+\_\+get\+\_\+membase(), pci\+\_\+get\+\_\+revision(), pci\+\_\+get\+\_\+vendor\+\_\+id(), pci\+\_\+device\+::revision, and pci\+\_\+device\+::vendor\+I\+D.
 
 
 \begin{DoxyCode}
@@ -566,11 +566,11 @@ Referenzia pci\+\_\+device\+::bus, pci\+\_\+device\+::dev, pci\+\_\+device\+::de
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{pci_8c_ab5a39d7e293f00b1c80deef6c287520d}{\index{pci.\+c@{pci.\+c}!pci\+\_\+devices@{pci\+\_\+devices}}
 \index{pci\+\_\+devices@{pci\+\_\+devices}!pci.\+c@{pci.\+c}}
 \subsubsection[{pci\+\_\+devices}]{\setlength{\rightskip}{0pt plus 5cm}{\bf pci\+\_\+device\+\_\+t}$\ast$ pci\+\_\+devices = N\+U\+L\+L}}\label{pci_8c_ab5a39d7e293f00b1c80deef6c287520d}
 
 
-Definizione alla linea 19 del file pci.\+c.
+Definition at line 19 of file pci.\+c.
 

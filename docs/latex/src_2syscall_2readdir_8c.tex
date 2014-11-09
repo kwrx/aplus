@@ -1,25 +1,25 @@
-\hypertarget{src_2syscall_2readdir_8c}{\section{Riferimenti per il file src/syscall/readdir.c}
+\hypertarget{src_2syscall_2readdir_8c}{\section{src/syscall/readdir.c File Reference}
 \label{src_2syscall_2readdir_8c}\index{src/syscall/readdir.\+c@{src/syscall/readdir.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/task.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structdirent}{dirent} $\ast$ \hyperlink{src_2syscall_2readdir_8c_a46fbf74e1730b06f865fe6e0dba03a61}{sys\+\_\+readdir} (int fd, int position)
 \item 
 \hyperlink{src_2syscall_2readdir_8c_a33e160890354903b1195af9f4aa74f19}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{src_2syscall_2readdir_8c_a46fbf74e1730b06f865fe6e0dba03a61}{sys\+\_\+readdir}, 80)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{src_2syscall_2readdir_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{src_2syscall_2readdir_8c_a46fbf74e1730b06f865fe6e0dba03a61}{\index{src/syscall/readdir.\+c@{src/syscall/readdir.\+c}!sys\+\_\+readdir@{sys\+\_\+readdir}}
 \index{sys\+\_\+readdir@{sys\+\_\+readdir}!src/syscall/readdir.\+c@{src/syscall/readdir.\+c}}
 \subsubsection[{sys\+\_\+readdir}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf dirent}$\ast$ sys\+\_\+readdir (
@@ -30,11 +30,11 @@ struct \hyperlink{structdirent}{dirent} $\ast$ \hyperlink{src_2syscall_2readdir_
 )}}\label{src_2syscall_2readdir_8c_a46fbf74e1730b06f865fe6e0dba03a61}
 
 
-Definizione alla linea 9 del file readdir.\+c.
+Definition at line 9 of file readdir.\+c.
 
 
 
-Referenzia errno, task\+::fd, e fs\+\_\+readdir().
+References errno, task\+::fd, and fs\+\_\+readdir().
 
 
 \begin{DoxyCode}
@@ -63,11 +63,15 @@ Referenzia errno, task\+::fd, e fs\+\_\+readdir().
 )}}\label{src_2syscall_2readdir_8c_a33e160890354903b1195af9f4aa74f19}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{src_2syscall_2readdir_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{src/syscall/readdir.\+c@{src/syscall/readdir.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!src/syscall/readdir.\+c@{src/syscall/readdir.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{src_2syscall_2readdir_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

@@ -1,0 +1,59 @@
+.TH "src/syscall/time.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/time.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <sys/time\&.h>\fP
+.br
+\fC#include <sys/times\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "time_t \fBsys_time\fP (time_t *ptr)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "time_t sys_time (time_t *ptr)"
+
+.PP
+Definition at line 12 of file time\&.c\&.
+.PP
+References sys_gettimeofday()\&.
+.PP
+.nf
+12                              {
+13     
+14     struct timeval tv;
+15     struct timezone tz;
+16 
+17     sys_gettimeofday(&tv, &tz);
+18 
+19 
+20     if(ptr)
+21         *ptr = tv\&.tv_sec;
+22 
+23     return tv\&.tv_sec;
+24 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

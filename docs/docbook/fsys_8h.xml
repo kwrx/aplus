@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="fsys_8h">
+    <title>fsys.h File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structfsys">fsys</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="fsys_8h_1a21463ca997e1f7e340e85fc8b65f7eb6">FSYS</link> static <link linkend="fsys_8h_1acb8db2fb3f178fd1a25c759bdfc50d17">fsys_t</link> fs_##<link linkend="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27">name</link> = {												\
+		#<link linkend="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27">name</link>, mount														\
+	}; <link linkend="slirp_8c_1a37f21b9482ca9c4a0e418a266742a8ae">ATTRIBUTE</link>(&quot;fs&quot;, fs_##<link linkend="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27">name</link>)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structfsys">fsys</link>  <link linkend="fsys_8h_1acb8db2fb3f178fd1a25c759bdfc50d17">fsys_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/fsys.h</para>
+    </simplesect>
+</section>

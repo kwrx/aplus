@@ -1,4 +1,4 @@
-\hypertarget{umount_8c}{\section{Riferimenti per il file src/syscall/umount.c}
+\hypertarget{umount_8c}{\section{src/syscall/umount.c File Reference}
 \label{umount_8c}\index{src/syscall/umount.\+c@{src/syscall/umount.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -6,27 +6,32 @@
 {\ttfamily \#include $<$aplus/task.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/list.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
 {\ttfamily \#include $<$fcntl.\+h$>$}\\*
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \hyperlink{umount_8c_a5cca250c6de3e921bf275843a92c1a35}{sys\+\_\+umount2} (const char $\ast$file, int flags)
+int \hyperlink{umount_8c_a5cca250c6de3e921bf275843a92c1a35}{sys\+\_\+umount2} (const char $\ast$file, int \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags})
 \item 
 int \hyperlink{umount_8c_a54765011a3f373afd364ef71d3dd7295}{sys\+\_\+umount} (const char $\ast$file)
+\item 
+\hyperlink{umount_8c_a58e6ca15fd18d508f7182e2cd68eba21}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{umount_8c_a54765011a3f373afd364ef71d3dd7295}{sys\+\_\+umount}, 25)
+\item 
+\hyperlink{umount_8c_a3576e97b06555aee2a1ccdc01d28a5ed}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{umount_8c_a5cca250c6de3e921bf275843a92c1a35}{sys\+\_\+umount2}, 26)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{umount_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{umount_8c_a54765011a3f373afd364ef71d3dd7295}{\index{umount.\+c@{umount.\+c}!sys\+\_\+umount@{sys\+\_\+umount}}
 \index{sys\+\_\+umount@{sys\+\_\+umount}!umount.\+c@{umount.\+c}}
 \subsubsection[{sys\+\_\+umount}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+umount (
@@ -36,17 +41,17 @@ int \hyperlink{umount_8c_a54765011a3f373afd364ef71d3dd7295}{sys\+\_\+umount} (co
 )}}\label{umount_8c_a54765011a3f373afd364ef71d3dd7295}
 
 
-Definizione alla linea 47 del file umount.\+c.
+Definition at line 48 of file umount.\+c.
 
 
 
-Referenzia sys\+\_\+umount2().
+References sys\+\_\+umount2().
 
 
 \begin{DoxyCode}
-47                                  \{
-48     \textcolor{keywordflow}{return} \hyperlink{umount_8c_a5cca250c6de3e921bf275843a92c1a35}{sys\_umount2}(file, 0);
-49 \}
+48                                  \{
+49     \textcolor{keywordflow}{return} \hyperlink{umount_8c_a5cca250c6de3e921bf275843a92c1a35}{sys\_umount2}(file, 0);
+50 \}
 \end{DoxyCode}
 \hypertarget{umount_8c_a5cca250c6de3e921bf275843a92c1a35}{\index{umount.\+c@{umount.\+c}!sys\+\_\+umount2@{sys\+\_\+umount2}}
 \index{sys\+\_\+umount2@{sys\+\_\+umount2}!umount.\+c@{umount.\+c}}
@@ -58,49 +63,69 @@ Referenzia sys\+\_\+umount2().
 )}}\label{umount_8c_a5cca250c6de3e921bf275843a92c1a35}
 
 
-Definizione alla linea 19 del file umount.\+c.
+Definition at line 20 of file umount.\+c.
 
 
 
-Referenzia inode\+::chown, inode\+::creat, inode\+::dev, errno, task\+::fd, inode\+::finddir, inode\+::flush, inode\+::mode, inode\+::readdir, sys\+\_\+close(), sys\+\_\+open(), e inode\+::unlink.
+References inode\+::chown, inode\+::creat, inode\+::dev, errno, task\+::fd, inode\+::finddir, inode\+::flush, inode\+::mode, inode\+::readdir, sys\+\_\+close(), sys\+\_\+open(), and inode\+::unlink.
 
 
 \begin{DoxyCode}
-19                                              \{
-20     \textcolor{keywordflow}{if}(!file) \{
-21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-22         \textcolor{keywordflow}{return} -1;
-23     \}
-24 
-25     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(file, O\_RDONLY, 0644);
-26     \textcolor{keywordflow}{if}(fd < 0) \{
-27         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOENT;
-28         \textcolor{keywordflow}{return} -1;
-29     \}
-30 
-31     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{umount_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-32     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
-33 
-34     ino->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir} = NULL;
-35     ino->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir} = NULL;
-36     ino->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat} = NULL;
-37     ino->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink} = NULL;
-38     ino->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = NULL;
-39     ino->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown} = NULL;
-40 
-41     ino->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev} = (dev\_t) 0;
-42     ino->\hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode} &= ~S\_IFMT;
-43 
-44     \textcolor{keywordflow}{return} 0;
-45 \}
+20                                              \{
+21     \textcolor{keywordflow}{if}(!file) \{
+22         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+23         \textcolor{keywordflow}{return} -1;
+24     \}
+25 
+26     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(file, O\_RDONLY, 0644);
+27     \textcolor{keywordflow}{if}(fd < 0) \{
+28         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOENT;
+29         \textcolor{keywordflow}{return} -1;
+30     \}
+31 
+32     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{umount_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+33     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
+34 
+35     ino->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir} = NULL;
+36     ino->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir} = NULL;
+37     ino->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat} = NULL;
+38     ino->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink} = NULL;
+39     ino->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = NULL;
+40     ino->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown} = NULL;
+41 
+42     ino->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev} = (dev\_t) 0;
+43     ino->\hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode} &= ~S\_IFMT;
+44 
+45     \textcolor{keywordflow}{return} 0;
+46 \}
 \end{DoxyCode}
+\hypertarget{umount_8c_a58e6ca15fd18d508f7182e2cd68eba21}{\index{umount.\+c@{umount.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!umount.\+c@{umount.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+umount}}]{, }
+\item[{25}]{}
+\end{DoxyParamCaption}
+)}}\label{umount_8c_a58e6ca15fd18d508f7182e2cd68eba21}
+\hypertarget{umount_8c_a3576e97b06555aee2a1ccdc01d28a5ed}{\index{umount.\+c@{umount.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!umount.\+c@{umount.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+umount2}}]{, }
+\item[{26}]{}
+\end{DoxyParamCaption}
+)}}\label{umount_8c_a3576e97b06555aee2a1ccdc01d28a5ed}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{umount_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{umount.\+c@{umount.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!umount.\+c@{umount.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{umount_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

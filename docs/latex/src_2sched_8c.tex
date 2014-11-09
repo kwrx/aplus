@@ -1,4 +1,4 @@
-\hypertarget{src_2sched_8c}{\section{Riferimenti per il file src/sched.c}
+\hypertarget{src_2sched_8c}{\section{src/sched.c File Reference}
 \label{src_2sched_8c}\index{src/sched.\+c@{src/sched.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -9,55 +9,55 @@
 {\ttfamily \#include $<$aplus/list.\+h$>$}\\*
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{src_2sched_8c_a11eb67cd27beaf272f76796f65d1ca1c}{im\+\_\+superuser} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Get root permissions for current task. \end{DoxyCompactList}\item 
 void \hyperlink{src_2sched_8c_a736a4d44542e7f4d0e231002cb7ddb8d}{schedule\+\_\+enable} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Enable scheduling. \end{DoxyCompactList}\item 
 void \hyperlink{src_2sched_8c_a5018bd63e4a7d4dd926e06faf1b7513d}{schedule\+\_\+disable} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Disable scheduling. \end{DoxyCompactList}\item 
 pid\+\_\+t \hyperlink{src_2sched_8c_a986fa43e945f396a2c722a1f766e03c8}{schedule\+\_\+nextpid} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Get a new Process I\+D. \end{DoxyCompactList}\item 
 int \hyperlink{src_2sched_8c_a9f6f16348da2348d320d255437e6ac02}{schedule\+\_\+init} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Initialize scheduling. \end{DoxyCompactList}\item 
 static \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\+\_\+next} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Get next ready task. \end{DoxyCompactList}\item 
 void \hyperlink{src_2sched_8c_a7d06701ac073c331c83519e3909b7fce}{schedule} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Perform a scheduling and check T\+T\+L (Time To Live) for current task. \end{DoxyCompactList}\item 
 void \hyperlink{src_2sched_8c_a4002881c26790c4390e314ce0e1ef1e8}{schedule\+\_\+yield} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Perform a forced scheduling. \end{DoxyCompactList}\item 
 void \hyperlink{src_2sched_8c_a878aa3454133f7c01a4ba15ef68b9be2}{schedule\+\_\+setpriority} (int priority)
-\item 
+\begin{DoxyCompactList}\small\item\em Set T\+T\+L (Time To Live) for current task. \end{DoxyCompactList}\item 
 int \hyperlink{src_2sched_8c_a74e91e3418aedd28c8ddf5d150859a70}{schedule\+\_\+wait} (\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$child)
-\item 
+\begin{DoxyCompactList}\small\item\em Wait for child. \end{DoxyCompactList}\item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{src_2sched_8c_a96793377662f91213568fe44bf4eccad}{schedule\+\_\+child} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Get Child task for current task. \end{DoxyCompactList}\item 
 void \hyperlink{src_2sched_8c_a5a770047741113d76251f4d75c4e5612}{schedule\+\_\+exit2} (\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$\hyperlink{structtask}{task}, int status)
-\item 
+\begin{DoxyCompactList}\small\item\em Terminate a task with an Exit Value. \end{DoxyCompactList}\item 
 void \hyperlink{src_2sched_8c_a38866ec6f9b163355973a41f15248ab1}{schedule\+\_\+exit} (int status)
-\item 
+\begin{DoxyCompactList}\small\item\em Terminate current task. \end{DoxyCompactList}\item 
 pid\+\_\+t \hyperlink{src_2sched_8c_abfd87543f692b5543a89246bd8fbe456}{schedule\+\_\+getpid} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Get Process I\+D of current task. \end{DoxyCompactList}\item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{src_2sched_8c_afcc9c5ea77b2a3aaafc7bdf896d9d633}{schedule\+\_\+getbypid} (pid\+\_\+t pid)
-\item 
+\begin{DoxyCompactList}\small\item\em Get task from his Process I\+D. \end{DoxyCompactList}\item 
 void $\ast$ \hyperlink{src_2sched_8c_a5af6764b80e6b9a24df59f7bb636f3d4}{schedule\+\_\+sbrk} (ptrdiff\+\_\+t increment)
-\end{DoxyCompactItemize}
-\subsection*{Variabili}
+\begin{DoxyCompactList}\small\item\em Increment address space of current task. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{src_2sched_8c_ac08620610e2419aca3878305400a96b7}{kernel\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Kernel task address. \end{DoxyCompactList}\item 
 \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\+\_\+queue}
-\item 
+\begin{DoxyCompactList}\small\item\em List of all Task. \end{DoxyCompactList}\item 
 static int \hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\+\_\+enabled} = 0
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Scheduling enabled status. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{src_2sched_8c_a11eb67cd27beaf272f76796f65d1ca1c}{\index{src/sched.\+c@{src/sched.\+c}!im\+\_\+superuser@{im\+\_\+superuser}}
 \index{im\+\_\+superuser@{im\+\_\+superuser}!src/sched.\+c@{src/sched.\+c}}
 \subsubsection[{im\+\_\+superuser}]{\setlength{\rightskip}{0pt plus 5cm}int im\+\_\+superuser (
@@ -67,27 +67,34 @@ static int \hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\+\_
 )}}\label{src_2sched_8c_a11eb67cd27beaf272f76796f65d1ca1c}
 
 
-Definizione alla linea 41 del file sched.\+c.
+Get root permissions for current task. 
+
+\begin{DoxyReturn}{Returns}
+true or false. 
+\end{DoxyReturn}
+
+
+Definition at line 58 of file sched.\+c.
 
 
 
-Referenzia task\+::gid, G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R, task\+::uid, e U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R.
+References task\+::gid, G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R, task\+::uid, and U\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R.
 
 
 \begin{DoxyCode}
-41                    \{
-42     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-43         \textcolor{keywordflow}{return} -1;
-44 
-45     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task} == \hyperlink{src_2sched_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task})
-46         \textcolor{keywordflow}{return} 1;
-47         
-48     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid} == \hyperlink{task_8h_a14338e391bef80aa10d476348d085c5c}{UID\_SUPERUSER} && 
+58                    \{
+59     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+60         \textcolor{keywordflow}{return} -1;
+61 
+62     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task} == \hyperlink{src_2sched_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task})
+63         \textcolor{keywordflow}{return} 1;
+64         
+65     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ade8fc4c414bce856dacf9efee3031be8}{uid} == \hyperlink{task_8h_a14338e391bef80aa10d476348d085c5c}{UID\_SUPERUSER} && 
       \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aaf3b6e15445e766a5c4823b815bca630}{gid} == \hyperlink{task_8h_a6120fde6185466f2810fd0457009aaf0}{GID\_SUPERUSER})
-49         \textcolor{keywordflow}{return} 1;
-50     \textcolor{keywordflow}{else}
-51         \textcolor{keywordflow}{return} 0;
-52 \}
+66         \textcolor{keywordflow}{return} 1;
+67     \textcolor{keywordflow}{else}
+68         \textcolor{keywordflow}{return} 0;
+69 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a7d06701ac073c331c83519e3909b7fce}{\index{src/sched.\+c@{src/sched.\+c}!schedule@{schedule}}
 \index{schedule@{schedule}!src/sched.\+c@{src/sched.\+c}}
@@ -98,29 +105,33 @@ Referenzia task\+::gid, G\+I\+D\+\_\+\+S\+U\+P\+E\+R\+U\+S\+E\+R, task\+::uid, e
 )}}\label{src_2sched_8c_a7d06701ac073c331c83519e3909b7fce}
 
 
-Definizione alla linea 93 del file sched.\+c.
+Perform a scheduling and check T\+T\+L (Time To Live) for current task. 
 
 
 
-Referenzia task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enabled, schedule\+\_\+next(), e task\+\_\+switch().
+Definition at line 133 of file sched.\+c.
+
+
+
+References task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enabled, schedule\+\_\+next(), and task\+\_\+switch().
 
 
 \begin{DoxyCode}
-93                 \{
-94     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
-95         \textcolor{keywordflow}{return};
-96         
-97     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
-98         \textcolor{keywordflow}{return};
-99 
-100         
-101     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} += 1;
-102     
-103     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} % \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority})
-104         \textcolor{keywordflow}{return};
-105         
-106     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
-107 \}
+133                 \{
+134     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
+135         \textcolor{keywordflow}{return};
+136         
+137     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
+138         \textcolor{keywordflow}{return};
+139 
+140         
+141     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} += 1;
+142     
+143     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} % \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority})
+144         \textcolor{keywordflow}{return};
+145         
+146     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
+147 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a96793377662f91213568fe44bf4eccad}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+child@{schedule\+\_\+child}}
 \index{schedule\+\_\+child@{schedule\+\_\+child}!src/sched.\+c@{src/sched.\+c}}
@@ -131,28 +142,35 @@ Referenzia task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enable
 )}}\label{src_2sched_8c_a96793377662f91213568fe44bf4eccad}
 
 
-Definizione alla linea 134 del file sched.\+c.
+Get Child task for current task. 
+
+\begin{DoxyReturn}{Returns}
+child task or N\+U\+L\+L in case of error. 
+\end{DoxyReturn}
+
+
+Definition at line 193 of file sched.\+c.
 
 
 
-Referenzia list\+\_\+foreach, task\+::parent, e value.
+References list\+\_\+foreach, task\+::parent, and value.
 
 
 \begin{DoxyCode}
-134                          \{
-135     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-136         \textcolor{keywordflow}{return} NULL;
-137         
-138 
-139     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}) \{
-140         \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
-141         
-142         \textcolor{keywordflow}{if}(child->\hyperlink{structtask_a34c6613744820a1e8127756fb6a5392c}{parent} == \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-143             \textcolor{keywordflow}{return} child;
-144     \}
-145     
-146     \textcolor{keywordflow}{return} NULL;
-147 \}
+193                          \{
+194     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+195         \textcolor{keywordflow}{return} NULL;
+196         
+197 
+198     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}) \{
+199         \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+200         
+201         \textcolor{keywordflow}{if}(child->\hyperlink{structtask_a34c6613744820a1e8127756fb6a5392c}{parent} == \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+202             \textcolor{keywordflow}{return} child;
+203     \}
+204     
+205     \textcolor{keywordflow}{return} NULL;
+206 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a5018bd63e4a7d4dd926e06faf1b7513d}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+disable@{schedule\+\_\+disable}}
 \index{schedule\+\_\+disable@{schedule\+\_\+disable}!src/sched.\+c@{src/sched.\+c}}
@@ -163,17 +181,21 @@ Referenzia list\+\_\+foreach, task\+::parent, e value.
 )}}\label{src_2sched_8c_a5018bd63e4a7d4dd926e06faf1b7513d}
 
 
-Definizione alla linea 58 del file sched.\+c.
+Disable scheduling. 
 
 
 
-Referenzia sched\+\_\+enabled.
+Definition at line 82 of file sched.\+c.
+
+
+
+References sched\+\_\+enabled.
 
 
 \begin{DoxyCode}
-58                         \{
-59     \hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} = 0;
-60 \}
+82                         \{
+83     \hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} = 0;
+84 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a736a4d44542e7f4d0e231002cb7ddb8d}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+enable@{schedule\+\_\+enable}}
 \index{schedule\+\_\+enable@{schedule\+\_\+enable}!src/sched.\+c@{src/sched.\+c}}
@@ -184,17 +206,21 @@ Referenzia sched\+\_\+enabled.
 )}}\label{src_2sched_8c_a736a4d44542e7f4d0e231002cb7ddb8d}
 
 
-Definizione alla linea 54 del file sched.\+c.
+Enable scheduling. 
 
 
 
-Referenzia sched\+\_\+enabled.
+Definition at line 75 of file sched.\+c.
+
+
+
+References sched\+\_\+enabled.
 
 
 \begin{DoxyCode}
-54                        \{
-55     \hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} = 1;
-56 \}
+75                        \{
+76     \hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} = 1;
+77 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a38866ec6f9b163355973a41f15248ab1}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+exit@{schedule\+\_\+exit}}
 \index{schedule\+\_\+exit@{schedule\+\_\+exit}!src/sched.\+c@{src/sched.\+c}}
@@ -205,17 +231,29 @@ Referenzia sched\+\_\+enabled.
 )}}\label{src_2sched_8c_a38866ec6f9b163355973a41f15248ab1}
 
 
-Definizione alla linea 162 del file sched.\+c.
+Terminate current task. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em status} & Exit Value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{src_2sched_8c_a5a770047741113d76251f4d75c4e5612}{schedule\+\_\+exit2} 
+\end{DoxySeeAlso}
+
+
+Definition at line 232 of file sched.\+c.
 
 
 
-Referenzia schedule\+\_\+exit2().
+References schedule\+\_\+exit2().
 
 
 \begin{DoxyCode}
-162                                \{
-163     \hyperlink{src_2sched_8c_a5a770047741113d76251f4d75c4e5612}{schedule\_exit2}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}, status);
-164 \}
+232                                \{
+233     \hyperlink{src_2sched_8c_a5a770047741113d76251f4d75c4e5612}{schedule\_exit2}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}, status);
+234 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a5a770047741113d76251f4d75c4e5612}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+exit2@{schedule\+\_\+exit2}}
 \index{schedule\+\_\+exit2@{schedule\+\_\+exit2}!src/sched.\+c@{src/sched.\+c}}
@@ -227,26 +265,37 @@ Referenzia schedule\+\_\+exit2().
 )}}\label{src_2sched_8c_a5a770047741113d76251f4d75c4e5612}
 
 
-Definizione alla linea 149 del file sched.\+c.
+Terminate a task with an Exit Value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em task} & Task to close. \\
+\hline
+{\em status} & Exit Value. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 213 of file sched.\+c.
 
 
 
-Referenzia kfree(), list\+\_\+remove(), schedule\+\_\+yield(), e T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D.
+References kfree(), list\+\_\+remove(), schedule\+\_\+yield(), and T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D.
 
 
 \begin{DoxyCode}
-149                                               \{
-150     \textcolor{keywordflow}{if}(!task)
-151         \textcolor{keywordflow}{return};
-152         
-153     \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) task);
-154         
-155     task->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} = \hyperlink{task_8h_aea18b04c3c7d46195bab375efc1f61b6}{TASK\_STATE\_DEAD};
-156     task->\hyperlink{structtask_a9bd7bbd83fe1f4744c76ff240b6da5db}{exitcode} = status;
-157     
-158     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}((\textcolor{keywordtype}{void}*) task->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr});
-159     \hyperlink{src_2sched_8c_a4002881c26790c4390e314ce0e1ef1e8}{schedule\_yield}();
-160 \}
+213                                               \{
+214     \textcolor{keywordflow}{if}(!task)
+215         \textcolor{keywordflow}{return};
+216         
+217     \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) task);
+218         
+219     task->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} = \hyperlink{task_8h_aea18b04c3c7d46195bab375efc1f61b6}{TASK\_STATE\_DEAD};
+220     task->\hyperlink{structtask_a9bd7bbd83fe1f4744c76ff240b6da5db}{exitcode} = status;
+221     
+222     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}((\textcolor{keywordtype}{void}*) task->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr});
+223     \hyperlink{src_2sched_8c_a4002881c26790c4390e314ce0e1ef1e8}{schedule\_yield}();
+224 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_afcc9c5ea77b2a3aaafc7bdf896d9d633}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+getbypid@{schedule\+\_\+getbypid}}
 \index{schedule\+\_\+getbypid@{schedule\+\_\+getbypid}!src/sched.\+c@{src/sched.\+c}}
@@ -257,27 +306,34 @@ Referenzia kfree(), list\+\_\+remove(), schedule\+\_\+yield(), e T\+A\+S\+K\+\_\
 )}}\label{src_2sched_8c_afcc9c5ea77b2a3aaafc7bdf896d9d633}
 
 
-Definizione alla linea 173 del file sched.\+c.
+Get task from his Process I\+D. 
+
+\begin{DoxyReturn}{Returns}
+Task or N\+U\+L\+L in case of error. 
+\end{DoxyReturn}
+
+
+Definition at line 253 of file sched.\+c.
 
 
 
-Referenzia current\+\_\+task, list\+\_\+foreach, task\+::pid, e value.
+References current\+\_\+task, list\+\_\+foreach, task\+::pid, and value.
 
 
 \begin{DoxyCode}
-173                                      \{
-174     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid} == pid)
-175         \textcolor{keywordflow}{return} \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
-176         
-177     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}) \{
-178         \hyperlink{structtask}{task\_t}* t = (\hyperlink{structtask}{task\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
-179         
-180         \textcolor{keywordflow}{if}(t->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid} == pid)
-181             \textcolor{keywordflow}{return} t;
-182     \}
-183     
-184     \textcolor{keywordflow}{return} NULL;
-185 \}
+253                                      \{
+254     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid} == pid)
+255         \textcolor{keywordflow}{return} \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
+256         
+257     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}) \{
+258         \hyperlink{structtask}{task\_t}* t = (\hyperlink{structtask}{task\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+259         
+260         \textcolor{keywordflow}{if}(t->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid} == pid)
+261             \textcolor{keywordflow}{return} t;
+262     \}
+263     
+264     \textcolor{keywordflow}{return} NULL;
+265 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_abfd87543f692b5543a89246bd8fbe456}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+getpid@{schedule\+\_\+getpid}}
 \index{schedule\+\_\+getpid@{schedule\+\_\+getpid}!src/sched.\+c@{src/sched.\+c}}
@@ -288,20 +344,27 @@ Referenzia current\+\_\+task, list\+\_\+foreach, task\+::pid, e value.
 )}}\label{src_2sched_8c_abfd87543f692b5543a89246bd8fbe456}
 
 
-Definizione alla linea 166 del file sched.\+c.
+Get Process I\+D of current task. 
+
+\begin{DoxyReturn}{Returns}
+Process I\+D or -\/1 in case of error. 
+\end{DoxyReturn}
+
+
+Definition at line 241 of file sched.\+c.
 
 
 
-Referenzia task\+::pid.
+References task\+::pid.
 
 
 \begin{DoxyCode}
-166                         \{
-167     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-168         \textcolor{keywordflow}{return} -1;
-169         
-170     \textcolor{keywordflow}{return} \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
-171 \}
+241                         \{
+242     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+243         \textcolor{keywordflow}{return} -1;
+244         
+245     \textcolor{keywordflow}{return} \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
+246 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a9f6f16348da2348d320d255437e6ac02}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+init@{schedule\+\_\+init}}
 \index{schedule\+\_\+init@{schedule\+\_\+init}!src/sched.\+c@{src/sched.\+c}}
@@ -312,22 +375,29 @@ Referenzia task\+::pid.
 )}}\label{src_2sched_8c_a9f6f16348da2348d320d255437e6ac02}
 
 
-Definizione alla linea 67 del file sched.\+c.
+Initialize scheduling. 
+
+\begin{DoxyReturn}{Returns}
+success of initilization. 
+\end{DoxyReturn}
+
+
+Definition at line 100 of file sched.\+c.
 
 
 
-Referenzia list\+\_\+init, schedule\+\_\+enable(), e task\+\_\+init().
+References list\+\_\+init, schedule\+\_\+enable(), and task\+\_\+init().
 
 
 \begin{DoxyCode}
-67                     \{
-68     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue});
-69     \hyperlink{task_8c_a30500c422833c90d6f42e44e2efb04a7}{task\_init}();
-70     
-71     
-72     \hyperlink{src_2sched_8c_a736a4d44542e7f4d0e231002cb7ddb8d}{schedule\_enable}();
-73     \textcolor{keywordflow}{return} 0;
-74 \}
+100                     \{
+101     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue});
+102     \hyperlink{task_8c_a30500c422833c90d6f42e44e2efb04a7}{task\_init}();
+103     
+104     
+105     \hyperlink{src_2sched_8c_a736a4d44542e7f4d0e231002cb7ddb8d}{schedule\_enable}();
+106     \textcolor{keywordflow}{return} 0;
+107 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+next@{schedule\+\_\+next}}
 \index{schedule\+\_\+next@{schedule\+\_\+next}!src/sched.\+c@{src/sched.\+c}}
@@ -338,29 +408,36 @@ Referenzia list\+\_\+init, schedule\+\_\+enable(), e task\+\_\+init().
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}
 
 
-Definizione alla linea 78 del file sched.\+c.
+Get next ready task. 
+
+\begin{DoxyReturn}{Returns}
+A ready task to schedule. 
+\end{DoxyReturn}
+
+
+Definition at line 114 of file sched.\+c.
 
 
 
-Referenzia current\+\_\+task, list\+\_\+head(), list\+\_\+next(), task\+::state, e T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E.
+References current\+\_\+task, list\+\_\+head(), list\+\_\+next(), task\+::state, and T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E.
 
 
 \begin{DoxyCode}
-78                                \{
-79     
-80     \hyperlink{structtask}{task\_t}* newtask = \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
-81     
-82     \textcolor{keywordflow}{do} \{
-83         newtask = (\hyperlink{structtask}{task\_t}*) \hyperlink{list_8h_abcd4418be12b04265c44dd69a1cfee1f}{list\_next}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}, (
+114                                \{
+115     
+116     \hyperlink{structtask}{task\_t}* newtask = \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
+117     
+118     \textcolor{keywordflow}{do} \{
+119         newtask = (\hyperlink{structtask}{task\_t}*) \hyperlink{list_8h_abcd4418be12b04265c44dd69a1cfee1f}{list\_next}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}, (
       \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) newtask);
-84         \textcolor{keywordflow}{if}(!newtask)
-85             newtask = (\hyperlink{structtask}{task\_t}*) \hyperlink{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}{list\_head}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue});
-86         
-87     \} \textcolor{keywordflow}{while}(newtask->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} != \hyperlink{task_8h_a447252ba92918fc13f5b6fd120b2656f}{TASK\_STATE\_ALIVE});
-88 
-89     
-90     \textcolor{keywordflow}{return} newtask;
-91 \}
+120         \textcolor{keywordflow}{if}(!newtask)
+121             newtask = (\hyperlink{structtask}{task\_t}*) \hyperlink{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}{list\_head}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue});
+122         
+123     \} \textcolor{keywordflow}{while}(newtask->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} != \hyperlink{task_8h_a447252ba92918fc13f5b6fd120b2656f}{TASK\_STATE\_ALIVE});
+124 
+125     
+126     \textcolor{keywordflow}{return} newtask;
+127 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a986fa43e945f396a2c722a1f766e03c8}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+nextpid@{schedule\+\_\+nextpid}}
 \index{schedule\+\_\+nextpid@{schedule\+\_\+nextpid}!src/sched.\+c@{src/sched.\+c}}
@@ -371,14 +448,18 @@ Referenzia current\+\_\+task, list\+\_\+head(), list\+\_\+next(), task\+::state,
 )}}\label{src_2sched_8c_a986fa43e945f396a2c722a1f766e03c8}
 
 
-Definizione alla linea 62 del file sched.\+c.
+Get a new Process I\+D. 
+
+
+
+Definition at line 89 of file sched.\+c.
 
 
 \begin{DoxyCode}
-62                          \{
-63     \textcolor{keyword}{static} pid\_t nextpid = 0;
-64     \textcolor{keywordflow}{return} nextpid++;
-65 \}
+89                          \{
+90     \textcolor{keyword}{static} pid\_t nextpid = 0;
+91     \textcolor{keywordflow}{return} nextpid++;
+92 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a5af6764b80e6b9a24df59f7bb636f3d4}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+sbrk@{schedule\+\_\+sbrk}}
 \index{schedule\+\_\+sbrk@{schedule\+\_\+sbrk}!src/sched.\+c@{src/sched.\+c}}
@@ -389,37 +470,49 @@ Definizione alla linea 62 del file sched.\+c.
 )}}\label{src_2sched_8c_a5af6764b80e6b9a24df59f7bb636f3d4}
 
 
-Definizione alla linea 187 del file sched.\+c.
+Increment address space of current task. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em increment} & Increment in Bytes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Current size of address space or N\+U\+L\+L in case of error. 
+\end{DoxyReturn}
+
+
+Definition at line 272 of file sched.\+c.
 
 
 
-Referenzia task\+::context, task\+::cr3, task\+::image, krealloc(), task\+::length, mm\+\_\+paddr(), task\+::ptr, uint32\+\_\+t, task\+::vaddr, V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T, e vmm\+\_\+map().
+References task\+::context, task\+::cr3, task\+::image, krealloc(), task\+::length, mm\+\_\+paddr(), task\+::ptr, uint32\+\_\+t, task\+::vaddr, V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T, and vmm\+\_\+map().
 
 
 \begin{DoxyCode}
-187                                          \{
-188     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-189         \textcolor{keywordflow}{return} NULL;
-190         
-191     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} == 0)
-192         \textcolor{keywordflow}{return} NULL;
-193         
-194     \textcolor{keywordflow}{if}(increment == 0)
-195         \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.
+272                                          \{
+273     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+274         \textcolor{keywordflow}{return} NULL;
+275         
+276     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} == 0)
+277         \textcolor{keywordflow}{return} NULL;
+278         
+279     \textcolor{keywordflow}{if}(increment == 0)
+280         \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.
       \hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} + \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length});
-196 
-197     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length} += increment;
-198     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr} = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}{krealloc}((\textcolor{keywordtype}{void}*) 
+281 
+282     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length} += increment;
+283     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr} = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}{krealloc}((\textcolor{keywordtype}{void}*) 
       \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr}, \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.
       \hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length});
-199     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} = \hyperlink{paging_8c_ae969f54f1646d5d8a871bef828a24239}{vmm\_map}(
+284     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} = \hyperlink{paging_8c_ae969f54f1646d5d8a871bef828a24239}{vmm\_map}(
       \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}.\hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}((\textcolor{keywordtype}{void}*) 
       \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr}), \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.
       \hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr}, \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length}, \hyperlink{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}{VMM\_FLAGS\_DEFAULT});
-200     
-201     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.
+285     
+286     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.
       \hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} + \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length});
-202 \}
+287 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a878aa3454133f7c01a4ba15ef68b9be2}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+setpriority@{schedule\+\_\+setpriority}}
 \index{schedule\+\_\+setpriority@{schedule\+\_\+setpriority}!src/sched.\+c@{src/sched.\+c}}
@@ -430,20 +523,29 @@ Referenzia task\+::context, task\+::cr3, task\+::image, krealloc(), task\+::leng
 )}}\label{src_2sched_8c_a878aa3454133f7c01a4ba15ef68b9be2}
 
 
-Definizione alla linea 119 del file sched.\+c.
+Set T\+T\+L (Time To Live) for current task. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em priority} & T\+T\+L for current task. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 168 of file sched.\+c.
 
 
 
-Referenzia task\+::priority.
+References task\+::priority.
 
 
 \begin{DoxyCode}
-119                                         \{
-120     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-121         \textcolor{keywordflow}{return};
-122         
-123     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority} = priority;
-124 \}
+168                                         \{
+169     \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+170         \textcolor{keywordflow}{return};
+171         
+172     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority} = priority;
+173 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a74e91e3418aedd28c8ddf5d150859a70}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+wait@{schedule\+\_\+wait}}
 \index{schedule\+\_\+wait@{schedule\+\_\+wait}!src/sched.\+c@{src/sched.\+c}}
@@ -454,21 +556,33 @@ Referenzia task\+::priority.
 )}}\label{src_2sched_8c_a74e91e3418aedd28c8ddf5d150859a70}
 
 
-Definizione alla linea 126 del file sched.\+c.
+Wait for child. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em child} & Task to wait. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exit value of child or -\/1 in case of error. 
+\end{DoxyReturn}
+
+
+Definition at line 181 of file sched.\+c.
 
 
 
-Referenzia task\+::exitcode, spinlock\+\_\+waiton, task\+::state, e T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D.
+References task\+::exitcode, spinlock\+\_\+waiton, task\+::state, and T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+D\+E\+A\+D.
 
 
 \begin{DoxyCode}
-126                                  \{
-127     \textcolor{keywordflow}{if}(!child)
-128         \textcolor{keywordflow}{return} -1;
-129         
-130     \hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\_waiton}(child->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} != \hyperlink{task_8h_aea18b04c3c7d46195bab375efc1f61b6}{TASK\_STATE\_DEAD});
-131     \textcolor{keywordflow}{return} child->\hyperlink{structtask_a9bd7bbd83fe1f4744c76ff240b6da5db}{exitcode};
-132 \}
+181                                  \{
+182     \textcolor{keywordflow}{if}(!child)
+183         \textcolor{keywordflow}{return} -1;
+184         
+185     \hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\_waiton}(child->\hyperlink{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}{state} != \hyperlink{task_8h_aea18b04c3c7d46195bab375efc1f61b6}{TASK\_STATE\_DEAD});
+186     \textcolor{keywordflow}{return} child->\hyperlink{structtask_a9bd7bbd83fe1f4744c76ff240b6da5db}{exitcode};
+187 \}
 \end{DoxyCode}
 \hypertarget{src_2sched_8c_a4002881c26790c4390e314ce0e1ef1e8}{\index{src/sched.\+c@{src/sched.\+c}!schedule\+\_\+yield@{schedule\+\_\+yield}}
 \index{schedule\+\_\+yield@{schedule\+\_\+yield}!src/sched.\+c@{src/sched.\+c}}
@@ -479,52 +593,72 @@ Referenzia task\+::exitcode, spinlock\+\_\+waiton, task\+::state, e T\+A\+S\+K\+
 )}}\label{src_2sched_8c_a4002881c26790c4390e314ce0e1ef1e8}
 
 
-Definizione alla linea 109 del file sched.\+c.
+Perform a forced scheduling. 
 
 
 
-Referenzia list\+\_\+empty(), sched\+\_\+enabled, schedule\+\_\+next(), e task\+\_\+switch().
+Definition at line 153 of file sched.\+c.
+
+
+
+References list\+\_\+empty(), sched\+\_\+enabled, schedule\+\_\+next(), and task\+\_\+switch().
 
 
 \begin{DoxyCode}
-109                       \{
-110     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
-111         \textcolor{keywordflow}{return};
-112         
-113     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
-114         \textcolor{keywordflow}{return};
-115         
-116     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
-117 \}
+153                       \{
+154     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
+155         \textcolor{keywordflow}{return};
+156         
+157     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
+158         \textcolor{keywordflow}{return};
+159         
+160     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
+161 \}
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{src/sched.\+c@{src/sched.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!src/sched.\+c@{src/sched.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 
 \hypertarget{src_2sched_8c_ac08620610e2419aca3878305400a96b7}{\index{src/sched.\+c@{src/sched.\+c}!kernel\+\_\+task@{kernel\+\_\+task}}
 \index{kernel\+\_\+task@{kernel\+\_\+task}!src/sched.\+c@{src/sched.\+c}}
 \subsubsection[{kernel\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ kernel\+\_\+task}}\label{src_2sched_8c_ac08620610e2419aca3878305400a96b7}
 
 
-Definizione alla linea 34 del file sched.\+c.
+Kernel task address. 
+
+
+
+Definition at line 40 of file sched.\+c.
 
 \hypertarget{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{\index{src/sched.\+c@{src/sched.\+c}!sched\+\_\+enabled@{sched\+\_\+enabled}}
 \index{sched\+\_\+enabled@{sched\+\_\+enabled}!src/sched.\+c@{src/sched.\+c}}
 \subsubsection[{sched\+\_\+enabled}]{\setlength{\rightskip}{0pt plus 5cm}int sched\+\_\+enabled = 0\hspace{0.3cm}{\ttfamily [static]}}}\label{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}
 
 
-Definizione alla linea 38 del file sched.\+c.
+Scheduling enabled status. 
+
+
+
+Definition at line 52 of file sched.\+c.
 
 \hypertarget{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{\index{src/sched.\+c@{src/sched.\+c}!task\+\_\+queue@{task\+\_\+queue}}
 \index{task\+\_\+queue@{task\+\_\+queue}!src/sched.\+c@{src/sched.\+c}}
 \subsubsection[{task\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ task\+\_\+queue}}\label{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}
 
 
-Definizione alla linea 36 del file sched.\+c.
+List of all Task. 
+
+
+
+Definition at line 46 of file sched.\+c.
 

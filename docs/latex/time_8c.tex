@@ -1,0 +1,50 @@
+\hypertarget{time_8c}{\section{src/syscall/time.c File Reference}
+\label{time_8c}\index{src/syscall/time.\+c@{src/syscall/time.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$time.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/time.\+h$>$}\\*
+{\ttfamily \#include $<$sys/times.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+time\+\_\+t \hyperlink{time_8c_a4b6eba92722ec1e5446f676e95e4cddf}{sys\+\_\+time} (time\+\_\+t $\ast$ptr)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{time_8c_a4b6eba92722ec1e5446f676e95e4cddf}{\index{time.\+c@{time.\+c}!sys\+\_\+time@{sys\+\_\+time}}
+\index{sys\+\_\+time@{sys\+\_\+time}!time.\+c@{time.\+c}}
+\subsubsection[{sys\+\_\+time}]{\setlength{\rightskip}{0pt plus 5cm}time\+\_\+t sys\+\_\+time (
+\begin{DoxyParamCaption}
+\item[{time\+\_\+t $\ast$}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{time_8c_a4b6eba92722ec1e5446f676e95e4cddf}
+
+
+Definition at line 12 of file time.\+c.
+
+
+
+References sys\+\_\+gettimeofday().
+
+
+\begin{DoxyCode}
+12                              \{
+13     
+14     \textcolor{keyword}{struct }timeval tv;
+15     \textcolor{keyword}{struct }timezone tz;
+16 
+17     \hyperlink{gettimeofday_8c_a0aa843ff444635c69c76f13b2f6b6ec6}{sys\_gettimeofday}(&tv, &tz);
+18 
+19 
+20     \textcolor{keywordflow}{if}(ptr)
+21         *ptr = tv.tv\_sec;
+22 
+23     \textcolor{keywordflow}{return} tv.tv\_sec;
+24 \}
+\end{DoxyCode}

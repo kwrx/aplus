@@ -1,0 +1,918 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="iso9660_8h" kind="file">
+    <compoundname>iso9660.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <includedby refid="iso9660_8c" local="yes">src/fs/iso9660/iso9660.c</includedby>
+    <includedby refid="iso9660__finddir_8c" local="yes">src/fs/iso9660/iso9660_finddir.c</includedby>
+    <includedby refid="iso9660__mount_8c" local="yes">src/fs/iso9660/iso9660_mount.c</includedby>
+    <includedby refid="iso9660__read_8c" local="yes">src/fs/iso9660/iso9660_read.c</includedby>
+    <includedby refid="iso9660__readdir_8c" local="yes">src/fs/iso9660/iso9660_readdir.c</includedby>
+    <incdepgraph>
+      <node id="207">
+        <label>stdint.h</label>
+      </node>
+      <node id="206">
+        <label>src/fs/iso9660/iso9660.h</label>
+        <link refid="iso9660.h"/>
+        <childnode refid="207" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="211">
+        <label>src/fs/iso9660/iso9660_mount.c</label>
+        <link refid="iso9660__mount_8c"/>
+      </node>
+      <node id="212">
+        <label>src/fs/iso9660/iso9660_read.c</label>
+        <link refid="iso9660__read_8c"/>
+      </node>
+      <node id="213">
+        <label>src/fs/iso9660/iso9660_readdir.c</label>
+        <link refid="iso9660__readdir_8c"/>
+      </node>
+      <node id="209">
+        <label>src/fs/iso9660/iso9660.c</label>
+        <link refid="iso9660_8c"/>
+      </node>
+      <node id="208">
+        <label>src/fs/iso9660/iso9660.h</label>
+        <link refid="iso9660.h"/>
+        <childnode refid="209" relation="include">
+        </childnode>
+        <childnode refid="210" relation="include">
+        </childnode>
+        <childnode refid="211" relation="include">
+        </childnode>
+        <childnode refid="212" relation="include">
+        </childnode>
+        <childnode refid="213" relation="include">
+        </childnode>
+      </node>
+      <node id="210">
+        <label>src/fs/iso9660/iso9660_finddir.c</label>
+        <link refid="iso9660__finddir_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structiso9660__volume__descriptor" prot="public">iso9660_volume_descriptor</innerclass>
+    <innerclass refid="structiso9660__pvd" prot="public">iso9660_pvd</innerclass>
+    <innerclass refid="structiso9660__dir" prot="public">iso9660_dir</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" prot="public" static="no">
+        <name>ISO9660_SECTOR_SIZE</name>
+        <initializer>2048</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="7" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a46d3c45c595db51113eb469111f8f47e" prot="public" static="no">
+        <name>ISO9660_PVD</name>
+        <initializer>(0x10 * ISO9660_SECTOR_SIZE)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="9" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1adb9a0b19d37ea681279fbc2fd12e78e9" prot="public" static="no">
+        <name>ISO9660_ID</name>
+        <initializer>&quot;CD001&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="10" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a686d0298670c8a960432fedea108a4ee" prot="public" static="no">
+        <name>ISO9660_VERSION</name>
+        <initializer>0x01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="11" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a4e26a4252a467603b5109045780288f9" prot="public" static="no">
+        <name>ISO9660_VOLDESC_BOOTRECORD</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="13" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a0a08c0312b4131176a26747f23c7298d" prot="public" static="no">
+        <name>ISO9660_VOLDESC_PRIMARY</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="14" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1ab73cb7a03004d39b3f8d63bd23278c32" prot="public" static="no">
+        <name>ISO9660_VOLDESC_SUPPLEMENTARY</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="15" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1ae3fe9bc425a2c8ef674454fbfbff24a6" prot="public" static="no">
+        <name>ISO9660_VOLDESC_PARTITION</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="16" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a2dc133b03085eb478dcb5453ae3c8a8f" prot="public" static="no">
+        <name>ISO9660_VOLDESC_TERMINATOR</name>
+        <initializer>255</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="17" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1aa140ca7b27f39439a142a564aa47c06b" prot="public" static="no">
+        <name>ISO9660_VOLDESC_SIZE</name>
+        <initializer><ref refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" kindref="member">ISO9660_SECTOR_SIZE</ref></initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="19" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a47c2721a8c2f9deb18f162d013378032" prot="public" static="no">
+        <name>ISO9660_FLAGS_HIDDEN</name>
+        <initializer>(1 &lt;&lt; 0)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="22" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a3a1a377e9111d5e7b6a9f668943281b0" prot="public" static="no">
+        <name>ISO9660_FLAGS_DIRECTORY</name>
+        <initializer>(1 &lt;&lt; 1)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="23" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1aef272dce8d7ba456a460020f84a1f93f" prot="public" static="no">
+        <name>ISO9660_FLAGS_FILE</name>
+        <initializer>(1 &lt;&lt; 2)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="24" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a2efe9dd2b4643cc3dce01afff69b956a" prot="public" static="no">
+        <name>ISO9660_FLAGS_EXTATTR</name>
+        <initializer>(1 &lt;&lt; 3)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="25" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1a2c9a6a3d061d953ac5feef15702e6ba2" prot="public" static="no">
+        <name>ISO9660_FLAGS_EXTFLAGS</name>
+        <initializer>(1 &lt;&lt; 4)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="26" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="iso9660_8h_1abc9ef8ec75a1700690ab76b3075cd9d9" prot="public" static="no">
+        <name>ISO9660_FLAGS_NOTLAST</name>
+        <initializer>(1 &lt;&lt; 7)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="27" column="9" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="iso9660_8h_1a6def72cbab7e986d0ac5dc7291e1394a" prot="public" static="no" mutable="no">
+        <type>int8_t</type>
+        <definition>int8_t type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="74" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a6250618cd0f2f1fd5e27398c85114505" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char id</definition>
+        <argsstring>[5]</argsstring>
+        <name>id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="75" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a0e5db10466cf0146cf761aaaafe090d0" prot="public" static="no" mutable="no">
+        <type>int8_t</type>
+        <definition>int8_t version</definition>
+        <argsstring></argsstring>
+        <name>version</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="76" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char data[2041]</definition>
+        <argsstring>[2041]</argsstring>
+        <name>data</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a1b319c7708ab2832a7c18a65b8a255e0" prot="public" static="no" mutable="no">
+        <type>int8_t</type>
+        <definition>int8_t unused</definition>
+        <argsstring></argsstring>
+        <name>unused</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ab8e767113a48de5ab0a016ea7cf699b6" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char sysid[32]</definition>
+        <argsstring>[32]</argsstring>
+        <name>sysid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="79" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a2b7479a4e3f7892e26f5494b5fb31450" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char volid[32]</definition>
+        <argsstring>[32]</argsstring>
+        <name>volid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="80" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a0e06fd66e6b5d18c6e37304bfbc72b42" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char null0[8]</definition>
+        <argsstring>[8]</argsstring>
+        <name>null0</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="81" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a235617b58403d22d4bc5db3fb50cbd29" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t volsize</definition>
+        <argsstring></argsstring>
+        <name>volsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="83" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a9cd7dbef0facac2c0fdaad0215a6993f" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char null1[32]</definition>
+        <argsstring>[32]</argsstring>
+        <name>null1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="85" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ae3322c95eca6f054a776fb60fce636b3" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t volsetsize</definition>
+        <argsstring></argsstring>
+        <name>volsetsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="87" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a98f0ee0957a15520bcfc6bbce92c9160" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t volnumber</definition>
+        <argsstring></argsstring>
+        <name>volnumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="88" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a0e7274df7510929be162a941cb2f0e79" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t logical_blksize</definition>
+        <argsstring></argsstring>
+        <name>logical_blksize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="89" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ad7fa99366995bb86dc6a3a299643c329" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t path_size</definition>
+        <argsstring></argsstring>
+        <name>path_size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="90" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1af3f290d3b974c05653a86a04e51f64af" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t path_lba</definition>
+        <argsstring></argsstring>
+        <name>path_lba</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="91" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1aec6b44e04e2fdb7b36c8b62099a5f1e8" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t optpath_lba</definition>
+        <argsstring></argsstring>
+        <name>optpath_lba</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="92" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1aee2dd1d9b05c479cdce439c36f488077" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t path_lba_msb</definition>
+        <argsstring></argsstring>
+        <name>path_lba_msb</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="93" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ab2a2664b9d342350a49a56ada9321bad" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t optpath_lba_msb</definition>
+        <argsstring></argsstring>
+        <name>optpath_lba_msb</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="94" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ac27411f3d37b72468123427ccb542011" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char rootdir[34]</definition>
+        <argsstring>[34]</argsstring>
+        <name>rootdir</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="96" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ae9cdf688def5af819e736cd2a11533f7" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char volsetid[128]</definition>
+        <argsstring>[128]</argsstring>
+        <name>volsetid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="97" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a57b4122d9219d77a475ec2aaaa0c196d" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char pubid[128]</definition>
+        <argsstring>[128]</argsstring>
+        <name>pubid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="98" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a461a2ff96f8a888c2182c388bc9b4355" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char dataid[128]</definition>
+        <argsstring>[128]</argsstring>
+        <name>dataid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="99" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a3ac8e8d02e75c9cefda147606975418f" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char appid[128]</definition>
+        <argsstring>[128]</argsstring>
+        <name>appid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="100" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a3104efb0fb2ca6c2e2d4ec755b184cca" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char copyid[38]</definition>
+        <argsstring>[38]</argsstring>
+        <name>copyid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="101" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a909223f1fddfd94b119bfac5e3543a10" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char abstractfileid[36]</definition>
+        <argsstring>[36]</argsstring>
+        <name>abstractfileid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="102" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1aa0f3126ac69ede6984bec36f3078aec1" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char bibid[37]</definition>
+        <argsstring>[37]</argsstring>
+        <name>bibid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="103" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a7a3d70624a24b670dca0a6c6eea3a997" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char cdate[17]</definition>
+        <argsstring>[17]</argsstring>
+        <name>cdate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="104" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1acd712a06b00249933092c83e0bee6561" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char mdate[17]</definition>
+        <argsstring>[17]</argsstring>
+        <name>mdate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="105" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ac3c57348cfd4a724eb12b15ac5c0759c" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char edate[17]</definition>
+        <argsstring>[17]</argsstring>
+        <name>edate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="106" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a38f14123ce557d8ee00ad08b15db0b83" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char efdate[17]</definition>
+        <argsstring>[17]</argsstring>
+        <name>efdate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="107" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a87b6275b2c86cfb8f12c6d33ac3b3394" prot="public" static="no" mutable="no">
+        <type>int8_t</type>
+        <definition>int8_t fileversion</definition>
+        <argsstring></argsstring>
+        <name>fileversion</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="108" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a619d439b6d2f397ef9e7c690dc9a9422" prot="public" static="no" mutable="no">
+        <type>int8_t</type>
+        <definition>int8_t unused0</definition>
+        <argsstring></argsstring>
+        <name>unused0</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="109" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a20d9a797c46021a1fddee15207dbf682" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char null2[512]</definition>
+        <argsstring>[512]</argsstring>
+        <name>null2</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="110" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a5827fd9642b17ceecd56a53b297aa9b8" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char reserved</definition>
+        <argsstring>[653]</argsstring>
+        <name>reserved</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="111" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="74" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1aa4106187b3ff93308ee98eaa09402586" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t exattr</definition>
+        <argsstring></argsstring>
+        <name>exattr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="75" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1aafa9f203f0abc59a4b08b3833f39b92c" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t lba</definition>
+        <argsstring></argsstring>
+        <name>lba</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="76" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t length</definition>
+        <argsstring></argsstring>
+        <name>length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ad217ba16d0b42c0e3c986247572e9ec8" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char date[7]</definition>
+        <argsstring>[7]</argsstring>
+        <name>date</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="78" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t flags</definition>
+        <argsstring></argsstring>
+        <name>flags</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="79" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1ac752f796c7827cddfc93b945c67bb54b" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t unitsize</definition>
+        <argsstring></argsstring>
+        <name>unitsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="80" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a90b488a6d4e2a35f363b5029ff562f28" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t gapsize</definition>
+        <argsstring></argsstring>
+        <name>gapsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="81" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="iso9660_8h_1a2da202efdeac0cce10457fe1cc6051db" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t idlen</definition>
+        <argsstring></argsstring>
+        <name>idlen</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="83" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="iso9660_8h_1a11b1fe8d934cf9dd11e83e3a093b68db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structiso9660__volume__descriptor" kindref="compound">iso9660_volume_descriptor</ref></type>
+        <definition>struct iso9660_volume_descriptor __attribute__</definition>
+        <argsstring>((packed)) iso9660_volume_descriptor_t</argsstring>
+        <name>__attribute__</name>
+        <param>
+          <type>(packed)</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="73" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_ISO9660_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_ISO9660_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_SECTOR_SIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2048</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="iso9660_8h_1a46d3c45c595db51113eb469111f8f47e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_PVD<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(0x10<sp/>*<sp/>ISO9660_SECTOR_SIZE)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="iso9660_8h_1adb9a0b19d37ea681279fbc2fd12e78e9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_ID<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&quot;CD001&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11" refid="iso9660_8h_1a686d0298670c8a960432fedea108a4ee" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_VERSION<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x01</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="iso9660_8h_1a4e26a4252a467603b5109045780288f9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_VOLDESC_BOOTRECORD<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="iso9660_8h_1a0a08c0312b4131176a26747f23c7298d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_VOLDESC_PRIMARY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="iso9660_8h_1ab73cb7a03004d39b3f8d63bd23278c32" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_VOLDESC_SUPPLEMENTARY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="iso9660_8h_1ae3fe9bc425a2c8ef674454fbfbff24a6" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_VOLDESC_PARTITION<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="iso9660_8h_1a2dc133b03085eb478dcb5453ae3c8a8f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_VOLDESC_TERMINATOR<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>255</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="iso9660_8h_1aa140ca7b27f39439a142a564aa47c06b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_VOLDESC_SIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ISO9660_SECTOR_SIZE</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="iso9660_8h_1a47c2721a8c2f9deb18f162d013378032" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_FLAGS_HIDDEN<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1<sp/>&lt;&lt;<sp/>0)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="iso9660_8h_1a3a1a377e9111d5e7b6a9f668943281b0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_FLAGS_DIRECTORY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1<sp/>&lt;&lt;<sp/>1)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="iso9660_8h_1aef272dce8d7ba456a460020f84a1f93f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_FLAGS_FILE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1<sp/>&lt;&lt;<sp/>2)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="iso9660_8h_1a2efe9dd2b4643cc3dce01afff69b956a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_FLAGS_EXTATTR<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1<sp/>&lt;&lt;<sp/>3)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="iso9660_8h_1a2c9a6a3d061d953ac5feef15702e6ba2" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_FLAGS_EXTFLAGS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1<sp/>&lt;&lt;<sp/>4)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="iso9660_8h_1abc9ef8ec75a1700690ab76b3075cd9d9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ISO9660_FLAGS_NOTLAST<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(1<sp/>&lt;&lt;<sp/>7)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="structiso9660__volume__descriptor" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structiso9660__volume__descriptor" kindref="compound">iso9660_volume_descriptor</ref><sp/>{</highlight></codeline>
+<codeline lineno="30" refid="structiso9660__volume__descriptor_1a4a6176bdba9bffc0ce8449819ea0607b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><ref refid="structiso9660__volume__descriptor_1a4a6176bdba9bffc0ce8449819ea0607b" kindref="member">type</ref>;</highlight></codeline>
+<codeline lineno="31" refid="structiso9660__volume__descriptor_1a8f6d3d0d6c09036a09ba6236fcadef24" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">[5];</highlight></codeline>
+<codeline lineno="32" refid="structiso9660__volume__descriptor_1a925c16dc5ba2782b30213c5bb5654f0d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><ref refid="structiso9660__volume__descriptor_1a925c16dc5ba2782b30213c5bb5654f0d" kindref="member">version</ref>;</highlight></codeline>
+<codeline lineno="33" refid="structiso9660__volume__descriptor_1aac66dd35d3b45b6e8eab687c935a912a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structiso9660__volume__descriptor_1aac66dd35d3b45b6e8eab687c935a912a" kindref="member">data</ref>[2041];</highlight></codeline>
+<codeline lineno="34"><highlight class="normal">}<sp/><ref refid="iso9660_8h_1a11b1fe8d934cf9dd11e83e3a093b68db" kindref="member">__attribute__</ref><sp/>((packed))<sp/>iso9660_volume_descriptor_t;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="structiso9660__pvd" refkind="compound"><highlight class="normal">typedef<sp/>struct<sp/><ref refid="structiso9660__pvd" kindref="compound">iso9660_pvd</ref><sp/>{</highlight></codeline>
+<codeline lineno="37" refid="structiso9660__pvd_1a6b7919d1112f6300190b5631fb043d05" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><ref refid="structiso9660__pvd_1a6b7919d1112f6300190b5631fb043d05" kindref="member">type</ref>;</highlight></codeline>
+<codeline lineno="38" refid="structiso9660__pvd_1a912fb8ad71f86bf868935349e74c540b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">id</highlight><highlight class="normal">[5];</highlight></codeline>
+<codeline lineno="39" refid="structiso9660__pvd_1ad4df80ddd241987b2e4ca9854fdb8780" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><ref refid="structiso9660__pvd_1ad4df80ddd241987b2e4ca9854fdb8780" kindref="member">version</ref>;</highlight></codeline>
+<codeline lineno="40" refid="structiso9660__pvd_1a6c4091535d70ca1acc3b577223849988" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><ref refid="structiso9660__pvd_1a6c4091535d70ca1acc3b577223849988" kindref="member">unused</ref>;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="42" refid="structiso9660__pvd_1a51ac299b0235e32b6a2cfe79694af834" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ab8e767113a48de5ab0a016ea7cf699b6" kindref="member">sysid</ref>[32];</highlight></codeline>
+<codeline lineno="43" refid="structiso9660__pvd_1a931f1452623da253d46c1fa9f8ce48e7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a2b7479a4e3f7892e26f5494b5fb31450" kindref="member">volid</ref>[32];</highlight></codeline>
+<codeline lineno="44" refid="structiso9660__pvd_1a78ee633ab6f48084aa516c057b174b2b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a0e06fd66e6b5d18c6e37304bfbc72b42" kindref="member">null0</ref>[8];</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="46" refid="structiso9660__pvd_1a3fe7f0b32c84d626dfe47f2795e43b28" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint64_t<sp/><ref refid="structiso9660__pvd_1a3fe7f0b32c84d626dfe47f2795e43b28" kindref="member">volsize</ref>;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="48" refid="structiso9660__pvd_1acd09bfa075780a123c973b0b0771f90e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a9cd7dbef0facac2c0fdaad0215a6993f" kindref="member">null1</ref>[32];</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50" refid="structiso9660__pvd_1a16db75aa8abe67319ec68ef69b8a54a3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structiso9660__pvd_1a16db75aa8abe67319ec68ef69b8a54a3" kindref="member">volsetsize</ref>;</highlight></codeline>
+<codeline lineno="51" refid="structiso9660__pvd_1a2f1450b3f7f1256e57962d92c495a0bd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structiso9660__pvd_1a2f1450b3f7f1256e57962d92c495a0bd" kindref="member">volnumber</ref>;</highlight></codeline>
+<codeline lineno="52" refid="structiso9660__pvd_1a4f37c15dff0a03459e69a2bae00cb059" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structiso9660__pvd_1a4f37c15dff0a03459e69a2bae00cb059" kindref="member">logical_blksize</ref>;</highlight></codeline>
+<codeline lineno="53" refid="structiso9660__pvd_1a65e75027b09f31834cced9292f9b8525" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint64_t<sp/><ref refid="structiso9660__pvd_1a65e75027b09f31834cced9292f9b8525" kindref="member">path_size</ref>;</highlight></codeline>
+<codeline lineno="54" refid="structiso9660__pvd_1aa5086117521602bf3f9b15770799fafd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structiso9660__pvd_1aa5086117521602bf3f9b15770799fafd" kindref="member">path_lba</ref>;</highlight></codeline>
+<codeline lineno="55" refid="structiso9660__pvd_1a3cc29bf3f73bf3fbd6b3ed28f5698b15" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structiso9660__pvd_1a3cc29bf3f73bf3fbd6b3ed28f5698b15" kindref="member">optpath_lba</ref>;</highlight></codeline>
+<codeline lineno="56" refid="structiso9660__pvd_1a765368e6bf4854e3c3407b5705fcea3f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structiso9660__pvd_1a765368e6bf4854e3c3407b5705fcea3f" kindref="member">path_lba_msb</ref>;</highlight></codeline>
+<codeline lineno="57" refid="structiso9660__pvd_1a55faa8733a116936c6360e7ae6f3b20a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structiso9660__pvd_1a55faa8733a116936c6360e7ae6f3b20a" kindref="member">optpath_lba_msb</ref>;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="59" refid="structiso9660__pvd_1a4c7b731634349ebdefb9de29b1022af7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ac27411f3d37b72468123427ccb542011" kindref="member">rootdir</ref>[34];</highlight></codeline>
+<codeline lineno="60" refid="structiso9660__pvd_1a9d462ff056bae911d25439cda11ad24e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae9cdf688def5af819e736cd2a11533f7" kindref="member">volsetid</ref>[128];</highlight></codeline>
+<codeline lineno="61" refid="structiso9660__pvd_1a2deec8116091f80a2e2c93035db3225f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a57b4122d9219d77a475ec2aaaa0c196d" kindref="member">pubid</ref>[128];</highlight></codeline>
+<codeline lineno="62" refid="structiso9660__pvd_1a0a29d27dbc0e5697c5d792402b0b997a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a461a2ff96f8a888c2182c388bc9b4355" kindref="member">dataid</ref>[128];</highlight></codeline>
+<codeline lineno="63" refid="structiso9660__pvd_1a2d316bdfc5fb447d4cc8fb0d8d13222d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a3ac8e8d02e75c9cefda147606975418f" kindref="member">appid</ref>[128];</highlight></codeline>
+<codeline lineno="64" refid="structiso9660__pvd_1ac823631d979880abef81ce27b040eb52" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a3104efb0fb2ca6c2e2d4ec755b184cca" kindref="member">copyid</ref>[38];</highlight></codeline>
+<codeline lineno="65" refid="structiso9660__pvd_1aa01a9944612a700271121507c9a46977" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a909223f1fddfd94b119bfac5e3543a10" kindref="member">abstractfileid</ref>[36];</highlight></codeline>
+<codeline lineno="66" refid="structiso9660__pvd_1a7f7dc75a65ede924ad50c9f687a38e72" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1aa0f3126ac69ede6984bec36f3078aec1" kindref="member">bibid</ref>[37];</highlight></codeline>
+<codeline lineno="67" refid="structiso9660__pvd_1a24c222ddd2ef04dda8576715e1f9af69" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a7a3d70624a24b670dca0a6c6eea3a997" kindref="member">cdate</ref>[17];</highlight></codeline>
+<codeline lineno="68" refid="structiso9660__pvd_1ac87f857ee6e7bc3d6b2910ef2b66ff9d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1acd712a06b00249933092c83e0bee6561" kindref="member">mdate</ref>[17];</highlight></codeline>
+<codeline lineno="69" refid="structiso9660__pvd_1ae6918d87e2f0b5c3ee804109f3231345" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ac3c57348cfd4a724eb12b15ac5c0759c" kindref="member">edate</ref>[17];</highlight></codeline>
+<codeline lineno="70" refid="structiso9660__pvd_1a28b756e60f3c81ddff6f6a218541e4b3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a38f14123ce557d8ee00ad08b15db0b83" kindref="member">efdate</ref>[17];</highlight></codeline>
+<codeline lineno="71" refid="structiso9660__pvd_1ac0af4a656dd263c7b4bac1666b759ffc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><ref refid="structiso9660__pvd_1ac0af4a656dd263c7b4bac1666b759ffc" kindref="member">fileversion</ref>;</highlight></codeline>
+<codeline lineno="72" refid="structiso9660__pvd_1a4084400e5a30ae71df0165f3a0e5e566" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>int8_t<sp/><ref refid="structiso9660__pvd_1a4084400e5a30ae71df0165f3a0e5e566" kindref="member">unused0</ref>;</highlight></codeline>
+<codeline lineno="73" refid="structiso9660__pvd_1a3fe9fe9cbdc559e8ccc9029f33e24899" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a20d9a797c46021a1fddee15207dbf682" kindref="member">null2</ref>[512];</highlight></codeline>
+<codeline lineno="74" refid="iso9660_8h_1a6def72cbab7e986d0ac5dc7291e1394a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a5827fd9642b17ceecd56a53b297aa9b8" kindref="member">reserved</ref>[653];</highlight></codeline>
+<codeline lineno="75" refid="iso9660_8h_1a6250618cd0f2f1fd5e27398c85114505" refkind="member"><highlight class="normal">}<sp/><ref refid="iso9660_8h_1a11b1fe8d934cf9dd11e83e3a093b68db" kindref="member">__attribute__</ref><sp/>((packed))<sp/>iso9660_pvd_t;</highlight></codeline>
+<codeline lineno="76" refid="iso9660_8h_1a0e5db10466cf0146cf761aaaafe090d0" refkind="member"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="iso9660_8h_1a1b319c7708ab2832a7c18a65b8a255e0" refkind="member"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78" refid="iso9660_8h_1ad217ba16d0b42c0e3c986247572e9ec8" refkind="member"><highlight class="normal">typedef<sp/>struct<sp/><ref refid="structiso9660__dir" kindref="compound">iso9660_dir</ref><sp/>{</highlight></codeline>
+<codeline lineno="79" refid="iso9660_8h_1ab8e767113a48de5ab0a016ea7cf699b6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="80" refid="iso9660_8h_1a2b7479a4e3f7892e26f5494b5fb31450" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="iso9660_8h_1aa4106187b3ff93308ee98eaa09402586" kindref="member">exattr</ref>;</highlight></codeline>
+<codeline lineno="81" refid="iso9660_8h_1a0e06fd66e6b5d18c6e37304bfbc72b42" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint64_t<sp/><ref refid="iso9660_8h_1aafa9f203f0abc59a4b08b3833f39b92c" kindref="member">lba</ref>;</highlight></codeline>
+<codeline lineno="82" refid="structiso9660__dir_1a8c14ed10aeaa7fa626b5d03b3902e083" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uint64_t<sp/><ref refid="structiso9660__dir_1a8c14ed10aeaa7fa626b5d03b3902e083" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="83" refid="iso9660_8h_1a235617b58403d22d4bc5db3fb50cbd29" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ad217ba16d0b42c0e3c986247572e9ec8" kindref="member">date</ref>[7];</highlight></codeline>
+<codeline lineno="84" refid="structiso9660__dir_1ab226f852b18e2b9dcddf013e3da07742" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structiso9660__dir_1ab226f852b18e2b9dcddf013e3da07742" kindref="member">flags</ref>;</highlight></codeline>
+<codeline lineno="85" refid="iso9660_8h_1a9cd7dbef0facac2c0fdaad0215a6993f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="iso9660_8h_1ac752f796c7827cddfc93b945c67bb54b" kindref="member">unitsize</ref>;</highlight></codeline>
+<codeline lineno="86" refid="structiso9660__dir_1a358fa7ee0501266c9006e7b037027ee6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structiso9660__dir_1a358fa7ee0501266c9006e7b037027ee6" kindref="member">gapsize</ref>;</highlight></codeline>
+<codeline lineno="87" refid="iso9660_8h_1ae3322c95eca6f054a776fb60fce636b3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="iso9660_8h_1a98f0ee0957a15520bcfc6bbce92c9160" kindref="member">volnumber</ref>;</highlight></codeline>
+<codeline lineno="88" refid="iso9660_8h_1a98f0ee0957a15520bcfc6bbce92c9160" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="iso9660_8h_1a2da202efdeac0cce10457fe1cc6051db" kindref="member">idlen</ref>;</highlight></codeline>
+<codeline lineno="89" refid="iso9660_8h_1a0e7274df7510929be162a941cb2f0e79" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a5827fd9642b17ceecd56a53b297aa9b8" kindref="member">reserved</ref>[0];</highlight></codeline>
+<codeline lineno="90" refid="iso9660_8h_1ad7fa99366995bb86dc6a3a299643c329" refkind="member"><highlight class="normal">}<sp/><ref refid="iso9660_8h_1a11b1fe8d934cf9dd11e83e3a093b68db" kindref="member">__attribute__</ref><sp/>((packed))<sp/>iso9660_dir_t;</highlight></codeline>
+<codeline lineno="91" refid="iso9660_8h_1af3f290d3b974c05653a86a04e51f64af" refkind="member"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="iso9660_8h_1aec6b44e04e2fdb7b36c8b62099a5f1e8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h"/>
+  </compounddef>
+</doxygen>

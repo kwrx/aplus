@@ -6,29 +6,29 @@
     <includes local="no">stdlib.h</includes>
     <includes local="no">signal.h</includes>
     <incdepgraph>
-      <node id="1923">
+      <node id="2121">
         <label>stdlib.h</label>
       </node>
-      <node id="1922">
+      <node id="2120">
         <label>errno.h</label>
       </node>
-      <node id="1921">
+      <node id="2119">
         <label>syscalls.c</label>
         <link refid="syscalls_8c"/>
-        <childnode refid="1922" relation="include">
+        <childnode refid="2120" relation="include">
         </childnode>
       </node>
-      <node id="1924">
+      <node id="2122">
         <label>signal.h</label>
       </node>
-      <node id="1920">
+      <node id="2118">
         <label>usr/src/libcrt0/src/crt0.c</label>
         <link refid="crt0.c"/>
-        <childnode refid="1921" relation="include">
+        <childnode refid="2119" relation="include">
         </childnode>
-        <childnode refid="1923" relation="include">
+        <childnode refid="2121" relation="include">
         </childnode>
-        <childnode refid="1924" relation="include">
+        <childnode refid="2122" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -199,12 +199,12 @@
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>__ctors_start;</highlight></codeline>
 <codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>__ctors_end;</highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(**<ref refid="structfs" kindref="compound">fs</ref>)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(**)<sp/>())<sp/>&amp;__ctors_start;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(**<ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref>)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(**)<sp/>())<sp/>&amp;__ctors_start;</highlight></codeline>
 <codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(**fe)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(**)<sp/>())<sp/>&amp;__ctors_end;</highlight></codeline>
 <codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(<ref refid="structfs" kindref="compound">fs</ref><sp/>&lt;<sp/>fe)<sp/>{</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(<ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref><sp/>&lt;<sp/>fe)<sp/>{</highlight></codeline>
 <codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*fs)<sp/>();</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structfs" kindref="compound">fs</ref>++;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref>++;</highlight></codeline>
 <codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="35"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="36"><highlight class="normal"></highlight></codeline>
@@ -212,12 +212,12 @@
 <codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>__dtors_start;</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>__dtors_end;</highlight></codeline>
 <codeline lineno="40"><highlight class="normal"></highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structfs" kindref="compound">fs</ref>)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*)<sp/>())<sp/>&amp;__dtors_start;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref>)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*)<sp/>())<sp/>&amp;__dtors_start;</highlight></codeline>
 <codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*fe)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*)<sp/>())<sp/>&amp;__dtors_end;</highlight></codeline>
 <codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(<ref refid="structfs" kindref="compound">fs</ref><sp/>&lt;<sp/>fe)<sp/>{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(<ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref><sp/>&lt;<sp/>fe)<sp/>{</highlight></codeline>
 <codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(*fs)<sp/>();</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structfs" kindref="compound">fs</ref>++;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref>++;</highlight></codeline>
 <codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="48"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="49"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>

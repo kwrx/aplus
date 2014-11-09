@@ -1,4 +1,4 @@
-\hypertarget{bufio_8c}{\section{Riferimenti per il file src/bufio.c}
+\hypertarget{bufio_8c}{\section{src/bufio.c File Reference}
 \label{bufio_8c}\index{src/bufio.\+c@{src/bufio.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -11,43 +11,42 @@
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
 {\ttfamily \#include $<$stdio.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{bufio_8c_a8553eb3703bbc2ac89010ccfaefe760f}{bufio\+\_\+init} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Buf\+I\+O initialization. \end{DoxyCompactList}\item 
 void \hyperlink{bufio_8c_a078ef38ac6ed6b044ebaf4f06dafdf46}{bufio\+\_\+free\+\_\+unused} ()
-\item 
+\begin{DoxyCompactList}\small\item\em Free al unused buffers. \end{DoxyCompactList}\item 
 \hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$ \hyperlink{bufio_8c_a788d5286cd4a5a1d4aed02c319aaf030}{bufio\+\_\+alloc} (size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
-\item 
+\begin{DoxyCompactList}\small\item\em Alloc new buffer for current task. \end{DoxyCompactList}\item 
 \hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$ \hyperlink{bufio_8c_a1258244c4b6ffe2885086facaa7a72b0}{bufio\+\_\+alloc\+\_\+raw} (void $\ast$raw, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
-\item 
+\begin{DoxyCompactList}\small\item\em Create new buffer from allocated data for current task. \end{DoxyCompactList}\item 
 void \hyperlink{bufio_8c_a2a92ff5d9427e2d5d88b4c95247b0f64}{bufio\+\_\+free} (\hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$buf)
-\item 
+\begin{DoxyCompactList}\small\item\em Free and remove buffer. \end{DoxyCompactList}\item 
 int \hyperlink{bufio_8c_a1fa3475774b4a60a2e8a1b10f202d7f8}{bufio\+\_\+seek} (\hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$buf, off\+\_\+t \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset}, int dir)
-\item 
+\begin{DoxyCompactList}\small\item\em Sets the position indicator associated with the bufio descriptor to a new position. \end{DoxyCompactList}\item 
 int \hyperlink{bufio_8c_a9fdd7357844210dfdb4fd10f6868bbf3}{bufio\+\_\+tell} (\hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$buf)
-\item 
+\begin{DoxyCompactList}\small\item\em Returns the current value of the position indicator of the stream.~\newline
+. \end{DoxyCompactList}\item 
 void \hyperlink{bufio_8c_ac3fb155871895c9d49c8bcb2290e1afa}{bufio\+\_\+clear} (\hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$buf)
-\item 
+\begin{DoxyCompactList}\small\item\em Clear entire stream of the buffer descriptor. \end{DoxyCompactList}\item 
 int \hyperlink{bufio_8c_a75016850df49d95e52a5508d22ff79e8}{bufio\+\_\+read} (\hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$buf, void $\ast$ptr, size\+\_\+t len)
-\item 
+\begin{DoxyCompactList}\small\item\em This function shall attempt to read nbyte bytes from the stream associated with the bufio descriptor, buf, into the buffer pointed to by ptr. \end{DoxyCompactList}\item 
 int \hyperlink{bufio_8c_a8db791aa56b168544d7666a723af32de}{bufio\+\_\+write} (\hyperlink{bufio_8h_aed33c7684664724ce2d39fe264246e35}{bufio\+\_\+t} $\ast$buf, void $\ast$ptr, size\+\_\+t len)
-\item 
-\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{bufio_8c_ab4a60d54cf7a99daf16f558781a99334}{bufio\+\_\+find\+\_\+by\+\_\+type} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type})
-\end{DoxyCompactItemize}
-\subsection*{Variabili}
+\begin{DoxyCompactList}\small\item\em This function shall attempt to write nbyte bytes into the stream associated with the bufio descriptor, buf, from the buffer pointed to by ptr. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\+\_\+buffers}
-\item 
+\begin{DoxyCompactList}\small\item\em List of allocated buffers. \end{DoxyCompactList}\item 
 static uint64\+\_\+t \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\+\_\+length}
-\item 
+\begin{DoxyCompactList}\small\item\em Allocated R\+A\+M of all buffers. \end{DoxyCompactList}\item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{bufio_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{bufio_8c_a788d5286cd4a5a1d4aed02c319aaf030}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+alloc@{bufio\+\_\+alloc}}
 \index{bufio\+\_\+alloc@{bufio\+\_\+alloc}!bufio.\+c@{bufio.\+c}}
 \subsubsection[{bufio\+\_\+alloc}]{\setlength{\rightskip}{0pt plus 5cm}{\bf bufio\+\_\+t}$\ast$ bufio\+\_\+alloc (
@@ -57,36 +56,48 @@ static uint64\+\_\+t \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buff
 )}}\label{bufio_8c_a788d5286cd4a5a1d4aed02c319aaf030}
 
 
-Definizione alla linea 45 del file bufio.\+c.
+Alloc new buffer for current task. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Size in Bytes of data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bufio descriptor. 
+\end{DoxyReturn}
+
+
+Definition at line 63 of file bufio.\+c.
 
 
 
-Referenzia buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), lock, bufio\+::offset, bufio\+::raw, bufio\+::size, size, bufio\+::task, bufio\+::type, e unlock.
+References buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), lock, bufio\+::offset, bufio\+::raw, bufio\+::size, size, bufio\+::task, bufio\+::type, and unlock.
 
 
 \begin{DoxyCode}
-45                                   \{
-46     \textcolor{keywordtype}{void}* addr = (\textcolor{keywordtype}{void}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-47     \textcolor{keywordflow}{if}(!addr)
-48         \textcolor{keywordflow}{return} 0;
-49         
-50     \hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}(); 
-51     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} += \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-52 
-53 
-54     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-55     buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} = addr;
-56     buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} = \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-57     buf->\hyperlink{structbufio_ad5542b6d1da521611e9d5790a4a9e651}{type} = 0;
-58     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = (off\_t) 0;
-59     buf->\hyperlink{structbufio_a27683bf934579d5f42529dcea191db50}{task} = \hyperlink{bufio_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
-60 
-61 
-62     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) buf);
-63 
-64     \hyperlink{spinlock_8h_a5f543d9add4a39382826f0d7ff9e94d8}{unlock}();
-65     \textcolor{keywordflow}{return} buf;
-66 \}
+63                                   \{
+64     \textcolor{keywordtype}{void}* addr = (\textcolor{keywordtype}{void}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+65     \textcolor{keywordflow}{if}(!addr)
+66         \textcolor{keywordflow}{return} 0;
+67         
+68     \hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}(); 
+69     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} += \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+70 
+71 
+72     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+73     buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} = addr;
+74     buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} = \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+75     buf->\hyperlink{structbufio_ad5542b6d1da521611e9d5790a4a9e651}{type} = 0;
+76     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = (off\_t) 0;
+77     buf->\hyperlink{structbufio_a27683bf934579d5f42529dcea191db50}{task} = \hyperlink{bufio_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
+78 
+79 
+80     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) buf);
+81 
+82     \hyperlink{spinlock_8h_a5f543d9add4a39382826f0d7ff9e94d8}{unlock}();
+83     \textcolor{keywordflow}{return} buf;
+84 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a1258244c4b6ffe2885086facaa7a72b0}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+alloc\+\_\+raw@{bufio\+\_\+alloc\+\_\+raw}}
 \index{bufio\+\_\+alloc\+\_\+raw@{bufio\+\_\+alloc\+\_\+raw}!bufio.\+c@{bufio.\+c}}
@@ -98,35 +109,49 @@ Referenzia buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), l
 )}}\label{bufio_8c_a1258244c4b6ffe2885086facaa7a72b0}
 
 
-Definizione alla linea 68 del file bufio.\+c.
+Create new buffer from allocated data for current task. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw} & Buffer allocated address. \\
+\hline
+{\em size} & Size in Bytes of data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bufio descriptor. 
+\end{DoxyReturn}
+
+
+Definition at line 92 of file bufio.\+c.
 
 
 
-Referenzia buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), lock, bufio\+::offset, bufio\+::raw, bufio\+::size, size, bufio\+::task, bufio\+::type, e unlock.
+References buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), lock, bufio\+::offset, bufio\+::raw, bufio\+::size, size, bufio\+::task, bufio\+::type, and unlock.
 
 
 \begin{DoxyCode}
-68                                                  \{
-69     \textcolor{keywordflow}{if}(!raw)
-70         \textcolor{keywordflow}{return} 0;
-71 
-72     \hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}(); 
-73 
-74     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} += \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-75 
-76     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-77     buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} = raw;
-78     buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} = \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-79     buf->\hyperlink{structbufio_ad5542b6d1da521611e9d5790a4a9e651}{type} = 0;
-80     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = (off\_t) 0;
-81     buf->\hyperlink{structbufio_a27683bf934579d5f42529dcea191db50}{task} = \hyperlink{bufio_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
-82     
-83     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) buf);
-84 
-85     \hyperlink{spinlock_8h_a5f543d9add4a39382826f0d7ff9e94d8}{unlock}();
-86     
-87     \textcolor{keywordflow}{return} buf;
-88 \}
+92                                                  \{
+93     \textcolor{keywordflow}{if}(!raw)
+94         \textcolor{keywordflow}{return} 0;
+95 
+96     \hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}(); 
+97 
+98     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} += \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+99 
+100     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+101     buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} = raw;
+102     buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} = \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+103     buf->\hyperlink{structbufio_ad5542b6d1da521611e9d5790a4a9e651}{type} = 0;
+104     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = (off\_t) 0;
+105     buf->\hyperlink{structbufio_a27683bf934579d5f42529dcea191db50}{task} = \hyperlink{bufio_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task};
+106     
+107     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) buf);
+108 
+109     \hyperlink{spinlock_8h_a5f543d9add4a39382826f0d7ff9e94d8}{unlock}();
+110     
+111     \textcolor{keywordflow}{return} buf;
+112 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_ac3fb155871895c9d49c8bcb2290e1afa}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+clear@{bufio\+\_\+clear}}
 \index{bufio\+\_\+clear@{bufio\+\_\+clear}!bufio.\+c@{bufio.\+c}}
@@ -137,50 +162,28 @@ Referenzia buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), l
 )}}\label{bufio_8c_ac3fb155871895c9d49c8bcb2290e1afa}
 
 
-Definizione alla linea 135 del file bufio.\+c.
+Clear entire stream of the buffer descriptor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Pointer to a bufio descriptor. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 186 of file bufio.\+c.
 
 
 
-Referenzia bufio\+::lock, bufio\+::raw, bufio\+::size, spinlock\+\_\+lock(), e spinlock\+\_\+unlock().
-
-
-\begin{DoxyCode}
-135                                \{
-136     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
-137     memset(buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw}, 0, buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size});
-138     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
-139 \}
-\end{DoxyCode}
-\hypertarget{bufio_8c_ab4a60d54cf7a99daf16f558781a99334}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+find\+\_\+by\+\_\+type@{bufio\+\_\+find\+\_\+by\+\_\+type}}
-\index{bufio\+\_\+find\+\_\+by\+\_\+type@{bufio\+\_\+find\+\_\+by\+\_\+type}!bufio.\+c@{bufio.\+c}}
-\subsubsection[{bufio\+\_\+find\+\_\+by\+\_\+type}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ bufio\+\_\+find\+\_\+by\+\_\+type (
-\begin{DoxyParamCaption}
-\item[{{\bf uint32\+\_\+t}}]{type}
-\end{DoxyParamCaption}
-)}}\label{bufio_8c_ab4a60d54cf7a99daf16f558781a99334}
-
-
-Definizione alla linea 168 del file bufio.\+c.
-
-
-
-Referenzia list\+\_\+add(), list\+\_\+foreach, list\+\_\+init, bufio\+::type, e value.
+References bufio\+::lock, bufio\+::raw, bufio\+::size, spinlock\+\_\+lock(), and spinlock\+\_\+unlock().
 
 
 \begin{DoxyCode}
-168                                           \{
-169     \hyperlink{structlist}{list\_t}* tmp;
-170     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(tmp);
-171     
-172     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers}) \{
-173         \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
-174 
-175         \textcolor{keywordflow}{if}(buf->\hyperlink{structbufio_ad5542b6d1da521611e9d5790a4a9e651}{type} == \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type})
-176             \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(tmp, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) buf);
-177     \}
-178     
-179     \textcolor{keywordflow}{return} tmp;
-180 \}
+186                                \{
+187     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
+188     memset(buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw}, 0, buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size});
+189     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
+190 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a2a92ff5d9427e2d5d88b4c95247b0f64}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+free@{bufio\+\_\+free}}
 \index{bufio\+\_\+free@{bufio\+\_\+free}!bufio.\+c@{bufio.\+c}}
@@ -191,26 +194,35 @@ Referenzia list\+\_\+add(), list\+\_\+foreach, list\+\_\+init, bufio\+::type, e 
 )}}\label{bufio_8c_a2a92ff5d9427e2d5d88b4c95247b0f64}
 
 
-Definizione alla linea 90 del file bufio.\+c.
+Free and remove buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & bufio descriptor. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 118 of file bufio.\+c.
 
 
 
-Referenzia buffers\+\_\+length, kfree(), list\+\_\+remove(), lock, bufio\+::raw, bufio\+::size, e unlock.
+References buffers\+\_\+length, kfree(), list\+\_\+remove(), lock, bufio\+::raw, bufio\+::size, and unlock.
 
 
 \begin{DoxyCode}
-90                               \{
-91     \hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}();
-92     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} -= buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size};
-93     
-94     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw});
-95     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(buf);
-96     
-97     \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) buf);
-98     
-99     
-100     \hyperlink{spinlock_8h_a5f543d9add4a39382826f0d7ff9e94d8}{unlock}();
-101 \}
+118                               \{
+119     \hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock}();
+120     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} -= buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size};
+121     
+122     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw});
+123     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(buf);
+124     
+125     \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) buf);
+126     
+127     
+128     \hyperlink{spinlock_8h_a5f543d9add4a39382826f0d7ff9e94d8}{unlock}();
+129 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a078ef38ac6ed6b044ebaf4f06dafdf46}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+free\+\_\+unused@{bufio\+\_\+free\+\_\+unused}}
 \index{bufio\+\_\+free\+\_\+unused@{bufio\+\_\+free\+\_\+unused}!bufio.\+c@{bufio.\+c}}
@@ -221,29 +233,33 @@ Referenzia buffers\+\_\+length, kfree(), list\+\_\+remove(), lock, bufio\+::raw,
 )}}\label{bufio_8c_a078ef38ac6ed6b044ebaf4f06dafdf46}
 
 
-Definizione alla linea 28 del file bufio.\+c.
+Free al unused buffers. 
 
 
 
-Referenzia list\+\_\+clone(), list\+\_\+destroy, list\+\_\+foreach, list\+\_\+init, e value.
+Definition at line 41 of file bufio.\+c.
+
+
+
+References list\+\_\+clone(), list\+\_\+destroy, list\+\_\+foreach, list\+\_\+init, and value.
 
 
 \begin{DoxyCode}
-28                          \{
-29 
-30     \hyperlink{structlist}{list\_t}* tmp;
-31     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(tmp);
-32     \hyperlink{list_8h_ad29245eda34d4cdac400323a1bd63cdd}{list\_clone}(tmp, \hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers});
-33     
-34     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, tmp) \{
-35         \textcolor{comment}{//bufio\_t* value = (bufio\_t*) value;}
-36         
-37         \textcolor{comment}{//if(value->task->state == TASK\_STATE\_DEAD)}
-38         \textcolor{comment}{//  bufio\_free(value);}
-39     \}
-40     
-41     \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\_destroy}(tmp);
-42 \}
+41                          \{
+42 
+43     \hyperlink{structlist}{list\_t}* tmp;
+44     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(tmp);
+45     \hyperlink{list_8h_ad29245eda34d4cdac400323a1bd63cdd}{list\_clone}(tmp, \hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers});
+46     
+47     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, tmp) \{
+48         \textcolor{comment}{//bufio\_t* value = (bufio\_t*) value;}
+49         
+50         \textcolor{comment}{//if(value->task->state == TASK\_STATE\_DEAD)}
+51         \textcolor{comment}{//  bufio\_free(value);}
+52     \}
+53     
+54     \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\_destroy}(tmp);
+55 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a8553eb3703bbc2ac89010ccfaefe760f}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+init@{bufio\+\_\+init}}
 \index{bufio\+\_\+init@{bufio\+\_\+init}!bufio.\+c@{bufio.\+c}}
@@ -254,19 +270,23 @@ Referenzia list\+\_\+clone(), list\+\_\+destroy, list\+\_\+foreach, list\+\_\+in
 )}}\label{bufio_8c_a8553eb3703bbc2ac89010ccfaefe760f}
 
 
-Definizione alla linea 20 del file bufio.\+c.
+Buf\+I\+O initialization. 
 
 
 
-Referenzia list\+\_\+init.
+Definition at line 31 of file bufio.\+c.
+
+
+
+References list\+\_\+init.
 
 
 \begin{DoxyCode}
-20                  \{
-21     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers});
-22     
-23     \textcolor{keywordflow}{return} 0;
-24 \}
+31                  \{
+32     \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{bufio_8c_a5e9324428544e1da920f5be30824d350}{list\_buffers});
+33     
+34     \textcolor{keywordflow}{return} 0;
+35 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a75016850df49d95e52a5508d22ff79e8}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+read@{bufio\+\_\+read}}
 \index{bufio\+\_\+read@{bufio\+\_\+read}!bufio.\+c@{bufio.\+c}}
@@ -279,27 +299,44 @@ Referenzia list\+\_\+init.
 )}}\label{bufio_8c_a75016850df49d95e52a5508d22ff79e8}
 
 
-Definizione alla linea 141 del file bufio.\+c.
+This function shall attempt to read nbyte bytes from the stream associated with the bufio descriptor, buf, into the buffer pointed to by ptr. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Pointer to a bufio descriptor. \\
+\hline
+{\em ptr} & Pointer to output buffer. \\
+\hline
+{\em len} & Size of data to read. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Upon successful completion, shall return a non-\/negative integer indicating the number of bytes actually read.~\newline
+ Otherwise, the functions shall return -\/1 and set errno to indicate the error. 
+\end{DoxyReturn}
+
+
+Definition at line 203 of file bufio.\+c.
 
 
 
-Referenzia bufio\+::lock, bufio\+::offset, bufio\+::raw, bufio\+::size, spinlock\+\_\+lock(), e spinlock\+\_\+unlock().
+References bufio\+::lock, bufio\+::offset, bufio\+::raw, bufio\+::size, spinlock\+\_\+lock(), and spinlock\+\_\+unlock().
 
 
 \begin{DoxyCode}
-141                                                     \{       
-142     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
-143     
-144     len = (len + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size}) ? (buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} - buf->
+203                                                     \{       
+204     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
+205     
+206     len = (len + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size}) ? (buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} - buf->
       \hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}) : len;
-145     memcpy(ptr, (\textcolor{keywordtype}{void}*) ((off\_t) buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}), len);
-146     
-147     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} += (off\_t) len;
-148     
-149     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
-150     
-151     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{int}) len;
-152 \}
+207     memcpy(ptr, (\textcolor{keywordtype}{void}*) ((off\_t) buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}), len);
+208     
+209     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} += (off\_t) len;
+210     
+211     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
+212     
+213     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{int}) len;
+214 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a1fa3475774b4a60a2e8a1b10f202d7f8}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+seek@{bufio\+\_\+seek}}
 \index{bufio\+\_\+seek@{bufio\+\_\+seek}!bufio.\+c@{bufio.\+c}}
@@ -312,41 +349,66 @@ Referenzia bufio\+::lock, bufio\+::offset, bufio\+::raw, bufio\+::size, spinlock
 )}}\label{bufio_8c_a1fa3475774b4a60a2e8a1b10f202d7f8}
 
 
-Definizione alla linea 103 del file bufio.\+c.
+Sets the position indicator associated with the bufio descriptor to a new position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Pointer to a bufio descriptor. \\
+\hline
+{\em offset} & Number of bytes to offset from dir. \\
+\hline
+{\em dir} & Position used as reference for the offset~\newline
+
+\begin{DoxyItemize}
+\item S\+E\+E\+K\+\_\+\+S\+E\+T\+: Beginning of stream.~\newline
+
+\item S\+E\+E\+K\+\_\+\+C\+U\+R\+: Current position of stream.~\newline
+
+\item S\+E\+E\+K\+\_\+\+E\+N\+D\+: End of stream.~\newline
+
+\end{DoxyItemize}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If successful return current position of stream, otherwise, it returns non-\/zero value. 
+\end{DoxyReturn}
+
+
+Definition at line 142 of file bufio.\+c.
 
 
 
-Referenzia bufio\+::offset, offset, e bufio\+::size.
+References bufio\+::offset, offset, and bufio\+::size.
 
 
 \begin{DoxyCode}
-103                                                     \{
-104 
-105     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset} > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size})
-106         \textcolor{keywordflow}{return} -1;
-107         
-108     \textcolor{keywordflow}{if}(dir == SEEK\_CUR && (\hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset} + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}) > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size})
-109         \textcolor{keywordflow}{return} -1;
-110 
-111     \textcolor{keywordflow}{switch}(dir) \{
-112         \textcolor{keywordflow}{case} SEEK\_SET:
-113             buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
-114             \textcolor{keywordflow}{break};
-115             
-116         \textcolor{keywordflow}{case} SEEK\_END:
-117             buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} - \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
-118             \textcolor{keywordflow}{break};
-119             
-120         \textcolor{keywordflow}{case} SEEK\_CUR:
-121             buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} += \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
-122             \textcolor{keywordflow}{break};
-123             
-124         \textcolor{keywordflow}{default}:
-125             \textcolor{keywordflow}{return} -1;
-126     \}
-127     
-128     \textcolor{keywordflow}{return} buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset};
-129 \}
+142                                                     \{
+143 
+144     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset} > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size})
+145         \textcolor{keywordflow}{return} -1;
+146         
+147     \textcolor{keywordflow}{if}(dir == SEEK\_CUR && (\hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset} + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}) > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size})
+148         \textcolor{keywordflow}{return} -1;
+149 
+150     \textcolor{keywordflow}{switch}(dir) \{
+151         \textcolor{keywordflow}{case} SEEK\_SET:
+152             buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
+153             \textcolor{keywordflow}{break};
+154             
+155         \textcolor{keywordflow}{case} SEEK\_END:
+156             buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} = buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} - \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
+157             \textcolor{keywordflow}{break};
+158             
+159         \textcolor{keywordflow}{case} SEEK\_CUR:
+160             buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} += \hyperlink{ipv4_8h_ac681806181c80437cfab37335f62ff39}{offset};
+161             \textcolor{keywordflow}{break};
+162             
+163         \textcolor{keywordflow}{default}:
+164             \textcolor{keywordflow}{return} -1;
+165     \}
+166     
+167     \textcolor{keywordflow}{return} buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset};
+168 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a9fdd7357844210dfdb4fd10f6868bbf3}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+tell@{bufio\+\_\+tell}}
 \index{bufio\+\_\+tell@{bufio\+\_\+tell}!bufio.\+c@{bufio.\+c}}
@@ -357,17 +419,31 @@ Referenzia bufio\+::offset, offset, e bufio\+::size.
 )}}\label{bufio_8c_a9fdd7357844210dfdb4fd10f6868bbf3}
 
 
-Definizione alla linea 131 del file bufio.\+c.
+Returns the current value of the position indicator of the stream.~\newline
+. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Pointer to a bufio descriptor. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+On success, the current value of the position indicator is returned.~\newline
+ On failure, -\/1\+L is returned. 
+\end{DoxyReturn}
+
+
+Definition at line 177 of file bufio.\+c.
 
 
 
-Referenzia bufio\+\_\+seek().
+References bufio\+\_\+seek().
 
 
 \begin{DoxyCode}
-131                              \{
-132     \textcolor{keywordflow}{return} \hyperlink{bufio_8c_a1fa3475774b4a60a2e8a1b10f202d7f8}{bufio\_seek}(buf, 0, SEEK\_CUR);
-133 \}
+177                              \{
+178     \textcolor{keywordflow}{return} \hyperlink{bufio_8c_a1fa3475774b4a60a2e8a1b10f202d7f8}{bufio\_seek}(buf, 0, SEEK\_CUR);
+179 \}
 \end{DoxyCode}
 \hypertarget{bufio_8c_a8db791aa56b168544d7666a723af32de}{\index{bufio.\+c@{bufio.\+c}!bufio\+\_\+write@{bufio\+\_\+write}}
 \index{bufio\+\_\+write@{bufio\+\_\+write}!bufio.\+c@{bufio.\+c}}
@@ -380,50 +456,79 @@ Referenzia bufio\+\_\+seek().
 )}}\label{bufio_8c_a8db791aa56b168544d7666a723af32de}
 
 
-Definizione alla linea 154 del file bufio.\+c.
+This function shall attempt to write nbyte bytes into the stream associated with the bufio descriptor, buf, from the buffer pointed to by ptr. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Pointer to a bufio descriptor. \\
+\hline
+{\em ptr} & Pointer to input buffer. \\
+\hline
+{\em len} & Size of data to write. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Upon successful completion, shall return a non-\/negative integer indicating the number of bytes actually write.~\newline
+ Otherwise, the functions shall return -\/1 and set errno to indicate the error. 
+\end{DoxyReturn}
+
+
+Definition at line 227 of file bufio.\+c.
 
 
 
-Referenzia bufio\+::lock, bufio\+::offset, bufio\+::raw, bufio\+::size, spinlock\+\_\+lock(), e spinlock\+\_\+unlock().
+References bufio\+::lock, bufio\+::offset, bufio\+::raw, bufio\+::size, spinlock\+\_\+lock(), and spinlock\+\_\+unlock().
 
 
 \begin{DoxyCode}
-154                                                      \{      
-155     
-156     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
-157     
-158     len = (len + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size}) ? (buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} - buf->
+227                                                      \{      
+228     
+229     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
+230     
+231     len = (len + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} > buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size}) ? (buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} - buf->
       \hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}) : len;
-159     memcpy((\textcolor{keywordtype}{void}*) ((off\_t) buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}), ptr, len);
-160     
-161     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} += (off\_t) len;
-162     
-163     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
-164     
-165     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{int}) len;
-166 \}
+232     memcpy((\textcolor{keywordtype}{void}*) ((off\_t) buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} + buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset}), ptr, len);
+233     
+234     buf->\hyperlink{structbufio_a0f3f80e49eba1806c7468d2283083ea0}{offset} += (off\_t) len;
+235     
+236     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&buf->\hyperlink{structbufio_acaf54fa3069ec8ccc9362b1527a1a72c}{lock});
+237     
+238     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{int}) len;
+239 \}
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{\index{bufio.\+c@{bufio.\+c}!buffers\+\_\+length@{buffers\+\_\+length}}
 \index{buffers\+\_\+length@{buffers\+\_\+length}!bufio.\+c@{bufio.\+c}}
 \subsubsection[{buffers\+\_\+length}]{\setlength{\rightskip}{0pt plus 5cm}uint64\+\_\+t buffers\+\_\+length\hspace{0.3cm}{\ttfamily [static]}}}\label{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}
 
 
-Definizione alla linea 16 del file bufio.\+c.
+Allocated R\+A\+M of all buffers. 
+
+
+
+Definition at line 23 of file bufio.\+c.
 
 \hypertarget{bufio_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{bufio.\+c@{bufio.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!bufio.\+c@{bufio.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{bufio_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 
 \hypertarget{bufio_8c_a5e9324428544e1da920f5be30824d350}{\index{bufio.\+c@{bufio.\+c}!list\+\_\+buffers@{list\+\_\+buffers}}
 \index{list\+\_\+buffers@{list\+\_\+buffers}!bufio.\+c@{bufio.\+c}}
 \subsubsection[{list\+\_\+buffers}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ list\+\_\+buffers\hspace{0.3cm}{\ttfamily [static]}}}\label{bufio_8c_a5e9324428544e1da920f5be30824d350}
 
 
-Definizione alla linea 15 del file bufio.\+c.
+List of allocated buffers. 
+
+
+
+Definition at line 18 of file bufio.\+c.
 

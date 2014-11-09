@@ -1,4 +1,4 @@
-.TH "src/arch/task.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/task.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -19,7 +19,7 @@ src/arch/task.c \-
 \fC#include <aplus/fs\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -41,18 +41,21 @@ src/arch/task.c \-
 .RI "int \fBtask_init\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .ti -1c
 .RI "\fBtask_t\fP * \fBkernel_task\fP"
 .br
+.RI "\fIKernel task address\&. \fP"
 .ti -1c
 .RI "\fBlist_t\fP * \fBtask_queue\fP"
 .br
+.RI "\fIList of all Task\&. \fP"
 .ti -1c
 .RI "\fBuint32_t\fP * \fBkernel_vmm\fP"
 .br
@@ -63,16 +66,16 @@ src/arch/task.c \-
 .RI "volatile \fBinode_t\fP * \fBvfs_root\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "__asm__ ('\&.global \fBtask_context_switch\fP \\n''task_context_switch: \\n'' push \fBebp\fP \\n'' movebp, esp\\n''pushf\\n''push edx\\n''push eax\\n''push ecx\\n''push ebx\\n''push esi\\n''push edi\\n''moveax, [ebp + 8] \\n''movedx, [ebp + 12] \\n''mov[eax], esp\\n''movesp, [edx] \\n''pop edi\\n''pop esi\\n''pop ebx\\n''pop ecx\\n''pop eax\\n''pop edx\\n''popf\\n''pop ebp\\n''sti\\n''ret\\n')"
 
 .SS "\fBtask_t\fP* task_clone (void *entry, void *arg, void *stack)"
 
 .PP
-Definizione alla linea 115 del file task\&.c\&.
+Definition at line 115 of file task\&.c\&.
 .PP
-Referenzia task::clock, task::context, task::cr3, current_task, task::cwd, task::env, task::exe, task::fd, task::gid, task::image, kmalloc(), task::length, list_add(), mm_align(), task::parent, task::pid, task::priority, task::ptr, schedule_nextpid(), task::signal_handler, task::signal_sig, task::stack, task::state, TASK_MAX_FD, TASK_STACKSIZE, TASK_STATE_ALIVE, task::uid, uint32_t, e task::vaddr\&.
+References task::clock, task::context, task::cr3, current_task, task::cwd, task::env, task::exe, task::fd, task::gid, task::image, kmalloc(), task::length, list_add(), mm_align(), task::parent, task::pid, task::priority, task::ptr, schedule_nextpid(), task::signal_handler, task::signal_sig, task::stack, task::state, TASK_MAX_FD, TASK_STACKSIZE, TASK_STATE_ALIVE, task::uid, uint32_t, and task::vaddr\&.
 .PP
 .nf
 115                                                         {
@@ -129,9 +132,9 @@ Referenzia task::clock, task::context, task::cr3, current_task, task::cwd, task:
 .SS "\fBtask_t\fP* task_fork ()"
 
 .PP
-Definizione alla linea 49 del file task\&.c\&.
+Definition at line 49 of file task\&.c\&.
 .PP
-Referenzia task::clock, task::context, task::cr3, current_task, task::cwd, task::env, task::exe, task::fd, task::gid, task::image, kmalloc(), task::length, list_add(), mm_align(), mm_paddr(), task::parent, task::pid, task::priority, task::ptr, schedule_nextpid(), task::signal_handler, task::signal_sig, task::stack, task::state, TASK_MAX_FD, TASK_STACKSIZE, TASK_STATE_ALIVE, task::uid, uint32_t, task::vaddr, vmm_create(), VMM_FLAGS_DEFAULT, VMM_FLAGS_USER, vmm_map(), vmm_mapkernel(), e vmm_umap()\&.
+References task::clock, task::context, task::cr3, current_task, task::cwd, task::env, task::exe, task::fd, task::gid, task::image, kmalloc(), task::length, list_add(), mm_align(), mm_paddr(), task::parent, task::pid, task::priority, task::ptr, schedule_nextpid(), task::signal_handler, task::signal_sig, task::stack, task::state, TASK_MAX_FD, TASK_STACKSIZE, TASK_STATE_ALIVE, task::uid, uint32_t, task::vaddr, vmm_create(), VMM_FLAGS_DEFAULT, VMM_FLAGS_USER, vmm_map(), vmm_mapkernel(), and vmm_umap()\&.
 .PP
 .nf
 49                     {
@@ -201,9 +204,9 @@ Referenzia task::clock, task::context, task::cr3, current_task, task::cwd, task:
 .SS "int task_init ()"
 
 .PP
-Definizione alla linea 179 del file task\&.c\&.
+Definition at line 179 of file task\&.c\&.
 .PP
-Referenzia task::context, task::cr3, task::cwd, task::env, task::gid, kernel_vmm, kmalloc(), list_add(), task::parent, task::pid, task::priority, schedule_nextpid(), task::stack, task::state, TASK_PRIORITY_REGULAR, TASK_STATE_ALIVE, task_switch(), task::uid, e uint32_t\&.
+References task::context, task::cr3, task::cwd, task::env, task::gid, kernel_vmm, kmalloc(), list_add(), task::parent, task::pid, task::priority, schedule_nextpid(), task::stack, task::state, TASK_PRIORITY_REGULAR, TASK_STATE_ALIVE, task_switch(), task::uid, and uint32_t\&.
 .PP
 .nf
 179                 {
@@ -239,9 +242,9 @@ Referenzia task::context, task::cr3, task::cwd, task::env, task::gid, kernel_vmm
 .SS "void task_switch (\fBtask_t\fP *newtask)"
 
 .PP
-Definizione alla linea 165 del file task\&.c\&.
+Definition at line 165 of file task\&.c\&.
 .PP
-Referenzia task::context, task::cr3, current_task, task::env, task_context_switch(), e vmm_switch()\&.
+References task::context, task::cr3, current_task, task::env, task_context_switch(), and vmm_switch()\&.
 .PP
 .nf
 165                                   {
@@ -256,32 +259,38 @@ Referenzia task::context, task::cr3, current_task, task::env, task_context_switc
 174     task_context_switch(&old->context\&.env, &current_task->context\&.env);
 175 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
 .SS "\fBuint32_t\fP* current_vmm"
 
 .PP
-Definizione alla linea 46 del file paging\&.c\&.
+Definition at line 46 of file paging\&.c\&.
 .SS "\fBtask_t\fP* kernel_task"
 
 .PP
-Definizione alla linea 34 del file sched\&.c\&.
+Kernel task address\&. 
+.PP
+Definition at line 40 of file sched\&.c\&.
 .SS "\fBuint32_t\fP* kernel_vmm"
 
 .PP
-Definizione alla linea 47 del file paging\&.c\&.
+Definition at line 47 of file paging\&.c\&.
 .SS "\fBlist_t\fP* task_queue"
 
 .PP
-Definizione alla linea 36 del file sched\&.c\&.
+List of all Task\&. 
+.PP
+Definition at line 46 of file sched\&.c\&.
 .SS "volatile \fBinode_t\fP* vfs_root"
 
 .PP
-Definizione alla linea 19 del file vfs\&.c\&.
-.SH "Autore"
+Definition at line 19 of file vfs\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

@@ -1,0 +1,106 @@
+.TH "src/fs/iso9660/iso9660_readdir.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/fs/iso9660/iso9660_readdir.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include 'iso9660\&.h'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "struct \fBdirent\fP * \fBiso9660_readdir\fP (\fBinode_t\fP *ino, int index)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "struct \fBdirent\fP* iso9660_readdir (\fBinode_t\fP *ino, intindex)"
+
+.PP
+Definition at line 15 of file iso9660_readdir\&.c\&.
+.PP
+References dirent::d_ino, dirent::d_name, inode::dev, devfs_getdevice(), fs_read(), iso9660_checkname(), iso9660_getlsb32(), ISO9660_SECTOR_SIZE, kfree(), kmalloc(), inode::position, uint32_t, and inode::userdata\&.
+.PP
+.nf
+15                                                         {
+16     if(!ino)
+17         return NULL;
+18         
+19     if(!ino->dev)
+20         return NULL;
+21 
+22     if(!ino->userdata)
+23         return NULL;
+24 
+25     inode_t* dev = (inode_t*) devfs_getdevice(ino->dev);
+26     if(!dev)
+27         return NULL;
+28 
+29     iso9660_dir_t* dir = (iso9660_dir_t*) ino->userdata;
+30     iso9660_dir_t* nodes = (iso9660_dir_t*) kmalloc(iso9660_getlsb32(dir->length));
+31     iso9660_dir_t* snodes = nodes;
+32 
+33     dev->position = iso9660_getlsb32(dir->lba) * ISO9660_SECTOR_SIZE;
+34     if(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length)) {
+35         kfree(nodes);
+36         return NULL;
+37     }
+38 
+39     /* Skip dots ("\&.", "\&.\&.") */
+40     nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
+41     nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
+42 
+43     for(int i = 0; i < index; i++) {        
+44         if(nodes->size == 0) {      
+45             kfree(snodes);
+46             return NULL;
+47         }
+48         
+49         nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
+50     }
+51 
+52 
+53     if(nodes->size == 0) {
+54         kfree(snodes);
+55         return NULL;
+56     }
+57 
+58     struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
+59     memset(ent, 0, sizeof(struct dirent));
+60     
+61     strncpy(ent->d_name, nodes->reserved, nodes->idlen);    
+62     iso9660_checkname(ent->d_name);
+63 
+64     ent->d_ino = 0;
+65 
+66     kfree(snodes);
+67     return ent;
+68 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

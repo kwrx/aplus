@@ -1,4 +1,4 @@
-\hypertarget{times_8c}{\section{Riferimenti per il file src/syscall/times.c}
+\hypertarget{times_8c}{\section{src/syscall/times.c File Reference}
 \label{times_8c}\index{src/syscall/times.\+c@{src/syscall/times.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -10,21 +10,21 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$sys/times.\+h$>$}\\*
 {\ttfamily \#include $<$time.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 clock\+\_\+t \hyperlink{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}{sys\+\_\+times} (struct tms $\ast$tm)
 \item 
 \hyperlink{times_8c_a8ecba6a43b15155c404aef0b811ca805}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}{sys\+\_\+times}, 14)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}{\index{times.\+c@{times.\+c}!sys\+\_\+times@{sys\+\_\+times}}
 \index{sys\+\_\+times@{sys\+\_\+times}!times.\+c@{times.\+c}}
 \subsubsection[{sys\+\_\+times}]{\setlength{\rightskip}{0pt plus 5cm}clock\+\_\+t sys\+\_\+times (
@@ -34,11 +34,11 @@ clock\+\_\+t \hyperlink{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}{sys\+\_\+tim
 )}}\label{times_8c_ab2a42757e24468b46e5046ce0e39a1f6}
 
 
-Definizione alla linea 15 del file times.\+c.
+Definition at line 15 of file times.\+c.
 
 
 
-Referenzia task\+::clock, pit\+\_\+getticks(), e schedule\+\_\+child().
+References task\+::clock, pit\+\_\+getticks(), and schedule\+\_\+child().
 
 
 \begin{DoxyCode}
@@ -72,11 +72,15 @@ Referenzia task\+::clock, pit\+\_\+getticks(), e schedule\+\_\+child().
 )}}\label{times_8c_a8ecba6a43b15155c404aef0b811ca805}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{times.\+c@{times.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!times.\+c@{times.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{times_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

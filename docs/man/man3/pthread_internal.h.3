@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_internal.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_internal.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,7 +13,7 @@ usr/src/libpthread/src/pthread_internal.h \-
 \fC#include <pthread\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -23,7 +23,7 @@ usr/src/libpthread/src/pthread_internal.h \-
 .RI "struct \fBpthread_context\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -45,7 +45,7 @@ usr/src/libpthread/src/pthread_internal.h \-
 .RI "#define \fBPTHREAD_THREADS_MAX\fP   2048"
 .br
 .in -1c
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
@@ -55,49 +55,49 @@ usr/src/libpthread/src/pthread_internal.h \-
 .RI "typedef struct \fBpthread_context\fP \fBpthread_context_t\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "int \fBsched_yield\fP (void)"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define EXTERN   extern"
 
 .PP
-Definizione alla linea 20 del file pthread_internal\&.h\&.
+Definition at line 20 of file pthread_internal\&.h\&.
 .SS "#define PRIVATE   static"
 
 .PP
-Definizione alla linea 11 del file pthread_internal\&.h\&.
+Definition at line 11 of file pthread_internal\&.h\&.
 .SS "#define PTHREAD_KEYS_MAX   64"
 
 .PP
-Definizione alla linea 25 del file pthread_internal\&.h\&.
+Definition at line 25 of file pthread_internal\&.h\&.
 .SS "#define PTHREAD_STACK_MIN   4096"
 
 .PP
-Definizione alla linea 26 del file pthread_internal\&.h\&.
+Definition at line 26 of file pthread_internal\&.h\&.
 .SS "#define PTHREAD_THREADS_MAX   2048"
 
 .PP
-Definizione alla linea 27 del file pthread_internal\&.h\&.
+Definition at line 27 of file pthread_internal\&.h\&.
 .SS "#define PUBLIC"
 
 .PP
-Definizione alla linea 15 del file pthread_internal\&.h\&.
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+Definition at line 15 of file pthread_internal\&.h\&.
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef struct \fB__pthread_key\fP  \fB__pthread_key_t\fP"
 
 .SS "typedef struct \fBpthread_context\fP  \fBpthread_context_t\fP"
 
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int sched_yield (void)"
 
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

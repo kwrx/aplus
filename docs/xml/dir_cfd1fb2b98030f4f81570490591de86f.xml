@@ -6,6 +6,7 @@
     <innerfile refid="attribute_8h">attribute.h</innerfile>
     <innerfile refid="bufio_8h">bufio.h</innerfile>
     <innerfile refid="fs_8h">fs.h</innerfile>
+    <innerfile refid="fsys_8h">fsys.h</innerfile>
     <innerfile refid="list_8h">list.h</innerfile>
     <innerfile refid="mm_8h">mm.h</innerfile>
     <innerfile refid="netif_8h">netif.h</innerfile>

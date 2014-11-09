@@ -44,6 +44,9 @@ extern inode_t* vfs_root;
 extern task_t* current_task;
 
 
+/**
+ *	\brief Put Kernel Task in optimized loop for powersave.
+ */
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_LOW);
 
@@ -53,6 +56,9 @@ static void sysidle() {
 }
 
 
+/**
+ *	\brief Entry point for kernel.
+ */
 int main() {
 	serial_init();
 	mm_init();

@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_key.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_key.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,7 +13,7 @@ usr/src/libpthread/src/pthread_key.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -29,21 +29,21 @@ usr/src/libpthread/src/pthread_key.c \-
 .RI "\fBPUBLIC\fP void * \fBpthread_getspecific\fP (\fBpthread_key_t\fP key)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBPRIVATE\fP \fB__pthread_key_t\fP \fB__pthread_keys\fP [\fBPTHREAD_KEYS_MAX\fP] = { }"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP void* pthread_getspecific (\fBpthread_key_t\fPkey)"
 
 .PP
-Definizione alla linea 65 del file pthread_key\&.c\&.
+Definition at line 65 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
+References __pthread_keys, errno, PTHREAD_KEYS_MAX, and __pthread_key::value\&.
 .PP
 .nf
 65                                                     {
@@ -63,9 +63,9 @@ Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
 .SS "\fBPUBLIC\fP int pthread_key_create (\fBpthread_key_t\fP *key, void(*)(void *)destructor)"
 
 .PP
-Definizione alla linea 9 del file pthread_key\&.c\&.
+Definition at line 9 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, e __pthread_key::value\&.
+References __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, and __pthread_key::value\&.
 .PP
 .nf
 9                                                                               {
@@ -93,9 +93,9 @@ Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthre
 .SS "\fBPUBLIC\fP int pthread_key_delete (\fBpthread_key_t\fPkey)"
 
 .PP
-Definizione alla linea 32 del file pthread_key\&.c\&.
+Definition at line 32 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, __pthread_key::value, e value\&.
+References __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthread_key::used, __pthread_key::value, and value\&.
 .PP
 .nf
 32                                                  {
@@ -117,9 +117,9 @@ Referenzia __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthre
 .SS "\fBPUBLIC\fP int pthread_setspecific (\fBpthread_key_t\fPkey, const void *value)"
 
 .PP
-Definizione alla linea 49 del file pthread_key\&.c\&.
+Definition at line 49 of file pthread_key\&.c\&.
 .PP
-Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
+References __pthread_keys, errno, PTHREAD_KEYS_MAX, and __pthread_key::value\&.
 .PP
 .nf
 49                                                                      {
@@ -137,12 +137,12 @@ Referenzia __pthread_keys, errno, PTHREAD_KEYS_MAX, e __pthread_key::value\&.
 61     return 0;
 62 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBPRIVATE\fP \fB__pthread_key_t\fP __pthread_keys[\fBPTHREAD_KEYS_MAX\fP] = { }"
 
 .PP
-Definizione alla linea 7 del file pthread_key\&.c\&.
-.SH "Autore"
+Definition at line 7 of file pthread_key\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

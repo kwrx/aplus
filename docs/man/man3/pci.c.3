@@ -1,4 +1,4 @@
-.TH "src/arch/pci.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/pci.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -19,7 +19,7 @@ src/arch/pci.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -41,7 +41,7 @@ src/arch/pci.c \-
 .RI "#define \fBPCI_MAX_FUNC\fP   8"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -93,47 +93,47 @@ src/arch/pci.c \-
 .RI "int \fBpci_init\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBpci_device_t\fP * \fBpci_devices\fP = NULL"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define PCI_CONFIG_ADDRESS   0x0CF8"
 
 .PP
-Definizione alla linea 11 del file pci\&.c\&.
+Definition at line 11 of file pci\&.c\&.
 .SS "#define PCI_CONFIG_DATA   0x0CFC"
 
 .PP
-Definizione alla linea 12 del file pci\&.c\&.
+Definition at line 12 of file pci\&.c\&.
 .SS "#define PCI_MAX_BUS   255"
 
 .PP
-Definizione alla linea 14 del file pci\&.c\&.
+Definition at line 14 of file pci\&.c\&.
 .SS "#define PCI_MAX_DEV   32"
 
 .PP
-Definizione alla linea 15 del file pci\&.c\&.
+Definition at line 15 of file pci\&.c\&.
 .SS "#define PCI_MAX_DEVICES   65536"
 
 .PP
-Definizione alla linea 13 del file pci\&.c\&.
+Definition at line 13 of file pci\&.c\&.
 .SS "#define PCI_MAX_FUNC   8"
 
 .PP
-Definizione alla linea 16 del file pci\&.c\&.
-.SH "Documentazione delle funzioni"
+Definition at line 16 of file pci\&.c\&.
+.SH "Function Documentation"
 .PP 
 .SS "static \fBuint32_t\fP pci_config_read (\fBuint8_t\fPbus, \fBuint8_t\fPdev, \fBuint8_t\fPfunc, \fBuint8_t\fPoffset)\fC [static]\fP"
 
 .PP
-Definizione alla linea 26 del file pci\&.c\&.
+Definition at line 26 of file pci\&.c\&.
 .PP
-Referenzia PCI_CONFIG_ADDRESS, PCI_CONFIG_DATA, e pci_get_address()\&.
+References PCI_CONFIG_ADDRESS, PCI_CONFIG_DATA, and pci_get_address()\&.
 .PP
 .nf
 26                                                                                         {
@@ -148,9 +148,9 @@ Referenzia PCI_CONFIG_ADDRESS, PCI_CONFIG_DATA, e pci_get_address()\&.
 .SS "int pci_find_by_class (\fBpci_device_t\fP **rdevs, \fBuint32_t\fPclass, \fBuint32_t\fPlength)"
 
 .PP
-Definizione alla linea 131 del file pci\&.c\&.
+Definition at line 131 of file pci\&.c\&.
 .PP
-Referenzia length, e PCI_MAX_DEVICES\&.
+References length, and PCI_MAX_DEVICES\&.
 .PP
 .nf
 131                                                                              {
@@ -168,9 +168,9 @@ Referenzia length, e PCI_MAX_DEVICES\&.
 .SS "\fBpci_device_t\fP* pci_find_by_id (\fBuint32_t\fPvendorID, \fBuint32_t\fPdeviceID)"
 
 .PP
-Definizione alla linea 120 del file pci\&.c\&.
+Definition at line 120 of file pci\&.c\&.
 .PP
-Referenzia PCI_MAX_DEVICES\&.
+References PCI_MAX_DEVICES\&.
 .PP
 .nf
 120                                                                    {
@@ -187,7 +187,7 @@ Referenzia PCI_MAX_DEVICES\&.
 .SS "static int pci_get_address (\fBuint8_t\fPbus, \fBuint8_t\fPdev, \fBuint8_t\fPfunc, \fBuint8_t\fPoffset)\fC [static]\fP"
 
 .PP
-Definizione alla linea 22 del file pci\&.c\&.
+Definition at line 22 of file pci\&.c\&.
 .PP
 .nf
 22                                                                                    {
@@ -197,9 +197,9 @@ Definizione alla linea 22 del file pci\&.c\&.
 .SS "static \fBuint32_t\fP pci_get_bar (\fBpci_device_t\fP *device, \fBuint8_t\fPbar)\fC [static]\fP"
 
 .PP
-Definizione alla linea 65 del file pci\&.c\&.
+Definition at line 65 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, pci_config_read(), pci_get_header_type(), e uint8_t\&.
+References pci_device::bus, pci_device::dev, pci_device::func, pci_config_read(), pci_get_header_type(), and uint8_t\&.
 .PP
 .nf
 65                                                                {
@@ -217,9 +217,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, pci_config_read()
 .SS "static \fBuint32_t\fP pci_get_class (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 56 del file pci\&.c\&.
+Definition at line 56 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+References pci_device::bus, pci_device::dev, pci_device::func, and pci_config_read()\&.
 .PP
 .nf
 56                                                     {
@@ -229,9 +229,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read
 .SS "static \fBuint32_t\fP pci_get_device_id (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 36 del file pci\&.c\&.
+Definition at line 36 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+References pci_device::bus, pci_device::dev, pci_device::func, and pci_config_read()\&.
 .PP
 .nf
 36                                                         {
@@ -241,9 +241,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read
 .SS "static \fBuint32_t\fP pci_get_header_type (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 60 del file pci\&.c\&.
+Definition at line 60 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+References pci_device::bus, pci_device::dev, pci_device::func, and pci_config_read()\&.
 .PP
 .nf
 60                                                           {
@@ -253,9 +253,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read
 .SS "static \fBuint32_t\fP pci_get_intr_line (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 48 del file pci\&.c\&.
+Definition at line 48 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+References pci_device::bus, pci_device::dev, pci_device::func, and pci_config_read()\&.
 .PP
 .nf
 48                                                         {
@@ -265,9 +265,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read
 .SS "static \fBuint32_t\fP pci_get_intr_pin (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 44 del file pci\&.c\&.
+Definition at line 44 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+References pci_device::bus, pci_device::dev, pci_device::func, and pci_config_read()\&.
 .PP
 .nf
 44                                                        {
@@ -277,9 +277,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read
 .SS "static \fBuint32_t\fP pci_get_iobase (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 77 del file pci\&.c\&.
+Definition at line 77 of file pci\&.c\&.
 .PP
-Referenzia pci_get_bar(), pci_get_header_type(), uint32_t, e uint8_t\&.
+References pci_get_bar(), pci_get_header_type(), uint32_t, and uint8_t\&.
 .PP
 .nf
 77                                                      {
@@ -298,9 +298,9 @@ Referenzia pci_get_bar(), pci_get_header_type(), uint32_t, e uint8_t\&.
 .SS "static \fBuint32_t\fP pci_get_membase (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 90 del file pci\&.c\&.
+Definition at line 90 of file pci\&.c\&.
 .PP
-Referenzia pci_get_bar(), pci_get_header_type(), uint32_t, e uint8_t\&.
+References pci_get_bar(), pci_get_header_type(), uint32_t, and uint8_t\&.
 .PP
 .nf
 90                                                       {
@@ -319,9 +319,9 @@ Referenzia pci_get_bar(), pci_get_header_type(), uint32_t, e uint8_t\&.
 .SS "static \fBuint32_t\fP pci_get_revision (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 52 del file pci\&.c\&.
+Definition at line 52 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+References pci_device::bus, pci_device::dev, pci_device::func, and pci_config_read()\&.
 .PP
 .nf
 52                                                        {
@@ -331,9 +331,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read
 .SS "static \fBuint32_t\fP pci_get_vendor_id (\fBpci_device_t\fP *device)\fC [static]\fP"
 
 .PP
-Definizione alla linea 40 del file pci\&.c\&.
+Definition at line 40 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read()\&.
+References pci_device::bus, pci_device::dev, pci_device::func, and pci_config_read()\&.
 .PP
 .nf
 40                                                         {
@@ -343,9 +343,9 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::func, e pci_config_read
 .SS "int pci_init ()"
 
 .PP
-Definizione alla linea 144 del file pci\&.c\&.
+Definition at line 144 of file pci\&.c\&.
 .PP
-Referenzia kmalloc(), kprintf, pci_config_read(), pci_load_device(), PCI_MAX_BUS, PCI_MAX_DEV, PCI_MAX_DEVICES, PCI_MAX_FUNC, e uint32_t\&.
+References kmalloc(), kprintf(), pci_config_read(), pci_load_device(), PCI_MAX_BUS, PCI_MAX_DEV, PCI_MAX_DEVICES, PCI_MAX_FUNC, and uint32_t\&.
 .PP
 .nf
 144                {
@@ -393,9 +393,9 @@ Referenzia kmalloc(), kprintf, pci_config_read(), pci_load_device(), PCI_MAX_BUS
 .SS "static void pci_load_device (\fBpci_device_t\fP *device, \fBuint8_t\fPbus, \fBuint8_t\fPdev, \fBuint8_t\fPfunc)\fC [static]\fP"
 
 .PP
-Definizione alla linea 103 del file pci\&.c\&.
+Definition at line 103 of file pci\&.c\&.
 .PP
-Referenzia pci_device::bus, pci_device::dev, pci_device::deviceID, pci_device::func, pci_device::header, pci_device::intr_line, pci_device::intr_pin, pci_device::iobase, pci_device::membase, pci_device::pci_class, pci_get_class(), pci_get_device_id(), pci_get_header_type(), pci_get_intr_line(), pci_get_intr_pin(), pci_get_iobase(), pci_get_membase(), pci_get_revision(), pci_get_vendor_id(), pci_device::revision, e pci_device::vendorID\&.
+References pci_device::bus, pci_device::dev, pci_device::deviceID, pci_device::func, pci_device::header, pci_device::intr_line, pci_device::intr_pin, pci_device::iobase, pci_device::membase, pci_device::pci_class, pci_get_class(), pci_get_device_id(), pci_get_header_type(), pci_get_intr_line(), pci_get_intr_pin(), pci_get_iobase(), pci_get_membase(), pci_get_revision(), pci_get_vendor_id(), pci_device::revision, and pci_device::vendorID\&.
 .PP
 .nf
 103                                                                                           {
@@ -414,12 +414,12 @@ Referenzia pci_device::bus, pci_device::dev, pci_device::deviceID, pci_device::f
 116     device->intr_line = pci_get_intr_line(device);
 117 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBpci_device_t\fP* pci_devices = NULL"
 
 .PP
-Definizione alla linea 19 del file pci\&.c\&.
-.SH "Autore"
+Definition at line 19 of file pci\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

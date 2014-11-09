@@ -7,6 +7,8 @@
     <includes refid="task_8h" local="no">aplus/task.h</includes>
     <includes refid="list_8h" local="no">aplus/list.h</includes>
     <includes refid="attribute_8h" local="no">aplus/attribute.h</includes>
+    <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
+    <includes refid="fsys_8h" local="no">aplus/fsys.h</includes>
     <includes local="no">stdint.h</includes>
     <includes local="no">unistd.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
@@ -14,152 +16,174 @@
     <includes local="no">sys/types.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="1635">
+      <node id="1827">
         <label>sys/stat.h</label>
       </node>
-      <node id="1630">
+      <node id="1822">
         <label>stdarg.h</label>
       </node>
-      <node id="1644">
+      <node id="1836">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1628" relation="include">
+        <childnode refid="1820" relation="include">
         </childnode>
-        <childnode refid="1641" relation="include">
+        <childnode refid="1833" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1631" relation="include">
+        <childnode refid="1823" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1826" relation="include">
         </childnode>
       </node>
-      <node id="1627">
+      <node id="1819">
         <label>src/syscall/mount.c</label>
         <link refid="mount.c"/>
-        <childnode refid="1628" relation="include">
+        <childnode refid="1820" relation="include">
         </childnode>
-        <childnode refid="1632" relation="include">
+        <childnode refid="1824" relation="include">
         </childnode>
-        <childnode refid="1638" relation="include">
+        <childnode refid="1830" relation="include">
         </childnode>
-        <childnode refid="1641" relation="include">
+        <childnode refid="1833" relation="include">
         </childnode>
-        <childnode refid="1644" relation="include">
+        <childnode refid="1836" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1837" relation="include">
         </childnode>
-        <childnode refid="1637" relation="include">
+        <childnode refid="1838" relation="include">
         </childnode>
-        <childnode refid="1636" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1645" relation="include">
+        <childnode refid="1829" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1828" relation="include">
         </childnode>
-        <childnode refid="1646" relation="include">
+        <childnode refid="1839" relation="include">
+        </childnode>
+        <childnode refid="1826" relation="include">
+        </childnode>
+        <childnode refid="1840" relation="include">
         </childnode>
       </node>
-      <node id="1632">
+      <node id="1824">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1633" relation="include">
+        <childnode refid="1825" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1826" relation="include">
         </childnode>
-        <childnode refid="1635" relation="include">
+        <childnode refid="1827" relation="include">
         </childnode>
-        <childnode refid="1636" relation="include">
+        <childnode refid="1828" relation="include">
         </childnode>
       </node>
-      <node id="1629">
+      <node id="1821">
         <label>stdint.h</label>
       </node>
-      <node id="1640">
+      <node id="1837">
+        <label>aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="1820" relation="include">
+        </childnode>
+        <childnode refid="1836" relation="include">
+        </childnode>
+        <childnode refid="1821" relation="include">
+        </childnode>
+      </node>
+      <node id="1832">
         <label>setjmp.h</label>
       </node>
-      <node id="1638">
+      <node id="1830">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1628" relation="include">
+        <childnode refid="1820" relation="include">
         </childnode>
-        <childnode refid="1632" relation="include">
+        <childnode refid="1824" relation="include">
         </childnode>
-        <childnode refid="1639" relation="include">
+        <childnode refid="1831" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1826" relation="include">
         </childnode>
-        <childnode refid="1640" relation="include">
+        <childnode refid="1832" relation="include">
         </childnode>
       </node>
-      <node id="1646">
+      <node id="1840">
         <label>errno.h</label>
       </node>
-      <node id="1645">
+      <node id="1839">
         <label>fcntl.h</label>
       </node>
-      <node id="1633">
+      <node id="1825">
         <label>stddef.h</label>
       </node>
-      <node id="1641">
+      <node id="1833">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1633" relation="include">
+        <childnode refid="1825" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1826" relation="include">
         </childnode>
-        <childnode refid="1642" relation="include">
+        <childnode refid="1834" relation="include">
         </childnode>
-        <childnode refid="1643" relation="include">
+        <childnode refid="1835" relation="include">
         </childnode>
       </node>
-      <node id="1628">
+      <node id="1820">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1630" relation="include">
+        <childnode refid="1822" relation="include">
         </childnode>
-        <childnode refid="1631" relation="include">
+        <childnode refid="1823" relation="include">
         </childnode>
       </node>
-      <node id="1634">
+      <node id="1826">
         <label>sys/types.h</label>
       </node>
-      <node id="1631">
+      <node id="1823">
         <label>string.h</label>
       </node>
-      <node id="1637">
+      <node id="1829">
         <label>unistd.h</label>
       </node>
-      <node id="1639">
+      <node id="1831">
         <label>signal.h</label>
       </node>
-      <node id="1643">
+      <node id="1835">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1638" relation="include">
+        <childnode refid="1830" relation="include">
         </childnode>
       </node>
-      <node id="1636">
+      <node id="1828">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1637" relation="include">
+        <childnode refid="1829" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1826" relation="include">
         </childnode>
       </node>
-      <node id="1642">
+      <node id="1834">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
+      </node>
+      <node id="1838">
+        <label>aplus/fsys.h</label>
+        <link refid="fsys_8h"/>
+        <childnode refid="1820" relation="include">
+        </childnode>
+        <childnode refid="1836" relation="include">
+        </childnode>
       </node>
     </incdepgraph>
       <sectiondef kind="var">
@@ -169,12 +193,12 @@
         <argsstring></argsstring>
         <name>current_task</name>
         <briefdescription>
-        </briefdescription>
+<para>Current task address. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/mount.c" line="18" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="33" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/mount.c" line="20" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -209,23 +233,43 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/mount.c" line="20" column="1" bodyfile="/opt/prj/aPlus/src/syscall/mount.c" bodystart="20" bodyend="88"/>
+        <location file="/opt/prj/aPlus/src/syscall/mount.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/syscall/mount.c" bodystart="22" bodyend="99"/>
         <references refid="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e" compoundref="attribute_8h" startline="31" endline="51">attribute</references>
-        <references refid="structinode_1a127a2eb030df332fa64a81188731ad6b" compoundref="fs_8h" startline="39">inode::dev</references>
+        <references refid="structinode_1a127a2eb030df332fa64a81188731ad6b" compoundref="fs_8h" startline="40">inode::dev</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="87">task::fd</references>
-        <references refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" compoundref="src_2sched_8c" startline="41" endline="52">im_superuser</references>
-        <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="40">inode::ino</references>
+        <references refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" compoundref="aplus_8h" startline="139">fs</references>
+        <references refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" compoundref="src_2sched_8c" startline="58" endline="69">im_superuser</references>
+        <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="41">inode::ino</references>
         <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="193">list_destroy</references>
         <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="49" endline="54">list_empty</references>
         <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
-        <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="41">inode::mode</references>
-        <references refid="structfs_1a6ae33214a489b396e834ac7e028d859c" compoundref="fs_8h" startline="77">fs::mount</references>
-        <references refid="structfs_1a7d1c966e58722afdf537c5d7bc0790c7" compoundref="fs_8h" startline="76">fs::name</references>
+        <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="42">inode::mode</references>
+        <references refid="structfsys_1ae6e5dcfb76d76f9636b95525ac63f4cb" compoundref="fsys_8h" startline="9">fsys::mount</references>
+        <references refid="structfsys_1a8c3f03ed1ac90dac03da844178857891" compoundref="fsys_8h" startline="8">fsys::name</references>
         <references refid="dirent_8h_1a6afd3dd2f570069804b40e6aa24fc966" compoundref="dirent_8h" startline="42">O_DIRECTORY</references>
-        <references refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" compoundref="close_8c" startline="16" endline="29">sys_close</references>
-        <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="126" endline="150">sys_open</references>
+        <references refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" compoundref="close_8c" startline="26" endline="39">sys_close</references>
+        <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="127" endline="155">sys_open</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="mount_8c_1ad1f2426abc49e3a353545a7f6fd465eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SYSCALL</definition>
+        <argsstring>(sys_mount, 24)</argsstring>
+        <name>SYSCALL</name>
+        <param>
+          <type><ref refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" kindref="member">sys_mount</ref></type>
+        </param>
+        <param>
+          <type>24</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/mount.c" line="101" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -238,90 +282,103 @@
 <codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="attribute_8h" kindref="compound">aplus/attribute.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="13"><highlight class="normal"></highlight></codeline>
-<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="syscall_8h" kindref="compound">aplus/syscall.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fsys_8h" kindref="compound">aplus/fsys.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight></codeline>
-<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="17"><highlight class="normal"></highlight></codeline>
-<codeline lineno="18"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="mount_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
 <codeline lineno="19"><highlight class="normal"></highlight></codeline>
-<codeline lineno="20" refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" kindref="member">sys_mount</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>dev,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>dir,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fstype,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>options,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>data)<sp/>{</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"></highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!<ref refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" kindref="member">im_superuser</ref>())<sp/>{</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EPERM;</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dir<sp/>==<sp/>NULL<sp/>||<sp/>strlen(dir)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"></highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>idev<sp/>=<sp/>NULL;</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>idir<sp/>=<sp/>NULL;</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"></highlight></codeline>
-<codeline lineno="39"><highlight class="normal"></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dev<sp/>&amp;&amp;<sp/>strlen(dev)<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dfd<sp/>=<sp/><ref refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kindref="member">sys_open</ref>(dev,<sp/>O_RDONLY,<sp/>0644);</highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dfd<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOENT;</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"></highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idev<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[dfd];</highlight></codeline>
-<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(dfd);</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"></highlight></codeline>
-<codeline lineno="51"><highlight class="normal"></highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sfd<sp/>=<sp/><ref refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kindref="member">sys_open</ref>(dir,<sp/>O_CREAT<sp/>|<sp/><ref refid="dirent_8h_1a6afd3dd2f570069804b40e6aa24fc966" kindref="member">O_DIRECTORY</ref><sp/>|<sp/>O_RDONLY,<sp/>S_IFDIR);</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(sfd<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOENT;</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"></highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>idir<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[sfd];</highlight></codeline>
-<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(sfd);</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"></highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="structfs" kindref="compound">fs</ref><sp/>=<sp/><ref refid="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e" kindref="member">attribute</ref>(</highlight><highlight class="stringliteral">&quot;fs&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(fs))<sp/>{</highlight></codeline>
-<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENODEV;</highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="67"><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structfs" kindref="compound">fs_t</ref>*<sp/>found<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="mount_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" kindref="member">sys_mount</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>dev,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>dir,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fstype,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>options,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" kindref="member">data</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!<ref refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" kindref="member">im_superuser</ref>())<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EPERM;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dir<sp/>==<sp/>NULL<sp/>||<sp/>strlen(dir)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>idev<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>idir<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dev<sp/>&amp;&amp;<sp/>strlen(dev)<sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dfd<sp/>=<sp/><ref refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kindref="member">sys_open</ref>(dev,<sp/>O_RDONLY,<sp/>0644);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dfd<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOENT;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idev<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[dfd];</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(dfd);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sfd<sp/>=<sp/><ref refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kindref="member">sys_open</ref>(dir,<sp/>O_CREAT<sp/>|<sp/><ref refid="dirent_8h_1a6afd3dd2f570069804b40e6aa24fc966" kindref="member">O_DIRECTORY</ref><sp/>|<sp/>O_RDONLY,<sp/>S_IFDIR);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(sfd<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOENT;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>idir<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[sfd];</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(sfd);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref><sp/>=<sp/><ref refid="attribute_8h_1ab96abe3fdf944e75a2316807105c1b6e" kindref="member">attribute</ref>(</highlight><highlight class="stringliteral">&quot;fs&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(fs))<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENODEV;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="69"><highlight class="normal"></highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>fs)<sp/>{</highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structfs" kindref="compound">fs_t</ref>*<sp/>f<sp/>=<sp/>(<ref refid="structfs" kindref="compound">fs_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"></highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(strcmp(f-&gt;<ref refid="structfs_1a7d1c966e58722afdf537c5d7bc0790c7" kindref="member">name</ref>,<sp/>fstype)<sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>found<sp/>=<sp/>f;</highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="76"><highlight class="normal"></highlight></codeline>
-<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" kindref="member">list_destroy</ref>(fs);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structfsys" kindref="compound">fsys_t</ref>*<sp/>found<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>fs)<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structfsys" kindref="compound">fsys_t</ref>*<sp/>f<sp/>=<sp/>(<ref refid="structfsys" kindref="compound">fsys_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(strcmp(f-&gt;<ref refid="structfsys_1a8c3f03ed1ac90dac03da844178857891" kindref="member">name</ref>,<sp/>fstype)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>found<sp/>=<sp/>f;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="78"><highlight class="normal"></highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(found<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENODEV;</highlight></codeline>
-<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="83"><highlight class="normal"></highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>idir-&gt;<ref refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" kindref="member">mode</ref><sp/>|=<sp/>S_IFMT;</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>idir-&gt;<ref refid="structinode_1a127a2eb030df332fa64a81188731ad6b" kindref="member">dev</ref><sp/>=<sp/>idev-&gt;<ref refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" kindref="member">ino</ref>;</highlight></codeline>
-<codeline lineno="86"><highlight class="normal"></highlight></codeline>
-<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>found-&gt;<ref refid="structfs_1a6ae33214a489b396e834ac7e028d859c" kindref="member">mount</ref>(idev,<sp/>idir,<sp/>options);</highlight></codeline>
-<codeline lineno="88"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" kindref="member">list_destroy</ref>(fs);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(found<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENODEV;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>idir-&gt;<ref refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" kindref="member">mode</ref><sp/>|=<sp/>S_IFMT;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>idir-&gt;<ref refid="structinode_1a127a2eb030df332fa64a81188731ad6b" kindref="member">dev</ref><sp/>=<sp/>idev-&gt;<ref refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" kindref="member">ino</ref>;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(found-&gt;<ref refid="structfsys_1ae6e5dcfb76d76f9636b95525ac63f4cb" kindref="member">mount</ref>(idev,<sp/>idir,<sp/>options)<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idir-&gt;<ref refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" kindref="member">mode</ref><sp/>&amp;=<sp/>~S_IFMT;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>idir-&gt;<ref refid="structinode_1a127a2eb030df332fa64a81188731ad6b" kindref="member">dev</ref><sp/>=<sp/>0;<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENODEV;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><ref refid="mount_8c_1ad1f2426abc49e3a353545a7f6fd465eb" kindref="member">SYSCALL</ref>(<ref refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" kindref="member">sys_mount</ref>,<sp/>24);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/mount.c"/>
   </compounddef>

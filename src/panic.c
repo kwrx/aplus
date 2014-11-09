@@ -10,10 +10,17 @@ extern task_t* current_task;
 extern task_t* kernel_task;
 
 
+/**
+ *	\brief Print last error number.
+ */
 static void dump_errno() {
 	kprintf("errno: %d - %s\n", errno, strerror(errno));
 }
 
+
+/**
+ *	\brief Print current registers.
+ */
 static void dump_registers() {
 
 	kprintf("Registers:\n");
@@ -54,11 +61,18 @@ static void dump_registers() {
 }
 
 
+/**
+ *	Print a stacktrace.
+ */
 static void dump_stacktrace(int count) {
 	kprintf("Stack trace:\n");
 	kprintf("TODO\n\n");
 }
 
+
+/**
+ *	\brief Print all and current task.
+ */
 static void dump_task() {
 	kprintf("Task:\n");
 	
@@ -81,6 +95,10 @@ static void dump_task() {
 	}
 }
 
+
+/**
+ *	\brief Go in Kernel Panic, halt system.
+ */
 void panic(char* msg) {
 	__asm__ ("cli");
 	kprintf("panic: \"%s\"\n", msg);

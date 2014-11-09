@@ -1,4 +1,4 @@
-\hypertarget{fcntl_8c}{\section{Riferimenti per il file src/syscall/fcntl.c}
+\hypertarget{fcntl_8c}{\section{src/syscall/fcntl.c File Reference}
 \label{fcntl_8c}\index{src/syscall/fcntl.\+c@{src/syscall/fcntl.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -11,23 +11,24 @@
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
 {\ttfamily \#include $<$stdio.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{fcntl_8c_a7d46f514aa7d9664ebd2baa4d61c4a37}{sys\+\_\+fcntl} (int fd, int request, void $\ast$buf)
-\item 
+\begin{DoxyCompactList}\small\item\em This function shall perform the operations described below on open files.~\newline
+ The available values for cmd are defined in $<$fcntl.\+h$>$ and are as follows. \end{DoxyCompactList}\item 
 \hyperlink{fcntl_8c_a5f500fa48a3ec03f7c9627bc1abda1aa}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{fcntl_8c_a7d46f514aa7d9664ebd2baa4d61c4a37}{sys\+\_\+fcntl}, 19)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
 \hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ \hyperlink{fcntl_8c_a9af8258c3554800f6613f8147544225f}{vfs\+\_\+root}
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{fcntl_8c_a7d46f514aa7d9664ebd2baa4d61c4a37}{\index{fcntl.\+c@{fcntl.\+c}!sys\+\_\+fcntl@{sys\+\_\+fcntl}}
 \index{sys\+\_\+fcntl@{sys\+\_\+fcntl}!fcntl.\+c@{fcntl.\+c}}
 \subsubsection[{sys\+\_\+fcntl}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+fcntl (
@@ -39,32 +40,106 @@ int \hyperlink{fcntl_8c_a7d46f514aa7d9664ebd2baa4d61c4a37}{sys\+\_\+fcntl} (int 
 )}}\label{fcntl_8c_a7d46f514aa7d9664ebd2baa4d61c4a37}
 
 
-Definizione alla linea 19 del file fcntl.\+c.
+This function shall perform the operations described below on open files.~\newline
+ The available values for cmd are defined in $<$fcntl.\+h$>$ and are as follows. 
+
+
+\begin{DoxyItemize}
+\item F\+\_\+\+D\+U\+P\+F\+D~\newline
+
+\begin{DoxyItemize}
+\item Return a new file descriptor which shall be the lowest numbered available (that is, not already open) file descriptor greater than or equal to the third argument, arg, taken as an integer of type int.~\newline
+ The new file descriptor shall refer to the same open file description as the original file descriptor, and shall share any locks.~\newline
+ The F\+D\+\_\+\+C\+L\+O\+E\+X\+E\+C flag associated with the new file descriptor shall be cleared to keep the file open across calls to one of the exec functions.~\newline
+
+\end{DoxyItemize}
+\item F\+\_\+\+G\+E\+T\+F\+D~\newline
+
+\begin{DoxyItemize}
+\item Get the file descriptor flags defined in $<$fcntl.\+h$>$ that are associated with the file descriptor fildes.~\newline
+ File descriptor flags are associated with a single file descriptor and do not affect other file descriptors that refer to the same file.
+\end{DoxyItemize}
+\item F\+\_\+\+S\+E\+T\+F\+D~\newline
+
+\begin{DoxyItemize}
+\item Set the file descriptor flags defined in $<$fcntl.\+h$>$, that are associated with fildes, to the third argument, arg, taken as type int.~\newline
+ If the F\+D\+\_\+\+C\+L\+O\+E\+X\+E\+C flag in the third argument is 0, the file shall remain open across the exec functions; otherwise, the file shall be closed upon successful execution of one of the exec functions.~\newline
+
+\end{DoxyItemize}
+\item F\+\_\+\+G\+E\+T\+F\+L~\newline
+
+\begin{DoxyItemize}
+\item Get the file status flags and file access modes, defined in $<$fcntl.\+h$>$, for the file description associated with fildes. The file access modes can be extracted from the return value using the mask O\+\_\+\+A\+C\+C\+M\+O\+D\+E, which is defined in $<$fcntl.\+h$>$.~\newline
+ File status flags and file access modes are associated with the file description and do not affect other file descriptors that refer to the same file with different open file descriptions.~\newline
+
+\end{DoxyItemize}
+\item F\+\_\+\+S\+E\+T\+F\+L~\newline
+
+\begin{DoxyItemize}
+\item Set the file status flags, defined in $<$fcntl.\+h$>$, for the file description associated with fildes from the corresponding bits in the third argument, arg, taken as type int.~\newline
+ Bits corresponding to the file access mode and the file creation flags, as defined in $<$fcntl.\+h$>$, that are set in arg shall be ignored. If any bits in arg other than those mentioned here are changed by the application, the result is unspecified.~\newline
+
+\end{DoxyItemize}
+\item F\+\_\+\+G\+E\+T\+O\+W\+N~\newline
+
+\begin{DoxyItemize}
+\item If fildes refers to a socket, get the process or process group I\+D specified to receive S\+I\+G\+U\+R\+G signals when out-\/of-\/band data is available.~\newline
+ Positive values indicate a process I\+D; negative values, other than -\/1, indicate a process group I\+D.~\newline
+ If fildes does not refer to a socket, the results are unspecified.~\newline
+
+\end{DoxyItemize}
+\item F\+\_\+\+S\+E\+T\+O\+W\+N~\newline
+
+\begin{DoxyItemize}
+\item If fildes refers to a socket, set the process or process group I\+D specified to receive S\+I\+G\+U\+R\+G signals when out-\/of-\/band data is available, using the value of the third argument, arg, taken as type int.~\newline
+ Positive values indicate a process I\+D; negative values, other than -\/1, indicate a process group I\+D.~\newline
+ If fildes does not refer to a socket, the results are unspecified~\newline
+~\newline
+~\newline
+~\newline
+ 
+\begin{DoxyParams}{Parameters}
+{\em fd} & File descriptor. \\
+\hline
+{\em request} & Request operation. \\
+\hline
+{\em buf} & Optional arguments. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Upon successful completion, the value returned shall depend on cmd.~\newline
+ Otherwise, -\/1 shall be returned and errno set to indicate the error 
+\end{DoxyReturn}
+
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Definition at line 72 of file fcntl.\+c.
 
 
 
-Referenzia errno, task\+::fd, e kprintf.
+References errno, task\+::fd, and kprintf().
 
 
 \begin{DoxyCode}
-19                                               \{
-20     \textcolor{keywordflow}{if}(!\hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
-21         \textcolor{keywordflow}{return} -1;
-22         
-23     
-24     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-25     \textcolor{keywordflow}{if}(!ino) \{
-26         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
-27         \textcolor{keywordflow}{return} -1;
-28     \}
-29 
-30 
-31     \textcolor{comment}{/* TODO */}
-32     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"sys\_chown: TODO."});
-33 
-34     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
-35     \textcolor{keywordflow}{return} -1;
-36 \}
+72                                               \{
+73     \textcolor{keywordflow}{if}(!\hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+74         \textcolor{keywordflow}{return} -1;
+75         
+76     
+77     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+78     \textcolor{keywordflow}{if}(!ino) \{
+79         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+80         \textcolor{keywordflow}{return} -1;
+81     \}
+82 
+83 
+84     \textcolor{comment}{/* TODO */}
+85     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_chown: TODO."});
+86 
+87     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+88     \textcolor{keywordflow}{return} -1;
+89 \}
 \end{DoxyCode}
 \hypertarget{fcntl_8c_a5f500fa48a3ec03f7c9627bc1abda1aa}{\index{fcntl.\+c@{fcntl.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!fcntl.\+c@{fcntl.\+c}}
@@ -76,18 +151,22 @@ Referenzia errno, task\+::fd, e kprintf.
 )}}\label{fcntl_8c_a5f500fa48a3ec03f7c9627bc1abda1aa}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{fcntl.\+c@{fcntl.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!fcntl.\+c@{fcntl.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 
 \hypertarget{fcntl_8c_a9af8258c3554800f6613f8147544225f}{\index{fcntl.\+c@{fcntl.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
 \index{vfs\+\_\+root@{vfs\+\_\+root}!fcntl.\+c@{fcntl.\+c}}
 \subsubsection[{vfs\+\_\+root}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ vfs\+\_\+root}}\label{fcntl_8c_a9af8258c3554800f6613f8147544225f}
 
 
-Definizione alla linea 19 del file vfs.\+c.
+Definition at line 19 of file vfs.\+c.
 

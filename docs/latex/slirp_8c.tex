@@ -1,4 +1,4 @@
-\hypertarget{slirp_8c}{\section{Riferimenti per il file src/net/slirp/slirp.c}
+\hypertarget{slirp_8c}{\section{src/net/slirp/slirp.c File Reference}
 \label{slirp_8c}\index{src/net/slirp/slirp.\+c@{src/net/slirp/slirp.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -13,20 +13,20 @@
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include \char`\"{}slirp.\+h\char`\"{}}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structslirpcard}{slirpcard}
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef struct \hyperlink{structslirpcard}{slirpcard} \hyperlink{slirp_8c_a568a798f46022c03ad5665b75e55909a}{slirpcard\+\_\+t}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}{slirp\+\_\+handler} (void $\ast$unused)
+void \hyperlink{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}{slirp\+\_\+handler} (void $\ast$\hyperlink{iso9660_8h_a1b319c7708ab2832a7c18a65b8a255e0}{unused})
 \item 
 int \hyperlink{slirp_8c_a5bb8edbc515f4ca455cdfff6c75cf708}{slirp\+\_\+send} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, int \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type})
 \item 
@@ -38,20 +38,20 @@ int \hyperlink{slirp_8c_a8e7e3c2a9bf497a11fd8e2159976e5ad}{slirp\+\_\+init} ()
 \item 
 \hyperlink{slirp_8c_a37f21b9482ca9c4a0e418a266742a8ae}{A\+T\+T\+R\+I\+B\+U\+T\+E} (\char`\"{}netif\char`\"{}, slirp\+\_\+init)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 static \hyperlink{slirp_8c_a568a798f46022c03ad5665b75e55909a}{slirpcard\+\_\+t} $\ast$ \hyperlink{slirp_8c_a0f272b2d098a6c4df9edf6a275a4447f}{slirpcard} = N\+U\+L\+L
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\subsection{Typedef Documentation}
 \hypertarget{slirp_8c_a568a798f46022c03ad5665b75e55909a}{\index{slirp.\+c@{slirp.\+c}!slirpcard\+\_\+t@{slirpcard\+\_\+t}}
 \index{slirpcard\+\_\+t@{slirpcard\+\_\+t}!slirp.\+c@{slirp.\+c}}
 \subsubsection[{slirpcard\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf slirpcard}  {\bf slirpcard\+\_\+t}}}\label{slirp_8c_a568a798f46022c03ad5665b75e55909a}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{slirp_8c_a37f21b9482ca9c4a0e418a266742a8ae}{\index{slirp.\+c@{slirp.\+c}!A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}}
 \index{A\+T\+T\+R\+I\+B\+U\+T\+E@{A\+T\+T\+R\+I\+B\+U\+T\+E}!slirp.\+c@{slirp.\+c}}
 \subsubsection[{A\+T\+T\+R\+I\+B\+U\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}A\+T\+T\+R\+I\+B\+U\+T\+E (
@@ -69,11 +69,11 @@ static \hyperlink{slirp_8c_a568a798f46022c03ad5665b75e55909a}{slirpcard\+\_\+t} 
 )}}\label{slirp_8c_a9a785c2d315f8be2a79b4831767c9b95}
 
 
-Definizione alla linea 28 del file slirp.\+c.
+Definition at line 28 of file slirp.\+c.
 
 
 
-Referenzia slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_\+recv(), kfree(), kmalloc(), kprintf, slirpcard\+::netif, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, slirpcard\+::offset, netif\+::rx\+\_\+bytes, netif\+::rx\+\_\+errors, netif\+::rx\+\_\+packets, serial\+\_\+recv(), S\+L\+I\+R\+P\+\_\+\+B\+U\+F\+S\+I\+Z, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, netif\+::state, uint8\+\_\+t, e slirpcard\+::used.
+References slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_\+recv(), kfree(), kmalloc(), kprintf(), slirpcard\+::netif, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, slirpcard\+::offset, netif\+::rx\+\_\+bytes, netif\+::rx\+\_\+errors, netif\+::rx\+\_\+packets, serial\+\_\+recv(), S\+L\+I\+R\+P\+\_\+\+B\+U\+F\+S\+I\+Z, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, netif\+::state, uint8\+\_\+t, and slirpcard\+::used.
 
 
 \begin{DoxyCode}
@@ -86,7 +86,7 @@ Referenzia slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_
 34     \textcolor{keywordflow}{if}((netif->\hyperlink{structnetif_a07586ae7a31c1231781af7394ce41659}{flags} & \hyperlink{netif_8h_a10eb923b0cb08f2b992345dd1a1bf98b}{NETIF\_FLAGS\_ENABLE}) == 0)
 35         \textcolor{keywordflow}{return};
 36     
-37     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"slirp: received data\(\backslash\)n"});
+37     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"slirp: received data\(\backslash\)n"});
 38 
 39     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t} \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d} = \hyperlink{serial_8c_abfa1d9231846e7f9820b4609e32f8f7c}{serial\_recv}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport});
 40     \textcolor{keywordflow}{if}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aca0b3836ef213a9ab9cab689175d6a38}{used} == 0) \{
@@ -146,11 +146,11 @@ Referenzia slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_
 )}}\label{slirp_8c_a145cf2e489aa075e08f69f79bdb19574}
 
 
-Definizione alla linea 124 del file slirp.\+c.
+Definition at line 124 of file slirp.\+c.
 
 
 
-Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+References netif\+::flags, and N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
 
 
 \begin{DoxyCode}
@@ -168,11 +168,11 @@ Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+
 )}}\label{slirp_8c_a6edb6b8f286eafaf6272e6e024c70934}
 
 
-Definizione alla linea 119 del file slirp.\+c.
+Definition at line 119 of file slirp.\+c.
 
 
 
-Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
+References netif\+::flags, and N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E.
 
 
 \begin{DoxyCode}
@@ -190,11 +190,11 @@ Referenzia netif\+::flags, e N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+
 )}}\label{slirp_8c_a8e7e3c2a9bf497a11fd8e2159976e5ad}
 
 
-Definizione alla linea 129 del file slirp.\+c.
+Definition at line 129 of file slirp.\+c.
 
 
 
-Referenzia slirpcard\+::buffer, netif\+::data, netif\+::dns, netif\+::ifdown, netif\+::ifup, slirpcard\+::ioport, netif\+::ipv4, netif\+::ipv6, irq\+\_\+set(), kmalloc(), netif\+::macaddr, slirpcard\+::magic, netif\+::mtu, netif\+::name, slirpcard\+::netif, netif\+\_\+add(), netif\+::netmask, slirpcard\+::offset, netif\+::primary, netif\+::secondary, netif\+::send, slirp\+\_\+handler(), slirp\+\_\+ifdown(), slirp\+\_\+ifup(), S\+L\+I\+R\+P\+\_\+\+M\+A\+G\+I\+C, S\+L\+I\+R\+P\+\_\+\+M\+T\+U, slirp\+\_\+send(), e slirpcard\+::used.
+References slirpcard\+::buffer, netif\+::data, netif\+::dns, netif\+::ifdown, netif\+::ifup, slirpcard\+::ioport, netif\+::ipv4, netif\+::ipv6, irq\+\_\+set(), kmalloc(), netif\+::macaddr, slirpcard\+::magic, netif\+::mtu, netif\+::name, slirpcard\+::netif, netif\+\_\+add(), netif\+::netmask, slirpcard\+::offset, netif\+::primary, netif\+::secondary, netif\+::send, slirp\+\_\+handler(), slirp\+\_\+ifdown(), slirp\+\_\+ifup(), S\+L\+I\+R\+P\+\_\+\+M\+A\+G\+I\+C, S\+L\+I\+R\+P\+\_\+\+M\+T\+U, slirp\+\_\+send(), and slirpcard\+::used.
 
 
 \begin{DoxyCode}
@@ -297,11 +297,11 @@ Referenzia slirpcard\+::buffer, netif\+::data, netif\+::dns, netif\+::ifdown, ne
 )}}\label{slirp_8c_a5bb8edbc515f4ca455cdfff6c75cf708}
 
 
-Definizione alla linea 85 del file slirp.\+c.
+Definition at line 85 of file slirp.\+c.
 
 
 
-Referenzia netif\+::data, netif\+::flags, slirpcard\+::ioport, length, slirpcard\+::magic, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, serial\+\_\+send(), S\+L\+I\+R\+P\+\_\+\+M\+A\+G\+I\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, e uint8\+\_\+t.
+References netif\+::data, netif\+::flags, slirpcard\+::ioport, length, slirpcard\+::magic, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, serial\+\_\+send(), S\+L\+I\+R\+P\+\_\+\+M\+A\+G\+I\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, and uint8\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -318,7 +318,7 @@ Referenzia netif\+::data, netif\+::flags, slirpcard\+::ioport, length, slirpcard
 94     \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END});
 95 
 96     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}* b = (\hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t}*) buf;
-97     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}; i++) \{
+97     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length}; i++) \{
 98         \textcolor{keywordflow}{switch}(b[i]) \{
 99             \textcolor{keywordflow}{case} \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END}:
 100                 \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, \hyperlink{slirp_8h_ab1ab0ab4001d8bdbfe07457776e58579}{SLIRP\_PACKET\_ESC});
@@ -339,16 +339,16 @@ Referenzia netif\+::data, netif\+::flags, slirpcard\+::ioport, length, slirpcard
 113     \}
 114 
 115     \hyperlink{serial_8c_a554c0b79338d298c39a06027b790edb5}{serial\_send}(slirpcard->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport}, \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END});
-116     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+116     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 117 \}
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{slirp_8c_a0f272b2d098a6c4df9edf6a275a4447f}{\index{slirp.\+c@{slirp.\+c}!slirpcard@{slirpcard}}
 \index{slirpcard@{slirpcard}!slirp.\+c@{slirp.\+c}}
 \subsubsection[{slirpcard}]{\setlength{\rightskip}{0pt plus 5cm}{\bf slirpcard\+\_\+t}$\ast$ {\bf slirpcard} = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{slirp_8c_a0f272b2d098a6c4df9edf6a275a4447f}
 
 
-Definizione alla linea 26 del file slirp.\+c.
+Definition at line 26 of file slirp.\+c.
 

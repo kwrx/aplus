@@ -1,0 +1,196 @@
+\hypertarget{iso9660_8c}{\section{src/fs/iso9660/iso9660.c File Reference}
+\label{iso9660_8c}\index{src/fs/iso9660/iso9660.\+c@{src/fs/iso9660/iso9660.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}iso9660.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8c_a905578f1c9b133346ef276f7bfb4c09b}{iso9660\+\_\+getroot} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$dev)
+\item 
+int \hyperlink{iso9660_8c_a0b0848072ac5dcd6aa6eb1c854a10100}{iso9660\+\_\+check} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$dev)
+\item 
+void \hyperlink{iso9660_8c_a42e767e05480219cfb4878964b4f0192}{iso9660\+\_\+checkname} (char $\ast$\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name})
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{iso9660_8c_a1e77818b5acc46131a039a4703fd5f7d}{iso9660\+\_\+getmsb16} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} val)
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8c_a0b1c5a3b273539e0d2cf38dd762b0d88}{iso9660\+\_\+getmsb32} (uint64\+\_\+t val)
+\item 
+\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{iso9660_8c_a4cf027df2173f6a384fdf798cb33fd0a}{iso9660\+\_\+getlsb16} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} val)
+\item 
+\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{iso9660_8c_a0e3f94f923e7f615525349cee099f701}{iso9660\+\_\+getlsb32} (uint64\+\_\+t val)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{iso9660_8c_a0b0848072ac5dcd6aa6eb1c854a10100}{\index{iso9660.\+c@{iso9660.\+c}!iso9660\+\_\+check@{iso9660\+\_\+check}}
+\index{iso9660\+\_\+check@{iso9660\+\_\+check}!iso9660.\+c@{iso9660.\+c}}
+\subsubsection[{iso9660\+\_\+check}]{\setlength{\rightskip}{0pt plus 5cm}int iso9660\+\_\+check (
+\begin{DoxyParamCaption}
+\item[{{\bf inode\+\_\+t} $\ast$}]{dev}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8c_a0b0848072ac5dcd6aa6eb1c854a10100}
+
+
+Definition at line 31 of file iso9660.\+c.
+
+
+
+References fs\+\_\+read(), I\+S\+O9660\+\_\+\+I\+D, I\+S\+O9660\+\_\+\+P\+V\+D, I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E, kfree(), kmalloc(), and inode\+::position.
+
+
+\begin{DoxyCode}
+31                                 \{
+32     iso9660\_pvd\_t* pvd = (iso9660\_pvd\_t*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE});
+33     memset(pvd, 0, \hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE});
+34 
+35     dev->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = \hyperlink{iso9660_8h_a46d3c45c595db51113eb469111f8f47e}{ISO9660\_PVD};
+36     \textcolor{keywordflow}{if}(\hyperlink{fs_8c_a8e53a98b93e6b136196b2ebd99e43dcd}{fs\_read}(dev, pvd, \hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE}) != 
+      \hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE}) \{
+37         \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(pvd);
+38         \textcolor{keywordflow}{return} 0;
+39     \}
+40 
+41     \textcolor{keywordtype}{int} ret = strncmp(pvd->id, \hyperlink{iso9660_8h_adb9a0b19d37ea681279fbc2fd12e78e9}{ISO9660\_ID}, 5);
+42     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(pvd);
+43 
+44     \textcolor{keywordflow}{return} ret;
+45 \}
+\end{DoxyCode}
+\hypertarget{iso9660_8c_a42e767e05480219cfb4878964b4f0192}{\index{iso9660.\+c@{iso9660.\+c}!iso9660\+\_\+checkname@{iso9660\+\_\+checkname}}
+\index{iso9660\+\_\+checkname@{iso9660\+\_\+checkname}!iso9660.\+c@{iso9660.\+c}}
+\subsubsection[{iso9660\+\_\+checkname}]{\setlength{\rightskip}{0pt plus 5cm}void iso9660\+\_\+checkname (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8c_a42e767e05480219cfb4878964b4f0192}
+
+
+Definition at line 47 of file iso9660.\+c.
+
+
+\begin{DoxyCode}
+47                                    \{
+48     \textcolor{keywordtype}{char}* p = strchr(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, \textcolor{charliteral}{';'});
+49     \textcolor{keywordflow}{if}(p) \{
+50         *p-- = 0;
+51     
+52         \textcolor{keywordflow}{if}(*p == \textcolor{charliteral}{'.'})
+53             *p = 0;
+54     \}
+55 
+56     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < strlen(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}); i++)
+57         \textcolor{keywordflow}{if}(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}[i] >= \textcolor{charliteral}{'A'} && \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}[i] <= \textcolor{charliteral}{'Z'})
+58             \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}[i] += 32;
+59 \}
+\end{DoxyCode}
+\hypertarget{iso9660_8c_a4cf027df2173f6a384fdf798cb33fd0a}{\index{iso9660.\+c@{iso9660.\+c}!iso9660\+\_\+getlsb16@{iso9660\+\_\+getlsb16}}
+\index{iso9660\+\_\+getlsb16@{iso9660\+\_\+getlsb16}!iso9660.\+c@{iso9660.\+c}}
+\subsubsection[{iso9660\+\_\+getlsb16}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} iso9660\+\_\+getlsb16 (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{val}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8c_a4cf027df2173f6a384fdf798cb33fd0a}
+
+
+Definition at line 69 of file iso9660.\+c.
+
+
+\begin{DoxyCode}
+69                                         \{
+70     \textcolor{keywordflow}{return} (val >> 0) & 0xFFFF;
+71 \}
+\end{DoxyCode}
+\hypertarget{iso9660_8c_a0e3f94f923e7f615525349cee099f701}{\index{iso9660.\+c@{iso9660.\+c}!iso9660\+\_\+getlsb32@{iso9660\+\_\+getlsb32}}
+\index{iso9660\+\_\+getlsb32@{iso9660\+\_\+getlsb32}!iso9660.\+c@{iso9660.\+c}}
+\subsubsection[{iso9660\+\_\+getlsb32}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} iso9660\+\_\+getlsb32 (
+\begin{DoxyParamCaption}
+\item[{uint64\+\_\+t}]{val}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8c_a0e3f94f923e7f615525349cee099f701}
+
+
+Definition at line 73 of file iso9660.\+c.
+
+
+\begin{DoxyCode}
+73                                         \{
+74     \textcolor{keywordflow}{return} (val >> 0) & 0xFFFFFFFF;
+75 \}
+\end{DoxyCode}
+\hypertarget{iso9660_8c_a1e77818b5acc46131a039a4703fd5f7d}{\index{iso9660.\+c@{iso9660.\+c}!iso9660\+\_\+getmsb16@{iso9660\+\_\+getmsb16}}
+\index{iso9660\+\_\+getmsb16@{iso9660\+\_\+getmsb16}!iso9660.\+c@{iso9660.\+c}}
+\subsubsection[{iso9660\+\_\+getmsb16}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} iso9660\+\_\+getmsb16 (
+\begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t}}]{val}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8c_a1e77818b5acc46131a039a4703fd5f7d}
+
+
+Definition at line 61 of file iso9660.\+c.
+
+
+\begin{DoxyCode}
+61                                         \{
+62     \textcolor{keywordflow}{return} (val >> 16) & 0xFFFF;
+63 \}
+\end{DoxyCode}
+\hypertarget{iso9660_8c_a0b1c5a3b273539e0d2cf38dd762b0d88}{\index{iso9660.\+c@{iso9660.\+c}!iso9660\+\_\+getmsb32@{iso9660\+\_\+getmsb32}}
+\index{iso9660\+\_\+getmsb32@{iso9660\+\_\+getmsb32}!iso9660.\+c@{iso9660.\+c}}
+\subsubsection[{iso9660\+\_\+getmsb32}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} iso9660\+\_\+getmsb32 (
+\begin{DoxyParamCaption}
+\item[{uint64\+\_\+t}]{val}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8c_a0b1c5a3b273539e0d2cf38dd762b0d88}
+
+
+Definition at line 65 of file iso9660.\+c.
+
+
+\begin{DoxyCode}
+65                                         \{
+66     \textcolor{keywordflow}{return} (val >> 32) & 0xFFFFFFFF;
+67 \}
+\end{DoxyCode}
+\hypertarget{iso9660_8c_a905578f1c9b133346ef276f7bfb4c09b}{\index{iso9660.\+c@{iso9660.\+c}!iso9660\+\_\+getroot@{iso9660\+\_\+getroot}}
+\index{iso9660\+\_\+getroot@{iso9660\+\_\+getroot}!iso9660.\+c@{iso9660.\+c}}
+\subsubsection[{iso9660\+\_\+getroot}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} iso9660\+\_\+getroot (
+\begin{DoxyParamCaption}
+\item[{{\bf inode\+\_\+t} $\ast$}]{dev}
+\end{DoxyParamCaption}
+)}}\label{iso9660_8c_a905578f1c9b133346ef276f7bfb4c09b}
+
+
+Definition at line 14 of file iso9660.\+c.
+
+
+
+References fs\+\_\+read(), I\+S\+O9660\+\_\+\+P\+V\+D, I\+S\+O9660\+\_\+\+V\+O\+L\+D\+E\+S\+C\+\_\+\+S\+I\+Z\+E, kfree(), kmalloc(), inode\+::position, and uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+14                                        \{
+15     iso9660\_pvd\_t* pvd = (iso9660\_pvd\_t*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE});
+16     memset(pvd, 0, \hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE});
+17 
+18     dev->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = \hyperlink{iso9660_8h_a46d3c45c595db51113eb469111f8f47e}{ISO9660\_PVD};
+19     \textcolor{keywordflow}{if}(\hyperlink{fs_8c_a8e53a98b93e6b136196b2ebd99e43dcd}{fs\_read}(dev, pvd, \hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE}) != 
+      \hyperlink{iso9660_8h_aa140ca7b27f39439a142a564aa47c06b}{ISO9660\_VOLDESC\_SIZE}) \{
+20         \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(pvd);
+21         \textcolor{keywordflow}{return} 0;
+22     \}
+23 
+24     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} ret = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) pvd->rootdir;
+25     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(pvd);
+26 
+27     \textcolor{keywordflow}{return} ret;
+28 \}
+\end{DoxyCode}

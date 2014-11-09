@@ -114,31 +114,31 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="81">
+      <node id="87">
         <label>pthread_once</label>
         <link refid="structpthread__once"/>
       </node>
-      <node id="80">
+      <node id="86">
         <label>pthread_context</label>
         <link refid="structpthread__context"/>
-        <childnode refid="80" relation="usage">
+        <childnode refid="86" relation="usage">
           <edgelabel>+next</edgelabel>
         </childnode>
-        <childnode refid="81" relation="usage">
+        <childnode refid="87" relation="usage">
           <edgelabel>+once</edgelabel>
         </childnode>
-        <childnode refid="82" relation="usage">
+        <childnode refid="88" relation="usage">
           <edgelabel>+cond</edgelabel>
         </childnode>
-        <childnode refid="83" relation="usage">
+        <childnode refid="89" relation="usage">
           <edgelabel>+attr</edgelabel>
         </childnode>
       </node>
-      <node id="83">
+      <node id="89">
         <label>pthread_attr</label>
         <link refid="structpthread__attr"/>
       </node>
-      <node id="82">
+      <node id="88">
         <label>pthread_cond</label>
         <link refid="structpthread__cond"/>
       </node>

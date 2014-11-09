@@ -2,6 +2,7 @@ var searchData=
 [
   ['capabilities',['capabilities',['../structvesaInfo__t.html#a1f4453c48c6629e27fd2e97948deb62b',1,'vesaInfo_t']]],
   ['card',['card',['../rtl8139_8c.html#a457f6197ba2a5b8c30f24394fcabd0f7',1,'rtl8139.c']]],
+  ['cdate',['cdate',['../structiso9660__pvd.html#a24c222ddd2ef04dda8576715e1f9af69',1,'iso9660_pvd::cdate()'],['../iso9660_8h.html#a7a3d70624a24b670dca0a6c6eea3a997',1,'cdate():&#160;iso9660.h']]],
   ['checksum',['checksum',['../structipv4__header.html#ac6447b538451342a6f016aedd17eb9fa',1,'ipv4_header::checksum()'],['../structudp__header.html#ad0ffcddf83678ff1305300db0dac33c5',1,'udp_header::checksum()'],['../ipv4_8h.html#a6796c847bbd16253ce2538754c250bd6',1,'checksum():&#160;ipv4.h'],['../udp_8h.html#a6796c847bbd16253ce2538754c250bd6',1,'checksum():&#160;udp.h']]],
   ['chown',['chown',['../structinode.html#a8221183a697c9f2b4e0e295f5a9d8afd',1,'inode']]],
   ['clock',['clock',['../structtask.html#a8a31c6648c1b1869bfa069f4a969b0ad',1,'task']]],
@@ -10,6 +11,7 @@ var searchData=
   ['config_5ftable',['config_table',['../structBootInfo__t.html#a43ae8547b0cea379829329a622d9bc4c',1,'BootInfo_t']]],
   ['contentionscope',['contentionscope',['../structpthread__attr.html#a1d5ca4923f6814d754208080896a360a',1,'pthread_attr']]],
   ['context',['context',['../structtask.html#a7e47fc3627188eeefc77f78e8d36ddd1',1,'task']]],
+  ['copyid',['copyid',['../structiso9660__pvd.html#ac823631d979880abef81ce27b040eb52',1,'iso9660_pvd::copyid()'],['../iso9660_8h.html#a3104efb0fb2ca6c2e2d4ec755b184cca',1,'copyid():&#160;iso9660.h']]],
   ['cr3',['cr3',['../structtask.html#a5f4968459d4640f19c7e802ae7057179',1,'task']]],
   ['creat',['creat',['../structinode.html#ad622a049b34780786d9ba4311b06b3b4',1,'inode']]],
   ['cs',['cs',['../structregs.html#a2d8cf067e67462a631c823b368ce67c4',1,'regs::cs()'],['../aplus_8h.html#a8519dc239502dfcbac171b3128dc7054',1,'cs():&#160;aplus.h']]],

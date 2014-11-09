@@ -9,107 +9,107 @@
     <includes refid="mm_8h" local="no">aplus/mm.h</includes>
     <includes refid="grub_8h" local="no">grub.h</includes>
     <incdepgraph>
-      <node id="948">
+      <node id="1140">
         <label>sys/stat.h</label>
       </node>
-      <node id="946">
+      <node id="1138">
         <label>stdarg.h</label>
       </node>
-      <node id="947">
+      <node id="1139">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="940" relation="include">
+        <childnode refid="1132" relation="include">
         </childnode>
-        <childnode refid="939" relation="include">
+        <childnode refid="1131" relation="include">
         </childnode>
-        <childnode refid="942" relation="include">
+        <childnode refid="1134" relation="include">
         </childnode>
-        <childnode refid="948" relation="include">
+        <childnode refid="1140" relation="include">
         </childnode>
-        <childnode refid="949" relation="include">
+        <childnode refid="1141" relation="include">
         </childnode>
       </node>
-      <node id="940">
+      <node id="1132">
         <label>stdint.h</label>
       </node>
-      <node id="952">
+      <node id="1144">
         <label>setjmp.h</label>
       </node>
-      <node id="944">
+      <node id="1136">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="940" relation="include">
+        <childnode refid="1132" relation="include">
         </childnode>
-        <childnode refid="945" relation="include">
+        <childnode refid="1137" relation="include">
         </childnode>
-        <childnode refid="947" relation="include">
+        <childnode refid="1139" relation="include">
         </childnode>
-        <childnode refid="951" relation="include">
+        <childnode refid="1143" relation="include">
         </childnode>
-        <childnode refid="942" relation="include">
+        <childnode refid="1134" relation="include">
         </childnode>
-        <childnode refid="952" relation="include">
+        <childnode refid="1144" relation="include">
         </childnode>
       </node>
-      <node id="953">
+      <node id="1145">
         <label>grub.h</label>
         <link refid="grub_8h"/>
       </node>
-      <node id="939">
+      <node id="1131">
         <label>stddef.h</label>
       </node>
-      <node id="945">
+      <node id="1137">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="940" relation="include">
+        <childnode refid="1132" relation="include">
         </childnode>
-        <childnode refid="946" relation="include">
+        <childnode refid="1138" relation="include">
         </childnode>
-        <childnode refid="941" relation="include">
+        <childnode refid="1133" relation="include">
         </childnode>
       </node>
-      <node id="942">
+      <node id="1134">
         <label>sys/types.h</label>
       </node>
-      <node id="938">
+      <node id="1130">
         <label>src/mm/kheap.c</label>
         <link refid="kheap.c"/>
-        <childnode refid="939" relation="include">
+        <childnode refid="1131" relation="include">
         </childnode>
-        <childnode refid="940" relation="include">
+        <childnode refid="1132" relation="include">
         </childnode>
-        <childnode refid="941" relation="include">
+        <childnode refid="1133" relation="include">
         </childnode>
-        <childnode refid="942" relation="include">
+        <childnode refid="1134" relation="include">
         </childnode>
-        <childnode refid="943" relation="include">
+        <childnode refid="1135" relation="include">
         </childnode>
-        <childnode refid="953" relation="include">
+        <childnode refid="1145" relation="include">
         </childnode>
       </node>
-      <node id="941">
+      <node id="1133">
         <label>string.h</label>
       </node>
-      <node id="950">
+      <node id="1142">
         <label>unistd.h</label>
       </node>
-      <node id="951">
+      <node id="1143">
         <label>signal.h</label>
       </node>
-      <node id="943">
+      <node id="1135">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="940" relation="include">
+        <childnode refid="1132" relation="include">
         </childnode>
-        <childnode refid="944" relation="include">
+        <childnode refid="1136" relation="include">
         </childnode>
       </node>
-      <node id="949">
+      <node id="1141">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="950" relation="include">
+        <childnode refid="1142" relation="include">
         </childnode>
-        <childnode refid="942" relation="include">
+        <childnode refid="1134" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -230,8 +230,8 @@
         <location file="/opt/prj/aPlus/src/mm/kheap.c" line="55" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="55" bodyend="71"/>
         <references refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" compoundref="mm_8h" startline="63">heap::bitmap</references>
         <references refid="kheap_8c_1a47df99630658921f6898646851230983" compoundref="kheap_8c" startline="38">BITMAP_TST</references>
-        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
         <references refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" compoundref="mm_8h" startline="64">heap::size</references>
+        <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="74">size</references>
       </memberdef>
       <memberdef kind="function" id="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void *</type>
@@ -257,8 +257,8 @@
         <references refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" compoundref="kheap_8c" startline="55" endline="71">bitmap_first</references>
         <references refid="kheap_8c_1a74db82a3840a04b119ef68ace44be19a" compoundref="kheap_8c" startline="32">BITMAP_SET</references>
         <references refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" compoundref="mm_8h" startline="57">BLKSIZE</references>
-        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
         <references refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" compoundref="mm_8h" startline="64">heap::size</references>
+        <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="74">size</references>
         <references refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" compoundref="mm_8h" startline="65">heap::used</references>
       </memberdef>
       <memberdef kind="function" id="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -289,7 +289,7 @@
         <references refid="kheap_8c_1a117b3288a72c30a6c9be0e2773332705" compoundref="kheap_8c" startline="35">BITMAP_CLR</references>
         <references refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" compoundref="mm_8h" startline="57">BLKSIZE</references>
         <references refid="kheap_8c_1a112c287ac25c656c889838c3629d822b" compoundref="kheap_8c" startline="42">GETBIT</references>
-        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
+        <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="74">size</references>
         <references refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" compoundref="mm_8h" startline="65">heap::used</references>
       </memberdef>
       <memberdef kind="function" id="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -303,7 +303,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="132" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="132" bodyend="149"/>
+        <location file="/opt/prj/aPlus/src/mm/kheap.c" line="132" column="1" bodyfile="/opt/prj/aPlus/src/mm/kheap.c" bodystart="132" bodyend="148"/>
         <references refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" compoundref="kheap_8c" startline="52">__bitmap</references>
         <references refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" compoundref="mm_8h" startline="67">heap::alloc</references>
         <references refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" compoundref="mm_8h" startline="63">heap::bitmap</references>
@@ -377,12 +377,12 @@
 <codeline lineno="52" refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" kindref="member">__bitmap</ref>[131072];</highlight></codeline>
 <codeline lineno="53"><highlight class="normal"></highlight></codeline>
 <codeline lineno="54"><highlight class="normal"></highlight></codeline>
-<codeline lineno="55" refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" kindref="member">bitmap_first</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="55" refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1a74ba44118238191dbc2c0aa8cb715b2a" kindref="member">bitmap_first</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>heap-&gt;<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>;<sp/>i++)<sp/>{<sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j<sp/>=<sp/>0,<sp/>f<sp/>=<sp/>0;<sp/>j<sp/>&lt;<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;<sp/>j++)<sp/>{</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>j<sp/>=<sp/>0,<sp/>f<sp/>=<sp/>0;<sp/>j<sp/>&lt;<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;<sp/>j++)<sp/>{</highlight></codeline>
 <codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="kheap_8c_1a47df99630658921f6898646851230983" kindref="member">BITMAP_TST</ref>(heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>(i<sp/>+<sp/>j)))</highlight></codeline>
 <codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
@@ -397,7 +397,7 @@
 <codeline lineno="72"><highlight class="normal"></highlight></codeline>
 <codeline lineno="73"><highlight class="normal"></highlight></codeline>
 <codeline lineno="74"><highlight class="normal"></highlight></codeline>
-<codeline lineno="75" refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" kindref="member">bitmap_alloc</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="75" refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" kindref="member">bitmap_alloc</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!heap)</highlight></codeline>
 <codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
@@ -419,16 +419,16 @@
 <codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(index<sp/>==<sp/>-1)</highlight></codeline>
 <codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;<sp/>i++)</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;<sp/>i++)</highlight></codeline>
 <codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="kheap_8c_1a74db82a3840a04b119ef68ace44be19a" kindref="member">BITMAP_SET</ref>(heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>(index<sp/>+<sp/>i));</highlight></codeline>
 <codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>heap-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>+=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>heap-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>+=<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;</highlight></codeline>
 <codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>(index<sp/>*<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>);</highlight></codeline>
 <codeline lineno="104"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="105"><highlight class="normal"></highlight></codeline>
-<codeline lineno="106" refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" kindref="member">bitmap_free</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="106" refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" kindref="member">bitmap_free</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!heap)</highlight></codeline>
 <codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
@@ -445,33 +445,32 @@
 <codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>index<sp/>=<sp/><ref refid="kheap_8c_1a112c287ac25c656c889838c3629d822b" kindref="member">GETBIT</ref>(addr);</highlight></codeline>
-<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;<sp/>i++)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;<sp/>i++)</highlight></codeline>
 <codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="kheap_8c_1a117b3288a72c30a6c9be0e2773332705" kindref="member">BITMAP_CLR</ref>(heap-&gt;<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>(index<sp/>+<sp/>i));</highlight></codeline>
 <codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>heap-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>-=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/>heap-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>-=<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;</highlight></codeline>
 <codeline lineno="128"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="129"><highlight class="normal"></highlight></codeline>
 <codeline lineno="130"><highlight class="normal"></highlight></codeline>
 <codeline lineno="131"><highlight class="normal"></highlight></codeline>
 <codeline lineno="132" refid="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" kindref="member">kheap_init</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>end;</highlight></codeline>
-<codeline lineno="134"><highlight class="normal"></highlight></codeline>
-<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref><sp/>=<sp/><ref refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" kindref="member">__bitmap</ref>;</highlight></codeline>
-<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref><sp/>=<sp/><ref refid="kheap_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>/<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>;</highlight></codeline>
-<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" kindref="member">alloc</ref><sp/>=<sp/><ref refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" kindref="member">bitmap_alloc</ref>;</highlight></codeline>
-<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" kindref="member">free</ref><sp/>=<sp/><ref refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" kindref="member">bitmap_free</ref>;</highlight></codeline>
-<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(kheap.<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>0,<sp/>kheap.<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>);</highlight></codeline>
-<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" kindref="member">mm_setheap</ref>(&amp;kheap);</highlight></codeline>
-<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Alloc<sp/>first<sp/>4MB<sp/>(reserved<sp/>physical<sp/>kernel<sp/>area)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(&amp;kheap,<sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">)<sp/>0x400000);</highlight></codeline>
-<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="147"><highlight class="normal"></highlight></codeline>
-<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="149"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref><sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/><ref refid="kheap_8c_1ab27b0e2ca68753b0298fd591615a6592" kindref="member">__bitmap</ref>;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref><sp/>=<sp/><ref refid="kheap_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>/<sp/><ref refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" kindref="member">BLKSIZE</ref>;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" kindref="member">alloc</ref><sp/>=<sp/><ref refid="kheap_8c_1a5091f353b0ceafc7134382b4386d206c" kindref="member">bitmap_alloc</ref>;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>kheap.<ref refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" kindref="member">free</ref><sp/>=<sp/><ref refid="kheap_8c_1ae9ee37909a7c84b79ce0d7d0414ebeee" kindref="member">bitmap_free</ref>;</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(kheap.<ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>,<sp/>0,<sp/>kheap.<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>);</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" kindref="member">mm_setheap</ref>(&amp;kheap);</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Alloc<sp/>first<sp/>4MB<sp/>(reserved<sp/>physical<sp/>kernel<sp/>area)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(&amp;kheap,<sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">)<sp/>0x400000);</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/mm/kheap.c"/>
   </compounddef>

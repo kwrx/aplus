@@ -9,6 +9,8 @@
     <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
     <programlisting>#include &lt;stddef.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;fcntl.h&gt;</programlisting>
     <programlisting>#include &lt;sys/times.h&gt;</programlisting>
     <programlisting>#include &lt;time.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/netif.h&gt;</programlisting>

@@ -1,4 +1,4 @@
-\hypertarget{eth_8c}{\section{Riferimenti per il file src/net/eth.c}
+\hypertarget{eth_8c}{\section{src/net/eth.c File Reference}
 \label{eth_8c}\index{src/net/eth.\+c@{src/net/eth.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -8,12 +8,12 @@
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$string.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{eth_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\+\_\+\+\_\+params}~\hyperlink{structnetif}{netif}, (void$\ast$) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t}) buf + sizeof(eth\+\_\+header\+\_\+t)), \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} -\/ sizeof(eth\+\_\+header\+\_\+t)
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{eth_8c_af8e21540e459402877e8e7143d17f47c}{eth\+\_\+recv} (\hyperlink{netif_8h_af6c73b8fa12396c0382f58d63e895008}{netif\+\_\+t} $\ast$\hyperlink{structnetif}{netif}, void $\ast$buf, size\+\_\+t \hyperlink{udp_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length})
@@ -24,13 +24,13 @@ int \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\+\_\+send} (\hyperl
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{eth_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\index{eth.\+c@{eth.\+c}!\+\_\+\+\_\+params@{\+\_\+\+\_\+params}}
 \index{\+\_\+\+\_\+params@{\+\_\+\+\_\+params}!eth.\+c@{eth.\+c}}
 \subsubsection[{\+\_\+\+\_\+params}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+params~{\bf netif}, (void$\ast$) (({\bf uint32\+\_\+t}) buf + sizeof(eth\+\_\+header\+\_\+t)), {\bf length} -\/ sizeof(eth\+\_\+header\+\_\+t)}}\label{eth_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{eth_8c_af8e21540e459402877e8e7143d17f47c}{\index{eth.\+c@{eth.\+c}!eth\+\_\+recv@{eth\+\_\+recv}}
 \index{eth\+\_\+recv@{eth\+\_\+recv}!eth.\+c@{eth.\+c}}
 \subsubsection[{eth\+\_\+recv}]{\setlength{\rightskip}{0pt plus 5cm}int eth\+\_\+recv (
@@ -42,11 +42,11 @@ int \hyperlink{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{eth\+\_\+send} (\hyperl
 )}}\label{eth_8c_af8e21540e459402877e8e7143d17f47c}
 
 
-Definizione alla linea 11 del file eth.\+c.
+Definition at line 11 of file eth.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+params, arp\+\_\+recv(), E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+R\+P, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V4, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V6, ipv4\+\_\+recv(), ipv6\+\_\+recv(), length, N\+E\+T\+I\+F\+\_\+\+E\+T\+H, netif\+\_\+packets\+\_\+add(), e netif\+\_\+packets\+\_\+create().
+References \+\_\+\+\_\+params, arp\+\_\+recv(), E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+R\+P, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V4, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V6, ipv4\+\_\+recv(), ipv6\+\_\+recv(), length, N\+E\+T\+I\+F\+\_\+\+E\+T\+H, netif\+\_\+packets\+\_\+add(), and netif\+\_\+packets\+\_\+create().
 
 
 \begin{DoxyCode}
@@ -60,17 +60,17 @@ Referenzia \+\_\+\+\_\+params, arp\+\_\+recv(), E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\
 18         \textcolor{keywordflow}{case} \hyperlink{eth_8h_acba2f68ee7a6d728108123f0209690fb}{ETH\_TYPE\_IPV4}:
 19             \textcolor{keywordflow}{if}(\hyperlink{ipv4_8c_aef7e4d9aa0ca33ce3ed3d39d613ebf64}{ipv4\_recv}(\hyperlink{eth_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\_\_params}) == 0)
 20                 \textcolor{keywordflow}{return} 0;
-21             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+21             \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 22 
 23         \textcolor{keywordflow}{case} \hyperlink{eth_8h_a9f5c136f58003cd8efe144d478877ead}{ETH\_TYPE\_IPV6}:
 24             \textcolor{keywordflow}{if}(\hyperlink{ipv6_8c_a65c6f6768d3db7c82274e94dbd24c141}{ipv6\_recv}(\hyperlink{eth_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\_\_params}) == 0)
 25                 \textcolor{keywordflow}{return} 0;
-26             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+26             \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 27 
 28         \textcolor{keywordflow}{case} \hyperlink{eth_8h_a14a88f547fcbf1570273a1582e823f87}{ETH\_TYPE\_ARP}:
 29             \textcolor{keywordflow}{if}(\hyperlink{arp_8c_ad8cef1da8ee381336f1c3bbfa015525c}{arp\_recv}(\hyperlink{eth_8c_a6e97b6f8ba31f1160a8e6c677832f3e3}{\_\_params}) == 0)
 30                 \textcolor{keywordflow}{return} 0;
-31             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+31             \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 32     \}
 33 
 34 
@@ -79,12 +79,12 @@ Referenzia \+\_\+\+\_\+params, arp\+\_\+recv(), E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\
 37         \hyperlink{netif_8c_aa14a95992efbcac98c16a43724dc0942}{netif\_packets\_create} (
 38                             netif,
 39                             \hyperlink{netif_8h_a1b5ab571fbbee0edabe0bbf9029663cf}{NETIF\_ETH}, 
-40                             \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, 
+40                             \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length}, 
 41                             \textcolor{keyword}{sizeof}(eth\_header\_t), 
 42                             buf
 43         )
 44     );
-45     \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+45     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 46 \}
 \end{DoxyCode}
 \hypertarget{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}{\index{eth.\+c@{eth.\+c}!eth\+\_\+send@{eth\+\_\+send}}
@@ -99,19 +99,19 @@ Referenzia \+\_\+\+\_\+params, arp\+\_\+recv(), E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\
 )}}\label{eth_8c_ae59b4f0e6c4a9e21facbf96b628f0832}
 
 
-Definizione alla linea 79 del file eth.\+c.
+Definition at line 79 of file eth.\+c.
 
 
 
-Referenzia eth\+\_\+send\+\_\+packet(), length, netif\+::mtu, type, e uint32\+\_\+t.
+References eth\+\_\+send\+\_\+packet(), length, netif\+::mtu, type, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
 79                                                                  \{
 80 
-81     \textcolor{keywordflow}{if}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} + \textcolor{keyword}{sizeof}(eth\_header\_t) < netif->\hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu}) \{
-82         \textcolor{keywordflow}{if}(\hyperlink{eth_8c_aa7c43183772abcca4a7b43ab1ef9faea}{eth\_send\_packet}(netif, buf, \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}) > 0)
-83             \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+81     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length} + \textcolor{keyword}{sizeof}(eth\_header\_t) < netif->\hyperlink{structnetif_a2eb32b1acf0a223c5cc3874da3c2f3df}{mtu}) \{
+82         \textcolor{keywordflow}{if}(\hyperlink{eth_8c_aa7c43183772abcca4a7b43ab1ef9faea}{eth\_send\_packet}(netif, buf, \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length}, \hyperlink{iso9660_8h_a6def72cbab7e986d0ac5dc7291e1394a}{type}) > 0)
+83             \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 84         \textcolor{keywordflow}{else}
 85             \textcolor{keywordflow}{return} 0;
 86     \}
@@ -120,17 +120,17 @@ Referenzia eth\+\_\+send\+\_\+packet(), length, netif\+::mtu, type, e uint32\+\_
 89     \textcolor{keywordtype}{int} ret = 0;
 90 
 91 
-92     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}; i += delta)
+92     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length}; i += delta)
 93         ret += \hyperlink{eth_8c_aa7c43183772abcca4a7b43ab1ef9faea}{eth\_send\_packet}(netif, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) buf + i), delta, 
-      \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type});
+      \hyperlink{iso9660_8h_a6def72cbab7e986d0ac5dc7291e1394a}{type});
 94 
 95     \textcolor{keywordflow}{if}((length % delta) != 0)
 96         ret += \hyperlink{eth_8c_aa7c43183772abcca4a7b43ab1ef9faea}{eth\_send\_packet}(netif, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) buf + length - (length % 
-      delta)), length % delta, \hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type});
+      delta)), length % delta, \hyperlink{iso9660_8h_a6def72cbab7e986d0ac5dc7291e1394a}{type});
 97     
 98     
 99     \textcolor{keywordflow}{if}(ret)
-100         \textcolor{keywordflow}{return} \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length};
+100         \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length};
 101     
 102     \textcolor{keywordflow}{return} 0;
 103 \}
@@ -147,23 +147,23 @@ Referenzia eth\+\_\+send\+\_\+packet(), length, netif\+::mtu, type, e uint32\+\_
 )\hspace{0.3cm}{\ttfamily [static]}}}\label{eth_8c_aa7c43183772abcca4a7b43ab1ef9faea}
 
 
-Definizione alla linea 49 del file eth.\+c.
+Definition at line 49 of file eth.\+c.
 
 
 
-Referenzia E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+R\+P, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V4, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V6, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+A\+W, kfree(), kmalloc(), netif\+::macaddr, N\+E\+T\+I\+F\+\_\+\+A\+R\+P, N\+E\+T\+I\+F\+\_\+\+E\+T\+H, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T6, netif\+::send, e uint32\+\_\+t.
+References E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+R\+P, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V4, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V6, E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+A\+W, kfree(), kmalloc(), netif\+::macaddr, N\+E\+T\+I\+F\+\_\+\+A\+R\+P, N\+E\+T\+I\+F\+\_\+\+E\+T\+H, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T, N\+E\+T\+I\+F\+\_\+\+I\+N\+E\+T6, netif\+::send, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
 49                                                                                \{
-50     eth\_header\_t* ethpkt = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} + \textcolor{keyword}{sizeof}(eth\_header\_t));
+50     eth\_header\_t* ethpkt = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length} + \textcolor{keyword}{sizeof}(eth\_header\_t));
 51     memset((\textcolor{keywordtype}{void}*) ethpkt->dest, 0xFF, \textcolor{keyword}{sizeof}(\hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t}));
 52     memcpy((\textcolor{keywordtype}{void}*) ethpkt->source, (\textcolor{keywordtype}{void}*) netif->\hyperlink{structnetif_a7a5c433a646e2b4424fe8ebf12db535c}{macaddr}, \textcolor{keyword}{sizeof}(
       \hyperlink{netif_8h_a95d524a06a1ff12a314f88bac04db658}{macaddr\_t}));
 53     memcpy((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) ethpkt + \textcolor{keyword}{sizeof}(eth\_header\_t)), buf, 
-      \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length});
+      \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length});
 54 
-55     \textcolor{keywordflow}{switch}(\hyperlink{eth_8h_acb5cfd209ba75c853d03f701e7f91679}{type}) \{
+55     \textcolor{keywordflow}{switch}(\hyperlink{iso9660_8h_a6def72cbab7e986d0ac5dc7291e1394a}{type}) \{
 56         \textcolor{keywordflow}{case} \hyperlink{netif_8h_a00e0d33542bf01395718b7c5047921d1}{NETIF\_INET}:
 57             ethpkt->type = \hyperlink{eth_8h_acba2f68ee7a6d728108123f0209690fb}{ETH\_TYPE\_IPV4};
 58             \textcolor{keywordflow}{break};
@@ -179,9 +179,9 @@ Referenzia E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+A\+R\+P, E\+T\+H\+\_\+\+T\+Y\+P\+E\+
 68     \}
 69 
 70     
-71     \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length} += \textcolor{keyword}{sizeof}(eth\_header\_t);
+71     \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length} += \textcolor{keyword}{sizeof}(eth\_header\_t);
 72     
-73     \textcolor{keywordtype}{int} ret = netif->\hyperlink{structnetif_ac0505ae55088f68c2cefa77dc6871208}{send}(netif, ethpkt, \hyperlink{ipv4_8h_a1892eba2086d12ac2b09005aeb09ea3b}{length}, \hyperlink{netif_8h_a1b5ab571fbbee0edabe0bbf9029663cf}{NETIF\_ETH});
+73     \textcolor{keywordtype}{int} ret = netif->\hyperlink{structnetif_ac0505ae55088f68c2cefa77dc6871208}{send}(netif, ethpkt, \hyperlink{iso9660_8h_a190b76b1f3d5bd26920300e5f073739b}{length}, \hyperlink{netif_8h_a1b5ab571fbbee0edabe0bbf9029663cf}{NETIF\_ETH});
 74     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(ethpkt);
 75     
 76     \textcolor{keywordflow}{return} ret;

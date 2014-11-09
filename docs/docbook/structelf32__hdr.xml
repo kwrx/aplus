@@ -102,4 +102,9 @@
                 </itemizedlist>
             </para>
         </simplesect>
+    <simplesect>
+        <title>Brief Description</title>
+
+<para>ELF32 Header. </para>
+    </simplesect>
 </section>

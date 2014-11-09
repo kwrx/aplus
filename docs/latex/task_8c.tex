@@ -1,4 +1,4 @@
-\hypertarget{task_8c}{\section{Riferimenti per il file src/arch/task.c}
+\hypertarget{task_8c}{\section{src/arch/task.c File Reference}
 \label{task_8c}\index{src/arch/task.\+c@{src/arch/task.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -7,7 +7,7 @@
 {\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/list.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8c_a30c5de54c48d098388d2048073a393a7}{\+\_\+\+\_\+asm\+\_\+\+\_\+} (\char`\"{}.global \hyperlink{task_8c_a82b2dfd3955cf0689cda053f3dc24481}{task\+\_\+context\+\_\+switch}		\textbackslash{}n\char`\"{}\char`\"{}task\+\_\+context\+\_\+switch\+:				\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}						\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}, \hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}					\textbackslash{}n\char`\"{}\char`\"{}	pushf							\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_af2b16bef95c844028dd145264d1d3875}{ecx}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi}						\textbackslash{}n\char`\"{}\char`\"{}	push \hyperlink{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}						\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}, \mbox{[}\hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp} + 8\mbox{]}				\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}, \mbox{[}\hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp} + 12\mbox{]}				\textbackslash{}n\char`\"{}\char`\"{}	mov \mbox{[}\hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}\mbox{]}, \hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}					\textbackslash{}n\char`\"{}\char`\"{}	mov \hyperlink{aplus_8h_a7534a179bc9cc0ef26f0468e0959ee5c}{esp}, \mbox{[}\hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}\mbox{]}					\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_a36ffab8d34c6c411a7e5205ddb95eaf9}{edi}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_ada78e3124de6adf5a5d212f9ebc4bbe0}{esi}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_ae7c1e3339e4dead200cab41010e9127c}{ebx}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_af2b16bef95c844028dd145264d1d3875}{ecx}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax}							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_ae6db045cebe7b4cf979120dccdee0d01}{edx}							\textbackslash{}n\char`\"{}\char`\"{}	popf							\textbackslash{}n\char`\"{}\char`\"{}	pop \hyperlink{aplus_8h_aaba2ad0ff8ba480934feabfdab02b1e7}{ebp}							\textbackslash{}n\char`\"{}\char`\"{}	sti								\textbackslash{}n\char`\"{}\char`\"{}ret								\textbackslash{}n\char`\"{})
@@ -22,15 +22,15 @@ void \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\+\_\+switch} (\h
 \item 
 int \hyperlink{task_8c_a30500c422833c90d6f42e44e2efb04a7}{task\+\_\+init} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{task_8c_ac08620610e2419aca3878305400a96b7}{kernel\+\_\+task}
-\item 
+\begin{DoxyCompactList}\small\item\em Kernel task address. \end{DoxyCompactList}\item 
 \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\+\_\+queue}
-\item 
+\begin{DoxyCompactList}\small\item\em List of all Task. \end{DoxyCompactList}\item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{task_8c_afac53891df03c313fc0b5b24e0acc8a9}{kernel\+\_\+vmm}
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{task_8c_a9bed7071511863f81c2de43b3c3f7db9}{current\+\_\+vmm}
@@ -39,7 +39,7 @@ volatile \hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{task_8c_a30c5de54c48d098388d2048073a393a7}{\index{task.\+c@{task.\+c}!\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+asm\+\_\+\+\_\+@{\+\_\+\+\_\+asm\+\_\+\+\_\+}!task.\+c@{task.\+c}}
 \subsubsection[{\+\_\+\+\_\+asm\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}\+\_\+\+\_\+asm\+\_\+\+\_\+ (
@@ -63,11 +63,11 @@ volatile \hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast
 )}}\label{task_8c_aa274b7334aace961395fdb788126712d}
 
 
-Definizione alla linea 115 del file task.\+c.
+Definition at line 115 of file task.\+c.
 
 
 
-Referenzia task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\+::cwd, task\+::env, task\+::exe, task\+::fd, task\+::gid, task\+::image, kmalloc(), task\+::length, list\+\_\+add(), mm\+\_\+align(), task\+::parent, task\+::pid, task\+::priority, task\+::ptr, schedule\+\_\+nextpid(), task\+::signal\+\_\+handler, task\+::signal\+\_\+sig, task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D, T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+::uid, uint32\+\_\+t, e task\+::vaddr.
+References task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\+::cwd, task\+::env, task\+::exe, task\+::fd, task\+::gid, task\+::image, kmalloc(), task\+::length, list\+\_\+add(), mm\+\_\+align(), task\+::parent, task\+::pid, task\+::priority, task\+::ptr, schedule\+\_\+nextpid(), task\+::signal\+\_\+handler, task\+::signal\+\_\+sig, task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D, T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+::uid, uint32\+\_\+t, and task\+::vaddr.
 
 
 \begin{DoxyCode}
@@ -140,11 +140,11 @@ Referenzia task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\
 )}}\label{task_8c_aa547121ba0907a969075a9d7530a98fb}
 
 
-Definizione alla linea 49 del file task.\+c.
+Definition at line 49 of file task.\+c.
 
 
 
-Referenzia task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\+::cwd, task\+::env, task\+::exe, task\+::fd, task\+::gid, task\+::image, kmalloc(), task\+::length, list\+\_\+add(), mm\+\_\+align(), mm\+\_\+paddr(), task\+::parent, task\+::pid, task\+::priority, task\+::ptr, schedule\+\_\+nextpid(), task\+::signal\+\_\+handler, task\+::signal\+\_\+sig, task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D, T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+::uid, uint32\+\_\+t, task\+::vaddr, vmm\+\_\+create(), V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T, V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R, vmm\+\_\+map(), vmm\+\_\+mapkernel(), e vmm\+\_\+umap().
+References task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\+::cwd, task\+::env, task\+::exe, task\+::fd, task\+::gid, task\+::image, kmalloc(), task\+::length, list\+\_\+add(), mm\+\_\+align(), mm\+\_\+paddr(), task\+::parent, task\+::pid, task\+::priority, task\+::ptr, schedule\+\_\+nextpid(), task\+::signal\+\_\+handler, task\+::signal\+\_\+sig, task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D, T\+A\+S\+K\+\_\+\+S\+T\+A\+C\+K\+S\+I\+Z\+E, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+::uid, uint32\+\_\+t, task\+::vaddr, vmm\+\_\+create(), V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T, V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R, vmm\+\_\+map(), vmm\+\_\+mapkernel(), and vmm\+\_\+umap().
 
 
 \begin{DoxyCode}
@@ -228,11 +228,11 @@ Referenzia task\+::clock, task\+::context, task\+::cr3, current\+\_\+task, task\
 )}}\label{task_8c_a30500c422833c90d6f42e44e2efb04a7}
 
 
-Definizione alla linea 179 del file task.\+c.
+Definition at line 179 of file task.\+c.
 
 
 
-Referenzia task\+::context, task\+::cr3, task\+::cwd, task\+::env, task\+::gid, kernel\+\_\+vmm, kmalloc(), list\+\_\+add(), task\+::parent, task\+::pid, task\+::priority, schedule\+\_\+nextpid(), task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+\_\+switch(), task\+::uid, e uint32\+\_\+t.
+References task\+::context, task\+::cr3, task\+::cwd, task\+::env, task\+::gid, kernel\+\_\+vmm, kmalloc(), list\+\_\+add(), task\+::parent, task\+::pid, task\+::priority, schedule\+\_\+nextpid(), task\+::stack, task\+::state, T\+A\+S\+K\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+R\+E\+G\+U\+L\+A\+R, T\+A\+S\+K\+\_\+\+S\+T\+A\+T\+E\+\_\+\+A\+L\+I\+V\+E, task\+\_\+switch(), task\+::uid, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -277,11 +277,11 @@ Referenzia task\+::context, task\+::cr3, task\+::cwd, task\+::env, task\+::gid, 
 )}}\label{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}
 
 
-Definizione alla linea 165 del file task.\+c.
+Definition at line 165 of file task.\+c.
 
 
 
-Referenzia task\+::context, task\+::cr3, current\+\_\+task, task\+::env, task\+\_\+context\+\_\+switch(), e vmm\+\_\+switch().
+References task\+::context, task\+::cr3, current\+\_\+task, task\+::env, task\+\_\+context\+\_\+switch(), and vmm\+\_\+switch().
 
 
 \begin{DoxyCode}
@@ -300,46 +300,58 @@ Referenzia task\+::context, task\+::cr3, current\+\_\+task, task\+::env, task\+\
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{task.\+c@{task.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!task.\+c@{task.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{task_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 
 \hypertarget{task_8c_a9bed7071511863f81c2de43b3c3f7db9}{\index{task.\+c@{task.\+c}!current\+\_\+vmm@{current\+\_\+vmm}}
 \index{current\+\_\+vmm@{current\+\_\+vmm}!task.\+c@{task.\+c}}
 \subsubsection[{current\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ current\+\_\+vmm}}\label{task_8c_a9bed7071511863f81c2de43b3c3f7db9}
 
 
-Definizione alla linea 46 del file paging.\+c.
+Definition at line 46 of file paging.\+c.
 
 \hypertarget{task_8c_ac08620610e2419aca3878305400a96b7}{\index{task.\+c@{task.\+c}!kernel\+\_\+task@{kernel\+\_\+task}}
 \index{kernel\+\_\+task@{kernel\+\_\+task}!task.\+c@{task.\+c}}
 \subsubsection[{kernel\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ kernel\+\_\+task}}\label{task_8c_ac08620610e2419aca3878305400a96b7}
 
 
-Definizione alla linea 34 del file sched.\+c.
+Kernel task address. 
+
+
+
+Definition at line 40 of file sched.\+c.
 
 \hypertarget{task_8c_afac53891df03c313fc0b5b24e0acc8a9}{\index{task.\+c@{task.\+c}!kernel\+\_\+vmm@{kernel\+\_\+vmm}}
 \index{kernel\+\_\+vmm@{kernel\+\_\+vmm}!task.\+c@{task.\+c}}
 \subsubsection[{kernel\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ kernel\+\_\+vmm}}\label{task_8c_afac53891df03c313fc0b5b24e0acc8a9}
 
 
-Definizione alla linea 47 del file paging.\+c.
+Definition at line 47 of file paging.\+c.
 
 \hypertarget{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{\index{task.\+c@{task.\+c}!task\+\_\+queue@{task\+\_\+queue}}
 \index{task\+\_\+queue@{task\+\_\+queue}!task.\+c@{task.\+c}}
 \subsubsection[{task\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ task\+\_\+queue}}\label{task_8c_acb74842176b48d2ab29b1a74b0ca4ef1}
 
 
-Definizione alla linea 36 del file sched.\+c.
+List of all Task. 
+
+
+
+Definition at line 46 of file sched.\+c.
 
 \hypertarget{task_8c_a93cc6260faf18f2e31742272b38a534c}{\index{task.\+c@{task.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
 \index{vfs\+\_\+root@{vfs\+\_\+root}!task.\+c@{task.\+c}}
 \subsubsection[{vfs\+\_\+root}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf inode\+\_\+t}$\ast$ vfs\+\_\+root}}\label{task_8c_a93cc6260faf18f2e31742272b38a534c}
 
 
-Definizione alla linea 19 del file vfs.\+c.
+Definition at line 19 of file vfs.\+c.
 

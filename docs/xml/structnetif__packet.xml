@@ -88,21 +88,21 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="56">
+      <node id="62">
         <label>netif_packet</label>
         <link refid="structnetif__packet"/>
-        <childnode refid="57" relation="usage">
+        <childnode refid="63" relation="usage">
           <edgelabel>+netif</edgelabel>
         </childnode>
       </node>
-      <node id="58">
+      <node id="64">
         <label>pci_device</label>
         <link refid="structpci__device"/>
       </node>
-      <node id="57">
+      <node id="63">
         <label>netif</label>
         <link refid="structnetif"/>
-        <childnode refid="58" relation="usage">
+        <childnode refid="64" relation="usage">
           <edgelabel>+device</edgelabel>
         </childnode>
       </node>

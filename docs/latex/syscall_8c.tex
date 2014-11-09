@@ -1,4 +1,4 @@
-\hypertarget{syscall_8c}{\section{Riferimenti per il file src/arch/syscall.c}
+\hypertarget{syscall_8c}{\section{src/arch/syscall.c File Reference}
 \label{syscall_8c}\index{src/arch/syscall.\+c@{src/arch/syscall.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -6,7 +6,7 @@
 {\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{syscall_8c_a15662fc3572d9f3abd72a439727767c3}{syscall\+\_\+init} ()
@@ -15,14 +15,14 @@ int \hyperlink{syscall_8c_a271c3526b04dd2fe678f7f0d00cbf759}{syscall\+\_\+invoke
 \item 
 int \hyperlink{syscall_8c_a7325ddfa6207debff955f3bcefc0bf93}{syscall\+\_\+handler} (regs\+\_\+t $\ast$r)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 static void $\ast$$\ast$ \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\+\_\+handlers} = N\+U\+L\+L
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{syscall_8c_a7325ddfa6207debff955f3bcefc0bf93}{\index{syscall.\+c@{syscall.\+c}!syscall\+\_\+handler@{syscall\+\_\+handler}}
 \index{syscall\+\_\+handler@{syscall\+\_\+handler}!syscall.\+c@{syscall.\+c}}
 \subsubsection[{syscall\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}int syscall\+\_\+handler (
@@ -32,11 +32,11 @@ static void $\ast$$\ast$ \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91
 )}}\label{syscall_8c_a7325ddfa6207debff955f3bcefc0bf93}
 
 
-Definizione alla linea 53 del file syscall.\+c.
+Definition at line 53 of file syscall.\+c.
 
 
 
-Referenzia syscall\+\_\+handlers, e syscall\+\_\+invoke().
+References syscall\+\_\+handlers, and syscall\+\_\+invoke().
 
 
 \begin{DoxyCode}
@@ -54,11 +54,11 @@ Referenzia syscall\+\_\+handlers, e syscall\+\_\+invoke().
 )}}\label{syscall_8c_a15662fc3572d9f3abd72a439727767c3}
 
 
-Definizione alla linea 11 del file syscall.\+c.
+Definition at line 11 of file syscall.\+c.
 
 
 
-Referenzia attribute(), \+\_\+\+\_\+syscall\+::handler, kmalloc(), kprintf, list\+\_\+destroy, list\+\_\+foreach, \+\_\+\+\_\+syscall\+::number, list\+::size, syscall\+\_\+handlers, e value.
+References attribute(), \+\_\+\+\_\+syscall\+::handler, kmalloc(), kprintf(), list\+\_\+destroy, list\+\_\+foreach, \+\_\+\+\_\+syscall\+::number, list\+::size, syscall\+\_\+handlers, and value.
 
 
 \begin{DoxyCode}
@@ -75,7 +75,7 @@ Referenzia attribute(), \+\_\+\+\_\+syscall\+::handler, kmalloc(), kprintf, list
 20         \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[sys->\hyperlink{struct____syscall_a7f020a41ed9bf3daff3dfc46ee673eef}{number}] = sys->\hyperlink{struct____syscall_af1d75ee98d8568f74e8421654a1081d3}{handler};
 21     \}
 22 
-23     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"syscall: loaded %d handlers\(\backslash\)n"}, syslist->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
+23     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: loaded %d handlers\(\backslash\)n"}, syslist->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
 24     \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\_destroy}(syslist);
 25     \textcolor{keywordflow}{return} 0;
 26 \}
@@ -94,11 +94,11 @@ Referenzia attribute(), \+\_\+\+\_\+syscall\+::handler, kmalloc(), kprintf, list
 )}}\label{syscall_8c_a271c3526b04dd2fe678f7f0d00cbf759}
 
 
-Definizione alla linea 28 del file syscall.\+c.
+Definition at line 28 of file syscall.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), e errno.
+References \+\_\+\+\_\+asm\+\_\+\+\_\+(), and errno.
 
 
 \begin{DoxyCode}
@@ -128,11 +128,11 @@ Referenzia \+\_\+\+\_\+asm\+\_\+\+\_\+(), e errno.
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{\index{syscall.\+c@{syscall.\+c}!syscall\+\_\+handlers@{syscall\+\_\+handlers}}
 \index{syscall\+\_\+handlers@{syscall\+\_\+handlers}!syscall.\+c@{syscall.\+c}}
 \subsubsection[{syscall\+\_\+handlers}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$$\ast$ syscall\+\_\+handlers = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}
 
 
-Definizione alla linea 9 del file syscall.\+c.
+Definition at line 9 of file syscall.\+c.
 

@@ -1,4 +1,4 @@
-\hypertarget{pthread_8h}{\section{Riferimenti per il file usr/src/libpthread/include/pthread.h}
+\hypertarget{pthread_8h}{\section{usr/src/libpthread/include/pthread.h File Reference}
 \label{pthread_8h}\index{usr/src/libpthread/include/pthread.\+h@{usr/src/libpthread/include/pthread.\+h}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
@@ -6,7 +6,7 @@
 {\ttfamily \#include $<$sys/time.\+h$>$}\\*
 {\ttfamily \#include $<$sched.\+h$>$}\\*
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structpthread__attr}{pthread\+\_\+attr}
@@ -31,7 +31,7 @@ struct \hyperlink{structpthread__rwlock}{pthread\+\_\+rwlock}
 \item 
 struct \hyperlink{structpthread__spinlock}{pthread\+\_\+spinlock}
 \end{DoxyCompactItemize}
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{pthread_8h_a5e89527a7c4b94907d559a975d5850ce}{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+T\+H\+R\+E\+A\+D\+S}
@@ -84,7 +84,7 @@ struct \hyperlink{structpthread__spinlock}{pthread\+\_\+spinlock}
 \item 
 \#define \hyperlink{pthread_8h_ad4620a03c26b4119bf642a7f53df4fb2}{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}~\{ 0, 0 \}
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{pthread_8h_afab214cf0e27a8f9c17c5412d0a7c88d}{tls\+\_\+t}
@@ -117,7 +117,7 @@ typedef struct \hyperlink{structpthread__rwlock}{pthread\+\_\+rwlock} \hyperlink
 \item 
 typedef struct \hyperlink{structpthread__spinlock}{pthread\+\_\+spinlock} \hyperlink{pthread_8h_a89b34d06ba0b6d13117e0043ea284800}{pthread\+\_\+spinlock\+\_\+t}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{pthread_8h_a0b85ebb1e3aac081a4c0a5e85ae3cbe9}{pthread\+\_\+attr\+\_\+init} (\hyperlink{pthread_8h_ae242a79436919ba1cd46e38598bc17e7}{pthread\+\_\+attr\+\_\+t} $\ast$attr)
@@ -286,191 +286,191 @@ int \hyperlink{pthread_8h_a3aff65ef8d5fb28a7be0403661724eee}{pthread\+\_\+spin\+
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{pthread_8h_a5e89527a7c4b94907d559a975d5850ce}{\index{pthread.\+h@{pthread.\+h}!\+\_\+\+P\+O\+S\+I\+X\+\_\+\+T\+H\+R\+E\+A\+D\+S@{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+T\+H\+R\+E\+A\+D\+S}}
 \index{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+T\+H\+R\+E\+A\+D\+S@{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+T\+H\+R\+E\+A\+D\+S}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{\+\_\+\+P\+O\+S\+I\+X\+\_\+\+T\+H\+R\+E\+A\+D\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+P\+O\+S\+I\+X\+\_\+\+T\+H\+R\+E\+A\+D\+S}}\label{pthread_8h_a5e89527a7c4b94907d559a975d5850ce}
 
 
-Definizione alla linea 32 del file pthread.\+h.
+Definition at line 32 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a822c63bc662ad86cfb2dcec50edbb42b}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+B\+A\+R\+R\+I\+E\+R\+\_\+\+S\+E\+R\+I\+A\+L\+\_\+\+T\+H\+R\+E\+A\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+B\+A\+R\+R\+I\+E\+R\+\_\+\+S\+E\+R\+I\+A\+L\+\_\+\+T\+H\+R\+E\+A\+D}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+B\+A\+R\+R\+I\+E\+R\+\_\+\+S\+E\+R\+I\+A\+L\+\_\+\+T\+H\+R\+E\+A\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+B\+A\+R\+R\+I\+E\+R\+\_\+\+S\+E\+R\+I\+A\+L\+\_\+\+T\+H\+R\+E\+A\+D}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+B\+A\+R\+R\+I\+E\+R\+\_\+\+S\+E\+R\+I\+A\+L\+\_\+\+T\+H\+R\+E\+A\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+B\+A\+R\+R\+I\+E\+R\+\_\+\+S\+E\+R\+I\+A\+L\+\_\+\+T\+H\+R\+E\+A\+D~$\sim$0}}\label{pthread_8h_a822c63bc662ad86cfb2dcec50edbb42b}
 
 
-Definizione alla linea 114 del file pthread.\+h.
+Definition at line 114 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a6c661332f782dcebc87b878990424b4c}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+D\+I\+S\+A\+B\+L\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+D\+I\+S\+A\+B\+L\+E}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+D\+I\+S\+A\+B\+L\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+D\+I\+S\+A\+B\+L\+E}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+D\+I\+S\+A\+B\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+D\+I\+S\+A\+B\+L\+E~1}}\label{pthread_8h_a6c661332f782dcebc87b878990424b4c}
 
 
-Definizione alla linea 50 del file pthread.\+h.
+Definition at line 50 of file pthread.\+h.
 
 \hypertarget{pthread_8h_aaf18882a8a6b82c7b7849a645f4445ef}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+E\+N\+A\+B\+L\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+E\+N\+A\+B\+L\+E}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+E\+N\+A\+B\+L\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+E\+N\+A\+B\+L\+E}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+E\+N\+A\+B\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+A\+N\+C\+E\+L\+\_\+\+E\+N\+A\+B\+L\+E~0}}\label{pthread_8h_aaf18882a8a6b82c7b7849a645f4445ef}
 
 
-Definizione alla linea 49 del file pthread.\+h.
+Definition at line 49 of file pthread.\+h.
 
 \hypertarget{pthread_8h_aa7b867fe46f3660283fcb356c4fcbbf0}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+O\+N\+D\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+O\+N\+D\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+O\+N\+D\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+O\+N\+D\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+O\+N\+D\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+O\+N\+D\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R~(({\bf pthread\+\_\+cond\+\_\+t}) -\/1)}}\label{pthread_8h_aa7b867fe46f3660283fcb356c4fcbbf0}
 
 
-Definizione alla linea 110 del file pthread.\+h.
+Definition at line 110 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a391c5eb0f6b5febc48710d0be3f62394}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+D\+E\+T\+A\+C\+H\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+D\+E\+T\+A\+C\+H\+E\+D}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+D\+E\+T\+A\+C\+H\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+D\+E\+T\+A\+C\+H\+E\+D}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+D\+E\+T\+A\+C\+H\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+D\+E\+T\+A\+C\+H\+E\+D~1}}\label{pthread_8h_a391c5eb0f6b5febc48710d0be3f62394}
 
 
-Definizione alla linea 41 del file pthread.\+h.
+Definition at line 41 of file pthread.\+h.
 
 \hypertarget{pthread_8h_afb10d234d831c7b57768d62786748bc7}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+J\+O\+I\+N\+A\+B\+L\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+J\+O\+I\+N\+A\+B\+L\+E}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+J\+O\+I\+N\+A\+B\+L\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+J\+O\+I\+N\+A\+B\+L\+E}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+J\+O\+I\+N\+A\+B\+L\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+J\+O\+I\+N\+A\+B\+L\+E~0}}\label{pthread_8h_afb10d234d831c7b57768d62786748bc7}
 
 
-Definizione alla linea 40 del file pthread.\+h.
+Definition at line 40 of file pthread.\+h.
 
 \hypertarget{pthread_8h_acff148607c8534833336adb03d3f7b5b}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R\+\_\+\+N\+P@{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R\+\_\+\+N\+P}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R\+\_\+\+N\+P@{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R\+\_\+\+N\+P}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R\+\_\+\+N\+P}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R\+\_\+\+N\+P~\{ 0, 0, -\/1, -\/1, -\/1 \}}}\label{pthread_8h_acff148607c8534833336adb03d3f7b5b}
 
 
-Definizione alla linea 98 del file pthread.\+h.
+Definition at line 98 of file pthread.\+h.
 
 \hypertarget{pthread_8h_ad45abe03c8232518b6995e73172fe053}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+C\+H\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+C\+H\+E\+D}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+C\+H\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+C\+H\+E\+D}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+C\+H\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+E\+X\+P\+L\+I\+C\+I\+T\+\_\+\+S\+C\+H\+E\+D~1}}\label{pthread_8h_ad45abe03c8232518b6995e73172fe053}
 
 
-Definizione alla linea 44 del file pthread.\+h.
+Definition at line 44 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a470fccc57c4d7c3846e446a17cd23573}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D~0}}\label{pthread_8h_a470fccc57c4d7c3846e446a17cd23573}
 
 
-Definizione alla linea 43 del file pthread.\+h.
+Definition at line 43 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a2a9b96c0491ae490c17d0b400bc427b0}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T~{\bf P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+N\+O\+R\+M\+A\+L}}}\label{pthread_8h_a2a9b96c0491ae490c17d0b400bc427b0}
 
 
-Definizione alla linea 79 del file pthread.\+h.
+Definition at line 79 of file pthread.\+h.
 
 \hypertarget{pthread_8h_aaf502496651f95b06be861af7902cb23}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K~2}}\label{pthread_8h_aaf502496651f95b06be861af7902cb23}
 
 
-Definizione alla linea 78 del file pthread.\+h.
+Definition at line 78 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a84e55100366a6a8338a2af3b3f279686}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R~\{ 0, 0, -\/1, -\/1, -\/1 \}}}\label{pthread_8h_a84e55100366a6a8338a2af3b3f279686}
 
 
-Definizione alla linea 97 del file pthread.\+h.
+Definition at line 97 of file pthread.\+h.
 
 \hypertarget{pthread_8h_aae4b650085c2599674938f503d6253cf}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+N\+O\+R\+M\+A\+L@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+N\+O\+R\+M\+A\+L}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+N\+O\+R\+M\+A\+L@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+N\+O\+R\+M\+A\+L}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+N\+O\+R\+M\+A\+L}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+N\+O\+R\+M\+A\+L~0}}\label{pthread_8h_aae4b650085c2599674938f503d6253cf}
 
 
-Definizione alla linea 76 del file pthread.\+h.
+Definition at line 76 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a715e9644a7183d98cb2c9dd41cb89645}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E~1}}\label{pthread_8h_a715e9644a7183d98cb2c9dd41cb89645}
 
 
-Definizione alla linea 77 del file pthread.\+h.
+Definition at line 77 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a59e22497b65fc305ddb5cea8b4990b51}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+O\+N\+C\+E\+\_\+\+I\+N\+I\+T@{P\+T\+H\+R\+E\+A\+D\+\_\+\+O\+N\+C\+E\+\_\+\+I\+N\+I\+T}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+O\+N\+C\+E\+\_\+\+I\+N\+I\+T@{P\+T\+H\+R\+E\+A\+D\+\_\+\+O\+N\+C\+E\+\_\+\+I\+N\+I\+T}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+O\+N\+C\+E\+\_\+\+I\+N\+I\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+O\+N\+C\+E\+\_\+\+I\+N\+I\+T~\{ 0, -\/1 \}}}\label{pthread_8h_a59e22497b65fc305ddb5cea8b4990b51}
 
 
-Definizione alla linea 72 del file pthread.\+h.
+Definition at line 72 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a443f2f512de9324bf77625041ecb04f4}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+P\+R\+I\+V\+A\+T\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+P\+R\+I\+V\+A\+T\+E}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+P\+R\+I\+V\+A\+T\+E@{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+P\+R\+I\+V\+A\+T\+E}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+P\+R\+I\+V\+A\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+P\+R\+I\+V\+A\+T\+E~0}}\label{pthread_8h_a443f2f512de9324bf77625041ecb04f4}
 
 
-Definizione alla linea 52 del file pthread.\+h.
+Definition at line 52 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a07f3670a510cdb93233e84e1a0b50e89}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+S\+H\+A\+R\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+S\+H\+A\+R\+E\+D}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+S\+H\+A\+R\+E\+D@{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+S\+H\+A\+R\+E\+D}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+S\+H\+A\+R\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+P\+R\+O\+C\+E\+S\+S\+\_\+\+S\+H\+A\+R\+E\+D~1}}\label{pthread_8h_a07f3670a510cdb93233e84e1a0b50e89}
 
 
-Definizione alla linea 53 del file pthread.\+h.
+Definition at line 53 of file pthread.\+h.
 
 \hypertarget{pthread_8h_aa92fd7b492a8a5b31b2f8b3b6039c622}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+R\+W\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+R\+W\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+R\+W\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+R\+W\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+R\+W\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+R\+W\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R~\{ {\bf P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}, 0, 0, 0, 0, 0, 0 \}}}\label{pthread_8h_aa92fd7b492a8a5b31b2f8b3b6039c622}
 
 
-Definizione alla linea 142 del file pthread.\+h.
+Definition at line 142 of file pthread.\+h.
 
 \hypertarget{pthread_8h_aeab18be4f4ee13db4b0b65c6768fb539}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+P\+R\+O\+C\+E\+S\+S@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+P\+R\+O\+C\+E\+S\+S}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+P\+R\+O\+C\+E\+S\+S@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+P\+R\+O\+C\+E\+S\+S}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+P\+R\+O\+C\+E\+S\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+P\+R\+O\+C\+E\+S\+S~0}}\label{pthread_8h_aeab18be4f4ee13db4b0b65c6768fb539}
 
 
-Definizione alla linea 46 del file pthread.\+h.
+Definition at line 46 of file pthread.\+h.
 
 \hypertarget{pthread_8h_ab754f4339f76c46b8f57413c03e8ec65}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+S\+Y\+S\+T\+E\+M@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+S\+Y\+S\+T\+E\+M}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+S\+Y\+S\+T\+E\+M@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+S\+Y\+S\+T\+E\+M}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+S\+Y\+S\+T\+E\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+C\+O\+P\+E\+\_\+\+S\+Y\+S\+T\+E\+M~1}}\label{pthread_8h_ab754f4339f76c46b8f57413c03e8ec65}
 
 
-Definizione alla linea 47 del file pthread.\+h.
+Definition at line 47 of file pthread.\+h.
 
 \hypertarget{pthread_8h_ad4620a03c26b4119bf642a7f53df4fb2}{\index{pthread.\+h@{pthread.\+h}!P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}}
 \index{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R@{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+E\+R~\{ 0, 0 \}}}\label{pthread_8h_ad4620a03c26b4119bf642a7f53df4fb2}
 
 
-Definizione alla linea 154 del file pthread.\+h.
+Definition at line 154 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a1521727499f19b6459d150df04a2e445}{\index{pthread.\+h@{pthread.\+h}!S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+L\+O\+C\+K\+E\+D@{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+L\+O\+C\+K\+E\+D}}
 \index{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+L\+O\+C\+K\+E\+D@{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+L\+O\+C\+K\+E\+D}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+L\+O\+C\+K\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+L\+O\+C\+K\+E\+D~2}}\label{pthread_8h_a1521727499f19b6459d150df04a2e445}
 
 
-Definizione alla linea 146 del file pthread.\+h.
+Definition at line 146 of file pthread.\+h.
 
 \hypertarget{pthread_8h_aabe0fad730afb8dd41f42bdda6f6ae81}{\index{pthread.\+h@{pthread.\+h}!S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+N\+L\+O\+C\+K\+E\+D@{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+N\+L\+O\+C\+K\+E\+D}}
 \index{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+N\+L\+O\+C\+K\+E\+D@{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+N\+L\+O\+C\+K\+E\+D}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+N\+L\+O\+C\+K\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+N\+L\+O\+C\+K\+E\+D~1}}\label{pthread_8h_aabe0fad730afb8dd41f42bdda6f6ae81}
 
 
-Definizione alla linea 145 del file pthread.\+h.
+Definition at line 145 of file pthread.\+h.
 
 \hypertarget{pthread_8h_a5e10ca049cf7b35f19b7cf24805f604a}{\index{pthread.\+h@{pthread.\+h}!S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+S\+E\+M\+U\+T\+E\+X@{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+S\+E\+M\+U\+T\+E\+X}}
 \index{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+S\+E\+M\+U\+T\+E\+X@{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+S\+E\+M\+U\+T\+E\+X}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+S\+E\+M\+U\+T\+E\+X}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+P\+I\+N\+L\+O\+C\+K\+\_\+\+U\+S\+E\+M\+U\+T\+E\+X~3}}\label{pthread_8h_a5e10ca049cf7b35f19b7cf24805f604a}
 
 
-Definizione alla linea 147 del file pthread.\+h.
+Definition at line 147 of file pthread.\+h.
 
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\subsection{Typedef Documentation}
 \hypertarget{pthread_8h_aea4188cfb1472f9bb606fd2566133e34}{\index{pthread.\+h@{pthread.\+h}!handle\+\_\+t@{handle\+\_\+t}}
 \index{handle\+\_\+t@{handle\+\_\+t}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{handle\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint32\+\_\+t} {\bf handle\+\_\+t}}}\label{pthread_8h_aea4188cfb1472f9bb606fd2566133e34}
 
 
-Definizione alla linea 36 del file pthread.\+h.
+Definition at line 36 of file pthread.\+h.
 
 \hypertarget{pthread_8h_ae242a79436919ba1cd46e38598bc17e7}{\index{pthread.\+h@{pthread.\+h}!pthread\+\_\+attr\+\_\+t@{pthread\+\_\+attr\+\_\+t}}
 \index{pthread\+\_\+attr\+\_\+t@{pthread\+\_\+attr\+\_\+t}!pthread.\+h@{pthread.\+h}}
@@ -492,7 +492,7 @@ Definizione alla linea 36 del file pthread.\+h.
 \subsubsection[{pthread\+\_\+key\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf tls\+\_\+t} {\bf pthread\+\_\+key\+\_\+t}}}\label{pthread_8h_a965dffa696273f72e4b513905c63a3ad}
 
 
-Definizione alla linea 38 del file pthread.\+h.
+Definition at line 38 of file pthread.\+h.
 
 \hypertarget{pthread_8h_ad613e9ad2d8d9713a8440618e7a70bba}{\index{pthread.\+h@{pthread.\+h}!pthread\+\_\+mutex\+\_\+t@{pthread\+\_\+mutex\+\_\+t}}
 \index{pthread\+\_\+mutex\+\_\+t@{pthread\+\_\+mutex\+\_\+t}!pthread.\+h@{pthread.\+h}}
@@ -517,18 +517,18 @@ Definizione alla linea 38 del file pthread.\+h.
 \subsubsection[{pthread\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf handle\+\_\+t} {\bf pthread\+\_\+t}}}\label{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}
 
 
-Definizione alla linea 37 del file pthread.\+h.
+Definition at line 37 of file pthread.\+h.
 
 \hypertarget{pthread_8h_afab214cf0e27a8f9c17c5412d0a7c88d}{\index{pthread.\+h@{pthread.\+h}!tls\+\_\+t@{tls\+\_\+t}}
 \index{tls\+\_\+t@{tls\+\_\+t}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{tls\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint32\+\_\+t} {\bf tls\+\_\+t}}}\label{pthread_8h_afab214cf0e27a8f9c17c5412d0a7c88d}
 
 
-Definizione alla linea 35 del file pthread.\+h.
+Definition at line 35 of file pthread.\+h.
 
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{pthread_8h_a4bcdbf47c17c7dcc51e9f05f5cb56d81}{\index{pthread.\+h@{pthread.\+h}!pthread\+\_\+attr\+\_\+destroy@{pthread\+\_\+attr\+\_\+destroy}}
 \index{pthread\+\_\+attr\+\_\+destroy@{pthread\+\_\+attr\+\_\+destroy}!pthread.\+h@{pthread.\+h}}
 \subsubsection[{pthread\+\_\+attr\+\_\+destroy}]{\setlength{\rightskip}{0pt plus 5cm}int pthread\+\_\+attr\+\_\+destroy (
@@ -538,11 +538,11 @@ Definizione alla linea 35 del file pthread.\+h.
 )}}\label{pthread_8h_a4bcdbf47c17c7dcc51e9f05f5cb56d81}
 
 
-Definizione alla linea 28 del file pthread\+\_\+attr.\+c.
+Definition at line 28 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -566,11 +566,11 @@ Referenzia errno.
 )}}\label{pthread_8h_a391c34da42e68ddd24f5ee0c070d5c4f}
 
 
-Definizione alla linea 38 del file pthread\+\_\+attr.\+c.
+Definition at line 38 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia pthread\+\_\+attr\+::detachstate, e errno.
+References pthread\+\_\+attr\+::detachstate, and errno.
 
 
 \begin{DoxyCode}
@@ -594,11 +594,11 @@ Referenzia pthread\+\_\+attr\+::detachstate, e errno.
 )}}\label{pthread_8h_ae83dac484200d8cdb85e59cb8a59ca92}
 
 
-Definizione alla linea 133 del file pthread\+\_\+attr.\+c.
+Definition at line 133 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::inheritsched.
+References errno, and pthread\+\_\+attr\+::inheritsched.
 
 
 \begin{DoxyCode}
@@ -622,11 +622,11 @@ Referenzia errno, e pthread\+\_\+attr\+::inheritsched.
 )}}\label{pthread_8h_afd3d272d702481044f8a8cd253fd9b47}
 
 
-Definizione alla linea 100 del file pthread\+\_\+attr.\+c.
+Definition at line 100 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::param.
+References errno, and pthread\+\_\+attr\+::param.
 
 
 \begin{DoxyCode}
@@ -650,11 +650,11 @@ Referenzia errno, e pthread\+\_\+attr\+::param.
 )}}\label{pthread_8h_a176ad27074237a3eea7bf8fccb911479}
 
 
-Definizione alla linea 123 del file pthread\+\_\+attr.\+c.
+Definition at line 123 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -673,11 +673,11 @@ Referenzia errno.
 )}}\label{pthread_8h_ad3fe01698c4fad85bb5cc3f9a2e82ea3}
 
 
-Definizione alla linea 153 del file pthread\+\_\+attr.\+c.
+Definition at line 153 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia pthread\+\_\+attr\+::contentionscope, e errno.
+References pthread\+\_\+attr\+::contentionscope, and errno.
 
 
 \begin{DoxyCode}
@@ -701,11 +701,11 @@ Referenzia pthread\+\_\+attr\+::contentionscope, e errno.
 )}}\label{pthread_8h_add78bd0e6395c9fbd8ed170a67da0b87}
 
 
-Definizione alla linea 58 del file pthread\+\_\+attr.\+c.
+Definition at line 58 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::stackaddr.
+References errno, and pthread\+\_\+attr\+::stackaddr.
 
 
 \begin{DoxyCode}
@@ -729,11 +729,11 @@ Referenzia errno, e pthread\+\_\+attr\+::stackaddr.
 )}}\label{pthread_8h_ae23600d4670359ab12bfba20db2c9a37}
 
 
-Definizione alla linea 79 del file pthread\+\_\+attr.\+c.
+Definition at line 79 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::stacksize.
+References errno, and pthread\+\_\+attr\+::stacksize.
 
 
 \begin{DoxyCode}
@@ -756,11 +756,11 @@ Referenzia errno, e pthread\+\_\+attr\+::stacksize.
 )}}\label{pthread_8h_a0b85ebb1e3aac081a4c0a5e85ae3cbe9}
 
 
-Definizione alla linea 12 del file pthread\+\_\+attr.\+c.
+Definition at line 12 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia pthread\+\_\+attr\+::contentionscope, pthread\+\_\+attr\+::detachstate, errno, pthread\+\_\+attr\+::inheritsched, pthread\+\_\+attr\+::param, P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N, pthread\+\_\+attr\+::stackaddr, e pthread\+\_\+attr\+::stacksize.
+References pthread\+\_\+attr\+::contentionscope, pthread\+\_\+attr\+::detachstate, errno, pthread\+\_\+attr\+::inheritsched, pthread\+\_\+attr\+::param, P\+T\+H\+R\+E\+A\+D\+\_\+\+S\+T\+A\+C\+K\+\_\+\+M\+I\+N, pthread\+\_\+attr\+::stackaddr, and pthread\+\_\+attr\+::stacksize.
 
 
 \begin{DoxyCode}
@@ -790,11 +790,11 @@ Referenzia pthread\+\_\+attr\+::contentionscope, pthread\+\_\+attr\+::detachstat
 )}}\label{pthread_8h_ae6ee78c307d8467b34a9b0c330993a54}
 
 
-Definizione alla linea 48 del file pthread\+\_\+attr.\+c.
+Definition at line 48 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia pthread\+\_\+attr\+::detachstate, e errno.
+References pthread\+\_\+attr\+::detachstate, and errno.
 
 
 \begin{DoxyCode}
@@ -818,11 +818,11 @@ Referenzia pthread\+\_\+attr\+::detachstate, e errno.
 )}}\label{pthread_8h_ad437fe8caa3ef9f0cb7d69f6f6479df9}
 
 
-Definizione alla linea 143 del file pthread\+\_\+attr.\+c.
+Definition at line 143 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::inheritsched.
+References errno, and pthread\+\_\+attr\+::inheritsched.
 
 
 \begin{DoxyCode}
@@ -846,11 +846,11 @@ Referenzia errno, e pthread\+\_\+attr\+::inheritsched.
 )}}\label{pthread_8h_a579e6529f0ce482312a5e77ac61cb4d5}
 
 
-Definizione alla linea 112 del file pthread\+\_\+attr.\+c.
+Definition at line 112 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::param.
+References errno, and pthread\+\_\+attr\+::param.
 
 
 \begin{DoxyCode}
@@ -874,11 +874,11 @@ Referenzia errno, e pthread\+\_\+attr\+::param.
 )}}\label{pthread_8h_a79b4c9e71486a87ef3014f1c660b33eb}
 
 
-Definizione alla linea 128 del file pthread\+\_\+attr.\+c.
+Definition at line 128 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -897,11 +897,11 @@ Referenzia errno.
 )}}\label{pthread_8h_a6d8d320a882ba044a064975dddcf9ced}
 
 
-Definizione alla linea 163 del file pthread\+\_\+attr.\+c.
+Definition at line 163 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia pthread\+\_\+attr\+::contentionscope, e errno.
+References pthread\+\_\+attr\+::contentionscope, and errno.
 
 
 \begin{DoxyCode}
@@ -925,11 +925,11 @@ Referenzia pthread\+\_\+attr\+::contentionscope, e errno.
 )}}\label{pthread_8h_a298a51c79184546ef78800ea6d4463b9}
 
 
-Definizione alla linea 68 del file pthread\+\_\+attr.\+c.
+Definition at line 68 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::stackaddr.
+References errno, and pthread\+\_\+attr\+::stackaddr.
 
 
 \begin{DoxyCode}
@@ -953,11 +953,11 @@ Referenzia errno, e pthread\+\_\+attr\+::stackaddr.
 )}}\label{pthread_8h_a812a9a455ae2ef2bb0dca4fff201a281}
 
 
-Definizione alla linea 89 del file pthread\+\_\+attr.\+c.
+Definition at line 89 of file pthread\+\_\+attr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+attr\+::stacksize.
+References errno, and pthread\+\_\+attr\+::stacksize.
 
 
 \begin{DoxyCode}
@@ -980,11 +980,11 @@ Referenzia errno, e pthread\+\_\+attr\+::stacksize.
 )}}\label{pthread_8h_ae8ef9b4e2d7feaa1a28159991e7433ac}
 
 
-Definizione alla linea 28 del file pthread\+\_\+barrier.\+c.
+Definition at line 28 of file pthread\+\_\+barrier.\+c.
 
 
 
-Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, e pthread\+\_\+barrier\+::init\+\_\+height.
+References pthread\+\_\+barrier\+::curr\+\_\+height, errno, and pthread\+\_\+barrier\+::init\+\_\+height.
 
 
 \begin{DoxyCode}
@@ -1012,11 +1012,11 @@ Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, e pthread\+\_\+barri
 )}}\label{pthread_8h_a8ccfa0d7e4ed11ad58990e4bc88d6563}
 
 
-Definizione alla linea 9 del file pthread\+\_\+barrier.\+c.
+Definition at line 9 of file pthread\+\_\+barrier.\+c.
 
 
 
-Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, e pthread\+\_\+barrier\+::init\+\_\+height.
+References pthread\+\_\+barrier\+::curr\+\_\+height, errno, and pthread\+\_\+barrier\+::init\+\_\+height.
 
 
 \begin{DoxyCode}
@@ -1048,11 +1048,11 @@ Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, e pthread\+\_\+barri
 )}}\label{pthread_8h_a85f92053b4d12aa94927b364b5b757d9}
 
 
-Definizione alla linea 42 del file pthread\+\_\+barrier.\+c.
+Definition at line 42 of file pthread\+\_\+barrier.\+c.
 
 
 
-Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, pthread\+\_\+barrier\+::init\+\_\+height, e sched\+\_\+yield().
+References pthread\+\_\+barrier\+::curr\+\_\+height, errno, pthread\+\_\+barrier\+::init\+\_\+height, and sched\+\_\+yield().
 
 
 \begin{DoxyCode}
@@ -1079,11 +1079,11 @@ Referenzia pthread\+\_\+barrier\+::curr\+\_\+height, errno, pthread\+\_\+barrier
 )}}\label{pthread_8h_abde7f3bdc7510a89b5ebe7ef70bb0f80}
 
 
-Definizione alla linea 20 del file pthread\+\_\+barrierattr.\+c.
+Definition at line 20 of file pthread\+\_\+barrierattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
+References errno, and pthread\+\_\+barrierattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1107,11 +1107,11 @@ Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
 )}}\label{pthread_8h_ac39928db5b4e7c041e69ecfa1973e579}
 
 
-Definizione alla linea 31 del file pthread\+\_\+barrierattr.\+c.
+Definition at line 31 of file pthread\+\_\+barrierattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
+References errno, and pthread\+\_\+barrierattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1139,11 +1139,11 @@ Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
 )}}\label{pthread_8h_a9f357dc609e57f516cbbbf845f92727d}
 
 
-Definizione alla linea 9 del file pthread\+\_\+barrierattr.\+c.
+Definition at line 9 of file pthread\+\_\+barrierattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
+References errno, and pthread\+\_\+barrierattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1167,11 +1167,11 @@ Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
 )}}\label{pthread_8h_aa9c3c335f5bcf702fe85a1c12dcdc70e}
 
 
-Definizione alla linea 47 del file pthread\+\_\+barrierattr.\+c.
+Definition at line 47 of file pthread\+\_\+barrierattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
+References errno, and pthread\+\_\+barrierattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1194,11 +1194,11 @@ Referenzia errno, e pthread\+\_\+barrierattr\+::pshared.
 )}}\label{pthread_8h_a9e77a80c073787bf9a593e9c619dce27}
 
 
-Definizione alla linea 7 del file pthread\+\_\+cancel.\+c.
+Definition at line 7 of file pthread\+\_\+cancel.\+c.
 
 
 
-Referenzia pthread\+\_\+detach().
+References pthread\+\_\+detach().
 
 
 \begin{DoxyCode}
@@ -1215,11 +1215,11 @@ Referenzia pthread\+\_\+detach().
 )}}\label{pthread_8h_afc4b19aa8ea2dce0956579ce878b4998}
 
 
-Definizione alla linea 116 del file pthread\+\_\+cond.\+c.
+Definition at line 116 of file pthread\+\_\+cond.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::cond, errno, pthread\+\_\+context\+::next, pthread\+\_\+cond\+::semaphore, e pthread\+\_\+cond\+::waiting.
+References \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::cond, errno, pthread\+\_\+context\+::next, pthread\+\_\+cond\+::semaphore, and pthread\+\_\+cond\+::waiting.
 
 
 \begin{DoxyCode}
@@ -1254,11 +1254,11 @@ Referenzia \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::cond, errno, 
 )}}\label{pthread_8h_aa1587e01856a579b78effd0a1a284a47}
 
 
-Definizione alla linea 25 del file pthread\+\_\+cond.\+c.
+Definition at line 25 of file pthread\+\_\+cond.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+cond\+::semaphore, e pthread\+\_\+cond\+::waiting.
+References errno, pthread\+\_\+cond\+::semaphore, and pthread\+\_\+cond\+::waiting.
 
 
 \begin{DoxyCode}
@@ -1290,11 +1290,11 @@ Referenzia errno, pthread\+\_\+cond\+::semaphore, e pthread\+\_\+cond\+::waiting
 )}}\label{pthread_8h_ad5b6c558bcd5260289981207b9ca9687}
 
 
-Definizione alla linea 13 del file pthread\+\_\+cond.\+c.
+Definition at line 13 of file pthread\+\_\+cond.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+cond\+::semaphore, e pthread\+\_\+cond\+::waiting.
+References errno, pthread\+\_\+cond\+::semaphore, and pthread\+\_\+cond\+::waiting.
 
 
 \begin{DoxyCode}
@@ -1319,11 +1319,11 @@ Referenzia errno, pthread\+\_\+cond\+::semaphore, e pthread\+\_\+cond\+::waiting
 )}}\label{pthread_8h_a20f98235b024efb10e5c76a64f0d94e5}
 
 
-Definizione alla linea 93 del file pthread\+\_\+cond.\+c.
+Definition at line 93 of file pthread\+\_\+cond.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::cond, errno, pthread\+\_\+context\+::next, pthread\+\_\+cond\+::semaphore, e pthread\+\_\+cond\+::waiting.
+References \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::cond, errno, pthread\+\_\+context\+::next, pthread\+\_\+cond\+::semaphore, and pthread\+\_\+cond\+::waiting.
 
 
 \begin{DoxyCode}
@@ -1361,11 +1361,11 @@ Referenzia \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::cond, errno, 
 )}}\label{pthread_8h_ab03e3ab6546f661d2b2f83bc12559e40}
 
 
-Definizione alla linea 44 del file pthread\+\_\+cond.\+c.
+Definition at line 44 of file pthread\+\_\+cond.\+c.
 
 
 
-Referenzia pthread\+\_\+context\+::cond, errno, pthread\+\_\+mutex\+::owner, pthread\+\_\+mutex\+\_\+unlock(), pthread\+\_\+self(), sched\+\_\+yield(), pthread\+\_\+cond\+::semaphore, e pthread\+\_\+cond\+::waiting.
+References pthread\+\_\+context\+::cond, errno, pthread\+\_\+mutex\+::owner, pthread\+\_\+mutex\+\_\+unlock(), pthread\+\_\+self(), sched\+\_\+yield(), pthread\+\_\+cond\+::semaphore, and pthread\+\_\+cond\+::waiting.
 
 
 \begin{DoxyCode}
@@ -1425,11 +1425,11 @@ Referenzia pthread\+\_\+context\+::cond, errno, pthread\+\_\+mutex\+::owner, pth
 )}}\label{pthread_8h_a907ae104b6dfd8fc12e23e84952aa7ca}
 
 
-Definizione alla linea 88 del file pthread\+\_\+cond.\+c.
+Definition at line 88 of file pthread\+\_\+cond.\+c.
 
 
 
-Referenzia pthread\+\_\+cond\+\_\+timedwait().
+References pthread\+\_\+cond\+\_\+timedwait().
 
 
 \begin{DoxyCode}
@@ -1446,11 +1446,11 @@ Referenzia pthread\+\_\+cond\+\_\+timedwait().
 )}}\label{pthread_8h_a066f082e4a085641043714e3bc4d70d7}
 
 
-Definizione alla linea 18 del file pthread\+\_\+condattr.\+c.
+Definition at line 18 of file pthread\+\_\+condattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+condattr\+::pshared.
+References errno, and pthread\+\_\+condattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1474,11 +1474,11 @@ Referenzia errno, e pthread\+\_\+condattr\+::pshared.
 )}}\label{pthread_8h_aff70de20d7bdac1310aa2cdcada218d4}
 
 
-Definizione alla linea 29 del file pthread\+\_\+condattr.\+c.
+Definition at line 29 of file pthread\+\_\+condattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+condattr\+::pshared.
+References errno, and pthread\+\_\+condattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1502,11 +1502,11 @@ Referenzia errno, e pthread\+\_\+condattr\+::pshared.
 )}}\label{pthread_8h_a34083fe1cd54d5d67599b4cca593ffa4}
 
 
-Definizione alla linea 7 del file pthread\+\_\+condattr.\+c.
+Definition at line 7 of file pthread\+\_\+condattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+condattr\+::pshared.
+References errno, and pthread\+\_\+condattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1530,11 +1530,11 @@ Referenzia errno, e pthread\+\_\+condattr\+::pshared.
 )}}\label{pthread_8h_a1a026d48926e804fed515bb01b0cbb45}
 
 
-Definizione alla linea 41 del file pthread\+\_\+condattr.\+c.
+Definition at line 41 of file pthread\+\_\+condattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+condattr\+::pshared.
+References errno, and pthread\+\_\+condattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -1560,11 +1560,11 @@ Referenzia errno, e pthread\+\_\+condattr\+::pshared.
 )}}\label{pthread_8h_a6933a96c86c4fbebef09c9cbc0625e81}
 
 
-Definizione alla linea 37 del file pthread\+\_\+create.\+c.
+Definition at line 37 of file pthread\+\_\+create.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+create, \+\_\+\+\_\+pthread\+\_\+counts, \+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+(), \+\_\+\+\_\+pthread\+\_\+init\+\_\+queue(), \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::attr, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, errno, pthread\+\_\+attr\+::inheritsched, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+attr\+::param, pthread\+\_\+attr\+\_\+setschedparam(), P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D, pthread\+\_\+self(), P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X, pthread\+\_\+once\+::started, e pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+os\+\_\+thread\+\_\+create, \+\_\+\+\_\+pthread\+\_\+counts, \+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+(), \+\_\+\+\_\+pthread\+\_\+init\+\_\+queue(), \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::attr, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, errno, pthread\+\_\+attr\+::inheritsched, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+attr\+::param, pthread\+\_\+attr\+\_\+setschedparam(), P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D, pthread\+\_\+self(), P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X, pthread\+\_\+once\+::started, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -1628,11 +1628,11 @@ Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+create, \+\_\+\+\_\+pthread\+\_\+coun
 )}}\label{pthread_8h_a7c275c509c26566b6dd95a2de1668a2f}
 
 
-Definizione alla linea 12 del file pthread\+\_\+detach.\+c.
+Definition at line 12 of file pthread\+\_\+detach.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+kill, \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::once, e pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+os\+\_\+thread\+\_\+kill, \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::once, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -1685,11 +1685,11 @@ Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+kill, \+\_\+\+\_\+pthread\+\_\+queue,
 )}}\label{pthread_8h_a98ec817164a6641eda2341de473b659d}
 
 
-Definizione alla linea 7 del file pthread\+\_\+equal.\+c.
+Definition at line 7 of file pthread\+\_\+equal.\+c.
 
 
 
-Referenzia pthread\+\_\+context\+::tid.
+References pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -1709,11 +1709,11 @@ Referenzia pthread\+\_\+context\+::tid.
 )}}\label{pthread_8h_a090bdc13141e76205fab4cb3c5fab0e4}
 
 
-Definizione alla linea 8 del file pthread\+\_\+exit.\+c.
+Definition at line 8 of file pthread\+\_\+exit.\+c.
 
 
 
-Referenzia pthread\+\_\+context\+::exitval, pthread\+\_\+detach(), e pthread\+\_\+self().
+References pthread\+\_\+context\+::exitval, pthread\+\_\+detach(), and pthread\+\_\+self().
 
 
 \begin{DoxyCode}
@@ -1739,11 +1739,11 @@ Referenzia pthread\+\_\+context\+::exitval, pthread\+\_\+detach(), e pthread\+\_
 )}}\label{pthread_8h_afb4344ea91774ba279ea5df3cb656ebc}
 
 
-Definizione alla linea 57 del file pthread\+\_\+sched.\+c.
+Definition at line 57 of file pthread\+\_\+sched.\+c.
 
 
 
-Referenzia pthread\+\_\+context\+::attr, errno, pthread\+\_\+attr\+::param, e pthread\+\_\+self().
+References pthread\+\_\+context\+::attr, errno, pthread\+\_\+attr\+::param, and pthread\+\_\+self().
 
 
 \begin{DoxyCode}
@@ -1769,11 +1769,11 @@ Referenzia pthread\+\_\+context\+::attr, errno, pthread\+\_\+attr\+::param, e pt
 )}}\label{pthread_8h_aae9850b3759769c748727e171c4c6e61}
 
 
-Definizione alla linea 26 del file pthread\+\_\+sched.\+c.
+Definition at line 26 of file pthread\+\_\+sched.\+c.
 
 
 
-Referenzia errno, sched\+\_\+getparam(), e pthread\+\_\+context\+::tid.
+References errno, sched\+\_\+getparam(), and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -1804,11 +1804,11 @@ Referenzia errno, sched\+\_\+getparam(), e pthread\+\_\+context\+::tid.
 )}}\label{pthread_8h_a31469375891078185bda93f0e4411a2c}
 
 
-Definizione alla linea 65 del file pthread\+\_\+key.\+c.
+Definition at line 65 of file pthread\+\_\+key.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+pthread\+\_\+keys, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, e \+\_\+\+\_\+pthread\+\_\+key\+::value.
+References \+\_\+\+\_\+pthread\+\_\+keys, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, and \+\_\+\+\_\+pthread\+\_\+key\+::value.
 
 
 \begin{DoxyCode}
@@ -1836,11 +1836,11 @@ Referenzia \+\_\+\+\_\+pthread\+\_\+keys, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E
 )}}\label{pthread_8h_aa79c99cc7b194918a2def257246f11c6}
 
 
-Definizione alla linea 8 del file pthread\+\_\+join.\+c.
+Definition at line 8 of file pthread\+\_\+join.\+c.
 
 
 
-Referenzia pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::once, e sched\+\_\+yield().
+References pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::once, and sched\+\_\+yield().
 
 
 \begin{DoxyCode}
@@ -1870,11 +1870,11 @@ Referenzia pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::exitval, pt
 )}}\label{pthread_8h_af4b7ced8ecff505380fe8216244a3764}
 
 
-Definizione alla linea 9 del file pthread\+\_\+key.\+c.
+Definition at line 9 of file pthread\+\_\+key.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, \+\_\+\+\_\+pthread\+\_\+key\+::used, e \+\_\+\+\_\+pthread\+\_\+key\+::value.
+References \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, \+\_\+\+\_\+pthread\+\_\+key\+::used, and \+\_\+\+\_\+pthread\+\_\+key\+::value.
 
 
 \begin{DoxyCode}
@@ -1909,11 +1909,11 @@ Referenzia \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, 
 )}}\label{pthread_8h_aee96306dc79294927ee840bb4de2244b}
 
 
-Definizione alla linea 32 del file pthread\+\_\+key.\+c.
+Definition at line 32 of file pthread\+\_\+key.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, \+\_\+\+\_\+pthread\+\_\+key\+::used, \+\_\+\+\_\+pthread\+\_\+key\+::value, e value.
+References \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, \+\_\+\+\_\+pthread\+\_\+key\+::used, \+\_\+\+\_\+pthread\+\_\+key\+::value, and value.
 
 
 \begin{DoxyCode}
@@ -1943,11 +1943,11 @@ Referenzia \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, 
 )}}\label{pthread_8h_a3cf620ff3a40af11d79cf28901dc55e2}
 
 
-Definizione alla linea 46 del file pthread\+\_\+mutex.\+c.
+Definition at line 46 of file pthread\+\_\+mutex.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, pthread\+\_\+mutex\+::recursion, e pthread\+\_\+mutex\+::time.
+References errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, pthread\+\_\+mutex\+::recursion, and pthread\+\_\+mutex\+::time.
 
 
 \begin{DoxyCode}
@@ -1982,11 +1982,11 @@ Referenzia errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutex\+::kind, pthre
 )}}\label{pthread_8h_a7454d249ed94ad5d5e57ba1529d7a7f2}
 
 
-Definizione alla linea 26 del file pthread\+\_\+mutex.\+c.
+Definition at line 26 of file pthread\+\_\+mutex.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutexattr\+::kind, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T, pthread\+\_\+mutex\+::recursion, e pthread\+\_\+mutex\+::time.
+References errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutexattr\+::kind, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T, pthread\+\_\+mutex\+::recursion, and pthread\+\_\+mutex\+::time.
 
 
 \begin{DoxyCode}
@@ -2018,11 +2018,11 @@ Referenzia errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutexattr\+::kind, p
 )}}\label{pthread_8h_a12809c44718c21544ceb280dc1a53573}
 
 
-Definizione alla linea 67 del file pthread\+\_\+mutex.\+c.
+Definition at line 67 of file pthread\+\_\+mutex.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), pthread\+\_\+mutex\+::recursion, e sched\+\_\+yield().
+References \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), pthread\+\_\+mutex\+::recursion, and sched\+\_\+yield().
 
 
 \begin{DoxyCode}
@@ -2060,11 +2060,11 @@ Referenzia \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pth
 )}}\label{pthread_8h_a5f197c3d769dee7a09d911241a7b6766}
 
 
-Definizione alla linea 92 del file pthread\+\_\+mutex.\+c.
+Definition at line 92 of file pthread\+\_\+mutex.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+lock(), e pthread\+\_\+mutex\+::time.
+References errno, pthread\+\_\+mutex\+\_\+lock(), and pthread\+\_\+mutex\+::time.
 
 
 \begin{DoxyCode}
@@ -2091,11 +2091,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+lock(), e pthread\+\_\+mutex\+::time.
 )}}\label{pthread_8h_a27da386211db1a7e9a3b2a0db4d22144}
 
 
-Definizione alla linea 107 del file pthread\+\_\+mutex.\+c.
+Definition at line 107 of file pthread\+\_\+mutex.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), e pthread\+\_\+mutex\+::recursion.
+References \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), and pthread\+\_\+mutex\+::recursion.
 
 
 \begin{DoxyCode}
@@ -2134,11 +2134,11 @@ Referenzia \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pth
 )}}\label{pthread_8h_a96184290ffb60e04c53a52869cf960a2}
 
 
-Definizione alla linea 133 del file pthread\+\_\+mutex.\+c.
+Definition at line 133 of file pthread\+\_\+mutex.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), e pthread\+\_\+mutex\+::recursion.
+References errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+::owner, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+E\+R\+R\+O\+R\+C\+H\+E\+C\+K, P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+R\+E\+C\+U\+R\+S\+I\+V\+E, pthread\+\_\+self(), and pthread\+\_\+mutex\+::recursion.
 
 
 \begin{DoxyCode}
@@ -2173,11 +2173,11 @@ Referenzia errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthrea
 )}}\label{pthread_8h_a2321aabf58224b06021185708d0f9658}
 
 
-Definizione alla linea 20 del file pthread\+\_\+mutexattr.\+c.
+Definition at line 20 of file pthread\+\_\+mutexattr.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutexattr\+::kind, e pthread\+\_\+mutexattr\+::pshared.
+References errno, pthread\+\_\+mutexattr\+::kind, and pthread\+\_\+mutexattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -2203,11 +2203,11 @@ Referenzia errno, pthread\+\_\+mutexattr\+::kind, e pthread\+\_\+mutexattr\+::ps
 )}}\label{pthread_8h_af8d7f85a0d52d3560db6d36cf9b44ac0}
 
 
-Definizione alla linea 32 del file pthread\+\_\+mutexattr.\+c.
+Definition at line 32 of file pthread\+\_\+mutexattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+mutexattr\+::pshared.
+References errno, and pthread\+\_\+mutexattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -2231,11 +2231,11 @@ Referenzia errno, e pthread\+\_\+mutexattr\+::pshared.
 )}}\label{pthread_8h_ab006d856e7ec59dc82d2e4a69d49f5dc}
 
 
-Definizione alla linea 52 del file pthread\+\_\+mutexattr.\+c.
+Definition at line 52 of file pthread\+\_\+mutexattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+mutexattr\+::kind.
+References errno, and pthread\+\_\+mutexattr\+::kind.
 
 
 \begin{DoxyCode}
@@ -2258,11 +2258,11 @@ Referenzia errno, e pthread\+\_\+mutexattr\+::kind.
 )}}\label{pthread_8h_af98f6b6c483077a39d1400b1de1577b8}
 
 
-Definizione alla linea 8 del file pthread\+\_\+mutexattr.\+c.
+Definition at line 8 of file pthread\+\_\+mutexattr.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutexattr\+::kind, pthread\+\_\+mutexattr\+::pshared, e P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T.
+References errno, pthread\+\_\+mutexattr\+::kind, pthread\+\_\+mutexattr\+::pshared, and P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+D\+E\+F\+A\+U\+L\+T.
 
 
 \begin{DoxyCode}
@@ -2288,11 +2288,11 @@ Referenzia errno, pthread\+\_\+mutexattr\+::kind, pthread\+\_\+mutexattr\+::psha
 )}}\label{pthread_8h_a73bd8697b91e0ee9a63c30052ac9f72f}
 
 
-Definizione alla linea 42 del file pthread\+\_\+mutexattr.\+c.
+Definition at line 42 of file pthread\+\_\+mutexattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+mutexattr\+::pshared.
+References errno, and pthread\+\_\+mutexattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -2316,11 +2316,11 @@ Referenzia errno, e pthread\+\_\+mutexattr\+::pshared.
 )}}\label{pthread_8h_a4676cf36cad3bde781928419735e6fb7}
 
 
-Definizione alla linea 62 del file pthread\+\_\+mutexattr.\+c.
+Definition at line 62 of file pthread\+\_\+mutexattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+mutexattr\+::kind.
+References errno, and pthread\+\_\+mutexattr\+::kind.
 
 
 \begin{DoxyCode}
@@ -2344,11 +2344,11 @@ Referenzia errno, e pthread\+\_\+mutexattr\+::kind.
 )}}\label{pthread_8h_a196103ac97710dad7a93fd6c188cc999}
 
 
-Definizione alla linea 7 del file pthread\+\_\+once.\+c.
+Definition at line 7 of file pthread\+\_\+once.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -2366,11 +2366,11 @@ Referenzia errno.
 )}}\label{pthread_8h_a1166bfb9159f43886513740ffcf52100}
 
 
-Definizione alla linea 34 del file pthread\+\_\+rwlock.\+c.
+Definition at line 34 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+rwlock\+::exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+shared\+\_\+waiters, pthread\+\_\+rwlock\+::owner, pthread\+\_\+mutex\+\_\+destroy(), pthread\+\_\+self(), pthread\+\_\+rwlock\+::rdmutex, pthread\+\_\+rwlock\+::shared\+\_\+waiters, e pthread\+\_\+rwlock\+::wrmutex.
+References errno, pthread\+\_\+rwlock\+::exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+shared\+\_\+waiters, pthread\+\_\+rwlock\+::owner, pthread\+\_\+mutex\+\_\+destroy(), pthread\+\_\+self(), pthread\+\_\+rwlock\+::rdmutex, pthread\+\_\+rwlock\+::shared\+\_\+waiters, and pthread\+\_\+rwlock\+::wrmutex.
 
 
 \begin{DoxyCode}
@@ -2413,11 +2413,11 @@ Referenzia errno, pthread\+\_\+rwlock\+::exclusive\+\_\+waiters, pthread\+\_\+rw
 )}}\label{pthread_8h_a5ee98536e18644a68d1e5fa377ba827b}
 
 
-Definizione alla linea 10 del file pthread\+\_\+rwlock.\+c.
+Definition at line 10 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+rwlock\+::exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+shared\+\_\+waiters, pthread\+\_\+rwlock\+::owner, pthread\+\_\+mutex\+\_\+init(), pthread\+\_\+self(), pthread\+\_\+rwlock\+::rdmutex, pthread\+\_\+rwlock\+::shared\+\_\+waiters, e pthread\+\_\+rwlock\+::wrmutex.
+References errno, pthread\+\_\+rwlock\+::exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+exclusive\+\_\+waiters, pthread\+\_\+rwlock\+::num\+\_\+shared\+\_\+waiters, pthread\+\_\+rwlock\+::owner, pthread\+\_\+mutex\+\_\+init(), pthread\+\_\+self(), pthread\+\_\+rwlock\+::rdmutex, pthread\+\_\+rwlock\+::shared\+\_\+waiters, and pthread\+\_\+rwlock\+::wrmutex.
 
 
 \begin{DoxyCode}
@@ -2454,11 +2454,11 @@ Referenzia errno, pthread\+\_\+rwlock\+::exclusive\+\_\+waiters, pthread\+\_\+rw
 )}}\label{pthread_8h_a41d0ae7d642f9e869275a1e35c7e7345}
 
 
-Definizione alla linea 81 del file pthread\+\_\+rwlock.\+c.
+Definition at line 81 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+lock(), e pthread\+\_\+rwlock\+::rdmutex.
+References errno, pthread\+\_\+mutex\+\_\+lock(), and pthread\+\_\+rwlock\+::rdmutex.
 
 
 \begin{DoxyCode}
@@ -2481,11 +2481,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+lock(), e pthread\+\_\+rwlock\+::rdmut
 )}}\label{pthread_8h_a75e229e656ee4048da890bff45eb056b}
 
 
-Definizione alla linea 90 del file pthread\+\_\+rwlock.\+c.
+Definition at line 90 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+timedlock(), e pthread\+\_\+rwlock\+::rdmutex.
+References errno, pthread\+\_\+mutex\+\_\+timedlock(), and pthread\+\_\+rwlock\+::rdmutex.
 
 
 \begin{DoxyCode}
@@ -2508,11 +2508,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+timedlock(), e pthread\+\_\+rwlock\+::
 )}}\label{pthread_8h_ac316d4073ca8a30c8b0b47d3c6cf6e8b}
 
 
-Definizione alla linea 108 del file pthread\+\_\+rwlock.\+c.
+Definition at line 108 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+timedlock(), e pthread\+\_\+rwlock\+::wrmutex.
+References errno, pthread\+\_\+mutex\+\_\+timedlock(), and pthread\+\_\+rwlock\+::wrmutex.
 
 
 \begin{DoxyCode}
@@ -2534,11 +2534,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+timedlock(), e pthread\+\_\+rwlock\+::
 )}}\label{pthread_8h_a22beda5fdbe327286232d6fa3072d0be}
 
 
-Definizione alla linea 63 del file pthread\+\_\+rwlock.\+c.
+Definition at line 63 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+trylock(), e pthread\+\_\+rwlock\+::rdmutex.
+References errno, pthread\+\_\+mutex\+\_\+trylock(), and pthread\+\_\+rwlock\+::rdmutex.
 
 
 \begin{DoxyCode}
@@ -2560,11 +2560,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+trylock(), e pthread\+\_\+rwlock\+::rd
 )}}\label{pthread_8h_af876ea2a1537ebb147ca1ac773d341ea}
 
 
-Definizione alla linea 72 del file pthread\+\_\+rwlock.\+c.
+Definition at line 72 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+trylock(), e pthread\+\_\+rwlock\+::wrmutex.
+References errno, pthread\+\_\+mutex\+\_\+trylock(), and pthread\+\_\+rwlock\+::wrmutex.
 
 
 \begin{DoxyCode}
@@ -2586,11 +2586,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+trylock(), e pthread\+\_\+rwlock\+::wr
 )}}\label{pthread_8h_a294df74b6a0613e5b0b18850ee24f2a6}
 
 
-Definizione alla linea 117 del file pthread\+\_\+rwlock.\+c.
+Definition at line 117 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+unlock(), pthread\+\_\+rwlock\+::rdmutex, e pthread\+\_\+rwlock\+::wrmutex.
+References errno, pthread\+\_\+mutex\+\_\+unlock(), pthread\+\_\+rwlock\+::rdmutex, and pthread\+\_\+rwlock\+::wrmutex.
 
 
 \begin{DoxyCode}
@@ -2618,11 +2618,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+unlock(), pthread\+\_\+rwlock\+::rdmut
 )}}\label{pthread_8h_a2bce91a7ca8b6a86d5ad896a7f4353ae}
 
 
-Definizione alla linea 99 del file pthread\+\_\+rwlock.\+c.
+Definition at line 99 of file pthread\+\_\+rwlock.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+mutex\+\_\+lock(), e pthread\+\_\+rwlock\+::wrmutex.
+References errno, pthread\+\_\+mutex\+\_\+lock(), and pthread\+\_\+rwlock\+::wrmutex.
 
 
 \begin{DoxyCode}
@@ -2644,11 +2644,11 @@ Referenzia errno, pthread\+\_\+mutex\+\_\+lock(), e pthread\+\_\+rwlock\+::wrmut
 )}}\label{pthread_8h_a78a54e67f0afe2601dbda0a904fa0bdf}
 
 
-Definizione alla linea 19 del file pthread\+\_\+rwlockattr.\+c.
+Definition at line 19 of file pthread\+\_\+rwlockattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
+References errno, and pthread\+\_\+rwlockattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -2672,11 +2672,11 @@ Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
 )}}\label{pthread_8h_a4a749019aadaa5443785ab81a9e11a86}
 
 
-Definizione alla linea 29 del file pthread\+\_\+rwlockattr.\+c.
+Definition at line 29 of file pthread\+\_\+rwlockattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
+References errno, and pthread\+\_\+rwlockattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -2704,11 +2704,11 @@ Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
 )}}\label{pthread_8h_a9d831af0179ed16d1b6cbeba0304810b}
 
 
-Definizione alla linea 9 del file pthread\+\_\+rwlockattr.\+c.
+Definition at line 9 of file pthread\+\_\+rwlockattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
+References errno, and pthread\+\_\+rwlockattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -2732,11 +2732,11 @@ Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
 )}}\label{pthread_8h_ae6550aa6aede71f618bb7457f3e50524}
 
 
-Definizione alla linea 44 del file pthread\+\_\+rwlockattr.\+c.
+Definition at line 44 of file pthread\+\_\+rwlockattr.\+c.
 
 
 
-Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
+References errno, and pthread\+\_\+rwlockattr\+::pshared.
 
 
 \begin{DoxyCode}
@@ -2759,11 +2759,11 @@ Referenzia errno, e pthread\+\_\+rwlockattr\+::pshared.
 )}}\label{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}
 
 
-Definizione alla linea 10 del file pthread\+\_\+self.\+c.
+Definition at line 10 of file pthread\+\_\+self.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+os\+\_\+gettid, \+\_\+\+\_\+pthread\+\_\+queue, errno, pthread\+\_\+context\+::next, e pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+os\+\_\+gettid, \+\_\+\+\_\+pthread\+\_\+queue, errno, pthread\+\_\+context\+::next, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -2796,11 +2796,11 @@ Referenzia \+\_\+\+\_\+os\+\_\+gettid, \+\_\+\+\_\+pthread\+\_\+queue, errno, pt
 )}}\label{pthread_8h_a37075410fbbaad7ee93c95375fc86e0e}
 
 
-Definizione alla linea 12 del file pthread\+\_\+cancel.\+c.
+Definition at line 12 of file pthread\+\_\+cancel.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -2819,11 +2819,11 @@ Referenzia errno.
 )}}\label{pthread_8h_aab579bcfcf0662a0c1e35fd82162e61d}
 
 
-Definizione alla linea 18 del file pthread\+\_\+cancel.\+c.
+Definition at line 18 of file pthread\+\_\+cancel.\+c.
 
 
 
-Referenzia errno.
+References errno.
 
 
 \begin{DoxyCode}
@@ -2841,11 +2841,11 @@ Referenzia errno.
 )}}\label{pthread_8h_aee776aa5481b87ca7e7f959a01b50bea}
 
 
-Definizione alla linea 44 del file pthread\+\_\+sched.\+c.
+Definition at line 44 of file pthread\+\_\+sched.\+c.
 
 
 
-Referenzia pthread\+\_\+context\+::attr, errno, pthread\+\_\+attr\+::param, e pthread\+\_\+self().
+References pthread\+\_\+context\+::attr, errno, pthread\+\_\+attr\+::param, and pthread\+\_\+self().
 
 
 \begin{DoxyCode}
@@ -2873,11 +2873,11 @@ Referenzia pthread\+\_\+context\+::attr, errno, pthread\+\_\+attr\+::param, e pt
 )}}\label{pthread_8h_a14f50e1f5d815c90f1f4225eca5d3a8c}
 
 
-Definizione alla linea 11 del file pthread\+\_\+sched.\+c.
+Definition at line 11 of file pthread\+\_\+sched.\+c.
 
 
 
-Referenzia errno, sched\+\_\+setparam(), e pthread\+\_\+context\+::tid.
+References errno, sched\+\_\+setparam(), and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -2906,11 +2906,11 @@ Referenzia errno, sched\+\_\+setparam(), e pthread\+\_\+context\+::tid.
 )}}\label{pthread_8h_a2187333dd46ce08d9d2e044f79fad705}
 
 
-Definizione alla linea 49 del file pthread\+\_\+key.\+c.
+Definition at line 49 of file pthread\+\_\+key.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+pthread\+\_\+keys, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, e \+\_\+\+\_\+pthread\+\_\+key\+::value.
+References \+\_\+\+\_\+pthread\+\_\+keys, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E\+Y\+S\+\_\+\+M\+A\+X, and \+\_\+\+\_\+pthread\+\_\+key\+::value.
 
 
 \begin{DoxyCode}
@@ -2938,11 +2938,11 @@ Referenzia \+\_\+\+\_\+pthread\+\_\+keys, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E
 )}}\label{pthread_8h_a87f8f1b6530c064af125525668de7573}
 
 
-Definizione alla linea 19 del file pthread\+\_\+spin.\+c.
+Definition at line 19 of file pthread\+\_\+spin.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+destroy().
+References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, and pthread\+\_\+mutex\+\_\+destroy().
 
 
 \begin{DoxyCode}
@@ -2968,11 +2968,11 @@ Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 )}}\label{pthread_8h_aa35638e0561b356d978095ebb3ca6401}
 
 
-Definizione alla linea 7 del file pthread\+\_\+spin.\+c.
+Definition at line 7 of file pthread\+\_\+spin.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+init().
+References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, and pthread\+\_\+mutex\+\_\+init().
 
 
 \begin{DoxyCode}
@@ -2997,11 +2997,11 @@ Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 )}}\label{pthread_8h_a5a807aedbbb69d36163c9fd6fa661f69}
 
 
-Definizione alla linea 31 del file pthread\+\_\+spin.\+c.
+Definition at line 31 of file pthread\+\_\+spin.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+lock().
+References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, and pthread\+\_\+mutex\+\_\+lock().
 
 
 \begin{DoxyCode}
@@ -3028,11 +3028,11 @@ Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 )}}\label{pthread_8h_acc1bbcf93cbba8a8f5a8dec2d2db9318}
 
 
-Definizione alla linea 45 del file pthread\+\_\+spin.\+c.
+Definition at line 45 of file pthread\+\_\+spin.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+trylock().
+References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, and pthread\+\_\+mutex\+\_\+trylock().
 
 
 \begin{DoxyCode}
@@ -3059,11 +3059,11 @@ Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 )}}\label{pthread_8h_a3aff65ef8d5fb28a7be0403661724eee}
 
 
-Definizione alla linea 59 del file pthread\+\_\+spin.\+c.
+Definition at line 59 of file pthread\+\_\+spin.\+c.
 
 
 
-Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, e pthread\+\_\+mutex\+\_\+unlock().
+References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::mutex, and pthread\+\_\+mutex\+\_\+unlock().
 
 
 \begin{DoxyCode}
@@ -3090,7 +3090,7 @@ Referenzia errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 )}}\label{pthread_8h_af1c95282ab2bea25f0888a19652cd41f}
 
 
-Definizione alla linea 23 del file pthread\+\_\+cancel.\+c.
+Definition at line 23 of file pthread\+\_\+cancel.\+c.
 
 
 \begin{DoxyCode}

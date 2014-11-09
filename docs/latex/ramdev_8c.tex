@@ -1,4 +1,4 @@
-\hypertarget{ramdev_8c}{\section{Riferimenti per il file src/fs/ramdev.c}
+\hypertarget{ramdev_8c}{\section{src/fs/ramdev.c File Reference}
 \label{ramdev_8c}\index{src/fs/ramdev.\+c@{src/fs/ramdev.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -9,7 +9,7 @@
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
 {\ttfamily \#include $<$fcntl.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{ramdev_8c_a6c11bf3d3e83703d529cd8697e1dc618}{ramdev\+\_\+read} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ino, char $\ast$buf, int \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
@@ -20,14 +20,14 @@ void \hyperlink{ramdev_8c_ac9ef7e9fc03cb083b7c94bda843576bd}{ramdev\+\_\+flush} 
 \item 
 \hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ \hyperlink{ramdev_8c_a0c040a7a5a5150b0b0d18354ac6f4958}{mkramdev} (char $\ast$path, \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} addr, \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{ramdev_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{ramdev_8c_a0c040a7a5a5150b0b0d18354ac6f4958}{\index{ramdev.\+c@{ramdev.\+c}!mkramdev@{mkramdev}}
 \index{mkramdev@{mkramdev}!ramdev.\+c@{ramdev.\+c}}
 \subsubsection[{mkramdev}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ mkramdev (
@@ -39,32 +39,32 @@ void \hyperlink{ramdev_8c_ac9ef7e9fc03cb083b7c94bda843576bd}{ramdev\+\_\+flush} 
 )}}\label{ramdev_8c_a0c040a7a5a5150b0b0d18354ac6f4958}
 
 
-Definizione alla linea 75 del file ramdev.\+c.
+Definition at line 76 of file ramdev.\+c.
 
 
 
-Referenzia bufio\+\_\+alloc\+\_\+raw(), task\+::fd, inode\+::flush, ramdev\+\_\+flush(), ramdev\+\_\+read(), ramdev\+\_\+write(), inode\+::read, size, inode\+::size, sys\+\_\+close(), sys\+\_\+open(), inode\+::userdata, e inode\+::write.
+References bufio\+\_\+alloc\+\_\+raw(), task\+::fd, inode\+::flush, ramdev\+\_\+flush(), ramdev\+\_\+read(), ramdev\+\_\+write(), inode\+::read, inode\+::size, size, sys\+\_\+close(), sys\+\_\+open(), inode\+::userdata, and inode\+::write.
 
 
 \begin{DoxyCode}
-75                                                             \{
-76     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(path, O\_CREAT | O\_EXCL | O\_TRUNC, S\_IFCHR);
-77     \textcolor{keywordflow}{if}(fd < 0)
-78         \textcolor{keywordflow}{return} NULL;
-79 
-80     \hyperlink{structinode}{inode\_t}* ino = (\hyperlink{structinode}{inode\_t}*) \hyperlink{ramdev_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-81     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
-82 
-83     ino->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read} = \hyperlink{ramdev_8c_a6c11bf3d3e83703d529cd8697e1dc618}{ramdev\_read};
-84     ino->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write} = \hyperlink{ramdev_8c_a9abd59435d15eab678b7b601e7415c97}{ramdev\_write};
-85     ino->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = \hyperlink{ramdev_8c_ac9ef7e9fc03cb083b7c94bda843576bd}{ramdev\_flush};
-86     ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata} = (\textcolor{keywordtype}{void}*) \hyperlink{bufio_8c_a1258244c4b6ffe2885086facaa7a72b0}{bufio\_alloc\_raw}((\textcolor{keywordtype}{void}*) addr, 
-      \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-87     ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} = \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-88 
+76                                                             \{
+77     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(path, O\_CREAT | O\_EXCL | O\_TRUNC, S\_IFCHR);
+78     \textcolor{keywordflow}{if}(fd < 0)
+79         \textcolor{keywordflow}{return} NULL;
+80 
+81     \hyperlink{structinode}{inode\_t}* ino = (\hyperlink{structinode}{inode\_t}*) \hyperlink{ramdev_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+82     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
+83 
+84     ino->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read} = \hyperlink{ramdev_8c_a6c11bf3d3e83703d529cd8697e1dc618}{ramdev\_read};
+85     ino->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write} = \hyperlink{ramdev_8c_a9abd59435d15eab678b7b601e7415c97}{ramdev\_write};
+86     ino->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = \hyperlink{ramdev_8c_ac9ef7e9fc03cb083b7c94bda843576bd}{ramdev\_flush};
+87     ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata} = (\textcolor{keywordtype}{void}*) \hyperlink{bufio_8c_a1258244c4b6ffe2885086facaa7a72b0}{bufio\_alloc\_raw}((\textcolor{keywordtype}{void}*) addr, 
+      \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+88     ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} = \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
 89 
-90     \textcolor{keywordflow}{return} ino;
-91 \}
+90 
+91     \textcolor{keywordflow}{return} ino;
+92 \}
 \end{DoxyCode}
 \hypertarget{ramdev_8c_ac9ef7e9fc03cb083b7c94bda843576bd}{\index{ramdev.\+c@{ramdev.\+c}!ramdev\+\_\+flush@{ramdev\+\_\+flush}}
 \index{ramdev\+\_\+flush@{ramdev\+\_\+flush}!ramdev.\+c@{ramdev.\+c}}
@@ -75,23 +75,23 @@ Referenzia bufio\+\_\+alloc\+\_\+raw(), task\+::fd, inode\+::flush, ramdev\+\_\+
 )}}\label{ramdev_8c_ac9ef7e9fc03cb083b7c94bda843576bd}
 
 
-Definizione alla linea 64 del file ramdev.\+c.
+Definition at line 65 of file ramdev.\+c.
 
 
 
-Referenzia bufio\+\_\+free(), e inode\+::userdata.
+References bufio\+\_\+free(), and inode\+::userdata.
 
 
 \begin{DoxyCode}
-64                                 \{
-65     \textcolor{keywordflow}{if}(!ino)
-66         \textcolor{keywordflow}{return};
-67 
-68     \textcolor{keywordflow}{if}(!ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata})
-69         \textcolor{keywordflow}{return};
-70 
-71     \hyperlink{bufio_8c_a2a92ff5d9427e2d5d88b4c95247b0f64}{bufio\_free}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata});
-72 \}
+65                                 \{
+66     \textcolor{keywordflow}{if}(!ino)
+67         \textcolor{keywordflow}{return};
+68 
+69     \textcolor{keywordflow}{if}(!ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata})
+70         \textcolor{keywordflow}{return};
+71 
+72     \hyperlink{bufio_8c_a2a92ff5d9427e2d5d88b4c95247b0f64}{bufio\_free}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata});
+73 \}
 \end{DoxyCode}
 \hypertarget{ramdev_8c_a6c11bf3d3e83703d529cd8697e1dc618}{\index{ramdev.\+c@{ramdev.\+c}!ramdev\+\_\+read@{ramdev\+\_\+read}}
 \index{ramdev\+\_\+read@{ramdev\+\_\+read}!ramdev.\+c@{ramdev.\+c}}
@@ -104,11 +104,11 @@ Referenzia bufio\+\_\+free(), e inode\+::userdata.
 )}}\label{ramdev_8c_a6c11bf3d3e83703d529cd8697e1dc618}
 
 
-Definizione alla linea 15 del file ramdev.\+c.
+Definition at line 15 of file ramdev.\+c.
 
 
 
-Referenzia bufio\+\_\+read(), inode\+::position, size, inode\+::size, e inode\+::userdata.
+References bufio\+\_\+read(), bufio\+\_\+seek(), inode\+::position, inode\+::size, size, and inode\+::userdata.
 
 
 \begin{DoxyCode}
@@ -119,22 +119,23 @@ Referenzia bufio\+\_\+read(), inode\+::position, size, inode\+::size, e inode\+:
 19     \textcolor{keywordflow}{if}(!buf)
 20         \textcolor{keywordflow}{return} 0;
 21 
-22     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
-23         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
+22     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
+23         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
 24 
 25     \textcolor{keywordflow}{if}(ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
 26         ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
 27 
-28     \textcolor{keywordflow}{if}(ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} + \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
-29         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} - ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position};
+28     \textcolor{keywordflow}{if}(ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} + \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
+29         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} - ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position};
 30 
-31     \textcolor{keywordflow}{if}(!\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+31     \textcolor{keywordflow}{if}(!\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size})
 32         \textcolor{keywordflow}{return} 0;
 33 
-34     \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = \hyperlink{bufio_8c_a75016850df49d95e52a5508d22ff79e8}{bufio\_read}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata}, buf, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-35     ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} += \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-36     \textcolor{keywordflow}{return} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-37 \}
+34     \hyperlink{bufio_8c_a1fa3475774b4a60a2e8a1b10f202d7f8}{bufio\_seek}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata}, ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position}, SEEK\_SET);
+35     \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = \hyperlink{bufio_8c_a75016850df49d95e52a5508d22ff79e8}{bufio\_read}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata}, buf, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+36     ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} += \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+37     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+38 \}
 \end{DoxyCode}
 \hypertarget{ramdev_8c_a9abd59435d15eab678b7b601e7415c97}{\index{ramdev.\+c@{ramdev.\+c}!ramdev\+\_\+write@{ramdev\+\_\+write}}
 \index{ramdev\+\_\+write@{ramdev\+\_\+write}!ramdev.\+c@{ramdev.\+c}}
@@ -147,46 +148,50 @@ Referenzia bufio\+\_\+read(), inode\+::position, size, inode\+::size, e inode\+:
 )}}\label{ramdev_8c_a9abd59435d15eab678b7b601e7415c97}
 
 
-Definizione alla linea 39 del file ramdev.\+c.
+Definition at line 40 of file ramdev.\+c.
 
 
 
-Referenzia bufio\+\_\+write(), inode\+::position, size, inode\+::size, e inode\+::userdata.
+References bufio\+\_\+seek(), bufio\+\_\+write(), inode\+::position, inode\+::size, size, and inode\+::userdata.
 
 
 \begin{DoxyCode}
-39                                                     \{
-40     \textcolor{keywordflow}{if}(!ino)
-41         \textcolor{keywordflow}{return} 0;
-42 
-43     \textcolor{keywordflow}{if}(!buf)
-44         \textcolor{keywordflow}{return} 0;
-45 
-46     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
-47         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
-48 
-49     \textcolor{keywordflow}{if}(ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
-50         ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
-51 
-52     \textcolor{keywordflow}{if}(ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} + \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
-53         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} - ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position};
-54 
-55     \textcolor{keywordflow}{if}(!\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
-56         \textcolor{keywordflow}{return} 0;
-57 
-58     
-59     \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = \hyperlink{bufio_8c_a8db791aa56b168544d7666a723af32de}{bufio\_write}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata}, buf, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-60     ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} += \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-61     \textcolor{keywordflow}{return} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-62 \}
+40                                                     \{
+41     \textcolor{keywordflow}{if}(!ino)
+42         \textcolor{keywordflow}{return} 0;
+43 
+44     \textcolor{keywordflow}{if}(!buf)
+45         \textcolor{keywordflow}{return} 0;
+46 
+47     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
+48         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
+49 
+50     \textcolor{keywordflow}{if}(ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
+51         ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
+52 
+53     \textcolor{keywordflow}{if}(ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} + \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
+54         \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} - ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position};
+55 
+56     \textcolor{keywordflow}{if}(!\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size})
+57         \textcolor{keywordflow}{return} 0;
+58 
+59     \hyperlink{bufio_8c_a1fa3475774b4a60a2e8a1b10f202d7f8}{bufio\_seek}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata}, ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position}, SEEK\_SET);
+60     \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = \hyperlink{bufio_8c_a8db791aa56b168544d7666a723af32de}{bufio\_write}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata}, buf, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+61     ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} += \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+62     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+63 \}
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{ramdev_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{ramdev.\+c@{ramdev.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!ramdev.\+c@{ramdev.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{ramdev_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

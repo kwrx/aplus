@@ -1,4 +1,4 @@
-.TH "src/debug.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/debug.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -6,6 +6,300 @@ src/debug.c \-
 .SH SYNOPSIS
 .br
 .PP
-.SH "Autore"
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBdebug_putc\fP (char ch)"
+.br
+.RI "\fISend a character to serial debug port\&. \fP"
+.ti -1c
+.RI "void \fBdebug_puts\fP (char *str)"
+.br
+.RI "\fISend a string to serial debug port\&. \fP"
+.ti -1c
+.RI "static void \fBprint_dec\fP (unsigned int \fBvalue\fP, unsigned int width, char *buf, int *ptr)"
+.br
+.RI "\fIPrint a number in base 10 into buffer\&. \fP"
+.ti -1c
+.RI "static void \fBprint_hex\fP (unsigned int \fBvalue\fP, unsigned int width, char *buf, int *ptr)"
+.br
+.RI "\fIPrint a number in base 16 into buffer\&. \fP"
+.ti -1c
+.RI "size_t \fBvasprintf\fP (char *buf, const char *fmt, va_list args)"
+.br
+.RI "\fIPrint to allocated string\&.
+.br
+The functions asprintf() and \fBvasprintf()\fP are analogs of sprintf(3) and vsprintf(3), except that they allocate a string large enough to hold the output including the terminating null byte, and return a pointer to it via the first argument\&. This pointer should be passed to free(3) to release the allocated storage when it is no longer needed\&. \fP"
+.ti -1c
+.RI "void \fBkprintf\fP (char *fmt,\&.\&.\&.)"
+.br
+.RI "\fIFormatted output conversion and print to Debug Standard Output\&. \fP"
+.in -1c
+.SH "Function Documentation"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+.SS "void debug_putc (charch)"
+
+.PP
+Send a character to serial debug port\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIch\fP Character to send\&. 
+.RE
+.PP
+
+.PP
+Definition at line 9 of file debug\&.c\&.
+.PP
+References serial_send()\&.
+.PP
+.nf
+9                          {
+10     serial_send(0, ch);
+11 }
+.fi
+.SS "void debug_puts (char *str)"
+
+.PP
+Send a string to serial debug port\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIstr\fP String to send\&. 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBdebug_putc\fP 
+.RE
+.PP
+
+.PP
+Definition at line 19 of file debug\&.c\&.
+.PP
+References debug_putc(), lock, and unlock\&.
+.PP
+.nf
+19                            {
+20     lock();
+21     
+22     while(*str)
+23         debug_putc(*str++);
+24     
+25     unlock();
+26 }
+.fi
+.SS "void kprintf (char *fmt, \&.\&.\&.)"
+
+.PP
+Formatted output conversion and print to Debug Standard Output\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfmt\fP Format of string\&. 
+.br
+\fI\&.\&.\&.\fP Arguments\&. 
+.RE
+.PP
+
+.PP
+Definition at line 167 of file debug\&.c\&.
+.PP
+References debug_puts(), and vasprintf()\&.
+.PP
+.nf
+167                              {
+168     static char __kprintf_buf[1024];
+169     memset(__kprintf_buf, 0, 1024);
+170     
+171     va_list lst;
+172     va_start(lst, fmt);
+173     vasprintf(__kprintf_buf, fmt, lst);
+174     va_end(lst);
+175     
+176     debug_puts(__kprintf_buf);
+177 }
+.fi
+.SS "static void print_dec (unsigned intvalue, unsigned intwidth, char *buf, int *ptr)\fC [static]\fP"
+
+.PP
+Print a number in base 10 into buffer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvalue\fP Number to convert as string\&. 
+.br
+\fIwidth\fP Padding\&. 
+.br
+\fIbuf\fP Buffer output\&. 
+.br
+\fIptr\fP Size of returned string\&. 
+.RE
+.PP
+
+.PP
+Definition at line 36 of file debug\&.c\&.
+.PP
+.nf
+36                                                                                     {
+37     unsigned int n_width = 1;
+38     unsigned int i = 9;
+39     while (value > i && i < UINT32_MAX) {
+40         n_width += 1;
+41         i *= 10;
+42         i += 9;
+43     }
+44 
+45     int printed = 0;
+46     while (n_width + printed < width) {
+47         buf[*ptr] = '0';
+48         *ptr += 1;
+49         printed += 1;
+50     }
+51 
+52     i = n_width;
+53     while (i > 0) {
+54         unsigned int n = value / 10;
+55         int r = value % 10;
+56         buf[*ptr + i - 1] = r + '0';
+57         i--;
+58         value = n;
+59     }
+60     *ptr += n_width;
+61 }
+.fi
+.SS "static void print_hex (unsigned intvalue, unsigned intwidth, char *buf, int *ptr)\fC [static]\fP"
+
+.PP
+Print a number in base 16 into buffer\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvalue\fP Number to convert as string\&. 
+.br
+\fIwidth\fP Padding\&. 
+.br
+\fIbuf\fP Buffer output\&. 
+.br
+\fIptr\fP Size of returned string\&. 
+.RE
+.PP
+
+.PP
+Definition at line 70 of file debug\&.c\&.
+.PP
+.nf
+70                                                                                    {
+71     int i = width;
+72 
+73     if (i == 0) i = 8;
+74 
+75     unsigned int n_width = 1;
+76     unsigned int j = 0x0F;
+77     while (value > j && j < UINT32_MAX) {
+78         n_width += 1;
+79         j *= 0x10;
+80         j += 0x0F;
+81     }
+82 
+83     while (i > (int)n_width) {
+84         buf[*ptr] = '0';
+85         *ptr += 1;
+86         i--;
+87     }
+88 
+89     i = (int)n_width;
+90     while (i-- > 0) {
+91         buf[*ptr] = "0123456789abcdef"[(value>>(i*4))&0xF];
+92         *ptr += + 1;
+93     }
+94 }
+.fi
+.SS "size_t vasprintf (char *buf, const char *fmt, va_listargs)"
+
+.PP
+Print to allocated string\&.
+.br
+The functions asprintf() and \fBvasprintf()\fP are analogs of sprintf(3) and vsprintf(3), except that they allocate a string large enough to hold the output including the terminating null byte, and return a pointer to it via the first argument\&. This pointer should be passed to free(3) to release the allocated storage when it is no longer needed\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIbuf\fP Output buffer just allocated\&. 
+.br
+\fIfmt\fP Format of string\&. 
+.br
+\fIargs\fP Arguments\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+When successful, these functions return the number of bytes printed, just like sprintf(3)\&. If memory allocation wasn't possible, or some other error occurs, these functions will return -1, and the contents of strp is undefined\&. 
+.RE
+.PP
+
+.PP
+Definition at line 110 of file debug\&.c\&.
+.PP
+References print_dec(), and print_hex()\&.
+.PP
+.nf
+110                                                             {
+111     int i = 0;
+112     char *s;
+113     int ptr = 0;
+114     int len = strlen(fmt);
+115     for ( ; i < len && fmt[i]; ++i) {
+116         if (fmt[i] != '%') {
+117             buf[ptr++] = fmt[i];
+118             continue;
+119         }
+120         ++i;
+121         unsigned int arg_width = 0;
+122         while (fmt[i] >= '0' && fmt[i] <= '9') {
+123             arg_width *= 10;
+124             arg_width += fmt[i] - '0';
+125             ++i;
+126         }
+127         /* fmt[i] == '%' */
+128         switch (fmt[i]) {
+129             case 's': /* String pointer -> String */
+130                 s = (char *)va_arg(args, char *);
+131                 if (s == NULL) {
+132                     s = "(null)";
+133                 }
+134                 while (*s) {
+135                     buf[ptr++] = *s++;
+136                 }
+137                 break;
+138             case 'c': /* Single character */
+139                 buf[ptr++] = (char)va_arg(args, int);
+140                 break;
+141             case 'x': /* Hexadecimal number */
+142                 print_hex((unsigned long)va_arg(args, unsigned long), arg_width, buf, &ptr);
+143                 break;
+144             case 'd': /* Decimal number */
+145                 print_dec((unsigned long)va_arg(args, unsigned long), arg_width, buf, &ptr);
+146                 break;
+147             case '%': /* Escape */
+148                 buf[ptr++] = '%';
+149                 break;
+150             default: /* Nothing at all, just dump it */
+151                 buf[ptr++] = fmt[i];
+152                 break;
+153         }
+154     }
+155     /* Ensure the buffer ends in a null */
+156     buf[ptr] = '\0';
+157     return ptr;
+158 
+159 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

@@ -24,6 +24,10 @@
 #include <aplus/list.h>
 
 
+/**
+ *	\brief Acquire a spinlock.
+ *	\param spin Spinlock address.
+ */
 void spinlock_lock(spinlock_t* spin) {
 	if((*spin & SPINLOCK_FLAGS_FASTLOCK) == 0)
 		spinlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
@@ -34,10 +38,20 @@ void spinlock_lock(spinlock_t* spin) {
 }
 
 
+/**
+ *	\brief Unlock a spinlock.
+ *	\param spin Spinlock address.
+ */
 void spinlock_unlock(spinlock_t* spin) {
 	*spin &= ~SPINLOCK_FLAGS_LOCKED;
 }
 
+
+/**
+ *	\brief Try to acquire a spinlock
+ *	\param spin Spinlock address.
+ *	\return 0 for success else -1.
+ */
 int spinlock_trylock(spinlock_t* spin) {
 	if(*spin & SPINLOCK_FLAGS_LOCKED)
 		return -1;
@@ -46,10 +60,19 @@ int spinlock_trylock(spinlock_t* spin) {
 	return 0;
 }
 
+
+/**
+ *	\brief Yield current task if a false condition was given by spinlock_waiton().
+ *	\see spinlock_waiton
+ */
 void __spinlock_waiton() {
 	schedule_yield();
 }
 
+/**
+ *	\brief Put CPU in pause for a while if a false condition was given by fastlock_waiton().
+ *	\see fastlock_waiton
+ */
 void __fastlock_waiton() {
 	__asm__ __volatile__("pause");
 }

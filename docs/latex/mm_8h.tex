@@ -1,14 +1,14 @@
-\hypertarget{mm_8h}{\section{Riferimenti per il file src/include/aplus/mm.h}
+\hypertarget{mm_8h}{\section{src/include/aplus/mm.h File Reference}
 \label{mm_8h}\index{src/include/aplus/mm.\+h@{src/include/aplus/mm.\+h}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/task.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structheap}{heap}
 \end{DoxyCompactItemize}
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{M\+M\+\_\+\+V\+B\+A\+S\+E}~0x40000000
@@ -37,12 +37,12 @@ struct \hyperlink{structheap}{heap}
 \item 
 \#define \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{B\+L\+K\+M\+A\+G\+I\+C}~0x1234
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef struct \hyperlink{structheap}{heap} \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 static void $\ast$ \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\+\_\+paddr} (void $\ast$vaddr)
@@ -59,107 +59,107 @@ void $\ast$ \hyperlink{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}{krealloc} (void 
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{\index{mm.\+h@{mm.\+h}!B\+L\+K\+M\+A\+G\+I\+C@{B\+L\+K\+M\+A\+G\+I\+C}}
 \index{B\+L\+K\+M\+A\+G\+I\+C@{B\+L\+K\+M\+A\+G\+I\+C}!mm.\+h@{mm.\+h}}
 \subsubsection[{B\+L\+K\+M\+A\+G\+I\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+L\+K\+M\+A\+G\+I\+C~0x1234}}\label{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}
 
 
-Definizione alla linea 58 del file mm.\+h.
+Definition at line 58 of file mm.\+h.
 
 \hypertarget{mm_8h_ac4551bbc9efabf8378f35498f80b4679}{\index{mm.\+h@{mm.\+h}!B\+L\+K\+S\+I\+Z\+E@{B\+L\+K\+S\+I\+Z\+E}}
 \index{B\+L\+K\+S\+I\+Z\+E@{B\+L\+K\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
 \subsubsection[{B\+L\+K\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define B\+L\+K\+S\+I\+Z\+E~0x1000}}\label{mm_8h_ac4551bbc9efabf8378f35498f80b4679}
 
 
-Definizione alla linea 57 del file mm.\+h.
+Definition at line 57 of file mm.\+h.
 
 \hypertarget{mm_8h_a1b54983be7272f850a1eef88a78db6f8}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+L\+B\+A\+S\+E@{M\+M\+\_\+\+L\+B\+A\+S\+E}}
 \index{M\+M\+\_\+\+L\+B\+A\+S\+E@{M\+M\+\_\+\+L\+B\+A\+S\+E}!mm.\+h@{mm.\+h}}
 \subsubsection[{M\+M\+\_\+\+L\+B\+A\+S\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+L\+B\+A\+S\+E~0x00000000}}\label{mm_8h_a1b54983be7272f850a1eef88a78db6f8}
 
 
-Definizione alla linea 41 del file mm.\+h.
+Definition at line 41 of file mm.\+h.
 
 \hypertarget{mm_8h_a4b54a4ab7755c6c4dfebb91b75d9d956}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+L\+S\+I\+Z\+E@{M\+M\+\_\+\+L\+S\+I\+Z\+E}}
 \index{M\+M\+\_\+\+L\+S\+I\+Z\+E@{M\+M\+\_\+\+L\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
 \subsubsection[{M\+M\+\_\+\+L\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+L\+S\+I\+Z\+E~0x00800000}}\label{mm_8h_a4b54a4ab7755c6c4dfebb91b75d9d956}
 
 
-Definizione alla linea 42 del file mm.\+h.
+Definition at line 42 of file mm.\+h.
 
 \hypertarget{mm_8h_a61d9fae3cb95715f92171f153d9ff018}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+U\+B\+A\+S\+E@{M\+M\+\_\+\+U\+B\+A\+S\+E}}
 \index{M\+M\+\_\+\+U\+B\+A\+S\+E@{M\+M\+\_\+\+U\+B\+A\+S\+E}!mm.\+h@{mm.\+h}}
 \subsubsection[{M\+M\+\_\+\+U\+B\+A\+S\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+U\+B\+A\+S\+E~0x00\+A00000}}\label{mm_8h_a61d9fae3cb95715f92171f153d9ff018}
 
 
-Definizione alla linea 44 del file mm.\+h.
+Definition at line 44 of file mm.\+h.
 
 \hypertarget{mm_8h_a600b21bbb74401132349a1325dadfdbe}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+U\+S\+I\+Z\+E@{M\+M\+\_\+\+U\+S\+I\+Z\+E}}
 \index{M\+M\+\_\+\+U\+S\+I\+Z\+E@{M\+M\+\_\+\+U\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
 \subsubsection[{M\+M\+\_\+\+U\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+U\+S\+I\+Z\+E~({\bf M\+M\+\_\+\+V\+B\+A\+S\+E} -\/ {\bf M\+M\+\_\+\+U\+B\+A\+S\+E})}}\label{mm_8h_a600b21bbb74401132349a1325dadfdbe}
 
 
-Definizione alla linea 45 del file mm.\+h.
+Definition at line 45 of file mm.\+h.
 
 \hypertarget{mm_8h_ae874c5b00fa6293a175b988b647afcc9}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+V\+B\+A\+S\+E@{M\+M\+\_\+\+V\+B\+A\+S\+E}}
 \index{M\+M\+\_\+\+V\+B\+A\+S\+E@{M\+M\+\_\+\+V\+B\+A\+S\+E}!mm.\+h@{mm.\+h}}
 \subsubsection[{M\+M\+\_\+\+V\+B\+A\+S\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+V\+B\+A\+S\+E~0x40000000}}\label{mm_8h_ae874c5b00fa6293a175b988b647afcc9}
 
 
-Definizione alla linea 38 del file mm.\+h.
+Definition at line 38 of file mm.\+h.
 
 \hypertarget{mm_8h_afbad6879737307d726ae456844b05320}{\index{mm.\+h@{mm.\+h}!M\+M\+\_\+\+V\+S\+I\+Z\+E@{M\+M\+\_\+\+V\+S\+I\+Z\+E}}
 \index{M\+M\+\_\+\+V\+S\+I\+Z\+E@{M\+M\+\_\+\+V\+S\+I\+Z\+E}!mm.\+h@{mm.\+h}}
 \subsubsection[{M\+M\+\_\+\+V\+S\+I\+Z\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define M\+M\+\_\+\+V\+S\+I\+Z\+E~(0x\+F\+F\+F\+F\+F\+F\+F\+F -\/ M\+M\+\_\+\+V\+B\+A\+S\+E)}}\label{mm_8h_afbad6879737307d726ae456844b05320}
 
 
-Definizione alla linea 39 del file mm.\+h.
+Definition at line 39 of file mm.\+h.
 
 \hypertarget{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T}}
 \index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T}!mm.\+h@{mm.\+h}}
 \subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T~({\bf V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T} $\vert$ {\bf V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R})}}\label{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}
 
 
-Definizione alla linea 52 del file mm.\+h.
+Definition at line 52 of file mm.\+h.
 
 \hypertarget{mm_8h_a9da196e1c5da9da3454cbcfa6d56c96e}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T}}
 \index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T}!mm.\+h@{mm.\+h}}
 \subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+P\+R\+E\+S\+E\+N\+T~0x01}}\label{mm_8h_a9da196e1c5da9da3454cbcfa6d56c96e}
 
 
-Definizione alla linea 49 del file mm.\+h.
+Definition at line 49 of file mm.\+h.
 
 \hypertarget{mm_8h_a39ac3cb44ab9c4695214a59a3d199557}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R}}
 \index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R}!mm.\+h@{mm.\+h}}
 \subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+R\+D\+W\+R~0x02}}\label{mm_8h_a39ac3cb44ab9c4695214a59a3d199557}
 
 
-Definizione alla linea 50 del file mm.\+h.
+Definition at line 50 of file mm.\+h.
 
 \hypertarget{mm_8h_a4f995b267ef97c4638c27370badecb21}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R}}
 \index{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R@{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R}!mm.\+h@{mm.\+h}}
 \subsubsection[{V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R~0x04}}\label{mm_8h_a4f995b267ef97c4638c27370badecb21}
 
 
-Definizione alla linea 51 del file mm.\+h.
+Definition at line 51 of file mm.\+h.
 
 \hypertarget{mm_8h_a17f8a27ab3548000488ca27d70785240}{\index{mm.\+h@{mm.\+h}!V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y@{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y}}
 \index{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y@{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y}!mm.\+h@{mm.\+h}}
 \subsubsection[{V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y~(0x\+F\+F\+F\+F\+F\+F\+F\+F -\/ M\+M\+\_\+\+V\+B\+A\+S\+E)}}\label{mm_8h_a17f8a27ab3548000488ca27d70785240}
 
 
-Definizione alla linea 54 del file mm.\+h.
+Definition at line 54 of file mm.\+h.
 
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\subsection{Typedef Documentation}
 \hypertarget{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{\index{mm.\+h@{mm.\+h}!heap\+\_\+t@{heap\+\_\+t}}
 \index{heap\+\_\+t@{heap\+\_\+t}!mm.\+h@{mm.\+h}}
 \subsubsection[{heap\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf heap}  {\bf heap\+\_\+t}}}\label{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{mm_8h_acee1960bdb3a19cb495341ec725cafef}{\index{mm.\+h@{mm.\+h}!kfree@{kfree}}
 \index{kfree@{kfree}!mm.\+h@{mm.\+h}}
 \subsubsection[{kfree}]{\setlength{\rightskip}{0pt plus 5cm}void kfree (
@@ -169,11 +169,11 @@ Definizione alla linea 54 del file mm.\+h.
 )}}\label{mm_8h_acee1960bdb3a19cb495341ec725cafef}
 
 
-Definizione alla linea 66 del file mm.\+c.
+Definition at line 66 of file mm.\+c.
 
 
 
-Referenzia B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), e size.
+References B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), and size.
 
 
 \begin{DoxyCode}
@@ -211,11 +211,11 @@ Referenzia B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), e 
 )}}\label{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}
 
 
-Definizione alla linea 84 del file mm.\+c.
+Definition at line 84 of file mm.\+c.
 
 
 
-Referenzia B\+L\+K\+M\+A\+G\+I\+C, kfree(), e kmalloc().
+References B\+L\+K\+M\+A\+G\+I\+C, kfree(), and kmalloc().
 
 
 \begin{DoxyCode}
@@ -254,11 +254,11 @@ Referenzia B\+L\+K\+M\+A\+G\+I\+C, kfree(), e kmalloc().
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{mm_8h_acb964323e95c799eb3896dce8c61d329}
 
 
-Definizione alla linea 85 del file mm.\+h.
+Definition at line 85 of file mm.\+h.
 
 
 
-Referenzia uint32\+\_\+t.
+References uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -275,11 +275,11 @@ Referenzia uint32\+\_\+t.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}
 
 
-Definizione alla linea 71 del file mm.\+h.
+Definition at line 71 of file mm.\+h.
 
 
 
-Referenzia M\+M\+\_\+\+V\+B\+A\+S\+E, e uint32\+\_\+t.
+References M\+M\+\_\+\+V\+B\+A\+S\+E, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -299,11 +299,11 @@ Referenzia M\+M\+\_\+\+V\+B\+A\+S\+E, e uint32\+\_\+t.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}
 
 
-Definizione alla linea 78 del file mm.\+h.
+Definition at line 78 of file mm.\+h.
 
 
 
-Referenzia M\+M\+\_\+\+V\+B\+A\+S\+E, e uint32\+\_\+t.
+References M\+M\+\_\+\+V\+B\+A\+S\+E, and uint32\+\_\+t.
 
 
 \begin{DoxyCode}

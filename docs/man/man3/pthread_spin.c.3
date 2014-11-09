@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_spin.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_spin.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,7 +13,7 @@ usr/src/libpthread/src/pthread_spin.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -32,14 +32,14 @@ usr/src/libpthread/src/pthread_spin.c \-
 .RI "\fBPUBLIC\fP int \fBpthread_spin_unlock\fP (\fBpthread_spinlock_t\fP *\fBlock\fP)"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP int pthread_spin_destroy (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 19 del file pthread_spin\&.c\&.
+Definition at line 19 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_destroy()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_destroy()\&.
 .PP
 .nf
 19                                                           {
@@ -57,9 +57,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "\fBPUBLIC\fP int pthread_spin_init (\fBpthread_spinlock_t\fP *lock, intpshared)"
 
 .PP
-Definizione alla linea 7 del file pthread_spin\&.c\&.
+Definition at line 7 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_init()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_init()\&.
 .PP
 .nf
 7                                                                     {
@@ -77,9 +77,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "\fBPUBLIC\fP int pthread_spin_lock (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 31 del file pthread_spin\&.c\&.
+Definition at line 31 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_lock()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_lock()\&.
 .PP
 .nf
 31                                                        {
@@ -99,9 +99,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "\fBPUBLIC\fP int pthread_spin_trylock (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 45 del file pthread_spin\&.c\&.
+Definition at line 45 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_trylock()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_trylock()\&.
 .PP
 .nf
 45                                                           {
@@ -121,9 +121,9 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 .SS "\fBPUBLIC\fP int pthread_spin_unlock (\fBpthread_spinlock_t\fP *lock)"
 
 .PP
-Definizione alla linea 59 del file pthread_spin\&.c\&.
+Definition at line 59 of file pthread_spin\&.c\&.
 .PP
-Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthread_mutex_unlock()\&.
+References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthread_mutex_unlock()\&.
 .PP
 .nf
 59                                                          {
@@ -140,6 +140,6 @@ Referenzia errno, pthread_spinlock::interlock, pthread_spinlock::mutex, e pthrea
 70     return 0;
 71 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

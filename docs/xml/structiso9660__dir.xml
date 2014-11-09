@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structiso9660__dir" kind="struct" prot="public">
+    <compoundname>iso9660_dir</compoundname>
+    <includes refid="iso9660_8h" local="no">iso9660.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structiso9660__dir_1a73204b6ab2ae137b1f77476e6c1448da" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t iso9660_dir::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="79" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1a9d379f70dbe8ddf0ad21cbb4d9269f4a" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t iso9660_dir::exattr</definition>
+        <argsstring></argsstring>
+        <name>exattr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="80" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1aa953c10b14a6fcaf2d71a067df031def" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t iso9660_dir::lba</definition>
+        <argsstring></argsstring>
+        <name>lba</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="81" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1a8c14ed10aeaa7fa626b5d03b3902e083" prot="public" static="no" mutable="no">
+        <type>uint64_t</type>
+        <definition>uint64_t iso9660_dir::length</definition>
+        <argsstring></argsstring>
+        <name>length</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="82" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1ad1a0e3827108b5d4583e46056c98f302" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char iso9660_dir::date[7]</definition>
+        <argsstring>[7]</argsstring>
+        <name>date</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="83" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1ab226f852b18e2b9dcddf013e3da07742" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t iso9660_dir::flags</definition>
+        <argsstring></argsstring>
+        <name>flags</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="84" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1a526e37b4f96c65db4c2ab5853155ee31" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t iso9660_dir::unitsize</definition>
+        <argsstring></argsstring>
+        <name>unitsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="85" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1a358fa7ee0501266c9006e7b037027ee6" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t iso9660_dir::gapsize</definition>
+        <argsstring></argsstring>
+        <name>gapsize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="86" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1afa69b98db7042e4e30ae0a08f3d6f12d" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t iso9660_dir::volnumber</definition>
+        <argsstring></argsstring>
+        <name>volnumber</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="87" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1a6b591363e79296cc8b68df9b481e1ff8" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t iso9660_dir::idlen</definition>
+        <argsstring></argsstring>
+        <name>idlen</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="88" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structiso9660__dir_1a6350cc135fe835f4372fcf9a0cfe0fcc" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char iso9660_dir::reserved[0]</definition>
+        <argsstring>[0]</argsstring>
+        <name>reserved</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="89" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="48">
+        <label>iso9660_dir</label>
+        <link refid="structiso9660__dir"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" line="78" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660.h" bodystart="78" bodyend="90"/>
+    <listofallmembers>
+      <member refid="structiso9660__dir_1ad1a0e3827108b5d4583e46056c98f302" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>date</name></member>
+      <member refid="structiso9660__dir_1a9d379f70dbe8ddf0ad21cbb4d9269f4a" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>exattr</name></member>
+      <member refid="structiso9660__dir_1ab226f852b18e2b9dcddf013e3da07742" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>flags</name></member>
+      <member refid="structiso9660__dir_1a358fa7ee0501266c9006e7b037027ee6" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>gapsize</name></member>
+      <member refid="structiso9660__dir_1a6b591363e79296cc8b68df9b481e1ff8" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>idlen</name></member>
+      <member refid="structiso9660__dir_1aa953c10b14a6fcaf2d71a067df031def" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>lba</name></member>
+      <member refid="structiso9660__dir_1a8c14ed10aeaa7fa626b5d03b3902e083" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>length</name></member>
+      <member refid="structiso9660__dir_1a6350cc135fe835f4372fcf9a0cfe0fcc" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>reserved</name></member>
+      <member refid="structiso9660__dir_1a73204b6ab2ae137b1f77476e6c1448da" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>size</name></member>
+      <member refid="structiso9660__dir_1a526e37b4f96c65db4c2ab5853155ee31" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>unitsize</name></member>
+      <member refid="structiso9660__dir_1afa69b98db7042e4e30ae0a08f3d6f12d" prot="public" virt="non-virtual"><scope>iso9660_dir</scope><name>volnumber</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

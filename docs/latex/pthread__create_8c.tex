@@ -1,4 +1,4 @@
-\hypertarget{pthread__create_8c}{\section{Riferimenti per il file usr/src/libpthread/src/pthread\+\_\+create.c}
+\hypertarget{pthread__create_8c}{\section{usr/src/libpthread/src/pthread\+\_\+create.c File Reference}
 \label{pthread__create_8c}\index{usr/src/libpthread/src/pthread\+\_\+create.\+c@{usr/src/libpthread/src/pthread\+\_\+create.\+c}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
@@ -6,7 +6,7 @@
 {\ttfamily \#include $<$string.\+h$>$}\\*
 {\ttfamily \#include $<$pthread.\+h$>$}\\*
 {\ttfamily \#include \char`\"{}pthread\+\_\+internal.\+h\char`\"{}}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{pthread__internal_8h_a77366c1bd428629dc898e188bfd182a3}{E\+X\+T\+E\+R\+N} void \hyperlink{pthread__create_8c_acbbda48de9905dc1d40c073a89b66e62}{\+\_\+\+\_\+pthread\+\_\+init\+\_\+queue} (void)
@@ -15,7 +15,7 @@
 \item 
 \hyperlink{pthread__internal_8h_ad17d551e31d1828c68acf40684849b7e}{P\+U\+B\+L\+I\+C} int \hyperlink{pthread__create_8c_a5b3939ca5fcdea47fb64229f75a00470}{pthread\+\_\+create} (\hyperlink{pthread_8h_a6766c2345d5c6fe6407d9f6b844e584a}{pthread\+\_\+t} $\ast$thread, const \hyperlink{pthread_8h_ae242a79436919ba1cd46e38598bc17e7}{pthread\+\_\+attr\+\_\+t} $\ast$attr, void $\ast$($\ast$start)(void $\ast$), void $\ast$arg)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{pthread__internal_8h_a77366c1bd428629dc898e188bfd182a3}{E\+X\+T\+E\+R\+N} \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{pthread__create_8c_ac693b080a510247dfaf444249c2e78b2}{\+\_\+\+\_\+pthread\+\_\+counts}
@@ -24,7 +24,7 @@
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{pthread__create_8c_a0177c641d305d417a7960701e701fc07}{\index{pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}!\+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+@{\+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+@{\+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+}!pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}{\bf P\+R\+I\+V\+A\+T\+E} void \+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+ (
@@ -34,11 +34,11 @@
 )}}\label{pthread__create_8c_a0177c641d305d417a7960701e701fc07}
 
 
-Definizione alla linea 24 del file pthread\+\_\+create.\+c.
+Definition at line 24 of file pthread\+\_\+create.\+c.
 
 
 
-Referenzia pthread\+\_\+context\+::entry, pthread\+\_\+context\+::param, e pthread\+\_\+exit().
+References pthread\+\_\+context\+::entry, pthread\+\_\+context\+::param, and pthread\+\_\+exit().
 
 
 \begin{DoxyCode}
@@ -63,11 +63,11 @@ Referenzia pthread\+\_\+context\+::entry, pthread\+\_\+context\+::param, e pthre
 )}}\label{pthread__create_8c_acbbda48de9905dc1d40c073a89b66e62}
 
 
-Definizione alla linea 12 del file pthread\+\_\+queue.\+c.
+Definition at line 12 of file pthread\+\_\+queue.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\+\_\+context\+::attr, pthread\+\_\+context\+::cond, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+once\+::started, e pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\+\_\+context\+::attr, pthread\+\_\+context\+::cond, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+once\+::started, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -99,11 +99,11 @@ Referenzia \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\
 )}}\label{pthread__create_8c_a5b3939ca5fcdea47fb64229f75a00470}
 
 
-Definizione alla linea 37 del file pthread\+\_\+create.\+c.
+Definition at line 37 of file pthread\+\_\+create.\+c.
 
 
 
-Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+create, \+\_\+\+\_\+pthread\+\_\+counts, \+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+(), \+\_\+\+\_\+pthread\+\_\+init\+\_\+queue(), \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::attr, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, errno, pthread\+\_\+attr\+::inheritsched, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+attr\+::param, pthread\+\_\+attr\+\_\+setschedparam(), P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D, pthread\+\_\+self(), P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X, pthread\+\_\+once\+::started, e pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+os\+\_\+thread\+\_\+create, \+\_\+\+\_\+pthread\+\_\+counts, \+\_\+\+\_\+pthread\+\_\+handler\+\_\+\+\_\+(), \+\_\+\+\_\+pthread\+\_\+init\+\_\+queue(), \+\_\+\+\_\+pthread\+\_\+queue, pthread\+\_\+context\+::attr, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, errno, pthread\+\_\+attr\+::inheritsched, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+attr\+::param, pthread\+\_\+attr\+\_\+setschedparam(), P\+T\+H\+R\+E\+A\+D\+\_\+\+I\+N\+H\+E\+R\+I\+T\+\_\+\+S\+C\+H\+E\+D, pthread\+\_\+self(), P\+T\+H\+R\+E\+A\+D\+\_\+\+T\+H\+R\+E\+A\+D\+S\+\_\+\+M\+A\+X, pthread\+\_\+once\+::started, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
@@ -160,18 +160,18 @@ Referenzia \+\_\+\+\_\+os\+\_\+thread\+\_\+create, \+\_\+\+\_\+pthread\+\_\+coun
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{pthread__create_8c_ac693b080a510247dfaf444249c2e78b2}{\index{pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}!\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}}
 \index{\+\_\+\+\_\+pthread\+\_\+counts@{\+\_\+\+\_\+pthread\+\_\+counts}!pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+counts}]{\setlength{\rightskip}{0pt plus 5cm}{\bf E\+X\+T\+E\+R\+N} {\bf uint32\+\_\+t} \+\_\+\+\_\+pthread\+\_\+counts}}\label{pthread__create_8c_ac693b080a510247dfaf444249c2e78b2}
 
 
-Definizione alla linea 10 del file pthread\+\_\+create.\+c.
+Definition at line 10 of file pthread\+\_\+create.\+c.
 
 \hypertarget{pthread__create_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}{\index{pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}!\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}}
 \index{\+\_\+\+\_\+pthread\+\_\+queue@{\+\_\+\+\_\+pthread\+\_\+queue}!pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}}
 \subsubsection[{\+\_\+\+\_\+pthread\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf E\+X\+T\+E\+R\+N} {\bf pthread\+\_\+context\+\_\+t}$\ast$ \+\_\+\+\_\+pthread\+\_\+queue}}\label{pthread__create_8c_a9ed893dd8f37e017f207c1c6ccdb41ec}
 
 
-Definizione alla linea 11 del file pthread\+\_\+create.\+c.
+Definition at line 11 of file pthread\+\_\+create.\+c.
 

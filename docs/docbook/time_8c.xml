@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="time_8c">
+    <title>time.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;time.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/time.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/times.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>time_t <link linkend="time_8c_1a4b6eba92722ec1e5446f676e95e4cddf">sys_time</link> (
+time_t * ptr)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/syscall/time.c</para>
+    </simplesect>
+</section>

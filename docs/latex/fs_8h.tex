@@ -1,4 +1,4 @@
-\hypertarget{fs_8h}{\section{Riferimenti per il file src/include/aplus/fs.h}
+\hypertarget{fs_8h}{\section{src/include/aplus/fs.h File Reference}
 \label{fs_8h}\index{src/include/aplus/fs.\+h@{src/include/aplus/fs.\+h}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
@@ -6,70 +6,43 @@
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$sys/dirent.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structinode}{inode}
-\item 
-struct \hyperlink{structfs}{fs}
 \end{DoxyCompactItemize}
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{fs_8h_a9cf90243a3f4070f29ff12e5740e4ae4}{U\+I\+D\+\_\+\+R\+O\+O\+T}~0
 \item 
 \#define \hyperlink{fs_8h_a2a5a81b6a48db264d1ec6048268ea154}{G\+I\+D\+\_\+\+R\+O\+O\+T}~0
-\item 
-\#define \hyperlink{fs_8h_a1f93d1e1e772c41d588e69bde2005bbc}{F\+S}(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, mount)
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef struct \hyperlink{structinode}{inode} \hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t}
-\item 
-typedef struct \hyperlink{structfs}{fs} \hyperlink{fs_8h_a1f12a61da64f0ab5c73e2be2066e5a0c}{fs\+\_\+t}
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
-\hypertarget{fs_8h_a1f93d1e1e772c41d588e69bde2005bbc}{\index{fs.\+h@{fs.\+h}!F\+S@{F\+S}}
-\index{F\+S@{F\+S}!fs.\+h@{fs.\+h}}
-\subsubsection[{F\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+S(
-\begin{DoxyParamCaption}
-\item[{}]{{\bf name}, }
-\item[{}]{mount}
-\end{DoxyParamCaption}
-)}}\label{fs_8h_a1f93d1e1e772c41d588e69bde2005bbc}
-{\bfseries Valore\+:}
-\begin{DoxyCode}
-\hyperlink{structfs}{fs\_t} fs\_##\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name} = \{                                                      \(\backslash\)
-\textcolor{preprocessor}{        #name, mount                                                        \(\backslash\)}
-\textcolor{preprocessor}{    \}; ATTRIBUTE("fs", fs\_##name)}
-\end{DoxyCode}
-
-
-Definizione alla linea 80 del file fs.\+h.
-
+\subsection{Macro Definition Documentation}
 \hypertarget{fs_8h_a2a5a81b6a48db264d1ec6048268ea154}{\index{fs.\+h@{fs.\+h}!G\+I\+D\+\_\+\+R\+O\+O\+T@{G\+I\+D\+\_\+\+R\+O\+O\+T}}
 \index{G\+I\+D\+\_\+\+R\+O\+O\+T@{G\+I\+D\+\_\+\+R\+O\+O\+T}!fs.\+h@{fs.\+h}}
 \subsubsection[{G\+I\+D\+\_\+\+R\+O\+O\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define G\+I\+D\+\_\+\+R\+O\+O\+T~0}}\label{fs_8h_a2a5a81b6a48db264d1ec6048268ea154}
 
 
-Definizione alla linea 27 del file fs.\+h.
+Definition at line 27 of file fs.\+h.
 
 \hypertarget{fs_8h_a9cf90243a3f4070f29ff12e5740e4ae4}{\index{fs.\+h@{fs.\+h}!U\+I\+D\+\_\+\+R\+O\+O\+T@{U\+I\+D\+\_\+\+R\+O\+O\+T}}
 \index{U\+I\+D\+\_\+\+R\+O\+O\+T@{U\+I\+D\+\_\+\+R\+O\+O\+T}!fs.\+h@{fs.\+h}}
 \subsubsection[{U\+I\+D\+\_\+\+R\+O\+O\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define U\+I\+D\+\_\+\+R\+O\+O\+T~0}}\label{fs_8h_a9cf90243a3f4070f29ff12e5740e4ae4}
 
 
-Definizione alla linea 26 del file fs.\+h.
+Definition at line 26 of file fs.\+h.
 
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
-\hypertarget{fs_8h_a1f12a61da64f0ab5c73e2be2066e5a0c}{\index{fs.\+h@{fs.\+h}!fs\+\_\+t@{fs\+\_\+t}}
-\index{fs\+\_\+t@{fs\+\_\+t}!fs.\+h@{fs.\+h}}
-\subsubsection[{fs\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf fs}  {\bf fs\+\_\+t}}}\label{fs_8h_a1f12a61da64f0ab5c73e2be2066e5a0c}
+\subsection{Typedef Documentation}
 \hypertarget{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{\index{fs.\+h@{fs.\+h}!inode\+\_\+t@{inode\+\_\+t}}
 \index{inode\+\_\+t@{inode\+\_\+t}!fs.\+h@{fs.\+h}}
 \subsubsection[{inode\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf inode}  {\bf inode\+\_\+t}}}\label{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}

@@ -1,4 +1,4 @@
-.TH "src/include/grub.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/grub.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -6,7 +6,7 @@ src/include/grub.h \-
 .SH SYNOPSIS
 .br
 .PP
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
@@ -19,7 +19,7 @@ src/include/grub.h \-
 .RI "struct \fBBootInfo_t\fP"
 .br
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -56,7 +56,7 @@ src/include/grub.h \-
 .RI "#define \fBMULTIBOOT_FLAG_VBE\fP   0x400"
 .br
 .in -1c
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
@@ -66,14 +66,14 @@ src/include/grub.h \-
 .RI "typedef struct \fBBootInfo_t\fP \fBBootInfo\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "struct \fBvesaModeInfo_t\fP \fB__attribute__\fP ((packed)) vesaModeInfo"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -179,64 +179,64 @@ src/include/grub.h \-
 .RI "unsigned int \fBmagic\fP"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define MULTIBOOT_FLAG_AOUT   0x010"
 
 .PP
-Definizione alla linea 99 del file grub\&.h\&.
+Definition at line 99 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_APM   0x200"
 
 .PP
-Definizione alla linea 104 del file grub\&.h\&.
+Definition at line 104 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_CMDLINE   0x004"
 
 .PP
-Definizione alla linea 97 del file grub\&.h\&.
+Definition at line 97 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_CONFIG   0x080"
 
 .PP
-Definizione alla linea 102 del file grub\&.h\&.
+Definition at line 102 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_DEVICE   0x002"
 
 .PP
-Definizione alla linea 96 del file grub\&.h\&.
+Definition at line 96 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_ELF   0x020"
 
 .PP
-Definizione alla linea 100 del file grub\&.h\&.
+Definition at line 100 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_LOADER   0x100"
 
 .PP
-Definizione alla linea 103 del file grub\&.h\&.
+Definition at line 103 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_MEM   0x001"
 
 .PP
-Definizione alla linea 95 del file grub\&.h\&.
+Definition at line 95 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_MMAP   0x040"
 
 .PP
-Definizione alla linea 101 del file grub\&.h\&.
+Definition at line 101 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_MODS   0x008"
 
 .PP
-Definizione alla linea 98 del file grub\&.h\&.
+Definition at line 98 of file grub\&.h\&.
 .SS "#define MULTIBOOT_FLAG_VBE   0x400"
 
 .PP
-Definizione alla linea 105 del file grub\&.h\&.
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+Definition at line 105 of file grub\&.h\&.
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef struct \fBBootInfo_t\fP  \fBBootInfo\fP"
 
 .SS "typedef struct \fBvesaInfo_t\fP  \fBvesaInfo\fP"
 
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "struct \fBvesaModeInfo_t\fP __attribute__ ((packed))"
 
 .PP
-Definizione alla linea 44 del file desc\&.c\&.
+Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
 46                        {
@@ -244,142 +244,142 @@ Definizione alla linea 44 del file desc\&.c\&.
 48     uint32_t base;
 49 } __attribute__((packed)) gdt_ptr_t;
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "unsigned short attributes"
 
 .PP
-Definizione alla linea 140 del file grub\&.h\&.
+Definition at line 140 of file grub\&.h\&.
 .SS "unsigned char bank_size"
 
 .PP
-Definizione alla linea 150 del file grub\&.h\&.
+Definition at line 150 of file grub\&.h\&.
 .SS "unsigned char banks"
 
 .PP
-Definizione alla linea 149 del file grub\&.h\&.
+Definition at line 149 of file grub\&.h\&.
 .SS "unsigned char blue_mask"
 
 .PP
-Definizione alla linea 155 del file grub\&.h\&.
+Definition at line 155 of file grub\&.h\&.
 .SS "unsigned char blue_position"
 
 .PP
-Definizione alla linea 155 del file grub\&.h\&.
+Definition at line 155 of file grub\&.h\&.
 .SS "unsigned char bpp"
 
 .PP
-Definizione alla linea 149 del file grub\&.h\&.
+Definition at line 149 of file grub\&.h\&.
 .SS "unsigned char directcolor_attributes"
 
 .PP
-Definizione alla linea 157 del file grub\&.h\&.
+Definition at line 157 of file grub\&.h\&.
 .SS "unsigned short granularity"
 
 .PP
-Definizione alla linea 142 del file grub\&.h\&.
+Definition at line 142 of file grub\&.h\&.
 .SS "unsigned char green_mask"
 
 .PP
-Definizione alla linea 154 del file grub\&.h\&.
+Definition at line 154 of file grub\&.h\&.
 .SS "unsigned char green_position"
 
 .PP
-Definizione alla linea 154 del file grub\&.h\&.
+Definition at line 154 of file grub\&.h\&.
 .SS "unsigned char image_pages"
 
 .PP
-Definizione alla linea 150 del file grub\&.h\&.
+Definition at line 150 of file grub\&.h\&.
 .SS "unsigned int magic"
 
 .PP
-Definizione alla linea 42 del file mm\&.c\&.
+Definition at line 42 of file mm\&.c\&.
 .SS "\fBBootInfo\fP* mbd"
 
 .SS "unsigned char memory_model"
 
 .PP
-Definizione alla linea 150 del file grub\&.h\&.
+Definition at line 150 of file grub\&.h\&.
 .SS "unsigned int physbase"
 
 .PP
-Definizione alla linea 159 del file grub\&.h\&.
+Definition at line 159 of file grub\&.h\&.
 .SS "unsigned short pitch"
 
 .PP
-Definizione alla linea 146 del file grub\&.h\&.
+Definition at line 146 of file grub\&.h\&.
 .SS "unsigned char planes"
 
 .PP
-Definizione alla linea 149 del file grub\&.h\&.
+Definition at line 149 of file grub\&.h\&.
 .SS "unsigned int realFctPtr"
 
 .PP
-Definizione alla linea 145 del file grub\&.h\&.
+Definition at line 145 of file grub\&.h\&.
 .SS "unsigned char red_mask"
 
 .PP
-Definizione alla linea 153 del file grub\&.h\&.
+Definition at line 153 of file grub\&.h\&.
 .SS "unsigned char red_position"
 
 .PP
-Definizione alla linea 153 del file grub\&.h\&.
+Definition at line 153 of file grub\&.h\&.
 .SS "unsigned char reserved0"
 
 .PP
-Definizione alla linea 151 del file grub\&.h\&.
+Definition at line 151 of file grub\&.h\&.
 .SS "unsigned int reserved1"
 
 .PP
-Definizione alla linea 160 del file grub\&.h\&.
+Definition at line 160 of file grub\&.h\&.
 .SS "short reserved2"
 
 .PP
-Definizione alla linea 161 del file grub\&.h\&.
+Definition at line 161 of file grub\&.h\&.
 .SS "unsigned char rsv_mask"
 
 .PP
-Definizione alla linea 156 del file grub\&.h\&.
+Definition at line 156 of file grub\&.h\&.
 .SS "unsigned char rsv_position"
 
 .PP
-Definizione alla linea 156 del file grub\&.h\&.
+Definition at line 156 of file grub\&.h\&.
 .SS "unsigned short segmentA"
 
 .PP
-Definizione alla linea 144 del file grub\&.h\&.
+Definition at line 144 of file grub\&.h\&.
 .SS "unsigned short segmentB"
 
 .PP
-Definizione alla linea 144 del file grub\&.h\&.
+Definition at line 144 of file grub\&.h\&.
 .SS "unsigned char Wchar"
 
 .PP
-Definizione alla linea 149 del file grub\&.h\&.
+Definition at line 149 of file grub\&.h\&.
 .SS "unsigned char winA"
 
 .PP
-Definizione alla linea 141 del file grub\&.h\&.
+Definition at line 141 of file grub\&.h\&.
 .SS "unsigned char winB"
 
 .PP
-Definizione alla linea 141 del file grub\&.h\&.
+Definition at line 141 of file grub\&.h\&.
 .SS "unsigned short winsize"
 
 .PP
-Definizione alla linea 143 del file grub\&.h\&.
+Definition at line 143 of file grub\&.h\&.
 .SS "unsigned short Xres"
 
 .PP
-Definizione alla linea 148 del file grub\&.h\&.
+Definition at line 148 of file grub\&.h\&.
 .SS "unsigned char Ychar"
 
 .PP
-Definizione alla linea 149 del file grub\&.h\&.
+Definition at line 149 of file grub\&.h\&.
 .SS "unsigned short Yres"
 
 .PP
-Definizione alla linea 148 del file grub\&.h\&.
-.SH "Autore"
+Definition at line 148 of file grub\&.h\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

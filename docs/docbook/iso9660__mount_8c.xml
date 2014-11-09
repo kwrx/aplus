@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="iso9660__mount_8c">
+    <title>iso9660_mount.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fsys.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;dirent.h&gt;</programlisting>
+    <programlisting>#include &lt;fcntl.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &quot;iso9660.h&quot;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structdirent">dirent</link> * <link linkend="iso9660__mount_8c_1a7863db87f2e6fa050ede770aebcf1087">iso9660_readdir</link> (
+<link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * , int )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * <link linkend="iso9660__mount_8c_1a4ba1d5bbcb2768b873eb11c7e210879f">iso9660_finddir</link> (
+<link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * , char * )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="iso9660__mount_8c_1a6b30eb9e62fe1078919d0a49849fa94c">iso9660_mount</link> (
+<link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * dev, <link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * ino, int flags)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="iso9660__mount_8c_1a8d23c05e41bb9d46b9a5c94e13cf11fa">FSYS</link> (
+iso9660 , <link linkend="iso9660__mount_8c_1a6b30eb9e62fe1078919d0a49849fa94c">iso9660_mount</link> )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/fs/iso9660/iso9660_mount.c</para>
+    </simplesect>
+</section>

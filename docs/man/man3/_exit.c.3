@@ -1,4 +1,4 @@
-.TH "src/syscall/_exit.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/_exit.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,32 +13,51 @@ src/syscall/_exit.c \-
 \fC#include <aplus/task\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "void \fBsys_exit\fP (int status)"
 .br
+.RI "\fITerminates the process normally by returning control to the host environment, but without performing any of the regular cleanup tasks for terminating processes (as function exit does)\&.
+.br
+ No object destructors, nor functions registered by atexit or at_quick_exit are called\&. \fP"
 .ti -1c
 .RI "\fBSYSCALL\fP (\fBsys_exit\fP, 0)"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "void sys_exit (intstatus)"
 
 .PP
-Definizione alla linea 6 del file _exit\&.c\&.
+Terminates the process normally by returning control to the host environment, but without performing any of the regular cleanup tasks for terminating processes (as function exit does)\&.
+.br
+ No object destructors, nor functions registered by atexit or at_quick_exit are called\&. 
 .PP
-Referenzia schedule_exit()\&.
+\fBParameters:\fP
+.RS 4
+\fIstatus\fP Status code\&.
+.br
+ If this is 0 or EXIT_SUCCESS, it indicates success\&.
+.br
+ If it is EXIT_FAILURE, it indicates failure\&.
+.br
+.RE
+.PP
+
+.PP
+Definition at line 16 of file _exit\&.c\&.
+.PP
+References schedule_exit()\&.
 .PP
 .nf
-6                           {
-7     schedule_exit(status);
-8 }
+16                           {
+17     schedule_exit(status);
+18 }
 .fi
 .SS "SYSCALL (\fBsys_exit\fP, 0)"
 
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

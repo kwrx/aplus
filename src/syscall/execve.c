@@ -9,6 +9,21 @@
 
 extern task_t* current_task;
 
+
+/**
+ *	\brief Executes the program pointed to by filename.\n
+		filename must be either a binary executable, or a script starting with a line of the form.\n
+			#! interpreter [optional-arg]
+ *	\param filename executable path.
+ *	\param argv Is an array of argument strings passed to the new program.\n
+		By convention, the first of these strings should contain the filename associated with the 
+		file being executed.
+ *	\param environ Is an array of strings, conventionally of the form key=value, which are passed
+		as environment to the new program.
+ *	\warning Both argv and environ must be terminated by a null pointer.
+ *	\return Does not return on success, and the text, data, bss, and stack of the calling process	
+		are overwritten by that of the program loaded.
+ */
 int sys_execve(char* filename, char** argv, char** environ) {
 	
 	int fd = sys_open(filename, O_RDONLY, 0644);

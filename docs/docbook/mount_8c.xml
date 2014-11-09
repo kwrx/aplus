@@ -6,6 +6,8 @@
     <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fsys.h&gt;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;unistd.h&gt;</programlisting>
     <programlisting>#include &lt;dirent.h&gt;</programlisting>
@@ -29,6 +31,14 @@
                     <listitem>
                         <para>int <link linkend="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98">sys_mount</link> (
 const char * dev, const char * dir, const char * fstype, int options, const void * data)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="mount_8c_1ad1f2426abc49e3a353545a7f6fd465eb">SYSCALL</link> (
+<link linkend="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98">sys_mount</link> , 24 )</para>
                     </listitem>
                 </itemizedlist>
             </para>

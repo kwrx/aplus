@@ -1,4 +1,4 @@
-\hypertarget{wait_8c}{\section{Riferimenti per il file src/syscall/wait.c}
+\hypertarget{wait_8c}{\section{src/syscall/wait.c File Reference}
 \label{wait_8c}\index{src/syscall/wait.\+c@{src/syscall/wait.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -8,21 +8,21 @@
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
 {\ttfamily \#include $<$fcntl.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{wait_8c_a71b3c0272e1d256262db857a794e3899}{sys\+\_\+wait} (int $\ast$status)
 \item 
 \hyperlink{wait_8c_a4a7121092029355dc4b74d1515420c88}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{wait_8c_a71b3c0272e1d256262db857a794e3899}{sys\+\_\+wait}, 16)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{wait_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{wait_8c_a71b3c0272e1d256262db857a794e3899}{\index{wait.\+c@{wait.\+c}!sys\+\_\+wait@{sys\+\_\+wait}}
 \index{sys\+\_\+wait@{sys\+\_\+wait}!wait.\+c@{wait.\+c}}
 \subsubsection[{sys\+\_\+wait}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+wait (
@@ -32,11 +32,11 @@ int \hyperlink{wait_8c_a71b3c0272e1d256262db857a794e3899}{sys\+\_\+wait} (int $\
 )}}\label{wait_8c_a71b3c0272e1d256262db857a794e3899}
 
 
-Definizione alla linea 12 del file wait.\+c.
+Definition at line 12 of file wait.\+c.
 
 
 
-Referenzia errno, task\+::pid, schedule\+\_\+child(), e schedule\+\_\+wait().
+References errno, task\+::pid, schedule\+\_\+child(), and schedule\+\_\+wait().
 
 
 \begin{DoxyCode}
@@ -70,11 +70,15 @@ Referenzia errno, task\+::pid, schedule\+\_\+child(), e schedule\+\_\+wait().
 )}}\label{wait_8c_a4a7121092029355dc4b74d1515420c88}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{wait_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{wait.\+c@{wait.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!wait.\+c@{wait.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{wait_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

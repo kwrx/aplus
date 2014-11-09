@@ -6,6 +6,7 @@
     <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;unistd.h&gt;</programlisting>
     <programlisting>#include &lt;dirent.h&gt;</programlisting>
@@ -37,6 +38,22 @@ const char * file, int flags)</para>
                     <listitem>
                         <para>int <link linkend="umount_8c_1a54765011a3f373afd364ef71d3dd7295">sys_umount</link> (
 const char * file)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="umount_8c_1a58e6ca15fd18d508f7182e2cd68eba21">SYSCALL</link> (
+<link linkend="umount_8c_1a54765011a3f373afd364ef71d3dd7295">sys_umount</link> , 25 )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="umount_8c_1a3576e97b06555aee2a1ccdc01d28a5ed">SYSCALL</link> (
+<link linkend="umount_8c_1a5cca250c6de3e921bf275843a92c1a35">sys_umount2</link> , 26 )</para>
                     </listitem>
                 </itemizedlist>
             </para>

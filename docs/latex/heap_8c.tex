@@ -1,10 +1,10 @@
-\hypertarget{heap_8c}{\section{Riferimenti per il file src/mm/heap.c}
+\hypertarget{heap_8c}{\section{src/mm/heap.c File Reference}
 \label{heap_8c}\index{src/mm/heap.\+c@{src/mm/heap.\+c}}
 }
 {\ttfamily \#include $<$stddef.\+h$>$}\\*
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void $\ast$ \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc} (\hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$\hyperlink{structheap}{heap}, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
@@ -13,7 +13,7 @@ void \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree} (\hyperlink{mm
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{\index{heap.\+c@{heap.\+c}!halloc@{halloc}}
 \index{halloc@{halloc}!heap.\+c@{heap.\+c}}
 \subsubsection[{halloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ halloc (
@@ -24,18 +24,18 @@ void \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree} (\hyperlink{mm
 )}}\label{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}
 
 
-Definizione alla linea 28 del file heap.\+c.
+Definition at line 28 of file heap.\+c.
 
 
 
-Referenzia heap\+::alloc.
+References heap\+::alloc.
 
 
 \begin{DoxyCode}
 28                                         \{
 29     \textcolor{keywordflow}{if}(heap)
 30         \textcolor{keywordflow}{if}(heap->\hyperlink{structheap_a8b4bc8c3f0ed79efd52d61a27a62a130}{alloc})
-31             \textcolor{keywordflow}{return} heap->\hyperlink{structheap_a8b4bc8c3f0ed79efd52d61a27a62a130}{alloc}(heap, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+31             \textcolor{keywordflow}{return} heap->\hyperlink{structheap_a8b4bc8c3f0ed79efd52d61a27a62a130}{alloc}(heap, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
 32             
 33     \textcolor{keywordflow}{return} 0;
 34 \}
@@ -51,17 +51,17 @@ Referenzia heap\+::alloc.
 )}}\label{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}
 
 
-Definizione alla linea 36 del file heap.\+c.
+Definition at line 36 of file heap.\+c.
 
 
 
-Referenzia heap\+::free.
+References heap\+::free.
 
 
 \begin{DoxyCode}
 36                                                   \{
 37     \textcolor{keywordflow}{if}(heap)
 38         \textcolor{keywordflow}{if}(heap->\hyperlink{structheap_ae53b14c50bbb9daab4346cd0873bda02}{free})
-39             heap->\hyperlink{structheap_ae53b14c50bbb9daab4346cd0873bda02}{free}(heap, addr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+39             heap->\hyperlink{structheap_ae53b14c50bbb9daab4346cd0873bda02}{free}(heap, addr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
 40 \}
 \end{DoxyCode}

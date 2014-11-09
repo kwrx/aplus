@@ -1,4 +1,4 @@
-.TH "src/syscall/read.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/read.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -27,7 +27,7 @@ src/syscall/read.c \-
 \fC#include <stdio\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -37,24 +37,25 @@ src/syscall/read.c \-
 .RI "\fBSYSCALL\fP (\fBsys_read\fP, 11)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .ti -1c
 .RI "\fBinode_t\fP * \fBvfs_root\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int sys_read (intfd, void *ptr, size_tsize)"
 
 .PP
-Definizione alla linea 19 del file read\&.c\&.
+Definition at line 19 of file read\&.c\&.
 .PP
-Referenzia errno, task::fd, e fs_read()\&.
+References errno, task::fd, and fs_read()\&.
 .PP
 .nf
 19                                              {
@@ -74,16 +75,18 @@ Referenzia errno, task::fd, e fs_read()\&.
 .fi
 .SS "SYSCALL (\fBsys_read\fP, 11)"
 
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
 .SS "\fBinode_t\fP* vfs_root"
 
 .PP
-Definizione alla linea 19 del file vfs\&.c\&.
-.SH "Autore"
+Definition at line 19 of file vfs\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

@@ -1,0 +1,472 @@
+.TH "src/fs/iso9660/iso9660.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/fs/iso9660/iso9660.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdint\&.h>\fP
+.br
+
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBiso9660_volume_descriptor\fP"
+.br
+.ti -1c
+.RI "struct \fBiso9660_pvd\fP"
+.br
+.ti -1c
+.RI "struct \fBiso9660_dir\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBISO9660_SECTOR_SIZE\fP   2048"
+.br
+.ti -1c
+.RI "#define \fBISO9660_PVD\fP   (0x10 * ISO9660_SECTOR_SIZE)"
+.br
+.ti -1c
+.RI "#define \fBISO9660_ID\fP   'CD001'"
+.br
+.ti -1c
+.RI "#define \fBISO9660_VERSION\fP   0x01"
+.br
+.ti -1c
+.RI "#define \fBISO9660_VOLDESC_BOOTRECORD\fP   0"
+.br
+.ti -1c
+.RI "#define \fBISO9660_VOLDESC_PRIMARY\fP   1"
+.br
+.ti -1c
+.RI "#define \fBISO9660_VOLDESC_SUPPLEMENTARY\fP   2"
+.br
+.ti -1c
+.RI "#define \fBISO9660_VOLDESC_PARTITION\fP   3"
+.br
+.ti -1c
+.RI "#define \fBISO9660_VOLDESC_TERMINATOR\fP   255"
+.br
+.ti -1c
+.RI "#define \fBISO9660_VOLDESC_SIZE\fP   \fBISO9660_SECTOR_SIZE\fP"
+.br
+.ti -1c
+.RI "#define \fBISO9660_FLAGS_HIDDEN\fP   (1 << 0)"
+.br
+.ti -1c
+.RI "#define \fBISO9660_FLAGS_DIRECTORY\fP   (1 << 1)"
+.br
+.ti -1c
+.RI "#define \fBISO9660_FLAGS_FILE\fP   (1 << 2)"
+.br
+.ti -1c
+.RI "#define \fBISO9660_FLAGS_EXTATTR\fP   (1 << 3)"
+.br
+.ti -1c
+.RI "#define \fBISO9660_FLAGS_EXTFLAGS\fP   (1 << 4)"
+.br
+.ti -1c
+.RI "#define \fBISO9660_FLAGS_NOTLAST\fP   (1 << 7)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "struct \fBiso9660_volume_descriptor\fP \fB__attribute__\fP ((packed)) iso9660_volume_descriptor_t"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "int8_t \fBtype\fP"
+.br
+.ti -1c
+.RI "char \fBid\fP [5]"
+.br
+.ti -1c
+.RI "int8_t \fBversion\fP"
+.br
+.ti -1c
+.RI "char \fBdata\fP [2041]"
+.br
+.ti -1c
+.RI "int8_t \fBunused\fP"
+.br
+.ti -1c
+.RI "char \fBsysid\fP [32]"
+.br
+.ti -1c
+.RI "char \fBvolid\fP [32]"
+.br
+.ti -1c
+.RI "char \fBnull0\fP [8]"
+.br
+.ti -1c
+.RI "uint64_t \fBvolsize\fP"
+.br
+.ti -1c
+.RI "char \fBnull1\fP [32]"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBvolsetsize\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBvolnumber\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBlogical_blksize\fP"
+.br
+.ti -1c
+.RI "uint64_t \fBpath_size\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBpath_lba\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBoptpath_lba\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBpath_lba_msb\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBoptpath_lba_msb\fP"
+.br
+.ti -1c
+.RI "char \fBrootdir\fP [34]"
+.br
+.ti -1c
+.RI "char \fBvolsetid\fP [128]"
+.br
+.ti -1c
+.RI "char \fBpubid\fP [128]"
+.br
+.ti -1c
+.RI "char \fBdataid\fP [128]"
+.br
+.ti -1c
+.RI "char \fBappid\fP [128]"
+.br
+.ti -1c
+.RI "char \fBcopyid\fP [38]"
+.br
+.ti -1c
+.RI "char \fBabstractfileid\fP [36]"
+.br
+.ti -1c
+.RI "char \fBbibid\fP [37]"
+.br
+.ti -1c
+.RI "char \fBcdate\fP [17]"
+.br
+.ti -1c
+.RI "char \fBmdate\fP [17]"
+.br
+.ti -1c
+.RI "char \fBedate\fP [17]"
+.br
+.ti -1c
+.RI "char \fBefdate\fP [17]"
+.br
+.ti -1c
+.RI "int8_t \fBfileversion\fP"
+.br
+.ti -1c
+.RI "int8_t \fBunused0\fP"
+.br
+.ti -1c
+.RI "char \fBnull2\fP [512]"
+.br
+.ti -1c
+.RI "char \fBreserved\fP [653]"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBsize\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBexattr\fP"
+.br
+.ti -1c
+.RI "uint64_t \fBlba\fP"
+.br
+.ti -1c
+.RI "uint64_t \fBlength\fP"
+.br
+.ti -1c
+.RI "char \fBdate\fP [7]"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBflags\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBunitsize\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBgapsize\fP"
+.br
+.ti -1c
+.RI "\fBuint8_t\fP \fBidlen\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define ISO9660_FLAGS_DIRECTORY   (1 << 1)"
+
+.PP
+Definition at line 23 of file iso9660\&.h\&.
+.SS "#define ISO9660_FLAGS_EXTATTR   (1 << 3)"
+
+.PP
+Definition at line 25 of file iso9660\&.h\&.
+.SS "#define ISO9660_FLAGS_EXTFLAGS   (1 << 4)"
+
+.PP
+Definition at line 26 of file iso9660\&.h\&.
+.SS "#define ISO9660_FLAGS_FILE   (1 << 2)"
+
+.PP
+Definition at line 24 of file iso9660\&.h\&.
+.SS "#define ISO9660_FLAGS_HIDDEN   (1 << 0)"
+
+.PP
+Definition at line 22 of file iso9660\&.h\&.
+.SS "#define ISO9660_FLAGS_NOTLAST   (1 << 7)"
+
+.PP
+Definition at line 27 of file iso9660\&.h\&.
+.SS "#define ISO9660_ID   'CD001'"
+
+.PP
+Definition at line 10 of file iso9660\&.h\&.
+.SS "#define ISO9660_PVD   (0x10 * ISO9660_SECTOR_SIZE)"
+
+.PP
+Definition at line 9 of file iso9660\&.h\&.
+.SS "#define ISO9660_SECTOR_SIZE   2048"
+
+.PP
+Definition at line 7 of file iso9660\&.h\&.
+.SS "#define ISO9660_VERSION   0x01"
+
+.PP
+Definition at line 11 of file iso9660\&.h\&.
+.SS "#define ISO9660_VOLDESC_BOOTRECORD   0"
+
+.PP
+Definition at line 13 of file iso9660\&.h\&.
+.SS "#define ISO9660_VOLDESC_PARTITION   3"
+
+.PP
+Definition at line 16 of file iso9660\&.h\&.
+.SS "#define ISO9660_VOLDESC_PRIMARY   1"
+
+.PP
+Definition at line 14 of file iso9660\&.h\&.
+.SS "#define ISO9660_VOLDESC_SIZE   \fBISO9660_SECTOR_SIZE\fP"
+
+.PP
+Definition at line 19 of file iso9660\&.h\&.
+.SS "#define ISO9660_VOLDESC_SUPPLEMENTARY   2"
+
+.PP
+Definition at line 15 of file iso9660\&.h\&.
+.SS "#define ISO9660_VOLDESC_TERMINATOR   255"
+
+.PP
+Definition at line 17 of file iso9660\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "struct \fBiso9660_volume_descriptor\fP __attribute__ ((packed))"
+
+.PP
+Definition at line 44 of file desc\&.c\&.
+.PP
+.nf
+46                        {
+47     uint16_t limit;
+48     uint32_t base;
+49 } __attribute__((packed)) gdt_ptr_t;
+.fi
+.SH "Variable Documentation"
+.PP 
+.SS "char abstractfileid[36]"
+
+.PP
+Definition at line 102 of file iso9660\&.h\&.
+.SS "char appid[128]"
+
+.PP
+Definition at line 100 of file iso9660\&.h\&.
+.SS "char bibid[37]"
+
+.PP
+Definition at line 103 of file iso9660\&.h\&.
+.SS "char cdate[17]"
+
+.PP
+Definition at line 104 of file iso9660\&.h\&.
+.SS "char copyid[38]"
+
+.PP
+Definition at line 101 of file iso9660\&.h\&.
+.SS "char data[2041]"
+
+.PP
+Definition at line 77 of file iso9660\&.h\&.
+.SS "char dataid[128]"
+
+.PP
+Definition at line 99 of file iso9660\&.h\&.
+.SS "char date[7]"
+
+.PP
+Definition at line 78 of file iso9660\&.h\&.
+.SS "char edate[17]"
+
+.PP
+Definition at line 106 of file iso9660\&.h\&.
+.SS "char efdate[17]"
+
+.PP
+Definition at line 107 of file iso9660\&.h\&.
+.SS "\fBuint8_t\fP exattr"
+
+.PP
+Definition at line 75 of file iso9660\&.h\&.
+.SS "int8_t fileversion"
+
+.PP
+Definition at line 108 of file iso9660\&.h\&.
+.SS "\fBuint8_t\fP flags"
+
+.PP
+Definition at line 79 of file iso9660\&.h\&.
+.SS "\fBuint8_t\fP gapsize"
+
+.PP
+Definition at line 81 of file iso9660\&.h\&.
+.SS "char id"
+
+.PP
+Definition at line 75 of file iso9660\&.h\&.
+.SS "\fBuint8_t\fP idlen"
+
+.PP
+Definition at line 83 of file iso9660\&.h\&.
+.SS "uint64_t lba"
+
+.PP
+Definition at line 76 of file iso9660\&.h\&.
+.SS "uint64_t length"
+
+.PP
+Definition at line 77 of file iso9660\&.h\&.
+.SS "\fBuint32_t\fP logical_blksize"
+
+.PP
+Definition at line 89 of file iso9660\&.h\&.
+.SS "char mdate[17]"
+
+.PP
+Definition at line 105 of file iso9660\&.h\&.
+.SS "char null0[8]"
+
+.PP
+Definition at line 81 of file iso9660\&.h\&.
+.SS "char null1[32]"
+
+.PP
+Definition at line 85 of file iso9660\&.h\&.
+.SS "char null2[512]"
+
+.PP
+Definition at line 110 of file iso9660\&.h\&.
+.SS "\fBuint32_t\fP optpath_lba"
+
+.PP
+Definition at line 92 of file iso9660\&.h\&.
+.SS "\fBuint32_t\fP optpath_lba_msb"
+
+.PP
+Definition at line 94 of file iso9660\&.h\&.
+.SS "\fBuint32_t\fP path_lba"
+
+.PP
+Definition at line 91 of file iso9660\&.h\&.
+.SS "\fBuint32_t\fP path_lba_msb"
+
+.PP
+Definition at line 93 of file iso9660\&.h\&.
+.SS "uint64_t path_size"
+
+.PP
+Definition at line 90 of file iso9660\&.h\&.
+.SS "char pubid[128]"
+
+.PP
+Definition at line 98 of file iso9660\&.h\&.
+.SS "char reserved"
+
+.PP
+Definition at line 111 of file iso9660\&.h\&.
+.SS "char rootdir[34]"
+
+.PP
+Definition at line 96 of file iso9660\&.h\&.
+.SS "\fBuint8_t\fP size"
+
+.PP
+Definition at line 74 of file iso9660\&.h\&.
+.SS "char sysid[32]"
+
+.PP
+Definition at line 79 of file iso9660\&.h\&.
+.SS "int8_t type"
+
+.PP
+Definition at line 74 of file iso9660\&.h\&.
+.SS "\fBuint8_t\fP unitsize"
+
+.PP
+Definition at line 80 of file iso9660\&.h\&.
+.SS "int8_t unused"
+
+.PP
+Definition at line 77 of file iso9660\&.h\&.
+.SS "int8_t unused0"
+
+.PP
+Definition at line 109 of file iso9660\&.h\&.
+.SS "int8_t version"
+
+.PP
+Definition at line 76 of file iso9660\&.h\&.
+.SS "char volid[32]"
+
+.PP
+Definition at line 80 of file iso9660\&.h\&.
+.SS "\fBuint32_t\fP volnumber"
+
+.PP
+Definition at line 88 of file iso9660\&.h\&.
+.SS "char volsetid[128]"
+
+.PP
+Definition at line 97 of file iso9660\&.h\&.
+.SS "\fBuint32_t\fP volsetsize"
+
+.PP
+Definition at line 87 of file iso9660\&.h\&.
+.SS "uint64_t volsize"
+
+.PP
+Definition at line 83 of file iso9660\&.h\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

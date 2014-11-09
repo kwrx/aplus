@@ -258,6 +258,14 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                            <para>#define <link linkend="exec_8c_1aa3ea57d3d539b6618daaaaf7af4bec80">ELF_DEBUG</link><para><emphasis>Enable or disable debug for ELF.</emphasis></para>
+</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                             <para>#define <link linkend="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9">check</link> if(cond) {					\
 			<link linkend="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf">errno</link> = ENOEXEC;		\
 			return -1;				\

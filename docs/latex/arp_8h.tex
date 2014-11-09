@@ -1,18 +1,18 @@
-\hypertarget{arp_8h}{\section{Riferimenti per il file src/include/aplus/net/arp.h}
+\hypertarget{arp_8h}{\section{src/include/aplus/net/arp.h File Reference}
 \label{arp_8h}\index{src/include/aplus/net/arp.\+h@{src/include/aplus/net/arp.\+h}}
 }
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/netif.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
 {\ttfamily \#include $<$time.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structarp__header}{arp\+\_\+header}
 \item 
 struct \hyperlink{structarp__cache__entry}{arp\+\_\+cache\+\_\+entry}
 \end{DoxyCompactItemize}
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{arp_8h_acd36df131f3c821461809b22fdc59d15}{A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E}~\hyperlink{eth_8h_acba2f68ee7a6d728108123f0209690fb}{E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V4}
@@ -29,17 +29,17 @@ struct \hyperlink{structarp__cache__entry}{arp\+\_\+cache\+\_\+entry}
 \item 
 \#define \hyperlink{arp_8h_a662dfbcb5d9c6cc0508b9fae0e061661}{A\+R\+P\+\_\+\+T\+T\+L}~600		/$\ast$ 10min $\ast$/
 \end{DoxyCompactItemize}
-\subsection*{Ridefinizioni di tipo (typedef)}
+\subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 typedef struct \hyperlink{structarp__cache__entry}{arp\+\_\+cache\+\_\+entry} \hyperlink{arp_8h_a9b4be1be5ee1e2531c81fa075b4f55d1}{arp\+\_\+cache\+\_\+entry\+\_\+t}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structarp__header}{arp\+\_\+header} \hyperlink{arp_8h_aa746629dfa56980dbf09cc6edf68c467}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) arp\+\_\+header\+\_\+t
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{arp_8h_a764ca22545b434fca03fac9a06bda626}{hwtype}
@@ -62,65 +62,65 @@ struct \hyperlink{structarp__header}{arp\+\_\+header} \hyperlink{arp_8h_aa746629
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{arp_8h_a1e4785e681402a451395c42f39b7b1cf}{\index{arp.\+h@{arp.\+h}!A\+R\+P\+\_\+\+H\+W\+L\+E\+N@{A\+R\+P\+\_\+\+H\+W\+L\+E\+N}}
 \index{A\+R\+P\+\_\+\+H\+W\+L\+E\+N@{A\+R\+P\+\_\+\+H\+W\+L\+E\+N}!arp.\+h@{arp.\+h}}
 \subsubsection[{A\+R\+P\+\_\+\+H\+W\+L\+E\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+R\+P\+\_\+\+H\+W\+L\+E\+N~6}}\label{arp_8h_a1e4785e681402a451395c42f39b7b1cf}
 
 
-Definizione alla linea 16 del file arp.\+h.
+Definition at line 16 of file arp.\+h.
 
 \hypertarget{arp_8h_a8054d75c10f454d169e571ba0bbd0020}{\index{arp.\+h@{arp.\+h}!A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E@{A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E}}
 \index{A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E@{A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E}!arp.\+h@{arp.\+h}}
 \subsubsection[{A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+R\+P\+\_\+\+H\+W\+T\+Y\+P\+E~0x0001}}\label{arp_8h_a8054d75c10f454d169e571ba0bbd0020}
 
 
-Definizione alla linea 15 del file arp.\+h.
+Definition at line 15 of file arp.\+h.
 
 \hypertarget{arp_8h_ad32703851a1b58336c54dbe3f4e4f8ee}{\index{arp.\+h@{arp.\+h}!A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y@{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y}}
 \index{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y@{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y}!arp.\+h@{arp.\+h}}
 \subsubsection[{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+P\+L\+Y~2}}\label{arp_8h_ad32703851a1b58336c54dbe3f4e4f8ee}
 
 
-Definizione alla linea 19 del file arp.\+h.
+Definition at line 19 of file arp.\+h.
 
 \hypertarget{arp_8h_a46acf87c581047a4931a07ca60a3d057}{\index{arp.\+h@{arp.\+h}!A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T@{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T}}
 \index{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T@{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T}!arp.\+h@{arp.\+h}}
 \subsubsection[{A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+R\+P\+\_\+\+O\+P\+E\+R\+A\+T\+I\+O\+N\+\_\+\+R\+E\+Q\+U\+E\+S\+T~1}}\label{arp_8h_a46acf87c581047a4931a07ca60a3d057}
 
 
-Definizione alla linea 18 del file arp.\+h.
+Definition at line 18 of file arp.\+h.
 
 \hypertarget{arp_8h_a8ea0479afe5a85f08dd59c3323febcbd}{\index{arp.\+h@{arp.\+h}!A\+R\+P\+\_\+\+P\+R\+L\+E\+N@{A\+R\+P\+\_\+\+P\+R\+L\+E\+N}}
 \index{A\+R\+P\+\_\+\+P\+R\+L\+E\+N@{A\+R\+P\+\_\+\+P\+R\+L\+E\+N}!arp.\+h@{arp.\+h}}
 \subsubsection[{A\+R\+P\+\_\+\+P\+R\+L\+E\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+R\+P\+\_\+\+P\+R\+L\+E\+N~4}}\label{arp_8h_a8ea0479afe5a85f08dd59c3323febcbd}
 
 
-Definizione alla linea 13 del file arp.\+h.
+Definition at line 13 of file arp.\+h.
 
 \hypertarget{arp_8h_acd36df131f3c821461809b22fdc59d15}{\index{arp.\+h@{arp.\+h}!A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E@{A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E}}
 \index{A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E@{A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E}!arp.\+h@{arp.\+h}}
 \subsubsection[{A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+R\+P\+\_\+\+P\+R\+T\+Y\+P\+E~{\bf E\+T\+H\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+P\+V4}}}\label{arp_8h_acd36df131f3c821461809b22fdc59d15}
 
 
-Definizione alla linea 12 del file arp.\+h.
+Definition at line 12 of file arp.\+h.
 
 \hypertarget{arp_8h_a662dfbcb5d9c6cc0508b9fae0e061661}{\index{arp.\+h@{arp.\+h}!A\+R\+P\+\_\+\+T\+T\+L@{A\+R\+P\+\_\+\+T\+T\+L}}
 \index{A\+R\+P\+\_\+\+T\+T\+L@{A\+R\+P\+\_\+\+T\+T\+L}!arp.\+h@{arp.\+h}}
 \subsubsection[{A\+R\+P\+\_\+\+T\+T\+L}]{\setlength{\rightskip}{0pt plus 5cm}\#define A\+R\+P\+\_\+\+T\+T\+L~600		/$\ast$ 10min $\ast$/}}\label{arp_8h_a662dfbcb5d9c6cc0508b9fae0e061661}
 
 
-Definizione alla linea 21 del file arp.\+h.
+Definition at line 21 of file arp.\+h.
 
 
 
-\subsection{Documentazione delle ridefinizioni di tipo (typedef)}
+\subsection{Typedef Documentation}
 \hypertarget{arp_8h_a9b4be1be5ee1e2531c81fa075b4f55d1}{\index{arp.\+h@{arp.\+h}!arp\+\_\+cache\+\_\+entry\+\_\+t@{arp\+\_\+cache\+\_\+entry\+\_\+t}}
 \index{arp\+\_\+cache\+\_\+entry\+\_\+t@{arp\+\_\+cache\+\_\+entry\+\_\+t}!arp.\+h@{arp.\+h}}
 \subsubsection[{arp\+\_\+cache\+\_\+entry\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf arp\+\_\+cache\+\_\+entry}  {\bf arp\+\_\+cache\+\_\+entry\+\_\+t}}}\label{arp_8h_a9b4be1be5ee1e2531c81fa075b4f55d1}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{arp_8h_aa746629dfa56980dbf09cc6edf68c467}{\index{arp.\+h@{arp.\+h}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!arp.\+h@{arp.\+h}}
 \subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf arp\+\_\+header} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
@@ -130,78 +130,78 @@ Definizione alla linea 21 del file arp.\+h.
 )}}\label{arp_8h_aa746629dfa56980dbf09cc6edf68c467}
 
 
-Definizione alla linea 44 del file desc.\+c.
+Definition at line 44 of file desc.\+c.
 
 
 \begin{DoxyCode}
 46                        \{
 47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
 48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
-49 \} \hyperlink{desc_8c_a88d6351e81fa254cec37b8a9a1353401}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+49 \} \hyperlink{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{arp_8h_ac0b63b998e1f7fb63c33a604225a686a}{\index{arp.\+h@{arp.\+h}!hwlen@{hwlen}}
 \index{hwlen@{hwlen}!arp.\+h@{arp.\+h}}
 \subsubsection[{hwlen}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} hwlen}}\label{arp_8h_ac0b63b998e1f7fb63c33a604225a686a}
 
 
-Definizione alla linea 71 del file arp.\+h.
+Definition at line 71 of file arp.\+h.
 
 \hypertarget{arp_8h_a764ca22545b434fca03fac9a06bda626}{\index{arp.\+h@{arp.\+h}!hwtype@{hwtype}}
 \index{hwtype@{hwtype}!arp.\+h@{arp.\+h}}
 \subsubsection[{hwtype}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} hwtype}}\label{arp_8h_a764ca22545b434fca03fac9a06bda626}
 
 
-Definizione alla linea 69 del file arp.\+h.
+Definition at line 69 of file arp.\+h.
 
 \hypertarget{arp_8h_ad21c763fa2f80cb8649108b759113b54}{\index{arp.\+h@{arp.\+h}!operation@{operation}}
 \index{operation@{operation}!arp.\+h@{arp.\+h}}
 \subsubsection[{operation}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} operation}}\label{arp_8h_ad21c763fa2f80cb8649108b759113b54}
 
 
-Definizione alla linea 73 del file arp.\+h.
+Definition at line 73 of file arp.\+h.
 
 \hypertarget{arp_8h_a045c65b958312333ba8a773fd16848ba}{\index{arp.\+h@{arp.\+h}!prlen@{prlen}}
 \index{prlen@{prlen}!arp.\+h@{arp.\+h}}
 \subsubsection[{prlen}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint8\+\_\+t} prlen}}\label{arp_8h_a045c65b958312333ba8a773fd16848ba}
 
 
-Definizione alla linea 72 del file arp.\+h.
+Definition at line 72 of file arp.\+h.
 
 \hypertarget{arp_8h_a0011d810efee0f2befcd01236aeb74a3}{\index{arp.\+h@{arp.\+h}!prtype@{prtype}}
 \index{prtype@{prtype}!arp.\+h@{arp.\+h}}
 \subsubsection[{prtype}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} prtype}}\label{arp_8h_a0011d810efee0f2befcd01236aeb74a3}
 
 
-Definizione alla linea 70 del file arp.\+h.
+Definition at line 70 of file arp.\+h.
 
 \hypertarget{arp_8h_a68d057d257965f26192458ba6bd3657b}{\index{arp.\+h@{arp.\+h}!sha@{sha}}
 \index{sha@{sha}!arp.\+h@{arp.\+h}}
 \subsubsection[{sha}]{\setlength{\rightskip}{0pt plus 5cm}{\bf macaddr\+\_\+t} sha}}\label{arp_8h_a68d057d257965f26192458ba6bd3657b}
 
 
-Definizione alla linea 74 del file arp.\+h.
+Definition at line 74 of file arp.\+h.
 
 \hypertarget{arp_8h_a02d2d5b2f207d56dd8c3d33fd3d4f44b}{\index{arp.\+h@{arp.\+h}!spa@{spa}}
 \index{spa@{spa}!arp.\+h@{arp.\+h}}
 \subsubsection[{spa}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ipv4\+\_\+t} spa}}\label{arp_8h_a02d2d5b2f207d56dd8c3d33fd3d4f44b}
 
 
-Definizione alla linea 75 del file arp.\+h.
+Definition at line 75 of file arp.\+h.
 
 \hypertarget{arp_8h_a3270389e5f50105152b1920f11844d3b}{\index{arp.\+h@{arp.\+h}!tha@{tha}}
 \index{tha@{tha}!arp.\+h@{arp.\+h}}
 \subsubsection[{tha}]{\setlength{\rightskip}{0pt plus 5cm}{\bf macaddr\+\_\+t} tha}}\label{arp_8h_a3270389e5f50105152b1920f11844d3b}
 
 
-Definizione alla linea 76 del file arp.\+h.
+Definition at line 76 of file arp.\+h.
 
 \hypertarget{arp_8h_ac69159d9b06000d1fe64c701014b1b19}{\index{arp.\+h@{arp.\+h}!tpa@{tpa}}
 \index{tpa@{tpa}!arp.\+h@{arp.\+h}}
 \subsubsection[{tpa}]{\setlength{\rightskip}{0pt plus 5cm}{\bf ipv4\+\_\+t} tpa}}\label{arp_8h_ac69159d9b06000d1fe64c701014b1b19}
 
 
-Definizione alla linea 77 del file arp.\+h.
+Definition at line 77 of file arp.\+h.
 

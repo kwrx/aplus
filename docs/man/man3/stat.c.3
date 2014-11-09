@@ -1,4 +1,4 @@
-.TH "src/syscall/stat.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/stat.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ src/syscall/stat.c \-
 \fC#include <dirent\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -35,21 +35,22 @@ src/syscall/stat.c \-
 .RI "\fBSYSCALL\fP (\fBsys_stat\fP, 13)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int sys_stat (const char *filename, struct stat *st)"
 
 .PP
-Definizione alla linea 15 del file stat\&.c\&.
+Definition at line 15 of file stat\&.c\&.
 .PP
-Referenzia errno, kprintf, sys_close(), sys_fstat(), e sys_open()\&.
+References errno, kprintf(), sys_close(), sys_fstat(), and sys_open()\&.
 .PP
 .nf
 15                                                     {
@@ -66,12 +67,14 @@ Referenzia errno, kprintf, sys_close(), sys_fstat(), e sys_open()\&.
 .fi
 .SS "SYSCALL (\fBsys_stat\fP, 13)"
 
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
-.SH "Autore"
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

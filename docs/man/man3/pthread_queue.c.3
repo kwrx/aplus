@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_queue.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_queue.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,14 +13,14 @@ usr/src/libpthread/src/pthread_queue.c \-
 \fC#include <string\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "\fBPUBLIC\fP void \fB__pthread_init_queue\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -33,14 +33,14 @@ usr/src/libpthread/src/pthread_queue.c \-
 .RI "\fBPUBLIC\fP \fBuint32_t\fP \fB__pthread_counts\fP = 1"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP void __pthread_init_queue (void)"
 
 .PP
-Definizione alla linea 12 del file pthread_queue\&.c\&.
+Definition at line 12 of file pthread_queue\&.c\&.
 .PP
-Referenzia __current_thread, __os_gettid, pthread_context::attr, pthread_context::cond, pthread_once::done, pthread_context::entry, pthread_context::exitval, pthread_context::next, pthread_context::once, pthread_context::param, pthread_once::started, e pthread_context::tid\&.
+References __current_thread, __os_gettid, pthread_context::attr, pthread_context::cond, pthread_once::done, pthread_context::entry, pthread_context::exitval, pthread_context::next, pthread_context::once, pthread_context::param, pthread_once::started, and pthread_context::tid\&.
 .PP
 .nf
 12                                    {
@@ -59,20 +59,20 @@ Referenzia __current_thread, __os_gettid, pthread_context::attr, pthread_context
 25     memset(&__current_thread\&.attr, 0, sizeof(pthread_attr_t));
 26 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBPRIVATE\fP \fBpthread_context_t\fP __current_thread"
 
 .PP
-Definizione alla linea 6 del file pthread_queue\&.c\&.
+Definition at line 6 of file pthread_queue\&.c\&.
 .SS "\fBPUBLIC\fP \fBuint32_t\fP __pthread_counts = 1"
 
 .PP
-Definizione alla linea 9 del file pthread_queue\&.c\&.
+Definition at line 9 of file pthread_queue\&.c\&.
 .SS "\fBPUBLIC\fP \fBpthread_context_t\fP* __pthread_queue = &\fB__current_thread\fP"
 
 .PP
-Definizione alla linea 8 del file pthread_queue\&.c\&.
-.SH "Autore"
+Definition at line 8 of file pthread_queue\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

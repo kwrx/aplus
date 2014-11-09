@@ -4,6 +4,7 @@ var dir_cfd1fb2b98030f4f81570490591de86f =
     [ "attribute.h", "attribute_8h.html", "attribute_8h" ],
     [ "bufio.h", "bufio_8h.html", "bufio_8h" ],
     [ "fs.h", "fs_8h.html", "fs_8h" ],
+    [ "fsys.h", "fsys_8h.html", "fsys_8h" ],
     [ "list.h", "list_8h.html", "list_8h" ],
     [ "mm.h", "mm_8h.html", "mm_8h" ],
     [ "netif.h", "netif_8h.html", "netif_8h" ],

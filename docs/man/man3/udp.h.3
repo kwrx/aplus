@@ -1,4 +1,4 @@
-.TH "src/include/aplus/net/udp.h" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/net/udp.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -11,21 +11,21 @@ src/include/aplus/net/udp.h \-
 \fC#include <aplus/netif\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBudp_header\fP"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "struct \fBudp_header\fP \fB__attribute__\fP ((packed)) udp_header_t"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -41,12 +41,12 @@ src/include/aplus/net/udp.h \-
 .RI "\fBuint16_t\fP \fBchecksum\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "struct \fBudp_header\fP __attribute__ ((packed))"
 
 .PP
-Definizione alla linea 44 del file desc\&.c\&.
+Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
 46                        {
@@ -54,24 +54,24 @@ Definizione alla linea 44 del file desc\&.c\&.
 48     uint32_t base;
 49 } __attribute__((packed)) gdt_ptr_t;
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBuint16_t\fP checksum"
 
 .PP
-Definizione alla linea 71 del file udp\&.h\&.
+Definition at line 71 of file udp\&.h\&.
 .SS "\fBuint16_t\fP dst_port"
 
 .PP
-Definizione alla linea 69 del file udp\&.h\&.
+Definition at line 69 of file udp\&.h\&.
 .SS "\fBuint16_t\fP length"
 
 .PP
-Definizione alla linea 70 del file udp\&.h\&.
+Definition at line 70 of file udp\&.h\&.
 .SS "\fBuint16_t\fP src_port"
 
 .PP
-Definizione alla linea 68 del file udp\&.h\&.
-.SH "Autore"
+Definition at line 68 of file udp\&.h\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

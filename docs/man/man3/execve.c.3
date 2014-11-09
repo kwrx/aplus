@@ -1,4 +1,4 @@
-.TH "src/syscall/execve.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/execve.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -19,89 +19,126 @@ src/syscall/execve.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "int \fBsys_execve\fP (char *filename, char **argv, char **\fBenviron\fP)"
 .br
+.RI "\fIExecutes the program pointed to by filename\&.
+.br
+ filename must be either a binary executable, or a script starting with a line of the form\&.
+.br
+ #! interpreter [optional-arg]\&. \fP"
 .ti -1c
 .RI "\fBSYSCALL\fP (\fBsys_execve\fP, 2)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int sys_execve (char *filename, char **argv, char **environ)"
 
 .PP
-Definizione alla linea 12 del file execve\&.c\&.
+Executes the program pointed to by filename\&.
+.br
+ filename must be either a binary executable, or a script starting with a line of the form\&.
+.br
+ #! interpreter [optional-arg]\&. 
 .PP
-Referenzia task::argv, elf32_load(), environ, task::envp, errno, task::exe, task::fd, kfree(), kmalloc(), size, sys_close(), sys_lseek(), sys_open(), e sys_read()\&.
+\fBParameters:\fP
+.RS 4
+\fIfilename\fP executable path\&. 
+.br
+\fIargv\fP Is an array of argument strings passed to the new program\&.
+.br
+ By convention, the first of these strings should contain the filename associated with the file being executed\&. 
+.br
+\fIenviron\fP Is an array of strings, conventionally of the form key=value, which are passed as environment to the new program\&. 
+.RE
+.PP
+\fBWarning:\fP
+.RS 4
+Both argv and environ must be terminated by a null pointer\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Does not return on success, and the text, data, bss, and stack of the calling process are overwritten by that of the program loaded\&. 
+.RE
+.PP
+
+.PP
+Definition at line 27 of file execve\&.c\&.
+.PP
+References task::argv, elf32_load(), environ, task::envp, errno, task::exe, task::fd, kfree(), kmalloc(), size, sys_close(), sys_lseek(), sys_open(), and sys_read()\&.
 .PP
 .nf
-12                                                             {
-13     
-14     int fd = sys_open(filename, O_RDONLY, 0644);
-15     if(fd < 0) {
-16         errno = ENOENT;
-17         return -1;
-18     }
-19 
-20     sys_lseek(fd, 0, SEEK_END);
-21     size_t size = sys_lseek(fd, 0, SEEK_CUR);
-22     sys_lseek(fd, 0, SEEK_SET);
-23 
-24     void* image = kmalloc(size);
-25     if(!image) {
-26         sys_close(fd);
-27 
-28         errno = ENOMEM;
-29         return -1;
-30     }
-31 
-32     if(sys_read(fd, image, size) < size) {
-33         sys_close(fd);
-34         kfree(image);
-35         
-36         errno = EIO;
-37         return -1;
-38     }
-39 
-40     
-41 
-42     void (*entry) () = (void (*) ()) elf32_load(image);
-43     if(entry) {
-44 
-45         current_task->exe = current_task->fd[fd];
-46         current_task->argv = argv;
-47         current_task->envp = environ;
-48 
-49         sys_close(fd);
-50 
-51 
-52         entry(); /* never return */
+27                                                             {
+28     
+29     int fd = sys_open(filename, O_RDONLY, 0644);
+30     if(fd < 0) {
+31         errno = ENOENT;
+32         return -1;
+33     }
+34 
+35     sys_lseek(fd, 0, SEEK_END);
+36     size_t size = sys_lseek(fd, 0, SEEK_CUR);
+37     sys_lseek(fd, 0, SEEK_SET);
+38 
+39     void* image = kmalloc(size);
+40     if(!image) {
+41         sys_close(fd);
+42 
+43         errno = ENOMEM;
+44         return -1;
+45     }
+46 
+47     if(sys_read(fd, image, size) < size) {
+48         sys_close(fd);
+49         kfree(image);
+50         
+51         errno = EIO;
+52         return -1;
 53     }
 54 
-55     sys_close(fd);
-56     kfree(image);
-57     return -1;
-58 }
+55     
+56 
+57     void (*entry) () = (void (*) ()) elf32_load(image);
+58     if(entry) {
+59 
+60         current_task->exe = current_task->fd[fd];
+61         current_task->argv = argv;
+62         current_task->envp = environ;
+63 
+64         sys_close(fd);
+65 
+66 
+67         entry(); /* never return */
+68     }
+69 
+70     sys_close(fd);
+71     kfree(image);
+72     return -1;
+73 }
 .fi
 .SS "SYSCALL (\fBsys_execve\fP, 2)"
 
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
-.SH "Autore"
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

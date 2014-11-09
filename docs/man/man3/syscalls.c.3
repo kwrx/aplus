@@ -1,4 +1,4 @@
-.TH "usr/src/libcrt0/src/syscalls.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libcrt0/src/syscalls.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,7 +9,7 @@ usr/src/libcrt0/src/syscalls.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -34,10 +34,10 @@ usr/src/libcrt0/src/syscalls.c \-
 .RI "#define \fBsyscall5\fP(n, h)"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define syscall0(n, h)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 h() {                             \
@@ -52,9 +52,9 @@ h() {                             \
     }
 .fi
 .PP
-Definizione alla linea 5 del file syscalls\&.c\&.
+Definition at line 5 of file syscalls\&.c\&.
 .SS "#define syscall1(n, h)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 h(p1) {                             \
@@ -69,9 +69,9 @@ h(p1) {                             \
     }
 .fi
 .PP
-Definizione alla linea 17 del file syscalls\&.c\&.
+Definition at line 17 of file syscalls\&.c\&.
 .SS "#define syscall2(n, h)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 h(p1, p2) {                            \
@@ -86,9 +86,9 @@ h(p1, p2) {                            \
     }
 .fi
 .PP
-Definizione alla linea 29 del file syscalls\&.c\&.
+Definition at line 29 of file syscalls\&.c\&.
 .SS "#define syscall3(n, h)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 h(p1, p2, p3) {                        \
@@ -104,9 +104,9 @@ h(p1, p2, p3) {                        \
     }
 .fi
 .PP
-Definizione alla linea 41 del file syscalls\&.c\&.
+Definition at line 41 of file syscalls\&.c\&.
 .SS "#define syscall4(n, h)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 h(p1, p2, p3, p4) {                    \
@@ -122,9 +122,9 @@ h(p1, p2, p3, p4) {                    \
     }
 .fi
 .PP
-Definizione alla linea 54 del file syscalls\&.c\&.
+Definition at line 54 of file syscalls\&.c\&.
 .SS "#define syscall5(n, h)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
 h(p1, p2, p3, p4, p5) {                \
@@ -140,11 +140,11 @@ h(p1, p2, p3, p4, p5) {                \
     }
 .fi
 .PP
-Definizione alla linea 67 del file syscalls\&.c\&.
+Definition at line 67 of file syscalls\&.c\&.
 .SS "#define SYSCODE   'int $0x80'"
 
 .PP
-Definizione alla linea 3 del file syscalls\&.c\&.
-.SH "Autore"
+Definition at line 3 of file syscalls\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

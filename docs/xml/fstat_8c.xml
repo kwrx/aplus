@@ -12,157 +12,157 @@
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1442">
+      <node id="1634">
         <label>sys/stat.h</label>
       </node>
-      <node id="1431">
+      <node id="1623">
         <label>stdarg.h</label>
       </node>
-      <node id="1434">
+      <node id="1626">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1429" relation="include">
+        <childnode refid="1621" relation="include">
         </childnode>
-        <childnode refid="1435" relation="include">
+        <childnode refid="1627" relation="include">
         </childnode>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
-        <childnode refid="1432" relation="include">
+        <childnode refid="1624" relation="include">
         </childnode>
-        <childnode refid="1437" relation="include">
+        <childnode refid="1629" relation="include">
         </childnode>
       </node>
-      <node id="1441">
+      <node id="1633">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
-        <childnode refid="1436" relation="include">
+        <childnode refid="1628" relation="include">
         </childnode>
-        <childnode refid="1437" relation="include">
+        <childnode refid="1629" relation="include">
         </childnode>
-        <childnode refid="1442" relation="include">
+        <childnode refid="1634" relation="include">
         </childnode>
-        <childnode refid="1443" relation="include">
+        <childnode refid="1635" relation="include">
         </childnode>
       </node>
-      <node id="1430">
+      <node id="1622">
         <label>stdint.h</label>
       </node>
-      <node id="1433">
+      <node id="1625">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1429" relation="include">
+        <childnode refid="1621" relation="include">
         </childnode>
-        <childnode refid="1434" relation="include">
+        <childnode refid="1626" relation="include">
         </childnode>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
       </node>
-      <node id="1446">
+      <node id="1638">
         <label>setjmp.h</label>
       </node>
-      <node id="1440">
+      <node id="1632">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
-        <childnode refid="1429" relation="include">
+        <childnode refid="1621" relation="include">
         </childnode>
-        <childnode refid="1441" relation="include">
+        <childnode refid="1633" relation="include">
         </childnode>
-        <childnode refid="1445" relation="include">
+        <childnode refid="1637" relation="include">
         </childnode>
-        <childnode refid="1437" relation="include">
+        <childnode refid="1629" relation="include">
         </childnode>
-        <childnode refid="1446" relation="include">
+        <childnode refid="1638" relation="include">
         </childnode>
       </node>
-      <node id="1448">
+      <node id="1640">
         <label>errno.h</label>
       </node>
-      <node id="1447">
+      <node id="1639">
         <label>fcntl.h</label>
       </node>
-      <node id="1436">
+      <node id="1628">
         <label>stddef.h</label>
       </node>
-      <node id="1435">
+      <node id="1627">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1436" relation="include">
+        <childnode refid="1628" relation="include">
         </childnode>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
-        <childnode refid="1437" relation="include">
+        <childnode refid="1629" relation="include">
         </childnode>
-        <childnode refid="1438" relation="include">
+        <childnode refid="1630" relation="include">
         </childnode>
-        <childnode refid="1439" relation="include">
+        <childnode refid="1631" relation="include">
         </childnode>
       </node>
-      <node id="1429">
+      <node id="1621">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
-        <childnode refid="1431" relation="include">
+        <childnode refid="1623" relation="include">
         </childnode>
-        <childnode refid="1432" relation="include">
+        <childnode refid="1624" relation="include">
         </childnode>
       </node>
-      <node id="1437">
+      <node id="1629">
         <label>sys/types.h</label>
       </node>
-      <node id="1432">
+      <node id="1624">
         <label>string.h</label>
       </node>
-      <node id="1444">
+      <node id="1636">
         <label>unistd.h</label>
       </node>
-      <node id="1445">
+      <node id="1637">
         <label>signal.h</label>
       </node>
-      <node id="1439">
+      <node id="1631">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
-        <childnode refid="1440" relation="include">
+        <childnode refid="1632" relation="include">
         </childnode>
       </node>
-      <node id="1443">
+      <node id="1635">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1444" relation="include">
+        <childnode refid="1636" relation="include">
         </childnode>
-        <childnode refid="1437" relation="include">
+        <childnode refid="1629" relation="include">
         </childnode>
       </node>
-      <node id="1438">
+      <node id="1630">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
-      <node id="1428">
+      <node id="1620">
         <label>src/syscall/fstat.c</label>
         <link refid="fstat.c"/>
-        <childnode refid="1429" relation="include">
+        <childnode refid="1621" relation="include">
         </childnode>
-        <childnode refid="1433" relation="include">
+        <childnode refid="1625" relation="include">
         </childnode>
-        <childnode refid="1441" relation="include">
+        <childnode refid="1633" relation="include">
         </childnode>
-        <childnode refid="1440" relation="include">
+        <childnode refid="1632" relation="include">
         </childnode>
-        <childnode refid="1444" relation="include">
+        <childnode refid="1636" relation="include">
         </childnode>
-        <childnode refid="1447" relation="include">
+        <childnode refid="1639" relation="include">
         </childnode>
-        <childnode refid="1448" relation="include">
+        <childnode refid="1640" relation="include">
         </childnode>
-        <childnode refid="1442" relation="include">
+        <childnode refid="1634" relation="include">
         </childnode>
-        <childnode refid="1443" relation="include">
+        <childnode refid="1635" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -173,12 +173,12 @@
         <argsstring></argsstring>
         <name>current_task</name>
         <briefdescription>
-        </briefdescription>
+<para>Current task address. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/fstat.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="33" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/fstat.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -196,26 +196,43 @@
           <declname>st</declname>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>This function shall obtain information about an open file associated with the file descriptor fildes, and shall write it to the area pointed to by buf. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>fd</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>File descriptor </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>st</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Stat structure </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Upon successful completion, 0 shall be returned.<linebreak/>
+ Otherwise, -1 shall be returned and errno set to indicate the error. </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/fstat.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/syscall/fstat.c" bodystart="15" bodyend="43"/>
-        <references refid="structinode_1a7e52661a115f6def97778566f2be0d80" compoundref="fs_8h" startline="49">inode::atime</references>
-        <references refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" compoundref="fs_8h" startline="51">inode::ctime</references>
-        <references refid="structinode_1a127a2eb030df332fa64a81188731ad6b" compoundref="fs_8h" startline="39">inode::dev</references>
+        <location file="/opt/prj/aPlus/src/syscall/fstat.c" line="24" column="1" bodyfile="/opt/prj/aPlus/src/syscall/fstat.c" bodystart="24" bodyend="52"/>
+        <references refid="structinode_1a7e52661a115f6def97778566f2be0d80" compoundref="fs_8h" startline="50">inode::atime</references>
+        <references refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" compoundref="fs_8h" startline="52">inode::ctime</references>
+        <references refid="structinode_1a127a2eb030df332fa64a81188731ad6b" compoundref="fs_8h" startline="40">inode::dev</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="87">task::fd</references>
-        <references refid="structinode_1a8434fb9dd05057d00b37ed713713835d" compoundref="fs_8h" startline="44">inode::gid</references>
-        <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="40">inode::ino</references>
-        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
-        <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="41">inode::mode</references>
-        <references refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" compoundref="fs_8h" startline="50">inode::mtime</references>
-        <references refid="structinode_1a1daedc820c86b5af32f0a137419f7a8f" compoundref="fs_8h" startline="42">inode::nlink</references>
-        <references refid="structinode_1a3e7613383954ff7b5faf7c2188e1f61b" compoundref="fs_8h" startline="45">inode::rdev</references>
-        <references refid="structinode_1a53722b1b60b7136ce0204b66527bb400" compoundref="fs_8h" startline="46">inode::size</references>
-        <references refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" compoundref="fs_8h" startline="43">inode::uid</references>
+        <references refid="structinode_1a8434fb9dd05057d00b37ed713713835d" compoundref="fs_8h" startline="45">inode::gid</references>
+        <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="41">inode::ino</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="42">inode::mode</references>
+        <references refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" compoundref="fs_8h" startline="51">inode::mtime</references>
+        <references refid="structinode_1a1daedc820c86b5af32f0a137419f7a8f" compoundref="fs_8h" startline="43">inode::nlink</references>
+        <references refid="structinode_1a3e7613383954ff7b5faf7c2188e1f61b" compoundref="fs_8h" startline="46">inode::rdev</references>
+        <references refid="structinode_1a53722b1b60b7136ce0204b66527bb400" compoundref="fs_8h" startline="47">inode::size</references>
+        <references refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" compoundref="fs_8h" startline="44">inode::uid</references>
       </memberdef>
       <memberdef kind="function" id="fstat_8c_1a4d257934d85058e9d4821db299a6544d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -234,7 +251,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/fstat.c" line="46" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/fstat.c" line="55" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -256,38 +273,39 @@
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="fstat_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"></highlight></codeline>
-<codeline lineno="15" refid="fstat_8c_1a37940479e5cc923a96785a82989b7974" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fstat_8c_1a37940479e5cc923a96785a82989b7974" kindref="member">sys_fstat</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>stat*<sp/>st)<sp/>{</highlight></codeline>
-<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!st)<sp/>{</highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"></highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_fstat:<sp/>%s.&quot;</highlight><highlight class="normal">,<sp/>strerror(<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>));</highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_mode<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" kindref="member">mode</ref>;</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_ino<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" kindref="member">ino</ref>;</highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_dev<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a127a2eb030df332fa64a81188731ad6b" kindref="member">dev</ref>;</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_uid<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" kindref="member">uid</ref>;</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_gid<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a8434fb9dd05057d00b37ed713713835d" kindref="member">gid</ref>;</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_atime<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a7e52661a115f6def97778566f2be0d80" kindref="member">atime</ref>;</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_ctime<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" kindref="member">ctime</ref>;</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_mtime<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" kindref="member">mtime</ref>;</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_nlink<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a1daedc820c86b5af32f0a137419f7a8f" kindref="member">nlink</ref>;</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_size<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>;</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_rdev<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a3e7613383954ff7b5faf7c2188e1f61b" kindref="member">rdev</ref>;</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_blksize<sp/>=<sp/>512;</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_blocks<sp/>=<sp/>st-&gt;st_size<sp/>/<sp/>st-&gt;st_blksize;</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"></highlight></codeline>
-<codeline lineno="45"><highlight class="normal"></highlight></codeline>
-<codeline lineno="46"><highlight class="normal"><ref refid="fstat_8c_1a4d257934d85058e9d4821db299a6544d" kindref="member">SYSCALL</ref>(<ref refid="fstat_8c_1a37940479e5cc923a96785a82989b7974" kindref="member">sys_fstat</ref>,<sp/>4);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="fstat_8c_1a37940479e5cc923a96785a82989b7974" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fstat_8c_1a37940479e5cc923a96785a82989b7974" kindref="member">sys_fstat</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>stat*<sp/>st)<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!st)<sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_fstat:<sp/>%s.&quot;</highlight><highlight class="normal">,<sp/>strerror(<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>));</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_mode<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" kindref="member">mode</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_ino<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" kindref="member">ino</ref>;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_dev<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a127a2eb030df332fa64a81188731ad6b" kindref="member">dev</ref>;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_uid<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" kindref="member">uid</ref>;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_gid<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a8434fb9dd05057d00b37ed713713835d" kindref="member">gid</ref>;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_atime<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a7e52661a115f6def97778566f2be0d80" kindref="member">atime</ref>;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_ctime<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" kindref="member">ctime</ref>;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_mtime<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" kindref="member">mtime</ref>;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_nlink<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a1daedc820c86b5af32f0a137419f7a8f" kindref="member">nlink</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_size<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_rdev<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a3e7613383954ff7b5faf7c2188e1f61b" kindref="member">rdev</ref>;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_blksize<sp/>=<sp/>512;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>st-&gt;st_blocks<sp/>=<sp/>st-&gt;st_size<sp/>/<sp/>st-&gt;st_blksize;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><ref refid="fstat_8c_1a4d257934d85058e9d4821db299a6544d" kindref="member">SYSCALL</ref>(<ref refid="fstat_8c_1a37940479e5cc923a96785a82989b7974" kindref="member">sys_fstat</ref>,<sp/>4);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/fstat.c"/>
   </compounddef>

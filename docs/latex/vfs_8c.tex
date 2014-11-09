@@ -1,4 +1,4 @@
-\hypertarget{vfs_8c}{\section{Riferimenti per il file src/fs/vfs.c}
+\hypertarget{vfs_8c}{\section{src/fs/vfs.c File Reference}
 \label{vfs_8c}\index{src/fs/vfs.\+c@{src/fs/vfs.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -12,7 +12,7 @@
 {\ttfamily \#include $<$fcntl.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \hyperlink{vfs_8c_acb87c78588a46c5526e933c495b69c2a}{vfs\+\_\+map} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$\hyperlink{structinode}{inode})
@@ -29,7 +29,7 @@ int \hyperlink{vfs_8c_ac571ec2fcf268f322214b46a0a8c7e74}{vfs\+\_\+chroot} (\hype
 \item 
 int \hyperlink{vfs_8c_aca585ca14c08d6c1a07e1b886fc9749a}{vfs\+\_\+init} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 static \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{vfs_8c_ab78229df5c858687756417b32ac398ff}{list\+\_\+inodes} = 0
@@ -40,7 +40,7 @@ static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hy
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{vfs_8c_ac571ec2fcf268f322214b46a0a8c7e74}{\index{vfs.\+c@{vfs.\+c}!vfs\+\_\+chroot@{vfs\+\_\+chroot}}
 \index{vfs\+\_\+chroot@{vfs\+\_\+chroot}!vfs.\+c@{vfs.\+c}}
 \subsubsection[{vfs\+\_\+chroot}]{\setlength{\rightskip}{0pt plus 5cm}int vfs\+\_\+chroot (
@@ -50,11 +50,11 @@ static \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hy
 )}}\label{vfs_8c_ac571ec2fcf268f322214b46a0a8c7e74}
 
 
-Definizione alla linea 72 del file vfs.\+c.
+Definition at line 72 of file vfs.\+c.
 
 
 
-Referenzia inode\+::parent.
+References inode\+::parent.
 
 
 \begin{DoxyCode}
@@ -74,11 +74,11 @@ Referenzia inode\+::parent.
 )}}\label{vfs_8c_aca585ca14c08d6c1a07e1b886fc9749a}
 
 
-Definizione alla linea 81 del file vfs.\+c.
+Definition at line 81 of file vfs.\+c.
 
 
 
-Referenzia inode\+::chown, inode\+::creat, inode\+::dev, inode\+::finddir, inode\+::flush, inode\+::gid, G\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::ino, inode\+::ioctl, kmalloc(), inode\+::link, list\+\_\+add(), list\+\_\+init, inode\+::mode, inode\+::name, nextinode, inode\+::nlink, inode\+::parent, inode\+::rdev, inode\+::read, inode\+::readdir, inode\+::rename, inode\+::size, inode\+::uid, U\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::unlink, e inode\+::write.
+References inode\+::atime, inode\+::chown, inode\+::creat, inode\+::ctime, inode\+::dev, inode\+::finddir, inode\+::flush, inode\+::gid, G\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::ino, inode\+::ioctl, kmalloc(), inode\+::link, list\+\_\+add(), list\+\_\+init, inode\+::mode, inode\+::mtime, inode\+::name, nextinode, inode\+::nlink, inode\+::parent, inode\+::rdev, inode\+::read, inode\+::readdir, inode\+::rename, inode\+::size, sys\+\_\+time(), inode\+::uid, U\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::unlink, and inode\+::write.
 
 
 \begin{DoxyCode}
@@ -98,7 +98,8 @@ Referenzia inode\+::chown, inode\+::creat, inode\+::dev, inode\+::finddir, inode
 94     \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a8434fb9dd05057d00b37ed713713835d}{gid} = \hyperlink{fs_8h_a2a5a81b6a48db264d1ec6048268ea154}{GID\_ROOT};
 95     \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{rdev} = (dev\_t) 0;
 96     \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} = (size\_t) 0;
-97     \textcolor{comment}{//vfs\_root->atime = vfs\_root->ctime = vfs\_root->mtime = time(NULL);}
+97     \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a7e52661a115f6def97778566f2be0d80}{atime} = \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a27334a9d3c25fbac1c134ed5b9cbc566}{ctime} = \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->
+      \hyperlink{structinode_a19f0d407fa2962c942e406d3e00c1da4}{mtime} = \hyperlink{time_8c_a4b6eba92722ec1e5446f676e95e4cddf}{sys\_time}(NULL);
 98     \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}{parent} = (\hyperlink{structinode}{inode\_t}*) NULL;
 99     \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a3533c53c5391601c66b3ae0f389c0843}{link} = (\hyperlink{structinode}{inode\_t}*) NULL;
 100     
@@ -127,11 +128,11 @@ Referenzia inode\+::chown, inode\+::creat, inode\+::dev, inode\+::finddir, inode
 )}}\label{vfs_8c_acb87c78588a46c5526e933c495b69c2a}
 
 
-Definizione alla linea 22 del file vfs.\+c.
+Definition at line 22 of file vfs.\+c.
 
 
 
-Referenzia inode\+::ino, list\+\_\+add(), e nextinode.
+References inode\+::ino, list\+\_\+add(), and nextinode.
 
 
 \begin{DoxyCode}
@@ -150,11 +151,11 @@ Referenzia inode\+::ino, list\+\_\+add(), e nextinode.
 )}}\label{vfs_8c_a99334446cfc1dfc32088d838b4f2895c}
 
 
-Definizione alla linea 32 del file vfs.\+c.
+Definition at line 32 of file vfs.\+c.
 
 
 
-Referenzia list\+\_\+foreach, inode\+::name, inode\+::parent, e value.
+References list\+\_\+foreach, inode\+::name, inode\+::parent, and value.
 
 
 \begin{DoxyCode}
@@ -180,11 +181,11 @@ Referenzia list\+\_\+foreach, inode\+::name, inode\+::parent, e value.
 )}}\label{vfs_8c_a4f7b5f17ac7c4b3a0a574d9620e0512d}
 
 
-Definizione alla linea 44 del file vfs.\+c.
+Definition at line 44 of file vfs.\+c.
 
 
 
-Referenzia list\+\_\+foreach, inode\+::parent, e value.
+References list\+\_\+foreach, inode\+::parent, and value.
 
 
 \begin{DoxyCode}
@@ -211,11 +212,11 @@ Referenzia list\+\_\+foreach, inode\+::parent, e value.
 )}}\label{vfs_8c_a829e1c063db610c46554db0e28cb2bcb}
 
 
-Definizione alla linea 58 del file vfs.\+c.
+Definition at line 58 of file vfs.\+c.
 
 
 
-Referenzia list\+\_\+foreach, inode\+::parent, e value.
+References list\+\_\+foreach, inode\+::parent, and value.
 
 
 \begin{DoxyCode}
@@ -241,11 +242,11 @@ Referenzia list\+\_\+foreach, inode\+::parent, e value.
 )}}\label{vfs_8c_a13a7520e2fe9380c3ed93472d0c800bc}
 
 
-Definizione alla linea 27 del file vfs.\+c.
+Definition at line 27 of file vfs.\+c.
 
 
 
-Referenzia kfree(), e list\+\_\+remove().
+References kfree(), and list\+\_\+remove().
 
 
 \begin{DoxyCode}
@@ -256,25 +257,25 @@ Referenzia kfree(), e list\+\_\+remove().
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{vfs_8c_ab78229df5c858687756417b32ac398ff}{\index{vfs.\+c@{vfs.\+c}!list\+\_\+inodes@{list\+\_\+inodes}}
 \index{list\+\_\+inodes@{list\+\_\+inodes}!vfs.\+c@{vfs.\+c}}
 \subsubsection[{list\+\_\+inodes}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ list\+\_\+inodes = 0\hspace{0.3cm}{\ttfamily [static]}}}\label{vfs_8c_ab78229df5c858687756417b32ac398ff}
 
 
-Definizione alla linea 16 del file vfs.\+c.
+Definition at line 16 of file vfs.\+c.
 
 \hypertarget{vfs_8c_ad11ac1a0eb756180b648d9ac7d53b169}{\index{vfs.\+c@{vfs.\+c}!nextinode@{nextinode}}
 \index{nextinode@{nextinode}!vfs.\+c@{vfs.\+c}}
 \subsubsection[{nextinode}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} nextinode = 0\hspace{0.3cm}{\ttfamily [static]}}}\label{vfs_8c_ad11ac1a0eb756180b648d9ac7d53b169}
 
 
-Definizione alla linea 17 del file vfs.\+c.
+Definition at line 17 of file vfs.\+c.
 
 \hypertarget{vfs_8c_a9af8258c3554800f6613f8147544225f}{\index{vfs.\+c@{vfs.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
 \index{vfs\+\_\+root@{vfs\+\_\+root}!vfs.\+c@{vfs.\+c}}
 \subsubsection[{vfs\+\_\+root}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ vfs\+\_\+root}}\label{vfs_8c_a9af8258c3554800f6613f8147544225f}
 
 
-Definizione alla linea 19 del file vfs.\+c.
+Definition at line 19 of file vfs.\+c.
 

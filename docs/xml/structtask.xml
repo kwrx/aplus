@@ -309,32 +309,32 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="106">
+      <node id="112">
         <label>inode</label>
         <link refid="structinode"/>
-        <childnode refid="106" relation="usage">
+        <childnode refid="112" relation="usage">
           <edgelabel>+finddir</edgelabel>
           <edgelabel>+link</edgelabel>
           <edgelabel>+parent</edgelabel>
           <edgelabel>+creat</edgelabel>
         </childnode>
-        <childnode refid="107" relation="usage">
+        <childnode refid="113" relation="usage">
           <edgelabel>+readdir</edgelabel>
         </childnode>
       </node>
-      <node id="105">
+      <node id="111">
         <label>task</label>
         <link refid="structtask"/>
-        <childnode refid="106" relation="usage">
+        <childnode refid="112" relation="usage">
           <edgelabel>+cwd</edgelabel>
           <edgelabel>+exe</edgelabel>
           <edgelabel>+fd</edgelabel>
         </childnode>
-        <childnode refid="105" relation="usage">
+        <childnode refid="111" relation="usage">
           <edgelabel>+parent</edgelabel>
         </childnode>
       </node>
-      <node id="107">
+      <node id="113">
         <label>dirent</label>
         <link refid="structdirent"/>
       </node>

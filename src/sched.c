@@ -29,15 +29,32 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-
+/**
+ *	\brief Current task address
+ */
 task_t* current_task;
+
+/**
+ *	\brief Kernel task address
+ */
 task_t* kernel_task;
 
+
+/**
+ *	\brief List of all Task
+ */
 list_t* task_queue;
 
+
+/**
+ *	\brief Scheduling enabled status
+ */
 static int sched_enabled = 0;
 
-
+/**
+ *	\brief Get root permissions for current task.
+ * 	\return true or false.
+ */
 int im_superuser() {
 	if(!current_task)
 		return -1;
@@ -51,19 +68,35 @@ int im_superuser() {
 		return 0;
 }
 
+
+/**
+ *	\brief Enable scheduling.
+ */
 void schedule_enable() {
 	sched_enabled = 1;
 }
 
+/**
+ *	\brief Disable scheduling.
+ */
 void schedule_disable() {
 	sched_enabled = 0;
 }
 
+/**
+ *	\brief Get a new Process ID.
+ */
 pid_t schedule_nextpid() {
 	static pid_t nextpid = 0;
 	return nextpid++;
 }
 
+
+
+/**
+ *	\brief Initialize scheduling.
+ *	\return success of initilization.
+ */
 int schedule_init() {
 	list_init(task_queue);
 	task_init();
@@ -74,7 +107,10 @@ int schedule_init() {
 }
 
 
-
+/**
+ *	\brief Get next ready task.
+ *	\return A ready task to schedule.
+ */
 static task_t* schedule_next() {
 	
 	task_t* newtask = current_task;
@@ -90,6 +126,10 @@ static task_t* schedule_next() {
 	return newtask;
 }
 
+
+/**
+ *	\brief Perform a scheduling and check TTL (Time To Live) for current task.
+ */
 void schedule() {
 	if(sched_enabled == 0)
 		return;
@@ -106,6 +146,10 @@ void schedule() {
 	task_switch(schedule_next());
 }
 
+
+/**
+ *	\brief Perform a forced scheduling.
+ */
 void schedule_yield() {
 	if(sched_enabled == 0)
 		return;
@@ -116,6 +160,11 @@ void schedule_yield() {
 	task_switch(schedule_next());
 }
 
+
+/**
+ *	\brief Set TTL (Time To Live) for current task.
+ *	\param priority TTL for current task.
+ */
 void schedule_setpriority(int priority) {
 	if(!current_task)
 		return;
@@ -123,6 +172,12 @@ void schedule_setpriority(int priority) {
 	current_task->priority = priority;
 }
 
+
+/**
+ *	\brief Wait for child.
+ *	\param child Task to wait.
+ *	\return Exit value of child or -1 in case of error.
+ */
 int schedule_wait(task_t* child) {
 	if(!child)
 		return -1;
@@ -131,6 +186,10 @@ int schedule_wait(task_t* child) {
 	return child->exitcode;
 }
 
+/**
+ *	\brief Get Child task for current task.
+ *	\return child task or NULL in case of error.
+ */
 task_t* schedule_child() {
 	if(!current_task)
 		return NULL;
@@ -146,6 +205,11 @@ task_t* schedule_child() {
 	return NULL;
 }
 
+/**
+ *	\brief Terminate a task with an Exit Value.
+ *	\param task Task to close.
+ *	\param status Exit Value.
+ */
 void schedule_exit2(task_t* task, int status) {
 	if(!task)
 		return;
@@ -159,10 +223,21 @@ void schedule_exit2(task_t* task, int status) {
 	schedule_yield();
 }
 
+
+/**
+ *	\brief Terminate current task.
+ *	\param status Exit Value.
+ * 	\see schedule_exit2
+ */
 void schedule_exit(int status) {
 	schedule_exit2(current_task, status);
 }
 
+
+/**
+ *	\brief Get Process ID of current task.
+ *	\return Process ID or -1 in case of error.
+ */
 pid_t schedule_getpid() {
 	if(!current_task)
 		return -1;
@@ -170,6 +245,11 @@ pid_t schedule_getpid() {
 	return current_task->pid;
 }
 
+
+/**
+ *	\brief Get task from his Process ID.
+ *	\return Task or NULL in case of error.
+ */
 task_t* schedule_getbypid(pid_t pid) {
 	if(current_task->pid == pid)
 		return current_task;
@@ -184,6 +264,11 @@ task_t* schedule_getbypid(pid_t pid) {
 	return NULL;
 }
 
+/**
+ *	\brief Increment address space of current task.
+ *	\param increment Increment in Bytes.
+ *	\return Current size of address space or NULL in case of error.
+ */
 void* schedule_sbrk(ptrdiff_t increment) {
 	if(!current_task)
 		return NULL;

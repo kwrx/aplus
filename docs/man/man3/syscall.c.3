@@ -1,4 +1,4 @@
-.TH "src/arch/syscall.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/syscall.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,7 +17,7 @@ src/arch/syscall.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -30,21 +30,21 @@ src/arch/syscall.c \-
 .RI "int \fBsyscall_handler\fP (regs_t *r)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "static void ** \fBsyscall_handlers\fP = NULL"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int syscall_handler (regs_t *r)"
 
 .PP
-Definizione alla linea 53 del file syscall\&.c\&.
+Definition at line 53 of file syscall\&.c\&.
 .PP
-Referenzia syscall_handlers, e syscall_invoke()\&.
+References syscall_handlers, and syscall_invoke()\&.
 .PP
 .nf
 53                                {
@@ -54,9 +54,9 @@ Referenzia syscall_handlers, e syscall_invoke()\&.
 .SS "int syscall_init ()"
 
 .PP
-Definizione alla linea 11 del file syscall\&.c\&.
+Definition at line 11 of file syscall\&.c\&.
 .PP
-Referenzia attribute(), __syscall::handler, kmalloc(), kprintf, list_destroy, list_foreach, __syscall::number, list::size, syscall_handlers, e value\&.
+References attribute(), __syscall::handler, kmalloc(), kprintf(), list_destroy, list_foreach, __syscall::number, list::size, syscall_handlers, and value\&.
 .PP
 .nf
 11                    {
@@ -79,9 +79,9 @@ Referenzia attribute(), __syscall::handler, kmalloc(), kprintf, list_destroy, li
 .SS "int syscall_invoke (void *handler, intp0, intp1, intp2, intp3, intp4)"
 
 .PP
-Definizione alla linea 28 del file syscall\&.c\&.
+Definition at line 28 of file syscall\&.c\&.
 .PP
-Referenzia __asm__(), e errno\&.
+References __asm__(), and errno\&.
 .PP
 .nf
 28                                                                           {
@@ -108,12 +108,12 @@ Referenzia __asm__(), e errno\&.
 49     return r;
 50 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "void** syscall_handlers = NULL\fC [static]\fP"
 
 .PP
-Definizione alla linea 9 del file syscall\&.c\&.
-.SH "Autore"
+Definition at line 9 of file syscall\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

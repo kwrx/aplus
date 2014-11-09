@@ -1,4 +1,4 @@
-.TH "src/net/arp.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/net/arp.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -23,7 +23,7 @@ src/net/arp.c \-
 \fC#include <aplus/net/arp\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -39,21 +39,21 @@ src/net/arp.c \-
 .RI "int \fBarp_send\fP (\fBnetif_t\fP *\fBnetif\fP)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBlist_t\fP * \fBarp_cache\fP = NULL"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "int arp_cache_add (\fBmacaddr_t\fPmacaddr, \fBipv4_t\fPipv4)"
 
 .PP
-Definizione alla linea 33 del file arp\&.c\&.
+Definition at line 33 of file arp\&.c\&.
 .PP
-Referenzia arp_cache_find_by_macaddr(), netif::ipv4, kmalloc(), kprintf, list_add(), list_init, list_remove(), e netif_find_by_macaddr()\&.
+References arp_cache_find_by_macaddr(), netif::ipv4, kmalloc(), kprintf(), list_add(), list_init, list_remove(), and netif_find_by_macaddr()\&.
 .PP
 .nf
 33                                                   {
@@ -93,9 +93,9 @@ Referenzia arp_cache_find_by_macaddr(), netif::ipv4, kmalloc(), kprintf, list_ad
 .SS "\fBarp_cache_entry_t\fP* arp_cache_find_by_macaddr (\fBmacaddr_t\fPmacaddr)"
 
 .PP
-Definizione alla linea 16 del file arp\&.c\&.
+Definition at line 16 of file arp\&.c\&.
 .PP
-Referenzia list_empty(), list_foreach, arp_cache_entry::macaddr, e value\&.
+References list_empty(), list_foreach, arp_cache_entry::macaddr, and value\&.
 .PP
 .nf
 16                                                                 {
@@ -118,9 +118,9 @@ Referenzia list_empty(), list_foreach, arp_cache_entry::macaddr, e value\&.
 .SS "int arp_recv (\fBnetif_t\fP *netif, void *buf, size_tlength)"
 
 .PP
-Definizione alla linea 67 del file arp\&.c\&.
+Definition at line 67 of file arp\&.c\&.
 .PP
-Referenzia arp_cache_add(), ARP_OPERATION_REPLY, length, e netif::macaddr\&.
+References arp_cache_add(), ARP_OPERATION_REPLY, length, and netif::macaddr\&.
 .PP
 .nf
 67                                                        {
@@ -137,9 +137,9 @@ Referenzia arp_cache_add(), ARP_OPERATION_REPLY, length, e netif::macaddr\&.
 .SS "int arp_send (\fBnetif_t\fP *netif)"
 
 .PP
-Definizione alla linea 79 del file arp\&.c\&.
+Definition at line 79 of file arp\&.c\&.
 .PP
-Referenzia ARP_HWLEN, ARP_HWTYPE, ARP_OPERATION_REQUEST, ARP_PRLEN, ARP_PRTYPE, eth_send(), kfree(), kmalloc(), kprintf, netif::macaddr, netif::name, e NETIF_ARP\&.
+References ARP_HWLEN, ARP_HWTYPE, ARP_OPERATION_REQUEST, ARP_PRLEN, ARP_PRTYPE, eth_send(), kfree(), kmalloc(), kprintf(), netif::macaddr, netif::name, and NETIF_ARP\&.
 .PP
 .nf
 79                              {
@@ -165,12 +165,12 @@ Referenzia ARP_HWLEN, ARP_HWTYPE, ARP_OPERATION_REQUEST, ARP_PRLEN, ARP_PRTYPE, 
 99     return ret;
 100 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBlist_t\fP* arp_cache = NULL"
 
 .PP
-Definizione alla linea 13 del file arp\&.c\&.
-.SH "Autore"
+Definition at line 13 of file arp\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

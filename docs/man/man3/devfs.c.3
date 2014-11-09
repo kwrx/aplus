@@ -1,4 +1,4 @@
-.TH "src/fs/devfs.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/fs/devfs.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -27,9 +27,12 @@ src/fs/devfs.c \-
 \fC#include <aplus/task\&.h>\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
+.ti -1c
+.RI "\fBinode_t\fP * \fBdevfs_getdevice\fP (dev_t dev)"
+.br
 .ti -1c
 .RI "struct \fBinode\fP * \fBdevfs_creat\fP (struct \fBinode\fP *\fBinode\fP, char *\fBname\fP, mode_t mode)"
 .br
@@ -37,7 +40,7 @@ src/fs/devfs.c \-
 .RI "\fBinode_t\fP * \fBdevfs_mount\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -46,108 +49,130 @@ src/fs/devfs.c \-
 .ti -1c
 .RI "\fBtask_t\fP * \fBcurrent_task\fP"
 .br
+.RI "\fICurrent task address\&. \fP"
 .ti -1c
 .RI "\fBinode_t\fP * \fBdevfs\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "struct \fBinode\fP* devfs_creat (struct \fBinode\fP *inode, char *name, mode_tmode)"
 
 .PP
-Definizione alla linea 24 del file devfs\&.c\&.
+Definition at line 35 of file devfs\&.c\&.
 .PP
-Referenzia inode::chown, inode::creat, inode::dev, inode::finddir, inode::flush, inode::gid, task::gid, inode::ino, inode::ioctl, kmalloc(), inode::link, inode::mode, inode::name, inode::nlink, inode::parent, inode::rdev, inode::read, inode::readdir, inode::rename, inode::size, inode::uid, task::uid, inode::unlink, vfs_map(), vfs_mapped(), e inode::write\&.
+References inode::atime, inode::chown, inode::creat, inode::ctime, inode::dev, inode::finddir, inode::flush, inode::gid, task::gid, inode::ino, inode::ioctl, kmalloc(), inode::link, inode::mode, inode::mtime, inode::name, inode::nlink, inode::parent, inode::rdev, inode::read, inode::readdir, inode::rename, inode::size, sys_time(), inode::uid, task::uid, inode::unlink, vfs_map(), vfs_mapped(), and inode::write\&.
 .PP
 .nf
-24                                                                          {
-25     if((void*) vfs_mapped(inode, name) != NULL)
-26         return NULL;
-27         
-28     inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
-29     strcpy(ino->name, name);
-30     
-31     ino->dev = inode->dev;
-32     ino->ino = 0;
-33     ino->mode = mode;
-34     ino->nlink = 0;
-35     ino->uid = current_task->uid;
-36     ino->gid = current_task->gid;
-37     ino->rdev = ino->rdev;
-38     ino->size = (size_t) 0;
-39     //ino->atime = ino->ctime = ino->mtime = time(NULL);
-40     ino->parent = inode;
-41     ino->link = NULL;
-42     
-43     ino->read = NULL;
-44     ino->write = NULL;
-45     ino->readdir = NULL;
-46     ino->finddir = NULL;
-47     ino->creat = NULL;
-48     ino->rename = NULL;
-49     ino->unlink = NULL;
-50     ino->chown = NULL;
-51     ino->flush = NULL;
-52     ino->ioctl = NULL;
+35                                                                          {
+36     if((void*) vfs_mapped(inode, name) != NULL)
+37         return NULL;
+38         
+39     inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
+40     strcpy(ino->name, name);
+41     
+42     ino->dev = inode->dev;
+43     ino->ino = 0;
+44     ino->mode = mode;
+45     ino->nlink = 0;
+46     ino->uid = current_task->uid;
+47     ino->gid = current_task->gid;
+48     ino->rdev = ino->rdev;
+49     ino->size = (size_t) 0;
+50     ino->atime = ino->ctime = ino->mtime = sys_time(NULL);
+51     ino->parent = inode;
+52     ino->link = NULL;
 53     
-54     vfs_map(ino);
-55     
-56     return ino;
-57 }
+54     ino->read = NULL;
+55     ino->write = NULL;
+56     ino->readdir = NULL;
+57     ino->finddir = NULL;
+58     ino->creat = NULL;
+59     ino->rename = NULL;
+60     ino->unlink = NULL;
+61     ino->chown = NULL;
+62     ino->flush = NULL;
+63     ino->ioctl = NULL;
+64     
+65     vfs_map(ino);
+66     
+67     return ino;
+68 }
+.fi
+.SS "\fBinode_t\fP* devfs_getdevice (dev_tdev)"
+
+.PP
+Definition at line 23 of file devfs\&.c\&.
+.PP
+References inode::ino, and vfs_mapped_at_index()\&.
+.PP
+.nf
+23                                     {
+24     int index = 0;
+25     inode_t* map = NULL;
+26 
+27     while((map = (inode_t*) vfs_mapped_at_index(devfs, index++)) != NULL)
+28         if(map->ino == dev)
+29             return map;
+30     
+31     return NULL;
+32 }
 .fi
 .SS "\fBinode_t\fP* devfs_mount ()"
 
 .PP
-Definizione alla linea 60 del file devfs\&.c\&.
+Definition at line 71 of file devfs\&.c\&.
 .PP
-Referenzia inode::chown, inode::creat, inode::dev, devfs, devfs_creat(), inode::finddir, inode::flush, inode::gid, GID_ROOT, inode::ino, inode::ioctl, kmalloc(), inode::link, inode::mode, inode::name, inode::nlink, inode::parent, inode::rdev, inode::read, inode::readdir, inode::rename, inode::size, inode::uid, UID_ROOT, inode::unlink, vfs_root, e inode::write\&.
+References inode::atime, inode::chown, inode::creat, inode::ctime, inode::dev, devfs, devfs_creat(), inode::finddir, inode::flush, inode::gid, GID_ROOT, inode::ino, inode::ioctl, kmalloc(), inode::link, inode::mode, inode::mtime, inode::name, inode::nlink, inode::parent, inode::rdev, inode::read, inode::readdir, inode::rename, inode::size, sys_time(), inode::uid, UID_ROOT, inode::unlink, vfs_root, and inode::write\&.
 .PP
 .nf
-60                        {
-61     
-62     devfs = (inode_t*) kmalloc(sizeof(inode_t));
-63     strcpy(devfs->name, "dev");
-64     
-65     devfs->dev = (dev_t) 0;
-66     devfs->ino = (ino_t) 0;
-67     devfs->mode = S_IFDIR;
-68     devfs->nlink = 0;
-69     devfs->uid = UID_ROOT;
-70     devfs->gid = GID_ROOT;
-71     devfs->rdev = (dev_t) 0;
-72     devfs->size = (size_t) 0;
-73     //devfs->atime = devfs->ctime = devfs->mtime = time(NULL);
-74     devfs->parent = vfs_root;
-75     devfs->link = NULL;
-76     
-77     devfs->read = NULL;
-78     devfs->write = NULL;
-79     devfs->readdir = NULL;
-80     devfs->finddir = NULL;
-81     devfs->creat = devfs_creat;
-82     devfs->rename = NULL;
-83     devfs->unlink = NULL;
-84     devfs->chown = NULL;
-85     devfs->flush = NULL;
-86     devfs->ioctl = NULL;
+71                        {
+72     
+73     devfs = (inode_t*) kmalloc(sizeof(inode_t));
+74     strcpy(devfs->name, "dev");
+75     
+76     devfs->dev = (dev_t) 0;
+77     devfs->ino = (ino_t) 0;
+78     devfs->mode = S_IFDIR;
+79     devfs->nlink = 0;
+80     devfs->uid = UID_ROOT;
+81     devfs->gid = GID_ROOT;
+82     devfs->rdev = (dev_t) 0;
+83     devfs->size = (size_t) 0;
+84     devfs->atime = devfs->ctime = devfs->mtime = sys_time(NULL);
+85     devfs->parent = vfs_root;
+86     devfs->link = NULL;
 87     
-88     return devfs;
-89 }
+88     devfs->read = NULL;
+89     devfs->write = NULL;
+90     devfs->readdir = NULL;
+91     devfs->finddir = NULL;
+92     devfs->creat = devfs_creat;
+93     devfs->rename = NULL;
+94     devfs->unlink = NULL;
+95     devfs->chown = NULL;
+96     devfs->flush = NULL;
+97     devfs->ioctl = NULL;
+98     
+99     return devfs;
+100 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBtask_t\fP* current_task"
 
 .PP
-Definizione alla linea 33 del file sched\&.c\&.
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
 .SS "\fBinode_t\fP* devfs"
 
 .PP
-Definizione alla linea 20 del file devfs\&.c\&.
+Definition at line 20 of file devfs\&.c\&.
 .SS "\fBinode_t\fP* vfs_root"
 
 .PP
-Definizione alla linea 19 del file vfs\&.c\&.
-.SH "Autore"
+Definition at line 19 of file vfs\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

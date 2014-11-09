@@ -10,6 +10,14 @@
 
 extern task_t* current_task;
 
+
+/**
+ * 	\brief Changes the ownership of the file specified by pathname, which is dereferenced if it is a symbolic link.
+ *	\param filename
+ *	\param owner
+ *	\param group
+ *	\return On success, zero is returned. On error, −1 is returned, and errno is set appropriately.
+ */
 int sys_chown(char* filename, uid_t owner, gid_t group) {
 	if(!im_superuser()) {
 		kprintf("sys_chown: only superuser allow to use this function.");

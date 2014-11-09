@@ -1,4 +1,4 @@
-\hypertarget{ioctl_8c}{\section{Riferimenti per il file src/syscall/ioctl.c}
+\hypertarget{ioctl_8c}{\section{src/syscall/ioctl.c File Reference}
 \label{ioctl_8c}\index{src/syscall/ioctl.\+c@{src/syscall/ioctl.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -10,21 +10,21 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{ioctl_8c_a76eeda26d1c9360d2d11b28c4f1be283}{sys\+\_\+ioctl} (int fd, int req, void $\ast$buf)
 \item 
 \hyperlink{ioctl_8c_a88be2ec84300ac3760f30a5858ff7e86}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{ioctl_8c_a76eeda26d1c9360d2d11b28c4f1be283}{sys\+\_\+ioctl}, 20)
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{ioctl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{ioctl_8c_a76eeda26d1c9360d2d11b28c4f1be283}{\index{ioctl.\+c@{ioctl.\+c}!sys\+\_\+ioctl@{sys\+\_\+ioctl}}
 \index{sys\+\_\+ioctl@{sys\+\_\+ioctl}!ioctl.\+c@{ioctl.\+c}}
 \subsubsection[{sys\+\_\+ioctl}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+ioctl (
@@ -36,11 +36,11 @@ int \hyperlink{ioctl_8c_a76eeda26d1c9360d2d11b28c4f1be283}{sys\+\_\+ioctl} (int 
 )}}\label{ioctl_8c_a76eeda26d1c9360d2d11b28c4f1be283}
 
 
-Definizione alla linea 15 del file ioctl.\+c.
+Definition at line 15 of file ioctl.\+c.
 
 
 
-Referenzia errno, task\+::fd, e fs\+\_\+ioctl().
+References errno, task\+::fd, and fs\+\_\+ioctl().
 
 
 \begin{DoxyCode}
@@ -66,11 +66,15 @@ Referenzia errno, task\+::fd, e fs\+\_\+ioctl().
 )}}\label{ioctl_8c_a88be2ec84300ac3760f30a5858ff7e86}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{ioctl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{ioctl.\+c@{ioctl.\+c}!current\+\_\+task@{current\+\_\+task}}
 \index{current\+\_\+task@{current\+\_\+task}!ioctl.\+c@{ioctl.\+c}}
 \subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{ioctl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
 
 
-Definizione alla linea 33 del file sched.\+c.
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
 

@@ -1,4 +1,4 @@
-\hypertarget{mm_8c}{\section{Riferimenti per il file src/mm/mm.c}
+\hypertarget{mm_8c}{\section{src/mm/mm.c File Reference}
 \label{mm_8c}\index{src/mm/mm.\+c@{src/mm/mm.\+c}}
 }
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
@@ -8,12 +8,12 @@
 {\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/list.\+h$>$}\\*
 {\ttfamily \#include $<$grub.\+h$>$}\\*
-\subsection*{Strutture dati}
+\subsection*{Data Structures}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structblock}{block}
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structblock}{block} \hyperlink{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed))
@@ -28,7 +28,7 @@ volatile \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$
 \item 
 int \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\+\_\+init} ()
 \end{DoxyCompactItemize}
-\subsection*{Variabili}
+\subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize}
@@ -47,7 +47,7 @@ size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}{\index{mm.\+c@{mm.\+c}!\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+attribute\+\_\+\+\_\+@{\+\_\+\+\_\+attribute\+\_\+\+\_\+}!mm.\+c@{mm.\+c}}
 \subsubsection[{\+\_\+\+\_\+attribute\+\_\+\+\_\+}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf block} \+\_\+\+\_\+attribute\+\_\+\+\_\+ (
@@ -57,7 +57,7 @@ size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}
 )}}\label{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}
 
 
-Definizione alla linea 47 del file mm.\+c.
+Definition at line 47 of file mm.\+c.
 
 
 \begin{DoxyCode}
@@ -85,11 +85,11 @@ Definizione alla linea 47 del file mm.\+c.
 )}}\label{mm_8c_a069f85a5001d71bc44d8be6532a4e432}
 
 
-Definizione alla linea 66 del file mm.\+c.
+Definition at line 66 of file mm.\+c.
 
 
 
-Referenzia B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), e size.
+References B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), and size.
 
 
 \begin{DoxyCode}
@@ -120,11 +120,11 @@ Referenzia B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), e 
 )}}\label{mm_8c_a0a2a93dff1df0b626cb5ff6d85d0553e}
 
 
-Definizione alla linea 84 del file mm.\+c.
+Definition at line 84 of file mm.\+c.
 
 
 
-Referenzia B\+L\+K\+M\+A\+G\+I\+C, kfree(), e kmalloc().
+References B\+L\+K\+M\+A\+G\+I\+C, kfree(), and kmalloc().
 
 
 \begin{DoxyCode}
@@ -163,11 +163,11 @@ Referenzia B\+L\+K\+M\+A\+G\+I\+C, kfree(), e kmalloc().
 )}}\label{mm_8c_a4e692b1c1f4e04a8b231f1493babb82f}
 
 
-Definizione alla linea 117 del file mm.\+c.
+Definition at line 117 of file mm.\+c.
 
 
 
-Referenzia current\+\_\+heap.
+References current\+\_\+heap.
 
 
 \begin{DoxyCode}
@@ -184,11 +184,11 @@ Referenzia current\+\_\+heap.
 )}}\label{mm_8c_a25db4b3982d49366c88b6be8331b9215}
 
 
-Definizione alla linea 122 del file mm.\+c.
+Definition at line 122 of file mm.\+c.
 
 
 
-Referenzia kheap\+\_\+init(), mbd, Boot\+Info\+\_\+t\+::mem\+\_\+lower, Boot\+Info\+\_\+t\+::mem\+\_\+upper, memsize, vmm\+\_\+init(), e V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y.
+References kheap\+\_\+init(), mbd, Boot\+Info\+\_\+t\+::mem\+\_\+lower, Boot\+Info\+\_\+t\+::mem\+\_\+upper, memsize, vmm\+\_\+init(), and V\+M\+M\+\_\+\+M\+A\+X\+\_\+\+M\+E\+M\+O\+R\+Y.
 
 
 \begin{DoxyCode}
@@ -214,7 +214,7 @@ Referenzia kheap\+\_\+init(), mbd, Boot\+Info\+\_\+t\+::mem\+\_\+lower, Boot\+In
 )}}\label{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}
 
 
-Definizione alla linea 113 del file mm.\+c.
+Definition at line 113 of file mm.\+c.
 
 
 \begin{DoxyCode}
@@ -224,53 +224,53 @@ Definizione alla linea 113 del file mm.\+c.
 \end{DoxyCode}
 
 
-\subsection{Documentazione delle variabili}
+\subsection{Variable Documentation}
 \hypertarget{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{\index{mm.\+c@{mm.\+c}!current\+\_\+heap@{current\+\_\+heap}}
 \index{current\+\_\+heap@{current\+\_\+heap}!mm.\+c@{mm.\+c}}
 \subsubsection[{current\+\_\+heap}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf heap\+\_\+t}$\ast$ current\+\_\+heap}}\label{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}
 
 
-Definizione alla linea 36 del file mm.\+c.
+Definition at line 36 of file mm.\+c.
 
 \hypertarget{mm_8c_a9bed7071511863f81c2de43b3c3f7db9}{\index{mm.\+c@{mm.\+c}!current\+\_\+vmm@{current\+\_\+vmm}}
 \index{current\+\_\+vmm@{current\+\_\+vmm}!mm.\+c@{mm.\+c}}
 \subsubsection[{current\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ current\+\_\+vmm}}\label{mm_8c_a9bed7071511863f81c2de43b3c3f7db9}
 
 
-Definizione alla linea 46 del file paging.\+c.
+Definition at line 46 of file paging.\+c.
 
 \hypertarget{mm_8c_afac53891df03c313fc0b5b24e0acc8a9}{\index{mm.\+c@{mm.\+c}!kernel\+\_\+vmm@{kernel\+\_\+vmm}}
 \index{kernel\+\_\+vmm@{kernel\+\_\+vmm}!mm.\+c@{mm.\+c}}
 \subsubsection[{kernel\+\_\+vmm}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t}$\ast$ kernel\+\_\+vmm}}\label{mm_8c_afac53891df03c313fc0b5b24e0acc8a9}
 
 
-Definizione alla linea 47 del file paging.\+c.
+Definition at line 47 of file paging.\+c.
 
 \hypertarget{mm_8c_a8c61e64b8675498cee79c59d3f8131e2}{\index{mm.\+c@{mm.\+c}!magic@{magic}}
 \index{magic@{magic}!mm.\+c@{mm.\+c}}
 \subsubsection[{magic}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} magic}}\label{mm_8c_a8c61e64b8675498cee79c59d3f8131e2}
 
 
-Definizione alla linea 42 del file mm.\+c.
+Definition at line 42 of file mm.\+c.
 
 \hypertarget{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{\index{mm.\+c@{mm.\+c}!memsize@{memsize}}
 \index{memsize@{memsize}!mm.\+c@{mm.\+c}}
 \subsubsection[{memsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} memsize}}\label{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}
 
 
-Definizione alla linea 35 del file mm.\+c.
+Definition at line 35 of file mm.\+c.
 
 \hypertarget{mm_8c_a854352f53b148adc24983a58a1866d66}{\index{mm.\+c@{mm.\+c}!size@{size}}
 \index{size@{size}!mm.\+c@{mm.\+c}}
 \subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t size}}\label{mm_8c_a854352f53b148adc24983a58a1866d66}
 
 
-Definizione alla linea 43 del file mm.\+c.
+Definition at line 43 of file mm.\+c.
 
 \hypertarget{mm_8c_a3744f58bc6d40534a3e026b2f242ab25}{\index{mm.\+c@{mm.\+c}!vmm\+\_\+queue@{vmm\+\_\+queue}}
 \index{vmm\+\_\+queue@{vmm\+\_\+queue}!mm.\+c@{mm.\+c}}
 \subsubsection[{vmm\+\_\+queue}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ vmm\+\_\+queue}}\label{mm_8c_a3744f58bc6d40534a3e026b2f242ab25}
 
 
-Definizione alla linea 49 del file paging.\+c.
+Definition at line 49 of file paging.\+c.
 

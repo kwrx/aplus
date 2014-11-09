@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['vasprintf',['vasprintf',['../debug_8c.html#a1c492cd47880cc15e2274cd13f62f617',1,'debug.c']]],
   ['vfs_5fchroot',['vfs_chroot',['../vfs_8c.html#ac571ec2fcf268f322214b46a0a8c7e74',1,'vfs.c']]],
   ['vfs_5finit',['vfs_init',['../vfs_8c.html#aca585ca14c08d6c1a07e1b886fc9749a',1,'vfs.c']]],
   ['vfs_5fmap',['vfs_map',['../vfs_8c.html#acb87c78588a46c5526e933c495b69c2a',1,'vfs.c']]],

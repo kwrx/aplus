@@ -1,0 +1,47 @@
+\hypertarget{src_2syscall_2test_8c}{\section{src/syscall/test.c File Reference}
+\label{src_2syscall_2test_8c}\index{src/syscall/test.\+c@{src/syscall/test.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{src_2syscall_2test_8c_a51f2edf7c5fd86bddffcc964a5af69da}{sys\+\_\+test} (int p0, int p1)
+\item 
+\hyperlink{src_2syscall_2test_8c_ae565d7d4913e52eff3d614648de40a22}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{src_2syscall_2test_8c_a51f2edf7c5fd86bddffcc964a5af69da}{sys\+\_\+test}, 1000)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{src_2syscall_2test_8c_a51f2edf7c5fd86bddffcc964a5af69da}{\index{src/syscall/test.\+c@{src/syscall/test.\+c}!sys\+\_\+test@{sys\+\_\+test}}
+\index{sys\+\_\+test@{sys\+\_\+test}!src/syscall/test.\+c@{src/syscall/test.\+c}}
+\subsubsection[{sys\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+test (
+\begin{DoxyParamCaption}
+\item[{int}]{p0, }
+\item[{int}]{p1}
+\end{DoxyParamCaption}
+)}}\label{src_2syscall_2test_8c_a51f2edf7c5fd86bddffcc964a5af69da}
+
+
+Definition at line 4 of file test.\+c.
+
+
+
+References kprintf().
+
+
+\begin{DoxyCode}
+4                              \{
+5     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_test called with (p0: %d; p1: %d)\(\backslash\)n"}, p0, p1);
+6 
+7     \textcolor{keywordflow}{return} 255;
+8 \}
+\end{DoxyCode}
+\hypertarget{src_2syscall_2test_8c_ae565d7d4913e52eff3d614648de40a22}{\index{src/syscall/test.\+c@{src/syscall/test.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!src/syscall/test.\+c@{src/syscall/test.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+test}}]{, }
+\item[{1000}]{}
+\end{DoxyParamCaption}
+)}}\label{src_2syscall_2test_8c_ae565d7d4913e52eff3d614648de40a22}

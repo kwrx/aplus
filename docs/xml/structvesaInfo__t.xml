@@ -140,7 +140,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="113">
+      <node id="119">
         <label>vesaInfo_t</label>
         <link refid="structvesaInfo__t"/>
       </node>

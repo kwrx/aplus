@@ -1,4 +1,4 @@
-.TH "src/mm/paging.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/mm/paging.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,7 +25,7 @@ src/mm/paging.c \-
 \fC#include <grub\&.h>\fP
 .br
 
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -47,7 +47,7 @@ src/mm/paging.c \-
 .RI "#define \fBPTENTRY\fP(x)   ((\fBuint32_t\fP) x << 10 >> 10 >> 12)"
 .br
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
@@ -60,13 +60,13 @@ src/mm/paging.c \-
 .RI "void \fBvmm_disable\fP ()"
 .br
 .ti -1c
-.RI "void * \fBvmm_map\fP (\fBuint32_t\fP *pd, void *paddr, void *vaddr, size_t len, int flags)"
+.RI "void * \fBvmm_map\fP (\fBuint32_t\fP *pd, void *paddr, void *vaddr, size_t len, int \fBflags\fP)"
 .br
 .ti -1c
 .RI "void \fBvmm_umap\fP (\fBuint32_t\fP *pd, void *addr, size_t len)"
 .br
 .ti -1c
-.RI "void * \fBvmm_alloc\fP (void *vaddr, size_t \fBsize\fP, int flags)"
+.RI "void * \fBvmm_alloc\fP (void *vaddr, size_t \fBsize\fP, int \fBflags\fP)"
 .br
 .ti -1c
 .RI "void \fBvmm_mapkernel\fP (\fBuint32_t\fP *\fBdest\fP)"
@@ -81,7 +81,7 @@ src/mm/paging.c \-
 .RI "int \fBvmm_init\fP ()"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
@@ -100,40 +100,40 @@ src/mm/paging.c \-
 .RI "\fBlist_t\fP * \fBvmm_queue\fP"
 .br
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define PDENTRY(x)   ((\fBuint32_t\fP) x >> 22)"
 
 .PP
-Definizione alla linea 38 del file paging\&.c\&.
+Definition at line 38 of file paging\&.c\&.
 .SS "#define PDSIZE   (1024)"
 
 .PP
-Definizione alla linea 37 del file paging\&.c\&.
+Definition at line 37 of file paging\&.c\&.
 .SS "#define PGFLAGS   (0x00000000)"
 
 .PP
-Definizione alla linea 35 del file paging\&.c\&.
+Definition at line 35 of file paging\&.c\&.
 .SS "#define PGSIZE   (\fBBLKSIZE\fP)"
 
 .PP
-Definizione alla linea 34 del file paging\&.c\&.
+Definition at line 34 of file paging\&.c\&.
 .SS "#define PTENTRY(x)   ((\fBuint32_t\fP) x << 10 >> 10 >> 12)"
 
 .PP
-Definizione alla linea 41 del file paging\&.c\&.
+Definition at line 41 of file paging\&.c\&.
 .SS "#define PTSIZE   (1024)"
 
 .PP
-Definizione alla linea 40 del file paging\&.c\&.
-.SH "Documentazione delle funzioni"
+Definition at line 40 of file paging\&.c\&.
+.SH "Function Documentation"
 .PP 
 .SS "void* vmm_alloc (void *vaddr, size_tsize, intflags)"
 
 .PP
-Definizione alla linea 130 del file paging\&.c\&.
+Definition at line 130 of file paging\&.c\&.
 .PP
-Referenzia current_vmm, halloc(), e vmm_map()\&.
+References current_vmm, halloc(), and vmm_map()\&.
 .PP
 .nf
 130                                                      {
@@ -147,9 +147,9 @@ Referenzia current_vmm, halloc(), e vmm_map()\&.
 .SS "\fBuint32_t\fP* vmm_create ()"
 
 .PP
-Definizione alla linea 151 del file paging\&.c\&.
+Definition at line 151 of file paging\&.c\&.
 .PP
-Referenzia kmalloc(), mm_align(), PDSIZE, e uint32_t\&.
+References kmalloc(), mm_align(), PDSIZE, and uint32_t\&.
 .PP
 .nf
 151                        {
@@ -165,9 +165,9 @@ Referenzia kmalloc(), mm_align(), PDSIZE, e uint32_t\&.
 .SS "void vmm_destroy (\fBuint32_t\fP *vmm)"
 
 .PP
-Definizione alla linea 161 del file paging\&.c\&.
+Definition at line 161 of file paging\&.c\&.
 .PP
-Referenzia PDSIZE, e uint32_t\&.
+References PDSIZE, and uint32_t\&.
 .PP
 .nf
 161                                 {
@@ -177,7 +177,7 @@ Referenzia PDSIZE, e uint32_t\&.
 .SS "void vmm_disable ()"
 
 .PP
-Definizione alla linea 65 del file paging\&.c\&.
+Definition at line 65 of file paging\&.c\&.
 .PP
 .nf
 65                    {
@@ -187,7 +187,7 @@ Definizione alla linea 65 del file paging\&.c\&.
 .SS "void vmm_enable ()"
 
 .PP
-Definizione alla linea 60 del file paging\&.c\&.
+Definition at line 60 of file paging\&.c\&.
 .PP
 .nf
 60                   {
@@ -198,14 +198,14 @@ Definizione alla linea 60 del file paging\&.c\&.
 .SS "int vmm_init ()"
 
 .PP
-Definizione alla linea 165 del file paging\&.c\&.
+Definition at line 165 of file paging\&.c\&.
 .PP
-Referenzia halloc(), kernel_vmm, list_init, panic(), PDSIZE, uint32_t, vmm_enable(), vmm_mapkernel(), e vmm_switch()\&.
+References halloc(), kernel_vmm, list_init, panic(), PDSIZE, uint32_t, vmm_enable(), vmm_mapkernel(), and vmm_switch()\&.
 .PP
 .nf
 165                {
 166 
-167     kernel_vmm = halloc(current_heap, PDSIZE * sizeof(uint32_t));
+167     kernel_vmm = (uint32_t*) halloc(current_heap, PDSIZE * sizeof(uint32_t));
 168     if(!kernel_vmm)
 169         panic("Could not initialize VMM");
 170     
@@ -223,12 +223,12 @@ Referenzia halloc(), kernel_vmm, list_init, panic(), PDSIZE, uint32_t, vmm_enabl
 .SS "void* vmm_map (\fBuint32_t\fP *pd, void *paddr, void *vaddr, size_tlen, intflags)"
 
 .PP
-Definizione alla linea 72 del file paging\&.c\&.
+Definition at line 72 of file paging\&.c\&.
 .PP
-Referenzia current_vmm, halloc(), mm_align(), panic(), PDENTRY, PGSIZE, PTENTRY, PTSIZE, uint32_t, e VMM_FLAGS_DEFAULT\&.
+References current_vmm, flags, halloc(), mm_align(), panic(), PDENTRY, PGSIZE, PTENTRY, PTSIZE, uint32_t, and VMM_FLAGS_DEFAULT\&.
 .PP
 .nf
-72                                                                              {  
+72                                                                              { 
 73     if(!pd)
 74         return paddr;
 75         
@@ -267,9 +267,9 @@ Referenzia current_vmm, halloc(), mm_align(), panic(), PDENTRY, PGSIZE, PTENTRY,
 .SS "void vmm_mapkernel (\fBuint32_t\fP *dest)"
 
 .PP
-Definizione alla linea 138 del file paging\&.c\&.
+Definition at line 138 of file paging\&.c\&.
 .PP
-Referenzia memsize, MM_LBASE, MM_LSIZE, mm_vaddr(), VMM_FLAGS_DEFAULT, VMM_FLAGS_USER, e vmm_map()\&.
+References memsize, MM_LBASE, MM_LSIZE, mm_vaddr(), VMM_FLAGS_DEFAULT, VMM_FLAGS_USER, and vmm_map()\&.
 .PP
 .nf
 138                                    {
@@ -286,9 +286,9 @@ Referenzia memsize, MM_LBASE, MM_LSIZE, mm_vaddr(), VMM_FLAGS_DEFAULT, VMM_FLAGS
 .SS "void vmm_switch (\fBuint32_t\fP *addr)"
 
 .PP
-Definizione alla linea 54 del file paging\&.c\&.
+Definition at line 54 of file paging\&.c\&.
 .PP
-Referenzia current_vmm, mm_paddr(), e uint32_t\&.
+References current_vmm, mm_paddr(), and uint32_t\&.
 .PP
 .nf
 54                                 {
@@ -300,9 +300,9 @@ Referenzia current_vmm, mm_paddr(), e uint32_t\&.
 .SS "void vmm_umap (\fBuint32_t\fP *pd, void *addr, size_tlen)"
 
 .PP
-Definizione alla linea 109 del file paging\&.c\&.
+Definition at line 109 of file paging\&.c\&.
 .PP
-Referenzia mm_align(), PDENTRY, PGSIZE, PTENTRY, e uint32_t\&.
+References mm_align(), PDENTRY, PGSIZE, PTENTRY, and uint32_t\&.
 .PP
 .nf
 109                                                     {
@@ -325,28 +325,28 @@ Referenzia mm_align(), PDENTRY, PGSIZE, PTENTRY, e uint32_t\&.
 126     
 127 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "volatile \fBheap_t\fP* current_heap"
 
 .PP
-Definizione alla linea 36 del file mm\&.c\&.
+Definition at line 36 of file mm\&.c\&.
 .SS "\fBuint32_t\fP* current_vmm"
 
 .PP
-Definizione alla linea 46 del file paging\&.c\&.
+Definition at line 46 of file paging\&.c\&.
 .SS "\fBuint32_t\fP* kernel_vmm"
 
 .PP
-Definizione alla linea 47 del file paging\&.c\&.
+Definition at line 47 of file paging\&.c\&.
 .SS "\fBuint32_t\fP memsize"
 
 .PP
-Definizione alla linea 35 del file mm\&.c\&.
+Definition at line 35 of file mm\&.c\&.
 .SS "\fBlist_t\fP* vmm_queue"
 
 .PP
-Definizione alla linea 49 del file paging\&.c\&.
-.SH "Autore"
+Definition at line 49 of file paging\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

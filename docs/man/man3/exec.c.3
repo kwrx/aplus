@@ -1,4 +1,4 @@
-.TH "src/exec.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/exec.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -15,17 +15,19 @@ src/exec.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Strutture dati"
+.SS "Data Structures"
 
 .in +1c
 .ti -1c
 .RI "struct \fBelf32_hdr\fP"
 .br
+.RI "\fIELF32 Header\&. \fP"
 .ti -1c
 .RI "struct \fBelf32_shdr\fP"
 .br
+.RI "\fIELF32 Section Header\&. \fP"
 .in -1c
-.SS "Definizioni"
+.SS "Macros"
 
 .in +1c
 .ti -1c
@@ -128,10 +130,14 @@ src/exec.c \-
 .RI "#define \fBSHF_MASK\fP   0xF0000000"
 .br
 .ti -1c
+.RI "#define \fBELF_DEBUG\fP"
+.br
+.RI "\fIEnable or disable debug for ELF\&. \fP"
+.ti -1c
 .RI "#define \fBcheck\fP(cond)"
 .br
 .in -1c
-.SS "Ridefinizioni di tipo (typedef)"
+.SS "Typedefs"
 
 .in +1c
 .ti -1c
@@ -152,27 +158,31 @@ src/exec.c \-
 .ti -1c
 .RI "typedef struct \fBelf32_hdr\fP \fBelf32_hdr_t\fP"
 .br
+.RI "\fIELF32 Header\&. \fP"
 .ti -1c
 .RI "typedef struct \fBelf32_shdr\fP \fBelf32_shdr_t\fP"
 .br
+.RI "\fIELF32 Section Header\&. \fP"
 .in -1c
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "int \fBelf32_check\fP (\fBelf32_hdr_t\fP *hdr)"
 .br
+.RI "\fICheck for valid ELF32 header\&. \fP"
 .ti -1c
 .RI "void * \fBelf32_load\fP (void *image)"
 .br
+.RI "\fILoad a ELF32 Executable image\&. \fP"
 .in -1c
-.SH "Documentazione delle definizioni"
+.SH "Macro Definition Documentation"
 .PP 
 .SS "#define check(cond)"
-\fBValore:\fP
+\fBValue:\fP
 .PP
 .nf
-if(cond) {                   \\
+if(cond) {                 \\
 			errno = ENOEXEC;     \
             return -1;              \
         }
@@ -180,237 +190,282 @@ if(cond) {                   \\
 .SS "#define EI_CLASS   4"
 
 .PP
-Definizione alla linea 20 del file exec\&.c\&.
+Definition at line 20 of file exec\&.c\&.
 .SS "#define EI_DATA   5"
 
 .PP
-Definizione alla linea 21 del file exec\&.c\&.
+Definition at line 21 of file exec\&.c\&.
 .SS "#define EI_MAG0   0"
 
 .PP
-Definizione alla linea 16 del file exec\&.c\&.
+Definition at line 16 of file exec\&.c\&.
 .SS "#define EI_MAG1   1"
 
 .PP
-Definizione alla linea 17 del file exec\&.c\&.
+Definition at line 17 of file exec\&.c\&.
 .SS "#define EI_MAG2   2"
 
 .PP
-Definizione alla linea 18 del file exec\&.c\&.
+Definition at line 18 of file exec\&.c\&.
 .SS "#define EI_MAG3   3"
 
 .PP
-Definizione alla linea 19 del file exec\&.c\&.
+Definition at line 19 of file exec\&.c\&.
 .SS "#define EI_NIDENT   16"
 
 .PP
-Definizione alla linea 15 del file exec\&.c\&.
+Definition at line 15 of file exec\&.c\&.
 .SS "#define EI_PAD   7"
 
 .PP
-Definizione alla linea 23 del file exec\&.c\&.
+Definition at line 23 of file exec\&.c\&.
 .SS "#define EI_VERSION   6"
 
 .PP
-Definizione alla linea 22 del file exec\&.c\&.
+Definition at line 22 of file exec\&.c\&.
 .SS "#define ELF_CLASS_32   1"
 
 .PP
-Definizione alla linea 30 del file exec\&.c\&.
+Definition at line 30 of file exec\&.c\&.
 .SS "#define ELF_CLASS_64   2"
 
 .PP
-Definizione alla linea 31 del file exec\&.c\&.
+Definition at line 31 of file exec\&.c\&.
 .SS "#define ELF_DATA_LSB   1"
 
 .PP
-Definizione alla linea 33 del file exec\&.c\&.
+Definition at line 33 of file exec\&.c\&.
 .SS "#define ELF_DATA_MSB   2"
 
 .PP
-Definizione alla linea 34 del file exec\&.c\&.
+Definition at line 34 of file exec\&.c\&.
+.SS "#define ELF_DEBUG"
+
+.PP
+Enable or disable debug for ELF\&. 
+.PP
+Definition at line 58 of file exec\&.c\&.
 .SS "#define ELF_MAG0   0x7F"
 
 .PP
-Definizione alla linea 25 del file exec\&.c\&.
+Definition at line 25 of file exec\&.c\&.
 .SS "#define ELF_MAG1   'E'"
 
 .PP
-Definizione alla linea 26 del file exec\&.c\&.
+Definition at line 26 of file exec\&.c\&.
 .SS "#define ELF_MAG2   'L'"
 
 .PP
-Definizione alla linea 27 del file exec\&.c\&.
+Definition at line 27 of file exec\&.c\&.
 .SS "#define ELF_MAG3   'F'"
 
 .PP
-Definizione alla linea 28 del file exec\&.c\&.
+Definition at line 28 of file exec\&.c\&.
 .SS "#define SHF_ALLOC   2"
 
 .PP
-Definizione alla linea 51 del file exec\&.c\&.
+Definition at line 51 of file exec\&.c\&.
 .SS "#define SHF_EXECINSTR   4"
 
 .PP
-Definizione alla linea 52 del file exec\&.c\&.
+Definition at line 52 of file exec\&.c\&.
 .SS "#define SHF_MASK   0xF0000000"
 
 .PP
-Definizione alla linea 53 del file exec\&.c\&.
+Definition at line 53 of file exec\&.c\&.
 .SS "#define SHF_WRITE   1"
 
 .PP
-Definizione alla linea 50 del file exec\&.c\&.
+Definition at line 50 of file exec\&.c\&.
 .SS "#define SHT_DYNAMIC   6"
 
 .PP
-Definizione alla linea 43 del file exec\&.c\&.
+Definition at line 43 of file exec\&.c\&.
 .SS "#define SHT_DYNSYM   11"
 
 .PP
-Definizione alla linea 48 del file exec\&.c\&.
+Definition at line 48 of file exec\&.c\&.
 .SS "#define SHT_HASH   5"
 
 .PP
-Definizione alla linea 42 del file exec\&.c\&.
+Definition at line 42 of file exec\&.c\&.
 .SS "#define SHT_NOBITS   8"
 
 .PP
-Definizione alla linea 45 del file exec\&.c\&.
+Definition at line 45 of file exec\&.c\&.
 .SS "#define SHT_NOTE   7"
 
 .PP
-Definizione alla linea 44 del file exec\&.c\&.
+Definition at line 44 of file exec\&.c\&.
 .SS "#define SHT_NULL   0"
 
 .PP
-Definizione alla linea 37 del file exec\&.c\&.
+Definition at line 37 of file exec\&.c\&.
 .SS "#define SHT_PROGBITS   1"
 
 .PP
-Definizione alla linea 38 del file exec\&.c\&.
+Definition at line 38 of file exec\&.c\&.
 .SS "#define SHT_REL   9"
 
 .PP
-Definizione alla linea 46 del file exec\&.c\&.
+Definition at line 46 of file exec\&.c\&.
 .SS "#define SHT_RELA   4"
 
 .PP
-Definizione alla linea 41 del file exec\&.c\&.
+Definition at line 41 of file exec\&.c\&.
 .SS "#define SHT_SHLIB   10"
 
 .PP
-Definizione alla linea 47 del file exec\&.c\&.
+Definition at line 47 of file exec\&.c\&.
 .SS "#define SHT_STRTAB   3"
 
 .PP
-Definizione alla linea 40 del file exec\&.c\&.
+Definition at line 40 of file exec\&.c\&.
 .SS "#define SHT_SYMTAB   2"
 
 .PP
-Definizione alla linea 39 del file exec\&.c\&.
-.SH "Documentazione delle ridefinizioni di tipo (typedef)"
+Definition at line 39 of file exec\&.c\&.
+.SH "Typedef Documentation"
 .PP 
 .SS "typedef \fBuint32_t\fP \fBElf32_Addr\fP"
 
 .PP
-Definizione alla linea 8 del file exec\&.c\&.
+Definition at line 8 of file exec\&.c\&.
 .SS "typedef \fBuint16_t\fP \fBElf32_Half\fP"
 
 .PP
-Definizione alla linea 9 del file exec\&.c\&.
+Definition at line 9 of file exec\&.c\&.
 .SS "typedef struct \fBelf32_hdr\fP  \fBelf32_hdr_t\fP"
 
+.PP
+ELF32 Header\&. 
 .SS "typedef \fBuint32_t\fP \fBElf32_Off\fP"
 
 .PP
-Definizione alla linea 10 del file exec\&.c\&.
+Definition at line 10 of file exec\&.c\&.
 .SS "typedef struct \fBelf32_shdr\fP  \fBelf32_shdr_t\fP"
 
+.PP
+ELF32 Section Header\&. 
 .SS "typedef int32_t \fBElf32_Sword\fP"
 
 .PP
-Definizione alla linea 11 del file exec\&.c\&.
+Definition at line 11 of file exec\&.c\&.
 .SS "typedef \fBuint32_t\fP \fBElf32_Word\fP"
 
 .PP
-Definizione alla linea 12 del file exec\&.c\&.
-.SH "Documentazione delle funzioni"
+Definition at line 12 of file exec\&.c\&.
+.SH "Function Documentation"
 .PP 
 .SS "int elf32_check (\fBelf32_hdr_t\fP *hdr)"
 
 .PP
-Definizione alla linea 89 del file exec\&.c\&.
+Check for valid ELF32 header\&. 
 .PP
-Referenzia check, elf32_hdr::e_ident, EI_CLASS, EI_DATA, EI_MAG0, EI_MAG1, EI_MAG2, EI_MAG3, ELF_CLASS_32, ELF_DATA_LSB, ELF_MAG0, ELF_MAG1, ELF_MAG2, e ELF_MAG3\&.
+\fBParameters:\fP
+.RS 4
+\fIhdr\fP ELF32 Header\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 for valid header or -1 in case of errors\&. 
+.RE
+.PP
+
+.PP
+Definition at line 104 of file exec\&.c\&.
+.PP
+References check, elf32_hdr::e_ident, EI_CLASS, EI_DATA, EI_MAG0, EI_MAG1, EI_MAG2, EI_MAG3, ELF_CLASS_32, ELF_DATA_LSB, ELF_MAG0, ELF_MAG1, ELF_MAG2, and ELF_MAG3\&.
 .PP
 .nf
-89                                   {
-90 
-91     #define check(cond)             \
-92         if(cond) {                  \
-93             errno = ENOEXEC;        \
-94             return -1;              \
-95         }
-96 
-97     check(
-98         (hdr->e_ident[EI_MAG0] != ELF_MAG0) ||
-99         (hdr->e_ident[EI_MAG1] != ELF_MAG1) ||
-100         (hdr->e_ident[EI_MAG2] != ELF_MAG2) ||
-101         (hdr->e_ident[EI_MAG3] != ELF_MAG3)
-102     )
-103 
-104     check(hdr->e_ident[EI_CLASS] != ELF_CLASS_32)
-105     check(hdr->e_ident[EI_DATA] != ELF_DATA_LSB)
-106 
-107     return 0;
-108 }
+104                                   {
+105 
+106     #define check(cond)             \
+107         if(cond) {                  \
+108             errno = ENOEXEC;        \
+109             return -1;              \
+110         }
+111 
+112     check(
+113         (hdr->e_ident[EI_MAG0] != ELF_MAG0) ||
+114         (hdr->e_ident[EI_MAG1] != ELF_MAG1) ||
+115         (hdr->e_ident[EI_MAG2] != ELF_MAG2) ||
+116         (hdr->e_ident[EI_MAG3] != ELF_MAG3)
+117     )
+118 
+119     check(hdr->e_ident[EI_CLASS] != ELF_CLASS_32)
+120     check(hdr->e_ident[EI_DATA] != ELF_DATA_LSB)
+121 
+122     return 0;
+123 }
 .fi
 .SS "void* elf32_load (void *image)"
 
 .PP
-Definizione alla linea 111 del file exec\&.c\&.
+Load a ELF32 Executable image\&. 
 .PP
-Referenzia elf32_hdr::e_shoff, elf32_check(), errno, kprintf, MM_UBASE, MM_USIZE, panic(), elf32_shdr::sh_addr, elf32_shdr::sh_offset, elf32_shdr::sh_size, uint32_t, vmm_alloc(), VMM_FLAGS_DEFAULT, e VMM_FLAGS_USER\&.
+\fBParameters:\fP
+.RS 4
+\fIimage\fP pointer to buffer address of a executable loaded in memory\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Entry Point address\&. 
+.RE
+.PP
+
+.PP
+Definition at line 131 of file exec\&.c\&.
+.PP
+References elf32_hdr::e_shoff, elf32_check(), errno, kprintf(), MM_UBASE, MM_USIZE, panic(), elf32_shdr::sh_addr, elf32_shdr::sh_offset, elf32_shdr::sh_size, uint32_t, vmm_alloc(), VMM_FLAGS_DEFAULT, and VMM_FLAGS_USER\&.
 .PP
 .nf
-111                               {
-112     if(image == NULL) {
-113         errno = EINVAL;
-114         return NULL;
-115     }
-116 
-117     if(elf32_check(image) < 0)
-118         return NULL;
-119 
-120     elf32_hdr_t* hdr = (elf32_hdr_t*) image;
-121     elf32_shdr_t* sec = (elf32_shdr_t*) ((uint32_t) hdr->e_shoff + (uint32_t) hdr);
-122     
-123     int sn = hdr->e_shnum;
-124     int ss = hdr->e_shentsize;
-125      
-126     for(int i = 0; i < sn; i++) {
-127         if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
-128             panic("elf section overflow");
-129             
-130 
-131 #ifdef ELF_DEBUG
-132         kprintf("elf: copy section to 0x%8x (%d KB)\n", sec->sh_addr, sh->sh_size / 1024);
-133 #endif
-134         
-135         if(sec->sh_addr && sec->sh_offset) {
-136             if(vmm_alloc((void*) sec->sh_addr, sec->sh_size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER))
-137                 memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
-138             else
-139                 panic("elf: cannot allocate memory");
-140         }
-141 
-142         sec = (elf32_shdr_t*) ((uint32_t) sec + ss);
-143     }
-144 
-145     return (void*) hdr->e_entry;
-146 }
+131                               {
+132     if(image == NULL) {
+133         errno = EINVAL;
+134         return NULL;
+135     }
+136 
+137     if(elf32_check(image) < 0)
+138         return NULL;
+139 
+140     elf32_hdr_t* hdr = (elf32_hdr_t*) image;
+141     elf32_shdr_t* sec = (elf32_shdr_t*) ((uint32_t) hdr->e_shoff + (uint32_t) hdr);
+142     
+143     int sn = hdr->e_shnum;
+144     int ss = hdr->e_shentsize;
+145      
+146     for(int i = 0; i < sn; i++) {
+147         
+148         if(sec->sh_addr && sec->sh_offset) {
+149 
+150 #ifdef ELF_DEBUG
+151             kprintf("elf: copy section to 0x%8x (%d Bytes)\n", sec->sh_addr, sec->sh_size);
+152 #endif
+153 
+154 
+155             if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
+156                 panic("elf section overflow");
+157             
+158 
+159             if(vmm_alloc((void*) sec->sh_addr, sec->sh_size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER))
+160                 memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
+161             else
+162                 panic("elf: cannot allocate memory");
+163         }
+164 
+165         sec = (elf32_shdr_t*) ((uint32_t) sec + ss);
+166     }
+167 
+168 #ifdef ELF_DEBUG
+169     kprintf("elf: entrypoint at 0x%8x\n", hdr->e_entry);
+170 #endif
+171 
+172     return (void*) hdr->e_entry;
+173 }
 .fi
-.SH "Autore"
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

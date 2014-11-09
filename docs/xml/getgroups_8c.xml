@@ -12,156 +12,156 @@
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1464">
+      <node id="1656">
         <label>sys/stat.h</label>
       </node>
-      <node id="1453">
+      <node id="1645">
         <label>stdarg.h</label>
       </node>
-      <node id="1456">
+      <node id="1648">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1451" relation="include">
+        <childnode refid="1643" relation="include">
         </childnode>
-        <childnode refid="1457" relation="include">
+        <childnode refid="1649" relation="include">
         </childnode>
-        <childnode refid="1452" relation="include">
+        <childnode refid="1644" relation="include">
         </childnode>
-        <childnode refid="1454" relation="include">
+        <childnode refid="1646" relation="include">
         </childnode>
-        <childnode refid="1459" relation="include">
+        <childnode refid="1651" relation="include">
         </childnode>
       </node>
-      <node id="1463">
+      <node id="1655">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1452" relation="include">
+        <childnode refid="1644" relation="include">
         </childnode>
-        <childnode refid="1458" relation="include">
+        <childnode refid="1650" relation="include">
         </childnode>
-        <childnode refid="1459" relation="include">
+        <childnode refid="1651" relation="include">
         </childnode>
-        <childnode refid="1464" relation="include">
+        <childnode refid="1656" relation="include">
         </childnode>
-        <childnode refid="1465" relation="include">
+        <childnode refid="1657" relation="include">
         </childnode>
       </node>
-      <node id="1452">
+      <node id="1644">
         <label>stdint.h</label>
       </node>
-      <node id="1455">
+      <node id="1647">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1451" relation="include">
+        <childnode refid="1643" relation="include">
         </childnode>
-        <childnode refid="1456" relation="include">
+        <childnode refid="1648" relation="include">
         </childnode>
-        <childnode refid="1452" relation="include">
+        <childnode refid="1644" relation="include">
         </childnode>
       </node>
-      <node id="1450">
+      <node id="1642">
         <label>src/syscall/getgroups.c</label>
         <link refid="getgroups.c"/>
-        <childnode refid="1451" relation="include">
+        <childnode refid="1643" relation="include">
         </childnode>
-        <childnode refid="1455" relation="include">
+        <childnode refid="1647" relation="include">
         </childnode>
-        <childnode refid="1462" relation="include">
+        <childnode refid="1654" relation="include">
         </childnode>
-        <childnode refid="1463" relation="include">
+        <childnode refid="1655" relation="include">
         </childnode>
-        <childnode refid="1466" relation="include">
+        <childnode refid="1658" relation="include">
         </childnode>
-        <childnode refid="1469" relation="include">
+        <childnode refid="1661" relation="include">
         </childnode>
-        <childnode refid="1470" relation="include">
+        <childnode refid="1662" relation="include">
         </childnode>
-        <childnode refid="1464" relation="include">
+        <childnode refid="1656" relation="include">
         </childnode>
-        <childnode refid="1465" relation="include">
+        <childnode refid="1657" relation="include">
         </childnode>
       </node>
-      <node id="1468">
+      <node id="1660">
         <label>setjmp.h</label>
       </node>
-      <node id="1462">
+      <node id="1654">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1452" relation="include">
+        <childnode refid="1644" relation="include">
         </childnode>
-        <childnode refid="1451" relation="include">
+        <childnode refid="1643" relation="include">
         </childnode>
-        <childnode refid="1463" relation="include">
+        <childnode refid="1655" relation="include">
         </childnode>
-        <childnode refid="1467" relation="include">
+        <childnode refid="1659" relation="include">
         </childnode>
-        <childnode refid="1459" relation="include">
+        <childnode refid="1651" relation="include">
         </childnode>
-        <childnode refid="1468" relation="include">
+        <childnode refid="1660" relation="include">
         </childnode>
       </node>
-      <node id="1470">
+      <node id="1662">
         <label>errno.h</label>
       </node>
-      <node id="1469">
+      <node id="1661">
         <label>fcntl.h</label>
       </node>
-      <node id="1458">
+      <node id="1650">
         <label>stddef.h</label>
       </node>
-      <node id="1457">
+      <node id="1649">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1458" relation="include">
+        <childnode refid="1650" relation="include">
         </childnode>
-        <childnode refid="1452" relation="include">
+        <childnode refid="1644" relation="include">
         </childnode>
-        <childnode refid="1459" relation="include">
+        <childnode refid="1651" relation="include">
         </childnode>
-        <childnode refid="1460" relation="include">
+        <childnode refid="1652" relation="include">
         </childnode>
-        <childnode refid="1461" relation="include">
+        <childnode refid="1653" relation="include">
         </childnode>
       </node>
-      <node id="1451">
+      <node id="1643">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1452" relation="include">
+        <childnode refid="1644" relation="include">
         </childnode>
-        <childnode refid="1453" relation="include">
+        <childnode refid="1645" relation="include">
         </childnode>
-        <childnode refid="1454" relation="include">
+        <childnode refid="1646" relation="include">
         </childnode>
       </node>
-      <node id="1459">
+      <node id="1651">
         <label>sys/types.h</label>
       </node>
-      <node id="1454">
+      <node id="1646">
         <label>string.h</label>
       </node>
-      <node id="1466">
+      <node id="1658">
         <label>unistd.h</label>
       </node>
-      <node id="1467">
+      <node id="1659">
         <label>signal.h</label>
       </node>
-      <node id="1461">
+      <node id="1653">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1452" relation="include">
+        <childnode refid="1644" relation="include">
         </childnode>
-        <childnode refid="1462" relation="include">
+        <childnode refid="1654" relation="include">
         </childnode>
       </node>
-      <node id="1465">
+      <node id="1657">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1466" relation="include">
+        <childnode refid="1658" relation="include">
         </childnode>
-        <childnode refid="1459" relation="include">
+        <childnode refid="1651" relation="include">
         </childnode>
       </node>
-      <node id="1460">
+      <node id="1652">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -173,12 +173,12 @@
         <argsstring></argsstring>
         <name>current_task</name>
         <briefdescription>
-        </briefdescription>
+<para>Current task address. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/getgroups.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="33" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/getgroups.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="getgroups_8c_1aab455defff8fa5fdd0fd0b6f64377979" prot="public" static="yes" mutable="no">
         <type>gid_t</type>
@@ -263,7 +263,7 @@
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8h_1a6120fde6185466f2810fd0457009aaf0" kindref="member">GID_SUPERUSER</ref>,<sp/>0</highlight></codeline>
 <codeline lineno="16"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="17"><highlight class="normal"></highlight></codeline>
-<codeline lineno="18" refid="getgroups_8c_1a4c13ff0868630ec89b5148b58bcaf9db" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="getgroups_8c_1a4c13ff0868630ec89b5148b58bcaf9db" kindref="member">sys_getgroups</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>,<sp/>gid_t*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="18" refid="getgroups_8c_1a4c13ff0868630ec89b5148b58bcaf9db" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="getgroups_8c_1a4c13ff0868630ec89b5148b58bcaf9db" kindref="member">sys_getgroups</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" kindref="member">length</ref>,<sp/>gid_t*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(length<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
 <codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
 <codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>

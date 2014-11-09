@@ -1,0 +1,47 @@
+\hypertarget{fsys_8h}{\section{src/include/aplus/fsys.h File Reference}
+\label{fsys_8h}\index{src/include/aplus/fsys.\+h@{src/include/aplus/fsys.\+h}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/attribute.\+h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfsys}{fsys}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{fsys_8h_a21463ca997e1f7e340e85fc8b65f7eb6}{F\+S\+Y\+S}(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, mount)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structfsys}{fsys} \hyperlink{fsys_8h_acb8db2fb3f178fd1a25c759bdfc50d17}{fsys\+\_\+t}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{fsys_8h_a21463ca997e1f7e340e85fc8b65f7eb6}{\index{fsys.\+h@{fsys.\+h}!F\+S\+Y\+S@{F\+S\+Y\+S}}
+\index{F\+S\+Y\+S@{F\+S\+Y\+S}!fsys.\+h@{fsys.\+h}}
+\subsubsection[{F\+S\+Y\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define F\+S\+Y\+S(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf name}, }
+\item[{}]{mount}
+\end{DoxyParamCaption}
+)}}\label{fsys_8h_a21463ca997e1f7e340e85fc8b65f7eb6}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{static} \hyperlink{structfsys}{fsys\_t} fs\_##\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name} = \{                                               \(\backslash\)
+\textcolor{preprocessor}{        #name, mount                                                        \(\backslash\)}
+\textcolor{preprocessor}{    \}; ATTRIBUTE("fs", fs\_##name)}
+\end{DoxyCode}
+
+
+Definition at line 12 of file fsys.\+h.
+
+
+
+\subsection{Typedef Documentation}
+\hypertarget{fsys_8h_acb8db2fb3f178fd1a25c759bdfc50d17}{\index{fsys.\+h@{fsys.\+h}!fsys\+\_\+t@{fsys\+\_\+t}}
+\index{fsys\+\_\+t@{fsys\+\_\+t}!fsys.\+h@{fsys.\+h}}
+\subsubsection[{fsys\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf fsys}  {\bf fsys\+\_\+t}}}\label{fsys_8h_acb8db2fb3f178fd1a25c759bdfc50d17}

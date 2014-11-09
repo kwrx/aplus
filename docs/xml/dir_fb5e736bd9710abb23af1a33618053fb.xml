@@ -24,7 +24,8 @@
     <innerfile refid="src_2syscall_2readdir_8c">readdir.c</innerfile>
     <innerfile refid="sbrk_8c">sbrk.c</innerfile>
     <innerfile refid="stat_8c">stat.c</innerfile>
-    <innerfile refid="test_8c">test.c</innerfile>
+    <innerfile refid="src_2syscall_2test_8c">test.c</innerfile>
+    <innerfile refid="time_8c">time.c</innerfile>
     <innerfile refid="times_8c">times.c</innerfile>
     <innerfile refid="umount_8c">umount.c</innerfile>
     <innerfile refid="unlink_8c">unlink.c</innerfile>

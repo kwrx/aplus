@@ -1,8 +1,8 @@
-\hypertarget{posix_2hooks_8h}{\section{Riferimenti per il file usr/src/libpthread/src/platform/posix/hooks.h}
+\hypertarget{posix_2hooks_8h}{\section{usr/src/libpthread/src/platform/posix/hooks.h File Reference}
 \label{posix_2hooks_8h}\index{usr/src/libpthread/src/platform/posix/hooks.\+h@{usr/src/libpthread/src/platform/posix/hooks.\+h}}
 }
 {\ttfamily \#include $<$sched.\+h$>$}\\*
-\subsection*{Definizioni}
+\subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{posix_2hooks_8h_a369266c24eacffb87046522897a570d5}{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}
@@ -15,7 +15,7 @@
 \item 
 \#define \hyperlink{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\+\_\+\+\_\+os\+\_\+gettid}()~\hyperlink{posix_2hooks_8h_a2ccdeb931b6cfcf884ca5ad73e0ba11c}{getpid}()
 \end{DoxyCompactItemize}
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{posix_2hooks_8h_ab116309fb8890770660ba2cc84d797fe}{clone} (int($\ast$fn)(void $\ast$), void $\ast$, int, void $\ast$)
@@ -26,7 +26,7 @@ int \hyperlink{posix_2hooks_8h_a2ccdeb931b6cfcf884ca5ad73e0ba11c}{getpid} ()
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle definizioni}
+\subsection{Macro Definition Documentation}
 \hypertarget{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\index{posix/hooks.\+h@{posix/hooks.\+h}!\+\_\+\+\_\+os\+\_\+gettid@{\+\_\+\+\_\+os\+\_\+gettid}}
 \index{\+\_\+\+\_\+os\+\_\+gettid@{\+\_\+\+\_\+os\+\_\+gettid}!posix/hooks.\+h@{posix/hooks.\+h}}
 \subsubsection[{\+\_\+\+\_\+os\+\_\+gettid}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+\_\+os\+\_\+gettid(
@@ -36,7 +36,7 @@ int \hyperlink{posix_2hooks_8h_a2ccdeb931b6cfcf884ca5ad73e0ba11c}{getpid} ()
 )~{\bf getpid}()}}\label{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}
 
 
-Definizione alla linea 18 del file hooks.\+h.
+Definition at line 18 of file hooks.\+h.
 
 \hypertarget{posix_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}{\index{posix/hooks.\+h@{posix/hooks.\+h}!\+\_\+\+\_\+os\+\_\+thread\+\_\+create@{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}}
 \index{\+\_\+\+\_\+os\+\_\+thread\+\_\+create@{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}!posix/hooks.\+h@{posix/hooks.\+h}}
@@ -49,7 +49,7 @@ Definizione alla linea 18 del file hooks.\+h.
 )~{\bf clone}((int($\ast$)(void$\ast$)) e, N\+U\+L\+L, {\bf C\+L\+O\+N\+E\+\_\+\+V\+M}, a)}}\label{posix_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}
 
 
-Definizione alla linea 16 del file hooks.\+h.
+Definition at line 16 of file hooks.\+h.
 
 \hypertarget{posix_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}{\index{posix/hooks.\+h@{posix/hooks.\+h}!\+\_\+\+\_\+os\+\_\+thread\+\_\+kill@{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}}
 \index{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill@{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}!posix/hooks.\+h@{posix/hooks.\+h}}
@@ -61,25 +61,25 @@ Definizione alla linea 16 del file hooks.\+h.
 )~{\bf kill}(t, s)}}\label{posix_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}
 
 
-Definizione alla linea 17 del file hooks.\+h.
+Definition at line 17 of file hooks.\+h.
 
 \hypertarget{posix_2hooks_8h_a369266c24eacffb87046522897a570d5}{\index{posix/hooks.\+h@{posix/hooks.\+h}!\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E@{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}}
 \index{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E@{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}!posix/hooks.\+h@{posix/hooks.\+h}}
 \subsubsection[{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define \+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}}\label{posix_2hooks_8h_a369266c24eacffb87046522897a570d5}
 
 
-Definizione alla linea 4 del file hooks.\+h.
+Definition at line 4 of file hooks.\+h.
 
 \hypertarget{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}{\index{posix/hooks.\+h@{posix/hooks.\+h}!C\+L\+O\+N\+E\+\_\+\+V\+M@{C\+L\+O\+N\+E\+\_\+\+V\+M}}
 \index{C\+L\+O\+N\+E\+\_\+\+V\+M@{C\+L\+O\+N\+E\+\_\+\+V\+M}!posix/hooks.\+h@{posix/hooks.\+h}}
 \subsubsection[{C\+L\+O\+N\+E\+\_\+\+V\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+O\+N\+E\+\_\+\+V\+M~0}}\label{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}
 
 
-Definizione alla linea 12 del file hooks.\+h.
+Definition at line 12 of file hooks.\+h.
 
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{posix_2hooks_8h_ab116309fb8890770660ba2cc84d797fe}{\index{posix/hooks.\+h@{posix/hooks.\+h}!clone@{clone}}
 \index{clone@{clone}!posix/hooks.\+h@{posix/hooks.\+h}}
 \subsubsection[{clone}]{\setlength{\rightskip}{0pt plus 5cm}int clone (

@@ -15,188 +15,188 @@
     <includes local="no">errno.h</includes>
     <includes refid="slirp_8h" local="yes">slirp.h</includes>
     <incdepgraph>
-      <node id="1176">
+      <node id="1368">
         <label>sys/stat.h</label>
       </node>
-      <node id="1166">
+      <node id="1358">
         <label>stdarg.h</label>
       </node>
-      <node id="1183">
+      <node id="1375">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1164" relation="include">
+        <childnode refid="1356" relation="include">
         </childnode>
-        <childnode refid="1182" relation="include">
+        <childnode refid="1374" relation="include">
         </childnode>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1167" relation="include">
+        <childnode refid="1359" relation="include">
         </childnode>
-        <childnode refid="1172" relation="include">
+        <childnode refid="1364" relation="include">
         </childnode>
       </node>
-      <node id="1175">
+      <node id="1367">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1170" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
-        <childnode refid="1172" relation="include">
+        <childnode refid="1364" relation="include">
         </childnode>
-        <childnode refid="1176" relation="include">
+        <childnode refid="1368" relation="include">
         </childnode>
-        <childnode refid="1177" relation="include">
+        <childnode refid="1369" relation="include">
         </childnode>
       </node>
-      <node id="1163">
+      <node id="1355">
         <label>src/net/slirp/slirp.c</label>
         <link refid="slirp.c"/>
-        <childnode refid="1164" relation="include">
+        <childnode refid="1356" relation="include">
         </childnode>
-        <childnode refid="1168" relation="include">
+        <childnode refid="1360" relation="include">
         </childnode>
-        <childnode refid="1171" relation="include">
+        <childnode refid="1363" relation="include">
         </childnode>
-        <childnode refid="1181" relation="include">
+        <childnode refid="1373" relation="include">
         </childnode>
-        <childnode refid="1174" relation="include">
+        <childnode refid="1366" relation="include">
         </childnode>
-        <childnode refid="1173" relation="include">
+        <childnode refid="1365" relation="include">
         </childnode>
-        <childnode refid="1182" relation="include">
+        <childnode refid="1374" relation="include">
         </childnode>
-        <childnode refid="1183" relation="include">
+        <childnode refid="1375" relation="include">
         </childnode>
-        <childnode refid="1167" relation="include">
+        <childnode refid="1359" relation="include">
         </childnode>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1184" relation="include">
+        <childnode refid="1376" relation="include">
         </childnode>
-        <childnode refid="1185" relation="include">
+        <childnode refid="1377" relation="include">
         </childnode>
       </node>
-      <node id="1185">
+      <node id="1377">
         <label>slirp.h</label>
         <link refid="slirp_8h"/>
       </node>
-      <node id="1165">
+      <node id="1357">
         <label>stdint.h</label>
       </node>
-      <node id="1180">
+      <node id="1372">
         <label>setjmp.h</label>
       </node>
-      <node id="1174">
+      <node id="1366">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1164" relation="include">
+        <childnode refid="1356" relation="include">
         </childnode>
-        <childnode refid="1175" relation="include">
+        <childnode refid="1367" relation="include">
         </childnode>
-        <childnode refid="1179" relation="include">
+        <childnode refid="1371" relation="include">
         </childnode>
-        <childnode refid="1172" relation="include">
+        <childnode refid="1364" relation="include">
         </childnode>
-        <childnode refid="1180" relation="include">
+        <childnode refid="1372" relation="include">
         </childnode>
       </node>
-      <node id="1184">
+      <node id="1376">
         <label>errno.h</label>
       </node>
-      <node id="1169">
+      <node id="1361">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="1164" relation="include">
+        <childnode refid="1356" relation="include">
         </childnode>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
       </node>
-      <node id="1170">
+      <node id="1362">
         <label>stddef.h</label>
       </node>
-      <node id="1182">
+      <node id="1374">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1170" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1172" relation="include">
+        <childnode refid="1364" relation="include">
         </childnode>
-        <childnode refid="1173" relation="include">
+        <childnode refid="1365" relation="include">
         </childnode>
-        <childnode refid="1181" relation="include">
+        <childnode refid="1373" relation="include">
         </childnode>
       </node>
-      <node id="1164">
+      <node id="1356">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1166" relation="include">
+        <childnode refid="1358" relation="include">
         </childnode>
-        <childnode refid="1167" relation="include">
+        <childnode refid="1359" relation="include">
         </childnode>
       </node>
-      <node id="1172">
+      <node id="1364">
         <label>sys/types.h</label>
       </node>
-      <node id="1167">
+      <node id="1359">
         <label>string.h</label>
       </node>
-      <node id="1178">
+      <node id="1370">
         <label>unistd.h</label>
       </node>
-      <node id="1179">
+      <node id="1371">
         <label>signal.h</label>
       </node>
-      <node id="1168">
+      <node id="1360">
         <label>aplus/netif.h</label>
         <link refid="netif_8h"/>
-        <childnode refid="1164" relation="include">
+        <childnode refid="1356" relation="include">
         </childnode>
-        <childnode refid="1169" relation="include">
+        <childnode refid="1361" relation="include">
         </childnode>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1170" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
       </node>
-      <node id="1181">
+      <node id="1373">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1174" relation="include">
+        <childnode refid="1366" relation="include">
         </childnode>
       </node>
-      <node id="1177">
+      <node id="1369">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1178" relation="include">
+        <childnode refid="1370" relation="include">
         </childnode>
-        <childnode refid="1172" relation="include">
+        <childnode refid="1364" relation="include">
         </childnode>
       </node>
-      <node id="1173">
+      <node id="1365">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
-      <node id="1171">
+      <node id="1363">
         <label>aplus/bufio.h</label>
         <link refid="bufio_8h"/>
-        <childnode refid="1165" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
-        <childnode refid="1170" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
-        <childnode refid="1172" relation="include">
+        <childnode refid="1364" relation="include">
         </childnode>
-        <childnode refid="1173" relation="include">
+        <childnode refid="1365" relation="include">
         </childnode>
-        <childnode refid="1174" relation="include">
+        <childnode refid="1366" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -256,7 +256,7 @@
         <references refid="ipv4_8c_1aef7e4d9aa0ca33ce3ed3d39d613ebf64" compoundref="ipv4_8c" startline="71" endline="114">ipv4_recv</references>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
-        <references refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" compoundref="aplus_8h" startline="147">kprintf</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
         <references refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" compoundref="slirp_8c" startline="23">slirpcard::netif</references>
         <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
         <references refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" compoundref="slirp_8c" startline="21">slirpcard::offset</references>
@@ -304,7 +304,7 @@
         <references refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" compoundref="netif_8h" startline="35">netif::data</references>
         <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
         <references refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" compoundref="slirp_8c" startline="22">slirpcard::ioport</references>
-        <references refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" compoundref="ipv4_8h" startline="49">length</references>
+        <references refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" compoundref="iso9660_8h" startline="77">length</references>
         <references refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" compoundref="slirp_8c" startline="17">slirpcard::magic</references>
         <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
         <references refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" compoundref="serial_8c" startline="11" endline="14">serial_send</references>
@@ -446,7 +446,7 @@
 <codeline lineno="25"><highlight class="normal"></highlight></codeline>
 <codeline lineno="26" refid="slirp_8c_1a0f272b2d098a6c4df9edf6a275a4447f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structslirpcard" kindref="compound">slirpcard_t</ref>*<sp/><ref refid="structslirpcard" kindref="compound">slirpcard</ref><sp/>=<sp/>NULL;</highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28" refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" kindref="member">slirp_handler</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>unused)<sp/>{</highlight></codeline>
+<codeline lineno="28" refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a9a785c2d315f8be2a79b4831767c9b95" kindref="member">slirp_handler</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="iso9660_8h_1a1b319c7708ab2832a7c18a65b8a255e0" kindref="member">unused</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(slirpcard<sp/>==<sp/>NULL)</highlight></codeline>
 <codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="31"><highlight class="normal"></highlight></codeline>
@@ -455,7 +455,7 @@
 <codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1af0b53ac0b8d6868da6396b11b30519c1" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;slirp:<sp/>received<sp/>data\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;slirp:<sp/>received<sp/>data\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="38"><highlight class="normal"></highlight></codeline>
 <codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref><sp/>=<sp/><ref refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" kindref="member">serial_recv</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>);</highlight></codeline>
 <codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(slirpcard-&gt;<ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref><sp/>==<sp/>0)<sp/>{</highlight></codeline>
@@ -503,7 +503,7 @@
 <codeline lineno="82"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="83"><highlight class="normal"></highlight></codeline>
 <codeline lineno="84"><highlight class="normal"></highlight></codeline>
-<codeline lineno="85" refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" kindref="member">slirp_send</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="eth_8h_1acb5cfd209ba75c853d03f701e7f91679" kindref="member">type</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="85" refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a5bb8edbc515f4ca455cdfff6c75cf708" kindref="member">slirp_send</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" kindref="member">length</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a6def72cbab7e986d0ac5dc7291e1394a" kindref="member">type</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((netif-&gt;<ref refid="structnetif_1a07586ae7a31c1231781af7394ce41659" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kindref="member">NETIF_FLAGS_ENABLE</ref>)<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="88"><highlight class="normal"></highlight></codeline>
@@ -515,7 +515,7 @@
 <codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>);</highlight></codeline>
 <codeline lineno="95"><highlight class="normal"></highlight></codeline>
 <codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>*<sp/>b<sp/>=<sp/>(<ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref>*)<sp/>buf;</highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" kindref="member">length</ref>;<sp/>i++)<sp/>{</highlight></codeline>
 <codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(b[i])<sp/>{</highlight></codeline>
 <codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>:</highlight></codeline>
 <codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1ab1ab0ab4001d8bdbfe07457776e58579" kindref="member">SLIRP_PACKET_ESC</ref>);</highlight></codeline>
@@ -534,7 +534,7 @@
 <codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="114"><highlight class="normal"></highlight></codeline>
 <codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" kindref="member">serial_send</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>,<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>);</highlight></codeline>
-<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="ipv4_8h_1a1892eba2086d12ac2b09005aeb09ea3b" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" kindref="member">length</ref>;</highlight></codeline>
 <codeline lineno="117"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="118"><highlight class="normal"></highlight></codeline>
 <codeline lineno="119" refid="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="slirp_8c_1a6edb6b8f286eafaf6272e6e024c70934" kindref="member">slirp_ifup</ref>(<ref refid="structnetif" kindref="compound">netif_t</ref>*<sp/><ref refid="structnetif" kindref="compound">netif</ref>)<sp/>{</highlight></codeline>

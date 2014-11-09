@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_self.c" 3 "Dom 9 Nov 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_self.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -13,28 +13,28 @@ usr/src/libpthread/src/pthread_self.c \-
 \fC#include 'pthread_internal\&.h'\fP
 .br
 
-.SS "Funzioni"
+.SS "Functions"
 
 .in +1c
 .ti -1c
 .RI "\fBPUBLIC\fP \fBpthread_t\fP \fBpthread_self\fP (void)"
 .br
 .in -1c
-.SS "Variabili"
+.SS "Variables"
 
 .in +1c
 .ti -1c
 .RI "\fBEXTERN\fP \fBpthread_context_t\fP * \fB__pthread_queue\fP"
 .br
 .in -1c
-.SH "Documentazione delle funzioni"
+.SH "Function Documentation"
 .PP 
 .SS "\fBPUBLIC\fP \fBpthread_t\fP pthread_self (void)"
 
 .PP
-Definizione alla linea 10 del file pthread_self\&.c\&.
+Definition at line 10 of file pthread_self\&.c\&.
 .PP
-Referenzia __os_gettid, __pthread_queue, errno, pthread_context::next, e pthread_context::tid\&.
+References __os_gettid, __pthread_queue, errno, pthread_context::next, and pthread_context::tid\&.
 .PP
 .nf
 10                                     {
@@ -56,12 +56,12 @@ Referenzia __os_gettid, __pthread_queue, errno, pthread_context::next, e pthread
 26     return 0;
 27 }
 .fi
-.SH "Documentazione delle variabili"
+.SH "Variable Documentation"
 .PP 
 .SS "\fBEXTERN\fP \fBpthread_context_t\fP* __pthread_queue"
 
 .PP
-Definizione alla linea 8 del file pthread_self\&.c\&.
-.SH "Autore"
+Definition at line 8 of file pthread_self\&.c\&.
+.SH "Author"
 .PP 
-Generato automaticamente da Doxygen per aPlus a partire dal codice sorgente\&.
+Generated automatically by Doxygen for aPlus from the source code\&.

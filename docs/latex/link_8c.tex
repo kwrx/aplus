@@ -1,4 +1,4 @@
-\hypertarget{link_8c}{\section{Riferimenti per il file src/syscall/link.c}
+\hypertarget{link_8c}{\section{src/syscall/link.c File Reference}
 \label{link_8c}\index{src/syscall/link.\+c@{src/syscall/link.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
@@ -10,7 +10,7 @@
 {\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
 {\ttfamily \#include $<$dirent.\+h$>$}\\*
-\subsection*{Funzioni}
+\subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{link_8c_ad3883e68a3087c15cf40cf9b827f4aa3}{sys\+\_\+link} (char $\ast$filename, char $\ast$link)
@@ -19,7 +19,7 @@ int \hyperlink{link_8c_ad3883e68a3087c15cf40cf9b827f4aa3}{sys\+\_\+link} (char $
 \end{DoxyCompactItemize}
 
 
-\subsection{Documentazione delle funzioni}
+\subsection{Function Documentation}
 \hypertarget{link_8c_ad3883e68a3087c15cf40cf9b827f4aa3}{\index{link.\+c@{link.\+c}!sys\+\_\+link@{sys\+\_\+link}}
 \index{sys\+\_\+link@{sys\+\_\+link}!link.\+c@{link.\+c}}
 \subsubsection[{sys\+\_\+link}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+link (
@@ -30,17 +30,17 @@ int \hyperlink{link_8c_ad3883e68a3087c15cf40cf9b827f4aa3}{sys\+\_\+link} (char $
 )}}\label{link_8c_ad3883e68a3087c15cf40cf9b827f4aa3}
 
 
-Definizione alla linea 14 del file link.\+c.
+Definition at line 14 of file link.\+c.
 
 
 
-Referenzia errno, e kprintf.
+References errno, and kprintf().
 
 
 \begin{DoxyCode}
 14                                          \{
 15     \textcolor{comment}{/* TODO */}
-16     \hyperlink{aplus_8h_af0b53ac0b8d6868da6396b11b30519c1}{kprintf}(\textcolor{stringliteral}{"sys\_link: TODO"});
+16     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_link: TODO"});
 17 
 18     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
 19     \textcolor{keywordflow}{return} -1;
