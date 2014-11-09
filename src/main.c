@@ -50,7 +50,14 @@ extern task_t* current_task;
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_LOW);
 
+	kprintf("IM SYSIDLE from %d and esp is %x\n", sys_getpid(), read_esp());
 
+	if(sys_fork() == 0)
+		kprintf("IM CHILD MOTHERFUCKERS from %d and esp is %x\n", sys_getpid(), read_esp());
+	else
+		kprintf("IM FATHER from %d and esp is %x\n", sys_getpid(), read_esp());
+	
+	
 	for(;;)
 		__asm__ ("pause");
 }
@@ -67,8 +74,8 @@ int main() {
 	vfs_init();
 	schedule_init();
 	bufio_init();
-	pci_init();
-	netif_init();
+	//pci_init();
+	//netif_init();
 	
 	vfs_map(devfs_mount());
 
@@ -90,12 +97,14 @@ int main() {
 	if(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0)
 		panic("initrd: cannot mount ramdisk");
 
+	
 
 /*
 	if(fork() == 0)
 		execl("/bin/init", "/bin/init", 0);
 	else
 */
-	sysidle();
+	task_clone(sysidle, NULL, NULL, 0);
+	for(;;);
 }
 

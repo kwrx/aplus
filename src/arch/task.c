@@ -5,6 +5,7 @@
 #include <aplus/list.h>
 #include <aplus/fs.h>
 
+#include <setjmp.h>
 
 __asm__ (
 	".global task_context_switch		\n"
@@ -46,73 +47,8 @@ extern volatile inode_t* vfs_root;
 extern void task_context_switch(task_env_t** old, task_env_t** new);
 
 
-task_t* task_fork() {
-	if(!current_task)
-		return NULL;
 
-	task_t* child = (task_t*) kmalloc(sizeof(task_t));
-	memset(child, 0, sizeof(task_t));
-
-	child->pid = schedule_nextpid();
-	child->cwd = current_task->cwd;
-	child->exe = current_task->exe;
-	child->uid = current_task->uid;
-	child->gid = current_task->gid;
-	
-	child->state = TASK_STATE_ALIVE;
-	child->priority = current_task->priority;
-	child->clock = 0;
-	child->parent = current_task;
-
-	child->signal_handler = current_task->signal_handler;
-	child->signal_sig = current_task->signal_sig;
-
-	
-	for(int i = 0; i < TASK_MAX_FD; i++)
-		child->fd[i] = current_task->fd[i];
-
-
-	child->context.cr3 = vmm_create();
-	vmm_mapkernel(child->context.cr3);
-
-
-	child->image.vaddr = current_task->image.vaddr;
-	child->image.length = current_task->image.length;
-
-	
-	if(current_task->image.ptr) {
-		void* addr = (void*) kmalloc(child->image.length);
-		memcpy(addr, (void*) child->image.vaddr, child->image.length);
-
-		vmm_map(child->context.cr3, mm_paddr(addr), child->image.vaddr, child->image.length);
-		child->image.ptr = (uint32_t) mm_paddr(addr);
-	}
-
-	
-	
-	child->context.stack = current_task->context.stack;
-	child->context.env = current_task->context.env;
-
-	void* stack = (void*) mm_align(kmalloc(TASK_STACKSIZE * 2));
-	memcpy(stack, (void*) child->context.stack, TASK_STACKSIZE);
-
-	vmm_umap(child->context.cr3, child->context.stack, TASK_STACKSIZE);
-	vmm_map(child->context.cr3, mm_paddr(stack), child->context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-	
-
-	/* TODO: Set EIP for child */
-	
-	if(current_task == child)
-		return 0;
-	
-
-	list_add(task_queue, (listval_t) child);
-	return child;
-}
-
-
-
-task_t* task_clone(void* entry, void* arg, void* stack) {
+task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	if(entry == NULL)
 		return NULL;
 
@@ -126,7 +62,6 @@ task_t* task_clone(void* entry, void* arg, void* stack) {
 	memset(child, 0, sizeof(task_t));
 
 	child->pid = schedule_nextpid();
-	child->cwd = current_task->cwd;
 	child->exe = current_task->exe;
 	child->uid = current_task->uid;
 	child->gid = current_task->gid;
@@ -134,17 +69,53 @@ task_t* task_clone(void* entry, void* arg, void* stack) {
 	child->state = TASK_STATE_ALIVE;
 	child->priority = current_task->priority;
 	child->clock = 0;
-	child->parent = current_task;
 
-	child->signal_handler = current_task->signal_handler;
-	child->signal_sig = current_task->signal_sig;
 
-	child->image.vaddr = current_task->image.vaddr;
-	child->image.length = current_task->image.length;
-	child->image.ptr = current_task->image.ptr;
-		
+	if(flags & CLONE_FILES) {
+		for(int i = 0; i < TASK_MAX_FD; i++)
+			child->fd[i] = current_task->fd[i];
+	}
+
+	if(flags & CLONE_FS)
+		child->cwd = current_task->cwd;
+	else
+		child->cwd = (inode_t*) vfs_root;
+
+	if(flags & CLONE_PARENT)
+		child->parent = current_task->parent;	
+	else
+		child->parent = current_task;
+
+ 	if(flags & CLONE_SIGHAND) {
+		child->signal_handler = current_task->signal_handler;
+		child->signal_sig = current_task->signal_sig;
+	}
+
+
+	if(flags & CLONE_VM) {
+		child->image.vaddr = current_task->image.vaddr;
+		child->image.length = current_task->image.length;
+		child->image.ptr = current_task->image.ptr;
+
+		child->context.cr3 = current_task->context.cr3;
+	} else {
+
+		child->context.cr3 = vmm_create();
+		vmm_mapkernel(child->context.cr3);
+
+		child->image.vaddr = current_task->image.vaddr;
+		child->image.length = current_task->image.length;
+
+		if(current_task->image.ptr) {
+			void* addr = (void*) kmalloc(child->image.length);
+			memcpy(addr, (void*) child->image.vaddr, child->image.length);
+
+			vmm_map(child->context.cr3, mm_paddr(addr), child->image.vaddr, child->image.length);
+			child->image.ptr = (uint32_t) mm_paddr(addr);
+		}
+	}
+
 	
-	child->context.cr3 = current_task->context.cr3;
 	child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
 	child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
 
@@ -153,14 +124,10 @@ task_t* task_clone(void* entry, void* arg, void* stack) {
 	child->context.env->ebp = (uint32_t) child->context.env; 
 
 	
-	for(int i = 0; i < TASK_MAX_FD; i++)
-		child->fd[i] = current_task->fd[i];
-
 
 	list_add(task_queue, (listval_t) child);
 	return child;
 }
-
 
 void task_switch(task_t* newtask) {
 	
@@ -172,6 +139,51 @@ void task_switch(task_t* newtask) {
 	outb(0x20, 0x20);
 
 	task_context_switch(&old->context.env, &current_task->context.env);
+}
+
+
+
+static jmp_buf __fork_buf;
+
+static int __fork_child() {
+
+	uint32_t oldesp = __fork_buf->esp;
+	uint32_t oldebp = __fork_buf->ebp;
+
+	uint32_t stack = (uint32_t) mm_align(kmalloc(TASK_STACKSIZE));
+
+	for(int i = 0; i < TASK_STACKSIZE; i++)
+		((uint8_t*) stack)[i] = ((uint8_t*) (oldesp & ~0xFFF)) [i];
+
+
+	uint32_t cr3 = current_task->context.cr3;
+
+	
+	vmm_map(cr3, mm_paddr(stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	vmm_switch(cr3);	
+	
+
+	longjmp(__fork_buf, 1);
+	return 0;
+}
+
+
+task_t* task_fork() {
+	if(!current_task)
+		return NULL;
+
+	schedule_disable();
+	task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);		
+
+
+	if(setjmp(__fork_buf) == 1) {
+		schedule_enable();	
+		return NULL;
+	}
+
+
+	task_switch(child);
+	return child; 
 }
 
 
@@ -205,3 +217,4 @@ int task_init() {
 
 	return 0;
 }
+

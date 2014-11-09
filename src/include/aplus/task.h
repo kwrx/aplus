@@ -53,7 +53,25 @@
 
 
 
+#ifndef CLONE_VM
+#define CLONE_VM		1
+#endif
 
+#ifndef CLONE_SIGHAND
+#define CLONE_SIGHAND	2
+#endif
+
+#ifndef CLONE_FS
+#define CLONE_FS		4
+#endif
+
+#ifndef CLONE_FILES
+#define CLONE_FILES		8
+#endif
+
+#ifndef CLONE_PARENT
+#define CLONE_PARENT	16
+#endif
 
 
 typedef struct task_env {

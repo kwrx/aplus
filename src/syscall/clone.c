@@ -39,7 +39,7 @@ int sys_clone(int (*fn)(void*), void* child_stack, int flags, void* arg) {
 	}
 
 
-	task_t* child = (task_t*) task_clone(fn, arg, child_stack);
+	task_t* child = (task_t*) task_clone(fn, arg, child_stack, flags);
 	if(!child) {
 		errno = EFAULT;
 		return -1;
