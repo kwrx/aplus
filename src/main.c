@@ -85,10 +85,6 @@ int main() {
 		panic("initrd: cannot mount ramdisk");
 
 
-	char* argv[] = { 0 };
-	char* envp[] = { 0 };
-	sys_execve("/dev/ramdisk/test", argv, envp);
-	kprintf("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW--------------");
 /*
 	if(fork() == 0)
 		execl("/bin/init", "/bin/init", 0);
