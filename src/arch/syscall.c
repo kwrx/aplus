@@ -17,11 +17,35 @@ int syscall_init() {
 	list_foreach(value, syslist) {
 		syscall_t* sys = (syscall_t*) value;
 
+		if(syscall_handlers[sys->number])
+			kprintf("syscall: duplicate number of %d handler\n");
+
 		syscall_handlers[sys->number] = sys->handler;
 	}
 
 	kprintf("syscall: loaded %d handlers\n", syslist->size);
 	list_destroy(syslist);
+
+
+#ifdef DEBUG
+	#define NSYSCALLS		1024
+
+	for(int i = 0, s = 0; i < NSYSCALLS; i++) {
+		if(syscall_handlers[i] == NULL) {
+			if(!s)
+				continue;
+
+			if(s > 1)
+				kprintf("\t%d..%d\n", i - s, i - 1);
+			else
+				kprintf("\t%d\n", i - s);
+
+			s = 0;
+		} else
+			s++;
+	}
+#endif
+
 	return 0;
 }
 

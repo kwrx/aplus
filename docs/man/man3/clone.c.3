@@ -1,4 +1,4 @@
-.TH "src/syscall/clone.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/clone.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -100,7 +100,7 @@ References errno, task::pid, and task_clone()\&.
 39     }
 40 
 41 
-42     task_t* child = (task_t*) task_clone(fn, arg, child_stack);
+42     task_t* child = (task_t*) task_clone(fn, arg, child_stack, flags);
 43     if(!child) {
 44         errno = EFAULT;
 45         return -1;

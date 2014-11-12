@@ -12,6 +12,7 @@ var searchData=
   ['spinlock_2ec',['spinlock.c',['../spinlock_8c.html',1,'']]],
   ['spinlock_2eh',['spinlock.h',['../spinlock_8h.html',1,'']]],
   ['stat_2ec',['stat.c',['../stat_8c.html',1,'']]],
+  ['symlink_2ec',['symlink.c',['../symlink_8c.html',1,'']]],
   ['syscall_2ec',['syscall.c',['../syscall_8c.html',1,'']]],
   ['syscall_2eh',['syscall.h',['../syscall_8h.html',1,'']]],
   ['syscalls_2ec',['syscalls.c',['../syscalls_8c.html',1,'']]]

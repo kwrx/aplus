@@ -5,34 +5,34 @@
     <includes refid="aplus_8h" local="no">aplus.h</includes>
     <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
     <incdepgraph>
-      <node id="137">
+      <node id="120">
         <label>stdarg.h</label>
       </node>
-      <node id="134">
+      <node id="117">
         <label>src/debug.c</label>
         <link refid="debug.c"/>
-        <childnode refid="135" relation="include">
+        <childnode refid="118" relation="include">
         </childnode>
-        <childnode refid="139" relation="include">
+        <childnode refid="122" relation="include">
         </childnode>
       </node>
-      <node id="136">
+      <node id="119">
         <label>stdint.h</label>
       </node>
-      <node id="135">
+      <node id="118">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="136" relation="include">
+        <childnode refid="119" relation="include">
         </childnode>
-        <childnode refid="137" relation="include">
+        <childnode refid="120" relation="include">
         </childnode>
-        <childnode refid="138" relation="include">
+        <childnode refid="121" relation="include">
         </childnode>
       </node>
-      <node id="138">
+      <node id="121">
         <label>string.h</label>
       </node>
-      <node id="139">
+      <node id="122">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -297,6 +297,53 @@ The functions asprintf() and <ref refid="debug_8c_1a1c492cd47880cc15e2274cd13f62
         <references refid="debug_8c_1a611fa7b9d919dbea95733c7a8d44a1eb" compoundref="debug_8c" startline="19" endline="26">debug_puts</references>
         <references refid="debug_8c_1a1c492cd47880cc15e2274cd13f62f617" compoundref="debug_8c" startline="110" endline="159">vasprintf</references>
       </memberdef>
+      <memberdef kind="function" id="debug_8c_1a123a367aba8cf7d2c802b6638b78a056" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void ksprintf</definition>
+        <argsstring>(char *buf, char *fmt,...)</argsstring>
+        <name>ksprintf</name>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>fmt</declname>
+        </param>
+        <param>
+          <type>...</type>
+        </param>
+        <briefdescription>
+<para>Formatted output conversion and print to buffer. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer output. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>fmt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Format of string. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>...</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Arguments. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/debug.c" line="186" column="1" bodyfile="/opt/prj/aPlus/src/debug.c" bodystart="186" bodyend="193"/>
+        <references refid="debug_8c_1a1c492cd47880cc15e2274cd13f62f617" compoundref="debug_8c" startline="110" endline="159">vasprintf</references>
+      </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
@@ -440,6 +487,16 @@ The functions asprintf() and <ref refid="debug_8c_1a1c492cd47880cc15e2274cd13f62
 <codeline lineno="177"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="178"><highlight class="normal"></highlight></codeline>
 <codeline lineno="179"><highlight class="normal"></highlight></codeline>
+<codeline lineno="186" refid="debug_8c_1a123a367aba8cf7d2c802b6638b78a056" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="debug_8c_1a123a367aba8cf7d2c802b6638b78a056" kindref="member">ksprintf</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>fmt,<sp/>...)<sp/>{</highlight></codeline>
+<codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/>va_list<sp/>lst;</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/>va_start(lst,<sp/>fmt);</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1a1c492cd47880cc15e2274cd13f62f617" kindref="member">vasprintf</ref>(buf,<sp/>fmt,<sp/>lst);</highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/>va_end(lst);</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"></highlight></codeline>
+<codeline lineno="193"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"></highlight></codeline>
+<codeline lineno="195"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/debug.c"/>
   </compounddef>

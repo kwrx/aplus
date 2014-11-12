@@ -16,5 +16,12 @@ var searchData=
   ['tcr_5fmxdma_5f2048',['TCR_MXDMA_2048',['../rtl8139_8h.html#af8057a0fe6148f3c91254f0fa0e615e5',1,'rtl8139.h']]],
   ['tcr_5fmxdma_5f256',['TCR_MXDMA_256',['../rtl8139_8h.html#a878054e18cfb85ec78fbc6a3f8c60f42',1,'rtl8139.h']]],
   ['tcr_5fmxdma_5f512',['TCR_MXDMA_512',['../rtl8139_8h.html#a4807a51726d5b1cbee7a7f53661f97ef',1,'rtl8139.h']]],
+  ['ttydef_5fios_5fcflag',['TTYDEF_IOS_CFLAG',['../tty_8h.html#ae440976cabc9ef1b86ec745135107f3f',1,'tty.h']]],
+  ['ttydef_5fios_5fiflag',['TTYDEF_IOS_IFLAG',['../tty_8h.html#acd69d0fbe279cfcd136fd45d44562404',1,'tty.h']]],
+  ['ttydef_5fios_5flflag',['TTYDEF_IOS_LFLAG',['../tty_8h.html#abeea8ac0ea0a9738e57f82d0ef43a85e',1,'tty.h']]],
+  ['ttydef_5fios_5foflag',['TTYDEF_IOS_OFLAG',['../tty_8h.html#a8fa8e526600e28d4607297cfe5fe3d3a',1,'tty.h']]],
+  ['ttydef_5fios_5fspeed',['TTYDEF_IOS_SPEED',['../tty_8h.html#a3ef6c6081b397b9416c8455571fe9e11',1,'tty.h']]],
+  ['ttydef_5fwin_5fcols',['TTYDEF_WIN_COLS',['../tty_8h.html#ae27757a251b08584e6d5f5f3c8baf0cb',1,'tty.h']]],
+  ['ttydef_5fwin_5frows',['TTYDEF_WIN_ROWS',['../tty_8h.html#a0c04c79b038508aafb633827bbf55af4',1,'tty.h']]],
   ['tx_5fbuffer_5fsize',['TX_BUFFER_SIZE',['../rtl8139_8h.html#a9ab33647617098646990fe263600b650',1,'rtl8139.h']]]
 ];

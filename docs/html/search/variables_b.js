@@ -6,7 +6,7 @@ var searchData=
   ['link',['link',['../structinode.html#a3533c53c5391601c66b3ae0f389c0843',1,'inode']]],
   ['list_5fbuffers',['list_buffers',['../bufio_8c.html#a5e9324428544e1da920f5be30824d350',1,'bufio.c']]],
   ['list_5finodes',['list_inodes',['../vfs_8c.html#ab78229df5c858687756417b32ac398ff',1,'vfs.c']]],
-  ['lock',['lock',['../structbufio.html#acaf54fa3069ec8ccc9362b1527a1a72c',1,'bufio::lock()'],['../structlist.html#a38fd85cafd1f71a39e83dd37b37ffbf4',1,'list::lock()'],['../structpthread__mutex.html#a039843af2bfee5ac32a1c4452108b833',1,'pthread_mutex::lock()']]],
+  ['lock',['lock',['../structbufio.html#acaf54fa3069ec8ccc9362b1527a1a72c',1,'bufio::lock()'],['../structlist.html#a59893e59e3f090a886894244b0dc0643',1,'list::lock()'],['../structtty.html#a37c81cc0b682d67ec3d789f061357d77',1,'tty::lock()'],['../structpthread__mutex.html#a039843af2bfee5ac32a1c4452108b833',1,'pthread_mutex::lock()']]],
   ['logical_5fblksize',['logical_blksize',['../structiso9660__pvd.html#a4f37c15dff0a03459e69a2bae00cb059',1,'iso9660_pvd::logical_blksize()'],['../iso9660_8h.html#a0e7274df7510929be162a941cb2f0e79',1,'logical_blksize():&#160;iso9660.h']]],
   ['lst_5fnetif',['lst_netif',['../netif_8c.html#aa7d07620133cc2243295b0c03ac8436e',1,'netif.c']]],
   ['lst_5fpackets',['lst_packets',['../netif_8c.html#accbe476fec12cec39066f558e3040ef6',1,'netif.c']]]

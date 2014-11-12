@@ -12,157 +12,141 @@
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1634">
+      <node id="1424">
         <label>sys/stat.h</label>
       </node>
-      <node id="1623">
+      <node id="1416">
         <label>stdarg.h</label>
       </node>
-      <node id="1626">
+      <node id="1419">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1621" relation="include">
+        <childnode refid="1414" relation="include">
         </childnode>
-        <childnode refid="1627" relation="include">
+        <childnode refid="1420" relation="include">
         </childnode>
-        <childnode refid="1622" relation="include">
+        <childnode refid="1415" relation="include">
         </childnode>
-        <childnode refid="1624" relation="include">
+        <childnode refid="1417" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1422" relation="include">
         </childnode>
       </node>
-      <node id="1633">
+      <node id="1423">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1622" relation="include">
+        <childnode refid="1415" relation="include">
         </childnode>
-        <childnode refid="1628" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1422" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1424" relation="include">
         </childnode>
-        <childnode refid="1635" relation="include">
+        <childnode refid="1425" relation="include">
         </childnode>
       </node>
-      <node id="1622">
+      <node id="1415">
         <label>stdint.h</label>
       </node>
-      <node id="1625">
+      <node id="1418">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1621" relation="include">
+        <childnode refid="1414" relation="include">
         </childnode>
-        <childnode refid="1626" relation="include">
+        <childnode refid="1419" relation="include">
         </childnode>
-        <childnode refid="1622" relation="include">
+        <childnode refid="1415" relation="include">
         </childnode>
       </node>
-      <node id="1638">
+      <node id="1429">
         <label>setjmp.h</label>
       </node>
-      <node id="1632">
+      <node id="1427">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1622" relation="include">
+        <childnode refid="1415" relation="include">
         </childnode>
-        <childnode refid="1621" relation="include">
+        <childnode refid="1414" relation="include">
         </childnode>
-        <childnode refid="1633" relation="include">
+        <childnode refid="1423" relation="include">
         </childnode>
-        <childnode refid="1637" relation="include">
+        <childnode refid="1428" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1422" relation="include">
         </childnode>
-        <childnode refid="1638" relation="include">
+        <childnode refid="1429" relation="include">
         </childnode>
       </node>
-      <node id="1640">
+      <node id="1431">
         <label>errno.h</label>
       </node>
-      <node id="1639">
+      <node id="1430">
         <label>fcntl.h</label>
       </node>
-      <node id="1628">
+      <node id="1421">
         <label>stddef.h</label>
       </node>
-      <node id="1627">
+      <node id="1420">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1628" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
-        <childnode refid="1622" relation="include">
+        <childnode refid="1415" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
-        </childnode>
-        <childnode refid="1630" relation="include">
-        </childnode>
-        <childnode refid="1631" relation="include">
+        <childnode refid="1422" relation="include">
         </childnode>
       </node>
-      <node id="1621">
+      <node id="1414">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1622" relation="include">
+        <childnode refid="1415" relation="include">
         </childnode>
-        <childnode refid="1623" relation="include">
+        <childnode refid="1416" relation="include">
         </childnode>
-        <childnode refid="1624" relation="include">
+        <childnode refid="1417" relation="include">
         </childnode>
       </node>
-      <node id="1629">
+      <node id="1422">
         <label>sys/types.h</label>
       </node>
-      <node id="1624">
+      <node id="1417">
         <label>string.h</label>
       </node>
-      <node id="1636">
+      <node id="1426">
         <label>unistd.h</label>
       </node>
-      <node id="1637">
+      <node id="1428">
         <label>signal.h</label>
       </node>
-      <node id="1631">
-        <label>aplus/mm.h</label>
-        <link refid="mm_8h"/>
-        <childnode refid="1622" relation="include">
-        </childnode>
-        <childnode refid="1632" relation="include">
-        </childnode>
-      </node>
-      <node id="1635">
+      <node id="1425">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1636" relation="include">
+        <childnode refid="1426" relation="include">
         </childnode>
-        <childnode refid="1629" relation="include">
+        <childnode refid="1422" relation="include">
         </childnode>
       </node>
-      <node id="1630">
-        <label>aplus/spinlock.h</label>
-        <link refid="spinlock_8h"/>
-      </node>
-      <node id="1620">
+      <node id="1413">
         <label>src/syscall/fstat.c</label>
         <link refid="fstat.c"/>
-        <childnode refid="1621" relation="include">
+        <childnode refid="1414" relation="include">
         </childnode>
-        <childnode refid="1625" relation="include">
+        <childnode refid="1418" relation="include">
         </childnode>
-        <childnode refid="1633" relation="include">
+        <childnode refid="1423" relation="include">
         </childnode>
-        <childnode refid="1632" relation="include">
+        <childnode refid="1427" relation="include">
         </childnode>
-        <childnode refid="1636" relation="include">
+        <childnode refid="1426" relation="include">
         </childnode>
-        <childnode refid="1639" relation="include">
+        <childnode refid="1430" relation="include">
         </childnode>
-        <childnode refid="1640" relation="include">
+        <childnode refid="1431" relation="include">
         </childnode>
-        <childnode refid="1634" relation="include">
+        <childnode refid="1424" relation="include">
         </childnode>
-        <childnode refid="1635" relation="include">
+        <childnode refid="1425" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -223,7 +207,7 @@
         <references refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" compoundref="fs_8h" startline="52">inode::ctime</references>
         <references refid="structinode_1a127a2eb030df332fa64a81188731ad6b" compoundref="fs_8h" startline="40">inode::dev</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="87">task::fd</references>
+        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="105">task::fd</references>
         <references refid="structinode_1a8434fb9dd05057d00b37ed713713835d" compoundref="fs_8h" startline="45">inode::gid</references>
         <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="41">inode::ino</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>

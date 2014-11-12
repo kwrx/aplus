@@ -1,0 +1,107 @@
+.TH "tty" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+tty \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <tty\&.h>\fP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "struct termios \fBios\fP"
+.br
+.ti -1c
+.RI "struct \fBwinsize\fP \fBwin\fP"
+.br
+.ti -1c
+.RI "\fBspinlock_t\fP \fBlock\fP"
+.br
+.ti -1c
+.RI "char \fBibuffer\fP [BUFSIZ]"
+.br
+.ti -1c
+.RI "char \fBobuffer\fP [BUFSIZ]"
+.br
+.ti -1c
+.RI "short \fBisize\fP"
+.br
+.ti -1c
+.RI "short \fBosize\fP"
+.br
+.ti -1c
+.RI "int \fBexclmode\fP"
+.br
+.ti -1c
+.RI "pid_t \fBfg\fP"
+.br
+.ti -1c
+.RI "pid_t \fBbg\fP"
+.br
+.ti -1c
+.RI "int \fBid\fP"
+.br
+.ti -1c
+.RI "void(* \fBoutput\fP )(struct \fBtty\fP *, void *ptr, size_t \fBsize\fP)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 25 of file tty\&.h\&.
+.SH "Field Documentation"
+.PP 
+.SS "pid_t tty::bg"
+
+.PP
+Definition at line 40 of file tty\&.h\&.
+.SS "int tty::exclmode"
+
+.PP
+Definition at line 37 of file tty\&.h\&.
+.SS "pid_t tty::fg"
+
+.PP
+Definition at line 39 of file tty\&.h\&.
+.SS "char tty::ibuffer[BUFSIZ]"
+
+.PP
+Definition at line 31 of file tty\&.h\&.
+.SS "int tty::id"
+
+.PP
+Definition at line 41 of file tty\&.h\&.
+.SS "struct termios tty::ios"
+
+.PP
+Definition at line 26 of file tty\&.h\&.
+.SS "short tty::isize"
+
+.PP
+Definition at line 34 of file tty\&.h\&.
+.SS "\fBspinlock_t\fP tty::lock"
+
+.PP
+Definition at line 29 of file tty\&.h\&.
+.SS "char tty::obuffer[BUFSIZ]"
+
+.PP
+Definition at line 32 of file tty\&.h\&.
+.SS "short tty::osize"
+
+.PP
+Definition at line 35 of file tty\&.h\&.
+.SS "void(* tty::output)(struct \fBtty\fP *, void *ptr, size_t \fBsize\fP)"
+
+.PP
+Definition at line 44 of file tty\&.h\&.
+.SS "struct \fBwinsize\fP tty::win"
+
+.PP
+Definition at line 27 of file tty\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

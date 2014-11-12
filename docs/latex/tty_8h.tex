@@ -1,0 +1,96 @@
+\hypertarget{tty_8h}{\section{src/include/aplus/tty.h File Reference}
+\label{tty_8h}\index{src/include/aplus/tty.\+h@{src/include/aplus/tty.\+h}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$sys/ioctl.\+h$>$}\\*
+{\ttfamily \#include $<$sys/termios.\+h$>$}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structtty}{tty}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{tty_8h_ae27757a251b08584e6d5f5f3c8baf0cb}{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S}~80
+\item 
+\#define \hyperlink{tty_8h_a0c04c79b038508aafb633827bbf55af4}{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S}~25
+\item 
+\#define \hyperlink{tty_8h_acd69d0fbe279cfcd136fd45d44562404}{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G}~(B\+R\+K\+I\+N\+T $\vert$ I\+S\+T\+R\+I\+P $\vert$ I\+C\+R\+N\+L $\vert$ I\+M\+A\+X\+B\+E\+L $\vert$ I\+X\+O\+N $\vert$ I\+X\+A\+N\+Y)
+\item 
+\#define \hyperlink{tty_8h_a8fa8e526600e28d4607297cfe5fe3d3a}{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G}~(O\+P\+O\+S\+T $\vert$ O\+N\+L\+C\+R $\vert$ O\+X\+T\+A\+B\+S)
+\item 
+\#define \hyperlink{tty_8h_abeea8ac0ea0a9738e57f82d0ef43a85e}{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G}~(E\+C\+H\+O $\vert$ I\+C\+A\+N\+O\+N $\vert$ I\+S\+I\+G $\vert$ I\+E\+X\+T\+E\+N $\vert$ E\+C\+H\+O\+E $\vert$ E\+C\+H\+O\+K\+E $\vert$ E\+C\+H\+O\+C\+T\+L)
+\item 
+\#define \hyperlink{tty_8h_ae440976cabc9ef1b86ec745135107f3f}{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G}~(C\+R\+E\+A\+D $\vert$ C\+S7 $\vert$ P\+A\+R\+E\+N\+B $\vert$ H\+U\+P\+C\+L)
+\item 
+\#define \hyperlink{tty_8h_a3ef6c6081b397b9416c8455571fe9e11}{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+S\+P\+E\+E\+D}~(B9600)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structtty}{tty} \hyperlink{tty_8h_ae87a1d3b391605c6f2337562698f46fa}{tty\+\_\+t}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{tty_8h_ae440976cabc9ef1b86ec745135107f3f}{\index{tty.\+h@{tty.\+h}!T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G}}
+\index{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G}!tty.\+h@{tty.\+h}}
+\subsubsection[{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G~(C\+R\+E\+A\+D $\vert$ C\+S7 $\vert$ P\+A\+R\+E\+N\+B $\vert$ H\+U\+P\+C\+L)}}\label{tty_8h_ae440976cabc9ef1b86ec745135107f3f}
+
+
+Definition at line 21 of file tty.\+h.
+
+\hypertarget{tty_8h_acd69d0fbe279cfcd136fd45d44562404}{\index{tty.\+h@{tty.\+h}!T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G}}
+\index{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G}!tty.\+h@{tty.\+h}}
+\subsubsection[{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G~(B\+R\+K\+I\+N\+T $\vert$ I\+S\+T\+R\+I\+P $\vert$ I\+C\+R\+N\+L $\vert$ I\+M\+A\+X\+B\+E\+L $\vert$ I\+X\+O\+N $\vert$ I\+X\+A\+N\+Y)}}\label{tty_8h_acd69d0fbe279cfcd136fd45d44562404}
+
+
+Definition at line 18 of file tty.\+h.
+
+\hypertarget{tty_8h_abeea8ac0ea0a9738e57f82d0ef43a85e}{\index{tty.\+h@{tty.\+h}!T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G}}
+\index{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G}!tty.\+h@{tty.\+h}}
+\subsubsection[{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G~(E\+C\+H\+O $\vert$ I\+C\+A\+N\+O\+N $\vert$ I\+S\+I\+G $\vert$ I\+E\+X\+T\+E\+N $\vert$ E\+C\+H\+O\+E $\vert$ E\+C\+H\+O\+K\+E $\vert$ E\+C\+H\+O\+C\+T\+L)}}\label{tty_8h_abeea8ac0ea0a9738e57f82d0ef43a85e}
+
+
+Definition at line 20 of file tty.\+h.
+
+\hypertarget{tty_8h_a8fa8e526600e28d4607297cfe5fe3d3a}{\index{tty.\+h@{tty.\+h}!T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G}}
+\index{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G}!tty.\+h@{tty.\+h}}
+\subsubsection[{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G~(O\+P\+O\+S\+T $\vert$ O\+N\+L\+C\+R $\vert$ O\+X\+T\+A\+B\+S)}}\label{tty_8h_a8fa8e526600e28d4607297cfe5fe3d3a}
+
+
+Definition at line 19 of file tty.\+h.
+
+\hypertarget{tty_8h_a3ef6c6081b397b9416c8455571fe9e11}{\index{tty.\+h@{tty.\+h}!T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+S\+P\+E\+E\+D@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+S\+P\+E\+E\+D}}
+\index{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+S\+P\+E\+E\+D@{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+S\+P\+E\+E\+D}!tty.\+h@{tty.\+h}}
+\subsubsection[{T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+S\+P\+E\+E\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+S\+P\+E\+E\+D~(B9600)}}\label{tty_8h_a3ef6c6081b397b9416c8455571fe9e11}
+
+
+Definition at line 22 of file tty.\+h.
+
+\hypertarget{tty_8h_ae27757a251b08584e6d5f5f3c8baf0cb}{\index{tty.\+h@{tty.\+h}!T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S@{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S}}
+\index{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S@{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S}!tty.\+h@{tty.\+h}}
+\subsubsection[{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S~80}}\label{tty_8h_ae27757a251b08584e6d5f5f3c8baf0cb}
+
+
+Definition at line 16 of file tty.\+h.
+
+\hypertarget{tty_8h_a0c04c79b038508aafb633827bbf55af4}{\index{tty.\+h@{tty.\+h}!T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S@{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S}}
+\index{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S@{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S}!tty.\+h@{tty.\+h}}
+\subsubsection[{T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S~25}}\label{tty_8h_a0c04c79b038508aafb633827bbf55af4}
+
+
+Definition at line 17 of file tty.\+h.
+
+
+
+\subsection{Typedef Documentation}
+\hypertarget{tty_8h_ae87a1d3b391605c6f2337562698f46fa}{\index{tty.\+h@{tty.\+h}!tty\+\_\+t@{tty\+\_\+t}}
+\index{tty\+\_\+t@{tty\+\_\+t}!tty.\+h@{tty.\+h}}
+\subsubsection[{tty\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf tty}  {\bf tty\+\_\+t}}}\label{tty_8h_ae87a1d3b391605c6f2337562698f46fa}

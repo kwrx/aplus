@@ -4,8 +4,6 @@
     <programlisting>#include &lt;stddef.h&gt;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;sys/types.h&gt;</programlisting>
-    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
-    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
         <simplesect>
             <title> Classes </title>
             <para>
@@ -28,14 +26,14 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="list_8h_1a22853dfff2d59e6a8ea2d77eeed5f293">list_safe_begin</link> <link linkend="spinlock_8c_1ab01e311f21f78fc3c2bd0bdf74ef85c4">spinlock_lock</link>(&amp;<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link>)</para>
+                            <para>#define <link linkend="list_8h_1a22853dfff2d59e6a8ea2d77eeed5f293">list_safe_begin</link> __list_lock(&amp;<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link>)</para>
                     </listitem>
                 </itemizedlist>
             </para>
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="list_8h_1a55d0a2f3e6dcbf7213b13e9e0dd9d981">list_safe_end</link> <link linkend="spinlock_8c_1a4ca6e661fa1b704d39d834ac7341b360">spinlock_unlock</link>(&amp;<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link>)</para>
+                            <para>#define <link linkend="list_8h_1a55d0a2f3e6dcbf7213b13e9e0dd9d981">list_safe_end</link> __list_unlock(&amp;<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link>)</para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -62,7 +60,7 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="list_8h_1aa288c0785df071ed8643763202928c82">list_init</link> <link linkend="structlist">list</link> = (<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link>*) <link linkend="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</link>(sizeof(<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link>));				\
+                            <para>#define <link linkend="list_8h_1aa288c0785df071ed8643763202928c82">list_init</link> <link linkend="structlist">list</link> = (<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link>*) __list_malloc(sizeof(<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link>));			\
 	<link linkend="structlist">list</link>-&gt;body = 0;											\
 	<link linkend="structlist">list</link>-&gt;<link linkend="mm_8c_1a854352f53b148adc24983a58a1866d66">size</link> = 0;											\
 	<link linkend="structlist">list</link>-&gt;<link linkend="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0">lock</link> = 0</para>
@@ -73,7 +71,7 @@
                 <itemizedlist>
                     <listitem>
                             <para>#define <link linkend="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990">list_destroy</link> <link linkend="list_8h_1ae055500d6fc23c82c45b2e5926df3b40">list_clear</link>(<link linkend="structlist">list</link>);										\
-	<link linkend="mm_8c_1a069f85a5001d71bc44d8be6532a4e432">kfree</link>(<link linkend="structlist">list</link>)</para>
+	__list_free(<link linkend="structlist">list</link>)</para>
                     </listitem>
                 </itemizedlist>
             </para>

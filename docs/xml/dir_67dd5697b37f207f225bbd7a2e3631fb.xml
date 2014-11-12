@@ -7,6 +7,7 @@
     <innerfile refid="fs_8c">fs.c</innerfile>
     <innerfile refid="pipe_8c">pipe.c</innerfile>
     <innerfile refid="ramdev_8c">ramdev.c</innerfile>
+    <innerfile refid="tty_8c">tty.c</innerfile>
     <innerfile refid="vfs_8c">vfs.c</innerfile>
     <briefdescription>
     </briefdescription>

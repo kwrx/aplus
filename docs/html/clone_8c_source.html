@@ -125,7 +125,7 @@ $(document).ready(function(){initNavTree('clone_8c_source.html','');});
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="structtask.html">task_t</a>* child = (<a class="code" href="structtask.html">task_t</a>*) <a class="code" href="task_8c.html#aa274b7334aace961395fdb788126712d">task_clone</a>(fn, arg, child_stack);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="structtask.html">task_t</a>* child = (<a class="code" href="structtask.html">task_t</a>*) <a class="code" href="task_8c.html#afed7d6a4dd3580596c0c925e766c4163">task_clone</a>(fn, arg, child_stack, flags);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">if</span>(!child) {</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EFAULT;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">return</span> -1;</div>
@@ -141,18 +141,18 @@ $(document).ready(function(){initNavTree('clone_8c_source.html','');});
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 <div class="ttc" id="clone_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="clone_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
 <div class="ttc" id="aplus_8h_html"><div class="ttname"><a href="aplus_8h.html">aplus.h</a></div></div>
+<div class="ttc" id="task_8c_html_afed7d6a4dd3580596c0c925e766c4163"><div class="ttname"><a href="task_8c.html#afed7d6a4dd3580596c0c925e766c4163">task_clone</a></div><div class="ttdeci">task_t * task_clone(void *entry, void *arg, void *stack, int flags)</div><div class="ttdef"><b>Definition:</b> <a href="task_8c_source.html#l00051">task.c:51</a></div></div>
 <div class="ttc" id="syscall_8h_html"><div class="ttname"><a href="syscall_8h.html">syscall.h</a></div></div>
 <div class="ttc" id="task_8h_html"><div class="ttname"><a href="task_8h.html">task.h</a></div></div>
-<div class="ttc" id="structtask_html"><div class="ttname"><a href="structtask.html">task</a></div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00072">task.h:72</a></div></div>
-<div class="ttc" id="structtask_html_ab56448ae42a75825ea923bd86648f3ae"><div class="ttname"><a href="structtask.html#ab56448ae42a75825ea923bd86648f3ae">task::pid</a></div><div class="ttdeci">pid_t pid</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00073">task.h:73</a></div></div>
-<div class="ttc" id="task_8c_html_aa274b7334aace961395fdb788126712d"><div class="ttname"><a href="task_8c.html#aa274b7334aace961395fdb788126712d">task_clone</a></div><div class="ttdeci">task_t * task_clone(void *entry, void *arg, void *stack)</div><div class="ttdef"><b>Definition:</b> <a href="task_8c_source.html#l00115">task.c:115</a></div></div>
+<div class="ttc" id="structtask_html"><div class="ttname"><a href="structtask.html">task</a></div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00090">task.h:90</a></div></div>
+<div class="ttc" id="structtask_html_ab56448ae42a75825ea923bd86648f3ae"><div class="ttname"><a href="structtask.html#ab56448ae42a75825ea923bd86648f3ae">task::pid</a></div><div class="ttdeci">pid_t pid</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00091">task.h:91</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="clone_8c.html">clone.c</a></li>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:39 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:02 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -7,4 +7,4 @@ void sys_yield() {
 	schedule_yield();
 }
 
-SYSCALL(sys_yield, 82);
+SYSCALL(sys_yield, 23);

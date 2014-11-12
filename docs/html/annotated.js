@@ -46,6 +46,7 @@ var annotated =
     [ "slirpcard", "structslirpcard.html", "structslirpcard" ],
     [ "task", "structtask.html", "structtask" ],
     [ "task_env", "structtask__env.html", "structtask__env" ],
+    [ "tty", "structtty.html", "structtty" ],
     [ "udp_header", "structudp__header.html", "structudp__header" ],
     [ "vesaInfo_t", "structvesaInfo__t.html", "structvesaInfo__t" ],
     [ "vesaModeInfo_t", "structvesaModeInfo__t.html", "structvesaModeInfo__t" ]

@@ -244,7 +244,7 @@
   </compound>
   <compound refid="structlist" kind="struct"><name>list</name>
     <member refid="structlist_1a86cadf6e44fd6505728c5149b336d3db" kind="variable"><name>body</name></member>
-    <member refid="structlist_1a38fd85cafd1f71a39e83dd37b37ffbf4" kind="variable"><name>lock</name></member>
+    <member refid="structlist_1a59893e59e3f090a886894244b0dc0643" kind="variable"><name>lock</name></member>
     <member refid="structlist_1ae581be90bd8eb7051528b61ad216de88" kind="variable"><name>size</name></member>
   </compound>
   <compound refid="structlist__body" kind="struct"><name>list_body</name>
@@ -434,6 +434,20 @@
     <member refid="structtask__env_1a6630718bd69f6876f2ff74299316ae47" kind="variable"><name>ebp</name></member>
     <member refid="structtask__env_1ae6f3defc8a0fe9512785fdfd2eedd07d" kind="variable"><name>eip</name></member>
   </compound>
+  <compound refid="structtty" kind="struct"><name>tty</name>
+    <member refid="structtty_1a10958fdd6a24123e3522b806a8647656" kind="variable"><name>ios</name></member>
+    <member refid="structtty_1af7fc07d18ca858dc99376525b8a437a3" kind="variable"><name>win</name></member>
+    <member refid="structtty_1a37c81cc0b682d67ec3d789f061357d77" kind="variable"><name>lock</name></member>
+    <member refid="structtty_1ad876c12571c56724c3277ee634b5dd30" kind="variable"><name>ibuffer</name></member>
+    <member refid="structtty_1a739b6ee550a2f4f997637261aed60167" kind="variable"><name>obuffer</name></member>
+    <member refid="structtty_1a25ab11cf5b7109480eb6f2e4f05efe4f" kind="variable"><name>isize</name></member>
+    <member refid="structtty_1a94aa6d24908c6976459d187842f1428b" kind="variable"><name>osize</name></member>
+    <member refid="structtty_1aeb81a44fe3a7067e36a6c2c9194d8dad" kind="variable"><name>exclmode</name></member>
+    <member refid="structtty_1a8a6dae366ed6eac05de7d9d463bd04eb" kind="variable"><name>fg</name></member>
+    <member refid="structtty_1a68f717ba40f28d6b941f62f0e7255e2e" kind="variable"><name>bg</name></member>
+    <member refid="structtty_1ababbf2910aa51f41da438d6adca0aca5" kind="variable"><name>id</name></member>
+    <member refid="structtty_1a2a619877d6ee5bb7caa115a931f98e2c" kind="variable"><name>output</name></member>
+  </compound>
   <compound refid="structudp__header" kind="struct"><name>udp_header</name>
     <member refid="structudp__header_1ac0f7a492b8b7dd8e425d6517c7e9b3c2" kind="variable"><name>src_port</name></member>
     <member refid="structudp__header_1a0cabb64601f3523a8defb137a90da96a" kind="variable"><name>dst_port</name></member>
@@ -583,11 +597,13 @@
     <member refid="task_8c_1afac53891df03c313fc0b5b24e0acc8a9" kind="variable"><name>kernel_vmm</name></member>
     <member refid="task_8c_1a9bed7071511863f81c2de43b3c3f7db9" kind="variable"><name>current_vmm</name></member>
     <member refid="task_8c_1a93cc6260faf18f2e31742272b38a534c" kind="variable"><name>vfs_root</name></member>
+    <member refid="task_8c_1a65552f86d5e6567721f1d1afcb34e7ab" kind="variable"><name>__fork_buf</name></member>
     <member refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kind="function"><name>__asm__</name></member>
     <member refid="task_8c_1a82b2dfd3955cf0689cda053f3dc24481" kind="function"><name>task_context_switch</name></member>
-    <member refid="task_8c_1aa547121ba0907a969075a9d7530a98fb" kind="function"><name>task_fork</name></member>
-    <member refid="task_8c_1aa274b7334aace961395fdb788126712d" kind="function"><name>task_clone</name></member>
+    <member refid="task_8c_1afed7d6a4dd3580596c0c925e766c4163" kind="function"><name>task_clone</name></member>
     <member refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" kind="function"><name>task_switch</name></member>
+    <member refid="task_8c_1ae020ae98e6a6fc90f836f38cc405290c" kind="function"><name>__fork_child</name></member>
+    <member refid="task_8c_1aa547121ba0907a969075a9d7530a98fb" kind="function"><name>task_fork</name></member>
     <member refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" kind="function"><name>task_init</name></member>
   </compound>
   <compound refid="bufio_8c" kind="file"><name>bufio.c</name>
@@ -612,6 +628,7 @@
     <member refid="debug_8c_1af7ebaa29342754a0f7c49a20495b2160" kind="function"><name>print_hex</name></member>
     <member refid="debug_8c_1a1c492cd47880cc15e2274cd13f62f617" kind="function"><name>vasprintf</name></member>
     <member refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kind="function"><name>kprintf</name></member>
+    <member refid="debug_8c_1a123a367aba8cf7d2c802b6638b78a056" kind="function"><name>ksprintf</name></member>
   </compound>
   <compound refid="exec_8c" kind="file"><name>exec.c</name>
     <member refid="exec_8c_1ae407130db14180c6737390604ba7c1fe" kind="define"><name>EI_NIDENT</name></member>
@@ -781,6 +798,19 @@
     <member refid="ramdev_8c_1a9abd59435d15eab678b7b601e7415c97" kind="function"><name>ramdev_write</name></member>
     <member refid="ramdev_8c_1ac9ef7e9fc03cb083b7c94bda843576bd" kind="function"><name>ramdev_flush</name></member>
     <member refid="ramdev_8c_1a0c040a7a5a5150b0b0d18354ac6f4958" kind="function"><name>mkramdev</name></member>
+  </compound>
+  <compound refid="tty_8c" kind="file"><name>tty.c</name>
+    <member refid="tty_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="tty_8c_1ac08620610e2419aca3878305400a96b7" kind="variable"><name>kernel_task</name></member>
+    <member refid="tty_8c_1ae98e607f54aef5eccd498dd30a6d005c" kind="variable"><name>ttydevs</name></member>
+    <member refid="tty_8c_1aa83abb5e9683a5205b3f41cf64859d46" kind="variable"><name>ttydefchars</name></member>
+    <member refid="tty_8c_1a4cb6812ea931081c175160c7832bd5cb" kind="function"><name>__default_tty_output</name></member>
+    <member refid="tty_8c_1af44ca2aed8cc67a67083f2632f2e8e9a" kind="function"><name>tty_ioctl</name></member>
+    <member refid="tty_8c_1a2c6de64e1d558b54c9ebd0954612acd8" kind="function"><name>tty_write</name></member>
+    <member refid="tty_8c_1af4257a33321700bf011d106a0491199f" kind="function"><name>tty_read</name></member>
+    <member refid="tty_8c_1ab570955fda22cdef6b32ab99a4d59e6f" kind="function"><name>tty_flush</name></member>
+    <member refid="tty_8c_1a73bb587a850df0de01eab91fa87e40d0" kind="function"><name>tty_open</name></member>
+    <member refid="tty_8c_1aab365abb615be7027fa0bdb2c09569cb" kind="function"><name>tty_init</name></member>
   </compound>
   <compound refid="vfs_8c" kind="file"><name>vfs.c</name>
     <member refid="vfs_8c_1ab78229df5c858687756417b32ac398ff" kind="variable"><name>list_inodes</name></member>
@@ -1050,6 +1080,11 @@
     <member refid="task_8h_1a87892f18571e88eba7fbe758759cac05" kind="define"><name>TASK_PRIORITY_MAX</name></member>
     <member refid="task_8h_1a14338e391bef80aa10d476348d085c5c" kind="define"><name>UID_SUPERUSER</name></member>
     <member refid="task_8h_1a6120fde6185466f2810fd0457009aaf0" kind="define"><name>GID_SUPERUSER</name></member>
+    <member refid="task_8h_1ac07965af2ad895ca67fdc8352303fbb5" kind="define"><name>CLONE_VM</name></member>
+    <member refid="task_8h_1a36c57614f62361d9a91c75d2ef1bf854" kind="define"><name>CLONE_SIGHAND</name></member>
+    <member refid="task_8h_1abf70cffabfa4515feef97f66bae6a5c7" kind="define"><name>CLONE_FS</name></member>
+    <member refid="task_8h_1ab062e8c87b92d645f7f4698a36e5b57a" kind="define"><name>CLONE_FILES</name></member>
+    <member refid="task_8h_1a93d70879b6c53ae3475b3241d09c4741" kind="define"><name>CLONE_PARENT</name></member>
     <member refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kind="typedef"><name>task_t</name></member>
     <member refid="task_8h_1a36ffab8d34c6c411a7e5205ddb95eaf9" kind="variable"><name>edi</name></member>
     <member refid="task_8h_1ada78e3124de6adf5a5d212f9ebc4bbe0" kind="variable"><name>esi</name></member>
@@ -1061,6 +1096,16 @@
     <member refid="task_8h_1aaba2ad0ff8ba480934feabfdab02b1e7" kind="variable"><name>ebp</name></member>
     <member refid="task_8h_1a1588906901fc3015e0865574669a56a6" kind="variable"><name>eip</name></member>
     <member refid="task_8h_1a82ac5a61b16740abc5cceaaff721c5c8" kind="function"><name>__attribute__</name></member>
+  </compound>
+  <compound refid="tty_8h" kind="file"><name>tty.h</name>
+    <member refid="tty_8h_1ae27757a251b08584e6d5f5f3c8baf0cb" kind="define"><name>TTYDEF_WIN_COLS</name></member>
+    <member refid="tty_8h_1a0c04c79b038508aafb633827bbf55af4" kind="define"><name>TTYDEF_WIN_ROWS</name></member>
+    <member refid="tty_8h_1acd69d0fbe279cfcd136fd45d44562404" kind="define"><name>TTYDEF_IOS_IFLAG</name></member>
+    <member refid="tty_8h_1a8fa8e526600e28d4607297cfe5fe3d3a" kind="define"><name>TTYDEF_IOS_OFLAG</name></member>
+    <member refid="tty_8h_1abeea8ac0ea0a9738e57f82d0ef43a85e" kind="define"><name>TTYDEF_IOS_LFLAG</name></member>
+    <member refid="tty_8h_1ae440976cabc9ef1b86ec745135107f3f" kind="define"><name>TTYDEF_IOS_CFLAG</name></member>
+    <member refid="tty_8h_1a3ef6c6081b397b9416c8455571fe9e11" kind="define"><name>TTYDEF_IOS_SPEED</name></member>
+    <member refid="tty_8h_1ae87a1d3b391605c6f2337562698f46fa" kind="typedef"><name>tty_t</name></member>
   </compound>
   <compound refid="grub_8h" kind="file"><name>grub.h</name>
     <member refid="grub_8h_1a3efad85ab30d96e506aba9003c0ee4dd" kind="define"><name>MULTIBOOT_FLAG_MEM</name></member>
@@ -1457,6 +1502,10 @@
     <member refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kind="function"><name>sys_open</name></member>
     <member refid="open_8c_1acad57ec13a2846f9bbbf7c99b66a773b" kind="function"><name>SYSCALL</name></member>
   </compound>
+  <compound refid="openpty_8c" kind="file"><name>openpty.c</name>
+    <member refid="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e" kind="function"><name>sys_openpty</name></member>
+    <member refid="openpty_8c_1a773637204237eb29e9c39c0dcd5a06f4" kind="function"><name>SYSCALL</name></member>
+  </compound>
   <compound refid="read_8c" kind="file"><name>read.c</name>
     <member refid="read_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
     <member refid="read_8c_1a9af8258c3554800f6613f8147544225f" kind="variable"><name>vfs_root</name></member>
@@ -1479,6 +1528,11 @@
     <member refid="stat_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
     <member refid="stat_8c_1a9c87666780aa51f709d34f50e05f1ef9" kind="function"><name>sys_stat</name></member>
     <member refid="stat_8c_1ab45af51509d61db3d12d130a3dbc84b2" kind="function"><name>SYSCALL</name></member>
+  </compound>
+  <compound refid="symlink_8c" kind="file"><name>symlink.c</name>
+    <member refid="symlink_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="symlink_8c_1aca4e437a3e65d900c99763ccd3032c1f" kind="function"><name>sys_symlink</name></member>
+    <member refid="symlink_8c_1ab054efed13f519c688c08dd61c876a32" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="time_8c" kind="file"><name>time.c</name>
     <member refid="time_8c_1a4b6eba92722ec1e5446f676e95e4cddf" kind="function"><name>sys_time</name></member>
@@ -1512,7 +1566,7 @@
   </compound>
   <compound refid="yield_8c" kind="file"><name>yield.c</name>
     <member refid="yield_8c_1a1b3e74d65228b4578f1021261a5f858b" kind="function"><name>sys_yield</name></member>
-    <member refid="yield_8c_1af498ada32e285a077cc5fc9b5f61d250" kind="function"><name>SYSCALL</name></member>
+    <member refid="yield_8c_1ac015462b27f6721140f30824adc6ba73" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="crt0_8c" kind="file"><name>crt0.c</name>
     <member refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" kind="variable"><name>environ</name></member>
@@ -1764,6 +1818,10 @@
   <compound refid="posix_2hooks_8h" kind="file"><name>hooks.h</name>
     <member refid="posix_2hooks_8h_1a369266c24eacffb87046522897a570d5" kind="define"><name>_GNU_SOURCE</name></member>
     <member refid="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5" kind="define"><name>CLONE_VM</name></member>
+    <member refid="posix_2hooks_8h_1a36c57614f62361d9a91c75d2ef1bf854" kind="define"><name>CLONE_SIGHAND</name></member>
+    <member refid="posix_2hooks_8h_1abf70cffabfa4515feef97f66bae6a5c7" kind="define"><name>CLONE_FS</name></member>
+    <member refid="posix_2hooks_8h_1ab062e8c87b92d645f7f4698a36e5b57a" kind="define"><name>CLONE_FILES</name></member>
+    <member refid="posix_2hooks_8h_1a93d70879b6c53ae3475b3241d09c4741" kind="define"><name>CLONE_PARENT</name></member>
     <member refid="posix_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34" kind="define"><name>__os_thread_create</name></member>
     <member refid="posix_2hooks_8h_1ab48a49c5d6297d7b9023b8796a1c996e" kind="define"><name>__os_thread_kill</name></member>
     <member refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" kind="define"><name>__os_gettid</name></member>

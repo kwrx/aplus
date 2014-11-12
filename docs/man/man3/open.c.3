@@ -1,4 +1,4 @@
-.TH "src/syscall/open.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/open.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -193,29 +193,28 @@ References dupstr(), errno, task::fd, ino_open(), kfree(), and TASK_MAX_FD\&.
 130 
 131     char* p = dupstr(filename);
 132     inode_t* ino = ino_open(p, flags, mode);
-133 
-134     kfree(p);
-135 
-136     if(!ino)
-137         return -1;
+133     kfree(p);
+134 
+135     if(!ino)
+136         return -1;
+137     
 138     
-139     
-140     inode_t** fd = NULL;
-141     for(int i = 0; i < TASK_MAX_FD; i++) {
-142         if(current_task->fd[i] == 0) {
-143             fd = &current_task->fd[i];
-144             break;
-145         }
-146     }
-147     
-148     if(fd == NULL) {
-149         errno = EMFILE;
-150         return -1;
-151     }
-152     
-153     *fd = ino;
-154     return 0;
-155 }
+139     inode_t** fd = NULL;
+140     for(int i = 0; i < TASK_MAX_FD; i++) {
+141         if(current_task->fd[i] == 0) {
+142             fd = &current_task->fd[i];
+143             break;
+144         }
+145     }
+146     
+147     if(fd == NULL) {
+148         errno = EMFILE;
+149         return -1;
+150     }
+151     
+152     *fd = ino;
+153     return 0;
+154 }
 .fi
 .SS "SYSCALL (\fBsys_open\fP, 10)"
 

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="tty_8h">
+    <title>tty.h File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/spinlock.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
+    <programlisting>#include &lt;stdio.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/ioctl.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/termios.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structtty">tty</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="tty_8h_1ae27757a251b08584e6d5f5f3c8baf0cb">TTYDEF_WIN_COLS</link> 80</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="tty_8h_1a0c04c79b038508aafb633827bbf55af4">TTYDEF_WIN_ROWS</link> 25</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="tty_8h_1acd69d0fbe279cfcd136fd45d44562404">TTYDEF_IOS_IFLAG</link> (BRKINT | ISTRIP | ICRNL | IMAXBEL | IXON | IXANY)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="tty_8h_1a8fa8e526600e28d4607297cfe5fe3d3a">TTYDEF_IOS_OFLAG</link> (OPOST | ONLCR | OXTABS)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="tty_8h_1abeea8ac0ea0a9738e57f82d0ef43a85e">TTYDEF_IOS_LFLAG</link> (ECHO | ICANON | ISIG | IEXTEN | ECHOE | ECHOKE | ECHOCTL)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="tty_8h_1ae440976cabc9ef1b86ec745135107f3f">TTYDEF_IOS_CFLAG</link> (CREAD | CS7 | PARENB | HUPCL)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="tty_8h_1a3ef6c6081b397b9416c8455571fe9e11">TTYDEF_IOS_SPEED</link> (B9600)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structtty">tty</link>  <link linkend="tty_8h_1ae87a1d3b391605c6f2337562698f46fa">tty_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/include/aplus/tty.h</para>
+    </simplesect>
+</section>

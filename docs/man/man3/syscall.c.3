@@ -1,4 +1,4 @@
-.TH "src/arch/syscall.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/syscall.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -42,14 +42,14 @@ src/arch/syscall.c \-
 .SS "int syscall_handler (regs_t *r)"
 
 .PP
-Definition at line 53 of file syscall\&.c\&.
+Definition at line 77 of file syscall\&.c\&.
 .PP
 References syscall_handlers, and syscall_invoke()\&.
 .PP
 .nf
-53                                {
-54     return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
-55 }
+77                                {
+78     return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
+79 }
 .fi
 .SS "int syscall_init ()"
 
@@ -68,45 +68,69 @@ References attribute(), __syscall::handler, kmalloc(), kprintf(), list_destroy, 
 17     list_foreach(value, syslist) {
 18         syscall_t* sys = (syscall_t*) value;
 19 
-20         syscall_handlers[sys->number] = sys->handler;
-21     }
+20         if(syscall_handlers[sys->number])
+21             kprintf("syscall: duplicate number of %d handler\n");
 22 
-23     kprintf("syscall: loaded %d handlers\n", syslist->size);
-24     list_destroy(syslist);
-25     return 0;
-26 }
+23         syscall_handlers[sys->number] = sys->handler;
+24     }
+25 
+26     kprintf("syscall: loaded %d handlers\n", syslist->size);
+27     list_destroy(syslist);
+28 
+29 
+30 #ifdef DEBUG
+31     #define NSYSCALLS       1024
+32 
+33     for(int i = 0, s = 0; i < NSYSCALLS; i++) {
+34         if(syscall_handlers[i] == NULL) {
+35             if(!s)
+36                 continue;
+37 
+38             if(s > 1)
+39                 kprintf("\t%d\&.\&.%d\n", i - s, i - 1);
+40             else
+41                 kprintf("\t%d\n", i - s);
+42 
+43             s = 0;
+44         } else
+45             s++;
+46     }
+47 #endif
+48 
+49     return 0;
+50 }
 .fi
 .SS "int syscall_invoke (void *handler, intp0, intp1, intp2, intp3, intp4)"
 
 .PP
-Definition at line 28 of file syscall\&.c\&.
+Definition at line 52 of file syscall\&.c\&.
 .PP
 References __asm__(), and errno\&.
 .PP
 .nf
-28                                                                           {
-29     if(handler == NULL) {
-30         errno = ENOSYS;
-31         return -1;
-32     }
-33 
-34 
-35     int r = 0;
-36 
-37     __asm__ (
-38         "push ebx           \n"
-39         "push ecx           \n"
-40         "push edx           \n"
-41         "push esi           \n"
-42         "push edi           \n"
-43         "call eax           \n"
-44         "add esp, 20        \n"
-45         : "=a"(r) 
-46         : "a"(handler), "b"(p4), "c"(p3), "d"(p2), "S"(p1), "D"(p0)
-47     );
-48 
-49     return r;
-50 }
+52                                                                           {
+53     if(handler == NULL) {
+54         errno = ENOSYS;
+55         return -1;
+56     }
+57 
+58 
+59     int r = 0;
+60 
+61     __asm__ (
+62         "push ebx           \n"
+63         "push ecx           \n"
+64         "push edx           \n"
+65         "push esi           \n"
+66         "push edi           \n"
+67         "call eax           \n"
+68         "add esp, 20        \n"
+69         : "=a"(r) 
+70         : "a"(handler), "b"(p4), "c"(p3), "d"(p2), "S"(p1), "D"(p0)
+71     );
+72 
+73     return r;
+74 }
 .fi
 .SH "Variable Documentation"
 .PP 

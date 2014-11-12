@@ -12,164 +12,148 @@
     <includes local="no">sys/times.h</includes>
     <includes local="no">time.h</includes>
     <incdepgraph>
-      <node id="1999">
+      <node id="1780">
         <label>sys/stat.h</label>
       </node>
-      <node id="1988">
+      <node id="1772">
         <label>stdarg.h</label>
       </node>
-      <node id="1991">
+      <node id="1775">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1986" relation="include">
+        <childnode refid="1770" relation="include">
         </childnode>
-        <childnode refid="1992" relation="include">
+        <childnode refid="1776" relation="include">
         </childnode>
-        <childnode refid="1987" relation="include">
+        <childnode refid="1771" relation="include">
         </childnode>
-        <childnode refid="1989" relation="include">
+        <childnode refid="1773" relation="include">
         </childnode>
-        <childnode refid="1994" relation="include">
+        <childnode refid="1778" relation="include">
         </childnode>
       </node>
-      <node id="2006">
+      <node id="1788">
         <label>sys/times.h</label>
       </node>
-      <node id="1998">
+      <node id="1779">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1987" relation="include">
+        <childnode refid="1771" relation="include">
         </childnode>
-        <childnode refid="1993" relation="include">
+        <childnode refid="1777" relation="include">
         </childnode>
-        <childnode refid="1994" relation="include">
+        <childnode refid="1778" relation="include">
         </childnode>
-        <childnode refid="1999" relation="include">
+        <childnode refid="1780" relation="include">
         </childnode>
-        <childnode refid="2000" relation="include">
+        <childnode refid="1781" relation="include">
         </childnode>
       </node>
-      <node id="1987">
+      <node id="1771">
         <label>stdint.h</label>
       </node>
-      <node id="1990">
+      <node id="1774">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1986" relation="include">
+        <childnode refid="1770" relation="include">
         </childnode>
-        <childnode refid="1991" relation="include">
+        <childnode refid="1775" relation="include">
         </childnode>
-        <childnode refid="1987" relation="include">
+        <childnode refid="1771" relation="include">
         </childnode>
       </node>
-      <node id="2003">
+      <node id="1785">
         <label>setjmp.h</label>
       </node>
-      <node id="1997">
+      <node id="1783">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1987" relation="include">
+        <childnode refid="1771" relation="include">
         </childnode>
-        <childnode refid="1986" relation="include">
+        <childnode refid="1770" relation="include">
         </childnode>
-        <childnode refid="1998" relation="include">
+        <childnode refid="1779" relation="include">
         </childnode>
-        <childnode refid="2002" relation="include">
+        <childnode refid="1784" relation="include">
         </childnode>
-        <childnode refid="1994" relation="include">
+        <childnode refid="1778" relation="include">
         </childnode>
-        <childnode refid="2003" relation="include">
+        <childnode refid="1785" relation="include">
         </childnode>
       </node>
-      <node id="2005">
+      <node id="1787">
         <label>errno.h</label>
       </node>
-      <node id="2004">
+      <node id="1786">
         <label>fcntl.h</label>
       </node>
-      <node id="1993">
+      <node id="1777">
         <label>stddef.h</label>
       </node>
-      <node id="1992">
+      <node id="1776">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1993" relation="include">
+        <childnode refid="1777" relation="include">
         </childnode>
-        <childnode refid="1987" relation="include">
+        <childnode refid="1771" relation="include">
         </childnode>
-        <childnode refid="1994" relation="include">
-        </childnode>
-        <childnode refid="1995" relation="include">
-        </childnode>
-        <childnode refid="1996" relation="include">
+        <childnode refid="1778" relation="include">
         </childnode>
       </node>
-      <node id="1986">
+      <node id="1770">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1987" relation="include">
+        <childnode refid="1771" relation="include">
         </childnode>
-        <childnode refid="1988" relation="include">
+        <childnode refid="1772" relation="include">
         </childnode>
-        <childnode refid="1989" relation="include">
+        <childnode refid="1773" relation="include">
         </childnode>
       </node>
-      <node id="1994">
+      <node id="1778">
         <label>sys/types.h</label>
       </node>
-      <node id="1989">
+      <node id="1773">
         <label>string.h</label>
       </node>
-      <node id="2001">
+      <node id="1782">
         <label>unistd.h</label>
       </node>
-      <node id="2002">
+      <node id="1784">
         <label>signal.h</label>
       </node>
-      <node id="1996">
-        <label>aplus/mm.h</label>
-        <link refid="mm_8h"/>
-        <childnode refid="1987" relation="include">
-        </childnode>
-        <childnode refid="1997" relation="include">
-        </childnode>
-      </node>
-      <node id="2007">
+      <node id="1789">
         <label>time.h</label>
       </node>
-      <node id="2000">
+      <node id="1781">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2001" relation="include">
+        <childnode refid="1782" relation="include">
         </childnode>
-        <childnode refid="1994" relation="include">
+        <childnode refid="1778" relation="include">
         </childnode>
       </node>
-      <node id="1985">
+      <node id="1769">
         <label>src/syscall/times.c</label>
         <link refid="times.c"/>
-        <childnode refid="1986" relation="include">
+        <childnode refid="1770" relation="include">
         </childnode>
-        <childnode refid="1990" relation="include">
+        <childnode refid="1774" relation="include">
         </childnode>
-        <childnode refid="1998" relation="include">
+        <childnode refid="1779" relation="include">
         </childnode>
-        <childnode refid="1997" relation="include">
+        <childnode refid="1783" relation="include">
         </childnode>
-        <childnode refid="2001" relation="include">
+        <childnode refid="1782" relation="include">
         </childnode>
-        <childnode refid="2004" relation="include">
+        <childnode refid="1786" relation="include">
         </childnode>
-        <childnode refid="2005" relation="include">
+        <childnode refid="1787" relation="include">
         </childnode>
-        <childnode refid="2006" relation="include">
+        <childnode refid="1788" relation="include">
         </childnode>
-        <childnode refid="2007" relation="include">
+        <childnode refid="1789" relation="include">
         </childnode>
-      </node>
-      <node id="1995">
-        <label>aplus/spinlock.h</label>
-        <link refid="spinlock_8h"/>
       </node>
     </incdepgraph>
       <sectiondef kind="var">
@@ -204,7 +188,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/syscall/times.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/syscall/times.c" bodystart="15" bodyend="33"/>
-        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="104">task::clock</references>
+        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="122">task::clock</references>
         <references refid="desc_8c_1affef3cc40072321b8d54e4c00aa4de85" compoundref="desc_8c" startline="393" endline="395">pit_getticks</references>
         <references refid="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" compoundref="src_2sched_8c" startline="193" endline="206">schedule_child</references>
       </memberdef>

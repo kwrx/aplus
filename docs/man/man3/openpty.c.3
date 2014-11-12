@@ -1,0 +1,51 @@
+.TH "src/syscall/openpty.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/openpty.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/tty\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_openpty\fP (int *master, int *slave, char *\fBname\fP, const struct termios *ios, const struct \fBwinsize\fP *win)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_openpty\fP, 27)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int sys_openpty (int *master, int *slave, char *name, const struct termios *ios, const struct \fBwinsize\fP *win)"
+
+.PP
+Definition at line 8 of file openpty\&.c\&.
+.PP
+References errno, and tty_open()\&.
+.PP
+.nf
+8                                                                                                            {
+9     if(!master || !slave) {
+10         errno = EINVAL;
+11         return -1;
+12     }
+13 
+14     return tty_open(master, slave, name, ios, win);
+15 }
+.fi
+.SS "SYSCALL (\fBsys_openpty\fP, 27)"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

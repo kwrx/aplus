@@ -5,29 +5,29 @@
     <includes local="no">fcntl.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="2305">
+      <node id="2066">
         <label>fcntl.h</label>
       </node>
-      <node id="2304">
+      <node id="2065">
         <label>usr/src/libposix/src/lstat.c</label>
         <link refid="lstat.c"/>
-        <childnode refid="2305" relation="include">
+        <childnode refid="2066" relation="include">
         </childnode>
-        <childnode refid="2306" relation="include">
+        <childnode refid="2067" relation="include">
         </childnode>
       </node>
-      <node id="2308">
+      <node id="2069">
         <label>sys/types.h</label>
       </node>
-      <node id="2307">
+      <node id="2068">
         <label>unistd.h</label>
       </node>
-      <node id="2306">
+      <node id="2067">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2307" relation="include">
+        <childnode refid="2068" relation="include">
         </childnode>
-        <childnode refid="2308" relation="include">
+        <childnode refid="2069" relation="include">
         </childnode>
       </node>
     </incdepgraph>

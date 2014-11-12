@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structtty" kind="struct" prot="public">
+    <compoundname>tty</compoundname>
+    <includes refid="tty_8h" local="no">tty.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structtty_1a10958fdd6a24123e3522b806a8647656" prot="public" static="no" mutable="no">
+        <type>struct termios</type>
+        <definition>struct termios tty::ios</definition>
+        <argsstring></argsstring>
+        <name>ios</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="110" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1af7fc07d18ca858dc99376525b8a437a3" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="grub_8h_1a75544d53f0c0032654ba8afc5ea4fb34" kindref="member">winsize</ref></type>
+        <definition>struct winsize tty::win</definition>
+        <argsstring></argsstring>
+        <name>win</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="110" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1a37c81cc0b682d67ec3d789f061357d77" prot="public" static="no" mutable="no">
+        <type><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref></type>
+        <definition>spinlock_t tty::lock</definition>
+        <argsstring></argsstring>
+        <name>lock</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="29" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1ad876c12571c56724c3277ee634b5dd30" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char tty::ibuffer[BUFSIZ]</definition>
+        <argsstring>[BUFSIZ]</argsstring>
+        <name>ibuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="31" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1a739b6ee550a2f4f997637261aed60167" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char tty::obuffer[BUFSIZ]</definition>
+        <argsstring>[BUFSIZ]</argsstring>
+        <name>obuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="32" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1a25ab11cf5b7109480eb6f2e4f05efe4f" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short tty::isize</definition>
+        <argsstring></argsstring>
+        <name>isize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="34" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1a94aa6d24908c6976459d187842f1428b" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short tty::osize</definition>
+        <argsstring></argsstring>
+        <name>osize</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="35" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1aeb81a44fe3a7067e36a6c2c9194d8dad" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tty::exclmode</definition>
+        <argsstring></argsstring>
+        <name>exclmode</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="37" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1a8a6dae366ed6eac05de7d9d463bd04eb" prot="public" static="no" mutable="no">
+        <type>pid_t</type>
+        <definition>pid_t tty::fg</definition>
+        <argsstring></argsstring>
+        <name>fg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="39" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1a68f717ba40f28d6b941f62f0e7255e2e" prot="public" static="no" mutable="no">
+        <type>pid_t</type>
+        <definition>pid_t tty::bg</definition>
+        <argsstring></argsstring>
+        <name>bg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="40" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1ababbf2910aa51f41da438d6adca0aca5" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tty::id</definition>
+        <argsstring></argsstring>
+        <name>id</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="41" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structtty_1a2a619877d6ee5bb7caa115a931f98e2c" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* tty::output)(struct tty *, void *ptr, size_t size)</definition>
+        <argsstring>)(struct tty *, void *ptr, size_t size)</argsstring>
+        <name>output</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="44" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="117">
+        <label>tty</label>
+        <link refid="structtty"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="25" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="25" bodyend="45"/>
+    <listofallmembers>
+      <member refid="structtty_1a68f717ba40f28d6b941f62f0e7255e2e" prot="public" virt="non-virtual"><scope>tty</scope><name>bg</name></member>
+      <member refid="structtty_1aeb81a44fe3a7067e36a6c2c9194d8dad" prot="public" virt="non-virtual"><scope>tty</scope><name>exclmode</name></member>
+      <member refid="structtty_1a8a6dae366ed6eac05de7d9d463bd04eb" prot="public" virt="non-virtual"><scope>tty</scope><name>fg</name></member>
+      <member refid="structtty_1ad876c12571c56724c3277ee634b5dd30" prot="public" virt="non-virtual"><scope>tty</scope><name>ibuffer</name></member>
+      <member refid="structtty_1ababbf2910aa51f41da438d6adca0aca5" prot="public" virt="non-virtual"><scope>tty</scope><name>id</name></member>
+      <member refid="structtty_1a10958fdd6a24123e3522b806a8647656" prot="public" virt="non-virtual"><scope>tty</scope><name>ios</name></member>
+      <member refid="structtty_1a25ab11cf5b7109480eb6f2e4f05efe4f" prot="public" virt="non-virtual"><scope>tty</scope><name>isize</name></member>
+      <member refid="structtty_1a37c81cc0b682d67ec3d789f061357d77" prot="public" virt="non-virtual"><scope>tty</scope><name>lock</name></member>
+      <member refid="structtty_1a739b6ee550a2f4f997637261aed60167" prot="public" virt="non-virtual"><scope>tty</scope><name>obuffer</name></member>
+      <member refid="structtty_1a94aa6d24908c6976459d187842f1428b" prot="public" virt="non-virtual"><scope>tty</scope><name>osize</name></member>
+      <member refid="structtty_1a2a619877d6ee5bb7caa115a931f98e2c" prot="public" virt="non-virtual"><scope>tty</scope><name>output</name></member>
+      <member refid="structtty_1af7fc07d18ca858dc99376525b8a437a3" prot="public" virt="non-virtual"><scope>tty</scope><name>win</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

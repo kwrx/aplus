@@ -11,5 +11,6 @@ var dir_cfd1fb2b98030f4f81570490591de86f =
     [ "pci.h", "pci_8h.html", "pci_8h" ],
     [ "spinlock.h", "spinlock_8h.html", "spinlock_8h" ],
     [ "syscall.h", "syscall_8h.html", "syscall_8h" ],
-    [ "task.h", "task_8h.html", "task_8h" ]
+    [ "task.h", "task_8h.html", "task_8h" ],
+    [ "tty.h", "tty_8h.html", "tty_8h" ]
 ];

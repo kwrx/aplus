@@ -2,6 +2,11 @@ var task_8h =
 [
     [ "task_env", "structtask__env.html", "structtask__env" ],
     [ "task", "structtask.html", "structtask" ],
+    [ "CLONE_FILES", "task_8h.html#ab062e8c87b92d645f7f4698a36e5b57a", null ],
+    [ "CLONE_FS", "task_8h.html#abf70cffabfa4515feef97f66bae6a5c7", null ],
+    [ "CLONE_PARENT", "task_8h.html#a93d70879b6c53ae3475b3241d09c4741", null ],
+    [ "CLONE_SIGHAND", "task_8h.html#a36c57614f62361d9a91c75d2ef1bf854", null ],
+    [ "CLONE_VM", "task_8h.html#ac07965af2ad895ca67fdc8352303fbb5", null ],
     [ "GID_SUPERUSER", "task_8h.html#a6120fde6185466f2810fd0457009aaf0", null ],
     [ "TASK_MAX_FD", "task_8h.html#aa0beab24d02a2ccd5d273dea188af93d", null ],
     [ "TASK_PRIORITY_HIGH", "task_8h.html#a32e4a0ac1f8e5ab8306c04d96de330ed", null ],

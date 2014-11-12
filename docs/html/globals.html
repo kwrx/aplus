@@ -175,9 +175,18 @@ $(document).ready(function(){initNavTree('globals.html','');});
 <li>__default_sighandler__()
 : <a class="el" href="crt0_8c.html#aa7ab5703ee773f395bff8dc7abf214af">crt0.c</a>
 </li>
+<li>__default_tty_output()
+: <a class="el" href="tty_8c.html#a4cb6812ea931081c175160c7832bd5cb">tty.c</a>
+</li>
 <li>__fastlock_waiton()
 : <a class="el" href="spinlock_8h.html#a2bf717efcda7e5189e3192e09e49c249">spinlock.h</a>
 , <a class="el" href="spinlock_8c.html#a2bf717efcda7e5189e3192e09e49c249">spinlock.c</a>
+</li>
+<li>__fork_buf
+: <a class="el" href="task_8c.html#a65552f86d5e6567721f1d1afcb34e7ab">task.c</a>
+</li>
+<li>__fork_child()
+: <a class="el" href="task_8c.html#ae020ae98e6a6fc90f836f38cc405290c">task.c</a>
 </li>
 <li>__groups
 : <a class="el" href="getgroups_8c.html#aab455defff8fa5fdd0fd0b6f64377979">getgroups.c</a>
@@ -192,7 +201,7 @@ $(document).ready(function(){initNavTree('globals.html','');});
 : <a class="el" href="posix_2hooks_8h.html#a20babf330fa9904ff336e8b41720991d">hooks.h</a>
 </li>
 <li>__os_thread_create
-: <a class="el" href="posix_2hooks_8h.html#a90a2b2b0249a9fde4ff642490f566e34">hooks.h</a>
+: <a class="el" href="win32_2hooks_8h.html#a90a2b2b0249a9fde4ff642490f566e34">hooks.h</a>
 </li>
 <li>__os_thread_kill
 : <a class="el" href="posix_2hooks_8h.html#ab48a49c5d6297d7b9023b8796a1c996e">hooks.h</a>
@@ -211,8 +220,8 @@ $(document).ready(function(){initNavTree('globals.html','');});
 : <a class="el" href="pthread__create_8c.html#a0177c641d305d417a7960701e701fc07">pthread_create.c</a>
 </li>
 <li>__pthread_init_queue()
-: <a class="el" href="pthread__create_8c.html#acbbda48de9905dc1d40c073a89b66e62">pthread_create.c</a>
-, <a class="el" href="pthread__queue_8c.html#a524e53db3985af45990760ed9068c0a9">pthread_queue.c</a>
+: <a class="el" href="pthread__queue_8c.html#a524e53db3985af45990760ed9068c0a9">pthread_queue.c</a>
+, <a class="el" href="pthread__create_8c.html#acbbda48de9905dc1d40c073a89b66e62">pthread_create.c</a>
 </li>
 <li>__pthread_key_t
 : <a class="el" href="pthread__internal_8h.html#af2e45523b401a6101f50c6f7be0d66a8">pthread_internal.h</a>
@@ -221,8 +230,8 @@ $(document).ready(function(){initNavTree('globals.html','');});
 : <a class="el" href="pthread__key_8c.html#afac43b0444afef8a4a8a6409728a2703">pthread_key.c</a>
 </li>
 <li>__pthread_queue
-: <a class="el" href="pthread__cond_8c.html#a9ed893dd8f37e017f207c1c6ccdb41ec">pthread_cond.c</a>
-, <a class="el" href="pthread__create_8c.html#a9ed893dd8f37e017f207c1c6ccdb41ec">pthread_create.c</a>
+: <a class="el" href="pthread__create_8c.html#a9ed893dd8f37e017f207c1c6ccdb41ec">pthread_create.c</a>
+, <a class="el" href="pthread__cond_8c.html#a9ed893dd8f37e017f207c1c6ccdb41ec">pthread_cond.c</a>
 , <a class="el" href="pthread__detach_8c.html#a9ed893dd8f37e017f207c1c6ccdb41ec">pthread_detach.c</a>
 , <a class="el" href="pthread__queue_8c.html#af5e1770b9b68ff239d3c16cb3587ce64">pthread_queue.c</a>
 , <a class="el" href="pthread__self_8c.html#a9ed893dd8f37e017f207c1c6ccdb41ec">pthread_self.c</a>
@@ -231,8 +240,8 @@ $(document).ready(function(){initNavTree('globals.html','');});
 : <a class="el" href="crt0_8c.html#a50595d26a35dfb272a9f822789821724">crt0.c</a>
 </li>
 <li>__spinlock_waiton()
-: <a class="el" href="spinlock_8h.html#aa40e1417e8410d92c2ffc313e57560e8">spinlock.h</a>
-, <a class="el" href="spinlock_8c.html#aa40e1417e8410d92c2ffc313e57560e8">spinlock.c</a>
+: <a class="el" href="spinlock_8c.html#aa40e1417e8410d92c2ffc313e57560e8">spinlock.c</a>
+, <a class="el" href="spinlock_8h.html#aa40e1417e8410d92c2ffc313e57560e8">spinlock.h</a>
 </li>
 <li>__stack_chk_guard
 : <a class="el" href="chkfail_8c.html#a4d89a2b9acdd92bbf45a2af64c570bb3">chkfail.c</a>
@@ -253,22 +262,21 @@ $(document).ready(function(){initNavTree('globals.html','');});
 : <a class="el" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">panic.c</a>
 </li>
 <li>_DEFUN()
-: <a class="el" href="execl_8c.html#aaed3b82a6a2931a5ea07cf041fcc5fba">execl.c</a>
-, <a class="el" href="execvp_8c.html#abd01b9e4dcf0b408353235fe59e17675">execvp.c</a>
+: <a class="el" href="execvp_8c.html#abd01b9e4dcf0b408353235fe59e17675">execvp.c</a>
 , <a class="el" href="execle_8c.html#a299626bec19ca939a02c5e9941e8d071">execle.c</a>
-, <a class="el" href="execv_8c.html#af785e3a983b2ce8aa8cdfb77e3b5b903">execv.c</a>
-, <a class="el" href="execvp_8c.html#a10efa145fdda589520d161cf247a568f">execvp.c</a>
 , <a class="el" href="execlp_8c.html#aab09774ec2290c965f64151463f38eee">execlp.c</a>
+, <a class="el" href="execv_8c.html#af785e3a983b2ce8aa8cdfb77e3b5b903">execv.c</a>
+, <a class="el" href="execl_8c.html#aaed3b82a6a2931a5ea07cf041fcc5fba">execl.c</a>
 </li>
 <li>_end
 : <a class="el" href="crt0_8c.html#abb406f6b7d63af84fda76dbcdbac66c5">crt0.c</a>
 </li>
 <li>_execve()
-: <a class="el" href="execv_8c.html#accd0d84615f4b84367796ea088af9d72">execv.c</a>
-, <a class="el" href="execlp_8c.html#accd0d84615f4b84367796ea088af9d72">execlp.c</a>
+: <a class="el" href="execl_8c.html#accd0d84615f4b84367796ea088af9d72">execl.c</a>
 , <a class="el" href="execle_8c.html#accd0d84615f4b84367796ea088af9d72">execle.c</a>
+, <a class="el" href="execv_8c.html#accd0d84615f4b84367796ea088af9d72">execv.c</a>
+, <a class="el" href="execlp_8c.html#accd0d84615f4b84367796ea088af9d72">execlp.c</a>
 , <a class="el" href="__execve_8c.html#accd0d84615f4b84367796ea088af9d72">_execve.c</a>
-, <a class="el" href="execl_8c.html#accd0d84615f4b84367796ea088af9d72">execl.c</a>
 </li>
 <li>_GNU_SOURCE
 : <a class="el" href="posix_2hooks_8h.html#a369266c24eacffb87046522897a570d5">hooks.h</a>
@@ -288,7 +296,7 @@ $(document).ready(function(){initNavTree('globals.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:41 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:04 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

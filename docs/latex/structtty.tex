@@ -1,0 +1,133 @@
+\hypertarget{structtty}{\section{tty Struct Reference}
+\label{structtty}\index{tty@{tty}}
+}
+
+
+{\ttfamily \#include $<$tty.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+struct termios \hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}
+\item 
+struct \hyperlink{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{winsize} \hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}
+\item 
+\hyperlink{spinlock_8h_a7d562148dafb0dacf0ee876d482ed090}{spinlock\+\_\+t} \hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock}
+\item 
+char \hyperlink{structtty_ad876c12571c56724c3277ee634b5dd30}{ibuffer} \mbox{[}B\+U\+F\+S\+I\+Z\mbox{]}
+\item 
+char \hyperlink{structtty_a739b6ee550a2f4f997637261aed60167}{obuffer} \mbox{[}B\+U\+F\+S\+I\+Z\mbox{]}
+\item 
+short \hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize}
+\item 
+short \hyperlink{structtty_a94aa6d24908c6976459d187842f1428b}{osize}
+\item 
+int \hyperlink{structtty_aeb81a44fe3a7067e36a6c2c9194d8dad}{exclmode}
+\item 
+pid\+\_\+t \hyperlink{structtty_a8a6dae366ed6eac05de7d9d463bd04eb}{fg}
+\item 
+pid\+\_\+t \hyperlink{structtty_a68f717ba40f28d6b941f62f0e7255e2e}{bg}
+\item 
+int \hyperlink{structtty_ababbf2910aa51f41da438d6adca0aca5}{id}
+\item 
+void($\ast$ \hyperlink{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{output} )(struct \hyperlink{structtty}{tty} $\ast$, void $\ast$ptr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 25 of file tty.\+h.
+
+
+
+\subsection{Field Documentation}
+\hypertarget{structtty_a68f717ba40f28d6b941f62f0e7255e2e}{\index{tty@{tty}!bg@{bg}}
+\index{bg@{bg}!tty@{tty}}
+\subsubsection[{bg}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t tty\+::bg}}\label{structtty_a68f717ba40f28d6b941f62f0e7255e2e}
+
+
+Definition at line 40 of file tty.\+h.
+
+\hypertarget{structtty_aeb81a44fe3a7067e36a6c2c9194d8dad}{\index{tty@{tty}!exclmode@{exclmode}}
+\index{exclmode@{exclmode}!tty@{tty}}
+\subsubsection[{exclmode}]{\setlength{\rightskip}{0pt plus 5cm}int tty\+::exclmode}}\label{structtty_aeb81a44fe3a7067e36a6c2c9194d8dad}
+
+
+Definition at line 37 of file tty.\+h.
+
+\hypertarget{structtty_a8a6dae366ed6eac05de7d9d463bd04eb}{\index{tty@{tty}!fg@{fg}}
+\index{fg@{fg}!tty@{tty}}
+\subsubsection[{fg}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t tty\+::fg}}\label{structtty_a8a6dae366ed6eac05de7d9d463bd04eb}
+
+
+Definition at line 39 of file tty.\+h.
+
+\hypertarget{structtty_ad876c12571c56724c3277ee634b5dd30}{\index{tty@{tty}!ibuffer@{ibuffer}}
+\index{ibuffer@{ibuffer}!tty@{tty}}
+\subsubsection[{ibuffer}]{\setlength{\rightskip}{0pt plus 5cm}char tty\+::ibuffer\mbox{[}B\+U\+F\+S\+I\+Z\mbox{]}}}\label{structtty_ad876c12571c56724c3277ee634b5dd30}
+
+
+Definition at line 31 of file tty.\+h.
+
+\hypertarget{structtty_ababbf2910aa51f41da438d6adca0aca5}{\index{tty@{tty}!id@{id}}
+\index{id@{id}!tty@{tty}}
+\subsubsection[{id}]{\setlength{\rightskip}{0pt plus 5cm}int tty\+::id}}\label{structtty_ababbf2910aa51f41da438d6adca0aca5}
+
+
+Definition at line 41 of file tty.\+h.
+
+\hypertarget{structtty_a10958fdd6a24123e3522b806a8647656}{\index{tty@{tty}!ios@{ios}}
+\index{ios@{ios}!tty@{tty}}
+\subsubsection[{ios}]{\setlength{\rightskip}{0pt plus 5cm}struct termios tty\+::ios}}\label{structtty_a10958fdd6a24123e3522b806a8647656}
+
+
+Definition at line 26 of file tty.\+h.
+
+\hypertarget{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{\index{tty@{tty}!isize@{isize}}
+\index{isize@{isize}!tty@{tty}}
+\subsubsection[{isize}]{\setlength{\rightskip}{0pt plus 5cm}short tty\+::isize}}\label{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}
+
+
+Definition at line 34 of file tty.\+h.
+
+\hypertarget{structtty_a37c81cc0b682d67ec3d789f061357d77}{\index{tty@{tty}!lock@{lock}}
+\index{lock@{lock}!tty@{tty}}
+\subsubsection[{lock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf spinlock\+\_\+t} tty\+::lock}}\label{structtty_a37c81cc0b682d67ec3d789f061357d77}
+
+
+Definition at line 29 of file tty.\+h.
+
+\hypertarget{structtty_a739b6ee550a2f4f997637261aed60167}{\index{tty@{tty}!obuffer@{obuffer}}
+\index{obuffer@{obuffer}!tty@{tty}}
+\subsubsection[{obuffer}]{\setlength{\rightskip}{0pt plus 5cm}char tty\+::obuffer\mbox{[}B\+U\+F\+S\+I\+Z\mbox{]}}}\label{structtty_a739b6ee550a2f4f997637261aed60167}
+
+
+Definition at line 32 of file tty.\+h.
+
+\hypertarget{structtty_a94aa6d24908c6976459d187842f1428b}{\index{tty@{tty}!osize@{osize}}
+\index{osize@{osize}!tty@{tty}}
+\subsubsection[{osize}]{\setlength{\rightskip}{0pt plus 5cm}short tty\+::osize}}\label{structtty_a94aa6d24908c6976459d187842f1428b}
+
+
+Definition at line 35 of file tty.\+h.
+
+\hypertarget{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{\index{tty@{tty}!output@{output}}
+\index{output@{output}!tty@{tty}}
+\subsubsection[{output}]{\setlength{\rightskip}{0pt plus 5cm}void($\ast$ tty\+::output)(struct {\bf tty} $\ast$, void $\ast$ptr, size\+\_\+t {\bf size})}}\label{structtty_a2a619877d6ee5bb7caa115a931f98e2c}
+
+
+Definition at line 44 of file tty.\+h.
+
+\hypertarget{structtty_af7fc07d18ca858dc99376525b8a437a3}{\index{tty@{tty}!win@{win}}
+\index{win@{win}!tty@{tty}}
+\subsubsection[{win}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf winsize} tty\+::win}}\label{structtty_af7fc07d18ca858dc99376525b8a437a3}
+
+
+Definition at line 27 of file tty.\+h.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/include/aplus/\hyperlink{tty_8h}{tty.\+h}\end{DoxyCompactItemize}

@@ -7,61 +7,61 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2578">
+      <node id="2339">
         <label>stdint.h</label>
       </node>
-      <node id="2586">
+      <node id="2347">
         <label>errno.h</label>
       </node>
-      <node id="2585">
+      <node id="2346">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2586" relation="include">
+        <childnode refid="2347" relation="include">
         </childnode>
-        <childnode refid="2578" relation="include">
+        <childnode refid="2339" relation="include">
         </childnode>
-        <childnode refid="2580" relation="include">
+        <childnode refid="2341" relation="include">
         </childnode>
       </node>
-      <node id="2577">
+      <node id="2338">
         <label>usr/src/libpthread/src/pthread_mutex.c</label>
         <link refid="pthread_mutex.c"/>
-        <childnode refid="2578" relation="include">
+        <childnode refid="2339" relation="include">
         </childnode>
-        <childnode refid="2579" relation="include">
+        <childnode refid="2340" relation="include">
         </childnode>
-        <childnode refid="2580" relation="include">
+        <childnode refid="2341" relation="include">
         </childnode>
-        <childnode refid="2585" relation="include">
+        <childnode refid="2346" relation="include">
         </childnode>
       </node>
-      <node id="2580">
+      <node id="2341">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2578" relation="include">
+        <childnode refid="2339" relation="include">
         </childnode>
-        <childnode refid="2581" relation="include">
+        <childnode refid="2342" relation="include">
         </childnode>
-        <childnode refid="2582" relation="include">
+        <childnode refid="2343" relation="include">
         </childnode>
-        <childnode refid="2583" relation="include">
+        <childnode refid="2344" relation="include">
         </childnode>
-        <childnode refid="2584" relation="include">
+        <childnode refid="2345" relation="include">
         </childnode>
       </node>
-      <node id="2581">
+      <node id="2342">
         <label>sys/types.h</label>
       </node>
-      <node id="2584">
+      <node id="2345">
         <label>unistd.h</label>
       </node>
-      <node id="2579">
+      <node id="2340">
         <label>time.h</label>
       </node>
-      <node id="2582">
+      <node id="2343">
         <label>sys/time.h</label>
       </node>
-      <node id="2583">
+      <node id="2344">
         <label>sched.h</label>
       </node>
     </incdepgraph>

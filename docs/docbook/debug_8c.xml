@@ -53,6 +53,14 @@ char * fmt, ... )</para>
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="debug_8c_1a123a367aba8cf7d2c802b6638b78a056">ksprintf</link> (
+char * buf, char * fmt, ... )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
     <simplesect>
         <title>Detailed Description</title>

@@ -7,9 +7,17 @@
 \item 
 \#define \hyperlink{posix_2hooks_8h_a369266c24eacffb87046522897a570d5}{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}
 \item 
-\#define \hyperlink{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}{C\+L\+O\+N\+E\+\_\+\+V\+M}~0
+\#define \hyperlink{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}{C\+L\+O\+N\+E\+\_\+\+V\+M}~1
 \item 
-\#define \hyperlink{posix_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}(e, a, p)~\hyperlink{posix_2hooks_8h_ab116309fb8890770660ba2cc84d797fe}{clone}((int($\ast$)(void$\ast$)) e, N\+U\+L\+L, \hyperlink{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}{C\+L\+O\+N\+E\+\_\+\+V\+M}, a)
+\#define \hyperlink{posix_2hooks_8h_a36c57614f62361d9a91c75d2ef1bf854}{C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D}~2
+\item 
+\#define \hyperlink{posix_2hooks_8h_abf70cffabfa4515feef97f66bae6a5c7}{C\+L\+O\+N\+E\+\_\+\+F\+S}~4
+\item 
+\#define \hyperlink{posix_2hooks_8h_ab062e8c87b92d645f7f4698a36e5b57a}{C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S}~8
+\item 
+\#define \hyperlink{posix_2hooks_8h_a93d70879b6c53ae3475b3241d09c4741}{C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T}~16
+\item 
+\#define \hyperlink{posix_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}(e, a, p)~\hyperlink{posix_2hooks_8h_ab116309fb8890770660ba2cc84d797fe}{clone}((int($\ast$)(void$\ast$)) e, N\+U\+L\+L, \hyperlink{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}{C\+L\+O\+N\+E\+\_\+\+V\+M} $\vert$ \hyperlink{posix_2hooks_8h_ab062e8c87b92d645f7f4698a36e5b57a}{C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S} $\vert$ \hyperlink{posix_2hooks_8h_a36c57614f62361d9a91c75d2ef1bf854}{C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D} $\vert$ \hyperlink{posix_2hooks_8h_abf70cffabfa4515feef97f66bae6a5c7}{C\+L\+O\+N\+E\+\_\+\+F\+S} $\vert$ \hyperlink{posix_2hooks_8h_a93d70879b6c53ae3475b3241d09c4741}{C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T}, a)
 \item 
 \#define \hyperlink{posix_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}(t, s)~\hyperlink{posix_2hooks_8h_a6edea8ed9aecaef5fc4762da7ec641ff}{kill}(t, s)
 \item 
@@ -36,7 +44,7 @@ int \hyperlink{posix_2hooks_8h_a2ccdeb931b6cfcf884ca5ad73e0ba11c}{getpid} ()
 )~{\bf getpid}()}}\label{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}
 
 
-Definition at line 18 of file hooks.\+h.
+Definition at line 34 of file hooks.\+h.
 
 \hypertarget{posix_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}{\index{posix/hooks.\+h@{posix/hooks.\+h}!\+\_\+\+\_\+os\+\_\+thread\+\_\+create@{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}}
 \index{\+\_\+\+\_\+os\+\_\+thread\+\_\+create@{\+\_\+\+\_\+os\+\_\+thread\+\_\+create}!posix/hooks.\+h@{posix/hooks.\+h}}
@@ -46,10 +54,10 @@ Definition at line 18 of file hooks.\+h.
 \item[{}]{a, }
 \item[{}]{p}
 \end{DoxyParamCaption}
-)~{\bf clone}((int($\ast$)(void$\ast$)) e, N\+U\+L\+L, {\bf C\+L\+O\+N\+E\+\_\+\+V\+M}, a)}}\label{posix_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}
+)~{\bf clone}((int($\ast$)(void$\ast$)) e, N\+U\+L\+L, {\bf C\+L\+O\+N\+E\+\_\+\+V\+M} $\vert$ {\bf C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S} $\vert$ {\bf C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D} $\vert$ {\bf C\+L\+O\+N\+E\+\_\+\+F\+S} $\vert$ {\bf C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T}, a)}}\label{posix_2hooks_8h_a90a2b2b0249a9fde4ff642490f566e34}
 
 
-Definition at line 16 of file hooks.\+h.
+Definition at line 32 of file hooks.\+h.
 
 \hypertarget{posix_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}{\index{posix/hooks.\+h@{posix/hooks.\+h}!\+\_\+\+\_\+os\+\_\+thread\+\_\+kill@{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}}
 \index{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill@{\+\_\+\+\_\+os\+\_\+thread\+\_\+kill}!posix/hooks.\+h@{posix/hooks.\+h}}
@@ -61,7 +69,7 @@ Definition at line 16 of file hooks.\+h.
 )~{\bf kill}(t, s)}}\label{posix_2hooks_8h_ab48a49c5d6297d7b9023b8796a1c996e}
 
 
-Definition at line 17 of file hooks.\+h.
+Definition at line 33 of file hooks.\+h.
 
 \hypertarget{posix_2hooks_8h_a369266c24eacffb87046522897a570d5}{\index{posix/hooks.\+h@{posix/hooks.\+h}!\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E@{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}}
 \index{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E@{\+\_\+\+G\+N\+U\+\_\+\+S\+O\+U\+R\+C\+E}!posix/hooks.\+h@{posix/hooks.\+h}}
@@ -70,9 +78,37 @@ Definition at line 17 of file hooks.\+h.
 
 Definition at line 4 of file hooks.\+h.
 
+\hypertarget{posix_2hooks_8h_ab062e8c87b92d645f7f4698a36e5b57a}{\index{posix/hooks.\+h@{posix/hooks.\+h}!C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S@{C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S}}
+\index{C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S@{C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S}!posix/hooks.\+h@{posix/hooks.\+h}}
+\subsubsection[{C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S~8}}\label{posix_2hooks_8h_ab062e8c87b92d645f7f4698a36e5b57a}
+
+
+Definition at line 24 of file hooks.\+h.
+
+\hypertarget{posix_2hooks_8h_abf70cffabfa4515feef97f66bae6a5c7}{\index{posix/hooks.\+h@{posix/hooks.\+h}!C\+L\+O\+N\+E\+\_\+\+F\+S@{C\+L\+O\+N\+E\+\_\+\+F\+S}}
+\index{C\+L\+O\+N\+E\+\_\+\+F\+S@{C\+L\+O\+N\+E\+\_\+\+F\+S}!posix/hooks.\+h@{posix/hooks.\+h}}
+\subsubsection[{C\+L\+O\+N\+E\+\_\+\+F\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+O\+N\+E\+\_\+\+F\+S~4}}\label{posix_2hooks_8h_abf70cffabfa4515feef97f66bae6a5c7}
+
+
+Definition at line 20 of file hooks.\+h.
+
+\hypertarget{posix_2hooks_8h_a93d70879b6c53ae3475b3241d09c4741}{\index{posix/hooks.\+h@{posix/hooks.\+h}!C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T@{C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T}}
+\index{C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T@{C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T}!posix/hooks.\+h@{posix/hooks.\+h}}
+\subsubsection[{C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+O\+N\+E\+\_\+\+P\+A\+R\+E\+N\+T~16}}\label{posix_2hooks_8h_a93d70879b6c53ae3475b3241d09c4741}
+
+
+Definition at line 28 of file hooks.\+h.
+
+\hypertarget{posix_2hooks_8h_a36c57614f62361d9a91c75d2ef1bf854}{\index{posix/hooks.\+h@{posix/hooks.\+h}!C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D@{C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D}}
+\index{C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D@{C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D}!posix/hooks.\+h@{posix/hooks.\+h}}
+\subsubsection[{C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D~2}}\label{posix_2hooks_8h_a36c57614f62361d9a91c75d2ef1bf854}
+
+
+Definition at line 16 of file hooks.\+h.
+
 \hypertarget{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}{\index{posix/hooks.\+h@{posix/hooks.\+h}!C\+L\+O\+N\+E\+\_\+\+V\+M@{C\+L\+O\+N\+E\+\_\+\+V\+M}}
 \index{C\+L\+O\+N\+E\+\_\+\+V\+M@{C\+L\+O\+N\+E\+\_\+\+V\+M}!posix/hooks.\+h@{posix/hooks.\+h}}
-\subsubsection[{C\+L\+O\+N\+E\+\_\+\+V\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+O\+N\+E\+\_\+\+V\+M~0}}\label{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}
+\subsubsection[{C\+L\+O\+N\+E\+\_\+\+V\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define C\+L\+O\+N\+E\+\_\+\+V\+M~1}}\label{posix_2hooks_8h_ac07965af2ad895ca67fdc8352303fbb5}
 
 
 Definition at line 12 of file hooks.\+h.

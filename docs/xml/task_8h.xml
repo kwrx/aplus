@@ -18,8 +18,10 @@
     <includedby refid="iso9660__readdir_8c" local="no">src/fs/iso9660/iso9660_readdir.c</includedby>
     <includedby refid="pipe_8c" local="no">src/fs/pipe.c</includedby>
     <includedby refid="ramdev_8c" local="no">src/fs/ramdev.c</includedby>
+    <includedby refid="tty_8c" local="no">src/fs/tty.c</includedby>
     <includedby refid="bufio_8h" local="no">src/include/aplus/bufio.h</includedby>
     <includedby refid="mm_8h" local="no">src/include/aplus/mm.h</includedby>
+    <includedby refid="tty_8h" local="no">src/include/aplus/tty.h</includedby>
     <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
     <includedby refid="paging_8c" local="no">src/mm/paging.c</includedby>
     <includedby refid="loopback_8c" local="no">src/net/loopback/loopback.c</includedby>
@@ -46,6 +48,7 @@
     <includedby refid="src_2syscall_2readdir_8c" local="no">src/syscall/readdir.c</includedby>
     <includedby refid="sbrk_8c" local="no">src/syscall/sbrk.c</includedby>
     <includedby refid="stat_8c" local="no">src/syscall/stat.c</includedby>
+    <includedby refid="symlink_8c" local="no">src/syscall/symlink.c</includedby>
     <includedby refid="times_8c" local="no">src/syscall/times.c</includedby>
     <includedby refid="umount_8c" local="no">src/syscall/umount.c</includedby>
     <includedby refid="unlink_8c" local="no">src/syscall/unlink.c</includedby>
@@ -53,616 +56,440 @@
     <includedby refid="write_8c" local="no">src/syscall/write.c</includedby>
     <includedby refid="yield_8c" local="no">src/syscall/yield.c</includedby>
     <incdepgraph>
-      <node id="990">
+      <node id="860">
         <label>sys/stat.h</label>
       </node>
-      <node id="985">
+      <node id="855">
         <label>stdarg.h</label>
       </node>
-      <node id="987">
+      <node id="857">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="983" relation="include">
+        <childnode refid="853" relation="include">
         </childnode>
-        <childnode refid="988" relation="include">
+        <childnode refid="858" relation="include">
         </childnode>
-        <childnode refid="989" relation="include">
+        <childnode refid="859" relation="include">
         </childnode>
-        <childnode refid="990" relation="include">
+        <childnode refid="860" relation="include">
         </childnode>
-        <childnode refid="991" relation="include">
+        <childnode refid="861" relation="include">
         </childnode>
       </node>
-      <node id="983">
+      <node id="853">
         <label>stdint.h</label>
       </node>
-      <node id="994">
+      <node id="864">
         <label>setjmp.h</label>
       </node>
-      <node id="982">
+      <node id="852">
         <label>src/include/aplus/task.h</label>
         <link refid="task.h"/>
-        <childnode refid="983" relation="include">
+        <childnode refid="853" relation="include">
         </childnode>
-        <childnode refid="984" relation="include">
+        <childnode refid="854" relation="include">
         </childnode>
-        <childnode refid="987" relation="include">
+        <childnode refid="857" relation="include">
         </childnode>
-        <childnode refid="993" relation="include">
+        <childnode refid="863" relation="include">
         </childnode>
-        <childnode refid="989" relation="include">
+        <childnode refid="859" relation="include">
         </childnode>
-        <childnode refid="994" relation="include">
+        <childnode refid="864" relation="include">
         </childnode>
       </node>
-      <node id="988">
+      <node id="858">
         <label>stddef.h</label>
       </node>
-      <node id="984">
+      <node id="854">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="983" relation="include">
+        <childnode refid="853" relation="include">
         </childnode>
-        <childnode refid="985" relation="include">
+        <childnode refid="855" relation="include">
         </childnode>
-        <childnode refid="986" relation="include">
+        <childnode refid="856" relation="include">
         </childnode>
       </node>
-      <node id="989">
+      <node id="859">
         <label>sys/types.h</label>
       </node>
-      <node id="986">
+      <node id="856">
         <label>string.h</label>
       </node>
-      <node id="992">
+      <node id="862">
         <label>unistd.h</label>
       </node>
-      <node id="993">
+      <node id="863">
         <label>signal.h</label>
       </node>
-      <node id="991">
+      <node id="861">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="992" relation="include">
+        <childnode refid="862" relation="include">
         </childnode>
-        <childnode refid="989" relation="include">
+        <childnode refid="859" relation="include">
         </childnode>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="1026">
+      <node id="899">
         <label>src/syscall/fcntl.c</label>
         <link refid="fcntl_8c"/>
       </node>
-      <node id="1050">
+      <node id="885">
         <label>src/main.c</label>
         <link refid="src_2main_8c"/>
       </node>
-      <node id="1036">
+      <node id="906">
         <label>src/syscall/lseek.c</label>
         <link refid="lseek_8c"/>
       </node>
-      <node id="1016">
-        <label>src/include/aplus/attribute.h</label>
-        <link refid="attribute_8h"/>
-        <childnode refid="1017" relation="include">
-        </childnode>
-        <childnode refid="1018" relation="include">
-        </childnode>
-        <childnode refid="1020" relation="include">
-        </childnode>
-        <childnode refid="1050" relation="include">
-        </childnode>
-        <childnode refid="1007" relation="include">
-        </childnode>
-        <childnode refid="1051" relation="include">
-        </childnode>
-        <childnode refid="1008" relation="include">
-        </childnode>
-        <childnode refid="1009" relation="include">
-        </childnode>
-        <childnode refid="1019" relation="include">
-        </childnode>
-        <childnode refid="1045" relation="include">
-        </childnode>
-      </node>
-      <node id="1062">
+      <node id="886">
         <label>src/mm/heap.c</label>
         <link refid="heap_8c"/>
       </node>
-      <node id="1019">
+      <node id="891">
+        <label>src/include/aplus/tty.h</label>
+        <link refid="tty_8h"/>
+        <childnode refid="876" relation="include">
+        </childnode>
+        <childnode refid="892" relation="include">
+        </childnode>
+      </node>
+      <node id="907">
         <label>src/syscall/mount.c</label>
         <link refid="mount_8c"/>
       </node>
-      <node id="1008">
+      <node id="879">
         <label>src/net/rtl8139/rtl8139.c</label>
         <link refid="rtl8139_8c"/>
       </node>
-      <node id="1011">
+      <node id="882">
         <label>src/arch/desc.c</label>
         <link refid="desc_8c"/>
       </node>
-      <node id="1053">
+      <node id="889">
         <label>src/mm/paging.c</label>
         <link refid="paging_8c"/>
       </node>
-      <node id="1024">
+      <node id="897">
         <label>src/syscall/close.c</label>
         <link refid="close_8c"/>
       </node>
-      <node id="1033">
-        <label>src/syscall/isatty.c</label>
-        <link refid="isatty_8c"/>
+      <node id="892">
+        <label>src/syscall/openpty.c</label>
+        <link refid="openpty_8c"/>
       </node>
-      <node id="1061">
-        <label>src/spinlock.c</label>
-        <link refid="spinlock_8c"/>
-      </node>
-      <node id="1009">
+      <node id="880">
         <label>src/net/slirp/slirp.c</label>
         <link refid="slirp_8c"/>
       </node>
-      <node id="1051">
-        <label>src/net/netif.c</label>
-        <link refid="netif_8c"/>
-      </node>
-      <node id="1032">
+      <node id="903">
         <label>src/syscall/ioctl.c</label>
         <link refid="ioctl_8c"/>
       </node>
-      <node id="1040">
+      <node id="911">
         <label>src/syscall/sbrk.c</label>
         <link refid="sbrk_8c"/>
       </node>
-      <node id="1020">
-        <label>src/include/aplus/syscall.h</label>
-        <link refid="syscall_8h"/>
-        <childnode refid="1017" relation="include">
-        </childnode>
-        <childnode refid="1021" relation="include">
-        </childnode>
-        <childnode refid="1022" relation="include">
-        </childnode>
-        <childnode refid="1023" relation="include">
-        </childnode>
-        <childnode refid="1024" relation="include">
-        </childnode>
-        <childnode refid="1025" relation="include">
-        </childnode>
-        <childnode refid="1026" relation="include">
-        </childnode>
-        <childnode refid="1027" relation="include">
-        </childnode>
-        <childnode refid="1028" relation="include">
-        </childnode>
-        <childnode refid="1029" relation="include">
-        </childnode>
-        <childnode refid="1030" relation="include">
-        </childnode>
-        <childnode refid="1031" relation="include">
-        </childnode>
-        <childnode refid="1032" relation="include">
-        </childnode>
-        <childnode refid="1033" relation="include">
-        </childnode>
-        <childnode refid="1034" relation="include">
-        </childnode>
-        <childnode refid="1035" relation="include">
-        </childnode>
-        <childnode refid="1036" relation="include">
-        </childnode>
-        <childnode refid="1019" relation="include">
-        </childnode>
-        <childnode refid="1037" relation="include">
-        </childnode>
-        <childnode refid="1038" relation="include">
-        </childnode>
-        <childnode refid="1039" relation="include">
-        </childnode>
-        <childnode refid="1040" relation="include">
-        </childnode>
-        <childnode refid="1041" relation="include">
-        </childnode>
-        <childnode refid="1042" relation="include">
-        </childnode>
-        <childnode refid="1043" relation="include">
-        </childnode>
-        <childnode refid="1044" relation="include">
-        </childnode>
-        <childnode refid="1045" relation="include">
-        </childnode>
-        <childnode refid="1046" relation="include">
-        </childnode>
-        <childnode refid="1047" relation="include">
-        </childnode>
-        <childnode refid="1048" relation="include">
-        </childnode>
-        <childnode refid="1049" relation="include">
-        </childnode>
-      </node>
-      <node id="1029">
+      <node id="902">
         <label>src/syscall/getgroups.c</label>
         <link refid="getgroups_8c"/>
       </node>
-      <node id="1048">
+      <node id="918">
         <label>src/syscall/write.c</label>
         <link refid="write_8c"/>
       </node>
-      <node id="1043">
-        <label>src/syscall/time.c</label>
-        <link refid="time_8c"/>
+      <node id="913">
+        <label>src/syscall/symlink.c</label>
+        <link refid="symlink_8c"/>
       </node>
-      <node id="995">
+      <node id="865">
         <label>src/include/aplus/task.h</label>
         <link refid="task.h"/>
-        <childnode refid="996" relation="include">
+        <childnode refid="866" relation="include">
         </childnode>
-        <childnode refid="997" relation="include">
+        <childnode refid="867" relation="include">
         </childnode>
-        <childnode refid="998" relation="include">
+        <childnode refid="868" relation="include">
         </childnode>
-        <childnode refid="999" relation="include">
+        <childnode refid="869" relation="include">
         </childnode>
-        <childnode refid="1000" relation="include">
+        <childnode refid="870" relation="include">
         </childnode>
-        <childnode refid="1001" relation="include">
+        <childnode refid="871" relation="include">
         </childnode>
-        <childnode refid="1002" relation="include">
+        <childnode refid="872" relation="include">
         </childnode>
-        <childnode refid="1003" relation="include">
+        <childnode refid="873" relation="include">
         </childnode>
-        <childnode refid="1004" relation="include">
+        <childnode refid="874" relation="include">
         </childnode>
-        <childnode refid="1005" relation="include">
+        <childnode refid="875" relation="include">
         </childnode>
-        <childnode refid="1006" relation="include">
+        <childnode refid="876" relation="include">
         </childnode>
-        <childnode refid="1010" relation="include">
+        <childnode refid="877" relation="include">
         </childnode>
-        <childnode refid="1050" relation="include">
+        <childnode refid="881" relation="include">
         </childnode>
-        <childnode refid="1053" relation="include">
+        <childnode refid="891" relation="include">
         </childnode>
-        <childnode refid="1007" relation="include">
+        <childnode refid="885" relation="include">
         </childnode>
-        <childnode refid="1008" relation="include">
+        <childnode refid="889" relation="include">
         </childnode>
-        <childnode refid="1009" relation="include">
+        <childnode refid="878" relation="include">
         </childnode>
-        <childnode refid="1059" relation="include">
+        <childnode refid="879" relation="include">
         </childnode>
-        <childnode refid="1060" relation="include">
+        <childnode refid="880" relation="include">
         </childnode>
-        <childnode refid="1021" relation="include">
+        <childnode refid="893" relation="include">
         </childnode>
-        <childnode refid="1022" relation="include">
+        <childnode refid="890" relation="include">
         </childnode>
-        <childnode refid="1023" relation="include">
+        <childnode refid="894" relation="include">
         </childnode>
-        <childnode refid="1024" relation="include">
+        <childnode refid="895" relation="include">
         </childnode>
-        <childnode refid="1025" relation="include">
+        <childnode refid="896" relation="include">
         </childnode>
-        <childnode refid="1026" relation="include">
+        <childnode refid="897" relation="include">
         </childnode>
-        <childnode refid="1027" relation="include">
+        <childnode refid="898" relation="include">
         </childnode>
-        <childnode refid="1028" relation="include">
+        <childnode refid="899" relation="include">
         </childnode>
-        <childnode refid="1029" relation="include">
+        <childnode refid="900" relation="include">
         </childnode>
-        <childnode refid="1032" relation="include">
+        <childnode refid="901" relation="include">
         </childnode>
-        <childnode refid="1034" relation="include">
+        <childnode refid="902" relation="include">
         </childnode>
-        <childnode refid="1035" relation="include">
+        <childnode refid="903" relation="include">
         </childnode>
-        <childnode refid="1036" relation="include">
+        <childnode refid="904" relation="include">
         </childnode>
-        <childnode refid="1019" relation="include">
+        <childnode refid="905" relation="include">
         </childnode>
-        <childnode refid="1037" relation="include">
+        <childnode refid="906" relation="include">
         </childnode>
-        <childnode refid="1038" relation="include">
+        <childnode refid="907" relation="include">
         </childnode>
-        <childnode refid="1039" relation="include">
+        <childnode refid="908" relation="include">
         </childnode>
-        <childnode refid="1040" relation="include">
+        <childnode refid="909" relation="include">
         </childnode>
-        <childnode refid="1041" relation="include">
+        <childnode refid="910" relation="include">
         </childnode>
-        <childnode refid="1044" relation="include">
+        <childnode refid="911" relation="include">
         </childnode>
-        <childnode refid="1045" relation="include">
+        <childnode refid="912" relation="include">
         </childnode>
-        <childnode refid="1046" relation="include">
+        <childnode refid="913" relation="include">
         </childnode>
-        <childnode refid="1047" relation="include">
+        <childnode refid="914" relation="include">
         </childnode>
-        <childnode refid="1048" relation="include">
+        <childnode refid="915" relation="include">
         </childnode>
-        <childnode refid="1049" relation="include">
+        <childnode refid="916" relation="include">
+        </childnode>
+        <childnode refid="917" relation="include">
+        </childnode>
+        <childnode refid="918" relation="include">
+        </childnode>
+        <childnode refid="919" relation="include">
         </childnode>
       </node>
-      <node id="1007">
+      <node id="878">
         <label>src/net/loopback/loopback.c</label>
         <link refid="loopback_8c"/>
       </node>
-      <node id="1012">
+      <node id="883">
         <label>src/arch/pci.c</label>
         <link refid="pci_8c"/>
       </node>
-      <node id="996">
+      <node id="866">
         <label>src/arch/task.c</label>
         <link refid="task_8c"/>
       </node>
-      <node id="1014">
-        <label>src/include/aplus/list.h</label>
-        <link refid="list_8h"/>
-        <childnode refid="996" relation="include">
-        </childnode>
-        <childnode refid="997" relation="include">
-        </childnode>
-        <childnode refid="1015" relation="include">
-        </childnode>
-        <childnode refid="1016" relation="include">
-        </childnode>
-        <childnode refid="1050" relation="include">
-        </childnode>
-        <childnode refid="1052" relation="include">
-        </childnode>
-        <childnode refid="1053" relation="include">
-        </childnode>
-        <childnode refid="1054" relation="include">
-        </childnode>
-        <childnode refid="1055" relation="include">
-        </childnode>
-        <childnode refid="1056" relation="include">
-        </childnode>
-        <childnode refid="1057" relation="include">
-        </childnode>
-        <childnode refid="1007" relation="include">
-        </childnode>
-        <childnode refid="1051" relation="include">
-        </childnode>
-        <childnode refid="1008" relation="include">
-        </childnode>
-        <childnode refid="1009" relation="include">
-        </childnode>
-        <childnode refid="1058" relation="include">
-        </childnode>
-        <childnode refid="1059" relation="include">
-        </childnode>
-        <childnode refid="1060" relation="include">
-        </childnode>
-        <childnode refid="1061" relation="include">
-        </childnode>
-        <childnode refid="1019" relation="include">
-        </childnode>
-        <childnode refid="1045" relation="include">
-        </childnode>
-      </node>
-      <node id="1049">
+      <node id="919">
         <label>src/syscall/yield.c</label>
         <link refid="yield_8c"/>
       </node>
-      <node id="1056">
-        <label>src/net/ipv4.c</label>
-        <link refid="ipv4_8c"/>
-      </node>
-      <node id="1059">
+      <node id="893">
         <label>src/panic.c</label>
         <link refid="panic_8c"/>
       </node>
-      <node id="1038">
+      <node id="909">
         <label>src/syscall/read.c</label>
         <link refid="read_8c"/>
       </node>
-      <node id="1023">
+      <node id="896">
         <label>src/syscall/clone.c</label>
         <link refid="clone_8c"/>
       </node>
-      <node id="1045">
+      <node id="915">
         <label>src/syscall/umount.c</label>
         <link refid="umount_8c"/>
       </node>
-      <node id="1015">
-        <label>src/fs/vfs.c</label>
-        <link refid="vfs_8c"/>
-      </node>
-      <node id="1004">
+      <node id="874">
         <label>src/fs/pipe.c</label>
         <link refid="pipe_8c"/>
       </node>
-      <node id="1030">
-        <label>src/syscall/getpid.c</label>
-        <link refid="getpid_8c"/>
-      </node>
-      <node id="1063">
+      <node id="887">
         <label>src/mm/kheap.c</label>
         <link refid="kheap_8c"/>
       </node>
-      <node id="1001">
+      <node id="871">
         <label>src/fs/iso9660/iso9660_mount.c</label>
         <link refid="iso9660__mount_8c"/>
       </node>
-      <node id="1021">
+      <node id="894">
         <label>src/syscall/_exit.c</label>
         <link refid="__exit_8c"/>
       </node>
-      <node id="1013">
+      <node id="884">
         <label>src/exec.c</label>
         <link refid="exec_8c"/>
       </node>
-      <node id="1002">
+      <node id="872">
         <label>src/fs/iso9660/iso9660_read.c</label>
         <link refid="iso9660__read_8c"/>
       </node>
-      <node id="998">
+      <node id="868">
         <label>src/fs/devfs.c</label>
         <link refid="devfs_8c"/>
       </node>
-      <node id="1037">
+      <node id="908">
         <label>src/syscall/open.c</label>
         <link refid="open_8c"/>
       </node>
-      <node id="997">
+      <node id="867">
         <label>src/bufio.c</label>
         <link refid="bufio_8c"/>
       </node>
-      <node id="1027">
+      <node id="900">
         <label>src/syscall/fork.c</label>
         <link refid="fork_8c"/>
       </node>
-      <node id="1003">
+      <node id="873">
         <label>src/fs/iso9660/iso9660_readdir.c</label>
         <link refid="iso9660__readdir_8c"/>
       </node>
-      <node id="1041">
+      <node id="912">
         <label>src/syscall/stat.c</label>
         <link refid="stat_8c"/>
       </node>
-      <node id="1010">
+      <node id="881">
         <label>src/include/aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1011" relation="include">
+        <childnode refid="882" relation="include">
         </childnode>
-        <childnode refid="1012" relation="include">
+        <childnode refid="883" relation="include">
         </childnode>
-        <childnode refid="996" relation="include">
+        <childnode refid="866" relation="include">
         </childnode>
-        <childnode refid="997" relation="include">
+        <childnode refid="867" relation="include">
         </childnode>
-        <childnode refid="1013" relation="include">
+        <childnode refid="884" relation="include">
         </childnode>
-        <childnode refid="1004" relation="include">
+        <childnode refid="874" relation="include">
         </childnode>
-        <childnode refid="1014" relation="include">
+        <childnode refid="885" relation="include">
         </childnode>
-        <childnode refid="1050" relation="include">
+        <childnode refid="886" relation="include">
         </childnode>
-        <childnode refid="1062" relation="include">
+        <childnode refid="887" relation="include">
         </childnode>
-        <childnode refid="1063" relation="include">
+        <childnode refid="888" relation="include">
         </childnode>
-        <childnode refid="1052" relation="include">
+        <childnode refid="889" relation="include">
         </childnode>
-        <childnode refid="1053" relation="include">
+        <childnode refid="878" relation="include">
         </childnode>
-        <childnode refid="1007" relation="include">
+        <childnode refid="879" relation="include">
         </childnode>
-        <childnode refid="1008" relation="include">
+        <childnode refid="880" relation="include">
         </childnode>
-        <childnode refid="1009" relation="include">
-        </childnode>
-        <childnode refid="1060" relation="include">
+        <childnode refid="890" relation="include">
         </childnode>
       </node>
-      <node id="1035">
+      <node id="905">
         <label>src/syscall/link.c</label>
         <link refid="link_8c"/>
       </node>
-      <node id="999">
+      <node id="869">
         <label>src/fs/iso9660/iso9660.c</label>
         <link refid="iso9660_8c"/>
       </node>
-      <node id="1042">
-        <label>src/syscall/test.c</label>
-        <link refid="src_2syscall_2test_8c"/>
-      </node>
-      <node id="1060">
+      <node id="890">
         <label>src/sched.c</label>
         <link refid="src_2sched_8c"/>
       </node>
-      <node id="1031">
-        <label>src/syscall/gettimeofday.c</label>
-        <link refid="gettimeofday_8c"/>
-      </node>
-      <node id="1055">
-        <label>src/net/eth.c</label>
-        <link refid="eth_8c"/>
-      </node>
-      <node id="1025">
+      <node id="898">
         <label>src/syscall/execve.c</label>
         <link refid="execve_8c"/>
       </node>
-      <node id="1022">
+      <node id="895">
         <label>src/syscall/chown.c</label>
         <link refid="chown_8c"/>
       </node>
-      <node id="1005">
+      <node id="875">
         <label>src/fs/ramdev.c</label>
         <link refid="ramdev_8c"/>
       </node>
-      <node id="1039">
+      <node id="910">
         <label>src/syscall/readdir.c</label>
         <link refid="src_2syscall_2readdir_8c"/>
       </node>
-      <node id="1044">
+      <node id="876">
+        <label>src/fs/tty.c</label>
+        <link refid="tty_8c"/>
+      </node>
+      <node id="914">
         <label>src/syscall/times.c</label>
         <link refid="times_8c"/>
       </node>
-      <node id="1058">
-        <label>src/net/udp.c</label>
-        <link refid="udp_8c"/>
-      </node>
-      <node id="1017">
-        <label>src/arch/syscall.c</label>
-        <link refid="syscall_8c"/>
-      </node>
-      <node id="1052">
+      <node id="888">
         <label>src/mm/mm.c</label>
         <link refid="mm_8c"/>
       </node>
-      <node id="1047">
+      <node id="917">
         <label>src/syscall/wait.c</label>
         <link refid="wait_8c"/>
       </node>
-      <node id="1057">
-        <label>src/net/ipv6.c</label>
-        <link refid="ipv6_8c"/>
-      </node>
-      <node id="1006">
+      <node id="877">
         <label>src/include/aplus/bufio.h</label>
         <link refid="bufio_8h"/>
-        <childnode refid="997" relation="include">
+        <childnode refid="867" relation="include">
         </childnode>
-        <childnode refid="1004" relation="include">
+        <childnode refid="874" relation="include">
         </childnode>
-        <childnode refid="1005" relation="include">
+        <childnode refid="875" relation="include">
         </childnode>
-        <childnode refid="1007" relation="include">
+        <childnode refid="878" relation="include">
         </childnode>
-        <childnode refid="1008" relation="include">
+        <childnode refid="879" relation="include">
         </childnode>
-        <childnode refid="1009" relation="include">
+        <childnode refid="880" relation="include">
         </childnode>
       </node>
-      <node id="1054">
-        <label>src/net/arp.c</label>
-        <link refid="arp_8c"/>
-      </node>
-      <node id="1034">
+      <node id="904">
         <label>src/syscall/kill.c</label>
         <link refid="kill_8c"/>
       </node>
-      <node id="1046">
+      <node id="916">
         <label>src/syscall/unlink.c</label>
         <link refid="unlink_8c"/>
       </node>
-      <node id="1000">
+      <node id="870">
         <label>src/fs/iso9660/iso9660_finddir.c</label>
         <link refid="iso9660__finddir_8c"/>
       </node>
-      <node id="1018">
-        <label>src/include/aplus/fsys.h</label>
-        <link refid="fsys_8h"/>
-        <childnode refid="1001" relation="include">
-        </childnode>
-        <childnode refid="1019" relation="include">
-        </childnode>
-      </node>
-      <node id="1028">
+      <node id="901">
         <label>src/syscall/fstat.c</label>
         <link refid="fstat_8c"/>
       </node>
@@ -813,6 +640,61 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="52" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/task.h" bodystart="52" bodyend="-1"/>
       </memberdef>
+      <memberdef kind="define" id="task_8h_1ac07965af2ad895ca67fdc8352303fbb5" prot="public" static="no">
+        <name>CLONE_VM</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="57" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/task.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="task_8h_1a36c57614f62361d9a91c75d2ef1bf854" prot="public" static="no">
+        <name>CLONE_SIGHAND</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="61" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/task.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="task_8h_1abf70cffabfa4515feef97f66bae6a5c7" prot="public" static="no">
+        <name>CLONE_FS</name>
+        <initializer>4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="65" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/task.h" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="task_8h_1ab062e8c87b92d645f7f4698a36e5b57a" prot="public" static="no">
+        <name>CLONE_FILES</name>
+        <initializer>8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="69" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/task.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="task_8h_1a93d70879b6c53ae3475b3241d09c4741" prot="public" static="no">
+        <name>CLONE_PARENT</name>
+        <initializer>16</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="73" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/task.h" bodystart="73" bodyend="-1"/>
+      </memberdef>
       </sectiondef>
       <sectiondef kind="typedef">
       <memberdef kind="typedef" id="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" prot="public" static="no">
@@ -826,7 +708,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="109" column="1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/task.h" line="127" column="1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="var">
@@ -1026,63 +908,81 @@
 <codeline lineno="53"><highlight class="normal"></highlight></codeline>
 <codeline lineno="54"><highlight class="normal"></highlight></codeline>
 <codeline lineno="55"><highlight class="normal"></highlight></codeline>
-<codeline lineno="56"><highlight class="normal"></highlight></codeline>
-<codeline lineno="57"><highlight class="normal"></highlight></codeline>
-<codeline lineno="58"><highlight class="normal"></highlight></codeline>
-<codeline lineno="59" refid="structtask__env" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structtask__env" kindref="compound">task_env</ref><sp/>{</highlight></codeline>
-<codeline lineno="60" refid="structtask__env_1afd28f73e49aab123e4c2a5f149f10fe2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1afd28f73e49aab123e4c2a5f149f10fe2" kindref="member">edi</ref>;</highlight></codeline>
-<codeline lineno="61" refid="structtask__env_1a4bae98183ee224f67097a00d887a229b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a4bae98183ee224f67097a00d887a229b" kindref="member">esi</ref>;</highlight></codeline>
-<codeline lineno="62" refid="structtask__env_1a8594000ef53ff5bb74343e54648fd5e1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a8594000ef53ff5bb74343e54648fd5e1" kindref="member">ebx</ref>;</highlight></codeline>
-<codeline lineno="63" refid="structtask__env_1a069a27e98e74717519066b7e73e9bc0e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a069a27e98e74717519066b7e73e9bc0e" kindref="member">ecx</ref>;</highlight></codeline>
-<codeline lineno="64" refid="structtask__env_1a617049724b4b79278b4fe107d9df7e3e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a617049724b4b79278b4fe107d9df7e3e" kindref="member">eax</ref>;</highlight></codeline>
-<codeline lineno="65" refid="structtask__env_1ab76a643115c795f2f9feb5582ea29497" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1ab76a643115c795f2f9feb5582ea29497" kindref="member">edx</ref>;</highlight></codeline>
-<codeline lineno="66" refid="structtask__env_1a1eeaac73d44a6550af32a9dd726935e5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a1eeaac73d44a6550af32a9dd726935e5" kindref="member">eflags</ref>;</highlight></codeline>
-<codeline lineno="67" refid="structtask__env_1a6630718bd69f6876f2ff74299316ae47" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a6630718bd69f6876f2ff74299316ae47" kindref="member">ebp</ref>;</highlight></codeline>
-<codeline lineno="68" refid="structtask__env_1ae6f3defc8a0fe9512785fdfd2eedd07d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1ae6f3defc8a0fe9512785fdfd2eedd07d" kindref="member">eip</ref>;</highlight></codeline>
-<codeline lineno="69"><highlight class="normal">}<sp/><ref refid="task_8h_1a82ac5a61b16740abc5cceaaff721c5c8" kindref="member">__attribute__</ref><sp/>((packed))<sp/>task_env_t;</highlight></codeline>
-<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CLONE_VM</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57" refid="task_8h_1ac07965af2ad895ca67fdc8352303fbb5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CLONE_VM<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CLONE_SIGHAND</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61" refid="task_8h_1a36c57614f62361d9a91c75d2ef1bf854" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CLONE_SIGHAND<sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CLONE_FS</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="task_8h_1abf70cffabfa4515feef97f66bae6a5c7" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CLONE_FS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CLONE_FILES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69" refid="task_8h_1ab062e8c87b92d645f7f4698a36e5b57a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CLONE_FILES<sp/><sp/><sp/><sp/><sp/>8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="71"><highlight class="normal"></highlight></codeline>
-<codeline lineno="72" refid="structtask" refkind="compound"><highlight class="normal">typedef<sp/>struct<sp/><ref refid="structtask" kindref="compound">task</ref><sp/>{</highlight></codeline>
-<codeline lineno="73" refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>pid_t<sp/><ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>;</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"></highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">{</highlight></codeline>
-<codeline lineno="76" refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>task_env_t*<sp/><ref refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" kindref="member">env</ref>;</highlight></codeline>
-<codeline lineno="77" refid="structtask_1a71232ebd31259f41c057b3e789b44587" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a71232ebd31259f41c057b3e789b44587" kindref="member">stack</ref>;</highlight></codeline>
-<codeline lineno="78" refid="structtask_1a5f4968459d4640f19c7e802ae7057179" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a5f4968459d4640f19c7e802ae7057179" kindref="member">cr3</ref>;</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>context;</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"></highlight></codeline>
-<codeline lineno="81"><highlight class="normal"></highlight></codeline>
-<codeline lineno="82" refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uid_t<sp/><ref refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" kindref="member">uid</ref>;</highlight></codeline>
-<codeline lineno="83" refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>gid_t<sp/><ref refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" kindref="member">gid</ref>;</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="85" refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" kindref="member">cwd</ref>;</highlight></codeline>
-<codeline lineno="86" refid="structtask_1a22a59fcfc18d5f671340669f96571768" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="structtask_1a22a59fcfc18d5f671340669f96571768" kindref="member">exe</ref>;</highlight></codeline>
-<codeline lineno="87" refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>fd[<ref refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" kindref="member">TASK_MAX_FD</ref>];</highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">{</highlight></codeline>
-<codeline lineno="90" refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref>;</highlight></codeline>
-<codeline lineno="91" refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" kindref="member">ptr</ref>;</highlight></codeline>
-<codeline lineno="92" refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>;</highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>image;</highlight></codeline>
-<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="95" refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*signal_handler)<sp/>(int);</highlight></codeline>
-<codeline lineno="96" refid="structtask_1a3d6991558f05258094bbef5c47073928" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref>;</highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CLONE_PARENT</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73" refid="task_8h_1a93d70879b6c53ae3475b3241d09c4741" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CLONE_PARENT<sp/><sp/><sp/><sp/>16</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="structtask__env" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structtask__env" kindref="compound">task_env</ref><sp/>{</highlight></codeline>
+<codeline lineno="78" refid="structtask__env_1afd28f73e49aab123e4c2a5f149f10fe2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1afd28f73e49aab123e4c2a5f149f10fe2" kindref="member">edi</ref>;</highlight></codeline>
+<codeline lineno="79" refid="structtask__env_1a4bae98183ee224f67097a00d887a229b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a4bae98183ee224f67097a00d887a229b" kindref="member">esi</ref>;</highlight></codeline>
+<codeline lineno="80" refid="structtask__env_1a8594000ef53ff5bb74343e54648fd5e1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a8594000ef53ff5bb74343e54648fd5e1" kindref="member">ebx</ref>;</highlight></codeline>
+<codeline lineno="81" refid="structtask__env_1a069a27e98e74717519066b7e73e9bc0e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a069a27e98e74717519066b7e73e9bc0e" kindref="member">ecx</ref>;</highlight></codeline>
+<codeline lineno="82" refid="structtask__env_1a617049724b4b79278b4fe107d9df7e3e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a617049724b4b79278b4fe107d9df7e3e" kindref="member">eax</ref>;</highlight></codeline>
+<codeline lineno="83" refid="structtask__env_1ab76a643115c795f2f9feb5582ea29497" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1ab76a643115c795f2f9feb5582ea29497" kindref="member">edx</ref>;</highlight></codeline>
+<codeline lineno="84" refid="structtask__env_1a1eeaac73d44a6550af32a9dd726935e5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a1eeaac73d44a6550af32a9dd726935e5" kindref="member">eflags</ref>;</highlight></codeline>
+<codeline lineno="85" refid="structtask__env_1a6630718bd69f6876f2ff74299316ae47" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1a6630718bd69f6876f2ff74299316ae47" kindref="member">ebp</ref>;</highlight></codeline>
+<codeline lineno="86" refid="structtask__env_1ae6f3defc8a0fe9512785fdfd2eedd07d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask__env_1ae6f3defc8a0fe9512785fdfd2eedd07d" kindref="member">eip</ref>;</highlight></codeline>
+<codeline lineno="87"><highlight class="normal">}<sp/><ref refid="task_8h_1a82ac5a61b16740abc5cceaaff721c5c8" kindref="member">__attribute__</ref><sp/>((packed))<sp/>task_env_t;</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90" refid="structtask" refkind="compound"><highlight class="normal">typedef<sp/>struct<sp/><ref refid="structtask" kindref="compound">task</ref><sp/>{</highlight></codeline>
+<codeline lineno="91" refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>pid_t<sp/><ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="94" refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>task_env_t*<sp/><ref refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" kindref="member">env</ref>;</highlight></codeline>
+<codeline lineno="95" refid="structtask_1a71232ebd31259f41c057b3e789b44587" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a71232ebd31259f41c057b3e789b44587" kindref="member">stack</ref>;</highlight></codeline>
+<codeline lineno="96" refid="structtask_1a5f4968459d4640f19c7e802ae7057179" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a5f4968459d4640f19c7e802ae7057179" kindref="member">cr3</ref>;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>context;</highlight></codeline>
 <codeline lineno="98"><highlight class="normal"></highlight></codeline>
-<codeline lineno="99" refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/><ref refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" kindref="member">argv</ref>;</highlight></codeline>
-<codeline lineno="100" refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/><ref refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" kindref="member">envp</ref>;</highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="102" refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" kindref="member">state</ref>;</highlight></codeline>
-<codeline lineno="103" refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" kindref="member">priority</ref>;</highlight></codeline>
-<codeline lineno="104" refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" kindref="member">clock</ref>;</highlight></codeline>
-<codeline lineno="105" refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" kindref="member">exitcode</ref>;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100" refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>uid_t<sp/><ref refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" kindref="member">uid</ref>;</highlight></codeline>
+<codeline lineno="101" refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>gid_t<sp/><ref refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" kindref="member">gid</ref>;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="103" refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" kindref="member">cwd</ref>;</highlight></codeline>
+<codeline lineno="104" refid="structtask_1a22a59fcfc18d5f671340669f96571768" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="structtask_1a22a59fcfc18d5f671340669f96571768" kindref="member">exe</ref>;</highlight></codeline>
+<codeline lineno="105" refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>fd[<ref refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" kindref="member">TASK_MAX_FD</ref>];</highlight></codeline>
 <codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="108" refid="structtask_1a34c6613744820a1e8127756fb6a5392c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">task*<sp/><ref refid="structtask_1a34c6613744820a1e8127756fb6a5392c" kindref="member">parent</ref>;</highlight></codeline>
-<codeline lineno="109"><highlight class="normal">}<sp/><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref>;</highlight></codeline>
-<codeline lineno="110"><highlight class="normal"></highlight></codeline>
-<codeline lineno="111"><highlight class="normal"></highlight></codeline>
-<codeline lineno="112"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="108" refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref>;</highlight></codeline>
+<codeline lineno="109" refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" kindref="member">ptr</ref>;</highlight></codeline>
+<codeline lineno="110" refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/>image;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="113" refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*signal_handler)<sp/>(int);</highlight></codeline>
+<codeline lineno="114" refid="structtask_1a3d6991558f05258094bbef5c47073928" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref>;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117" refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/><ref refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" kindref="member">argv</ref>;</highlight></codeline>
+<codeline lineno="118" refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/><ref refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" kindref="member">envp</ref>;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="120" refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" kindref="member">state</ref>;</highlight></codeline>
+<codeline lineno="121" refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" kindref="member">priority</ref>;</highlight></codeline>
+<codeline lineno="122" refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" kindref="member">clock</ref>;</highlight></codeline>
+<codeline lineno="123" refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" kindref="member">exitcode</ref>;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="126" refid="structtask_1a34c6613744820a1e8127756fb6a5392c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">task*<sp/><ref refid="structtask_1a34c6613744820a1e8127756fb6a5392c" kindref="member">parent</ref>;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal">}<sp/><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref>;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/include/aplus/task.h"/>
   </compounddef>

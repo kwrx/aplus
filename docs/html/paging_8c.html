@@ -430,7 +430,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="paging_8c_source.html#l00165">165</a> of file <a class="el" href="paging_8c_source.html">paging.c</a>.</p>
 
-<p>References <a class="el" href="heap_8c_source.html#l00028">halloc()</a>, <a class="el" href="paging_8c_source.html#l00047">kernel_vmm</a>, <a class="el" href="list_8h_source.html#l00187">list_init</a>, <a class="el" href="panic_8c_source.html#l00102">panic()</a>, <a class="el" href="paging_8c_source.html#l00037">PDSIZE</a>, <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>, <a class="el" href="paging_8c_source.html#l00060">vmm_enable()</a>, <a class="el" href="paging_8c_source.html#l00138">vmm_mapkernel()</a>, and <a class="el" href="paging_8c_source.html#l00054">vmm_switch()</a>.</p>
+<p>References <a class="el" href="heap_8c_source.html#l00028">halloc()</a>, <a class="el" href="paging_8c_source.html#l00047">kernel_vmm</a>, <a class="el" href="list_8h_source.html#l00196">list_init</a>, <a class="el" href="panic_8c_source.html#l00102">panic()</a>, <a class="el" href="paging_8c_source.html#l00037">PDSIZE</a>, <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>, <a class="el" href="paging_8c_source.html#l00060">vmm_enable()</a>, <a class="el" href="paging_8c_source.html#l00138">vmm_mapkernel()</a>, and <a class="el" href="paging_8c_source.html#l00054">vmm_switch()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;               {</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <a class="code" href="paging_8c.html#afac53891df03c313fc0b5b24e0acc8a9">kernel_vmm</a> = (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>*) <a class="code" href="heap_8c.html#ace4a8a1fe937911a1a107c92e6d40339">halloc</a>(<a class="code" href="paging_8c.html#a3068f9054a832aa72e12ab9ad210dd99">current_heap</a>, <a class="code" href="paging_8c.html#ad1e1979b244e7f89d86e1bcb9500e177">PDSIZE</a> * <span class="keyword">sizeof</span>(<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>));</div>
@@ -456,7 +456,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="paging_8c_html_aa760eb29c4563f9ab05cc3d9331944ac"><div class="ttname"><a href="paging_8c.html#aa760eb29c4563f9ab05cc3d9331944ac">vmm_enable</a></div><div class="ttdeci">void vmm_enable()</div><div class="ttdef"><b>Definition:</b> <a href="paging_8c_source.html#l00060">paging.c:60</a></div></div>
 <div class="ttc" id="paging_8c_html_ad1e1979b244e7f89d86e1bcb9500e177"><div class="ttname"><a href="paging_8c.html#ad1e1979b244e7f89d86e1bcb9500e177">PDSIZE</a></div><div class="ttdeci">#define PDSIZE</div><div class="ttdef"><b>Definition:</b> <a href="paging_8c_source.html#l00037">paging.c:37</a></div></div>
 <div class="ttc" id="paging_8c_html_a3068f9054a832aa72e12ab9ad210dd99"><div class="ttname"><a href="paging_8c.html#a3068f9054a832aa72e12ab9ad210dd99">current_heap</a></div><div class="ttdeci">volatile heap_t * current_heap</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00036">mm.c:36</a></div></div>
-<div class="ttc" id="list_8h_html_aa288c0785df071ed8643763202928c82"><div class="ttname"><a href="list_8h.html#aa288c0785df071ed8643763202928c82">list_init</a></div><div class="ttdeci">#define list_init(list)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00187">list.h:187</a></div></div>
+<div class="ttc" id="list_8h_html_aa288c0785df071ed8643763202928c82"><div class="ttname"><a href="list_8h.html#aa288c0785df071ed8643763202928c82">list_init</a></div><div class="ttdeci">#define list_init(list)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00196">list.h:196</a></div></div>
 <div class="ttc" id="paging_8c_html_afac53891df03c313fc0b5b24e0acc8a9"><div class="ttname"><a href="paging_8c.html#afac53891df03c313fc0b5b24e0acc8a9">kernel_vmm</a></div><div class="ttdeci">uint32_t * kernel_vmm</div><div class="ttdef"><b>Definition:</b> <a href="paging_8c_source.html#l00047">paging.c:47</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -760,7 +760,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_e07adefefc5da1d7540fd182d8c11934.html">mm</a></li><li class="navelem"><a class="el" href="paging_8c.html">paging.c</a></li>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:40 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:02 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

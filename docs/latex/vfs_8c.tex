@@ -78,7 +78,7 @@ Definition at line 81 of file vfs.\+c.
 
 
 
-References inode\+::atime, inode\+::chown, inode\+::creat, inode\+::ctime, inode\+::dev, inode\+::finddir, inode\+::flush, inode\+::gid, G\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::ino, inode\+::ioctl, kmalloc(), inode\+::link, list\+\_\+add(), list\+\_\+init, inode\+::mode, inode\+::mtime, inode\+::name, nextinode, inode\+::nlink, inode\+::parent, inode\+::rdev, inode\+::read, inode\+::readdir, inode\+::rename, inode\+::size, sys\+\_\+time(), inode\+::uid, U\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::unlink, and inode\+::write.
+References inode\+::atime, inode\+::chown, inode\+::creat, inode\+::ctime, inode\+::dev, devfs\+\_\+mount(), inode\+::finddir, inode\+::flush, inode\+::gid, G\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::ino, inode\+::ioctl, kmalloc(), inode\+::link, list\+\_\+add(), list\+\_\+init, inode\+::mode, inode\+::mtime, inode\+::name, nextinode, inode\+::nlink, inode\+::parent, inode\+::rdev, inode\+::read, inode\+::readdir, inode\+::rename, inode\+::size, sys\+\_\+time(), inode\+::uid, U\+I\+D\+\_\+\+R\+O\+O\+T, inode\+::unlink, vfs\+\_\+map(), and inode\+::write.
 
 
 \begin{DoxyCode}
@@ -115,9 +115,12 @@ References inode\+::atime, inode\+::chown, inode\+::creat, inode\+::ctime, inode
 110     \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root}->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl} = NULL;
 111     
 112     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{vfs_8c_ab78229df5c858687756417b32ac398ff}{list\_inodes}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) \hyperlink{vfs_8c_a9af8258c3554800f6613f8147544225f}{vfs\_root});
-113     
-114     \textcolor{keywordflow}{return} 0;
-115 \}
+113 
+114 
+115     \hyperlink{vfs_8c_acb87c78588a46c5526e933c495b69c2a}{vfs\_map}((\hyperlink{structinode}{inode\_t}*) \hyperlink{devfs_8c_a12b8ede9eeee8603d4b89d189a484380}{devfs\_mount}());
+116     
+117     \textcolor{keywordflow}{return} 0;
+118 \}
 \end{DoxyCode}
 \hypertarget{vfs_8c_acb87c78588a46c5526e933c495b69c2a}{\index{vfs.\+c@{vfs.\+c}!vfs\+\_\+map@{vfs\+\_\+map}}
 \index{vfs\+\_\+map@{vfs\+\_\+map}!vfs.\+c@{vfs.\+c}}

@@ -135,8 +135,6 @@ void task_switch(task_t* newtask) {
 	task_t* old = current_task;
 	current_task = newtask;
 
-	kprintf("task new is: %d\n", newtask->pid);
-
 	vmm_switch(current_task->context.cr3);
 	outb(0x20, 0x20);
 
@@ -150,7 +148,6 @@ static jmp_buf __fork_buf;
 static int __fork_child() {
 
 	uint32_t oldesp = __fork_buf->esp;
-	uint32_t oldebp = __fork_buf->ebp;
 
 	uint32_t stack = (uint32_t) mm_align(kmalloc(TASK_STACKSIZE));
 
@@ -158,7 +155,7 @@ static int __fork_child() {
 		((uint8_t*) stack)[i] = ((uint8_t*) (oldesp & ~0xFFF)) [i];
 
 
-	vmm_map(current_task->context.cr3, mm_paddr(stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);	
+	vmm_map(current_task->context.cr3, mm_paddr((void*) stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);	
 
 	longjmp(__fork_buf, 1);
 	return 0;

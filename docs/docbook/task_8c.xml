@@ -7,6 +7,7 @@
     <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
+    <programlisting>#include &lt;setjmp.h&gt;</programlisting>
         <simplesect>
             <title>Variables</title>
             <para>
@@ -51,6 +52,13 @@
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static jmp_buf <link linkend="task_8c_1a65552f86d5e6567721f1d1afcb34e7ab">__fork_buf</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
         <simplesect>
             <title>Functions</title>
@@ -73,16 +81,8 @@ task_env_t ** old, task_env_t ** new)</para>
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1aa547121ba0907a969075a9d7530a98fb">task_fork</link> (
-)</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1aa274b7334aace961395fdb788126712d">task_clone</link> (
-void * entry, void * arg, void * stack)</para>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1afed7d6a4dd3580596c0c925e766c4163">task_clone</link> (
+void * entry, void * arg, void * stack, int flags)</para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -91,6 +91,22 @@ void * entry, void * arg, void * stack)</para>
                     <listitem>
                         <para>void <link linkend="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645">task_switch</link> (
 <link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * newtask)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static int <link linkend="task_8c_1ae020ae98e6a6fc90f836f38cc405290c">__fork_child</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1aa547121ba0907a969075a9d7530a98fb">task_fork</link> (
+)</para>
                     </listitem>
                 </itemizedlist>
             </para>

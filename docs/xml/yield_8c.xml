@@ -6,140 +6,124 @@
     <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
     <includes refid="task_8h" local="no">aplus/task.h</includes>
     <incdepgraph>
-      <node id="2112">
+      <node id="1884">
         <label>sys/stat.h</label>
       </node>
-      <node id="2101">
+      <node id="1875">
         <label>stdarg.h</label>
       </node>
-      <node id="2104">
+      <node id="1878">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="2099" relation="include">
+        <childnode refid="1873" relation="include">
         </childnode>
-        <childnode refid="2105" relation="include">
+        <childnode refid="1879" relation="include">
         </childnode>
-        <childnode refid="2100" relation="include">
+        <childnode refid="1874" relation="include">
         </childnode>
-        <childnode refid="2102" relation="include">
+        <childnode refid="1876" relation="include">
         </childnode>
-        <childnode refid="2107" relation="include">
+        <childnode refid="1881" relation="include">
         </childnode>
       </node>
-      <node id="2111">
+      <node id="1883">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="2100" relation="include">
+        <childnode refid="1874" relation="include">
         </childnode>
-        <childnode refid="2106" relation="include">
+        <childnode refid="1880" relation="include">
         </childnode>
-        <childnode refid="2107" relation="include">
+        <childnode refid="1881" relation="include">
         </childnode>
-        <childnode refid="2112" relation="include">
+        <childnode refid="1884" relation="include">
         </childnode>
-        <childnode refid="2113" relation="include">
+        <childnode refid="1885" relation="include">
         </childnode>
       </node>
-      <node id="2100">
+      <node id="1874">
         <label>stdint.h</label>
       </node>
-      <node id="2103">
+      <node id="1877">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="2099" relation="include">
+        <childnode refid="1873" relation="include">
         </childnode>
-        <childnode refid="2104" relation="include">
+        <childnode refid="1878" relation="include">
         </childnode>
-        <childnode refid="2100" relation="include">
+        <childnode refid="1874" relation="include">
         </childnode>
       </node>
-      <node id="2116">
+      <node id="1888">
         <label>setjmp.h</label>
       </node>
-      <node id="2110">
+      <node id="1882">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="2100" relation="include">
+        <childnode refid="1874" relation="include">
         </childnode>
-        <childnode refid="2099" relation="include">
+        <childnode refid="1873" relation="include">
         </childnode>
-        <childnode refid="2111" relation="include">
+        <childnode refid="1883" relation="include">
         </childnode>
-        <childnode refid="2115" relation="include">
+        <childnode refid="1887" relation="include">
         </childnode>
-        <childnode refid="2107" relation="include">
+        <childnode refid="1881" relation="include">
         </childnode>
-        <childnode refid="2116" relation="include">
+        <childnode refid="1888" relation="include">
         </childnode>
       </node>
-      <node id="2106">
+      <node id="1880">
         <label>stddef.h</label>
       </node>
-      <node id="2105">
+      <node id="1879">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="2106" relation="include">
+        <childnode refid="1880" relation="include">
         </childnode>
-        <childnode refid="2100" relation="include">
+        <childnode refid="1874" relation="include">
         </childnode>
-        <childnode refid="2107" relation="include">
-        </childnode>
-        <childnode refid="2108" relation="include">
-        </childnode>
-        <childnode refid="2109" relation="include">
+        <childnode refid="1881" relation="include">
         </childnode>
       </node>
-      <node id="2098">
+      <node id="1872">
         <label>src/syscall/yield.c</label>
         <link refid="yield.c"/>
-        <childnode refid="2099" relation="include">
+        <childnode refid="1873" relation="include">
         </childnode>
-        <childnode refid="2103" relation="include">
+        <childnode refid="1877" relation="include">
         </childnode>
-        <childnode refid="2110" relation="include">
+        <childnode refid="1882" relation="include">
         </childnode>
       </node>
-      <node id="2099">
+      <node id="1873">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="2100" relation="include">
+        <childnode refid="1874" relation="include">
         </childnode>
-        <childnode refid="2101" relation="include">
+        <childnode refid="1875" relation="include">
         </childnode>
-        <childnode refid="2102" relation="include">
+        <childnode refid="1876" relation="include">
         </childnode>
       </node>
-      <node id="2107">
+      <node id="1881">
         <label>sys/types.h</label>
       </node>
-      <node id="2102">
+      <node id="1876">
         <label>string.h</label>
       </node>
-      <node id="2114">
+      <node id="1886">
         <label>unistd.h</label>
       </node>
-      <node id="2115">
+      <node id="1887">
         <label>signal.h</label>
       </node>
-      <node id="2109">
-        <label>aplus/mm.h</label>
-        <link refid="mm_8h"/>
-        <childnode refid="2100" relation="include">
-        </childnode>
-        <childnode refid="2110" relation="include">
-        </childnode>
-      </node>
-      <node id="2113">
+      <node id="1885">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2114" relation="include">
+        <childnode refid="1886" relation="include">
         </childnode>
-        <childnode refid="2107" relation="include">
+        <childnode refid="1881" relation="include">
         </childnode>
-      </node>
-      <node id="2108">
-        <label>aplus/spinlock.h</label>
-        <link refid="spinlock_8h"/>
       </node>
     </incdepgraph>
       <sectiondef kind="func">
@@ -157,16 +141,16 @@
         <location file="/opt/prj/aPlus/src/syscall/yield.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/syscall/yield.c" bodystart="6" bodyend="8"/>
         <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="153" endline="161">schedule_yield</references>
       </memberdef>
-      <memberdef kind="function" id="yield_8c_1af498ada32e285a077cc5fc9b5f61d250" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="yield_8c_1ac015462b27f6721140f30824adc6ba73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
         <definition>SYSCALL</definition>
-        <argsstring>(sys_yield, 82)</argsstring>
+        <argsstring>(sys_yield, 23)</argsstring>
         <name>SYSCALL</name>
         <param>
           <type><ref refid="yield_8c_1a1b3e74d65228b4578f1021261a5f858b" kindref="member">sys_yield</ref></type>
         </param>
         <param>
-          <type>82</type>
+          <type>23</type>
         </param>
         <briefdescription>
         </briefdescription>
@@ -191,7 +175,7 @@
 <codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" kindref="member">schedule_yield</ref>();</highlight></codeline>
 <codeline lineno="8"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="9"><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"><ref refid="yield_8c_1af498ada32e285a077cc5fc9b5f61d250" kindref="member">SYSCALL</ref>(<ref refid="yield_8c_1a1b3e74d65228b4578f1021261a5f858b" kindref="member">sys_yield</ref>,<sp/>82);</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><ref refid="yield_8c_1ac015462b27f6721140f30824adc6ba73" kindref="member">SYSCALL</ref>(<ref refid="yield_8c_1a1b3e74d65228b4578f1021261a5f858b" kindref="member">sys_yield</ref>,<sp/>23);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/yield.c"/>
   </compounddef>

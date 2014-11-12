@@ -162,50 +162,49 @@ Variables</h2></td></tr>
 
 <p>Entry point for kernel. </p>
 
-<p>Definition at line <a class="el" href="src_2main_8c_source.html#l00062">62</a> of file <a class="el" href="src_2main_8c_source.html">main.c</a>.</p>
+<p>Definition at line <a class="el" href="src_2main_8c_source.html#l00061">61</a> of file <a class="el" href="src_2main_8c_source.html">main.c</a>.</p>
 
-<p>References <a class="el" href="bufio_8c_source.html#l00031">bufio_init()</a>, <a class="el" href="desc_8c_source.html#l00195">desc_init()</a>, <a class="el" href="devfs_8c_source.html#l00071">devfs_mount()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>, <a class="el" href="ramdev_8c_source.html#l00076">mkramdev()</a>, <a class="el" href="mm_8c_source.html#l00122">mm_init()</a>, <a class="el" href="grub_8h_source.html#l00071">BootInfo_t::mods_addr</a>, <a class="el" href="grub_8h_source.html#l00070">BootInfo_t::mods_count</a>, <a class="el" href="netif_8c_source.html#l00221">netif_init()</a>, <a class="el" href="panic_8c_source.html#l00102">panic()</a>, <a class="el" href="pci_8c_source.html#l00144">pci_init()</a>, <a class="el" href="src_2sched_8c_source.html#l00100">schedule_init()</a>, <a class="el" href="serial_8c_source.html#l00022">serial_init()</a>, <a class="el" href="mount_8c_source.html#l00022">sys_mount()</a>, <a class="el" href="syscall_8c_source.html#l00011">syscall_init()</a>, <a class="el" href="src_2main_8c_source.html#l00050">sysidle()</a>, <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>, <a class="el" href="vfs_8c_source.html#l00081">vfs_init()</a>, and <a class="el" href="vfs_8c_source.html#l00022">vfs_map()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;           {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="serial_8c.html#a459999cfa35c788b64284953a93c4b57">serial_init</a>();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">mm_init</a>();</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="desc_8c.html#a6a369f578313199f231869f97e16802d">desc_init</a>();</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="syscall_8c.html#a15662fc3572d9f3abd72a439727767c3">syscall_init</a>();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="vfs_8c.html#aca585ca14c08d6c1a07e1b886fc9749a">vfs_init</a>();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="src_2sched_8c.html#a9f6f16348da2348d320d255437e6ac02">schedule_init</a>();</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="bufio_8c.html#a8553eb3703bbc2ac89010ccfaefe760f">bufio_init</a>();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="pci_8c.html#a5c450b9e2534226b162a16de0ef6b434">pci_init</a>();</div>
+<p>References <a class="el" href="bufio_8c_source.html#l00031">bufio_init()</a>, <a class="el" href="desc_8c_source.html#l00195">desc_init()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>, <a class="el" href="ramdev_8c_source.html#l00076">mkramdev()</a>, <a class="el" href="mm_8c_source.html#l00122">mm_init()</a>, <a class="el" href="grub_8h_source.html#l00071">BootInfo_t::mods_addr</a>, <a class="el" href="grub_8h_source.html#l00070">BootInfo_t::mods_count</a>, <a class="el" href="netif_8c_source.html#l00221">netif_init()</a>, <a class="el" href="panic_8c_source.html#l00102">panic()</a>, <a class="el" href="pci_8c_source.html#l00144">pci_init()</a>, <a class="el" href="src_2sched_8c_source.html#l00100">schedule_init()</a>, <a class="el" href="serial_8c_source.html#l00022">serial_init()</a>, <a class="el" href="mount_8c_source.html#l00022">sys_mount()</a>, <a class="el" href="syscall_8c_source.html#l00011">syscall_init()</a>, <a class="el" href="src_2main_8c_source.html#l00050">sysidle()</a>, <a class="el" href="task_8c_source.html#l00051">task_clone()</a>, <a class="el" href="tty_8c_source.html#l00307">tty_init()</a>, <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>, and <a class="el" href="vfs_8c_source.html#l00081">vfs_init()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;           {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="serial_8c.html#a459999cfa35c788b64284953a93c4b57">serial_init</a>();</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <a class="code" href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">mm_init</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="desc_8c.html#a6a369f578313199f231869f97e16802d">desc_init</a>();</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="syscall_8c.html#a15662fc3572d9f3abd72a439727767c3">syscall_init</a>();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <a class="code" href="vfs_8c.html#aca585ca14c08d6c1a07e1b886fc9749a">vfs_init</a>();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="src_2sched_8c.html#a9f6f16348da2348d320d255437e6ac02">schedule_init</a>();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="bufio_8c.html#a8553eb3703bbc2ac89010ccfaefe760f">bufio_init</a>();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="pci_8c.html#a5c450b9e2534226b162a16de0ef6b434">pci_init</a>();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="tty_8c.html#aab365abb615be7027fa0bdb2c09569cb">tty_init</a>();</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="netif_8c.html#af7c3254022249b2dfa78151c8f345e77">netif_init</a>();</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="vfs_8c.html#acb87c78588a46c5526e933c495b69c2a">vfs_map</a>(<a class="code" href="devfs_8c.html#a12b8ede9eeee8603d4b89d189a484380">devfs_mount</a>());</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a178ef95a8fbd89ec018899b9ba241d92">mods_count</a> == 0)</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;no initrd module found&quot;</span>);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> addr = ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>*) <a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">mods_addr</a>) [0];</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> endp = ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>*) <a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">mods_addr</a>) [1];</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a178ef95a8fbd89ec018899b9ba241d92">mods_count</a> == 0)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;no initrd module found&quot;</span>);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> addr = ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>*) <a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">mods_addr</a>) [0];</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> endp = ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>*) <a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">mods_addr</a>) [1];</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;initrd: module found at addess: 0x%x (%d KB)\n&quot;</span>, addr, (endp - addr) / 1024);</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;initrd: module found at addess: 0x%x (%d KB)\n&quot;</span>, addr, (endp - addr) / 1024);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span>(!<a class="code" href="ramdev_8c.html#a0c040a7a5a5150b0b0d18354ac6f4958">mkramdev</a>(<span class="stringliteral">&quot;/dev/ram0&quot;</span>, addr, endp - addr))</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;initrd: cannot create /dev/ram0&quot;</span>);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="mount_8c.html#adbb2f2f41fa719d188b9291a25afdd98">sys_mount</a>(<span class="stringliteral">&quot;/dev/ram0&quot;</span>, <span class="stringliteral">&quot;/dev/ramdisk&quot;</span>, <span class="stringliteral">&quot;iso9660&quot;</span>, 0, 0) != 0)</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;initrd: cannot mount ramdisk&quot;</span>);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">    if(fork() == 0)</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">        execl(&quot;/bin/init&quot;, &quot;/bin/init&quot;, 0);</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">    else</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="src_2main_8c.html#aef7c73ff9178a16543352d9e530d8c60">sysidle</a>();</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span>(!<a class="code" href="ramdev_8c.html#a0c040a7a5a5150b0b0d18354ac6f4958">mkramdev</a>(<span class="stringliteral">&quot;/dev/ram0&quot;</span>, addr, endp - addr))</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;initrd: cannot create /dev/ram0&quot;</span>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="mount_8c.html#adbb2f2f41fa719d188b9291a25afdd98">sys_mount</a>(<span class="stringliteral">&quot;/dev/ram0&quot;</span>, <span class="stringliteral">&quot;/dev/ramdisk&quot;</span>, <span class="stringliteral">&quot;iso9660&quot;</span>, 0, 0) != 0)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;initrd: cannot mount ramdisk&quot;</span>);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="comment">    if(fork() == 0)</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">        execl(&quot;/bin/init&quot;, &quot;/bin/init&quot;, 0);</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">    else</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="task_8c.html#afed7d6a4dd3580596c0c925e766c4163">task_clone</a>(<a class="code" href="src_2main_8c.html#aef7c73ff9178a16543352d9e530d8c60">sysidle</a>, NULL, NULL, 0);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">for</span>(;;);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
 <div class="ttc" id="bufio_8c_html_a8553eb3703bbc2ac89010ccfaefe760f"><div class="ttname"><a href="bufio_8c.html#a8553eb3703bbc2ac89010ccfaefe760f">bufio_init</a></div><div class="ttdeci">int bufio_init()</div><div class="ttdoc">BufIO initialization. </div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00031">bufio.c:31</a></div></div>
-<div class="ttc" id="devfs_8c_html_a12b8ede9eeee8603d4b89d189a484380"><div class="ttname"><a href="devfs_8c.html#a12b8ede9eeee8603d4b89d189a484380">devfs_mount</a></div><div class="ttdeci">inode_t * devfs_mount()</div><div class="ttdef"><b>Definition:</b> <a href="devfs_8c_source.html#l00071">devfs.c:71</a></div></div>
 <div class="ttc" id="vfs_8c_html_aca585ca14c08d6c1a07e1b886fc9749a"><div class="ttname"><a href="vfs_8c.html#aca585ca14c08d6c1a07e1b886fc9749a">vfs_init</a></div><div class="ttdeci">int vfs_init()</div><div class="ttdef"><b>Definition:</b> <a href="vfs_8c_source.html#l00081">vfs.c:81</a></div></div>
 <div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
 <div class="ttc" id="pci_8c_html_a5c450b9e2534226b162a16de0ef6b434"><div class="ttname"><a href="pci_8c.html#a5c450b9e2534226b162a16de0ef6b434">pci_init</a></div><div class="ttdeci">int pci_init()</div><div class="ttdef"><b>Definition:</b> <a href="pci_8c_source.html#l00144">pci.c:144</a></div></div>
@@ -217,9 +216,10 @@ Variables</h2></td></tr>
 <div class="ttc" id="syscall_8c_html_a15662fc3572d9f3abd72a439727767c3"><div class="ttname"><a href="syscall_8c.html#a15662fc3572d9f3abd72a439727767c3">syscall_init</a></div><div class="ttdeci">int syscall_init()</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00011">syscall.c:11</a></div></div>
 <div class="ttc" id="mount_8c_html_adbb2f2f41fa719d188b9291a25afdd98"><div class="ttname"><a href="mount_8c.html#adbb2f2f41fa719d188b9291a25afdd98">sys_mount</a></div><div class="ttdeci">int sys_mount(const char *dev, const char *dir, const char *fstype, int options, const void *data)</div><div class="ttdef"><b>Definition:</b> <a href="mount_8c_source.html#l00022">mount.c:22</a></div></div>
 <div class="ttc" id="ramdev_8c_html_a0c040a7a5a5150b0b0d18354ac6f4958"><div class="ttname"><a href="ramdev_8c.html#a0c040a7a5a5150b0b0d18354ac6f4958">mkramdev</a></div><div class="ttdeci">inode_t * mkramdev(char *path, uint32_t addr, uint32_t size)</div><div class="ttdef"><b>Definition:</b> <a href="ramdev_8c_source.html#l00076">ramdev.c:76</a></div></div>
-<div class="ttc" id="vfs_8c_html_acb87c78588a46c5526e933c495b69c2a"><div class="ttname"><a href="vfs_8c.html#acb87c78588a46c5526e933c495b69c2a">vfs_map</a></div><div class="ttdeci">void vfs_map(inode_t *inode)</div><div class="ttdef"><b>Definition:</b> <a href="vfs_8c_source.html#l00022">vfs.c:22</a></div></div>
 <div class="ttc" id="netif_8c_html_af7c3254022249b2dfa78151c8f345e77"><div class="ttname"><a href="netif_8c.html#af7c3254022249b2dfa78151c8f345e77">netif_init</a></div><div class="ttdeci">int netif_init()</div><div class="ttdef"><b>Definition:</b> <a href="netif_8c_source.html#l00221">netif.c:221</a></div></div>
+<div class="ttc" id="tty_8c_html_aab365abb615be7027fa0bdb2c09569cb"><div class="ttname"><a href="tty_8c.html#aab365abb615be7027fa0bdb2c09569cb">tty_init</a></div><div class="ttdeci">int tty_init()</div><div class="ttdef"><b>Definition:</b> <a href="tty_8c_source.html#l00307">tty.c:307</a></div></div>
 <div class="ttc" id="structBootInfo__t_html_a1be510e25cd3a21bfd0d4d3b303e0543"><div class="ttname"><a href="structBootInfo__t.html#a1be510e25cd3a21bfd0d4d3b303e0543">BootInfo_t::mods_addr</a></div><div class="ttdeci">unsigned int ** mods_addr</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00071">grub.h:71</a></div></div>
+<div class="ttc" id="task_8c_html_afed7d6a4dd3580596c0c925e766c4163"><div class="ttname"><a href="task_8c.html#afed7d6a4dd3580596c0c925e766c4163">task_clone</a></div><div class="ttdeci">task_t * task_clone(void *entry, void *arg, void *stack, int flags)</div><div class="ttdef"><b>Definition:</b> <a href="task_8c_source.html#l00051">task.c:51</a></div></div>
 <div class="ttc" id="structBootInfo__t_html_a178ef95a8fbd89ec018899b9ba241d92"><div class="ttname"><a href="structBootInfo__t.html#a178ef95a8fbd89ec018899b9ba241d92">BootInfo_t::mods_count</a></div><div class="ttdeci">unsigned int mods_count</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00070">grub.h:70</a></div></div>
 <div class="ttc" id="desc_8c_html_a6a369f578313199f231869f97e16802d"><div class="ttname"><a href="desc_8c.html#a6a369f578313199f231869f97e16802d">desc_init</a></div><div class="ttdeci">int desc_init()</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00195">desc.c:195</a></div></div>
 <div class="ttc" id="src_2main_8c_html_aef7c73ff9178a16543352d9e530d8c60"><div class="ttname"><a href="src_2main_8c.html#aef7c73ff9178a16543352d9e530d8c60">sysidle</a></div><div class="ttdeci">static void sysidle()</div><div class="ttdoc">Put Kernel Task in optimized loop for powersave. </div><div class="ttdef"><b>Definition:</b> <a href="src_2main_8c_source.html#l00050">main.c:50</a></div></div>
@@ -255,11 +255,10 @@ Variables</h2></td></tr>
 <p>References <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="src_2sched_8c_source.html#l00168">schedule_setpriority()</a>, and <a class="el" href="task_8h_source.html#l00045">TASK_PRIORITY_LOW</a>.</p>
 <div class="fragment"><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                      {</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="src_2sched_8c.html#a878aa3454133f7c01a4ba15ef68b9be2">schedule_setpriority</a>(<a class="code" href="task_8h.html#a00a0568927a39311236b718f2018c0ab">TASK_PRIORITY_LOW</a>);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">for</span>(;;)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (<span class="stringliteral">&quot;pause&quot;</span>);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">for</span>(;;)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (<span class="stringliteral">&quot;pause&quot;</span>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
 <div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
 	.global gdt_load	\n\
 	gdt_load:			\n\
@@ -327,7 +326,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="src_2main_8c.html">main.c</a></li>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:40 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:02 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

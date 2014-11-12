@@ -13,146 +13,142 @@
     <includes local="no">sys/types.h</includes>
     <includes local="no">stdio.h</includes>
     <incdepgraph>
-      <node id="126">
+      <node id="109">
         <label>sys/stat.h</label>
       </node>
-      <node id="117">
+      <node id="100">
         <label>stdarg.h</label>
       </node>
-      <node id="125">
+      <node id="108">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="116" relation="include">
+        <childnode refid="99" relation="include">
         </childnode>
-        <childnode refid="120" relation="include">
+        <childnode refid="103" relation="include">
         </childnode>
-        <childnode refid="121" relation="include">
+        <childnode refid="104" relation="include">
         </childnode>
-        <childnode refid="126" relation="include">
+        <childnode refid="109" relation="include">
         </childnode>
-        <childnode refid="127" relation="include">
+        <childnode refid="110" relation="include">
         </childnode>
       </node>
-      <node id="116">
+      <node id="99">
         <label>stdint.h</label>
       </node>
-      <node id="130">
+      <node id="113">
         <label>setjmp.h</label>
       </node>
-      <node id="124">
+      <node id="107">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="116" relation="include">
+        <childnode refid="99" relation="include">
         </childnode>
-        <childnode refid="115" relation="include">
+        <childnode refid="98" relation="include">
         </childnode>
-        <childnode refid="125" relation="include">
+        <childnode refid="108" relation="include">
         </childnode>
-        <childnode refid="129" relation="include">
+        <childnode refid="112" relation="include">
         </childnode>
-        <childnode refid="121" relation="include">
+        <childnode refid="104" relation="include">
         </childnode>
-        <childnode refid="130" relation="include">
+        <childnode refid="113" relation="include">
         </childnode>
       </node>
-      <node id="120">
+      <node id="103">
         <label>stddef.h</label>
       </node>
-      <node id="119">
+      <node id="102">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="120" relation="include">
+        <childnode refid="103" relation="include">
         </childnode>
-        <childnode refid="116" relation="include">
+        <childnode refid="99" relation="include">
         </childnode>
-        <childnode refid="121" relation="include">
-        </childnode>
-        <childnode refid="122" relation="include">
-        </childnode>
-        <childnode refid="123" relation="include">
+        <childnode refid="104" relation="include">
         </childnode>
       </node>
-      <node id="115">
+      <node id="98">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="116" relation="include">
+        <childnode refid="99" relation="include">
         </childnode>
-        <childnode refid="117" relation="include">
+        <childnode refid="100" relation="include">
         </childnode>
-        <childnode refid="118" relation="include">
+        <childnode refid="101" relation="include">
         </childnode>
       </node>
-      <node id="121">
+      <node id="104">
         <label>sys/types.h</label>
       </node>
-      <node id="118">
+      <node id="101">
         <label>string.h</label>
       </node>
-      <node id="128">
+      <node id="111">
         <label>unistd.h</label>
       </node>
-      <node id="129">
+      <node id="112">
         <label>signal.h</label>
       </node>
-      <node id="114">
+      <node id="97">
         <label>src/bufio.c</label>
         <link refid="bufio.c"/>
+        <childnode refid="98" relation="include">
+        </childnode>
+        <childnode refid="102" relation="include">
+        </childnode>
+        <childnode refid="105" relation="include">
+        </childnode>
+        <childnode refid="106" relation="include">
+        </childnode>
+        <childnode refid="114" relation="include">
+        </childnode>
+        <childnode refid="107" relation="include">
+        </childnode>
+        <childnode refid="103" relation="include">
+        </childnode>
+        <childnode refid="99" relation="include">
+        </childnode>
+        <childnode refid="104" relation="include">
+        </childnode>
         <childnode refid="115" relation="include">
         </childnode>
-        <childnode refid="119" relation="include">
-        </childnode>
-        <childnode refid="122" relation="include">
-        </childnode>
-        <childnode refid="123" relation="include">
-        </childnode>
-        <childnode refid="131" relation="include">
-        </childnode>
-        <childnode refid="124" relation="include">
-        </childnode>
-        <childnode refid="120" relation="include">
-        </childnode>
-        <childnode refid="116" relation="include">
-        </childnode>
-        <childnode refid="121" relation="include">
-        </childnode>
-        <childnode refid="132" relation="include">
-        </childnode>
       </node>
-      <node id="123">
+      <node id="106">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="116" relation="include">
+        <childnode refid="99" relation="include">
         </childnode>
-        <childnode refid="124" relation="include">
+        <childnode refid="107" relation="include">
         </childnode>
       </node>
-      <node id="127">
+      <node id="110">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="128" relation="include">
+        <childnode refid="111" relation="include">
         </childnode>
-        <childnode refid="121" relation="include">
+        <childnode refid="104" relation="include">
         </childnode>
       </node>
-      <node id="122">
+      <node id="105">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
-      <node id="131">
+      <node id="114">
         <label>aplus/bufio.h</label>
         <link refid="bufio_8h"/>
-        <childnode refid="116" relation="include">
+        <childnode refid="99" relation="include">
         </childnode>
-        <childnode refid="120" relation="include">
+        <childnode refid="103" relation="include">
         </childnode>
-        <childnode refid="121" relation="include">
+        <childnode refid="104" relation="include">
         </childnode>
-        <childnode refid="122" relation="include">
+        <childnode refid="105" relation="include">
         </childnode>
-        <childnode refid="124" relation="include">
+        <childnode refid="107" relation="include">
         </childnode>
       </node>
-      <node id="132">
+      <node id="115">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -210,7 +206,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/bufio.c" line="31" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="31" bodyend="35"/>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
       </memberdef>
       <memberdef kind="function" id="bufio_8c_1a078ef38ac6ed6b044ebaf4f06dafdf46" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -224,10 +220,10 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/bufio.c" line="41" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="41" bodyend="55"/>
-        <references refid="list_8h_1ad29245eda34d4cdac400323a1bd63cdd" compoundref="list_8h" startline="119" endline="127">list_clone</references>
-        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="193">list_destroy</references>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="list_8h_1ad29245eda34d4cdac400323a1bd63cdd" compoundref="list_8h" startline="128" endline="136">list_clone</references>
+        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="202">list_destroy</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
       <memberdef kind="function" id="bufio_8c_1a788d5286cd4a5a1d4aed02c319aaf030" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -258,7 +254,7 @@
         <references refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" compoundref="bufio_8c" startline="23">buffers_length</references>
         <references refid="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
         <references refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" compoundref="spinlock_8h" startline="38">lock</references>
         <references refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" compoundref="bufio_8h" startline="35">bufio::offset</references>
         <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
@@ -307,7 +303,7 @@
         <references refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" compoundref="bufio_8c" startline="23">buffers_length</references>
         <references refid="bufio_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
         <references refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" compoundref="spinlock_8h" startline="38">lock</references>
         <references refid="structbufio_1a0f3f80e49eba1806c7468d2283083ea0" compoundref="bufio_8h" startline="35">bufio::offset</references>
         <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
@@ -343,7 +339,7 @@
         <location file="/opt/prj/aPlus/src/bufio.c" line="118" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="118" bodyend="129"/>
         <references refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" compoundref="bufio_8c" startline="23">buffers_length</references>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
-        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="82" endline="106">list_remove</references>
         <references refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" compoundref="spinlock_8h" startline="38">lock</references>
         <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>
         <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>

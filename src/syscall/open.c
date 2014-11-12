@@ -130,7 +130,6 @@ int sys_open(char* filename, int flags, mode_t mode) {
 
 	char* p = dupstr(filename);
 	inode_t* ino = ino_open(p, flags, mode);
-
 	kfree(p);
 
 	if(!ino)

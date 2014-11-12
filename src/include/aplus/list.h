@@ -26,9 +26,18 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#if defined(__aplus__)
 #include <aplus/spinlock.h>
 #include <aplus/mm.h>
 
+
+#define __list_malloc	kmalloc
+#define __list_free		kfree
+#define __list_lock		spinlock_lock
+#define __list_unlock	spinlock_unlock
+#define __list_lock_t	spinlock_t
+
+#endif
 
 typedef uint32_t listval_t;
 
@@ -41,7 +50,7 @@ typedef struct list_body {
 typedef struct list {
 	list_body_t* body;
 	
-	spinlock_t lock;
+	__list_lock_t lock;
 	size_t size;
 } list_t;
 
@@ -54,11 +63,11 @@ static inline int list_empty(list_t* list) {
 }
 
 static inline int list_add(list_t* list, listval_t v) {
-	list_body_t* val = (list_body_t*) kmalloc(sizeof(list_body_t));
+	list_body_t* val = (list_body_t*) __list_malloc(sizeof(list_body_t));
 	if(!val)
 		return -1;
 		
-	spinlock_lock(&list->lock);
+	__list_lock(&list->lock);
 		
 	val->value = v;
 	val->next = list->body;
@@ -66,12 +75,12 @@ static inline int list_add(list_t* list, listval_t v) {
 	list->body = val;
 	list->size += 1;
 	
-	spinlock_unlock(&list->lock);
+	__list_unlock(&list->lock);
 	return 0;
 }
 
 static inline int list_remove(list_t* list, listval_t v) {
-	spinlock_lock(&list->lock);
+	__list_lock(&list->lock);
 	
 	list_body_t* body = list->body;
 	list_body_t* prev = 0;
@@ -84,7 +93,7 @@ static inline int list_remove(list_t* list, listval_t v) {
 				list->body = body->next;
 				
 			body->value = 0;
-			kfree(body);
+			__list_free(body);
 			break;
 		}
 		
@@ -92,38 +101,38 @@ static inline int list_remove(list_t* list, listval_t v) {
 		body = body->next;
 	}
 	
-	spinlock_unlock(&list->lock);
+	__list_unlock(&list->lock);
 	return 0;
 }
 
 static inline int list_clear(list_t* list) {
-	spinlock_lock(&list->lock);
+	__list_lock(&list->lock);
 	
 	list_body_t* body = list->body;
 	list_body_t* tmp = list->body;
 	
 	while(body) {
 		tmp = body->next;
-		kfree(body);
+		__list_free(body);
 		body = tmp;
 	}
 	
 	list->body = 0;
 	list->size = 0;
 	
-	spinlock_unlock(&list->lock);
+	__list_unlock(&list->lock);
 	return 0;
 }
 
 
 static inline void list_clone(list_t* dest, list_t* src) {
-	spinlock_lock(&src->lock);
+	__list_lock(&src->lock);
 	
 	for(list_body_t* i = src->body; i; i = i->next) {
 		list_add(dest, i->value);
 	}
 	
-	spinlock_unlock(&src->lock);
+	__list_unlock(&src->lock);
 }
 
 static inline listval_t list_prev(list_t* list, listval_t val) {
@@ -167,10 +176,10 @@ static inline listval_t list_head(list_t* list) {
 
 
 #define list_safe_begin(list)								\
-	spinlock_lock(&list->lock)
+	__list_lock(&list->lock)
 	
 #define list_safe_end(list)									\
-	spinlock_unlock(&list->lock)
+	__list_unlock(&list->lock)
 	
 #define list_foreach(value, list)							\
 	for(listval_t value = list_head(list); 					\
@@ -185,14 +194,14 @@ static inline listval_t list_head(list_t* list) {
 		)
 
 #define list_init(list)										\
-	list = (list_t*) kmalloc(sizeof(list_t));				\
+	list = (list_t*) __list_malloc(sizeof(list_t));			\
 	list->body = 0;											\
 	list->size = 0;											\
 	list->lock = 0
 	
 #define list_destroy(list)									\
 	list_clear(list);										\
-	kfree(list)
+	__list_free(list)
 
 
 

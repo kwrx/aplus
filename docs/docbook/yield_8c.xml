@@ -17,8 +17,8 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para> <link linkend="yield_8c_1af498ada32e285a077cc5fc9b5f61d250">SYSCALL</link> (
-<link linkend="yield_8c_1a1b3e74d65228b4578f1021261a5f858b">sys_yield</link> , 82 )</para>
+                        <para> <link linkend="yield_8c_1ac015462b27f6721140f30824adc6ba73">SYSCALL</link> (
+<link linkend="yield_8c_1a1b3e74d65228b4578f1021261a5f858b">sys_yield</link> , 23 )</para>
                     </listitem>
                 </itemizedlist>
             </para>

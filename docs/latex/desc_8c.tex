@@ -715,7 +715,7 @@ References task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enable
 )}}\label{desc_8c_ab36b30e25787b3f4887160064ba2f43a}
 
 
-Definition at line 53 of file syscall.\+c.
+Definition at line 77 of file syscall.\+c.
 
 
 
@@ -723,10 +723,10 @@ References syscall\+\_\+handlers, and syscall\+\_\+invoke().
 
 
 \begin{DoxyCode}
-53                                \{
-54     \textcolor{keywordflow}{return} \hyperlink{syscall_8c_a271c3526b04dd2fe678f7f0d00cbf759}{syscall\_invoke}(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[r->eax], r->ebx, r->ecx, r->edx, r
+77                                \{
+78     \textcolor{keywordflow}{return} \hyperlink{syscall_8c_a271c3526b04dd2fe678f7f0d00cbf759}{syscall\_invoke}(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[r->eax], r->ebx, r->ecx, r->edx, r
       ->esi, r->edi);
-55 \}
+79 \}
 \end{DoxyCode}
 
 

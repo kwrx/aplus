@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="openpty_8c">
+    <title>openpty.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/tty.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e">sys_openpty</link> (
+int * master, int * slave, char * name, const struct termios * ios, const struct <link linkend="grub_8h_1a75544d53f0c0032654ba8afc5ea4fb34">winsize</link> * win)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="openpty_8c_1a773637204237eb29e9c39c0dcd5a06f4">SYSCALL</link> (
+<link linkend="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e">sys_openpty</link> , 27 )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/syscall/openpty.c</para>
+    </simplesect>
+</section>

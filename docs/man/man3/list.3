@@ -1,4 +1,4 @@
-.TH "list" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "list" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -15,7 +15,7 @@ list \-
 .RI "\fBlist_body_t\fP * \fBbody\fP"
 .br
 .ti -1c
-.RI "\fBspinlock_t\fP \fBlock\fP"
+.RI "__list_lock_t \fBlock\fP"
 .br
 .ti -1c
 .RI "size_t \fBsize\fP"
@@ -23,21 +23,21 @@ list \-
 .in -1c
 .SH "Detailed Description"
 .PP 
-Definition at line 41 of file list\&.h\&.
+Definition at line 50 of file list\&.h\&.
 .SH "Field Documentation"
 .PP 
 .SS "\fBlist_body_t\fP* list::body"
 
 .PP
-Definition at line 42 of file list\&.h\&.
-.SS "\fBspinlock_t\fP list::lock"
+Definition at line 51 of file list\&.h\&.
+.SS "__list_lock_t list::lock"
 
 .PP
-Definition at line 44 of file list\&.h\&.
+Definition at line 53 of file list\&.h\&.
 .SS "size_t list::size"
 
 .PP
-Definition at line 45 of file list\&.h\&.
+Definition at line 54 of file list\&.h\&.
 
 .SH "Author"
 .PP 

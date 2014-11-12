@@ -7,6 +7,7 @@ var searchData=
   ['base_5fm',['base_m',['../structgdt__entry.html#a9866fb96bce8b51042b75995a9f5ed4f',1,'gdt_entry::base_m()'],['../desc_8c.html#a98fb2af33fad804398328d56ccf01ec2',1,'base_m():&#160;desc.c']]],
   ['bcd2bin',['BCD2BIN',['../desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a',1,'desc.c']]],
   ['bcd2bin2',['BCD2BIN2',['../desc_8c.html#a33200b25f91bf4cf6a4ec73ef292b207',1,'desc.c']]],
+  ['bg',['bg',['../structtty.html#a68f717ba40f28d6b941f62f0e7255e2e',1,'tty']]],
   ['bibid',['bibid',['../structiso9660__pvd.html#a7f7dc75a65ede924ad50c9f687a38e72',1,'iso9660_pvd::bibid()'],['../iso9660_8h.html#aa0f3126ac69ede6984bec36f3078aec1',1,'bibid():&#160;iso9660.h']]],
   ['bitmap',['bitmap',['../structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1',1,'heap']]],
   ['bitmap_5falloc',['bitmap_alloc',['../kheap_8c.html#a5091f353b0ceafc7134382b4386d206c',1,'kheap.c']]],

@@ -177,3 +177,19 @@ void kprintf(char* fmt, ...) {
 }
 
 
+/**
+ *	\brief Formatted output conversion and print to buffer.
+ * 	\param buf Buffer output.
+ *	\param fmt Format of string.
+ *	\param ... Arguments.
+ */
+void ksprintf(char* buf, char* fmt, ...) {
+	
+	va_list lst;
+	va_start(lst, fmt);
+	vasprintf(buf, fmt, lst);
+	va_end(lst);
+
+}
+
+

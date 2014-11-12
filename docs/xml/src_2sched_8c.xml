@@ -11,124 +11,120 @@
     <includes local="no">stdint.h</includes>
     <includes local="no">sys/types.h</includes>
     <incdepgraph>
-      <node id="1432">
+      <node id="1250">
         <label>sys/stat.h</label>
       </node>
-      <node id="1426">
+      <node id="1244">
         <label>stdarg.h</label>
       </node>
-      <node id="1429">
+      <node id="1247">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1425" relation="include">
+        <childnode refid="1243" relation="include">
         </childnode>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1248" relation="include">
         </childnode>
-        <childnode refid="1431" relation="include">
+        <childnode refid="1249" relation="include">
         </childnode>
-        <childnode refid="1432" relation="include">
+        <childnode refid="1250" relation="include">
         </childnode>
-        <childnode refid="1433" relation="include">
+        <childnode refid="1251" relation="include">
         </childnode>
       </node>
-      <node id="1425">
+      <node id="1243">
         <label>stdint.h</label>
       </node>
-      <node id="1436">
+      <node id="1254">
         <label>setjmp.h</label>
       </node>
-      <node id="1428">
+      <node id="1246">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1425" relation="include">
+        <childnode refid="1243" relation="include">
         </childnode>
-        <childnode refid="1424" relation="include">
+        <childnode refid="1242" relation="include">
         </childnode>
-        <childnode refid="1429" relation="include">
+        <childnode refid="1247" relation="include">
         </childnode>
-        <childnode refid="1435" relation="include">
+        <childnode refid="1253" relation="include">
         </childnode>
-        <childnode refid="1431" relation="include">
+        <childnode refid="1249" relation="include">
         </childnode>
-        <childnode refid="1436" relation="include">
+        <childnode refid="1254" relation="include">
         </childnode>
       </node>
-      <node id="1430">
+      <node id="1248">
         <label>stddef.h</label>
       </node>
-      <node id="1439">
+      <node id="1257">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1430" relation="include">
+        <childnode refid="1248" relation="include">
         </childnode>
-        <childnode refid="1425" relation="include">
+        <childnode refid="1243" relation="include">
         </childnode>
-        <childnode refid="1431" relation="include">
-        </childnode>
-        <childnode refid="1437" relation="include">
-        </childnode>
-        <childnode refid="1438" relation="include">
+        <childnode refid="1249" relation="include">
         </childnode>
       </node>
-      <node id="1424">
+      <node id="1242">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1425" relation="include">
+        <childnode refid="1243" relation="include">
         </childnode>
-        <childnode refid="1426" relation="include">
+        <childnode refid="1244" relation="include">
         </childnode>
-        <childnode refid="1427" relation="include">
+        <childnode refid="1245" relation="include">
         </childnode>
       </node>
-      <node id="1431">
+      <node id="1249">
         <label>sys/types.h</label>
       </node>
-      <node id="1427">
+      <node id="1245">
         <label>string.h</label>
       </node>
-      <node id="1434">
+      <node id="1252">
         <label>unistd.h</label>
       </node>
-      <node id="1435">
+      <node id="1253">
         <label>signal.h</label>
       </node>
-      <node id="1438">
+      <node id="1256">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1425" relation="include">
+        <childnode refid="1243" relation="include">
         </childnode>
-        <childnode refid="1428" relation="include">
+        <childnode refid="1246" relation="include">
         </childnode>
       </node>
-      <node id="1423">
+      <node id="1241">
         <label>src/sched.c</label>
         <link refid="src/sched.c"/>
-        <childnode refid="1424" relation="include">
+        <childnode refid="1242" relation="include">
         </childnode>
-        <childnode refid="1428" relation="include">
+        <childnode refid="1246" relation="include">
         </childnode>
-        <childnode refid="1429" relation="include">
+        <childnode refid="1247" relation="include">
         </childnode>
-        <childnode refid="1437" relation="include">
+        <childnode refid="1255" relation="include">
         </childnode>
-        <childnode refid="1438" relation="include">
+        <childnode refid="1256" relation="include">
         </childnode>
-        <childnode refid="1439" relation="include">
+        <childnode refid="1257" relation="include">
         </childnode>
-        <childnode refid="1425" relation="include">
+        <childnode refid="1243" relation="include">
         </childnode>
-        <childnode refid="1431" relation="include">
+        <childnode refid="1249" relation="include">
         </childnode>
       </node>
-      <node id="1433">
+      <node id="1251">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1434" relation="include">
+        <childnode refid="1252" relation="include">
         </childnode>
-        <childnode refid="1431" relation="include">
+        <childnode refid="1249" relation="include">
         </childnode>
       </node>
-      <node id="1437">
+      <node id="1255">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -202,9 +198,9 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="58" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="58" bodyend="69"/>
-        <references refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" compoundref="task_8h" startline="83">task::gid</references>
+        <references refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" compoundref="task_8h" startline="101">task::gid</references>
         <references refid="task_8h_1a6120fde6185466f2810fd0457009aaf0" compoundref="task_8h" startline="52">GID_SUPERUSER</references>
-        <references refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" compoundref="task_8h" startline="82">task::uid</references>
+        <references refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" compoundref="task_8h" startline="100">task::uid</references>
         <references refid="task_8h_1a14338e391bef80aa10d476348d085c5c" compoundref="task_8h" startline="51">UID_SUPERUSER</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -261,9 +257,9 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="100" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="100" bodyend="107"/>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
         <references refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" compoundref="src_2sched_8c" startline="75" endline="77">schedule_enable</references>
-        <references refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" compoundref="task_8c" startline="179" endline="207">task_init</references>
+        <references refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" compoundref="task_8c" startline="184" endline="212">task_init</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
@@ -279,9 +275,9 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="114" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="114" bodyend="127"/>
         <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
-        <references refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" compoundref="list_8h" startline="156" endline="166">list_head</references>
-        <references refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" compoundref="list_8h" startline="139" endline="147">list_next</references>
-        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="102">task::state</references>
+        <references refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" compoundref="list_8h" startline="165" endline="175">list_head</references>
+        <references refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" compoundref="list_8h" startline="148" endline="156">list_next</references>
+        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="120">task::state</references>
         <references refid="task_8h_1a447252ba92918fc13f5b6fd120b2656f" compoundref="task_8h" startline="40">TASK_STATE_ALIVE</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -296,12 +292,12 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="133" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="133" bodyend="147"/>
-        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="104">task::clock</references>
-        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="49" endline="54">list_empty</references>
-        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="103">task::priority</references>
+        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="122">task::clock</references>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="58" endline="63">list_empty</references>
+        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="121">task::priority</references>
         <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
         <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="114" endline="127">schedule_next</references>
-        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="165" endline="175">task_switch</references>
+        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="133" endline="142">task_switch</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -315,10 +311,10 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="153" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="153" bodyend="161"/>
-        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="49" endline="54">list_empty</references>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="58" endline="63">list_empty</references>
         <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
         <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="114" endline="127">schedule_next</references>
-        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="165" endline="175">task_switch</references>
+        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="133" endline="142">task_switch</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -344,7 +340,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="168" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="168" bodyend="173"/>
-        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="103">task::priority</references>
+        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="121">task::priority</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a74e91e3418aedd28c8ddf5d150859a70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
@@ -371,9 +367,9 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="181" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="181" bodyend="187"/>
-        <references refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" compoundref="task_8h" startline="105">task::exitcode</references>
+        <references refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" compoundref="task_8h" startline="123">task::exitcode</references>
         <references refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" compoundref="spinlock_8h" startline="47">spinlock_waiton</references>
-        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="102">task::state</references>
+        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="120">task::state</references>
         <references refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" compoundref="task_8h" startline="42">TASK_STATE_DEAD</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -389,8 +385,8 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="193" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="193" bodyend="206"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
-        <references refid="structtask_1a34c6613744820a1e8127756fb6a5392c" compoundref="task_8h" startline="108">task::parent</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="structtask_1a34c6613744820a1e8127756fb6a5392c" compoundref="task_8h" startline="126">task::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -429,7 +425,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="213" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="213" bodyend="224"/>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
-        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="82" endline="106">list_remove</references>
         <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="153" endline="161">schedule_yield</references>
         <references refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" compoundref="task_8h" startline="42">TASK_STATE_DEAD</references>
       </memberdef>
@@ -473,7 +469,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="241" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="241" bodyend="246"/>
-        <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="73">task::pid</references>
+        <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
@@ -493,8 +489,8 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="253" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="253" bodyend="265"/>
         <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
-        <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="73">task::pid</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a5af6764b80e6b9a24df59f7bb636f3d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -523,14 +519,14 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="272" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="272" bodyend="287"/>
         <references refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1">task::context</references>
-        <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="78">task::cr3</references>
+        <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="96">task::cr3</references>
         <references refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107">task::image</references>
         <references refid="mm_8h_1a2e2878c4e9b542b6e68d7ceccfdcfc86" compoundref="mm_8c" startline="84" endline="108">krealloc</references>
-        <references refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" compoundref="task_8h" startline="92">task::length</references>
+        <references refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" compoundref="task_8h" startline="110">task::length</references>
         <references refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" compoundref="mm_8h" startline="71" endline="76">mm_paddr</references>
-        <references refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" compoundref="task_8h" startline="91">task::ptr</references>
+        <references refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" compoundref="task_8h" startline="109">task::ptr</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
-        <references refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" compoundref="task_8h" startline="90">task::vaddr</references>
+        <references refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" compoundref="task_8h" startline="108">task::vaddr</references>
         <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="52">VMM_FLAGS_DEFAULT</references>
         <references refid="paging_8c_1ae969f54f1646d5d8a871bef828a24239" compoundref="paging_8c" startline="72" endline="106">vmm_map</references>
       </memberdef>

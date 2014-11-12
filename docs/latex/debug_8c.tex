@@ -18,7 +18,9 @@ size\+\_\+t \hyperlink{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{vasprintf} (c
 \begin{DoxyCompactList}\small\item\em Print to allocated string.~\newline
 The functions asprintf() and \hyperlink{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{vasprintf()} are analogs of sprintf(3) and vsprintf(3), except that they allocate a string large enough to hold the output including the terminating null byte, and return a pointer to it via the first argument. This pointer should be passed to free(3) to release the allocated storage when it is no longer needed. \end{DoxyCompactList}\item 
 void \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf} (char $\ast$fmt,...)
-\begin{DoxyCompactList}\small\item\em Formatted output conversion and print to Debug Standard Output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Formatted output conversion and print to Debug Standard Output. \end{DoxyCompactList}\item 
+void \hyperlink{debug_8c_a123a367aba8cf7d2c802b6638b78a056}{ksprintf} (char $\ast$buf, char $\ast$fmt,...)
+\begin{DoxyCompactList}\small\item\em Formatted output conversion and print to buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
@@ -130,6 +132,47 @@ References debug\+\_\+puts(), and vasprintf().
 175     
 176     \hyperlink{debug_8c_a611fa7b9d919dbea95733c7a8d44a1eb}{debug\_puts}(\_\_kprintf\_buf);
 177 \}
+\end{DoxyCode}
+\hypertarget{debug_8c_a123a367aba8cf7d2c802b6638b78a056}{\index{debug.\+c@{debug.\+c}!ksprintf@{ksprintf}}
+\index{ksprintf@{ksprintf}!debug.\+c@{debug.\+c}}
+\subsubsection[{ksprintf}]{\setlength{\rightskip}{0pt plus 5cm}void ksprintf (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{buf, }
+\item[{char $\ast$}]{fmt, }
+\item[{}]{...}
+\end{DoxyParamCaption}
+)}}\label{debug_8c_a123a367aba8cf7d2c802b6638b78a056}
+
+
+Formatted output conversion and print to buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buf} & Buffer output. \\
+\hline
+{\em fmt} & Format of string. \\
+\hline
+{\em ...} & Arguments. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 186 of file debug.\+c.
+
+
+
+References vasprintf().
+
+
+\begin{DoxyCode}
+186                                          \{
+187     
+188     va\_list lst;
+189     va\_start(lst, fmt);
+190     \hyperlink{debug_8c_a1c492cd47880cc15e2274cd13f62f617}{vasprintf}(buf, fmt, lst);
+191     va\_end(lst);
+192 
+193 \}
 \end{DoxyCode}
 \hypertarget{debug_8c_aaef6c9284815d5abe4204817030e6d25}{\index{debug.\+c@{debug.\+c}!print\+\_\+dec@{print\+\_\+dec}}
 \index{print\+\_\+dec@{print\+\_\+dec}!debug.\+c@{debug.\+c}}

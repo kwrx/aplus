@@ -1,0 +1,294 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="tty_8h" kind="file">
+    <compoundname>tty.h</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes refid="fs_8h" local="no">aplus/fs.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">sys/ioctl.h</includes>
+    <includes local="no">sys/termios.h</includes>
+    <includedby refid="tty_8c" local="no">src/fs/tty.c</includedby>
+    <includedby refid="openpty_8c" local="no">src/syscall/openpty.c</includedby>
+    <incdepgraph>
+      <node id="930">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="923">
+        <label>stdarg.h</label>
+      </node>
+      <node id="920">
+        <label>src/include/aplus/tty.h</label>
+        <link refid="tty.h"/>
+        <childnode refid="921" relation="include">
+        </childnode>
+        <childnode refid="925" relation="include">
+        </childnode>
+        <childnode refid="926" relation="include">
+        </childnode>
+        <childnode refid="927" relation="include">
+        </childnode>
+        <childnode refid="935" relation="include">
+        </childnode>
+        <childnode refid="922" relation="include">
+        </childnode>
+        <childnode refid="936" relation="include">
+        </childnode>
+        <childnode refid="937" relation="include">
+        </childnode>
+      </node>
+      <node id="927">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="922" relation="include">
+        </childnode>
+        <childnode refid="928" relation="include">
+        </childnode>
+        <childnode refid="929" relation="include">
+        </childnode>
+        <childnode refid="930" relation="include">
+        </childnode>
+        <childnode refid="931" relation="include">
+        </childnode>
+      </node>
+      <node id="922">
+        <label>stdint.h</label>
+      </node>
+      <node id="934">
+        <label>setjmp.h</label>
+      </node>
+      <node id="926">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="922" relation="include">
+        </childnode>
+        <childnode refid="921" relation="include">
+        </childnode>
+        <childnode refid="927" relation="include">
+        </childnode>
+        <childnode refid="933" relation="include">
+        </childnode>
+        <childnode refid="929" relation="include">
+        </childnode>
+        <childnode refid="934" relation="include">
+        </childnode>
+      </node>
+      <node id="936">
+        <label>sys/ioctl.h</label>
+      </node>
+      <node id="928">
+        <label>stddef.h</label>
+      </node>
+      <node id="921">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="922" relation="include">
+        </childnode>
+        <childnode refid="923" relation="include">
+        </childnode>
+        <childnode refid="924" relation="include">
+        </childnode>
+      </node>
+      <node id="929">
+        <label>sys/types.h</label>
+      </node>
+      <node id="924">
+        <label>string.h</label>
+      </node>
+      <node id="932">
+        <label>unistd.h</label>
+      </node>
+      <node id="933">
+        <label>signal.h</label>
+      </node>
+      <node id="931">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="932" relation="include">
+        </childnode>
+        <childnode refid="929" relation="include">
+        </childnode>
+      </node>
+      <node id="937">
+        <label>sys/termios.h</label>
+      </node>
+      <node id="925">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="935">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="938">
+        <label>src/include/aplus/tty.h</label>
+        <link refid="tty.h"/>
+        <childnode refid="939" relation="include">
+        </childnode>
+        <childnode refid="940" relation="include">
+        </childnode>
+      </node>
+      <node id="940">
+        <label>src/syscall/openpty.c</label>
+        <link refid="openpty_8c"/>
+      </node>
+      <node id="939">
+        <label>src/fs/tty.c</label>
+        <link refid="tty_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structtty" prot="public">tty</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="tty_8h_1ae27757a251b08584e6d5f5f3c8baf0cb" prot="public" static="no">
+        <name>TTYDEF_WIN_COLS</name>
+        <initializer>80</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="16" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="tty_8h_1a0c04c79b038508aafb633827bbf55af4" prot="public" static="no">
+        <name>TTYDEF_WIN_ROWS</name>
+        <initializer>25</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="17" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="tty_8h_1acd69d0fbe279cfcd136fd45d44562404" prot="public" static="no">
+        <name>TTYDEF_IOS_IFLAG</name>
+        <initializer>(BRKINT | ISTRIP | ICRNL | IMAXBEL | IXON | IXANY)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="18" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="tty_8h_1a8fa8e526600e28d4607297cfe5fe3d3a" prot="public" static="no">
+        <name>TTYDEF_IOS_OFLAG</name>
+        <initializer>(OPOST | ONLCR | OXTABS)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="19" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="tty_8h_1abeea8ac0ea0a9738e57f82d0ef43a85e" prot="public" static="no">
+        <name>TTYDEF_IOS_LFLAG</name>
+        <initializer>(ECHO | ICANON | ISIG | IEXTEN | ECHOE | ECHOKE | ECHOCTL)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="20" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="tty_8h_1ae440976cabc9ef1b86ec745135107f3f" prot="public" static="no">
+        <name>TTYDEF_IOS_CFLAG</name>
+        <initializer>(CREAD | CS7 | PARENB | HUPCL)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="21" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="tty_8h_1a3ef6c6081b397b9416c8455571fe9e11" prot="public" static="no">
+        <name>TTYDEF_IOS_SPEED</name>
+        <initializer>(B9600)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="22" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/tty.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="tty_8h_1ae87a1d3b391605c6f2337562698f46fa" prot="public" static="no">
+        <type>struct <ref refid="structtty" kindref="compound">tty</ref></type>
+        <definition>typedef struct tty  tty_t</definition>
+        <argsstring></argsstring>
+        <name>tty_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/include/aplus/tty.h" line="45" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_TTY_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_TTY_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fs_8h" kindref="compound">aplus/fs.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/ioctl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/termios.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="tty_8h_1ae27757a251b08584e6d5f5f3c8baf0cb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TTYDEF_WIN_COLS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>80</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="tty_8h_1a0c04c79b038508aafb633827bbf55af4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TTYDEF_WIN_ROWS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>25</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="tty_8h_1acd69d0fbe279cfcd136fd45d44562404" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TTYDEF_IOS_IFLAG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(BRKINT<sp/>|<sp/>ISTRIP<sp/>|<sp/>ICRNL<sp/>|<sp/>IMAXBEL<sp/>|<sp/>IXON<sp/>|<sp/>IXANY)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="tty_8h_1a8fa8e526600e28d4607297cfe5fe3d3a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TTYDEF_IOS_OFLAG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(OPOST<sp/>|<sp/>ONLCR<sp/>|<sp/>OXTABS)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="tty_8h_1abeea8ac0ea0a9738e57f82d0ef43a85e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TTYDEF_IOS_LFLAG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(ECHO<sp/>|<sp/>ICANON<sp/>|<sp/>ISIG<sp/>|<sp/>IEXTEN<sp/>|<sp/>ECHOE<sp/>|<sp/>ECHOKE<sp/>|<sp/>ECHOCTL)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21" refid="tty_8h_1ae440976cabc9ef1b86ec745135107f3f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TTYDEF_IOS_CFLAG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(CREAD<sp/>|<sp/>CS7<sp/>|<sp/>PARENB<sp/>|<sp/>HUPCL)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="tty_8h_1a3ef6c6081b397b9416c8455571fe9e11" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TTYDEF_IOS_SPEED<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(B9600)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="structtty" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structtty" kindref="compound">tty</ref><sp/>{</highlight></codeline>
+<codeline lineno="26" refid="structtty_1a10958fdd6a24123e3522b806a8647656" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">termios<sp/><ref refid="structtty_1a10958fdd6a24123e3522b806a8647656" kindref="member">ios</ref>;</highlight></codeline>
+<codeline lineno="27" refid="structtty_1af7fc07d18ca858dc99376525b8a437a3" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="grub_8h_1a75544d53f0c0032654ba8afc5ea4fb34" kindref="member">winsize</ref><sp/><ref refid="structtty_1af7fc07d18ca858dc99376525b8a437a3" kindref="member">win</ref>;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29" refid="structtty_1a37c81cc0b682d67ec3d789f061357d77" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a7d562148dafb0dacf0ee876d482ed090" kindref="member">spinlock_t</ref><sp/><ref refid="structtty_1a37c81cc0b682d67ec3d789f061357d77" kindref="member">lock</ref>;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="31" refid="structtty_1ad876c12571c56724c3277ee634b5dd30" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structtty_1ad876c12571c56724c3277ee634b5dd30" kindref="member">ibuffer</ref>[BUFSIZ];</highlight></codeline>
+<codeline lineno="32" refid="structtty_1a739b6ee550a2f4f997637261aed60167" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structtty_1a739b6ee550a2f4f997637261aed60167" kindref="member">obuffer</ref>[BUFSIZ];</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="34" refid="structtty_1a25ab11cf5b7109480eb6f2e4f05efe4f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structtty_1a25ab11cf5b7109480eb6f2e4f05efe4f" kindref="member">isize</ref>;</highlight></codeline>
+<codeline lineno="35" refid="structtty_1a94aa6d24908c6976459d187842f1428b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="structtty_1a94aa6d24908c6976459d187842f1428b" kindref="member">osize</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="structtty_1aeb81a44fe3a7067e36a6c2c9194d8dad" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structtty_1aeb81a44fe3a7067e36a6c2c9194d8dad" kindref="member">exclmode</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="39" refid="structtty_1a8a6dae366ed6eac05de7d9d463bd04eb" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>pid_t<sp/><ref refid="structtty_1a8a6dae366ed6eac05de7d9d463bd04eb" kindref="member">fg</ref>;</highlight></codeline>
+<codeline lineno="40" refid="structtty_1a68f717ba40f28d6b941f62f0e7255e2e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>pid_t<sp/><ref refid="structtty_1a68f717ba40f28d6b941f62f0e7255e2e" kindref="member">bg</ref>;</highlight></codeline>
+<codeline lineno="41" refid="structtty_1ababbf2910aa51f41da438d6adca0aca5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structtty_1ababbf2910aa51f41da438d6adca0aca5" kindref="member">id</ref>;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="structtty_1a2a619877d6ee5bb7caa115a931f98e2c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structtty_1a2a619877d6ee5bb7caa115a931f98e2c" kindref="member">output</ref>)<sp/>(</highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structtty" kindref="compound">tty</ref>*,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ptr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">}<sp/><ref refid="tty_8h_1ae87a1d3b391605c6f2337562698f46fa" kindref="member">tty_t</ref>;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/include/aplus/tty.h"/>
+  </compounddef>
+</doxygen>

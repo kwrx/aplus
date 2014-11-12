@@ -14,14 +14,42 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5">CLONE_VM</link> 0</para>
+                            <para>#define <link linkend="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5">CLONE_VM</link> 1</para>
                     </listitem>
                 </itemizedlist>
             </para>
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="posix_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34">__os_thread_create</link> <link linkend="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe">clone</link>((int(*)(void*)) e, NULL, <link linkend="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5">CLONE_VM</link>, a)</para>
+                            <para>#define <link linkend="posix_2hooks_8h_1a36c57614f62361d9a91c75d2ef1bf854">CLONE_SIGHAND</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1abf70cffabfa4515feef97f66bae6a5c7">CLONE_FS</link> 4</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1ab062e8c87b92d645f7f4698a36e5b57a">CLONE_FILES</link> 8</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1a93d70879b6c53ae3475b3241d09c4741">CLONE_PARENT</link> 16</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="posix_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34">__os_thread_create</link> <link linkend="posix_2hooks_8h_1ab116309fb8890770660ba2cc84d797fe">clone</link>((int(*)(void*)) e, NULL, <link linkend="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5">CLONE_VM</link> | <link linkend="posix_2hooks_8h_1ab062e8c87b92d645f7f4698a36e5b57a">CLONE_FILES</link> | <link linkend="posix_2hooks_8h_1a36c57614f62361d9a91c75d2ef1bf854">CLONE_SIGHAND</link> | <link linkend="posix_2hooks_8h_1abf70cffabfa4515feef97f66bae6a5c7">CLONE_FS</link> | <link linkend="posix_2hooks_8h_1a93d70879b6c53ae3475b3241d09c4741">CLONE_PARENT</link>, a)</para>
                     </listitem>
                 </itemizedlist>
             </para>

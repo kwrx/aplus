@@ -174,7 +174,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="fstat_8c_source.html#l00024">24</a> of file <a class="el" href="fstat_8c_source.html">fstat.c</a>.</p>
 
-<p>References <a class="el" href="fs_8h_source.html#l00050">inode::atime</a>, <a class="el" href="fs_8h_source.html#l00052">inode::ctime</a>, <a class="el" href="fs_8h_source.html#l00040">inode::dev</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00087">task::fd</a>, <a class="el" href="fs_8h_source.html#l00045">inode::gid</a>, <a class="el" href="fs_8h_source.html#l00041">inode::ino</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="fs_8h_source.html#l00042">inode::mode</a>, <a class="el" href="fs_8h_source.html#l00051">inode::mtime</a>, <a class="el" href="fs_8h_source.html#l00043">inode::nlink</a>, <a class="el" href="fs_8h_source.html#l00046">inode::rdev</a>, <a class="el" href="fs_8h_source.html#l00047">inode::size</a>, and <a class="el" href="fs_8h_source.html#l00044">inode::uid</a>.</p>
+<p>References <a class="el" href="fs_8h_source.html#l00050">inode::atime</a>, <a class="el" href="fs_8h_source.html#l00052">inode::ctime</a>, <a class="el" href="fs_8h_source.html#l00040">inode::dev</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00105">task::fd</a>, <a class="el" href="fs_8h_source.html#l00045">inode::gid</a>, <a class="el" href="fs_8h_source.html#l00041">inode::ino</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="fs_8h_source.html#l00042">inode::mode</a>, <a class="el" href="fs_8h_source.html#l00051">inode::mtime</a>, <a class="el" href="fs_8h_source.html#l00043">inode::nlink</a>, <a class="el" href="fs_8h_source.html#l00046">inode::rdev</a>, <a class="el" href="fs_8h_source.html#l00047">inode::size</a>, and <a class="el" href="fs_8h_source.html#l00044">inode::uid</a>.</p>
 <div class="fragment"><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                                       {</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">if</span>(!st) {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
@@ -219,7 +219,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="structinode_html_a8434fb9dd05057d00b37ed713713835d"><div class="ttname"><a href="structinode.html#a8434fb9dd05057d00b37ed713713835d">inode::gid</a></div><div class="ttdeci">gid_t gid</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00045">fs.h:45</a></div></div>
 <div class="ttc" id="structinode_html_a3e7613383954ff7b5faf7c2188e1f61b"><div class="ttname"><a href="structinode.html#a3e7613383954ff7b5faf7c2188e1f61b">inode::rdev</a></div><div class="ttdeci">dev_t rdev</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00046">fs.h:46</a></div></div>
 <div class="ttc" id="structinode_html_a7e52661a115f6def97778566f2be0d80"><div class="ttname"><a href="structinode.html#a7e52661a115f6def97778566f2be0d80">inode::atime</a></div><div class="ttdeci">time_t atime</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00050">fs.h:50</a></div></div>
-<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00087">task.h:87</a></div></div>
+<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00105">task.h:105</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -272,7 +272,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="fstat_8c.html">fstat.c</a></li>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:40 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:03 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

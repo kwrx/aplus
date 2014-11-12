@@ -10,154 +10,102 @@
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1678">
+      <node id="1466">
         <label>sys/stat.h</label>
       </node>
-      <node id="1667">
+      <node id="1456">
         <label>stdarg.h</label>
       </node>
-      <node id="1670">
+      <node id="1459">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1665" relation="include">
+        <childnode refid="1454" relation="include">
         </childnode>
-        <childnode refid="1671" relation="include">
+        <childnode refid="1460" relation="include">
         </childnode>
-        <childnode refid="1666" relation="include">
+        <childnode refid="1455" relation="include">
         </childnode>
-        <childnode refid="1668" relation="include">
+        <childnode refid="1457" relation="include">
         </childnode>
-        <childnode refid="1673" relation="include">
-        </childnode>
-      </node>
-      <node id="1677">
-        <label>aplus/fs.h</label>
-        <link refid="fs_8h"/>
-        <childnode refid="1666" relation="include">
-        </childnode>
-        <childnode refid="1672" relation="include">
-        </childnode>
-        <childnode refid="1673" relation="include">
-        </childnode>
-        <childnode refid="1678" relation="include">
-        </childnode>
-        <childnode refid="1679" relation="include">
+        <childnode refid="1462" relation="include">
         </childnode>
       </node>
-      <node id="1666">
+      <node id="1455">
         <label>stdint.h</label>
       </node>
-      <node id="1669">
+      <node id="1458">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1665" relation="include">
+        <childnode refid="1454" relation="include">
         </childnode>
-        <childnode refid="1670" relation="include">
+        <childnode refid="1459" relation="include">
         </childnode>
-        <childnode refid="1666" relation="include">
-        </childnode>
-      </node>
-      <node id="1682">
-        <label>setjmp.h</label>
-      </node>
-      <node id="1676">
-        <label>aplus/task.h</label>
-        <link refid="task_8h"/>
-        <childnode refid="1666" relation="include">
-        </childnode>
-        <childnode refid="1665" relation="include">
-        </childnode>
-        <childnode refid="1677" relation="include">
-        </childnode>
-        <childnode refid="1681" relation="include">
-        </childnode>
-        <childnode refid="1673" relation="include">
-        </childnode>
-        <childnode refid="1682" relation="include">
+        <childnode refid="1455" relation="include">
         </childnode>
       </node>
-      <node id="1684">
+      <node id="1465">
         <label>errno.h</label>
       </node>
-      <node id="1683">
+      <node id="1464">
         <label>fcntl.h</label>
       </node>
-      <node id="1672">
+      <node id="1461">
         <label>stddef.h</label>
       </node>
-      <node id="1671">
+      <node id="1460">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1672" relation="include">
+        <childnode refid="1461" relation="include">
         </childnode>
-        <childnode refid="1666" relation="include">
+        <childnode refid="1455" relation="include">
         </childnode>
-        <childnode refid="1673" relation="include">
-        </childnode>
-        <childnode refid="1674" relation="include">
-        </childnode>
-        <childnode refid="1675" relation="include">
+        <childnode refid="1462" relation="include">
         </childnode>
       </node>
-      <node id="1665">
+      <node id="1454">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1666" relation="include">
+        <childnode refid="1455" relation="include">
         </childnode>
-        <childnode refid="1667" relation="include">
+        <childnode refid="1456" relation="include">
         </childnode>
-        <childnode refid="1668" relation="include">
+        <childnode refid="1457" relation="include">
         </childnode>
       </node>
-      <node id="1664">
+      <node id="1453">
         <label>src/syscall/getpid.c</label>
         <link refid="getpid.c"/>
-        <childnode refid="1665" relation="include">
+        <childnode refid="1454" relation="include">
         </childnode>
-        <childnode refid="1669" relation="include">
+        <childnode refid="1458" relation="include">
         </childnode>
-        <childnode refid="1680" relation="include">
+        <childnode refid="1463" relation="include">
         </childnode>
-        <childnode refid="1683" relation="include">
+        <childnode refid="1464" relation="include">
         </childnode>
-        <childnode refid="1684" relation="include">
+        <childnode refid="1465" relation="include">
         </childnode>
-        <childnode refid="1678" relation="include">
+        <childnode refid="1466" relation="include">
         </childnode>
-        <childnode refid="1679" relation="include">
+        <childnode refid="1467" relation="include">
         </childnode>
       </node>
-      <node id="1673">
+      <node id="1462">
         <label>sys/types.h</label>
       </node>
-      <node id="1668">
+      <node id="1457">
         <label>string.h</label>
       </node>
-      <node id="1680">
+      <node id="1463">
         <label>unistd.h</label>
       </node>
-      <node id="1681">
-        <label>signal.h</label>
-      </node>
-      <node id="1675">
-        <label>aplus/mm.h</label>
-        <link refid="mm_8h"/>
-        <childnode refid="1666" relation="include">
-        </childnode>
-        <childnode refid="1676" relation="include">
-        </childnode>
-      </node>
-      <node id="1679">
-        <label>sys/dirent.h</label>
+      <node id="1467">
+        <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1680" relation="include">
+        <childnode refid="1463" relation="include">
         </childnode>
-        <childnode refid="1673" relation="include">
+        <childnode refid="1462" relation="include">
         </childnode>
-      </node>
-      <node id="1674">
-        <label>aplus/spinlock.h</label>
-        <link refid="spinlock_8h"/>
       </node>
     </incdepgraph>
       <sectiondef kind="func">

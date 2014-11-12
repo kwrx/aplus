@@ -110,6 +110,9 @@ int vfs_init() {
 	vfs_root->ioctl = NULL;
 	
 	list_add(list_inodes, (listval_t) vfs_root);
+
+
+	vfs_map((inode_t*) devfs_mount());
 	
 	return 0;
 }

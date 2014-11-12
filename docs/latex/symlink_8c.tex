@@ -1,0 +1,96 @@
+\hypertarget{symlink_8c}{\section{src/syscall/symlink.c File Reference}
+\label{symlink_8c}\index{src/syscall/symlink.\+c@{src/syscall/symlink.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}{sys\+\_\+symlink} (char $\ast$path, char $\ast$link)
+\item 
+\hyperlink{symlink_8c_ab054efed13f519c688c08dd61c876a32}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}{sys\+\_\+symlink}, 28)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{symlink_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}{\index{symlink.\+c@{symlink.\+c}!sys\+\_\+symlink@{sys\+\_\+symlink}}
+\index{sys\+\_\+symlink@{sys\+\_\+symlink}!symlink.\+c@{symlink.\+c}}
+\subsubsection[{sys\+\_\+symlink}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+symlink (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{path, }
+\item[{char $\ast$}]{link}
+\end{DoxyParamCaption}
+)}}\label{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}
+
+
+Definition at line 16 of file symlink.\+c.
+
+
+
+References errno, task\+::fd, inode\+::link, inode\+::nlink, sys\+\_\+close(), and sys\+\_\+open().
+
+
+\begin{DoxyCode}
+16                                         \{
+17     \textcolor{keywordflow}{if}(!\hyperlink{symlink_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+18         \textcolor{keywordflow}{return} -1;  
+19 
+20     \textcolor{keywordflow}{if}(!path || !link) \{
+21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+22         \textcolor{keywordflow}{return} -1;
+23     \}
+24 
+25     \textcolor{keywordtype}{int} dfd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(link, O\_CREAT | O\_EXCL | O\_RDONLY, S\_IFLNK);
+26     \textcolor{keywordflow}{if}(dfd < 0)
+27         \textcolor{keywordflow}{return} -1;
+28 
+29     \hyperlink{structinode}{inode\_t}* dino = \hyperlink{symlink_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[dfd];
+30     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(dfd);
+31 
+32     \textcolor{keywordtype}{int} pfd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(path, O\_RDONLY, 0644);
+33     \textcolor{keywordflow}{if}(pfd < 0)
+34         \textcolor{keywordflow}{return} -1;
+35 
+36     \hyperlink{structinode}{inode\_t}* pino = \hyperlink{symlink_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[pfd];
+37     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(pfd);
+38 
+39     pino->\hyperlink{structinode_a1daedc820c86b5af32f0a137419f7a8f}{nlink} += 1;
+40     dino->\hyperlink{structinode_a3533c53c5391601c66b3ae0f389c0843}{link} = pino;
+41     
+42     \textcolor{keywordflow}{return} 0;   
+43 \}
+\end{DoxyCode}
+\hypertarget{symlink_8c_ab054efed13f519c688c08dd61c876a32}{\index{symlink.\+c@{symlink.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!symlink.\+c@{symlink.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+symlink}}]{, }
+\item[{28}]{}
+\end{DoxyParamCaption}
+)}}\label{symlink_8c_ab054efed13f519c688c08dd61c876a32}
+
+
+\subsection{Variable Documentation}
+\hypertarget{symlink_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{symlink.\+c@{symlink.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!symlink.\+c@{symlink.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{symlink_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
+

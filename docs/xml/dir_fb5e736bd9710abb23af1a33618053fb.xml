@@ -20,10 +20,12 @@
     <innerfile refid="lseek_8c">lseek.c</innerfile>
     <innerfile refid="mount_8c">mount.c</innerfile>
     <innerfile refid="open_8c">open.c</innerfile>
+    <innerfile refid="openpty_8c">openpty.c</innerfile>
     <innerfile refid="read_8c">read.c</innerfile>
     <innerfile refid="src_2syscall_2readdir_8c">readdir.c</innerfile>
     <innerfile refid="sbrk_8c">sbrk.c</innerfile>
     <innerfile refid="stat_8c">stat.c</innerfile>
+    <innerfile refid="symlink_8c">symlink.c</innerfile>
     <innerfile refid="src_2syscall_2test_8c">test.c</innerfile>
     <innerfile refid="time_8c">time.c</innerfile>
     <innerfile refid="times_8c">times.c</innerfile>

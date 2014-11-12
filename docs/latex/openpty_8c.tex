@@ -1,0 +1,56 @@
+\hypertarget{openpty_8c}{\section{src/syscall/openpty.c File Reference}
+\label{openpty_8c}\index{src/syscall/openpty.\+c@{src/syscall/openpty.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/tty.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{openpty_8c_ae7a2feb8c532924511fcdda51eac004e}{sys\+\_\+openpty} (int $\ast$master, int $\ast$slave, char $\ast$\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, const struct termios $\ast$ios, const struct \hyperlink{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{winsize} $\ast$win)
+\item 
+\hyperlink{openpty_8c_a773637204237eb29e9c39c0dcd5a06f4}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{openpty_8c_ae7a2feb8c532924511fcdda51eac004e}{sys\+\_\+openpty}, 27)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{openpty_8c_ae7a2feb8c532924511fcdda51eac004e}{\index{openpty.\+c@{openpty.\+c}!sys\+\_\+openpty@{sys\+\_\+openpty}}
+\index{sys\+\_\+openpty@{sys\+\_\+openpty}!openpty.\+c@{openpty.\+c}}
+\subsubsection[{sys\+\_\+openpty}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+openpty (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{master, }
+\item[{int $\ast$}]{slave, }
+\item[{char $\ast$}]{name, }
+\item[{const struct termios $\ast$}]{ios, }
+\item[{const struct {\bf winsize} $\ast$}]{win}
+\end{DoxyParamCaption}
+)}}\label{openpty_8c_ae7a2feb8c532924511fcdda51eac004e}
+
+
+Definition at line 8 of file openpty.\+c.
+
+
+
+References errno, and tty\+\_\+open().
+
+
+\begin{DoxyCode}
+8                                                                                                            
+      \{
+9     \textcolor{keywordflow}{if}(!master || !slave) \{
+10         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+11         \textcolor{keywordflow}{return} -1;
+12     \}
+13 
+14     \textcolor{keywordflow}{return} \hyperlink{tty_8c_a73bb587a850df0de01eab91fa87e40d0}{tty\_open}(master, slave, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, ios, win);
+15 \}
+\end{DoxyCode}
+\hypertarget{openpty_8c_a773637204237eb29e9c39c0dcd5a06f4}{\index{openpty.\+c@{openpty.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!openpty.\+c@{openpty.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+openpty}}]{, }
+\item[{27}]{}
+\end{DoxyParamCaption}
+)}}\label{openpty_8c_a773637204237eb29e9c39c0dcd5a06f4}

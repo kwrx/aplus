@@ -1,0 +1,97 @@
+.TH "src/syscall/symlink.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/symlink.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_symlink\fP (char *path, char *link)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_symlink\fP, 28)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.RI "\fICurrent task address\&. \fP"
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int sys_symlink (char *path, char *link)"
+
+.PP
+Definition at line 16 of file symlink\&.c\&.
+.PP
+References errno, task::fd, inode::link, inode::nlink, sys_close(), and sys_open()\&.
+.PP
+.nf
+16                                         {
+17     if(!current_task)
+18         return -1;  
+19 
+20     if(!path || !link) {
+21         errno = EINVAL;
+22         return -1;
+23     }
+24 
+25     int dfd = sys_open(link, O_CREAT | O_EXCL | O_RDONLY, S_IFLNK);
+26     if(dfd < 0)
+27         return -1;
+28 
+29     inode_t* dino = current_task->fd[dfd];
+30     sys_close(dfd);
+31 
+32     int pfd = sys_open(path, O_RDONLY, 0644);
+33     if(pfd < 0)
+34         return -1;
+35 
+36     inode_t* pino = current_task->fd[pfd];
+37     sys_close(pfd);
+38 
+39     pino->nlink += 1;
+40     dino->link = pino;
+41     
+42     return 0;   
+43 }
+.fi
+.SS "SYSCALL (\fBsys_symlink\fP, 28)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

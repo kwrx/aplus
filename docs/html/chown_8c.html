@@ -178,7 +178,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="chown_8c_source.html#l00021">21</a> of file <a class="el" href="chown_8c_source.html">chown.c</a>.</p>
 
-<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00087">task::fd</a>, <a class="el" href="fs_8c_source.html#l00093">fs_chown()</a>, <a class="el" href="src_2sched_8c_source.html#l00058">im_superuser()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, and <a class="el" href="open_8c_source.html#l00127">sys_open()</a>.</p>
+<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00105">task::fd</a>, <a class="el" href="fs_8c_source.html#l00093">fs_chown()</a>, <a class="el" href="src_2sched_8c_source.html#l00058">im_superuser()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, and <a class="el" href="open_8c_source.html#l00127">sys_open()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                                                        {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordflow">if</span>(!<a class="code" href="src_2sched_8c.html#a11eb67cd27beaf272f76796f65d1ca1c">im_superuser</a>()) {</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;sys_chown: only superuser allow to use this function.&quot;</span>);</div>
@@ -204,7 +204,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="fs_8c_html_a2928203c42eba392963b57bfed7b65c4"><div class="ttname"><a href="fs_8c.html#a2928203c42eba392963b57bfed7b65c4">fs_chown</a></div><div class="ttdeci">int fs_chown(struct inode *inode, uid_t owner, gid_t group)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8c_source.html#l00093">fs.c:93</a></div></div>
 <div class="ttc" id="open_8c_html_ab7835c4352479c7a3d7af78c138e81c1"><div class="ttname"><a href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a></div><div class="ttdeci">int sys_open(char *filename, int flags, mode_t mode)</div><div class="ttdef"><b>Definition:</b> <a href="open_8c_source.html#l00127">open.c:127</a></div></div>
 <div class="ttc" id="chown_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="chown_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
-<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00087">task.h:87</a></div></div>
+<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00105">task.h:105</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -257,7 +257,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="chown_8c.html">chown.c</a></li>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:40 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:03 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

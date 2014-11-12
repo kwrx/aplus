@@ -35,6 +35,7 @@ var searchData=
   ['esp',['esp',['../structregs.html#a7c44c0dc13f854e06e6cc509ba6e9054',1,'regs::esp()'],['../aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c',1,'esp():&#160;aplus.h']]],
   ['event',['event',['../structpthread__mutex.html#a3fdfabe67e940844d49b5f98809907f3',1,'pthread_mutex']]],
   ['exattr',['exattr',['../structiso9660__dir.html#a9d379f70dbe8ddf0ad21cbb4d9269f4a',1,'iso9660_dir::exattr()'],['../iso9660_8h.html#aa4106187b3ff93308ee98eaa09402586',1,'exattr():&#160;iso9660.h']]],
+  ['exclmode',['exclmode',['../structtty.html#aeb81a44fe3a7067e36a6c2c9194d8dad',1,'tty']]],
   ['exclusive_5fwaiters',['exclusive_waiters',['../structpthread__rwlock.html#ae49a53d46712b0d4af191e85a622da1d',1,'pthread_rwlock']]],
   ['exe',['exe',['../structtask.html#a22a59fcfc18d5f671340669f96571768',1,'task']]],
   ['exitcode',['exitcode',['../structtask.html#a9bd7bbd83fe1f4744c76ff240b6da5db',1,'task']]],

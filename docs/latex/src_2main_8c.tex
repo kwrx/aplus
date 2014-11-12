@@ -47,53 +47,53 @@ Entry point for kernel.
 
 
 
-Definition at line 62 of file main.\+c.
+Definition at line 61 of file main.\+c.
 
 
 
-References bufio\+\_\+init(), desc\+\_\+init(), devfs\+\_\+mount(), kprintf(), mbd, mkramdev(), mm\+\_\+init(), Boot\+Info\+\_\+t\+::mods\+\_\+addr, Boot\+Info\+\_\+t\+::mods\+\_\+count, netif\+\_\+init(), panic(), pci\+\_\+init(), schedule\+\_\+init(), serial\+\_\+init(), sys\+\_\+mount(), syscall\+\_\+init(), sysidle(), uint32\+\_\+t, vfs\+\_\+init(), and vfs\+\_\+map().
+References bufio\+\_\+init(), desc\+\_\+init(), kprintf(), mbd, mkramdev(), mm\+\_\+init(), Boot\+Info\+\_\+t\+::mods\+\_\+addr, Boot\+Info\+\_\+t\+::mods\+\_\+count, netif\+\_\+init(), panic(), pci\+\_\+init(), schedule\+\_\+init(), serial\+\_\+init(), sys\+\_\+mount(), syscall\+\_\+init(), sysidle(), task\+\_\+clone(), tty\+\_\+init(), uint32\+\_\+t, and vfs\+\_\+init().
 
 
 \begin{DoxyCode}
-62            \{
-63     \hyperlink{serial_8c_a459999cfa35c788b64284953a93c4b57}{serial\_init}();
-64     \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\_init}();
-65     \hyperlink{desc_8c_a6a369f578313199f231869f97e16802d}{desc\_init}();
-66     \hyperlink{syscall_8c_a15662fc3572d9f3abd72a439727767c3}{syscall\_init}();
-67     \hyperlink{vfs_8c_aca585ca14c08d6c1a07e1b886fc9749a}{vfs\_init}();
-68     \hyperlink{src_2sched_8c_a9f6f16348da2348d320d255437e6ac02}{schedule\_init}();
-69     \hyperlink{bufio_8c_a8553eb3703bbc2ac89010ccfaefe760f}{bufio\_init}();
-70     \hyperlink{pci_8c_a5c450b9e2534226b162a16de0ef6b434}{pci\_init}();
+61            \{
+62     \hyperlink{serial_8c_a459999cfa35c788b64284953a93c4b57}{serial\_init}();
+63     \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\_init}();
+64     \hyperlink{desc_8c_a6a369f578313199f231869f97e16802d}{desc\_init}();
+65     \hyperlink{syscall_8c_a15662fc3572d9f3abd72a439727767c3}{syscall\_init}();
+66     \hyperlink{vfs_8c_aca585ca14c08d6c1a07e1b886fc9749a}{vfs\_init}();
+67     \hyperlink{src_2sched_8c_a9f6f16348da2348d320d255437e6ac02}{schedule\_init}();
+68     \hyperlink{bufio_8c_a8553eb3703bbc2ac89010ccfaefe760f}{bufio\_init}();
+69     \hyperlink{pci_8c_a5c450b9e2534226b162a16de0ef6b434}{pci\_init}();
+70     \hyperlink{tty_8c_aab365abb615be7027fa0bdb2c09569cb}{tty\_init}();
 71     \hyperlink{netif_8c_af7c3254022249b2dfa78151c8f345e77}{netif\_init}();
 72     
-73     \hyperlink{vfs_8c_acb87c78588a46c5526e933c495b69c2a}{vfs\_map}(\hyperlink{devfs_8c_a12b8ede9eeee8603d4b89d189a484380}{devfs\_mount}());
-74 
-75 
-76     \textcolor{keywordflow}{if}(\hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a178ef95a8fbd89ec018899b9ba241d92}{mods\_count} == 0)
-77         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"no initrd module found"});
-78     
-79 
-80     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} addr = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [0];
-81     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} endp = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [1];
+73 
+74     \textcolor{keywordflow}{if}(\hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a178ef95a8fbd89ec018899b9ba241d92}{mods\_count} == 0)
+75         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"no initrd module found"});
+76     
+77 
+78     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} addr = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [0];
+79     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} endp = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [1];
+80 
+81     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"initrd: module found at addess: 0x%x (%d KB)\(\backslash\)n"}, addr, (endp - addr) / 1024);
 82 
-83     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"initrd: module found at addess: 0x%x (%d KB)\(\backslash\)n"}, addr, (endp - addr) / 1024);
-84 
-85 
-86     \textcolor{keywordflow}{if}(!\hyperlink{ramdev_8c_a0c040a7a5a5150b0b0d18354ac6f4958}{mkramdev}(\textcolor{stringliteral}{"/dev/ram0"}, addr, endp - addr))
-87         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot create /dev/ram0"});
-88 
-89 
-90     \textcolor{keywordflow}{if}(\hyperlink{mount_8c_adbb2f2f41fa719d188b9291a25afdd98}{sys\_mount}(\textcolor{stringliteral}{"/dev/ram0"}, \textcolor{stringliteral}{"/dev/ramdisk"}, \textcolor{stringliteral}{"iso9660"}, 0, 0) != 0)
-91         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot mount ramdisk"});
-92 
-93 
-94 \textcolor{comment}{/*}
-95 \textcolor{comment}{    if(fork() == 0)}
-96 \textcolor{comment}{        execl("/bin/init", "/bin/init", 0);}
-97 \textcolor{comment}{    else}
-98 \textcolor{comment}{*/}
-99     \hyperlink{src_2main_8c_aef7c73ff9178a16543352d9e530d8c60}{sysidle}();
-100 \}
+83 
+84     \textcolor{keywordflow}{if}(!\hyperlink{ramdev_8c_a0c040a7a5a5150b0b0d18354ac6f4958}{mkramdev}(\textcolor{stringliteral}{"/dev/ram0"}, addr, endp - addr))
+85         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot create /dev/ram0"});
+86 
+87 
+88     \textcolor{keywordflow}{if}(\hyperlink{mount_8c_adbb2f2f41fa719d188b9291a25afdd98}{sys\_mount}(\textcolor{stringliteral}{"/dev/ram0"}, \textcolor{stringliteral}{"/dev/ramdisk"}, \textcolor{stringliteral}{"iso9660"}, 0, 0) != 0)
+89         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot mount ramdisk"});
+90 
+91 
+92 \textcolor{comment}{/*}
+93 \textcolor{comment}{    if(fork() == 0)}
+94 \textcolor{comment}{        execl("/bin/init", "/bin/init", 0);}
+95 \textcolor{comment}{    else}
+96 \textcolor{comment}{*/}
+97     \hyperlink{task_8c_afed7d6a4dd3580596c0c925e766c4163}{task\_clone}(\hyperlink{src_2main_8c_aef7c73ff9178a16543352d9e530d8c60}{sysidle}, NULL, NULL, 0);
+98     \textcolor{keywordflow}{for}(;;);
+99 \}
 \end{DoxyCode}
 \hypertarget{src_2main_8c_aef7c73ff9178a16543352d9e530d8c60}{\index{src/main.\+c@{src/main.\+c}!sysidle@{sysidle}}
 \index{sysidle@{sysidle}!src/main.\+c@{src/main.\+c}}
@@ -118,11 +118,10 @@ References \+\_\+\+\_\+asm\+\_\+\+\_\+(), schedule\+\_\+setpriority(), and T\+A\
 \begin{DoxyCode}
 50                       \{
 51     \hyperlink{src_2sched_8c_a878aa3454133f7c01a4ba15ef68b9be2}{schedule\_setpriority}(\hyperlink{task_8h_a00a0568927a39311236b718f2018c0ab}{TASK\_PRIORITY\_LOW});
-52 
-53 
-54     \textcolor{keywordflow}{for}(;;)
-55         \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"pause"});
-56 \}
+52     
+53     \textcolor{keywordflow}{for}(;;)
+54         \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"pause"});
+55 \}
 \end{DoxyCode}
 
 

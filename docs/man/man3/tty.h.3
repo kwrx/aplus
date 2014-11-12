@@ -1,0 +1,101 @@
+.TH "src/include/aplus/tty.h" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/include/aplus/tty.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/spinlock\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+\fC#include <sys/ioctl\&.h>\fP
+.br
+\fC#include <sys/termios\&.h>\fP
+.br
+
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBtty\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBTTYDEF_WIN_COLS\fP   80"
+.br
+.ti -1c
+.RI "#define \fBTTYDEF_WIN_ROWS\fP   25"
+.br
+.ti -1c
+.RI "#define \fBTTYDEF_IOS_IFLAG\fP   (BRKINT | ISTRIP | ICRNL | IMAXBEL | IXON | IXANY)"
+.br
+.ti -1c
+.RI "#define \fBTTYDEF_IOS_OFLAG\fP   (OPOST | ONLCR | OXTABS)"
+.br
+.ti -1c
+.RI "#define \fBTTYDEF_IOS_LFLAG\fP   (ECHO | ICANON | ISIG | IEXTEN | ECHOE | ECHOKE | ECHOCTL)"
+.br
+.ti -1c
+.RI "#define \fBTTYDEF_IOS_CFLAG\fP   (CREAD | CS7 | PARENB | HUPCL)"
+.br
+.ti -1c
+.RI "#define \fBTTYDEF_IOS_SPEED\fP   (B9600)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef struct \fBtty\fP \fBtty_t\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define TTYDEF_IOS_CFLAG   (CREAD | CS7 | PARENB | HUPCL)"
+
+.PP
+Definition at line 21 of file tty\&.h\&.
+.SS "#define TTYDEF_IOS_IFLAG   (BRKINT | ISTRIP | ICRNL | IMAXBEL | IXON | IXANY)"
+
+.PP
+Definition at line 18 of file tty\&.h\&.
+.SS "#define TTYDEF_IOS_LFLAG   (ECHO | ICANON | ISIG | IEXTEN | ECHOE | ECHOKE | ECHOCTL)"
+
+.PP
+Definition at line 20 of file tty\&.h\&.
+.SS "#define TTYDEF_IOS_OFLAG   (OPOST | ONLCR | OXTABS)"
+
+.PP
+Definition at line 19 of file tty\&.h\&.
+.SS "#define TTYDEF_IOS_SPEED   (B9600)"
+
+.PP
+Definition at line 22 of file tty\&.h\&.
+.SS "#define TTYDEF_WIN_COLS   80"
+
+.PP
+Definition at line 16 of file tty\&.h\&.
+.SS "#define TTYDEF_WIN_ROWS   25"
+
+.PP
+Definition at line 17 of file tty\&.h\&.
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef struct \fBtty\fP  \fBtty_t\fP"
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

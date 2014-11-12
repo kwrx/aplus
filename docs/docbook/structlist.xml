@@ -16,7 +16,7 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>spinlock_t lock</para>
+                        <para>__list_lock_t lock</para>
                     </listitem>
                 </itemizedlist>
             </para>

@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="openpty_8c" kind="file">
+    <compoundname>openpty.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="tty_8h" local="no">aplus/tty.h</includes>
+    <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
+    <includes local="no">errno.h</includes>
+    <incdepgraph>
+      <node id="1632">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1624">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1641">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1622" relation="include">
+        </childnode>
+        <childnode refid="1642" relation="include">
+        </childnode>
+        <childnode refid="1623" relation="include">
+        </childnode>
+        <childnode refid="1625" relation="include">
+        </childnode>
+        <childnode refid="1631" relation="include">
+        </childnode>
+      </node>
+      <node id="1626">
+        <label>aplus/tty.h</label>
+        <link refid="tty_8h"/>
+        <childnode refid="1622" relation="include">
+        </childnode>
+        <childnode refid="1627" relation="include">
+        </childnode>
+        <childnode refid="1628" relation="include">
+        </childnode>
+        <childnode refid="1629" relation="include">
+        </childnode>
+        <childnode refid="1637" relation="include">
+        </childnode>
+        <childnode refid="1623" relation="include">
+        </childnode>
+        <childnode refid="1638" relation="include">
+        </childnode>
+        <childnode refid="1639" relation="include">
+        </childnode>
+      </node>
+      <node id="1629">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1623" relation="include">
+        </childnode>
+        <childnode refid="1630" relation="include">
+        </childnode>
+        <childnode refid="1631" relation="include">
+        </childnode>
+        <childnode refid="1632" relation="include">
+        </childnode>
+        <childnode refid="1633" relation="include">
+        </childnode>
+      </node>
+      <node id="1621">
+        <label>src/syscall/openpty.c</label>
+        <link refid="openpty.c"/>
+        <childnode refid="1622" relation="include">
+        </childnode>
+        <childnode refid="1626" relation="include">
+        </childnode>
+        <childnode refid="1640" relation="include">
+        </childnode>
+        <childnode refid="1643" relation="include">
+        </childnode>
+      </node>
+      <node id="1623">
+        <label>stdint.h</label>
+      </node>
+      <node id="1640">
+        <label>aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="1622" relation="include">
+        </childnode>
+        <childnode refid="1641" relation="include">
+        </childnode>
+        <childnode refid="1623" relation="include">
+        </childnode>
+      </node>
+      <node id="1636">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1628">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1623" relation="include">
+        </childnode>
+        <childnode refid="1622" relation="include">
+        </childnode>
+        <childnode refid="1629" relation="include">
+        </childnode>
+        <childnode refid="1635" relation="include">
+        </childnode>
+        <childnode refid="1631" relation="include">
+        </childnode>
+        <childnode refid="1636" relation="include">
+        </childnode>
+      </node>
+      <node id="1643">
+        <label>errno.h</label>
+      </node>
+      <node id="1638">
+        <label>sys/ioctl.h</label>
+      </node>
+      <node id="1630">
+        <label>stddef.h</label>
+      </node>
+      <node id="1642">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1630" relation="include">
+        </childnode>
+        <childnode refid="1623" relation="include">
+        </childnode>
+        <childnode refid="1631" relation="include">
+        </childnode>
+      </node>
+      <node id="1622">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1623" relation="include">
+        </childnode>
+        <childnode refid="1624" relation="include">
+        </childnode>
+        <childnode refid="1625" relation="include">
+        </childnode>
+      </node>
+      <node id="1631">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1625">
+        <label>string.h</label>
+      </node>
+      <node id="1634">
+        <label>unistd.h</label>
+      </node>
+      <node id="1635">
+        <label>signal.h</label>
+      </node>
+      <node id="1633">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1634" relation="include">
+        </childnode>
+        <childnode refid="1631" relation="include">
+        </childnode>
+      </node>
+      <node id="1639">
+        <label>sys/termios.h</label>
+      </node>
+      <node id="1627">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="1637">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sys_openpty</definition>
+        <argsstring>(int *master, int *slave, char *name, const struct termios *ios, const struct winsize *win)</argsstring>
+        <name>sys_openpty</name>
+        <param>
+          <type>int *</type>
+          <declname>master</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>slave</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>const struct termios *</type>
+          <declname>ios</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="grub_8h_1a75544d53f0c0032654ba8afc5ea4fb34" kindref="member">winsize</ref> *</type>
+          <declname>win</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/openpty.c" line="8" column="1" bodyfile="/opt/prj/aPlus/src/syscall/openpty.c" bodystart="8" bodyend="15"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="tty_8c_1a73bb587a850df0de01eab91fa87e40d0" compoundref="tty_8c" startline="233" endline="305">tty_open</references>
+      </memberdef>
+      <memberdef kind="function" id="openpty_8c_1a773637204237eb29e9c39c0dcd5a06f4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SYSCALL</definition>
+        <argsstring>(sys_openpty, 27)</argsstring>
+        <name>SYSCALL</name>
+        <param>
+          <type><ref refid="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e" kindref="member">sys_openpty</ref></type>
+        </param>
+        <param>
+          <type>27</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/openpty.c" line="17" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="tty_8h" kindref="compound">aplus/tty.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="syscall_8h" kindref="compound">aplus/syscall.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e" kindref="member">sys_openpty</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>master,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>slave,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>termios*<sp/>ios,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="grub_8h_1a75544d53f0c0032654ba8afc5ea4fb34" kindref="member">winsize</ref>*<sp/>win)<sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!master<sp/>||<sp/>!slave)<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="tty_8c_1a73bb587a850df0de01eab91fa87e40d0" kindref="member">tty_open</ref>(master,<sp/>slave,<sp/>name,<sp/>ios,<sp/>win);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><ref refid="openpty_8c_1a773637204237eb29e9c39c0dcd5a06f4" kindref="member">SYSCALL</ref>(<ref refid="openpty_8c_1ae7a2feb8c532924511fcdda51eac004e" kindref="member">sys_openpty</ref>,<sp/>27);</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/syscall/openpty.c"/>
+  </compounddef>
+</doxygen>

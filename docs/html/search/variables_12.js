@@ -10,6 +10,8 @@ var searchData=
   ['tpa',['tpa',['../structarp__header.html#aedc5d2cdff377ab3192ed264d060e914',1,'arp_header::tpa()'],['../arp_8h.html#ac69159d9b06000d1fe64c701014b1b19',1,'tpa():&#160;arp.h']]],
   ['traffic',['traffic',['../structipv6__header.html#a606cd7e1d19fc609e648d88aabcd7b55',1,'ipv6_header::traffic()'],['../ipv6_8h.html#a46a2a6dd0178cdef2860bb8c43125d0c',1,'traffic():&#160;ipv6.h']]],
   ['ttl',['ttl',['../structarp__cache__entry.html#a9e7f6ce0108939a15edffff4aa0fdb5a',1,'arp_cache_entry::ttl()'],['../structipv4__header.html#a847be1c747cb3282ac66c766a176ecfd',1,'ipv4_header::ttl()'],['../structipv6__header.html#a33bb04e114be3a3e1d5dd2c360bc4844',1,'ipv6_header::ttl()'],['../ipv4_8h.html#a4d402503271315376ddf4e47674d4965',1,'ttl():&#160;ipv4.h'],['../ipv6_8h.html#a4d402503271315376ddf4e47674d4965',1,'ttl():&#160;ipv6.h']]],
+  ['ttydefchars',['ttydefchars',['../tty_8c.html#aa83abb5e9683a5205b3f41cf64859d46',1,'tty.c']]],
+  ['ttydevs',['ttydevs',['../tty_8c.html#ae98e607f54aef5eccd498dd30a6d005c',1,'tty.c']]],
   ['tx_5fbytes',['tx_bytes',['../structnetif.html#ac340647ad948b8103aa9a4e3c7b3fd0f',1,'netif']]],
   ['tx_5fdropped',['tx_dropped',['../structnetif.html#a7793287254eb992df0174122a81654d0',1,'netif']]],
   ['tx_5ferrors',['tx_errors',['../structnetif.html#adac4c9e26ac4c17089eaf3a0e060f601',1,'netif']]],

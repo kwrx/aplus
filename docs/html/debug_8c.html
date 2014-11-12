@@ -135,6 +135,9 @@ The functions asprintf() and <a class="el" href="debug_8c.html#a1c492cd47880cc15
 <tr class="memitem:ac9d768b4772cc87fc88afbbbd805f96a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a> (char *fmt,...)</td></tr>
 <tr class="memdesc:ac9d768b4772cc87fc88afbbbd805f96a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formatted output conversion and print to Debug Standard Output.  <a href="#ac9d768b4772cc87fc88afbbbd805f96a">More...</a><br /></td></tr>
 <tr class="separator:ac9d768b4772cc87fc88afbbbd805f96a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a123a367aba8cf7d2c802b6638b78a056"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="debug_8c.html#a123a367aba8cf7d2c802b6638b78a056">ksprintf</a> (char *buf, char *fmt,...)</td></tr>
+<tr class="memdesc:a123a367aba8cf7d2c802b6638b78a056"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formatted output conversion and print to buffer.  <a href="#a123a367aba8cf7d2c802b6638b78a056">More...</a><br /></td></tr>
+<tr class="separator:a123a367aba8cf7d2c802b6638b78a056"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a6a6c93f71258d258dd8085e206f11265"></a>
@@ -257,6 +260,61 @@ The functions asprintf() and <a class="el" href="debug_8c.html#a1c492cd47880cc15
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    <a class="code" href="debug_8c.html#a611fa7b9d919dbea95733c7a8d44a1eb">debug_puts</a>(__kprintf_buf);</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;}</div>
 <div class="ttc" id="debug_8c_html_a611fa7b9d919dbea95733c7a8d44a1eb"><div class="ttname"><a href="debug_8c.html#a611fa7b9d919dbea95733c7a8d44a1eb">debug_puts</a></div><div class="ttdeci">void debug_puts(char *str)</div><div class="ttdoc">Send a string to serial debug port. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00019">debug.c:19</a></div></div>
+<div class="ttc" id="debug_8c_html_a1c492cd47880cc15e2274cd13f62f617"><div class="ttname"><a href="debug_8c.html#a1c492cd47880cc15e2274cd13f62f617">vasprintf</a></div><div class="ttdeci">size_t vasprintf(char *buf, const char *fmt, va_list args)</div><div class="ttdoc">Print to allocated string. The functions asprintf() and vasprintf() are analogs of sprintf(3) and vsp...</div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00110">debug.c:110</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a123a367aba8cf7d2c802b6638b78a056"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ksprintf </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Formatted output conversion and print to buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Buffer output. </td></tr>
+    <tr><td class="paramname">fmt</td><td>Format of string. </td></tr>
+    <tr><td class="paramname">...</td><td>Arguments. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="debug_8c_source.html#l00186">186</a> of file <a class="el" href="debug_8c_source.html">debug.c</a>.</p>
+
+<p>References <a class="el" href="debug_8c_source.html#l00110">vasprintf()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                                         {</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    </div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    va_list lst;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    va_start(lst, fmt);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <a class="code" href="debug_8c.html#a1c492cd47880cc15e2274cd13f62f617">vasprintf</a>(buf, fmt, lst);</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    va_end(lst);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;}</div>
 <div class="ttc" id="debug_8c_html_a1c492cd47880cc15e2274cd13f62f617"><div class="ttname"><a href="debug_8c.html#a1c492cd47880cc15e2274cd13f62f617">vasprintf</a></div><div class="ttdeci">size_t vasprintf(char *buf, const char *fmt, va_list args)</div><div class="ttdoc">Print to allocated string. The functions asprintf() and vasprintf() are analogs of sprintf(3) and vsp...</div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00110">debug.c:110</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -538,7 +596,7 @@ The functions asprintf() and <a class="el" href="debug_8c.html#a1c492cd47880cc15
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="debug_8c.html">debug.c</a></li>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:40 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:02 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

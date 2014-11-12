@@ -1,4 +1,4 @@
-.TH "src/syscall/close.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/close.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -73,23 +73,21 @@ Upon successful completion, 0 shall be returned; otherwise, -1 shall be returned
 .PP
 Definition at line 26 of file close\&.c\&.
 .PP
-References errno, task::fd, and kprintf()\&.
+References errno, and task::fd\&.
 .PP
 .nf
 26                       {
 27     if(!current_task)
 28         return -1;
 29         
-30     if(current_task->fd[fd] == 0) {
-31         kprintf("sys_close: fd %d not exist\&.", fd);
-32         
-33         errno = EBADF;
-34         return -1;
-35     }
-36     
-37     current_task->fd[fd] = 0;
-38     return 0;
-39 }
+30     if(current_task->fd[fd] == 0) {     
+31         errno = EBADF;
+32         return -1;
+33     }
+34     
+35     current_task->fd[fd] = 0;
+36     return 0;
+37 }
 .fi
 .SS "SYSCALL (\fBsys_close\fP, 1)"
 

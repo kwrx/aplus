@@ -8,33 +8,33 @@
     <includes local="no">sched.h</includes>
     <includes local="no">stdlib.h</includes>
     <incdepgraph>
-      <node id="2311">
+      <node id="2072">
         <label>sys/times.h</label>
       </node>
-      <node id="2315">
+      <node id="2076">
         <label>stdlib.h</label>
       </node>
-      <node id="2313">
+      <node id="2074">
         <label>errno.h</label>
       </node>
-      <node id="2310">
+      <node id="2071">
         <label>usr/src/libposix/src/nanosleep.c</label>
         <link refid="nanosleep.c"/>
-        <childnode refid="2311" relation="include">
+        <childnode refid="2072" relation="include">
         </childnode>
-        <childnode refid="2312" relation="include">
+        <childnode refid="2073" relation="include">
         </childnode>
-        <childnode refid="2313" relation="include">
+        <childnode refid="2074" relation="include">
         </childnode>
-        <childnode refid="2314" relation="include">
+        <childnode refid="2075" relation="include">
         </childnode>
-        <childnode refid="2315" relation="include">
+        <childnode refid="2076" relation="include">
         </childnode>
       </node>
-      <node id="2312">
+      <node id="2073">
         <label>sys/time.h</label>
       </node>
-      <node id="2314">
+      <node id="2075">
         <label>sched.h</label>
       </node>
     </incdepgraph>

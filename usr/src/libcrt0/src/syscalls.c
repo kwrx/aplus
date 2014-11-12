@@ -105,6 +105,7 @@ syscall0(23, sched_yield)
 syscall5(24, mount)
 syscall1(25, umount)
 syscall2(26, umount2)
+syscall5(27, openpty)
 
 #ifdef __aplus__
 syscall2(80, aplus_readdir)

@@ -244,10 +244,21 @@ $(document).ready(function(){initNavTree('debug_8c_source.html','');});
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;}</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
+<div class="line"><a name="l00186"></a><span class="lineno"><a class="line" href="debug_8c.html#a123a367aba8cf7d2c802b6638b78a056">  186</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="debug_8c.html#a123a367aba8cf7d2c802b6638b78a056">ksprintf</a>(<span class="keywordtype">char</span>* buf, <span class="keywordtype">char</span>* fmt, ...) {</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    </div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    va_list lst;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    va_start(lst, fmt);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <a class="code" href="debug_8c.html#a1c492cd47880cc15e2274cd13f62f617">vasprintf</a>(buf, fmt, lst);</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    va_end(lst);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;}</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
 <div class="ttc" id="debug_8c_html_a611fa7b9d919dbea95733c7a8d44a1eb"><div class="ttname"><a href="debug_8c.html#a611fa7b9d919dbea95733c7a8d44a1eb">debug_puts</a></div><div class="ttdeci">void debug_puts(char *str)</div><div class="ttdoc">Send a string to serial debug port. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00019">debug.c:19</a></div></div>
 <div class="ttc" id="debug_8c_html_a6a6c93f71258d258dd8085e206f11265"><div class="ttname"><a href="debug_8c.html#a6a6c93f71258d258dd8085e206f11265">debug_putc</a></div><div class="ttdeci">void debug_putc(char ch)</div><div class="ttdoc">Send a character to serial debug port. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00009">debug.c:9</a></div></div>
 <div class="ttc" id="spinlock_8h_html_a5f543d9add4a39382826f0d7ff9e94d8"><div class="ttname"><a href="spinlock_8h.html#a5f543d9add4a39382826f0d7ff9e94d8">unlock</a></div><div class="ttdeci">#define unlock()</div><div class="ttdef"><b>Definition:</b> <a href="spinlock_8h_source.html#l00042">spinlock.h:42</a></div></div>
 <div class="ttc" id="debug_8c_html_aaef6c9284815d5abe4204817030e6d25"><div class="ttname"><a href="debug_8c.html#aaef6c9284815d5abe4204817030e6d25">print_dec</a></div><div class="ttdeci">static void print_dec(unsigned int value, unsigned int width, char *buf, int *ptr)</div><div class="ttdoc">Print a number in base 10 into buffer. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00036">debug.c:36</a></div></div>
+<div class="ttc" id="debug_8c_html_a123a367aba8cf7d2c802b6638b78a056"><div class="ttname"><a href="debug_8c.html#a123a367aba8cf7d2c802b6638b78a056">ksprintf</a></div><div class="ttdeci">void ksprintf(char *buf, char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to buffer. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00186">debug.c:186</a></div></div>
 <div class="ttc" id="debug_8c_html_a1c492cd47880cc15e2274cd13f62f617"><div class="ttname"><a href="debug_8c.html#a1c492cd47880cc15e2274cd13f62f617">vasprintf</a></div><div class="ttdeci">size_t vasprintf(char *buf, const char *fmt, va_list args)</div><div class="ttdoc">Print to allocated string. The functions asprintf() and vasprintf() are analogs of sprintf(3) and vsp...</div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00110">debug.c:110</a></div></div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
 <div class="ttc" id="spinlock_8h_html"><div class="ttname"><a href="spinlock_8h.html">spinlock.h</a></div></div>
@@ -262,7 +273,7 @@ $(document).ready(function(){initNavTree('debug_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="debug_8c.html">debug.c</a></li>
-    <li class="footer">Generated on Sun Nov 9 2014 20:21:39 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 17:33:01 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

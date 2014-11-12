@@ -14,47 +14,28 @@
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="336">
+      <node id="341">
         <label>sys/stat.h</label>
       </node>
-      <node id="331">
+      <node id="336">
         <label>stdarg.h</label>
       </node>
-      <node id="333">
+      <node id="338">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="330" relation="include">
-        </childnode>
-        <childnode refid="334" relation="include">
-        </childnode>
         <childnode refid="335" relation="include">
         </childnode>
-        <childnode refid="336" relation="include">
+        <childnode refid="339" relation="include">
         </childnode>
-        <childnode refid="337" relation="include">
+        <childnode refid="340" relation="include">
+        </childnode>
+        <childnode refid="341" relation="include">
+        </childnode>
+        <childnode refid="342" relation="include">
         </childnode>
       </node>
-      <node id="330">
+      <node id="335">
         <label>stdint.h</label>
-      </node>
-      <node id="344">
-        <label>setjmp.h</label>
-      </node>
-      <node id="342">
-        <label>aplus/task.h</label>
-        <link refid="task_8h"/>
-        <childnode refid="330" relation="include">
-        </childnode>
-        <childnode refid="329" relation="include">
-        </childnode>
-        <childnode refid="333" relation="include">
-        </childnode>
-        <childnode refid="343" relation="include">
-        </childnode>
-        <childnode refid="335" relation="include">
-        </childnode>
-        <childnode refid="344" relation="include">
-        </childnode>
       </node>
       <node id="346">
         <label>errno.h</label>
@@ -62,90 +43,71 @@
       <node id="345">
         <label>fcntl.h</label>
       </node>
-      <node id="334">
+      <node id="339">
         <label>stddef.h</label>
       </node>
-      <node id="339">
+      <node id="344">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="334" relation="include">
-        </childnode>
-        <childnode refid="330" relation="include">
+        <childnode refid="339" relation="include">
         </childnode>
         <childnode refid="335" relation="include">
         </childnode>
         <childnode refid="340" relation="include">
         </childnode>
-        <childnode refid="341" relation="include">
-        </childnode>
       </node>
-      <node id="329">
+      <node id="334">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="330" relation="include">
+        <childnode refid="335" relation="include">
         </childnode>
-        <childnode refid="331" relation="include">
+        <childnode refid="336" relation="include">
         </childnode>
-        <childnode refid="332" relation="include">
+        <childnode refid="337" relation="include">
         </childnode>
       </node>
-      <node id="328">
+      <node id="333">
         <label>src/fs/vfs.c</label>
         <link refid="vfs.c"/>
-        <childnode refid="329" relation="include">
-        </childnode>
-        <childnode refid="333" relation="include">
-        </childnode>
-        <childnode refid="339" relation="include">
-        </childnode>
-        <childnode refid="330" relation="include">
-        </childnode>
         <childnode refid="334" relation="include">
         </childnode>
         <childnode refid="338" relation="include">
         </childnode>
-        <childnode refid="336" relation="include">
+        <childnode refid="344" relation="include">
         </childnode>
         <childnode refid="335" relation="include">
         </childnode>
+        <childnode refid="339" relation="include">
+        </childnode>
+        <childnode refid="343" relation="include">
+        </childnode>
+        <childnode refid="341" relation="include">
+        </childnode>
+        <childnode refid="340" relation="include">
+        </childnode>
         <childnode refid="345" relation="include">
         </childnode>
-        <childnode refid="337" relation="include">
+        <childnode refid="342" relation="include">
         </childnode>
         <childnode refid="346" relation="include">
         </childnode>
       </node>
-      <node id="335">
+      <node id="340">
         <label>sys/types.h</label>
       </node>
-      <node id="332">
+      <node id="337">
         <label>string.h</label>
       </node>
-      <node id="338">
+      <node id="343">
         <label>unistd.h</label>
       </node>
-      <node id="343">
-        <label>signal.h</label>
-      </node>
-      <node id="341">
-        <label>aplus/mm.h</label>
-        <link refid="mm_8h"/>
-        <childnode refid="330" relation="include">
-        </childnode>
-        <childnode refid="342" relation="include">
-        </childnode>
-      </node>
-      <node id="337">
+      <node id="342">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="338" relation="include">
+        <childnode refid="343" relation="include">
         </childnode>
-        <childnode refid="335" relation="include">
+        <childnode refid="340" relation="include">
         </childnode>
-      </node>
-      <node id="340">
-        <label>aplus/spinlock.h</label>
-        <link refid="spinlock_8h"/>
       </node>
     </incdepgraph>
       <sectiondef kind="var">
@@ -209,7 +171,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="22" bodyend="25"/>
         <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="41">inode::ino</references>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
         <references refid="vfs_8c_1ad11ac1a0eb756180b648d9ac7d53b169" compoundref="vfs_8c" startline="17">nextinode</references>
       </memberdef>
       <memberdef kind="function" id="vfs_8c_1a13a7520e2fe9380c3ed93472d0c800bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -229,7 +191,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="27" bodyend="30"/>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
-        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="73" endline="97">list_remove</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="82" endline="106">list_remove</references>
       </memberdef>
       <memberdef kind="function" id="vfs_8c_1a99334446cfc1dfc32088d838b4f2895c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
@@ -251,7 +213,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="32" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="32" bodyend="42"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
         <references refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" compoundref="fs_8h" startline="38">inode::name</references>
         <references refid="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" compoundref="fs_8h" startline="71">inode::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
@@ -276,7 +238,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="44" bodyend="56"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
         <references refid="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" compoundref="fs_8h" startline="71">inode::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
@@ -296,7 +258,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="58" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="58" bodyend="69"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="175">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
         <references refid="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" compoundref="fs_8h" startline="71">inode::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
@@ -329,12 +291,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/fs/vfs.c" line="81" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="81" bodyend="115"/>
+        <location file="/opt/prj/aPlus/src/fs/vfs.c" line="81" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="81" bodyend="118"/>
         <references refid="structinode_1a7e52661a115f6def97778566f2be0d80" compoundref="fs_8h" startline="50">inode::atime</references>
         <references refid="structinode_1a8221183a697c9f2b4e0e295f5a9d8afd" compoundref="fs_8h" startline="65">inode::chown</references>
         <references refid="structinode_1ad622a049b34780786d9ba4311b06b3b4" compoundref="fs_8h" startline="61">inode::creat</references>
         <references refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" compoundref="fs_8h" startline="52">inode::ctime</references>
         <references refid="structinode_1a127a2eb030df332fa64a81188731ad6b" compoundref="fs_8h" startline="40">inode::dev</references>
+        <references refid="devfs_8c_1a12b8ede9eeee8603d4b89d189a484380" compoundref="devfs_8c" startline="71" endline="100">devfs_mount</references>
         <references refid="structinode_1ab6c5e2d912fdbd506086e53185cd370d" compoundref="fs_8h" startline="60">inode::finddir</references>
         <references refid="structinode_1ae2972ef183f5c39aac7cb83b9f8a04a8" compoundref="fs_8h" startline="66">inode::flush</references>
         <references refid="structinode_1a8434fb9dd05057d00b37ed713713835d" compoundref="fs_8h" startline="45">inode::gid</references>
@@ -343,8 +306,8 @@
         <references refid="structinode_1a636843da203574bc338b016758bf8c7e" compoundref="fs_8h" startline="68">inode::ioctl</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="structinode_1a3533c53c5391601c66b3ae0f389c0843" compoundref="fs_8h" startline="72">inode::link</references>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="56" endline="71">list_add</references>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="187">list_init</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
         <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="42">inode::mode</references>
         <references refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" compoundref="fs_8h" startline="51">inode::mtime</references>
         <references refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" compoundref="fs_8h" startline="38">inode::name</references>
@@ -360,6 +323,7 @@
         <references refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" compoundref="fs_8h" startline="44">inode::uid</references>
         <references refid="fs_8h_1a9cf90243a3f4070f29ff12e5740e4ae4" compoundref="fs_8h" startline="26">UID_ROOT</references>
         <references refid="structinode_1adf65bac80736631b8000d3d34e953aaa" compoundref="fs_8h" startline="64">inode::unlink</references>
+        <references refid="vfs_8c_1acb87c78588a46c5526e933c495b69c2a" compoundref="vfs_8c" startline="22" endline="25">vfs_map</references>
         <references refid="structinode_1a53a123d38834fa17e7ef5c1e5f47bba2" compoundref="fs_8h" startline="57">inode::write</references>
       </memberdef>
       </sectiondef>
@@ -480,9 +444,12 @@
 <codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>vfs_root-&gt;<ref refid="structinode_1a636843da203574bc338b016758bf8c7e" kindref="member">ioctl</ref><sp/>=<sp/>NULL;</highlight></codeline>
 <codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" kindref="member">list_add</ref>(list_inodes,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>vfs_root);</highlight></codeline>
-<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="115"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vfs_8c_1acb87c78588a46c5526e933c495b69c2a" kindref="member">vfs_map</ref>((<ref refid="structinode" kindref="compound">inode_t</ref>*)<sp/><ref refid="devfs_8c_1a12b8ede9eeee8603d4b89d189a484380" kindref="member">devfs_mount</ref>());</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/fs/vfs.c"/>
   </compounddef>

@@ -6,29 +6,29 @@
     <includes local="no">stdlib.h</includes>
     <includes local="no">signal.h</includes>
     <incdepgraph>
-      <node id="2121">
+      <node id="1893">
         <label>stdlib.h</label>
       </node>
-      <node id="2120">
+      <node id="1892">
         <label>errno.h</label>
       </node>
-      <node id="2119">
+      <node id="1891">
         <label>syscalls.c</label>
         <link refid="syscalls_8c"/>
-        <childnode refid="2120" relation="include">
+        <childnode refid="1892" relation="include">
         </childnode>
       </node>
-      <node id="2122">
+      <node id="1894">
         <label>signal.h</label>
       </node>
-      <node id="2118">
+      <node id="1890">
         <label>usr/src/libcrt0/src/crt0.c</label>
         <link refid="crt0.c"/>
-        <childnode refid="2119" relation="include">
+        <childnode refid="1891" relation="include">
         </childnode>
-        <childnode refid="2121" relation="include">
+        <childnode refid="1893" relation="include">
         </childnode>
-        <childnode refid="2122" relation="include">
+        <childnode refid="1894" relation="include">
         </childnode>
       </node>
     </incdepgraph>

@@ -1,4 +1,4 @@
-.TH "src/include/aplus/task.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/task.h" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -71,6 +71,21 @@ src/include/aplus/task.h \-
 .ti -1c
 .RI "#define \fBGID_SUPERUSER\fP   1000"
 .br
+.ti -1c
+.RI "#define \fBCLONE_VM\fP   1"
+.br
+.ti -1c
+.RI "#define \fBCLONE_SIGHAND\fP   2"
+.br
+.ti -1c
+.RI "#define \fBCLONE_FS\fP   4"
+.br
+.ti -1c
+.RI "#define \fBCLONE_FILES\fP   8"
+.br
+.ti -1c
+.RI "#define \fBCLONE_PARENT\fP   16"
+.br
 .in -1c
 .SS "Typedefs"
 
@@ -119,6 +134,26 @@ src/include/aplus/task.h \-
 .in -1c
 .SH "Macro Definition Documentation"
 .PP 
+.SS "#define CLONE_FILES   8"
+
+.PP
+Definition at line 69 of file task\&.h\&.
+.SS "#define CLONE_FS   4"
+
+.PP
+Definition at line 65 of file task\&.h\&.
+.SS "#define CLONE_PARENT   16"
+
+.PP
+Definition at line 73 of file task\&.h\&.
+.SS "#define CLONE_SIGHAND   2"
+
+.PP
+Definition at line 61 of file task\&.h\&.
+.SS "#define CLONE_VM   1"
+
+.PP
+Definition at line 57 of file task\&.h\&.
 .SS "#define GID_SUPERUSER   1000"
 
 .PP

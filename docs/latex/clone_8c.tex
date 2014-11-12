@@ -83,7 +83,8 @@ References errno, task\+::pid, and task\+\_\+clone().
 39     \}
 40 
 41 
-42     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{task_8c_aa274b7334aace961395fdb788126712d}{task\_clone}(fn, arg, child\_stack);
+42     \hyperlink{structtask}{task\_t}* child = (\hyperlink{structtask}{task\_t}*) \hyperlink{task_8c_afed7d6a4dd3580596c0c925e766c4163}{task\_clone}(fn, arg, child\_stack, 
+      \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags});
 43     \textcolor{keywordflow}{if}(!child) \{
 44         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EFAULT;
 45         \textcolor{keywordflow}{return} -1;

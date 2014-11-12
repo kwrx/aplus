@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['id',['id',['../structiso9660__volume__descriptor.html#a8f6d3d0d6c09036a09ba6236fcadef24',1,'iso9660_volume_descriptor::id()'],['../structiso9660__pvd.html#a912fb8ad71f86bf868935349e74c540b',1,'iso9660_pvd::id()'],['../structipv4__header.html#a1b3ce4e0d6313af76d19bace542513a3',1,'ipv4_header::id()'],['../structnetif__packet.html#ac2dc39fe302e155960127c09161f36ae',1,'netif_packet::id()'],['../iso9660_8h.html#a6250618cd0f2f1fd5e27398c85114505',1,'id():&#160;iso9660.h'],['../ipv4_8h.html#a4fc3a0c58dfbd1e68224521185cb9384',1,'id():&#160;ipv4.h']]],
+  ['ibuffer',['ibuffer',['../structtty.html#ad876c12571c56724c3277ee634b5dd30',1,'tty']]],
+  ['id',['id',['../structiso9660__volume__descriptor.html#a8f6d3d0d6c09036a09ba6236fcadef24',1,'iso9660_volume_descriptor::id()'],['../structiso9660__pvd.html#a912fb8ad71f86bf868935349e74c540b',1,'iso9660_pvd::id()'],['../structipv4__header.html#a1b3ce4e0d6313af76d19bace542513a3',1,'ipv4_header::id()'],['../structnetif__packet.html#ac2dc39fe302e155960127c09161f36ae',1,'netif_packet::id()'],['../structtty.html#ababbf2910aa51f41da438d6adca0aca5',1,'tty::id()'],['../iso9660_8h.html#a6250618cd0f2f1fd5e27398c85114505',1,'id():&#160;iso9660.h'],['../ipv4_8h.html#a4fc3a0c58dfbd1e68224521185cb9384',1,'id():&#160;ipv4.h']]],
   ['idlen',['idlen',['../structiso9660__dir.html#a6b591363e79296cc8b68df9b481e1ff8',1,'iso9660_dir::idlen()'],['../iso9660_8h.html#a2da202efdeac0cce10457fe1cc6051db',1,'idlen():&#160;iso9660.h']]],
   ['idt_5fe',['idt_e',['../desc_8c.html#a248e57c601e50474a60c9d42c6ac8fb3',1,'desc.c']]],
   ['idt_5fp',['idt_p',['../desc_8c.html#acd81c3f56ebae00c0f2af978d2b48d42',1,'desc.c']]],
@@ -19,7 +20,9 @@ var searchData=
   ['iobase',['iobase',['../structpci__device.html#a5b15ddf1741aaae55aa9933f53876d11',1,'pci_device']]],
   ['ioctl',['ioctl',['../structinode.html#a636843da203574bc338b016758bf8c7e',1,'inode']]],
   ['ioport',['ioport',['../structslirpcard.html#aed1b09924afb61043cd93bed7edea389',1,'slirpcard']]],
+  ['ios',['ios',['../structtty.html#a10958fdd6a24123e3522b806a8647656',1,'tty']]],
   ['ipv4',['ipv4',['../structarp__cache__entry.html#a0347c9b0b7ec01ff4b5a2fb258ffc9d5',1,'arp_cache_entry::ipv4()'],['../structnetif.html#a312a8e870ce8803f02f5b09012ce6bc6',1,'netif::ipv4()']]],
   ['ipv6',['ipv6',['../structnetif.html#aced1ed63f6f33dd3987a06deee6a2292',1,'netif']]],
-  ['irqs',['irqs',['../desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d',1,'desc.c']]]
+  ['irqs',['irqs',['../desc_8c.html#a8e2066f75678ef3cb314db1e33fe5e4d',1,'desc.c']]],
+  ['isize',['isize',['../structtty.html#a25ab11cf5b7109480eb6f2e4f05efe4f',1,'tty']]]
 ];

@@ -27,9 +27,7 @@ int sys_close(int fd) {
 	if(!current_task)
 		return -1;
 		
-	if(current_task->fd[fd] == 0) {
-		kprintf("sys_close: fd %d not exist.", fd);
-		
+	if(current_task->fd[fd] == 0) {		
 		errno = EBADF;
 		return -1;
 	}

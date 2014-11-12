@@ -1,4 +1,4 @@
-.TH "src/include/aplus/list.h" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/list.h" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -11,10 +11,6 @@ src/include/aplus/list.h \-
 \fC#include <stdint\&.h>\fP
 .br
 \fC#include <sys/types\&.h>\fP
-.br
-\fC#include <aplus/spinlock\&.h>\fP
-.br
-\fC#include <aplus/mm\&.h>\fP
 .br
 
 .SS "Data Structures"
@@ -31,10 +27,10 @@ src/include/aplus/list.h \-
 
 .in +1c
 .ti -1c
-.RI "#define \fBlist_safe_begin\fP(\fBlist\fP)   \fBspinlock_lock\fP(&\fBlist\fP->\fBlock\fP)"
+.RI "#define \fBlist_safe_begin\fP(\fBlist\fP)   __list_lock(&\fBlist\fP->\fBlock\fP)"
 .br
 .ti -1c
-.RI "#define \fBlist_safe_end\fP(\fBlist\fP)   \fBspinlock_unlock\fP(&\fBlist\fP->\fBlock\fP)"
+.RI "#define \fBlist_safe_end\fP(\fBlist\fP)   __list_unlock(&\fBlist\fP->\fBlock\fP)"
 .br
 .ti -1c
 .RI "#define \fBlist_foreach\fP(\fBvalue\fP, \fBlist\fP)"
@@ -99,11 +95,11 @@ src/include/aplus/list.h \-
 \fBValue:\fP
 .PP
 .nf
-list_clear(list);                                       \\
-	kfree(list)
+list_clear(list);                                     \
+    __list_free(list)
 .fi
 .PP
-Definition at line 193 of file list\&.h\&.
+Definition at line 202 of file list\&.h\&.
 .SS "#define list_foreach(\fBvalue\fP, \fBlist\fP)"
 \fBValue:\fP
 .PP
@@ -114,7 +110,7 @@ for(listval_t value = list_head(list);                     \\
         )
 .fi
 .PP
-Definition at line 175 of file list\&.h\&.
+Definition at line 184 of file list\&.h\&.
 .SS "#define list_foreach_inverse(\fBvalue\fP, \fBlist\fP)"
 \fBValue:\fP
 .PP
@@ -125,26 +121,26 @@ for(listval_t value = list_tail(list);                     \\
         )
 .fi
 .PP
-Definition at line 181 of file list\&.h\&.
+Definition at line 190 of file list\&.h\&.
 .SS "#define list_init(\fBlist\fP)"
 \fBValue:\fP
 .PP
 .nf
-list = (list_t*) kmalloc(sizeof(list_t));                \
+list = (list_t*) __list_malloc(sizeof(list_t));          \
     list->body = 0;                                         \
     list->size = 0;                                         \
     list->lock = 0
 .fi
 .PP
-Definition at line 187 of file list\&.h\&.
-.SS "#define list_safe_begin(\fBlist\fP)   \fBspinlock_lock\fP(&\fBlist\fP->\fBlock\fP)"
+Definition at line 196 of file list\&.h\&.
+.SS "#define list_safe_begin(\fBlist\fP)   __list_lock(&\fBlist\fP->\fBlock\fP)"
 
 .PP
-Definition at line 169 of file list\&.h\&.
-.SS "#define list_safe_end(\fBlist\fP)   \fBspinlock_unlock\fP(&\fBlist\fP->\fBlock\fP)"
+Definition at line 178 of file list\&.h\&.
+.SS "#define list_safe_end(\fBlist\fP)   __list_unlock(&\fBlist\fP->\fBlock\fP)"
 
 .PP
-Definition at line 172 of file list\&.h\&.
+Definition at line 181 of file list\&.h\&.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef struct \fBlist_body\fP  \fBlist_body_t\fP"
@@ -154,198 +150,198 @@ Definition at line 172 of file list\&.h\&.
 .SS "typedef \fBuint32_t\fP \fBlistval_t\fP"
 
 .PP
-Definition at line 33 of file list\&.h\&.
+Definition at line 42 of file list\&.h\&.
 .SH "Function Documentation"
 .PP 
 .SS "static int list_add (\fBlist_t\fP *list, \fBlistval_t\fPv)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 56 of file list\&.h\&.
+Definition at line 65 of file list\&.h\&.
 .PP
-References list::body, kmalloc(), list::lock, list_body::next, list::size, spinlock_lock(), spinlock_unlock(), and list_body::value\&.
+References list::body, list::lock, list_body::next, list::size, and list_body::value\&.
 .PP
 .nf
-56                                                       {
-57     list_body_t* val = (list_body_t*) kmalloc(sizeof(list_body_t));
-58     if(!val)
-59         return -1;
-60         
-61     spinlock_lock(&list->lock);
-62         
-63     val->value = v;
-64     val->next = list->body;
-65     
-66     list->body = val;
-67     list->size += 1;
-68     
-69     spinlock_unlock(&list->lock);
-70     return 0;
-71 }
+65                                                       {
+66     list_body_t* val = (list_body_t*) __list_malloc(sizeof(list_body_t));
+67     if(!val)
+68         return -1;
+69         
+70     __list_lock(&list->lock);
+71         
+72     val->value = v;
+73     val->next = list->body;
+74     
+75     list->body = val;
+76     list->size += 1;
+77     
+78     __list_unlock(&list->lock);
+79     return 0;
+80 }
 .fi
 .SS "static int list_clear (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 99 of file list\&.h\&.
+Definition at line 108 of file list\&.h\&.
 .PP
-References list::body, kfree(), list::lock, list_body::next, list::size, spinlock_lock(), and spinlock_unlock()\&.
+References list::body, list::lock, list_body::next, and list::size\&.
 .PP
 .nf
-99                                            {
-100     spinlock_lock(&list->lock);
-101     
-102     list_body_t* body = list->body;
-103     list_body_t* tmp = list->body;
-104     
-105     while(body) {
-106         tmp = body->next;
-107         kfree(body);
-108         body = tmp;
-109     }
+108                                            {
+109     __list_lock(&list->lock);
 110     
-111     list->body = 0;
-112     list->size = 0;
+111     list_body_t* body = list->body;
+112     list_body_t* tmp = list->body;
 113     
-114     spinlock_unlock(&list->lock);
-115     return 0;
-116 }
+114     while(body) {
+115         tmp = body->next;
+116         __list_free(body);
+117         body = tmp;
+118     }
+119     
+120     list->body = 0;
+121     list->size = 0;
+122     
+123     __list_unlock(&list->lock);
+124     return 0;
+125 }
 .fi
 .SS "static void list_clone (\fBlist_t\fP *dest, \fBlist_t\fP *src)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 119 of file list\&.h\&.
+Definition at line 128 of file list\&.h\&.
 .PP
-References list::body, list_add(), list::lock, list_body::next, spinlock_lock(), and spinlock_unlock()\&.
+References list::body, list_add(), list::lock, and list_body::next\&.
 .PP
 .nf
-119                                                          {
-120     spinlock_lock(&src->lock);
-121     
-122     for(list_body_t* i = src->body; i; i = i->next) {
-123         list_add(dest, i->value);
-124     }
-125     
-126     spinlock_unlock(&src->lock);
-127 }
+128                                                          {
+129     __list_lock(&src->lock);
+130     
+131     for(list_body_t* i = src->body; i; i = i->next) {
+132         list_add(dest, i->value);
+133     }
+134     
+135     __list_unlock(&src->lock);
+136 }
 .fi
 .SS "static int list_empty (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 49 of file list\&.h\&.
+Definition at line 58 of file list\&.h\&.
 .PP
 References list::size\&.
 .PP
 .nf
-49                                            {
-50     if(list)
-51         return list->size == 0;
-52     else
-53         return 1;   /* empty */
-54 }
+58                                            {
+59     if(list)
+60         return list->size == 0;
+61     else
+62         return 1;   /* empty */
+63 }
 .fi
 .SS "static \fBlistval_t\fP list_head (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 156 of file list\&.h\&.
+Definition at line 165 of file list\&.h\&.
 .PP
 References list::body, list_body::next, and list_body::value\&.
 .PP
 .nf
-156                                                 {
-157 
-158     if(!list->body)
-159         return (listval_t) NULL;
-160     
-161     list_body_t* tmp = list->body;
-162     while(tmp->next)
-163         tmp = tmp->next;
-164         
-165     return (listval_t) tmp->value;
-166 }
+165                                                 {
+166 
+167     if(!list->body)
+168         return (listval_t) NULL;
+169     
+170     list_body_t* tmp = list->body;
+171     while(tmp->next)
+172         tmp = tmp->next;
+173         
+174     return (listval_t) tmp->value;
+175 }
 .fi
 .SS "static \fBlistval_t\fP list_next (\fBlist_t\fP *list, \fBlistval_t\fPval)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 139 of file list\&.h\&.
+Definition at line 148 of file list\&.h\&.
 .PP
 References list::body, and list_body::next\&.
 .PP
 .nf
-139                                                                {
-140     for(list_body_t* i = list->body; i; i = i->next) {
-141         if(i->next)
-142             if(i->next->value == val)
-143                 return i->value;
-144     }
-145     
-146     return (listval_t) NULL;
-147 }
+148                                                                {
+149     for(list_body_t* i = list->body; i; i = i->next) {
+150         if(i->next)
+151             if(i->next->value == val)
+152                 return i->value;
+153     }
+154     
+155     return (listval_t) NULL;
+156 }
 .fi
 .SS "static \fBlistval_t\fP list_prev (\fBlist_t\fP *list, \fBlistval_t\fPval)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 129 of file list\&.h\&.
+Definition at line 138 of file list\&.h\&.
 .PP
 References list::body, and list_body::next\&.
 .PP
 .nf
-129                                                                {
-130     for(list_body_t* i = list->body; i; i = i->next) {
-131         if(i->value == val)
-132             if(i->next)
-133                 return i->next->value;
-134     }
-135     
-136     return (listval_t) NULL;
-137 }
+138                                                                {
+139     for(list_body_t* i = list->body; i; i = i->next) {
+140         if(i->value == val)
+141             if(i->next)
+142                 return i->next->value;
+143     }
+144     
+145     return (listval_t) NULL;
+146 }
 .fi
 .SS "static int list_remove (\fBlist_t\fP *list, \fBlistval_t\fPv)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 73 of file list\&.h\&.
+Definition at line 82 of file list\&.h\&.
 .PP
-References list::body, kfree(), list::lock, list_body::next, spinlock_lock(), spinlock_unlock(), and list_body::value\&.
+References list::body, list::lock, list_body::next, and list_body::value\&.
 .PP
 .nf
-73                                                          {
-74     spinlock_lock(&list->lock);
-75     
-76     list_body_t* body = list->body;
-77     list_body_t* prev = 0;
-78     
-79     while(body) {
-80         if(body->value == v) {
-81             if(prev)
-82                 prev->next = body->next;
-83             else
-84                 list->body = body->next;
-85                 
-86             body->value = 0;
-87             kfree(body);
-88             break;
-89         }
-90         
-91         prev = body;
-92         body = body->next;
-93     }
-94     
-95     spinlock_unlock(&list->lock);
-96     return 0;
-97 }
+82                                                          {
+83     __list_lock(&list->lock);
+84     
+85     list_body_t* body = list->body;
+86     list_body_t* prev = 0;
+87     
+88     while(body) {
+89         if(body->value == v) {
+90             if(prev)
+91                 prev->next = body->next;
+92             else
+93                 list->body = body->next;
+94                 
+95             body->value = 0;
+96             __list_free(body);
+97             break;
+98         }
+99         
+100         prev = body;
+101         body = body->next;
+102     }
+103     
+104     __list_unlock(&list->lock);
+105     return 0;
+106 }
 .fi
 .SS "static \fBlistval_t\fP list_tail (\fBlist_t\fP *list)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 149 of file list\&.h\&.
+Definition at line 158 of file list\&.h\&.
 .PP
 References list::body, and list_body::value\&.
 .PP
 .nf
-149                                                 {
-150     if(list->body)
-151         return list->body->value;
-152         
-153     return (listval_t) NULL;
-154 }
+158                                                 {
+159     if(list->body)
+160         return list->body->value;
+161         
+162     return (listval_t) NULL;
+163 }
 .fi
 .SH "Author"
 .PP 

@@ -200,29 +200,28 @@ References dupstr(), errno, task\+::fd, ino\+\_\+open(), kfree(), and T\+A\+S\+K
 130 
 131     \textcolor{keywordtype}{char}* p = \hyperlink{open_8c_a6fae53653306206ed481c3589c7aa51b}{dupstr}(filename);
 132     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{open_8c_a8b5a87d8a01e3e89bd9be45a8e177cb1}{ino\_open}(p, \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags}, mode);
-133 
-134     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(p);
-135 
-136     \textcolor{keywordflow}{if}(!ino)
-137         \textcolor{keywordflow}{return} -1;
+133     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(p);
+134 
+135     \textcolor{keywordflow}{if}(!ino)
+136         \textcolor{keywordflow}{return} -1;
+137     
 138     
-139     
-140     \hyperlink{structinode}{inode\_t}** fd = NULL;
-141     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}; i++) \{
-142         \textcolor{keywordflow}{if}(\hyperlink{open_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i] == 0) \{
-143             fd = &\hyperlink{open_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i];
-144             \textcolor{keywordflow}{break};
-145         \}
-146     \}
-147     
-148     \textcolor{keywordflow}{if}(fd == NULL) \{
-149         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EMFILE;
-150         \textcolor{keywordflow}{return} -1;
-151     \}
-152     
-153     *fd = ino;
-154     \textcolor{keywordflow}{return} 0;
-155 \}
+139     \hyperlink{structinode}{inode\_t}** fd = NULL;
+140     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}; i++) \{
+141         \textcolor{keywordflow}{if}(\hyperlink{open_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i] == 0) \{
+142             fd = &\hyperlink{open_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[i];
+143             \textcolor{keywordflow}{break};
+144         \}
+145     \}
+146     
+147     \textcolor{keywordflow}{if}(fd == NULL) \{
+148         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EMFILE;
+149         \textcolor{keywordflow}{return} -1;
+150     \}
+151     
+152     *fd = ino;
+153     \textcolor{keywordflow}{return} 0;
+154 \}
 \end{DoxyCode}
 \hypertarget{open_8c_acad57ec13a2846f9bbbf7c99b66a773b}{\index{open.\+c@{open.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!open.\+c@{open.\+c}}

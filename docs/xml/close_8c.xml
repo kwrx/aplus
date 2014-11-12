@@ -12,158 +12,142 @@
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1545">
+      <node id="1343">
         <label>sys/stat.h</label>
       </node>
-      <node id="1534">
+      <node id="1335">
         <label>stdarg.h</label>
       </node>
-      <node id="1537">
+      <node id="1338">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1532" relation="include">
+        <childnode refid="1333" relation="include">
         </childnode>
-        <childnode refid="1538" relation="include">
+        <childnode refid="1339" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
-        <childnode refid="1535" relation="include">
+        <childnode refid="1336" relation="include">
         </childnode>
-        <childnode refid="1540" relation="include">
+        <childnode refid="1341" relation="include">
         </childnode>
       </node>
-      <node id="1531">
+      <node id="1332">
         <label>src/syscall/close.c</label>
         <link refid="close.c"/>
-        <childnode refid="1532" relation="include">
+        <childnode refid="1333" relation="include">
         </childnode>
-        <childnode refid="1536" relation="include">
+        <childnode refid="1337" relation="include">
         </childnode>
-        <childnode refid="1544" relation="include">
+        <childnode refid="1342" relation="include">
         </childnode>
-        <childnode refid="1543" relation="include">
+        <childnode refid="1346" relation="include">
         </childnode>
-        <childnode refid="1547" relation="include">
+        <childnode refid="1345" relation="include">
         </childnode>
-        <childnode refid="1550" relation="include">
+        <childnode refid="1349" relation="include">
         </childnode>
-        <childnode refid="1551" relation="include">
+        <childnode refid="1350" relation="include">
         </childnode>
-        <childnode refid="1545" relation="include">
+        <childnode refid="1343" relation="include">
         </childnode>
-        <childnode refid="1546" relation="include">
+        <childnode refid="1344" relation="include">
         </childnode>
       </node>
-      <node id="1544">
+      <node id="1342">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
-        <childnode refid="1539" relation="include">
+        <childnode refid="1340" relation="include">
         </childnode>
-        <childnode refid="1540" relation="include">
+        <childnode refid="1341" relation="include">
         </childnode>
-        <childnode refid="1545" relation="include">
+        <childnode refid="1343" relation="include">
         </childnode>
-        <childnode refid="1546" relation="include">
+        <childnode refid="1344" relation="include">
         </childnode>
       </node>
-      <node id="1533">
+      <node id="1334">
         <label>stdint.h</label>
       </node>
-      <node id="1536">
+      <node id="1337">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1532" relation="include">
+        <childnode refid="1333" relation="include">
         </childnode>
-        <childnode refid="1537" relation="include">
+        <childnode refid="1338" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
       </node>
-      <node id="1549">
+      <node id="1348">
         <label>setjmp.h</label>
       </node>
-      <node id="1543">
+      <node id="1346">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
-        <childnode refid="1532" relation="include">
+        <childnode refid="1333" relation="include">
         </childnode>
-        <childnode refid="1544" relation="include">
+        <childnode refid="1342" relation="include">
         </childnode>
-        <childnode refid="1548" relation="include">
+        <childnode refid="1347" relation="include">
         </childnode>
-        <childnode refid="1540" relation="include">
+        <childnode refid="1341" relation="include">
         </childnode>
-        <childnode refid="1549" relation="include">
+        <childnode refid="1348" relation="include">
         </childnode>
       </node>
-      <node id="1551">
+      <node id="1350">
         <label>errno.h</label>
       </node>
-      <node id="1550">
+      <node id="1349">
         <label>fcntl.h</label>
       </node>
-      <node id="1539">
+      <node id="1340">
         <label>stddef.h</label>
       </node>
-      <node id="1538">
+      <node id="1339">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1539" relation="include">
+        <childnode refid="1340" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
-        <childnode refid="1540" relation="include">
-        </childnode>
-        <childnode refid="1541" relation="include">
-        </childnode>
-        <childnode refid="1542" relation="include">
+        <childnode refid="1341" relation="include">
         </childnode>
       </node>
-      <node id="1532">
+      <node id="1333">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
-        <childnode refid="1534" relation="include">
+        <childnode refid="1335" relation="include">
         </childnode>
-        <childnode refid="1535" relation="include">
+        <childnode refid="1336" relation="include">
         </childnode>
       </node>
-      <node id="1540">
+      <node id="1341">
         <label>sys/types.h</label>
       </node>
-      <node id="1535">
+      <node id="1336">
         <label>string.h</label>
       </node>
-      <node id="1547">
+      <node id="1345">
         <label>unistd.h</label>
       </node>
-      <node id="1548">
+      <node id="1347">
         <label>signal.h</label>
       </node>
-      <node id="1542">
-        <label>aplus/mm.h</label>
-        <link refid="mm_8h"/>
-        <childnode refid="1533" relation="include">
-        </childnode>
-        <childnode refid="1543" relation="include">
-        </childnode>
-      </node>
-      <node id="1546">
+      <node id="1344">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1547" relation="include">
+        <childnode refid="1345" relation="include">
         </childnode>
-        <childnode refid="1540" relation="include">
+        <childnode refid="1341" relation="include">
         </childnode>
-      </node>
-      <node id="1541">
-        <label>aplus/spinlock.h</label>
-        <link refid="spinlock_8h"/>
       </node>
     </incdepgraph>
       <sectiondef kind="var">
@@ -208,10 +192,9 @@ All outstanding record locks owned by the process on the file associated with th
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/close.c" line="26" column="1" bodyfile="/opt/prj/aPlus/src/syscall/close.c" bodystart="26" bodyend="39"/>
+        <location file="/opt/prj/aPlus/src/syscall/close.c" line="26" column="1" bodyfile="/opt/prj/aPlus/src/syscall/close.c" bodystart="26" bodyend="37"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="87">task::fd</references>
-        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="105">task::fd</references>
       </memberdef>
       <memberdef kind="function" id="close_8c_1af50bb9113581b84b91cad26990c7caa4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -230,7 +213,7 @@ All outstanding record locks owned by the process on the file associated with th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/close.c" line="41" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/close.c" line="39" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -257,18 +240,16 @@ All outstanding record locks owned by the process on the file associated with th
 <codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
 <codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd]<sp/>==<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;sys_close:<sp/>fd<sp/>%d<sp/>not<sp/>exist.&quot;</highlight><highlight class="normal">,<sp/>fd);</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd]<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="39"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"></highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><ref refid="close_8c_1af50bb9113581b84b91cad26990c7caa4" kindref="member">SYSCALL</ref>(<ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>,<sp/>1);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd]<sp/>==<sp/>0)<sp/>{<sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><ref refid="close_8c_1af50bb9113581b84b91cad26990c7caa4" kindref="member">SYSCALL</ref>(<ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>,<sp/>1);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/close.c"/>
   </compounddef>

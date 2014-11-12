@@ -1,4 +1,4 @@
-.TH "src/fs/vfs.c" 3 "Sun Nov 9 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/fs/vfs.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -89,7 +89,7 @@ References inode::parent\&.
 .PP
 Definition at line 81 of file vfs\&.c\&.
 .PP
-References inode::atime, inode::chown, inode::creat, inode::ctime, inode::dev, inode::finddir, inode::flush, inode::gid, GID_ROOT, inode::ino, inode::ioctl, kmalloc(), inode::link, list_add(), list_init, inode::mode, inode::mtime, inode::name, nextinode, inode::nlink, inode::parent, inode::rdev, inode::read, inode::readdir, inode::rename, inode::size, sys_time(), inode::uid, UID_ROOT, inode::unlink, and inode::write\&.
+References inode::atime, inode::chown, inode::creat, inode::ctime, inode::dev, devfs_mount(), inode::finddir, inode::flush, inode::gid, GID_ROOT, inode::ino, inode::ioctl, kmalloc(), inode::link, list_add(), list_init, inode::mode, inode::mtime, inode::name, nextinode, inode::nlink, inode::parent, inode::rdev, inode::read, inode::readdir, inode::rename, inode::size, sys_time(), inode::uid, UID_ROOT, inode::unlink, vfs_map(), and inode::write\&.
 .PP
 .nf
 81                {
@@ -124,9 +124,12 @@ References inode::atime, inode::chown, inode::creat, inode::ctime, inode::dev, i
 110     vfs_root->ioctl = NULL;
 111     
 112     list_add(list_inodes, (listval_t) vfs_root);
-113     
-114     return 0;
-115 }
+113 
+114 
+115     vfs_map((inode_t*) devfs_mount());
+116     
+117     return 0;
+118 }
 .fi
 .SS "void vfs_map (\fBinode_t\fP *inode)"
 

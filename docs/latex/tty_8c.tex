@@ -1,0 +1,528 @@
+\hypertarget{tty_8c}{\section{src/fs/tty.c File Reference}
+\label{tty_8c}\index{src/fs/tty.\+c@{src/fs/tty.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/tty.\+h$>$}\\*
+{\ttfamily \#include $<$stdio.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/ioctl.\+h$>$}\\*
+{\ttfamily \#include $<$sys/termios.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{tty_8c_a4cb6812ea931081c175160c7832bd5cb}{\+\_\+\+\_\+default\+\_\+tty\+\_\+output} (\hyperlink{tty_8h_ae87a1d3b391605c6f2337562698f46fa}{tty\+\_\+t} $\ast$\hyperlink{structtty}{tty}, void $\ast$ptr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\item 
+int \hyperlink{tty_8c_af44ca2aed8cc67a67083f2632f2e8e9a}{tty\+\_\+ioctl} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ino, int cmd, void $\ast$buf)
+\item 
+int \hyperlink{tty_8c_a2c6de64e1d558b54c9ebd0954612acd8}{tty\+\_\+write} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ino, char $\ast$ptr, int \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\item 
+int \hyperlink{tty_8c_af4257a33321700bf011d106a0491199f}{tty\+\_\+read} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ino, char $\ast$ptr, int \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\item 
+void \hyperlink{tty_8c_ab570955fda22cdef6b32ab99a4d59e6f}{tty\+\_\+flush} (\hyperlink{fs_8h_a48b686d0c4375b0d1aab2296dc36c7a6}{inode\+\_\+t} $\ast$ino)
+\item 
+int \hyperlink{tty_8c_a73bb587a850df0de01eab91fa87e40d0}{tty\+\_\+open} (int $\ast$master, int $\ast$slave, char $\ast$\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, struct termios $\ast$ios, struct \hyperlink{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{winsize} $\ast$win)
+\item 
+int \hyperlink{tty_8c_aab365abb615be7027fa0bdb2c09569cb}{tty\+\_\+init} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{tty_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{tty_8c_ac08620610e2419aca3878305400a96b7}{kernel\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Kernel task address. \end{DoxyCompactList}\item 
+\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs} = N\+U\+L\+L
+\item 
+cc\+\_\+t \hyperlink{tty_8c_aa83abb5e9683a5205b3f41cf64859d46}{ttydefchars} \mbox{[}N\+C\+C\+S\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{tty_8c_a4cb6812ea931081c175160c7832bd5cb}{\index{tty.\+c@{tty.\+c}!\+\_\+\+\_\+default\+\_\+tty\+\_\+output@{\+\_\+\+\_\+default\+\_\+tty\+\_\+output}}
+\index{\+\_\+\+\_\+default\+\_\+tty\+\_\+output@{\+\_\+\+\_\+default\+\_\+tty\+\_\+output}!tty.\+c@{tty.\+c}}
+\subsubsection[{\+\_\+\+\_\+default\+\_\+tty\+\_\+output}]{\setlength{\rightskip}{0pt plus 5cm}static void \+\_\+\+\_\+default\+\_\+tty\+\_\+output (
+\begin{DoxyParamCaption}
+\item[{{\bf tty\+\_\+t} $\ast$}]{tty, }
+\item[{void $\ast$}]{ptr, }
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{tty_8c_a4cb6812ea931081c175160c7832bd5cb}
+
+
+Definition at line 32 of file tty.\+c.
+
+
+
+References kprintf(), and size.
+
+
+\begin{DoxyCode}
+32                                                                      \{
+33     \textcolor{keywordtype}{char}* ctr = (\textcolor{keywordtype}{char}*) ptr;
+34     
+35     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}; i++)
+36         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"%c"}, ctr[i]);
+37 \}
+\end{DoxyCode}
+\hypertarget{tty_8c_ab570955fda22cdef6b32ab99a4d59e6f}{\index{tty.\+c@{tty.\+c}!tty\+\_\+flush@{tty\+\_\+flush}}
+\index{tty\+\_\+flush@{tty\+\_\+flush}!tty.\+c@{tty.\+c}}
+\subsubsection[{tty\+\_\+flush}]{\setlength{\rightskip}{0pt plus 5cm}void tty\+\_\+flush (
+\begin{DoxyParamCaption}
+\item[{{\bf inode\+\_\+t} $\ast$}]{ino}
+\end{DoxyParamCaption}
+)}}\label{tty_8c_ab570955fda22cdef6b32ab99a4d59e6f}
+
+
+Definition at line 221 of file tty.\+c.
+
+
+
+References kfree(), list\+\_\+remove(), and inode\+::userdata.
+
+
+\begin{DoxyCode}
+221                              \{
+222     \textcolor{keywordflow}{if}(!ino)
+223         \textcolor{keywordflow}{return};
+224 
+225     \textcolor{keywordflow}{if}(!ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata})
+226         \textcolor{keywordflow}{return};
+227 
+228     \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata});
+229     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata});
+230 \}
+\end{DoxyCode}
+\hypertarget{tty_8c_aab365abb615be7027fa0bdb2c09569cb}{\index{tty.\+c@{tty.\+c}!tty\+\_\+init@{tty\+\_\+init}}
+\index{tty\+\_\+init@{tty\+\_\+init}!tty.\+c@{tty.\+c}}
+\subsubsection[{tty\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}int tty\+\_\+init (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{tty_8c_aab365abb615be7027fa0bdb2c09569cb}
+
+
+Definition at line 307 of file tty.\+c.
+
+
+
+References errno, task\+::fd, kprintf(), name, sys\+\_\+close(), sys\+\_\+symlink(), and tty\+\_\+open().
+
+
+\begin{DoxyCode}
+307                \{
+308     \textcolor{keywordtype}{int} master, slave;
+309     \textcolor{keywordtype}{char} \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}[32];
+310 
+311     \textcolor{keywordflow}{if}(\hyperlink{tty_8c_a73bb587a850df0de01eab91fa87e40d0}{tty\_open}(&master, &slave, name, NULL, NULL) != 0) \{
+312         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"tty\_open: failed with %d (%s)\(\backslash\)n"}, \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}, strerror(
+      \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}));
+313         \textcolor{keywordflow}{return} -1;
+314     \}
+315 
+316     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"tty: created device at %s\(\backslash\)n"}, name);
+317 
+318     \hyperlink{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}{sys\_symlink}(name, \textcolor{stringliteral}{"/dev/stdin"});
+319     \hyperlink{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}{sys\_symlink}(name, \textcolor{stringliteral}{"/dev/stdout"});
+320     \hyperlink{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}{sys\_symlink}(name, \textcolor{stringliteral}{"/dev/stderr"});
+321 
+322 
+323     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{tty_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[master];
+324 
+325     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(master);
+326     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(slave);
+327 
+328     
+329     \hyperlink{tty_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[STDIN\_FILENO] = ino;
+330     \hyperlink{tty_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[STDOUT\_FILENO] = ino;
+331     \hyperlink{tty_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[STDERR\_FILENO] = ino;
+332 
+333     \textcolor{keywordflow}{return} 0;   
+334 \}
+\end{DoxyCode}
+\hypertarget{tty_8c_af44ca2aed8cc67a67083f2632f2e8e9a}{\index{tty.\+c@{tty.\+c}!tty\+\_\+ioctl@{tty\+\_\+ioctl}}
+\index{tty\+\_\+ioctl@{tty\+\_\+ioctl}!tty.\+c@{tty.\+c}}
+\subsubsection[{tty\+\_\+ioctl}]{\setlength{\rightskip}{0pt plus 5cm}int tty\+\_\+ioctl (
+\begin{DoxyParamCaption}
+\item[{{\bf inode\+\_\+t} $\ast$}]{ino, }
+\item[{int}]{cmd, }
+\item[{void $\ast$}]{buf}
+\end{DoxyParamCaption}
+)}}\label{tty_8c_af44ca2aed8cc67a67083f2632f2e8e9a}
+
+
+Definition at line 39 of file tty.\+c.
+
+
+
+References errno, tty\+::exclmode, tty\+::fg, tty\+::ibuffer, tty\+::id, im\+\_\+superuser(), tty\+::ios, tty\+::isize, tty\+::lock, tty\+::osize, spinlock\+\_\+lock(), spinlock\+\_\+unlock(), inode\+::userdata, tty\+::win, and winsize.
+
+
+\begin{DoxyCode}
+39                                                 \{
+40     \textcolor{keywordflow}{if}(!ino) \{
+41         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+42         \textcolor{keywordflow}{return} -1;
+43     \}
+44 
+45     \hyperlink{structtty}{tty\_t}* \hyperlink{structtty}{tty} = ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata};
+46     \textcolor{keywordflow}{if}(!tty) \{
+47         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOTTY;
+48         \textcolor{keywordflow}{return} -1;
+49     \}
+50 
+51 
+52     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&tty->\hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock});
+53 
+54     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = 0;
+55 
+56     \textcolor{keywordflow}{switch}(cmd) \{
+57         \textcolor{keywordflow}{case} TCGETS:
+58             memcpy(buf, &tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} termios));
+59             \textcolor{keywordflow}{break};
+60         \textcolor{keywordflow}{case} TCSETS:
+61         \textcolor{keywordflow}{case} TCSETSW:
+62         \textcolor{keywordflow}{case} TCSETSF:
+63             memcpy(&tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}, buf, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} termios));
+64             \textcolor{keywordflow}{break};
+65         \textcolor{keywordflow}{case} TCGETA:
+66         \textcolor{keywordflow}{case} TCSETA:
+67         \textcolor{keywordflow}{case} TCSETAW:
+68         \textcolor{keywordflow}{case} TCSETAF:
+69             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+70             \textcolor{keywordflow}{break};
+71         \textcolor{keywordflow}{case} TIOCGLCKTRMIOS:
+72         \textcolor{keywordflow}{case} TIOCSLCKTRMIOS:
+73             \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a11eb67cd27beaf272f76796f65d1ca1c}{im\_superuser}())
+74                 \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EPERM;
+75             \textcolor{keywordflow}{else}
+76                 \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+77             \textcolor{keywordflow}{break};
+78         \textcolor{keywordflow}{case} TIOCGWINSZ:
+79             memcpy(buf, &tty->\hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} \hyperlink{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{winsize}));
+80             \textcolor{keywordflow}{break};
+81         \textcolor{keywordflow}{case} TIOCSWINSZ:
+82             memcpy(&tty->\hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}, buf, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} \hyperlink{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{winsize}));
+83             \textcolor{keywordflow}{break};
+84         \textcolor{keywordflow}{case} TCSBRK:
+85         \textcolor{keywordflow}{case} TCSBRKP:
+86             \textcolor{keywordflow}{break};
+87         \textcolor{keywordflow}{case} TIOCSBRK:
+88         \textcolor{keywordflow}{case} TIOCCBRK:
+89             \textcolor{keywordflow}{break};
+90         \textcolor{keywordflow}{case} TCXONC:
+91             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+92             \textcolor{keywordflow}{break};
+93         \textcolor{keywordflow}{case} FIONREAD:
+94             *(\textcolor{keywordtype}{int}*) buf = tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize};
+95             \textcolor{keywordflow}{break};
+96         \textcolor{keywordflow}{case} TIOCOUTQ:
+97             *(\textcolor{keywordtype}{int}*) buf = tty->\hyperlink{structtty_a94aa6d24908c6976459d187842f1428b}{osize};
+98             \textcolor{keywordflow}{break};
+99         \textcolor{keywordflow}{case} TCFLSH:
+100             \textcolor{keywordflow}{switch}(*(\textcolor{keywordtype}{int}*) buf) \{
+101                 \textcolor{keywordflow}{case} TCIFLUSH:
+102                     tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize} = 0;
+103                     \textcolor{keywordflow}{break};
+104                 \textcolor{keywordflow}{case} TCOFLUSH:
+105                     tty->\hyperlink{structtty_a94aa6d24908c6976459d187842f1428b}{osize} = 0;
+106                     \textcolor{keywordflow}{break};
+107                 \textcolor{keywordflow}{case} TCIOFLUSH:
+108                     tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize} = tty->\hyperlink{structtty_a94aa6d24908c6976459d187842f1428b}{osize} = 0;
+109                     \textcolor{keywordflow}{break};
+110                 \textcolor{keywordflow}{default}:
+111                     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+112             \}
+113             \textcolor{keywordflow}{break};
+114         \textcolor{keywordflow}{case} TIOCSTI:
+115             \textcolor{keywordflow}{while}(*(\textcolor{keywordtype}{char}*) buf)
+116                 tty->\hyperlink{structtty_ad876c12571c56724c3277ee634b5dd30}{ibuffer}[tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize}++] = *(\textcolor{keywordtype}{char}*) buf++;
+117             \textcolor{keywordflow}{break};
+118         \textcolor{keywordflow}{case} TIOCCONS:
+119         \textcolor{keywordflow}{case} TIOCSCTTY:
+120             \textcolor{keywordflow}{if}(!\hyperlink{src_2sched_8c_a11eb67cd27beaf272f76796f65d1ca1c}{im\_superuser}())
+121                 \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EPERM;
+122             \textcolor{keywordflow}{else}
+123                 \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+124             \textcolor{keywordflow}{break};
+125         \textcolor{keywordflow}{case} TIOCGPGRP:
+126             *(pid\_t*) buf = tty->\hyperlink{structtty_a8a6dae366ed6eac05de7d9d463bd04eb}{fg};
+127             \textcolor{keywordflow}{break};
+128         \textcolor{keywordflow}{case} TIOCSPGRP:
+129             tty->\hyperlink{structtty_a8a6dae366ed6eac05de7d9d463bd04eb}{fg} = *(pid\_t*) buf;
+130             \textcolor{keywordflow}{break};
+131         \textcolor{keywordflow}{case} TIOCGSID:
+132             *(pid\_t*) buf = tty->\hyperlink{structtty_ababbf2910aa51f41da438d6adca0aca5}{id};
+133             \textcolor{keywordflow}{break};
+134         \textcolor{keywordflow}{case} TIOCEXCL:
+135             tty->\hyperlink{structtty_aeb81a44fe3a7067e36a6c2c9194d8dad}{exclmode} = 1;
+136             \textcolor{keywordflow}{break};
+137         \textcolor{keywordflow}{case} TIOCNXCL:
+138             tty->\hyperlink{structtty_aeb81a44fe3a7067e36a6c2c9194d8dad}{exclmode} = 0;
+139             \textcolor{keywordflow}{break};
+140         \textcolor{keywordflow}{case} TIOCGETD:
+141         \textcolor{keywordflow}{case} TIOCSETD:
+142             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+143             \textcolor{keywordflow}{break};
+144         \textcolor{keywordflow}{default}:
+145 #ifdef ENOIOCTLCMD
+146             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOIOCTLCMD;
+147 #\textcolor{keywordflow}{else}
+148             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+149 #endif
+150             \textcolor{keywordflow}{break};
+151     \}
+152 
+153     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&tty->\hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock});
+154 
+155     \textcolor{keywordflow}{if}(\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} == 0)
+156         \textcolor{keywordflow}{return} 0;
+157     
+158     \textcolor{keywordflow}{return} -1;
+159 \}
+\end{DoxyCode}
+\hypertarget{tty_8c_a73bb587a850df0de01eab91fa87e40d0}{\index{tty.\+c@{tty.\+c}!tty\+\_\+open@{tty\+\_\+open}}
+\index{tty\+\_\+open@{tty\+\_\+open}!tty.\+c@{tty.\+c}}
+\subsubsection[{tty\+\_\+open}]{\setlength{\rightskip}{0pt plus 5cm}int tty\+\_\+open (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{master, }
+\item[{int $\ast$}]{slave, }
+\item[{char $\ast$}]{name, }
+\item[{struct termios $\ast$}]{ios, }
+\item[{struct {\bf winsize} $\ast$}]{win}
+\end{DoxyParamCaption}
+)}}\label{tty_8c_a73bb587a850df0de01eab91fa87e40d0}
+
+
+Definition at line 233 of file tty.\+c.
+
+
+
+References \+\_\+\+\_\+default\+\_\+tty\+\_\+output(), tty\+::bg, errno, tty\+::exclmode, task\+::fd, tty\+::fg, inode\+::flush, tty\+::id, inode\+::ioctl, tty\+::ios, tty\+::isize, kmalloc(), ksprintf(), list\+\_\+add(), list\+\_\+init, tty\+::lock, tty\+::osize, tty\+::output, task\+::pid, inode\+::read, list\+::size, sys\+\_\+open(), tty\+\_\+flush(), tty\+\_\+ioctl(), tty\+\_\+read(), tty\+\_\+write(), T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S, T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S, ttydefchars, inode\+::userdata, tty\+::win, winsize, and inode\+::write.
+
+
+\begin{DoxyCode}
+233                                                                                             \{
+234     \textcolor{keywordflow}{if}(\hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs} == NULL) \{
+235         \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\_init}(\hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs});
+236     \}
+237 
+238     \textcolor{keywordflow}{if}(!master || !slave) \{
+239         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+240         \textcolor{keywordflow}{return} -1;
+241     \}
+242 
+243     \textcolor{keywordtype}{char} fname[32];
+244     memset(fname, 0, 32);
+245 
+246     \hyperlink{debug_8c_a123a367aba8cf7d2c802b6638b78a056}{ksprintf}(fname, \textcolor{stringliteral}{"/dev/tty%d"}, (\textcolor{keywordtype}{int}) \hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs}->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
+247 
+248     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(fname, O\_CREAT | O\_EXCL | O\_RDWR, S\_IFCHR);
+249     \textcolor{keywordflow}{if}(fd < 0) \{
+250         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOENT;
+251         \textcolor{keywordflow}{return} -1;
+252     \}
+253 
+254 
+255     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{tty_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+256     \hyperlink{structtty}{tty\_t}* \hyperlink{structtty}{tty} = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structtty}{tty\_t}));
+257 
+258 
+259     ino->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read} = \hyperlink{tty_8c_af4257a33321700bf011d106a0491199f}{tty\_read};
+260     ino->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write} = \hyperlink{tty_8c_a2c6de64e1d558b54c9ebd0954612acd8}{tty\_write};
+261     ino->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl} = \hyperlink{tty_8c_af44ca2aed8cc67a67083f2632f2e8e9a}{tty\_ioctl};
+262     ino->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush} = \hyperlink{tty_8c_ab570955fda22cdef6b32ab99a4d59e6f}{tty\_flush};
+263 
+264     ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata} = tty;
+265 
+266     tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}.c\_iflag = \hyperlink{tty_8h_acd69d0fbe279cfcd136fd45d44562404}{TTYDEF\_IOS\_IFLAG};
+267     tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}.c\_oflag = \hyperlink{tty_8h_a8fa8e526600e28d4607297cfe5fe3d3a}{TTYDEF\_IOS\_OFLAG};
+268     tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}.c\_cflag = \hyperlink{tty_8h_ae440976cabc9ef1b86ec745135107f3f}{TTYDEF\_IOS\_CFLAG};
+269     tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}.c\_lflag = \hyperlink{tty_8h_abeea8ac0ea0a9738e57f82d0ef43a85e}{TTYDEF\_IOS\_LFLAG};
+270     
+271     memcpy(tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}.c\_cc, \hyperlink{tty_8c_aa83abb5e9683a5205b3f41cf64859d46}{ttydefchars}, \textcolor{keyword}{sizeof}(cc\_t) * NCCS);
+272 
+273     tty->\hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}.ws\_row = \hyperlink{tty_8h_a0c04c79b038508aafb633827bbf55af4}{TTYDEF\_WIN\_ROWS};
+274     tty->\hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}.ws\_col = \hyperlink{tty_8h_ae27757a251b08584e6d5f5f3c8baf0cb}{TTYDEF\_WIN\_COLS};
+275     tty->\hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}.ws\_xpixel = 0; \textcolor{comment}{/* unused */}
+276     tty->\hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}.ws\_ypixel = 0; \textcolor{comment}{/* unused */}
+277 
+278     tty->\hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock} = 0;
+279     tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize} = 0;
+280     tty->\hyperlink{structtty_a94aa6d24908c6976459d187842f1428b}{osize} = 0;
+281     tty->\hyperlink{structtty_aeb81a44fe3a7067e36a6c2c9194d8dad}{exclmode} = 0;
+282 
+283     tty->\hyperlink{structtty_a8a6dae366ed6eac05de7d9d463bd04eb}{fg} = \hyperlink{tty_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
+284     tty->\hyperlink{structtty_a68f717ba40f28d6b941f62f0e7255e2e}{bg} = -1;
+285 
+286     tty->\hyperlink{structtty_ababbf2910aa51f41da438d6adca0aca5}{id} = \hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs}->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size};
+287 
+288     tty->\hyperlink{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{output} = \hyperlink{tty_8c_a4cb6812ea931081c175160c7832bd5cb}{\_\_default\_tty\_output};
+289 
+290     \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs}, (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) tty);
+291 
+292     \textcolor{keywordflow}{if}(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name})
+293         strcpy(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, fname);
+294 
+295     \textcolor{keywordflow}{if}(ios)
+296         memcpy(ios, &tty->\hyperlink{structtty_a10958fdd6a24123e3522b806a8647656}{ios}, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} termios));
+297 
+298     \textcolor{keywordflow}{if}(win)
+299         memcpy(win, &tty->\hyperlink{structtty_af7fc07d18ca858dc99376525b8a437a3}{win}, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} \hyperlink{grub_8h_a75544d53f0c0032654ba8afc5ea4fb34}{winsize})); 
+300         
+301     *master = fd;
+302     *slave = fd;
+303 
+304     \textcolor{keywordflow}{return} 0;
+305 \}
+\end{DoxyCode}
+\hypertarget{tty_8c_af4257a33321700bf011d106a0491199f}{\index{tty.\+c@{tty.\+c}!tty\+\_\+read@{tty\+\_\+read}}
+\index{tty\+\_\+read@{tty\+\_\+read}!tty.\+c@{tty.\+c}}
+\subsubsection[{tty\+\_\+read}]{\setlength{\rightskip}{0pt plus 5cm}int tty\+\_\+read (
+\begin{DoxyParamCaption}
+\item[{{\bf inode\+\_\+t} $\ast$}]{ino, }
+\item[{char $\ast$}]{ptr, }
+\item[{int}]{size}
+\end{DoxyParamCaption}
+)}}\label{tty_8c_af4257a33321700bf011d106a0491199f}
+
+
+Definition at line 190 of file tty.\+c.
+
+
+
+References errno, tty\+::ibuffer, tty\+::isize, tty\+::lock, tty\+::output, size, spinlock\+\_\+lock(), spinlock\+\_\+unlock(), spinlock\+\_\+waiton, and inode\+::userdata.
+
+
+\begin{DoxyCode}
+190                                                 \{
+191     \textcolor{keywordflow}{if}(!ino)
+192         \textcolor{keywordflow}{return} 0;
+193 
+194     \textcolor{keywordflow}{if}(!ptr)
+195         \textcolor{keywordflow}{return} 0;
+196     
+197     \textcolor{keywordflow}{if}(!\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size})
+198         \textcolor{keywordflow}{return} 0;
+199 
+200     \hyperlink{structtty}{tty\_t}* \hyperlink{structtty}{tty} = ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata};
+201     \textcolor{keywordflow}{if}(!tty) \{
+202         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOTTY;
+203         \textcolor{keywordflow}{return} -1;
+204     \}
+205 
+206     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&tty->\hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock});
+207     \hyperlink{spinlock_8h_a9fd2288887ae3bf29520677b29e010a3}{spinlock\_waiton}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} > tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize});
+208 
+209     memcpy(ptr, tty->\hyperlink{structtty_ad876c12571c56724c3277ee634b5dd30}{ibuffer}, tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize});
+210     tty->\hyperlink{structtty_a25ab11cf5b7109480eb6f2e4f05efe4f}{isize} -= \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+211 
+212     \textcolor{keywordflow}{if}(tty->\hyperlink{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{output})
+213         tty->\hyperlink{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{output}(tty, ptr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+214 
+215     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&tty->\hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock});
+216 
+217     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+218 \}
+\end{DoxyCode}
+\hypertarget{tty_8c_a2c6de64e1d558b54c9ebd0954612acd8}{\index{tty.\+c@{tty.\+c}!tty\+\_\+write@{tty\+\_\+write}}
+\index{tty\+\_\+write@{tty\+\_\+write}!tty.\+c@{tty.\+c}}
+\subsubsection[{tty\+\_\+write}]{\setlength{\rightskip}{0pt plus 5cm}int tty\+\_\+write (
+\begin{DoxyParamCaption}
+\item[{{\bf inode\+\_\+t} $\ast$}]{ino, }
+\item[{char $\ast$}]{ptr, }
+\item[{int}]{size}
+\end{DoxyParamCaption}
+)}}\label{tty_8c_a2c6de64e1d558b54c9ebd0954612acd8}
+
+
+Definition at line 162 of file tty.\+c.
+
+
+
+References errno, tty\+::lock, tty\+::obuffer, tty\+::output, size, spinlock\+\_\+lock(), spinlock\+\_\+unlock(), and inode\+::userdata.
+
+
+\begin{DoxyCode}
+162                                                  \{
+163     \textcolor{keywordflow}{if}(!ino)
+164         \textcolor{keywordflow}{return} 0;
+165     
+166     \textcolor{keywordflow}{if}(!ptr)
+167         \textcolor{keywordflow}{return} 0;
+168 
+169     \textcolor{keywordflow}{if}(!\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size})
+170         \textcolor{keywordflow}{return} 0;
+171 
+172     \hyperlink{structtty}{tty\_t}* \hyperlink{structtty}{tty} = ino->\hyperlink{structinode_a8ba627a7ebbacc723e8452fbf8dd3670}{userdata};
+173     \textcolor{keywordflow}{if}(!tty) \{
+174         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOTTY;
+175         \textcolor{keywordflow}{return} -1;
+176     \}
+177 
+178     \hyperlink{spinlock_8h_ab01e311f21f78fc3c2bd0bdf74ef85c4}{spinlock\_lock}(&tty->\hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock});
+179     memcpy(tty->\hyperlink{structtty_a739b6ee550a2f4f997637261aed60167}{obuffer}, ptr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+180 
+181     \textcolor{keywordflow}{if}(tty->\hyperlink{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{output})
+182         tty->\hyperlink{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{output}(tty, ptr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+183 
+184     \hyperlink{spinlock_8h_a4ca6e661fa1b704d39d834ac7341b360}{spinlock\_unlock}(&tty->\hyperlink{structtty_a37c81cc0b682d67ec3d789f061357d77}{lock});
+185 
+186     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
+187 \}
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\hypertarget{tty_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{tty.\+c@{tty.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!tty.\+c@{tty.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{tty_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
+
+\hypertarget{tty_8c_ac08620610e2419aca3878305400a96b7}{\index{tty.\+c@{tty.\+c}!kernel\+\_\+task@{kernel\+\_\+task}}
+\index{kernel\+\_\+task@{kernel\+\_\+task}!tty.\+c@{tty.\+c}}
+\subsubsection[{kernel\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ kernel\+\_\+task}}\label{tty_8c_ac08620610e2419aca3878305400a96b7}
+
+
+Kernel task address. 
+
+
+
+Definition at line 40 of file sched.\+c.
+
+\hypertarget{tty_8c_aa83abb5e9683a5205b3f41cf64859d46}{\index{tty.\+c@{tty.\+c}!ttydefchars@{ttydefchars}}
+\index{ttydefchars@{ttydefchars}!tty.\+c@{tty.\+c}}
+\subsubsection[{ttydefchars}]{\setlength{\rightskip}{0pt plus 5cm}cc\+\_\+t ttydefchars\mbox{[}N\+C\+C\+S\mbox{]}}}\label{tty_8c_aa83abb5e9683a5205b3f41cf64859d46}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+= \{
+    
+    
+    
+\}
+\end{DoxyCode}
+
+
+Definition at line 25 of file tty.\+c.
+
+\hypertarget{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{\index{tty.\+c@{tty.\+c}!ttydevs@{ttydevs}}
+\index{ttydevs@{ttydevs}!tty.\+c@{tty.\+c}}
+\subsubsection[{ttydevs}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+t}$\ast$ ttydevs = N\+U\+L\+L}}\label{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}
+
+
+Definition at line 23 of file tty.\+c.
+

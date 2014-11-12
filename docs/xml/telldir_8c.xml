@@ -10,51 +10,51 @@
     <includes local="no">string.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="2368">
+      <node id="2129">
         <label>stdlib.h</label>
       </node>
-      <node id="2370">
+      <node id="2131">
         <label>errno.h</label>
       </node>
-      <node id="2366">
+      <node id="2127">
         <label>fcntl.h</label>
       </node>
-      <node id="2362">
+      <node id="2123">
         <label>usr/src/libposix/src/telldir.c</label>
         <link refid="telldir.c"/>
-        <childnode refid="2363" relation="include">
+        <childnode refid="2124" relation="include">
         </childnode>
-        <childnode refid="2364" relation="include">
+        <childnode refid="2125" relation="include">
         </childnode>
-        <childnode refid="2366" relation="include">
+        <childnode refid="2127" relation="include">
         </childnode>
-        <childnode refid="2367" relation="include">
+        <childnode refid="2128" relation="include">
         </childnode>
-        <childnode refid="2368" relation="include">
+        <childnode refid="2129" relation="include">
         </childnode>
-        <childnode refid="2369" relation="include">
+        <childnode refid="2130" relation="include">
         </childnode>
-        <childnode refid="2370" relation="include">
+        <childnode refid="2131" relation="include">
         </childnode>
       </node>
-      <node id="2365">
+      <node id="2126">
         <label>sys/types.h</label>
       </node>
-      <node id="2369">
+      <node id="2130">
         <label>string.h</label>
       </node>
-      <node id="2364">
+      <node id="2125">
         <label>unistd.h</label>
       </node>
-      <node id="2363">
+      <node id="2124">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2364" relation="include">
+        <childnode refid="2125" relation="include">
         </childnode>
-        <childnode refid="2365" relation="include">
+        <childnode refid="2126" relation="include">
         </childnode>
       </node>
-      <node id="2367">
+      <node id="2128">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
