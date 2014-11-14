@@ -24,6 +24,7 @@ var NAVTREEINDEX1 =
 "eth_8h.html#ad67aa3eb3b4517f80ebf59a2b845ffc5":[4,0,1,2,0,0,1,9],
 "eth_8h.html#aec9f2aac7e6a6448440cf0e28bb401e8":[4,0,1,2,0,0,1,5],
 "eth_8h_source.html":[4,0,1,2,0,0,1],
+"examples.html":[5],
 "exec_8c.html":[4,0,1,8],
 "exec_8c.html#a025c79223b0fee4676337d660f76b59b":[4,0,1,8,24],
 "exec_8c.html#a1566f4c14cff9f4b539b00af54d62dbb":[4,0,1,8,30],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "globals_func_h.html":[4,1,1,8],
 "globals_func_i.html":[4,1,1,9],
 "globals_func_k.html":[4,1,1,10],
-"globals_func_l.html":[4,1,1,11],
-"globals_func_m.html":[4,1,1,12]
+"globals_func_l.html":[4,1,1,11]
 };

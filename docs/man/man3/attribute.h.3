@@ -71,7 +71,7 @@ Definition at line 12 of file attribute\&.h\&.
 \fBValue:\fP
 .PP
 .nf
-attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section("\&.attribute"))) = {   \\
+attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section("\&.attribute"))) = {    \\
 		name, (uint32_t) &value                                                                       \
     }                                                                                               \
 .fi

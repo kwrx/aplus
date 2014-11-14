@@ -1,0 +1,251 @@
+\hypertarget{list_8h-example}{\section{list.\+h}
+}
+Initialization \begin{DoxyVerb}list_t test = NULL;
+list_init(test);
+
+for(int i = 0; i < 10; i++)
+    list_add(test, (listval_t) i);
+\end{DoxyVerb}
+
+
+Iterate list. Output\+: 0, 1, 2, 3, ... 9 \begin{DoxyVerb}list_foreach(v, test)
+    printf("%d\n", v);
+\end{DoxyVerb}
+
+
+Iterate list conversly. Output\+: 9, 8, 7, 6, ... 0 \begin{DoxyVerb}list_foreach_reverse(v, test)
+    printf("%d\n", v);
+\end{DoxyVerb}
+
+
+Remove a value \begin{DoxyVerb}list_remove(test, (listval_t) 2);
+\end{DoxyVerb}
+
+
+Destroy \begin{DoxyVerb}list_destroy(test);\end{DoxyVerb}
+
+
+
+\begin{DoxyCodeInclude}
+\textcolor{comment}{//}
+\textcolor{comment}{//  list.h}
+\textcolor{comment}{//}
+\textcolor{comment}{//  Author:}
+\textcolor{comment}{//       Antonio Natale <inferdevil97@gmail.com>}
+\textcolor{comment}{//}
+\textcolor{comment}{//  Copyright (c) 2014 WareX}
+\textcolor{comment}{//}
+\textcolor{comment}{//  This program is free software: you can redistribute it and/or modify}
+\textcolor{comment}{//  it under the terms of the GNU General Public License as published by}
+\textcolor{comment}{//  the Free Software Foundation, either version 3 of the License, or}
+\textcolor{comment}{//  (at your option) any later version.}
+\textcolor{comment}{//}
+\textcolor{comment}{//  This program is distributed in the hope that it will be useful,}
+\textcolor{comment}{//  but WITHOUT ANY WARRANTY; without even the implied warranty of}
+\textcolor{comment}{//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the}
+\textcolor{comment}{//  GNU General Public License for more details.}
+\textcolor{comment}{//}
+\textcolor{comment}{//  You should have received a copy of the GNU General Public License}
+\textcolor{comment}{//  along with this program.  If not, see <http://www.gnu.org/licenses/>.}
+
+\textcolor{preprocessor}{#ifndef \_LIST\_H}
+\textcolor{preprocessor}{#define \_LIST\_H}
+
+\textcolor{preprocessor}{#include <stddef.h>}
+\textcolor{preprocessor}{#include <stdint.h>}
+\textcolor{preprocessor}{#include <sys/types.h>}
+
+\textcolor{preprocessor}{#if defined(\_\_aplus\_\_)}
+\textcolor{preprocessor}{#include <\hyperlink{spinlock_8h}{aplus/spinlock.h}>}
+\textcolor{preprocessor}{#include <\hyperlink{mm_8h}{aplus/mm.h}>}
+
+
+\textcolor{preprocessor}{#define \_\_list\_malloc(x)        kmalloc(x)}
+\textcolor{preprocessor}{#define \_\_list\_free(x)          kfree(x)}
+\textcolor{preprocessor}{#define \_\_list\_lock(x)          spinlock\_lock(x)}
+\textcolor{preprocessor}{#define \_\_list\_unlock(x)        spinlock\_unlock(x)}
+\textcolor{preprocessor}{#define \_\_list\_lock\_t           spinlock\_t}
+
+\textcolor{preprocessor}{#endif}
+
+\textcolor{keyword}{typedef} \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t};
+
+\textcolor{keyword}{typedef} \textcolor{keyword}{struct }\hyperlink{structlist__body}{list\_body} \{
+    listval\_t \hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value};
+    
+    \textcolor{keyword}{struct }\hyperlink{structlist__body}{list\_body}* \hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+\} \hyperlink{list_8h_a26009b16c17e2336df1025f49f3ebd7e}{list\_body\_t};
+
+\textcolor{keyword}{typedef} \textcolor{keyword}{struct }list \{
+    \hyperlink{structlist__body}{list\_body\_t}* \hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+    
+    \_\_list\_lock\_t \hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock};
+    \textcolor{keywordtype}{size\_t} \hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size};
+\} \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\_t};
+
+
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int} \hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{structlist}{list\_t}* list) \{
+    \textcolor{keywordflow}{if}(list)
+        \textcolor{keywordflow}{return} list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} == 0;
+    \textcolor{keywordflow}{else}
+        \textcolor{keywordflow}{return} 1;   \textcolor{comment}{/* empty */}
+\}
+
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int} \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(\hyperlink{structlist}{list\_t}* list, listval\_t v) \{
+    \hyperlink{structlist__body}{list\_body\_t}* val = (\hyperlink{structlist__body}{list\_body\_t}*) \_\_list\_malloc(\textcolor{keyword}{sizeof}(
+      \hyperlink{structlist__body}{list\_body\_t}));
+    \textcolor{keywordflow}{if}(!val)
+        \textcolor{keywordflow}{return} -1;
+        
+    \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+        
+    val->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} = v;
+    val->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next} = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+    
+    list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = val;
+    list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} += 1;
+    
+    \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+    \textcolor{keywordflow}{return} 0;
+\}
+
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int} \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\_remove}(\hyperlink{structlist}{list\_t}* list, listval\_t v) \{
+    \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+    
+    \hyperlink{structlist__body}{list\_body\_t}* body = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+    \hyperlink{structlist__body}{list\_body\_t}* prev = 0;
+    
+    \textcolor{keywordflow}{while}(body) \{
+        \textcolor{keywordflow}{if}(body->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} == v) \{
+            \textcolor{keywordflow}{if}(prev)
+                prev->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next} = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+            \textcolor{keywordflow}{else}
+                list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+                
+            body->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} = 0;
+            \_\_list\_free(body);
+            \textcolor{keywordflow}{break};
+        \}
+        
+        prev = body;
+        body = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+    \}
+    
+    \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+    \textcolor{keywordflow}{return} 0;
+\}
+
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{int} \hyperlink{list_8h_ae055500d6fc23c82c45b2e5926df3b40}{list\_clear}(\hyperlink{structlist}{list\_t}* list) \{
+    \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+    
+    \hyperlink{structlist__body}{list\_body\_t}* body = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+    \hyperlink{structlist__body}{list\_body\_t}* tmp = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+    
+    \textcolor{keywordflow}{while}(body) \{
+        tmp = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+        \_\_list\_free(body);
+        body = tmp;
+    \}
+    
+    list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = 0;
+    list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} = 0;
+    
+    \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+    \textcolor{keywordflow}{return} 0;
+\}
+
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \hyperlink{list_8h_ad29245eda34d4cdac400323a1bd63cdd}{list\_clone}(\hyperlink{structlist}{list\_t}* dest, \hyperlink{structlist}{list\_t}* src) \{
+    \_\_list\_lock(&src->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+    
+    \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = src->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
+        \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(dest, i->value);
+    \}
+    
+    \_\_list\_unlock(&src->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+\}
+
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} listval\_t \hyperlink{list_8h_ae9b833d2dc140368303ecffecce7fe3f}{list\_prev}(\hyperlink{structlist}{list\_t}* list, listval\_t val) \{
+    \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
+        \textcolor{keywordflow}{if}(i->value == val)
+            \textcolor{keywordflow}{if}(i->next)
+                \textcolor{keywordflow}{return} i->next->value;
+    \}
+    
+    \textcolor{keywordflow}{return} (listval\_t) NULL;
+\}
+
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} listval\_t \hyperlink{list_8h_abcd4418be12b04265c44dd69a1cfee1f}{list\_next}(\hyperlink{structlist}{list\_t}* list, listval\_t val) \{
+    \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
+        \textcolor{keywordflow}{if}(i->next)
+            \textcolor{keywordflow}{if}(i->next->value == val)
+                \textcolor{keywordflow}{return} i->value;
+    \}
+    
+    \textcolor{keywordflow}{return} (listval\_t) NULL;
+\}
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} listval\_t \hyperlink{list_8h_aea7ba4088b37f0bd303771d71a066a90}{list\_tail}(\hyperlink{structlist}{list\_t}* list) \{
+    \textcolor{keywordflow}{if}(list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body})
+        \textcolor{keywordflow}{return} list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value};
+        
+    \textcolor{keywordflow}{return} (listval\_t) NULL;
+\}
+
+\textcolor{keyword}{static} \textcolor{keyword}{inline} listval\_t \hyperlink{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}{list\_head}(\hyperlink{structlist}{list\_t}* list) \{
+
+    \textcolor{keywordflow}{if}(!list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body})
+        \textcolor{keywordflow}{return} (listval\_t) NULL;
+    
+    \hyperlink{structlist__body}{list\_body\_t}* tmp = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+    \textcolor{keywordflow}{while}(tmp->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next})
+        tmp = tmp->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+        
+    \textcolor{keywordflow}{return} (listval\_t) tmp->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value};
+\}
+
+
+\textcolor{preprocessor}{#define list\_safe\_begin(list)                               \(\backslash\)}
+\textcolor{preprocessor}{    \_\_list\_lock(&list->lock)}
+    
+\textcolor{preprocessor}{#define list\_safe\_end(list)                                 \(\backslash\)}
+\textcolor{preprocessor}{    \_\_list\_unlock(&list->lock)}
+    
+
+\textcolor{preprocessor}{#define list\_foreach(value, list)                           \(\backslash\)}
+\textcolor{preprocessor}{    for(listval\_t value = list\_head(list);                  \(\backslash\)}
+\textcolor{preprocessor}{        value;                                              \(\backslash\)}
+\textcolor{preprocessor}{        value = list\_next(list, value)                      \(\backslash\)}
+\textcolor{preprocessor}{        )}
+    
+\textcolor{preprocessor}{#define list\_foreach\_reverse(value, list)                   \(\backslash\)}
+\textcolor{preprocessor}{    for(listval\_t value = list\_tail(list);                  \(\backslash\)}
+\textcolor{preprocessor}{        value;                                              \(\backslash\)}
+\textcolor{preprocessor}{        value = list\_prev(list, value)                      \(\backslash\)}
+\textcolor{preprocessor}{        )}
+
+
+\textcolor{preprocessor}{#define list\_size(list)                                     \(\backslash\)}
+\textcolor{preprocessor}{    list->size}
+
+\textcolor{preprocessor}{#define list\_init(list)                                     \(\backslash\)}
+\textcolor{preprocessor}{    list = (list\_t*) \_\_list\_malloc(sizeof(list\_t));         \(\backslash\)}
+\textcolor{preprocessor}{    list->body = 0;                                         \(\backslash\)}
+\textcolor{preprocessor}{    list->size = 0;                                         \(\backslash\)}
+\textcolor{preprocessor}{    list->lock = 0}
+
+\textcolor{preprocessor}{#define list\_destroy(list)                                  \(\backslash\)}
+\textcolor{preprocessor}{    list\_clear(list);                                       \(\backslash\)}
+\textcolor{preprocessor}{    \_\_list\_free(list)}
+
+
+
+\textcolor{preprocessor}{#endif}
+\end{DoxyCodeInclude}
+ 

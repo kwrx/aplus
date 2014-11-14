@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <errno.h>
 
+#define ELF32_ADDRSPACE_MIN_LENGTH		0x100000
+
 
 typedef uint32_t Elf32_Addr;
 typedef uint16_t Elf32_Half;
@@ -52,6 +54,18 @@ typedef uint32_t Elf32_Word;
 #define SHF_EXECINSTR		4
 #define SHF_MASK			0xF0000000
 
+
+
+#define PT_NULL				0
+#define PT_LOAD				1
+#define PT_DYNAMIC			2
+#define PT_INTERP			3
+#define PT_NOTE				4
+#define PT_SHLIB			5
+#define PT_PHDR				6
+#define PT_LOPROC			0x70000000
+#define PT_HIPROC			0x7FFFFFFF
+
 /**
  *	\brief Enable or disable debug for ELF.
  */
@@ -95,6 +109,20 @@ typedef struct elf32_shdr {
 } elf32_shdr_t;
 
 
+/**
+ *	\brief ELF32 Program Header.
+ */
+typedef struct elf32_phdr {
+	Elf32_Word p_type;
+	Elf32_Off p_offset;
+	Elf32_Addr p_vaddr;
+	Elf32_Addr p_paddr;
+	Elf32_Word p_filesz;
+	Elf32_Word p_memsz;
+	Elf32_Word p_flags;
+	Elf32_Word p_align;
+} elf32_phdr_t;
+
 
 /**
  *	\brief Check for valid ELF32 header.
@@ -102,6 +130,11 @@ typedef struct elf32_shdr {
  * 	\return 0 for valid header or -1 in case of errors.
  */
 int elf32_check(elf32_hdr_t* hdr) {
+
+	if(!hdr) {
+		errno = EINVAL;	
+		return -1;
+	}
 
 	#define check(cond)				\
 		if(cond) {					\
@@ -124,11 +157,55 @@ int elf32_check(elf32_hdr_t* hdr) {
 
 
 /**
+ *	\brief Get Address Space of ELF32 Executable.
+ *	\param hdr ELF32 Header.
+ *	\param ptr Pointer to start of memory address.
+ *	\param size Size of memory address.
+ *	\return if success 0, otherwise -1.
+ */
+int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
+	if(elf32_check(hdr) < 0)
+		return -1;
+
+	elf32_phdr_t* phdr = (elf32_phdr_t*) ((uint32_t) hdr->e_phoff + (uint32_t) hdr);
+	int pn = hdr->e_phnum;
+	int ps = hdr->e_phentsize;
+
+	int p = 0;
+	int s = 0;
+
+	for(int i = 0; i < pn; i++) {
+		if(!p || p > phdr->p_vaddr)
+			p = phdr->p_vaddr;
+
+		s += phdr->p_memsz;
+		phdr = (elf32_phdr_t*) ((uint32_t) phdr + ps);
+	}
+
+	if(s < ELF32_ADDRSPACE_MIN_LENGTH)
+		s = ELF32_ADDRSPACE_MIN_LENGTH;
+
+#ifdef ELF_DEBUG
+	kprintf("elf: address space at 0x%x (%d Bytes)\n", p, s);
+#endif
+
+
+	if(ptr)
+		*ptr = p;
+
+	if(size)
+		*size = s;
+
+	return 0;
+}
+
+
+/**
  *	\brief Load a ELF32 Executable image.
  *	\param image pointer to buffer address of a executable loaded in memory.
  *	\return Entry Point address.
  */
-void* elf32_load(void* image) {
+void* elf32_load(void* image, int* vaddr, int* vsize) {
 	if(image == NULL) {
 		errno = EINVAL;
 		return NULL;
@@ -138,11 +215,24 @@ void* elf32_load(void* image) {
 		return NULL;
 
 	elf32_hdr_t* hdr = (elf32_hdr_t*) image;
+
+	int iptr, isiz;
+	if(elf32_getspace(hdr, &iptr, &isiz) != 0)
+		panic("elf: cannot found a valid address space"); 
+	vmm_alloc(iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
+
+	if(vaddr)
+		*vaddr = iptr;
+	if(vsize)
+		*vsize = isiz;
+
+
 	elf32_shdr_t* sec = (elf32_shdr_t*) ((uint32_t) hdr->e_shoff + (uint32_t) hdr);
 	
 	int sn = hdr->e_shnum;
 	int ss = hdr->e_shentsize;
-	 
+
 	for(int i = 0; i < sn; i++) {
 		
 		if(sec->sh_addr && sec->sh_offset) {
@@ -153,13 +243,10 @@ void* elf32_load(void* image) {
 
 
 			if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
-				panic("elf section overflow");
+				panic("elf: section overflow");
 			
-
-			if(vmm_alloc((void*) sec->sh_addr, sec->sh_size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER))
-				memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
-			else
-				panic("elf: cannot allocate memory");
+			
+			memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
 		}
 
 		sec = (elf32_shdr_t*) ((uint32_t) sec + ss);

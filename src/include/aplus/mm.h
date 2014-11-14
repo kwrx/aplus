@@ -33,7 +33,7 @@
  * 0x40000000 - 0xE0000000:		Kernel Heap
  * 0xE0000000 - 0xF0000000;		Linear Frame Buffer (User)
  * 0xF0000000 - 0xFFFFFFFF;		Kernel Heap
-*/
+ */
 
 #define MM_VBASE			0x40000000
 #define MM_VSIZE			(0xFFFFFFFF - MM_VBASE)

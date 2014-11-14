@@ -53,13 +53,17 @@ int sys_execve(char* filename, char** argv, char** environ) {
 	}
 
 	
-
-	void (*entry) () = (void (*) ()) elf32_load(image);
+	int vaddr, vsize;
+	void (*entry) () = (void (*) ()) elf32_load(image, &vaddr, &vsize);
 	if(entry) {
 
 		current_task->exe = current_task->fd[fd];
 		current_task->argv = argv;
 		current_task->envp = environ;
+
+		current_task->image.ptr = image;
+		current_task->image.vaddr = vaddr;
+		current_task->image.length = vsize;
 
 		sys_close(fd);
 

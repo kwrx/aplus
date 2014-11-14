@@ -225,9 +225,9 @@
         <references refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" compoundref="aplus_8h" startline="139">fs</references>
         <references refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" compoundref="src_2sched_8c" startline="58" endline="69">im_superuser</references>
         <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="41">inode::ino</references>
-        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="202">list_destroy</references>
-        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="58" endline="63">list_empty</references>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="292">list_destroy</references>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="64" endline="69">list_empty</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="42">inode::mode</references>
         <references refid="structfsys_1ae6e5dcfb76d76f9636b95525ac63f4cb" compoundref="fsys_8h" startline="9">fsys::mount</references>
         <references refid="structfsys_1a8c3f03ed1ac90dac03da844178857891" compoundref="fsys_8h" startline="8">fsys::name</references>

@@ -435,8 +435,8 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/include/aplus/attribute.h" line="31" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/attribute.h" bodystart="31" bodyend="51"/>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="78" endline="93">list_add</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="282">list_init</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       </sectiondef>

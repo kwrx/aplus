@@ -243,7 +243,7 @@ int tty_open(int* master, int* slave, char* name, struct termios* ios, struct wi
 	char fname[32];
 	memset(fname, 0, 32);
 
-	ksprintf(fname, "/dev/tty%d", (int) ttydevs->size);
+	ksprintf(fname, "/dev/tty%d", (int) list_size(ttydevs));
 
 	int fd = sys_open(fname, O_CREAT | O_EXCL | O_RDWR, S_IFCHR);
 	if(fd < 0) {
@@ -283,7 +283,7 @@ int tty_open(int* master, int* slave, char* name, struct termios* ios, struct wi
 	tty->fg = current_task->pid;
 	tty->bg = -1;
 
-	tty->id = ttydevs->size;
+	tty->id = list_size(ttydevs);
 
 	tty->output = __default_tty_output;
 

@@ -171,7 +171,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="22" bodyend="25"/>
         <references refid="structinode_1a1a77be0f24a6c9a18bbdbcecfb75df7c" compoundref="fs_8h" startline="41">inode::ino</references>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="78" endline="93">list_add</references>
         <references refid="vfs_8c_1ad11ac1a0eb756180b648d9ac7d53b169" compoundref="vfs_8c" startline="17">nextinode</references>
       </memberdef>
       <memberdef kind="function" id="vfs_8c_1a13a7520e2fe9380c3ed93472d0c800bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -191,7 +191,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="27" bodyend="30"/>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
-        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="82" endline="106">list_remove</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
       </memberdef>
       <memberdef kind="function" id="vfs_8c_1a99334446cfc1dfc32088d838b4f2895c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
@@ -213,7 +213,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="32" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="32" bodyend="42"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" compoundref="fs_8h" startline="38">inode::name</references>
         <references refid="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" compoundref="fs_8h" startline="71">inode::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
@@ -238,7 +238,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="44" bodyend="56"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" compoundref="fs_8h" startline="71">inode::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
@@ -258,7 +258,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="58" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="58" bodyend="69"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structinode_1a2d4fac4ae14332628e6fa2bd55dd3121" compoundref="fs_8h" startline="71">inode::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
@@ -306,8 +306,8 @@
         <references refid="structinode_1a636843da203574bc338b016758bf8c7e" compoundref="fs_8h" startline="68">inode::ioctl</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="structinode_1a3533c53c5391601c66b3ae0f389c0843" compoundref="fs_8h" startline="72">inode::link</references>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="78" endline="93">list_add</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="282">list_init</references>
         <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="42">inode::mode</references>
         <references refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" compoundref="fs_8h" startline="51">inode::mtime</references>
         <references refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" compoundref="fs_8h" startline="38">inode::name</references>

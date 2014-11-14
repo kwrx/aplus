@@ -518,7 +518,7 @@
 <codeline lineno="33"><highlight class="comment"><sp/>*<sp/>0x40000000<sp/>-<sp/>0xE0000000:<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Heap</highlight></codeline>
 <codeline lineno="34"><highlight class="comment"><sp/>*<sp/>0xE0000000<sp/>-<sp/>0xF0000000;<sp/><sp/><sp/><sp/><sp/>Linear<sp/>Frame<sp/>Buffer<sp/>(User)</highlight></codeline>
 <codeline lineno="35"><highlight class="comment"><sp/>*<sp/>0xF0000000<sp/>-<sp/>0xFFFFFFFF;<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Heap</highlight></codeline>
-<codeline lineno="36"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="37"><highlight class="normal"></highlight></codeline>
 <codeline lineno="38" refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_VBASE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x40000000</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="39" refid="mm_8h_1afbad6879737307d726ae456844b05320" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_VSIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(0xFFFFFFFF<sp/>-<sp/>MM_VBASE)</highlight><highlight class="normal"></highlight></codeline>

@@ -6,6 +6,9 @@
 #include <errno.h>
 
 
+#define SYSCALL_DEBUG
+
+
 static void** syscall_handlers = NULL;
 
 int syscall_init() {
@@ -49,12 +52,13 @@ int syscall_init() {
 	return 0;
 }
 
-int syscall_invoke(void* handler, int p0, int p1, int p2, int p3, int p4) {
+int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4) {
+	void* handler = syscall_handlers[idx];	
+
 	if(handler == NULL) {
 		errno = ENOSYS;
 		return -1;
 	}
-
 
 	int r = 0;
 
@@ -75,5 +79,16 @@ int syscall_invoke(void* handler, int p0, int p1, int p2, int p3, int p4) {
 
 
 int syscall_handler(regs_t* r) {
-	return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
+
+#ifdef SYSCALL_DEBUG
+	kprintf("syscall: called %d (%x, %x, %x, %x, %x);", r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+#endif
+
+	int ret = syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+
+#ifdef SYSCALL_DEBUG
+	kprintf(" returned %x\n", ret);
+#endif
+
+	return ret;
 }

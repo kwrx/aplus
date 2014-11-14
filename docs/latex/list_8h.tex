@@ -15,17 +15,19 @@ struct \hyperlink{structlist}{list}
 \begin{DoxyCompactItemize}
 \item 
 \#define \hyperlink{list_8h_a22853dfff2d59e6a8ea2d77eeed5f293}{list\+\_\+safe\+\_\+begin}(\hyperlink{structlist}{list})~\+\_\+\+\_\+list\+\_\+lock(\&\hyperlink{structlist}{list}-\/$>$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock})
-\item 
+\begin{DoxyCompactList}\small\item\em Lock a list for safe operations on it. \end{DoxyCompactList}\item 
 \#define \hyperlink{list_8h_a55d0a2f3e6dcbf7213b13e9e0dd9d981}{list\+\_\+safe\+\_\+end}(\hyperlink{structlist}{list})~\+\_\+\+\_\+list\+\_\+unlock(\&\hyperlink{structlist}{list}-\/$>$\hyperlink{spinlock_8h_aea28b4c44db4f0f1d0f222d6382c04c0}{lock})
-\item 
+\begin{DoxyCompactList}\small\item\em Unlock a list. \end{DoxyCompactList}\item 
 \#define \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\+\_\+foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{structlist}{list})
-\item 
-\#define \hyperlink{list_8h_a6e172d1395eb664ce14adbb6ab82abf3}{list\+\_\+foreach\+\_\+inverse}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{structlist}{list})
-\item 
+\begin{DoxyCompactList}\small\item\em Iterating a list and save each value in \char`\"{}value\char`\"{}. \end{DoxyCompactList}\item 
+\#define \hyperlink{list_8h_a548f0cb42e0622f6b4d71c2769bcb502}{list\+\_\+foreach\+\_\+reverse}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, \hyperlink{structlist}{list})
+\begin{DoxyCompactList}\small\item\em Iterating a list and save each value in \char`\"{}value\char`\"{} conversely. \end{DoxyCompactList}\item 
+\#define \hyperlink{list_8h_af39ba1612dbf2ed0f90e335a2d9a8a04}{list\+\_\+size}(\hyperlink{structlist}{list})~\hyperlink{structlist}{list}-\/$>$\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}
+\begin{DoxyCompactList}\small\item\em Get size of list. \end{DoxyCompactList}\item 
 \#define \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\+\_\+init}(\hyperlink{structlist}{list})
-\item 
+\begin{DoxyCompactList}\small\item\em Initialize a list. \end{DoxyCompactList}\item 
 \#define \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\+\_\+destroy}(\hyperlink{structlist}{list})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Destroy a list. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
@@ -39,23 +41,23 @@ typedef struct \hyperlink{structlist}{list} \hyperlink{list_8h_af629e6a6713d7de1
 \begin{DoxyCompactItemize}
 \item 
 static int \hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\+\_\+empty} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list})
-\item 
+\begin{DoxyCompactList}\small\item\em Check if list is empty or unitialized. \end{DoxyCompactList}\item 
 static int \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\+\_\+add} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list}, \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} v)
-\item 
+\begin{DoxyCompactList}\small\item\em Add value to the list. \end{DoxyCompactList}\item 
 static int \hyperlink{list_8h_a4470c240b622941415ae5250067699b5}{list\+\_\+remove} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list}, \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} v)
-\item 
+\begin{DoxyCompactList}\small\item\em Remove value to the list. \end{DoxyCompactList}\item 
 static int \hyperlink{list_8h_ae055500d6fc23c82c45b2e5926df3b40}{list\+\_\+clear} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list})
-\item 
+\begin{DoxyCompactList}\small\item\em Erase all values in the list. \end{DoxyCompactList}\item 
 static void \hyperlink{list_8h_ad29245eda34d4cdac400323a1bd63cdd}{list\+\_\+clone} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{ipv6_8h_ab4bf83701631abccacef4ebedf8db65e}{dest}, \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$src)
-\item 
+\begin{DoxyCompactList}\small\item\em Copy all values in the src's list to dest's list. \end{DoxyCompactList}\item 
 static \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} \hyperlink{list_8h_ae9b833d2dc140368303ecffecce7fe3f}{list\+\_\+prev} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list}, \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} val)
-\item 
+\begin{DoxyCompactList}\small\item\em Get previous value in the list. \end{DoxyCompactList}\item 
 static \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} \hyperlink{list_8h_abcd4418be12b04265c44dd69a1cfee1f}{list\+\_\+next} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list}, \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} val)
-\item 
+\begin{DoxyCompactList}\small\item\em Get next value in the list. \end{DoxyCompactList}\item 
 static \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} \hyperlink{list_8h_aea7ba4088b37f0bd303771d71a066a90}{list\+\_\+tail} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list})
-\item 
+\begin{DoxyCompactList}\small\item\em Get last value in the list. \end{DoxyCompactList}\item 
 static \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} \hyperlink{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}{list\+\_\+head} (\hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$\hyperlink{structlist}{list})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Get first value in the list. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Macro Definition Documentation}
@@ -73,7 +75,16 @@ static \hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\+\_\+t} \hy
 \end{DoxyCode}
 
 
-Definition at line 202 of file list.\+h.
+Destroy a list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 292 of file list.\+h.
 
 \hypertarget{list_8h_a1f44c976d2c698407a17fef984a5b232}{\index{list.\+h@{list.\+h}!list\+\_\+foreach@{list\+\_\+foreach}}
 \index{list\+\_\+foreach@{list\+\_\+foreach}!list.\+h@{list.\+h}}
@@ -93,16 +104,27 @@ Definition at line 202 of file list.\+h.
 \end{DoxyCode}
 
 
-Definition at line 184 of file list.\+h.
+Iterating a list and save each value in \char`\"{}value\char`\"{}. 
 
-\hypertarget{list_8h_a6e172d1395eb664ce14adbb6ab82abf3}{\index{list.\+h@{list.\+h}!list\+\_\+foreach\+\_\+inverse@{list\+\_\+foreach\+\_\+inverse}}
-\index{list\+\_\+foreach\+\_\+inverse@{list\+\_\+foreach\+\_\+inverse}!list.\+h@{list.\+h}}
-\subsubsection[{list\+\_\+foreach\+\_\+inverse}]{\setlength{\rightskip}{0pt plus 5cm}\#define list\+\_\+foreach\+\_\+inverse(
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Value where save each iteration. \\
+\hline
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 253 of file list.\+h.
+
+\hypertarget{list_8h_a548f0cb42e0622f6b4d71c2769bcb502}{\index{list.\+h@{list.\+h}!list\+\_\+foreach\+\_\+reverse@{list\+\_\+foreach\+\_\+reverse}}
+\index{list\+\_\+foreach\+\_\+reverse@{list\+\_\+foreach\+\_\+reverse}!list.\+h@{list.\+h}}
+\subsubsection[{list\+\_\+foreach\+\_\+reverse}]{\setlength{\rightskip}{0pt plus 5cm}\#define list\+\_\+foreach\+\_\+reverse(
 \begin{DoxyParamCaption}
 \item[{}]{{\bf value}, }
 \item[{}]{{\bf list}}
 \end{DoxyParamCaption}
-)}}\label{list_8h_a6e172d1395eb664ce14adbb6ab82abf3}
+)}}\label{list_8h_a548f0cb42e0622f6b4d71c2769bcb502}
 {\bfseries Value\+:}
 \begin{DoxyCode}
 \textcolor{keywordflow}{for}(\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t} \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value} = \hyperlink{list_8h_aea7ba4088b37f0bd303771d71a066a90}{list\_tail}(\hyperlink{structlist}{list});                   
@@ -113,7 +135,18 @@ Definition at line 184 of file list.\+h.
 \end{DoxyCode}
 
 
-Definition at line 190 of file list.\+h.
+Iterating a list and save each value in \char`\"{}value\char`\"{} conversely. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Value where save each iteration. \\
+\hline
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 264 of file list.\+h.
 
 \hypertarget{list_8h_aa288c0785df071ed8643763202928c82}{\index{list.\+h@{list.\+h}!list\+\_\+init@{list\+\_\+init}}
 \index{list\+\_\+init@{list\+\_\+init}!list.\+h@{list.\+h}}
@@ -131,7 +164,16 @@ Definition at line 190 of file list.\+h.
 \end{DoxyCode}
 
 
-Definition at line 196 of file list.\+h.
+Initialize a list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 282 of file list.\+h.
 
 \hypertarget{list_8h_a22853dfff2d59e6a8ea2d77eeed5f293}{\index{list.\+h@{list.\+h}!list\+\_\+safe\+\_\+begin@{list\+\_\+safe\+\_\+begin}}
 \index{list\+\_\+safe\+\_\+begin@{list\+\_\+safe\+\_\+begin}!list.\+h@{list.\+h}}
@@ -142,7 +184,16 @@ Definition at line 196 of file list.\+h.
 )~\+\_\+\+\_\+list\+\_\+lock(\&{\bf list}-\/$>${\bf lock})}}\label{list_8h_a22853dfff2d59e6a8ea2d77eeed5f293}
 
 
-Definition at line 178 of file list.\+h.
+Lock a list for safe operations on it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 237 of file list.\+h.
 
 \hypertarget{list_8h_a55d0a2f3e6dcbf7213b13e9e0dd9d981}{\index{list.\+h@{list.\+h}!list\+\_\+safe\+\_\+end@{list\+\_\+safe\+\_\+end}}
 \index{list\+\_\+safe\+\_\+end@{list\+\_\+safe\+\_\+end}!list.\+h@{list.\+h}}
@@ -153,7 +204,36 @@ Definition at line 178 of file list.\+h.
 )~\+\_\+\+\_\+list\+\_\+unlock(\&{\bf list}-\/$>${\bf lock})}}\label{list_8h_a55d0a2f3e6dcbf7213b13e9e0dd9d981}
 
 
-Definition at line 181 of file list.\+h.
+Unlock a list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 244 of file list.\+h.
+
+\hypertarget{list_8h_af39ba1612dbf2ed0f90e335a2d9a8a04}{\index{list.\+h@{list.\+h}!list\+\_\+size@{list\+\_\+size}}
+\index{list\+\_\+size@{list\+\_\+size}!list.\+h@{list.\+h}}
+\subsubsection[{list\+\_\+size}]{\setlength{\rightskip}{0pt plus 5cm}\#define list\+\_\+size(
+\begin{DoxyParamCaption}
+\item[{}]{{\bf list}}
+\end{DoxyParamCaption}
+)~{\bf list}-\/$>${\bf size}}}\label{list_8h_af39ba1612dbf2ed0f90e335a2d9a8a04}
+
+
+Get size of list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 275 of file list.\+h.
 
 
 
@@ -161,12 +241,21 @@ Definition at line 181 of file list.\+h.
 \hypertarget{list_8h_a26009b16c17e2336df1025f49f3ebd7e}{\index{list.\+h@{list.\+h}!list\+\_\+body\+\_\+t@{list\+\_\+body\+\_\+t}}
 \index{list\+\_\+body\+\_\+t@{list\+\_\+body\+\_\+t}!list.\+h@{list.\+h}}
 \subsubsection[{list\+\_\+body\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf list\+\_\+body}  {\bf list\+\_\+body\+\_\+t}}}\label{list_8h_a26009b16c17e2336df1025f49f3ebd7e}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
 \hypertarget{list_8h_af629e6a6713d7de11eab50cbe6449b06}{\index{list.\+h@{list.\+h}!list\+\_\+t@{list\+\_\+t}}
 \index{list\+\_\+t@{list\+\_\+t}!list.\+h@{list.\+h}}
 \subsubsection[{list\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf list}  {\bf list\+\_\+t}}}\label{list_8h_af629e6a6713d7de11eab50cbe6449b06}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
 \hypertarget{list_8h_a83bc1af7566502e08756b8d8c425972e}{\index{list.\+h@{list.\+h}!listval\+\_\+t@{listval\+\_\+t}}
 \index{listval\+\_\+t@{listval\+\_\+t}!list.\+h@{list.\+h}}
 \subsubsection[{listval\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint32\+\_\+t} {\bf listval\+\_\+t}}}\label{list_8h_a83bc1af7566502e08756b8d8c425972e}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
 
 
 Definition at line 42 of file list.\+h.
@@ -184,7 +273,24 @@ Definition at line 42 of file list.\+h.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}
 
 
-Definition at line 65 of file list.\+h.
+Add value to the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+{\em v} & Value to add. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if success, otherwise -\/1. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 78 of file list.\+h.
 
 
 
@@ -192,23 +298,23 @@ References list\+::body, list\+::lock, list\+\_\+body\+::next, list\+::size, and
 
 
 \begin{DoxyCode}
-65                                                       \{
-66     \hyperlink{structlist__body}{list\_body\_t}* val = (\hyperlink{structlist__body}{list\_body\_t}*) \_\_list\_malloc(\textcolor{keyword}{sizeof}(
+78                                                       \{
+79     \hyperlink{structlist__body}{list\_body\_t}* val = (\hyperlink{structlist__body}{list\_body\_t}*) \_\_list\_malloc(\textcolor{keyword}{sizeof}(
       \hyperlink{structlist__body}{list\_body\_t}));
-67     \textcolor{keywordflow}{if}(!val)
-68         \textcolor{keywordflow}{return} -1;
-69         
-70     \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-71         
-72     val->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} = v;
-73     val->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next} = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
-74     
-75     list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = val;
-76     list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} += 1;
-77     
-78     \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-79     \textcolor{keywordflow}{return} 0;
-80 \}
+80     \textcolor{keywordflow}{if}(!val)
+81         \textcolor{keywordflow}{return} -1;
+82         
+83     \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+84         
+85     val->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} = v;
+86     val->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next} = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+87     
+88     list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = val;
+89     list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} += 1;
+90     
+91     \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+92     \textcolor{keywordflow}{return} 0;
+93 \}
 \end{DoxyCode}
 \hypertarget{list_8h_ae055500d6fc23c82c45b2e5926df3b40}{\index{list.\+h@{list.\+h}!list\+\_\+clear@{list\+\_\+clear}}
 \index{list\+\_\+clear@{list\+\_\+clear}!list.\+h@{list.\+h}}
@@ -219,7 +325,22 @@ References list\+::body, list\+::lock, list\+\_\+body\+::next, list\+::size, and
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_ae055500d6fc23c82c45b2e5926df3b40}
 
 
-Definition at line 108 of file list.\+h.
+Erase all values in the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if success, otherwise -\/1. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 134 of file list.\+h.
 
 
 
@@ -227,24 +348,24 @@ References list\+::body, list\+::lock, list\+\_\+body\+::next, and list\+::size.
 
 
 \begin{DoxyCode}
-108                                            \{
-109     \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-110     
-111     \hyperlink{structlist__body}{list\_body\_t}* body = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
-112     \hyperlink{structlist__body}{list\_body\_t}* tmp = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
-113     
-114     \textcolor{keywordflow}{while}(body) \{
-115         tmp = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
-116         \_\_list\_free(body);
-117         body = tmp;
-118     \}
-119     
-120     list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = 0;
-121     list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} = 0;
-122     
-123     \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-124     \textcolor{keywordflow}{return} 0;
-125 \}
+134                                            \{
+135     \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+136     
+137     \hyperlink{structlist__body}{list\_body\_t}* body = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+138     \hyperlink{structlist__body}{list\_body\_t}* tmp = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+139     
+140     \textcolor{keywordflow}{while}(body) \{
+141         tmp = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+142         \_\_list\_free(body);
+143         body = tmp;
+144     \}
+145     
+146     list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = 0;
+147     list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} = 0;
+148     
+149     \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+150     \textcolor{keywordflow}{return} 0;
+151 \}
 \end{DoxyCode}
 \hypertarget{list_8h_ad29245eda34d4cdac400323a1bd63cdd}{\index{list.\+h@{list.\+h}!list\+\_\+clone@{list\+\_\+clone}}
 \index{list\+\_\+clone@{list\+\_\+clone}!list.\+h@{list.\+h}}
@@ -256,7 +377,21 @@ References list\+::body, list\+::lock, list\+\_\+body\+::next, and list\+::size.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_ad29245eda34d4cdac400323a1bd63cdd}
 
 
-Definition at line 128 of file list.\+h.
+Copy all values in the src's list to dest's list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest} & Pointer to list. \\
+\hline
+{\em src} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 159 of file list.\+h.
 
 
 
@@ -264,15 +399,15 @@ References list\+::body, list\+\_\+add(), list\+::lock, and list\+\_\+body\+::ne
 
 
 \begin{DoxyCode}
-128                                                          \{
-129     \_\_list\_lock(&src->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-130     
-131     \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = src->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
-132         \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(dest, i->value);
-133     \}
-134     
-135     \_\_list\_unlock(&src->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-136 \}
+159                                                          \{
+160     \_\_list\_lock(&src->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+161     
+162     \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = src->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
+163         \hyperlink{list_8h_a945ef9f05b26f6016d2f28ec8836b1f0}{list\_add}(dest, i->value);
+164     \}
+165     
+166     \_\_list\_unlock(&src->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+167 \}
 \end{DoxyCode}
 \hypertarget{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{\index{list.\+h@{list.\+h}!list\+\_\+empty@{list\+\_\+empty}}
 \index{list\+\_\+empty@{list\+\_\+empty}!list.\+h@{list.\+h}}
@@ -283,7 +418,22 @@ References list\+::body, list\+\_\+add(), list\+::lock, and list\+\_\+body\+::ne
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}
 
 
-Definition at line 58 of file list.\+h.
+Check if list is empty or unitialized. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true or false. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 64 of file list.\+h.
 
 
 
@@ -291,12 +441,12 @@ References list\+::size.
 
 
 \begin{DoxyCode}
-58                                            \{
-59     \textcolor{keywordflow}{if}(list)
-60         \textcolor{keywordflow}{return} list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} == 0;
-61     \textcolor{keywordflow}{else}
-62         \textcolor{keywordflow}{return} 1;   \textcolor{comment}{/* empty */}
-63 \}
+64                                            \{
+65     \textcolor{keywordflow}{if}(list)
+66         \textcolor{keywordflow}{return} list->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size} == 0;
+67     \textcolor{keywordflow}{else}
+68         \textcolor{keywordflow}{return} 1;   \textcolor{comment}{/* empty */}
+69 \}
 \end{DoxyCode}
 \hypertarget{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}{\index{list.\+h@{list.\+h}!list\+\_\+head@{list\+\_\+head}}
 \index{list\+\_\+head@{list\+\_\+head}!list.\+h@{list.\+h}}
@@ -307,7 +457,22 @@ References list\+::size.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a0c1ce6a6a566dc1db394540f5bf65149}
 
 
-Definition at line 165 of file list.\+h.
+Get first value in the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+First value if success, otherwise N\+U\+L\+L. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 220 of file list.\+h.
 
 
 
@@ -315,17 +480,17 @@ References list\+::body, list\+\_\+body\+::next, and list\+\_\+body\+::value.
 
 
 \begin{DoxyCode}
-165                                                 \{
-166 
-167     \textcolor{keywordflow}{if}(!list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body})
-168         \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
-169     
-170     \hyperlink{structlist__body}{list\_body\_t}* tmp = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
-171     \textcolor{keywordflow}{while}(tmp->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next})
-172         tmp = tmp->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
-173         
-174     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) tmp->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value};
-175 \}
+220                                                 \{
+221 
+222     \textcolor{keywordflow}{if}(!list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body})
+223         \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
+224     
+225     \hyperlink{structlist__body}{list\_body\_t}* tmp = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+226     \textcolor{keywordflow}{while}(tmp->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next})
+227         tmp = tmp->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+228         
+229     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) tmp->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value};
+230 \}
 \end{DoxyCode}
 \hypertarget{list_8h_abcd4418be12b04265c44dd69a1cfee1f}{\index{list.\+h@{list.\+h}!list\+\_\+next@{list\+\_\+next}}
 \index{list\+\_\+next@{list\+\_\+next}!list.\+h@{list.\+h}}
@@ -337,7 +502,24 @@ References list\+::body, list\+\_\+body\+::next, and list\+\_\+body\+::value.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_abcd4418be12b04265c44dd69a1cfee1f}
 
 
-Definition at line 148 of file list.\+h.
+Get next value in the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+{\em val} & A Value in the list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Next value if success, otherwise N\+U\+L\+L. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 193 of file list.\+h.
 
 
 
@@ -345,15 +527,15 @@ References list\+::body, and list\+\_\+body\+::next.
 
 
 \begin{DoxyCode}
-148                                                                \{
-149     \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
-150         \textcolor{keywordflow}{if}(i->next)
-151             \textcolor{keywordflow}{if}(i->next->value == val)
-152                 \textcolor{keywordflow}{return} i->value;
-153     \}
-154     
-155     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
-156 \}
+193                                                                \{
+194     \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
+195         \textcolor{keywordflow}{if}(i->next)
+196             \textcolor{keywordflow}{if}(i->next->value == val)
+197                 \textcolor{keywordflow}{return} i->value;
+198     \}
+199     
+200     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
+201 \}
 \end{DoxyCode}
 \hypertarget{list_8h_ae9b833d2dc140368303ecffecce7fe3f}{\index{list.\+h@{list.\+h}!list\+\_\+prev@{list\+\_\+prev}}
 \index{list\+\_\+prev@{list\+\_\+prev}!list.\+h@{list.\+h}}
@@ -365,7 +547,24 @@ References list\+::body, and list\+\_\+body\+::next.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_ae9b833d2dc140368303ecffecce7fe3f}
 
 
-Definition at line 138 of file list.\+h.
+Get previous value in the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+{\em val} & A Value in the list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Previous value if success, otherwise N\+U\+L\+L. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 176 of file list.\+h.
 
 
 
@@ -373,15 +572,15 @@ References list\+::body, and list\+\_\+body\+::next.
 
 
 \begin{DoxyCode}
-138                                                                \{
-139     \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
-140         \textcolor{keywordflow}{if}(i->value == val)
-141             \textcolor{keywordflow}{if}(i->next)
-142                 \textcolor{keywordflow}{return} i->next->value;
-143     \}
-144     
-145     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
-146 \}
+176                                                                \{
+177     \textcolor{keywordflow}{for}(\hyperlink{structlist__body}{list\_body\_t}* i = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}; i; i = i->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next}) \{
+178         \textcolor{keywordflow}{if}(i->value == val)
+179             \textcolor{keywordflow}{if}(i->next)
+180                 \textcolor{keywordflow}{return} i->next->value;
+181     \}
+182     
+183     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
+184 \}
 \end{DoxyCode}
 \hypertarget{list_8h_a4470c240b622941415ae5250067699b5}{\index{list.\+h@{list.\+h}!list\+\_\+remove@{list\+\_\+remove}}
 \index{list\+\_\+remove@{list\+\_\+remove}!list.\+h@{list.\+h}}
@@ -393,7 +592,24 @@ References list\+::body, and list\+\_\+body\+::next.
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_a4470c240b622941415ae5250067699b5}
 
 
-Definition at line 82 of file list.\+h.
+Remove value to the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+{\em v} & Value to remove. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if success, otherwise -\/1. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 102 of file list.\+h.
 
 
 
@@ -401,31 +617,31 @@ References list\+::body, list\+::lock, list\+\_\+body\+::next, and list\+\_\+bod
 
 
 \begin{DoxyCode}
-82                                                          \{
-83     \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-84     
-85     \hyperlink{structlist__body}{list\_body\_t}* body = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
-86     \hyperlink{structlist__body}{list\_body\_t}* prev = 0;
-87     
-88     \textcolor{keywordflow}{while}(body) \{
-89         \textcolor{keywordflow}{if}(body->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} == v) \{
-90             \textcolor{keywordflow}{if}(prev)
-91                 prev->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next} = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
-92             \textcolor{keywordflow}{else}
-93                 list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
-94                 
-95             body->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} = 0;
-96             \_\_list\_free(body);
-97             \textcolor{keywordflow}{break};
-98         \}
-99         
-100         prev = body;
-101         body = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
-102     \}
-103     
-104     \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
-105     \textcolor{keywordflow}{return} 0;
-106 \}
+102                                                          \{
+103     \_\_list\_lock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+104     
+105     \hyperlink{structlist__body}{list\_body\_t}* body = list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body};
+106     \hyperlink{structlist__body}{list\_body\_t}* prev = 0;
+107     
+108     \textcolor{keywordflow}{while}(body) \{
+109         \textcolor{keywordflow}{if}(body->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} == v) \{
+110             \textcolor{keywordflow}{if}(prev)
+111                 prev->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next} = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+112             \textcolor{keywordflow}{else}
+113                 list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body} = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+114                 
+115             body->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value} = 0;
+116             \_\_list\_free(body);
+117             \textcolor{keywordflow}{break};
+118         \}
+119         
+120         prev = body;
+121         body = body->\hyperlink{structlist__body_ae0f31e0790456c070895880578d171ca}{next};
+122     \}
+123     
+124     \_\_list\_unlock(&list->\hyperlink{structlist_a59893e59e3f090a886894244b0dc0643}{lock});
+125     \textcolor{keywordflow}{return} 0;
+126 \}
 \end{DoxyCode}
 \hypertarget{list_8h_aea7ba4088b37f0bd303771d71a066a90}{\index{list.\+h@{list.\+h}!list\+\_\+tail@{list\+\_\+tail}}
 \index{list\+\_\+tail@{list\+\_\+tail}!list.\+h@{list.\+h}}
@@ -436,7 +652,22 @@ References list\+::body, list\+::lock, list\+\_\+body\+::next, and list\+\_\+bod
 )\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{list_8h_aea7ba4088b37f0bd303771d71a066a90}
 
 
-Definition at line 158 of file list.\+h.
+Get last value in the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & Pointer to list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Last value if success, otherwise N\+U\+L\+L. 
+\end{DoxyReturn}
+\begin{Desc}
+\item[Examples\+: ]\par
+\hyperlink{list_8h-example}{list.\+h}.\end{Desc}
+
+
+Definition at line 208 of file list.\+h.
 
 
 
@@ -444,10 +675,10 @@ References list\+::body, and list\+\_\+body\+::value.
 
 
 \begin{DoxyCode}
-158                                                 \{
-159     \textcolor{keywordflow}{if}(list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body})
-160         \textcolor{keywordflow}{return} list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value};
-161         
-162     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
-163 \}
+208                                                 \{
+209     \textcolor{keywordflow}{if}(list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body})
+210         \textcolor{keywordflow}{return} list->\hyperlink{structlist_a86cadf6e44fd6505728c5149b336d3db}{body}->\hyperlink{structlist__body_ae3194d24911b82410a61d50f5e6f588d}{value};
+211         
+212     \textcolor{keywordflow}{return} (\hyperlink{list_8h_a83bc1af7566502e08756b8d8c425972e}{listval\_t}) NULL;
+213 \}
 \end{DoxyCode}

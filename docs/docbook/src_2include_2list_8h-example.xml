@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="src_2include_2list_8h-example_1src_2include_2list_8h-example">
+    <title>src/include/list.h</title>
+
+<para>list_t test = NULL; <link linkend="list_8h_1aa288c0785df071ed8643763202928c82">list_init(test)</link>;</para>
+
+<para>for(int i = 0; i &lt; 10; i++) list_add(test, (listval_t) i);</para>
+
+<para><link linkend="list_8h_1a1f44c976d2c698407a17fef984a5b232">list_foreach(v, test)</link> printf(&quot;%d\n&quot;, v);</para>
+
+<para>Output: 0, 1, 2, 3, ... 9</para>
+
+<para><literallayout>list_foreach_reverse(v, test)
+    printf(&quot;%d\n&quot;, v);
+</literallayout></para>
+
+<para>Output: 9, 8, 7, 6, ... 0</para>
+
+<para><literallayout>list_remove(test, (listval_t) 2);
+
+list_foreach(v, test)
+    printf(&quot;%d\n&quot;, v);
+</literallayout></para>
+
+<para>Output: 0, 1, 3, 4, ... 9</para>
+
+<para><literallayout>list_destroy(test);</literallayout> <literallayout><computeroutput></computeroutput></literallayout> </para>
+
+</section>

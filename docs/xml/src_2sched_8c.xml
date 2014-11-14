@@ -257,7 +257,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="100" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="100" bodyend="107"/>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="282">list_init</references>
         <references refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" compoundref="src_2sched_8c" startline="75" endline="77">schedule_enable</references>
         <references refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" compoundref="task_8c" startline="184" endline="212">task_init</references>
       </memberdef>
@@ -275,8 +275,8 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="114" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="114" bodyend="127"/>
         <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
-        <references refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" compoundref="list_8h" startline="165" endline="175">list_head</references>
-        <references refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" compoundref="list_8h" startline="148" endline="156">list_next</references>
+        <references refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" compoundref="list_8h" startline="220" endline="230">list_head</references>
+        <references refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" compoundref="list_8h" startline="193" endline="201">list_next</references>
         <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="120">task::state</references>
         <references refid="task_8h_1a447252ba92918fc13f5b6fd120b2656f" compoundref="task_8h" startline="40">TASK_STATE_ALIVE</references>
       </memberdef>
@@ -293,7 +293,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="133" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="133" bodyend="147"/>
         <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="122">task::clock</references>
-        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="58" endline="63">list_empty</references>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="64" endline="69">list_empty</references>
         <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="121">task::priority</references>
         <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
         <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="114" endline="127">schedule_next</references>
@@ -311,7 +311,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="153" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="153" bodyend="161"/>
-        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="58" endline="63">list_empty</references>
+        <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="64" endline="69">list_empty</references>
         <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
         <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="114" endline="127">schedule_next</references>
         <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="133" endline="142">task_switch</references>
@@ -385,7 +385,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="193" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="193" bodyend="206"/>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structtask_1a34c6613744820a1e8127756fb6a5392c" compoundref="task_8h" startline="126">task::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>
@@ -425,7 +425,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="213" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="213" bodyend="224"/>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
-        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="82" endline="106">list_remove</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
         <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="153" endline="161">schedule_yield</references>
         <references refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" compoundref="task_8h" startline="42">TASK_STATE_DEAD</references>
       </memberdef>
@@ -489,7 +489,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/sched.c" line="253" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="253" bodyend="265"/>
         <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
       </memberdef>

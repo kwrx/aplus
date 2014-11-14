@@ -288,7 +288,7 @@ References errno, tty::exclmode, tty::fg, tty::ibuffer, tty::id, im_superuser(),
 .PP
 Definition at line 233 of file tty\&.c\&.
 .PP
-References __default_tty_output(), tty::bg, errno, tty::exclmode, task::fd, tty::fg, inode::flush, tty::id, inode::ioctl, tty::ios, tty::isize, kmalloc(), ksprintf(), list_add(), list_init, tty::lock, tty::osize, tty::output, task::pid, inode::read, list::size, sys_open(), tty_flush(), tty_ioctl(), tty_read(), tty_write(), TTYDEF_IOS_CFLAG, TTYDEF_IOS_IFLAG, TTYDEF_IOS_LFLAG, TTYDEF_IOS_OFLAG, TTYDEF_WIN_COLS, TTYDEF_WIN_ROWS, ttydefchars, inode::userdata, tty::win, winsize, and inode::write\&.
+References __default_tty_output(), tty::bg, errno, tty::exclmode, task::fd, tty::fg, inode::flush, tty::id, inode::ioctl, tty::ios, tty::isize, kmalloc(), ksprintf(), list_add(), list_init, list_size, tty::lock, tty::osize, tty::output, task::pid, inode::read, sys_open(), tty_flush(), tty_ioctl(), tty_read(), tty_write(), TTYDEF_IOS_CFLAG, TTYDEF_IOS_IFLAG, TTYDEF_IOS_LFLAG, TTYDEF_IOS_OFLAG, TTYDEF_WIN_COLS, TTYDEF_WIN_ROWS, ttydefchars, inode::userdata, tty::win, winsize, and inode::write\&.
 .PP
 .nf
 233                                                                                             {
@@ -304,7 +304,7 @@ References __default_tty_output(), tty::bg, errno, tty::exclmode, task::fd, tty:
 243     char fname[32];
 244     memset(fname, 0, 32);
 245 
-246     ksprintf(fname, "/dev/tty%d", (int) ttydevs->size);
+246     ksprintf(fname, "/dev/tty%d", (int) list_size(ttydevs));
 247 
 248     int fd = sys_open(fname, O_CREAT | O_EXCL | O_RDWR, S_IFCHR);
 249     if(fd < 0) {
@@ -344,7 +344,7 @@ References __default_tty_output(), tty::bg, errno, tty::exclmode, task::fd, tty:
 283     tty->fg = current_task->pid;
 284     tty->bg = -1;
 285 
-286     tty->id = ttydevs->size;
+286     tty->id = list_size(ttydevs);
 287 
 288     tty->output = __default_tty_output;
 289 

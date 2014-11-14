@@ -110,9 +110,9 @@ syscall5(27, openpty)
 #ifdef __aplus__
 syscall2(80, aplus_readdir)
 syscall2(81, aplus_getgroups)
-syscall0(100, aplus_argv)
-syscall0(101, aplus_envp)
-syscall1(102, aplus_install_sighandler);
+syscall0(100, __get_argv)
+syscall0(101, __get_envp)
+syscall1(102, __install_sighandler);
 #endif
 
 

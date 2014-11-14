@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"structpci__device.html#ae1867eca43c8f867951963a1753649ea":[3,0,28,9],
+"structpci__device.html#ae456e0d5fb85c5d367b1a4e27f996b96":[3,0,28,1],
+"structpipeinfo.html":[3,0,29],
 "structpipeinfo.html#a88940cfea171abbf28b2b96bc87054ca":[3,0,29,0],
 "structpipeinfo.html#abb510c9ed7b4d0bc60432bcc04e3962b":[3,0,29,2],
 "structpipeinfo.html#add2e1b264654f589da8c98cd502c3fbc":[3,0,29,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX7 =
 "task_8h.html#ae7c1e3339e4dead200cab41010e9127c":[4,0,1,2,0,11,24],
 "task_8h.html#aea18b04c3c7d46195bab375efc1f61b6":[4,0,1,2,0,11,17],
 "task_8h.html#aeedfc39703ec8e0a1f052a832e74acd3":[4,0,1,2,0,11,28],
-"task_8h.html#af2b16bef95c844028dd145264d1d3875":[4,0,1,2,0,11,25],
-"task_8h_source.html":[4,0,1,2,0,11],
-"telldir_8c.html":[4,0,2,0,1,1,24],
-"telldir_8c.html#a8460dc201f4c651f8d6b84b4316e4180":[4,0,2,0,1,1,24,0]
+"task_8h.html#af2b16bef95c844028dd145264d1d3875":[4,0,1,2,0,11,25]
 };

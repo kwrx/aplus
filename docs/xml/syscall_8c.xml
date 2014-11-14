@@ -122,8 +122,8 @@
         <references refid="struct____syscall_1af1d75ee98d8568f74e8421654a1081d3" compoundref="syscall_8h" startline="10">__syscall::handler</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
-        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="202">list_destroy</references>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" compoundref="list_8h" startline="292">list_destroy</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="struct____syscall_1a7f020a41ed9bf3daff3dfc46ee673eef" compoundref="syscall_8h" startline="11">__syscall::number</references>
         <references refid="structlist_1ae581be90bd8eb7051528b61ad216de88" compoundref="list_8h" startline="54">list::size</references>
         <references refid="syscall_8c_1afb85e77f03c9acf2f02687360c17dd91" compoundref="syscall_8c" startline="9">syscall_handlers</references>

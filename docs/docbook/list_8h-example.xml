@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="list_8h-example_1list_8h-example">
+    <title>list.h</title>
+
+<para>Initialization <literallayout>list_t test = NULL;
+list_init(test);
+
+for(int i = 0; i &lt; 10; i++)
+    list_add(test, (listval_t) i);
+</literallayout></para>
+
+<para>Iterate list. Output: 0, 1, 2, 3, ... 9 <literallayout>list_foreach(v, test)
+    printf(&quot;%d\n&quot;, v);
+</literallayout></para>
+
+<para>Iterate list conversly. Output: 9, 8, 7, 6, ... 0 <literallayout>list_foreach_reverse(v, test)
+    printf(&quot;%d\n&quot;, v);
+</literallayout></para>
+
+<para>Remove a value <literallayout>list_remove(test, (listval_t) 2);
+</literallayout></para>
+
+<para>Destroy <literallayout>list_destroy(test);</literallayout> <literallayout><computeroutput><emphasis class="comment">//</emphasis>
+<emphasis class="comment">//&#32;&#32;list.h</emphasis>
+<emphasis class="comment">//</emphasis>
+<emphasis class="comment">//&#32;&#32;Author:</emphasis>
+<emphasis class="comment">//&#32;&#32;&#32;&#32;&#32;&#32;&#32;Antonio&#32;Natale&#32;&lt;inferdevil97@gmail.com&gt;</emphasis>
+<emphasis class="comment">//</emphasis>
+<emphasis class="comment">//&#32;&#32;Copyright&#32;(c)&#32;2014&#32;WareX</emphasis>
+<emphasis class="comment">//</emphasis>
+<emphasis class="comment">//&#32;&#32;This&#32;program&#32;is&#32;free&#32;software:&#32;you&#32;can&#32;redistribute&#32;it&#32;and/or&#32;modify</emphasis>
+<emphasis class="comment">//&#32;&#32;it&#32;under&#32;the&#32;terms&#32;of&#32;the&#32;GNU&#32;General&#32;Public&#32;License&#32;as&#32;published&#32;by</emphasis>
+<emphasis class="comment">//&#32;&#32;the&#32;Free&#32;Software&#32;Foundation,&#32;either&#32;version&#32;3&#32;of&#32;the&#32;License,&#32;or</emphasis>
+<emphasis class="comment">//&#32;&#32;(at&#32;your&#32;option)&#32;any&#32;later&#32;version.</emphasis>
+<emphasis class="comment">//</emphasis>
+<emphasis class="comment">//&#32;&#32;This&#32;program&#32;is&#32;distributed&#32;in&#32;the&#32;hope&#32;that&#32;it&#32;will&#32;be&#32;useful,</emphasis>
+<emphasis class="comment">//&#32;&#32;but&#32;WITHOUT&#32;ANY&#32;WARRANTY;&#32;without&#32;even&#32;the&#32;implied&#32;warranty&#32;of</emphasis>
+<emphasis class="comment">//&#32;&#32;MERCHANTABILITY&#32;or&#32;FITNESS&#32;FOR&#32;A&#32;PARTICULAR&#32;PURPOSE.&#32;&#32;See&#32;the</emphasis>
+<emphasis class="comment">//&#32;&#32;GNU&#32;General&#32;Public&#32;License&#32;for&#32;more&#32;details.</emphasis>
+<emphasis class="comment">//</emphasis>
+<emphasis class="comment">//&#32;&#32;You&#32;should&#32;have&#32;received&#32;a&#32;copy&#32;of&#32;the&#32;GNU&#32;General&#32;Public&#32;License</emphasis>
+<emphasis class="comment">//&#32;&#32;along&#32;with&#32;this&#32;program.&#32;&#32;If&#32;not,&#32;see&#32;&lt;http://www.gnu.org/licenses/&gt;.</emphasis>
+
+<emphasis class="preprocessor">#ifndef&#32;_LIST_H</emphasis>
+<emphasis class="preprocessor">#define&#32;_LIST_H</emphasis>
+
+<emphasis class="preprocessor">#include&#32;&lt;stddef.h&gt;</emphasis>
+<emphasis class="preprocessor">#include&#32;&lt;stdint.h&gt;</emphasis>
+<emphasis class="preprocessor">#include&#32;&lt;sys/types.h&gt;</emphasis>
+
+<emphasis class="preprocessor">#if&#32;defined(__aplus__)</emphasis>
+<emphasis class="preprocessor">#include&#32;&lt;<link linkend="spinlock_8h">aplus/spinlock.h</link>&gt;</emphasis>
+<emphasis class="preprocessor">#include&#32;&lt;<link linkend="mm_8h">aplus/mm.h</link>&gt;</emphasis>
+
+
+<emphasis class="preprocessor">#define&#32;__list_malloc(x)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;kmalloc(x)</emphasis>
+<emphasis class="preprocessor">#define&#32;__list_free(x)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;kfree(x)</emphasis>
+<emphasis class="preprocessor">#define&#32;__list_lock(x)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;spinlock_lock(x)</emphasis>
+<emphasis class="preprocessor">#define&#32;__list_unlock(x)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;spinlock_unlock(x)</emphasis>
+<emphasis class="preprocessor">#define&#32;__list_lock_t&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;spinlock_t</emphasis>
+
+<emphasis class="preprocessor">#endif</emphasis>
+
+<emphasis class="keyword">typedef</emphasis>&#32;<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link>&#32;<link linkend="list_8h_1a83bc1af7566502e08756b8d8c425972e">listval_t</link>;
+
+<emphasis class="keyword">typedef</emphasis>&#32;<emphasis class="keyword">struct&#32;</emphasis><link linkend="structlist__body">list_body</link>&#32;{
+&#32;&#32;&#32;&#32;listval_t&#32;<link linkend="structlist__body_1ae3194d24911b82410a61d50f5e6f588d">value</link>;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keyword">struct&#32;</emphasis><link linkend="structlist__body">list_body</link>*&#32;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>;
+}&#32;<link linkend="list_8h_1a26009b16c17e2336df1025f49f3ebd7e">list_body_t</link>;
+
+<emphasis class="keyword">typedef</emphasis>&#32;<emphasis class="keyword">struct&#32;</emphasis>list&#32;{
+&#32;&#32;&#32;&#32;<link linkend="structlist__body">list_body_t</link>*&#32;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;__list_lock_t&#32;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>;
+&#32;&#32;&#32;&#32;<emphasis class="keywordtype">size_t</emphasis>&#32;<link linkend="structlist_1ae581be90bd8eb7051528b61ad216de88">size</link>;
+}&#32;<link linkend="list_8h_1af629e6a6713d7de11eab50cbe6449b06">list_t</link>;
+
+
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;<emphasis class="keywordtype">int</emphasis>&#32;<link linkend="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754">list_empty</link>(<link linkend="structlist">list_t</link>*&#32;list)&#32;{
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(list)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;list-&gt;<link linkend="structlist_1ae581be90bd8eb7051528b61ad216de88">size</link>&#32;==&#32;0;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">else</emphasis>
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;1;&#32;&#32;&#32;<emphasis class="comment">/*&#32;empty&#32;*/</emphasis>
+}
+
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;<emphasis class="keywordtype">int</emphasis>&#32;<link linkend="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0">list_add</link>(<link linkend="structlist">list_t</link>*&#32;list,&#32;listval_t&#32;v)&#32;{
+&#32;&#32;&#32;&#32;<link linkend="structlist__body">list_body_t</link>*&#32;val&#32;=&#32;(<link linkend="structlist__body">list_body_t</link>*)&#32;__list_malloc(<emphasis class="keyword">sizeof</emphasis>(<link linkend="structlist__body">list_body_t</link>));
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(!val)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;-1;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;__list_lock(&amp;list-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;val-&gt;<link linkend="structlist__body_1ae3194d24911b82410a61d50f5e6f588d">value</link>&#32;=&#32;v;
+&#32;&#32;&#32;&#32;val-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>&#32;=&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>&#32;=&#32;val;
+&#32;&#32;&#32;&#32;list-&gt;<link linkend="structlist_1ae581be90bd8eb7051528b61ad216de88">size</link>&#32;+=&#32;1;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;__list_unlock(&amp;list-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;0;
+}
+
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;<emphasis class="keywordtype">int</emphasis>&#32;<link linkend="list_8h_1a4470c240b622941415ae5250067699b5">list_remove</link>(<link linkend="structlist">list_t</link>*&#32;list,&#32;listval_t&#32;v)&#32;{
+&#32;&#32;&#32;&#32;__list_lock(&amp;list-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<link linkend="structlist__body">list_body_t</link>*&#32;body&#32;=&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;
+&#32;&#32;&#32;&#32;<link linkend="structlist__body">list_body_t</link>*&#32;prev&#32;=&#32;0;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">while</emphasis>(body)&#32;{
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(body-&gt;<link linkend="structlist__body_1ae3194d24911b82410a61d50f5e6f588d">value</link>&#32;==&#32;v)&#32;{
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(prev)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;prev-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>&#32;=&#32;body-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">else</emphasis>
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>&#32;=&#32;body-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;body-&gt;<link linkend="structlist__body_1ae3194d24911b82410a61d50f5e6f588d">value</link>&#32;=&#32;0;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;__list_free(body);
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">break</emphasis>;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;}
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;prev&#32;=&#32;body;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;body&#32;=&#32;body-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>;
+&#32;&#32;&#32;&#32;}
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;__list_unlock(&amp;list-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;0;
+}
+
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;<emphasis class="keywordtype">int</emphasis>&#32;<link linkend="list_8h_1ae055500d6fc23c82c45b2e5926df3b40">list_clear</link>(<link linkend="structlist">list_t</link>*&#32;list)&#32;{
+&#32;&#32;&#32;&#32;__list_lock(&amp;list-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<link linkend="structlist__body">list_body_t</link>*&#32;body&#32;=&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;
+&#32;&#32;&#32;&#32;<link linkend="structlist__body">list_body_t</link>*&#32;tmp&#32;=&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">while</emphasis>(body)&#32;{
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;tmp&#32;=&#32;body-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;__list_free(body);
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;body&#32;=&#32;tmp;
+&#32;&#32;&#32;&#32;}
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>&#32;=&#32;0;
+&#32;&#32;&#32;&#32;list-&gt;<link linkend="structlist_1ae581be90bd8eb7051528b61ad216de88">size</link>&#32;=&#32;0;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;__list_unlock(&amp;list-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;0;
+}
+
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;<emphasis class="keywordtype">void</emphasis>&#32;<link linkend="list_8h_1ad29245eda34d4cdac400323a1bd63cdd">list_clone</link>(<link linkend="structlist">list_t</link>*&#32;dest,&#32;<link linkend="structlist">list_t</link>*&#32;src)&#32;{
+&#32;&#32;&#32;&#32;__list_lock(&amp;src-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">for</emphasis>(<link linkend="structlist__body">list_body_t</link>*&#32;i&#32;=&#32;src-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;&#32;i;&#32;i&#32;=&#32;i-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>)&#32;{
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<link linkend="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0">list_add</link>(dest,&#32;i-&gt;value);
+&#32;&#32;&#32;&#32;}
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;__list_unlock(&amp;src-&gt;<link linkend="structlist_1a59893e59e3f090a886894244b0dc0643">lock</link>);
+}
+
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;listval_t&#32;<link linkend="list_8h_1ae9b833d2dc140368303ecffecce7fe3f">list_prev</link>(<link linkend="structlist">list_t</link>*&#32;list,&#32;listval_t&#32;val)&#32;{
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">for</emphasis>(<link linkend="structlist__body">list_body_t</link>*&#32;i&#32;=&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;&#32;i;&#32;i&#32;=&#32;i-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>)&#32;{
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(i-&gt;value&#32;==&#32;val)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(i-&gt;next)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;i-&gt;next-&gt;value;
+&#32;&#32;&#32;&#32;}
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;(listval_t)&#32;NULL;
+}
+
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;listval_t&#32;<link linkend="list_8h_1abcd4418be12b04265c44dd69a1cfee1f">list_next</link>(<link linkend="structlist">list_t</link>*&#32;list,&#32;listval_t&#32;val)&#32;{
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">for</emphasis>(<link linkend="structlist__body">list_body_t</link>*&#32;i&#32;=&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;&#32;i;&#32;i&#32;=&#32;i-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>)&#32;{
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(i-&gt;next)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(i-&gt;next-&gt;value&#32;==&#32;val)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;i-&gt;value;
+&#32;&#32;&#32;&#32;}
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;(listval_t)&#32;NULL;
+}
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;listval_t&#32;<link linkend="list_8h_1aea7ba4088b37f0bd303771d71a066a90">list_tail</link>(<link linkend="structlist">list_t</link>*&#32;list)&#32;{
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>-&gt;<link linkend="structlist__body_1ae3194d24911b82410a61d50f5e6f588d">value</link>;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;(listval_t)&#32;NULL;
+}
+
+<emphasis class="keyword">static</emphasis>&#32;<emphasis class="keyword">inline</emphasis>&#32;listval_t&#32;<link linkend="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149">list_head</link>(<link linkend="structlist">list_t</link>*&#32;list)&#32;{
+
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">if</emphasis>(!list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;(listval_t)&#32;NULL;
+&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<link linkend="structlist__body">list_body_t</link>*&#32;tmp&#32;=&#32;list-&gt;<link linkend="structlist_1a86cadf6e44fd6505728c5149b336d3db">body</link>;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">while</emphasis>(tmp-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>)
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;tmp&#32;=&#32;tmp-&gt;<link linkend="structlist__body_1ae0f31e0790456c070895880578d171ca">next</link>;
+&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;
+&#32;&#32;&#32;&#32;<emphasis class="keywordflow">return</emphasis>&#32;(listval_t)&#32;tmp-&gt;<link linkend="structlist__body_1ae3194d24911b82410a61d50f5e6f588d">value</link>;
+}
+
+
+<emphasis class="preprocessor">#define&#32;list_safe_begin(list)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;__list_lock(&amp;list-&gt;lock)</emphasis>
+&#32;&#32;&#32;&#32;
+<emphasis class="preprocessor">#define&#32;list_safe_end(list)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;__list_unlock(&amp;list-&gt;lock)</emphasis>
+&#32;&#32;&#32;&#32;
+
+<emphasis class="preprocessor">#define&#32;list_foreach(value,&#32;list)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;for(listval_t&#32;value&#32;=&#32;list_head(list);&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;value;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;value&#32;=&#32;list_next(list,&#32;value)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;)</emphasis>
+&#32;&#32;&#32;&#32;
+<emphasis class="preprocessor">#define&#32;list_foreach_reverse(value,&#32;list)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;for(listval_t&#32;value&#32;=&#32;list_tail(list);&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;value;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;value&#32;=&#32;list_prev(list,&#32;value)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;)</emphasis>
+
+
+<emphasis class="preprocessor">#define&#32;list_size(list)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;list-&gt;size</emphasis>
+
+<emphasis class="preprocessor">#define&#32;list_init(list)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;list&#32;=&#32;(list_t*)&#32;__list_malloc(sizeof(list_t));&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;list-&gt;body&#32;=&#32;0;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;list-&gt;size&#32;=&#32;0;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;list-&gt;lock&#32;=&#32;0</emphasis>
+
+<emphasis class="preprocessor">#define&#32;list_destroy(list)&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;list_clear(list);&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;&#32;\</emphasis>
+<emphasis class="preprocessor">&#32;&#32;&#32;&#32;__list_free(list)</emphasis>
+
+
+
+<emphasis class="preprocessor">#endif</emphasis>
+</computeroutput></literallayout> </para>
+
+</section>

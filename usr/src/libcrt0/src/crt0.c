@@ -66,12 +66,14 @@ void _start() {
 		*(char*) i = 0;
 
 
-	environ = (char**) aplus_envp();
-	char** argv = (char**) aplus_argv();
+	environ = (char**) __get_envp();
+	char** argv = (char**) __get_argv();
 
 	int argc = 0;
-	while(argv[argc])
-		argc += 1;
+
+	if(argv)
+		while(argv[argc])
+			argc += 1;
 
 
 	open("/dev/stdin", 0, 0644);
@@ -79,7 +81,8 @@ void _start() {
 	open("/dev/stderr", 0, 0644);
 
 
-	aplus_install_sighandler(__sigtramp);
+
+	__install_sighandler(__sigtramp);
 	_init_signal();
 	__init_traps();
 

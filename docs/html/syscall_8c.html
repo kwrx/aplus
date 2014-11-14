@@ -49,6 +49,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -173,7 +174,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="syscall_8c_source.html#l00011">11</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
 
-<p>References <a class="el" href="attribute_8h_source.html#l00031">attribute()</a>, <a class="el" href="syscall_8h_source.html#l00010">__syscall::handler</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="list_8h_source.html#l00202">list_destroy</a>, <a class="el" href="list_8h_source.html#l00184">list_foreach</a>, <a class="el" href="syscall_8h_source.html#l00011">__syscall::number</a>, <a class="el" href="list_8h_source.html#l00054">list::size</a>, <a class="el" href="syscall_8c_source.html#l00009">syscall_handlers</a>, and <a class="el" href="attribute_8h_source.html#l00083">value</a>.</p>
+<p>References <a class="el" href="attribute_8h_source.html#l00031">attribute()</a>, <a class="el" href="syscall_8h_source.html#l00010">__syscall::handler</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="list_8h_source.html#l00292">list_destroy</a>, <a class="el" href="list_8h_source.html#l00253">list_foreach</a>, <a class="el" href="syscall_8h_source.html#l00011">__syscall::number</a>, <a class="el" href="list_8h_source.html#l00054">list::size</a>, <a class="el" href="syscall_8c_source.html#l00009">syscall_handlers</a>, and <a class="el" href="attribute_8h_source.html#l00083">value</a>.</p>
 <div class="fragment"><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;                   {</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="code" href="structlist.html">list_t</a>* syslist = <a class="code" href="attribute_8h.html#ab96abe3fdf944e75a2316807105c1b6e">attribute</a>(<span class="stringliteral">&quot;syscall&quot;</span>);</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
@@ -217,11 +218,11 @@ Variables</h2></td></tr>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
 <div class="ttc" id="syscall_8c_html_afb85e77f03c9acf2f02687360c17dd91"><div class="ttname"><a href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a></div><div class="ttdeci">static void ** syscall_handlers</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00009">syscall.c:9</a></div></div>
 <div class="ttc" id="attribute_8h_html_ab96abe3fdf944e75a2316807105c1b6e"><div class="ttname"><a href="attribute_8h.html#ab96abe3fdf944e75a2316807105c1b6e">attribute</a></div><div class="ttdeci">static list_t * attribute(const char *name)</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00031">attribute.h:31</a></div></div>
-<div class="ttc" id="list_8h_html_a9c676c5a77ee9c18ccaadcb4f99fc990"><div class="ttname"><a href="list_8h.html#a9c676c5a77ee9c18ccaadcb4f99fc990">list_destroy</a></div><div class="ttdeci">#define list_destroy(list)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00202">list.h:202</a></div></div>
+<div class="ttc" id="list_8h_html_a9c676c5a77ee9c18ccaadcb4f99fc990"><div class="ttname"><a href="list_8h.html#a9c676c5a77ee9c18ccaadcb4f99fc990">list_destroy</a></div><div class="ttdeci">#define list_destroy(list)</div><div class="ttdoc">Destroy a list. </div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00292">list.h:292</a></div></div>
 <div class="ttc" id="struct____syscall_html_af1d75ee98d8568f74e8421654a1081d3"><div class="ttname"><a href="struct____syscall.html#af1d75ee98d8568f74e8421654a1081d3">__syscall::handler</a></div><div class="ttdeci">void * handler</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8h_source.html#l00010">syscall.h:10</a></div></div>
 <div class="ttc" id="struct____syscall_html"><div class="ttname"><a href="struct____syscall.html">__syscall</a></div><div class="ttdef"><b>Definition:</b> <a href="syscall_8h_source.html#l00009">syscall.h:9</a></div></div>
 <div class="ttc" id="mm_8h_html_a1f5d4240b2decc62c0e6eae06c72916c"><div class="ttname"><a href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a></div><div class="ttdeci">void * kmalloc(size_t)</div></div>
-<div class="ttc" id="list_8h_html_a1f44c976d2c698407a17fef984a5b232"><div class="ttname"><a href="list_8h.html#a1f44c976d2c698407a17fef984a5b232">list_foreach</a></div><div class="ttdeci">#define list_foreach(value, list)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00184">list.h:184</a></div></div>
+<div class="ttc" id="list_8h_html_a1f44c976d2c698407a17fef984a5b232"><div class="ttname"><a href="list_8h.html#a1f44c976d2c698407a17fef984a5b232">list_foreach</a></div><div class="ttdeci">#define list_foreach(value, list)</div><div class="ttdoc">Iterating a list and save each value in "value". </div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00253">list.h:253</a></div></div>
 <div class="ttc" id="struct____syscall_html_a7f020a41ed9bf3daff3dfc46ee673eef"><div class="ttname"><a href="struct____syscall.html#a7f020a41ed9bf3daff3dfc46ee673eef">__syscall::number</a></div><div class="ttdeci">int number</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8h_source.html#l00011">syscall.h:11</a></div></div>
 <div class="ttc" id="structlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00050">list.h:50</a></div></div>
 <div class="ttc" id="structlist_html_ae581be90bd8eb7051528b61ad216de88"><div class="ttname"><a href="structlist.html#ae581be90bd8eb7051528b61ad216de88">list::size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00054">list.h:54</a></div></div>
@@ -361,7 +362,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_1a2db638ef6877e1d4473af5a81c9a08.html">arch</a></li><li class="navelem"><a class="el" href="syscall_8c.html">syscall.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 17:33:02 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 18:07:57 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

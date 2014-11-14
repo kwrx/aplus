@@ -14,7 +14,7 @@ AR			:= $(TARGET)-ar
 endif
 
 
-CFLAGS		+=
+CFLAGS		+= -DDEBUG
 CXXFLAGS	+=
 LDFLAGS		+=
 ARFLAGS		+= -rcs

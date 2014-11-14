@@ -1,5 +1,8 @@
 var NAVTREEINDEX6 =
 {
+"structBootInfo__t.html#ab2c8b3b8778032a87c0c2fe73245e9e8":[3,0,7,16],
+"structBootInfo__t.html#ac0a248c150ec1bceaafc488988174a1d":[3,0,7,0],
+"structBootInfo__t.html#ac44eb8289f5f6fbbca78dc24e5052be7":[3,0,7,12],
 "structBootInfo__t.html#ad583d2ecbdc34a87c6ab29a2fded69b6":[3,0,7,23],
 "structBootInfo__t.html#adc0745eb234059fc6eb37d8a6c18e4b4":[3,0,7,7],
 "struct____DIR.html":[3,0,0],
@@ -246,8 +249,5 @@ var NAVTREEINDEX6 =
 "structpci__device.html#ac292358b1097064cb388125a45740aff":[3,0,28,3],
 "structpci__device.html#ac9682451216985995a3601f14239dc26":[3,0,28,11],
 "structpci__device.html#ad6450a83a220d2015cb94a9698580668":[3,0,28,10],
-"structpci__device.html#ad68a4bddbd8fa989a866dccdd5035842":[3,0,28,4],
-"structpci__device.html#ae1867eca43c8f867951963a1753649ea":[3,0,28,9],
-"structpci__device.html#ae456e0d5fb85c5d367b1a4e27f996b96":[3,0,28,1],
-"structpipeinfo.html":[3,0,29]
+"structpci__device.html#ad68a4bddbd8fa989a866dccdd5035842":[3,0,28,4]
 };

@@ -259,7 +259,7 @@
         <location file="/opt/prj/aPlus/src/panic.c" line="76" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="76" bodyend="96"/>
         <references refid="structtask_1a22a59fcfc18d5f671340669f96571768" compoundref="task_8h" startline="104">task::exe</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
-        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="184">list_foreach</references>
+        <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" compoundref="fs_8h" startline="38">inode::name</references>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>

@@ -1,0 +1,29 @@
+\hypertarget{list_8h_0Cn-example}{\section{list.\+h\textbackslash{}n}
+}
+Initialization list\+\_\+t test = N\+U\+L\+L; \hyperlink{list_8h_aa288c0785df071ed8643763202928c82}{list\+\_\+init(test)};
+
+for(int i = 0; i $<$ 10; i++) list\+\_\+add(test, (listval\+\_\+t) i);
+
+\hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\+\_\+foreach(v, test)} printf(\char`\"{}\%d\textbackslash{}n\char`\"{}, v);
+
+Output\+: 0, 1, 2, 3, ... 9
+
+\begin{DoxyVerb}list_foreach_reverse(v, test)
+    printf("%d\n", v);
+\end{DoxyVerb}
+
+
+Output\+: 9, 8, 7, 6, ... 0
+
+Remove a value list\+\_\+remove(test, (listval\+\_\+t) 2);
+
+\hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\+\_\+foreach(v, test)} printf(\char`\"{}\%d\textbackslash{}n\char`\"{}, v);
+
+Output\+: 0, 1, 3, 4, ... 9
+
+Destroy list \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\+\_\+destroy(test)};
+
+
+\begin{DoxyCodeInclude}
+\end{DoxyCodeInclude}
+ 

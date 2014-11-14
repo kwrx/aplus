@@ -135,6 +135,25 @@ void* vmm_alloc(void* vaddr, size_t size, int flags) {
 	return paddr;
 }
 
+void vmm_free(void* vaddr, size_t size) {
+
+	int pages = (size / PGSIZE) + 1;
+	uint32_t frame = (uint32_t) vaddr;
+	uint32_t* pd = (uint32_t*) current_vmm;
+
+	for(int i = 0; i < size; i++) {
+		uint32_t* e = &pd[PDENTRY(frame)];
+
+		if((*e & 1) != 1)
+			continue;
+
+		uint32_t* table = (uint32_t*) (*e & ~0xFFF);
+		hfree(current_heap, table[PTENTRY(frame)] & ~0xFFF, PGSIZE);
+	}
+
+	vmm_umap(current_vmm, vaddr, size);
+}
+
 void vmm_mapkernel(uint32_t* dest) {
 	// Map 8MB to low area (kernel reserved)
 	vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);

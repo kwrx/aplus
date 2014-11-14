@@ -492,7 +492,7 @@
         <location file="/opt/prj/aPlus/src/mm/paging.c" line="165" column="1" bodyfile="/opt/prj/aPlus/src/mm/paging.c" bodystart="165" bodyend="180"/>
         <references refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" compoundref="heap_8c" startline="28" endline="34">halloc</references>
         <references refid="paging_8c_1afac53891df03c313fc0b5b24e0acc8a9" compoundref="paging_8c" startline="47">kernel_vmm</references>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="282">list_init</references>
         <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="102" endline="113">panic</references>
         <references refid="paging_8c_1ad1e1979b244e7f89d86e1bcb9500e177" compoundref="paging_8c" startline="37">PDSIZE</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>

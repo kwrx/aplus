@@ -1,5 +1,8 @@
 var NAVTREEINDEX8 =
 {
+"task_8h_source.html":[4,0,1,2,0,11],
+"telldir_8c.html":[4,0,2,0,1,1,24],
+"telldir_8c.html#a8460dc201f4c651f8d6b84b4316e4180":[4,0,2,0,1,1,24,0],
 "telldir_8c_source.html":[4,0,2,0,1,1,24],
 "time_8c.html":[4,0,1,5,25],
 "time_8c.html#a4b6eba92722ec1e5446f676e95e4cddf":[4,0,1,5,25,0],

@@ -21,7 +21,8 @@ var NAVTREE =
         [ "Typedefs", "globals_type.html", null ],
         [ "Macros", "globals_defs.html", "globals_defs" ]
       ] ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 
@@ -29,13 +30,13 @@ var NAVTREEINDEX =
 [
 "__execve_8c.html",
 "environ_8c.html#aa006daaf11f1e2e45a6ababaf463212b",
-"globals_func_n.html",
-"iso9660__finddir_8c.html#ab5b5a339d80506e680848ffdae68d5ee",
-"pci_8h.html#a90b08a0d7cf59514faa0acd3be1a2ace",
-"pthread__mutex_8c.html#a9d5a00f9e6e279cce1e875a48cb9188d",
-"structBootInfo__t.html#ad583d2ecbdc34a87c6ab29a2fded69b6",
-"structpipeinfo.html#a88940cfea171abbf28b2b96bc87054ca",
-"telldir_8c_source.html"
+"globals_func_m.html",
+"iso9660__finddir_8c.html#a7863db87f2e6fa050ede770aebcf1087",
+"pci_8h.html#a61f94d72dd9ca69ac0cbf4be0680cde4",
+"pthread__mutex_8c.html#a53c032e9b0fe998bcded3c3c381b4418",
+"structBootInfo__t.html#ab2c8b3b8778032a87c0c2fe73245e9e8",
+"structpci__device.html#ae1867eca43c8f867951963a1753649ea",
+"task_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

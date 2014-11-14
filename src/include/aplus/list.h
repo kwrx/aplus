@@ -31,11 +31,11 @@
 #include <aplus/mm.h>
 
 
-#define __list_malloc	kmalloc
-#define __list_free		kfree
-#define __list_lock		spinlock_lock
-#define __list_unlock	spinlock_unlock
-#define __list_lock_t	spinlock_t
+#define __list_malloc(x)		kmalloc(x)
+#define __list_free(x)			kfree(x)
+#define __list_lock(x)			spinlock_lock(x)
+#define __list_unlock(x)		spinlock_unlock(x)
+#define __list_lock_t			spinlock_t
 
 #endif
 
@@ -55,6 +55,12 @@ typedef struct list {
 } list_t;
 
 
+
+/**
+ * \brief Check if list is empty or unitialized.
+ * \param list Pointer to list.
+ * \return true or false.
+ */
 static inline int list_empty(list_t* list) {
 	if(list)
 		return list->size == 0;
@@ -62,6 +68,13 @@ static inline int list_empty(list_t* list) {
 		return 1; 	/* empty */
 }
 
+
+/**
+ * \brief Add value to the list.
+ * \param list Pointer to list.
+ * \param v Value to add.
+ * \return 0 if success, otherwise -1.
+ */
 static inline int list_add(list_t* list, listval_t v) {
 	list_body_t* val = (list_body_t*) __list_malloc(sizeof(list_body_t));
 	if(!val)
@@ -79,6 +92,13 @@ static inline int list_add(list_t* list, listval_t v) {
 	return 0;
 }
 
+
+/**
+ * \brief Remove value to the list.
+ * \param list Pointer to list.
+ * \param v Value to remove.
+ * \return 0 if success, otherwise -1.
+ */
 static inline int list_remove(list_t* list, listval_t v) {
 	__list_lock(&list->lock);
 	
@@ -105,6 +125,12 @@ static inline int list_remove(list_t* list, listval_t v) {
 	return 0;
 }
 
+
+/**
+ * \brief Erase all values in the list.
+ * \param list Pointer to list.
+ * \return 0 if success, otherwise -1.
+ */
 static inline int list_clear(list_t* list) {
 	__list_lock(&list->lock);
 	
@@ -125,6 +151,11 @@ static inline int list_clear(list_t* list) {
 }
 
 
+/**
+ * \brief Copy all values in the src's list to dest's list.
+ * \param dest Pointer to list.
+ * \param src Pointer to list.
+ */
 static inline void list_clone(list_t* dest, list_t* src) {
 	__list_lock(&src->lock);
 	
@@ -135,6 +166,13 @@ static inline void list_clone(list_t* dest, list_t* src) {
 	__list_unlock(&src->lock);
 }
 
+
+/**
+ * \brief Get previous value in the list.
+ * \param list Pointer to list.
+ * \param val A Value in the list.
+ * \return Previous value if success, otherwise NULL.
+ */
 static inline listval_t list_prev(list_t* list, listval_t val) {
 	for(list_body_t* i = list->body; i; i = i->next) {
 		if(i->value == val)
@@ -145,6 +183,13 @@ static inline listval_t list_prev(list_t* list, listval_t val) {
 	return (listval_t) NULL;
 }
 
+
+/**
+ * \brief Get next value in the list.
+ * \param list Pointer to list.
+ * \param val A Value in the list.
+ * \return Next value if success, otherwise NULL.
+ */
 static inline listval_t list_next(list_t* list, listval_t val) {
 	for(list_body_t* i = list->body; i; i = i->next) {
 		if(i->next)
@@ -155,6 +200,11 @@ static inline listval_t list_next(list_t* list, listval_t val) {
 	return (listval_t) NULL;
 }
 
+/**
+ * \brief Get last value in the list.
+ * \param list Pointer to list.
+ * \return Last value if success, otherwise NULL.
+ */
 static inline listval_t list_tail(list_t* list) {
 	if(list->body)
 		return list->body->value;
@@ -162,6 +212,11 @@ static inline listval_t list_tail(list_t* list) {
 	return (listval_t) NULL;
 }
 
+/**
+ * \brief Get first value in the list.
+ * \param list Pointer to list.
+ * \return First value if success, otherwise NULL.
+ */
 static inline listval_t list_head(list_t* list) {
 
 	if(!list->body)
@@ -175,34 +230,107 @@ static inline listval_t list_head(list_t* list) {
 }
 
 
+/**
+ * \brief Lock a list for safe operations on it.
+ * \param list Pointer to list.
+ */
 #define list_safe_begin(list)								\
 	__list_lock(&list->lock)
 	
+/**
+ * \brief Unlock a list.
+ * \param list Pointer to list.
+ */
 #define list_safe_end(list)									\
 	__list_unlock(&list->lock)
 	
+
+/**
+ * \brief Iterating a list and save each value in "value".
+ * \param value Value where save each iteration.
+ * \param list Pointer to list.
+ */
 #define list_foreach(value, list)							\
 	for(listval_t value = list_head(list); 					\
 		value; 												\
 		value = list_next(list, value)						\
 		)
-		
-#define list_foreach_inverse(value, list)					\
+	
+/**
+ * \brief Iterating a list and save each value in "value" conversely.
+ * \param value Value where save each iteration.
+ * \param list Pointer to list.
+ */	
+#define list_foreach_reverse(value, list)					\
 	for(listval_t value = list_tail(list); 					\
 		value; 												\
 		value = list_prev(list, value)						\
 		)
 
+
+/**
+ * \brief Get size of list.
+ * \param list Pointer to list.
+ */
+#define list_size(list)										\
+	list->size
+
+/**
+ * \brief Initialize a list.
+ * \param list Pointer to list.
+ */	
 #define list_init(list)										\
 	list = (list_t*) __list_malloc(sizeof(list_t));			\
 	list->body = 0;											\
 	list->size = 0;											\
 	list->lock = 0
-	
+
+/**
+ * \brief Destroy a list.
+ * \param list Pointer to list.
+ */		
 #define list_destroy(list)									\
 	list_clear(list);										\
 	__list_free(list)
 
 
+
+/**
+ * \example list.h
+
+	// Initialization
+
+	list_t test = NULL;
+	list_init(test);
+
+	for(int i = 0; i < 10; i++)
+		list_add(test, (listval_t) i);
+
+
+	// Iterate list.
+	// Output: 0, 1, 2, 3, ... 9
+
+	list_foreach(v, test)
+		printf("%d\n", v);
+
+	
+
+	// Iterate list conversly.
+	// Output: 9, 8, 7, 6, ... 0
+
+	list_foreach_reverse(v, test)
+		printf("%d\n", v);
+
+
+
+	// Remove a value
+
+	list_remove(test, (listval_t) 2);
+
+	
+	// Destroy
+
+	list_destroy(test);
+ */
 
 #endif

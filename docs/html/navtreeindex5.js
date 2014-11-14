@@ -1,5 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"pthread__mutex_8c.html#a53c032e9b0fe998bcded3c3c381b4418":[4,0,2,0,2,1,14,5],
+"pthread__mutex_8c.html#a8033a9fb4c16036471e20a33cb7361bd":[4,0,2,0,2,1,14,2],
+"pthread__mutex_8c.html#a98a732043af58199cdf7f663dbf4d805":[4,0,2,0,2,1,14,6],
 "pthread__mutex_8c.html#a9d5a00f9e6e279cce1e875a48cb9188d":[4,0,2,0,2,1,14,3],
 "pthread__mutex_8c_source.html":[4,0,2,0,2,1,14],
 "pthread__mutexattr_8c.html":[4,0,2,0,2,1,15],
@@ -246,8 +249,5 @@ var NAVTREEINDEX5 =
 "structBootInfo__t.html#a8a09488fd20d514ccd02e07e5ca45d6d":[3,0,7,18],
 "structBootInfo__t.html#a904e8344d4c4ef9a650305409b933b17":[3,0,7,11],
 "structBootInfo__t.html#aa355db96d835f264c29a00f15ba126bf":[3,0,7,6],
-"structBootInfo__t.html#ab20281f521d626a49714e06b62291be9":[3,0,7,10],
-"structBootInfo__t.html#ab2c8b3b8778032a87c0c2fe73245e9e8":[3,0,7,16],
-"structBootInfo__t.html#ac0a248c150ec1bceaafc488988174a1d":[3,0,7,0],
-"structBootInfo__t.html#ac44eb8289f5f6fbbca78dc24e5052be7":[3,0,7,12]
+"structBootInfo__t.html#ab20281f521d626a49714e06b62291be9":[3,0,7,10]
 };

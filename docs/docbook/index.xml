@@ -214,4 +214,8 @@
         <xi:include href="pthread__spin_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="chkfail_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     </chapter>
+    <chapter>
+        <title>Example Documentation</title>
+        <xi:include href="list_8h-example.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    </chapter>
 </book>

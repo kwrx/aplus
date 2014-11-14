@@ -390,7 +390,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/tty.c" line="221" column="1" bodyfile="/opt/prj/aPlus/src/fs/tty.c" bodystart="221" bodyend="230"/>
         <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
-        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="82" endline="106">list_remove</references>
+        <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
         <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
       </memberdef>
       <memberdef kind="function" id="tty_8c_1a73bb587a850df0de01eab91fa87e40d0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -438,14 +438,14 @@
         <references refid="structtty_1a25ab11cf5b7109480eb6f2e4f05efe4f" compoundref="tty_8h" startline="34">tty::isize</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="debug_8c_1a123a367aba8cf7d2c802b6638b78a056" compoundref="debug_8c" startline="186" endline="193">ksprintf</references>
-        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="65" endline="80">list_add</references>
-        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="196">list_init</references>
+        <references refid="list_8h_1a945ef9f05b26f6016d2f28ec8836b1f0" compoundref="list_8h" startline="78" endline="93">list_add</references>
+        <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="282">list_init</references>
+        <references refid="list_8h_1af39ba1612dbf2ed0f90e335a2d9a8a04" compoundref="list_8h" startline="275">list_size</references>
         <references refid="structtty_1a37c81cc0b682d67ec3d789f061357d77" compoundref="tty_8h" startline="29">tty::lock</references>
         <references refid="structtty_1a94aa6d24908c6976459d187842f1428b" compoundref="tty_8h" startline="35">tty::osize</references>
         <references refid="structtty_1a2a619877d6ee5bb7caa115a931f98e2c" compoundref="tty_8h" startline="44">tty::output</references>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
         <references refid="structinode_1ae2c5e8a0a372334b97024fbd9ef694c1" compoundref="fs_8h" startline="56">inode::read</references>
-        <references refid="structlist_1ae581be90bd8eb7051528b61ad216de88" compoundref="list_8h" startline="54">list::size</references>
         <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="127" endline="154">sys_open</references>
         <references refid="tty_8c_1ab570955fda22cdef6b32ab99a4d59e6f" compoundref="tty_8c" startline="221" endline="230">tty_flush</references>
         <references refid="tty_8c_1af44ca2aed8cc67a67083f2632f2e8e9a" compoundref="tty_8c" startline="39" endline="159">tty_ioctl</references>
@@ -734,7 +734,7 @@
 <codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>fname[32];</highlight></codeline>
 <codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(fname,<sp/>0,<sp/>32);</highlight></codeline>
 <codeline lineno="245"><highlight class="normal"></highlight></codeline>
-<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1a123a367aba8cf7d2c802b6638b78a056" kindref="member">ksprintf</ref>(fname,<sp/></highlight><highlight class="stringliteral">&quot;/dev/tty%d&quot;</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>ttydevs-&gt;<ref refid="structlist_1ae581be90bd8eb7051528b61ad216de88" kindref="member">size</ref>);</highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1a123a367aba8cf7d2c802b6638b78a056" kindref="member">ksprintf</ref>(fname,<sp/></highlight><highlight class="stringliteral">&quot;/dev/tty%d&quot;</highlight><highlight class="normal">,<sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/><ref refid="list_8h_1af39ba1612dbf2ed0f90e335a2d9a8a04" kindref="member">list_size</ref>(ttydevs));</highlight></codeline>
 <codeline lineno="247"><highlight class="normal"></highlight></codeline>
 <codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd<sp/>=<sp/><ref refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" kindref="member">sys_open</ref>(fname,<sp/>O_CREAT<sp/>|<sp/>O_EXCL<sp/>|<sp/>O_RDWR,<sp/>S_IFCHR);</highlight></codeline>
 <codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fd<sp/>&lt;<sp/>0)<sp/>{</highlight></codeline>
@@ -774,7 +774,7 @@
 <codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/>tty-&gt;<ref refid="structtty_1a8a6dae366ed6eac05de7d9d463bd04eb" kindref="member">fg</ref><sp/>=<sp/>current_task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>;</highlight></codeline>
 <codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/>tty-&gt;<ref refid="structtty_1a68f717ba40f28d6b941f62f0e7255e2e" kindref="member">bg</ref><sp/>=<sp/>-1;</highlight></codeline>
 <codeline lineno="285"><highlight class="normal"></highlight></codeline>
-<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/>tty-&gt;<ref refid="structtty_1ababbf2910aa51f41da438d6adca0aca5" kindref="member">id</ref><sp/>=<sp/>ttydevs-&gt;<ref refid="structlist_1ae581be90bd8eb7051528b61ad216de88" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/>tty-&gt;<ref refid="structtty_1ababbf2910aa51f41da438d6adca0aca5" kindref="member">id</ref><sp/>=<sp/><ref refid="list_8h_1af39ba1612dbf2ed0f90e335a2d9a8a04" kindref="member">list_size</ref>(ttydevs);</highlight></codeline>
 <codeline lineno="287"><highlight class="normal"></highlight></codeline>
 <codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/>tty-&gt;<ref refid="structtty_1a2a619877d6ee5bb7caa115a931f98e2c" kindref="member">output</ref><sp/>=<sp/><ref refid="tty_8c_1a4cb6812ea931081c175160c7832bd5cb" kindref="member">__default_tty_output</ref>;</highlight></codeline>
 <codeline lineno="289"><highlight class="normal"></highlight></codeline>

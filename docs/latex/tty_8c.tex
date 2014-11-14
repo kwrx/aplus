@@ -306,7 +306,7 @@ Definition at line 233 of file tty.\+c.
 
 
 
-References \+\_\+\+\_\+default\+\_\+tty\+\_\+output(), tty\+::bg, errno, tty\+::exclmode, task\+::fd, tty\+::fg, inode\+::flush, tty\+::id, inode\+::ioctl, tty\+::ios, tty\+::isize, kmalloc(), ksprintf(), list\+\_\+add(), list\+\_\+init, tty\+::lock, tty\+::osize, tty\+::output, task\+::pid, inode\+::read, list\+::size, sys\+\_\+open(), tty\+\_\+flush(), tty\+\_\+ioctl(), tty\+\_\+read(), tty\+\_\+write(), T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S, T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S, ttydefchars, inode\+::userdata, tty\+::win, winsize, and inode\+::write.
+References \+\_\+\+\_\+default\+\_\+tty\+\_\+output(), tty\+::bg, errno, tty\+::exclmode, task\+::fd, tty\+::fg, inode\+::flush, tty\+::id, inode\+::ioctl, tty\+::ios, tty\+::isize, kmalloc(), ksprintf(), list\+\_\+add(), list\+\_\+init, list\+\_\+size, tty\+::lock, tty\+::osize, tty\+::output, task\+::pid, inode\+::read, sys\+\_\+open(), tty\+\_\+flush(), tty\+\_\+ioctl(), tty\+\_\+read(), tty\+\_\+write(), T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+C\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+I\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+L\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+I\+O\+S\+\_\+\+O\+F\+L\+A\+G, T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+C\+O\+L\+S, T\+T\+Y\+D\+E\+F\+\_\+\+W\+I\+N\+\_\+\+R\+O\+W\+S, ttydefchars, inode\+::userdata, tty\+::win, winsize, and inode\+::write.
 
 
 \begin{DoxyCode}
@@ -323,7 +323,7 @@ References \+\_\+\+\_\+default\+\_\+tty\+\_\+output(), tty\+::bg, errno, tty\+::
 243     \textcolor{keywordtype}{char} fname[32];
 244     memset(fname, 0, 32);
 245 
-246     \hyperlink{debug_8c_a123a367aba8cf7d2c802b6638b78a056}{ksprintf}(fname, \textcolor{stringliteral}{"/dev/tty%d"}, (\textcolor{keywordtype}{int}) \hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs}->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
+246     \hyperlink{debug_8c_a123a367aba8cf7d2c802b6638b78a056}{ksprintf}(fname, \textcolor{stringliteral}{"/dev/tty%d"}, (\textcolor{keywordtype}{int}) \hyperlink{list_8h_af39ba1612dbf2ed0f90e335a2d9a8a04}{list\_size}(\hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs}));
 247 
 248     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(fname, O\_CREAT | O\_EXCL | O\_RDWR, S\_IFCHR);
 249     \textcolor{keywordflow}{if}(fd < 0) \{
@@ -363,7 +363,7 @@ References \+\_\+\+\_\+default\+\_\+tty\+\_\+output(), tty\+::bg, errno, tty\+::
 283     tty->\hyperlink{structtty_a8a6dae366ed6eac05de7d9d463bd04eb}{fg} = \hyperlink{tty_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
 284     tty->\hyperlink{structtty_a68f717ba40f28d6b941f62f0e7255e2e}{bg} = -1;
 285 
-286     tty->\hyperlink{structtty_ababbf2910aa51f41da438d6adca0aca5}{id} = \hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs}->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size};
+286     tty->\hyperlink{structtty_ababbf2910aa51f41da438d6adca0aca5}{id} = \hyperlink{list_8h_af39ba1612dbf2ed0f90e335a2d9a8a04}{list\_size}(\hyperlink{tty_8c_ae98e607f54aef5eccd498dd30a6d005c}{ttydevs});
 287 
 288     tty->\hyperlink{structtty_a2a619877d6ee5bb7caa115a931f98e2c}{output} = \hyperlink{tty_8c_a4cb6812ea931081c175160c7832bd5cb}{\_\_default\_tty\_output};
 289 

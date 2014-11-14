@@ -50,6 +50,8 @@ extern task_t* current_task;
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_LOW);
 	
+	sys_execve("/dev/ramdisk/test", NULL, NULL);
+
 	for(;;)
 		__asm__ ("pause");
 }
@@ -89,12 +91,19 @@ int main() {
 		panic("initrd: cannot mount ramdisk");
 
 
+	
+
 /*
 	if(fork() == 0)
 		execl("/bin/init", "/bin/init", 0);
 	else
 */
 	task_clone(sysidle, NULL, NULL, 0);
+
+	for(int i = 0; i < 100000000; i++);
+	kprintf("\n\nKILLING %d\n\n", sys_kill(1, 1));
+	
+
 	for(;;);
 }
 

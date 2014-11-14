@@ -49,6 +49,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -1101,7 +1102,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00133">133</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
 
-<p>References <a class="el" href="task_8h_source.html#l00122">task::clock</a>, <a class="el" href="list_8h_source.html#l00058">list_empty()</a>, <a class="el" href="task_8h_source.html#l00121">task::priority</a>, <a class="el" href="src_2sched_8c_source.html#l00052">sched_enabled</a>, <a class="el" href="src_2sched_8c_source.html#l00114">schedule_next()</a>, and <a class="el" href="task_8c_source.html#l00133">task_switch()</a>.</p>
+<p>References <a class="el" href="task_8h_source.html#l00122">task::clock</a>, <a class="el" href="list_8h_source.html#l00064">list_empty()</a>, <a class="el" href="task_8h_source.html#l00121">task::priority</a>, <a class="el" href="src_2sched_8c_source.html#l00052">sched_enabled</a>, <a class="el" href="src_2sched_8c_source.html#l00114">schedule_next()</a>, and <a class="el" href="task_8c_source.html#l00133">task_switch()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                {</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="src_2sched_8c.html#aeb00dca46bca400ba3512e70f9a1c55c">sched_enabled</a> == 0)</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="keywordflow">return</span>;</div>
@@ -1119,7 +1120,7 @@ Variables</h2></td></tr>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;}</div>
 <div class="ttc" id="task_8c_html_a1b2086f34fd20264fae9ed90c4bc2645"><div class="ttname"><a href="task_8c.html#a1b2086f34fd20264fae9ed90c4bc2645">task_switch</a></div><div class="ttdeci">void task_switch(task_t *newtask)</div><div class="ttdef"><b>Definition:</b> <a href="task_8c_source.html#l00133">task.c:133</a></div></div>
 <div class="ttc" id="src_2sched_8c_html_acb74842176b48d2ab29b1a74b0ca4ef1"><div class="ttname"><a href="src_2sched_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</a></div><div class="ttdeci">list_t * task_queue</div><div class="ttdoc">List of all Task. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00046">sched.c:46</a></div></div>
-<div class="ttc" id="list_8h_html_a89e0fc8ca134e1dceb33c75b756e6754"><div class="ttname"><a href="list_8h.html#a89e0fc8ca134e1dceb33c75b756e6754">list_empty</a></div><div class="ttdeci">static int list_empty(list_t *list)</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00058">list.h:58</a></div></div>
+<div class="ttc" id="list_8h_html_a89e0fc8ca134e1dceb33c75b756e6754"><div class="ttname"><a href="list_8h.html#a89e0fc8ca134e1dceb33c75b756e6754">list_empty</a></div><div class="ttdeci">static int list_empty(list_t *list)</div><div class="ttdoc">Check if list is empty or unitialized. </div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00064">list.h:64</a></div></div>
 <div class="ttc" id="src_2sched_8c_html_aeb00dca46bca400ba3512e70f9a1c55c"><div class="ttname"><a href="src_2sched_8c.html#aeb00dca46bca400ba3512e70f9a1c55c">sched_enabled</a></div><div class="ttdeci">static int sched_enabled</div><div class="ttdoc">Scheduling enabled status. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00052">sched.c:52</a></div></div>
 <div class="ttc" id="src_2sched_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="src_2sched_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
 <div class="ttc" id="structtask_html_a8a31c6648c1b1869bfa069f4a969b0ad"><div class="ttname"><a href="structtask.html#a8a31c6648c1b1869bfa069f4a969b0ad">task::clock</a></div><div class="ttdeci">uint32_t clock</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00122">task.h:122</a></div></div>
@@ -1434,7 +1435,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_1a2db638ef6877e1d4473af5a81c9a08.html">arch</a></li><li class="navelem"><a class="el" href="desc_8c.html">desc.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 17:33:02 for aPlus by
+    <li class="footer">Generated on Wed Nov 12 2014 18:07:57 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

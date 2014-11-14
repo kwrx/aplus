@@ -888,7 +888,8 @@
     <member refid="list_8h_1a22853dfff2d59e6a8ea2d77eeed5f293" kind="define"><name>list_safe_begin</name></member>
     <member refid="list_8h_1a55d0a2f3e6dcbf7213b13e9e0dd9d981" kind="define"><name>list_safe_end</name></member>
     <member refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kind="define"><name>list_foreach</name></member>
-    <member refid="list_8h_1a6e172d1395eb664ce14adbb6ab82abf3" kind="define"><name>list_foreach_inverse</name></member>
+    <member refid="list_8h_1a548f0cb42e0622f6b4d71c2769bcb502" kind="define"><name>list_foreach_reverse</name></member>
+    <member refid="list_8h_1af39ba1612dbf2ed0f90e335a2d9a8a04" kind="define"><name>list_size</name></member>
     <member refid="list_8h_1aa288c0785df071ed8643763202928c82" kind="define"><name>list_init</name></member>
     <member refid="list_8h_1a9c676c5a77ee9c18ccaadcb4f99fc990" kind="define"><name>list_destroy</name></member>
     <member refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kind="typedef"><name>listval_t</name></member>
@@ -2060,5 +2061,7 @@
   <compound refid="dir_88d4425b71c248820f76f8cc7a718e04" kind="dir"><name>usr</name>
   </compound>
   <compound refid="dir_e87e7991faf28f71b600c8b3b35f99ec" kind="dir"><name>usr/src/libpthread/src/platform/win32</name>
+  </compound>
+  <compound refid="list_8h-example" kind="example"><name>list.h</name>
   </compound>
 </doxygenindex>

@@ -47,6 +47,11 @@ typedef struct block {
 } __attribute__((packed)) block_t;
 
 
+/**
+ *	\brief Alloc memory from Kernel Heap.
+ * 	\param size Size of data to alloc.
+ *	\return Virtual Address of data.
+ */
 void* kmalloc(size_t size) {
 	void* addr = (void*) halloc(current_heap, size);
 	if(!addr)
@@ -63,6 +68,10 @@ void* kmalloc(size_t size) {
 }
 
 
+/**
+ *	\brief Free memory from Kernel Heap.
+ * 	\param ptr Pointer to data allocated.
+ */
 void kfree(void* ptr) {
 	if(!ptr)
 		return;
@@ -81,6 +90,12 @@ void kfree(void* ptr) {
 }
 
 
+/**
+ *	\brief Realloc memory from Kernel Heap.
+ * 	\param ptr Pointer to data allocated.
+ * 	\param size Size of data to alloc.
+ *	\return Virtual Address of data.
+ */
 void* krealloc(void* ptr, size_t size) {
 	if(ptr == NULL)
 		return kmalloc(size);
@@ -109,16 +124,24 @@ void* krealloc(void* ptr, size_t size) {
 
 
 
-
+/**
+ *	\brief Set current heap for memory operations.
+ */
 void mm_setheap(heap_t* heap) {
 	current_heap = heap;
 }
 
+/**
+ *	\brief Get current heap for memory operations.
+ */
 volatile heap_t* mm_getheap() {
 	return current_heap;
 }
 
 
+/**
+ *	\brief Initialize MMU.
+ */
 int mm_init() {
 
 	memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;

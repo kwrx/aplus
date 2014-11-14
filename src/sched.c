@@ -137,12 +137,22 @@ void schedule() {
 	if(list_empty(task_queue))
 		return;
 
+
+	if(current_task->signal_sig) {
+		if(current_task->signal_handler) {
+			current_task->signal_handler(current_task->signal_sig);
+			current_task->signal_sig = 0;
+		}
+	}
 		
+
+
 	current_task->clock += 1;
 	
 	if(current_task->clock % current_task->priority)
 		return;
-		
+
+	
 	task_switch(schedule_next());
 }
 
@@ -220,6 +230,8 @@ void schedule_exit2(task_t* task, int status) {
 	task->exitcode = status;
 	
 	kfree((void*) task->image.ptr);
+	vmm_free(task->image.vaddr, task->image.length);
+
 	schedule_yield();
 }
 
@@ -275,14 +287,23 @@ void* schedule_sbrk(ptrdiff_t increment) {
 		
 	if(current_task->image.vaddr == 0)
 		return NULL;
-		
+
+
+
+	void* brk = (void*) ((uint32_t) current_task->image.vaddr + current_task->image.length);		
 	if(increment == 0)
-		return (void*) ((uint32_t) current_task->image.vaddr + current_task->image.length);
+		return brk;
+
+
+	increment = (increment & ~0xFFF) + 0x1000;
+
+	if(increment > 0)
+		vmm_alloc(current_task->image.vaddr + current_task->image.length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	else
+		vmm_free(current_task->image.vaddr + current_task->image.length, increment);	
 
 	current_task->image.length += increment;
-	current_task->image.ptr = (uint32_t) krealloc((void*) current_task->image.ptr, current_task->image.length);
-	current_task->image.vaddr = vmm_map(current_task->context.cr3, mm_paddr((void*) current_task->image.ptr), current_task->image.vaddr, current_task->image.length, VMM_FLAGS_DEFAULT);
-	
-	return (void*) ((uint32_t) current_task->image.vaddr + current_task->image.length);
+
+	return brk;
 }
 
