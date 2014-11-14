@@ -3,6 +3,7 @@
   <compounddef id="dir_fb5e736bd9710abb23af1a33618053fb" kind="dir">
     <compoundname>src/syscall</compoundname>
     <innerfile refid="__exit_8c">_exit.c</innerfile>
+    <innerfile refid="args_8c">args.c</innerfile>
     <innerfile refid="chown_8c">chown.c</innerfile>
     <innerfile refid="clone_8c">clone.c</innerfile>
     <innerfile refid="close_8c">close.c</innerfile>
@@ -24,6 +25,7 @@
     <innerfile refid="read_8c">read.c</innerfile>
     <innerfile refid="src_2syscall_2readdir_8c">readdir.c</innerfile>
     <innerfile refid="sbrk_8c">sbrk.c</innerfile>
+    <innerfile refid="sighandler_8c">sighandler.c</innerfile>
     <innerfile refid="stat_8c">stat.c</innerfile>
     <innerfile refid="symlink_8c">symlink.c</innerfile>
     <innerfile refid="src_2syscall_2test_8c">test.c</innerfile>

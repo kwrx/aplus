@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="dir_6a9c6543806adfb0a9f993048d7a021b" kind="dir">
+    <compoundname>usr/src/libatk/src/include/atk</compoundname>
+    <innerfile refid="widget_8h">widget.h</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/"/>
+  </compounddef>
+</doxygen>

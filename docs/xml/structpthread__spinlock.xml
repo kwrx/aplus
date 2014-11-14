@@ -36,14 +36,14 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="102">
+      <node id="109">
         <label>pthread_spinlock</label>
         <link refid="structpthread__spinlock"/>
-        <childnode refid="103" relation="usage">
+        <childnode refid="110" relation="usage">
           <edgelabel>+mutex</edgelabel>
         </childnode>
       </node>
-      <node id="103">
+      <node id="110">
         <label>pthread_mutex</label>
         <link refid="structpthread__mutex"/>
       </node>

@@ -117,7 +117,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="46">
+      <node id="53">
         <label>ipv6_header</label>
         <link refid="structipv6__header"/>
       </node>

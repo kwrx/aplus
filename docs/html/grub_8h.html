@@ -161,6 +161,7 @@ Typedefs</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:afa73cc1cb823e7947162fcc569b64e5a"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structvesaModeInfo__t.html">vesaModeInfo_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grub_8h.html#afa73cc1cb823e7947162fcc569b64e5a">__attribute__</a> ((packed)) vesaModeInfo</td></tr>
+<tr class="memdesc:afa73cc1cb823e7947162fcc569b64e5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alloc memory from Kernel Heap.  <a href="#afa73cc1cb823e7947162fcc569b64e5a">More...</a><br /></td></tr>
 <tr class="separator:afa73cc1cb823e7947162fcc569b64e5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -429,13 +430,22 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Alloc memory from Kernel Heap. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>Size of data to alloc. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Virtual Address of data. </dd></dl>
+
 <p>Definition at line <a class="el" href="desc_8c_source.html#l00044">44</a> of file <a class="el" href="desc_8c_source.html">desc.c</a>.</p>
 <div class="fragment"><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                       {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a> limit;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> base;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <a class="code" href="desc_8c.html#a7d771d9751c9e97e25096acd0dfd1a94">__attribute__</a>((packed)) gdt_ptr_t;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;} <a class="code" href="desc_8c.html#ae21df847b32e33e64ba0912dd628e610">__attribute__</a>((packed)) gdt_ptr_t;</div>
 <div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
-<div class="ttc" id="desc_8c_html_a7d771d9751c9e97e25096acd0dfd1a94"><div class="ttname"><a href="desc_8c.html#a7d771d9751c9e97e25096acd0dfd1a94">__attribute__</a></div><div class="ttdeci">struct gdt_entry __attribute__((packed))</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
+<div class="ttc" id="desc_8c_html_ae21df847b32e33e64ba0912dd628e610"><div class="ttname"><a href="desc_8c.html#ae21df847b32e33e64ba0912dd628e610">__attribute__</a></div><div class="ttdeci">struct gdt_entry __attribute__((packed))</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
 <div class="ttc" id="aplus_8h_html_a5a8b2dc9e45a9ee81a94ef304fb62505"><div class="ttname"><a href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a></div><div class="ttdeci">uint16_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00102">aplus.h:102</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -921,7 +931,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="grub_8h.html">grub.h</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 18:07:57 for aPlus by
+    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

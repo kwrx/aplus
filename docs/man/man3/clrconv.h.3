@@ -1,0 +1,103 @@
+.TH "usr/src/libatk/src/clrconv.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libatk/src/clrconv.h \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <atk\&.h>\fP
+.br
+\fC#include <stdint\&.h>\fP
+.br
+
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBV4F_TO_ARGB\fP(c)"
+.br
+.ti -1c
+.RI "#define \fBV4F_TO_RGB\fP(c)"
+.br
+.ti -1c
+.RI "#define \fBV4F_TO_R5G6B5\fP(c)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBatk_color_t\fP \fB__alphablend\fP (\fBatk_color_t\fP \fBd\fP, \fBatk_color_t\fP s, float a)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define V4F_TO_ARGB(c)"
+\fBValue:\fP
+.PP
+.nf
+(                                       \
+        ((int32_t)(c[3] * 0xFF) << 24)  |   \
+        ((int32_t)(c[2] * 0xFF) << 16)  |   \
+        ((int32_t)(c[1] * 0xFF) << 8)   |   \
+        ((int32_t)(c[0] * 0xFF))        |   \
+    )
+.fi
+.PP
+Definition at line 14 of file clrconv\&.h\&.
+.SS "#define V4F_TO_R5G6B5(c)"
+\fBValue:\fP
+.PP
+.nf
+(                                     \
+        ((int16_t)(c[2] * 0x1F) << 11)  |   \
+        ((int16_t)(c[1] * 0x3F) << 5)   |   \
+        ((int16_t)(c[0] * 0x1F))        |   \
+    )
+.fi
+.PP
+Definition at line 29 of file clrconv\&.h\&.
+.SS "#define V4F_TO_RGB(c)"
+\fBValue:\fP
+.PP
+.nf
+(                                        \
+        ((int32_t)(c[2] * 0xFF) << 16)  |   \
+        ((int32_t)(c[1] * 0xFF) << 8)   |   \
+        ((int32_t)(c[0] * 0xFF))        |   \
+    )
+.fi
+.PP
+Definition at line 22 of file clrconv\&.h\&.
+.SH "Function Documentation"
+.PP 
+.SS "static \fBatk_color_t\fP __alphablend (\fBatk_color_t\fPd, \fBatk_color_t\fPs, floata)\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definition at line 38 of file clrconv\&.h\&.
+.PP
+References ATK_COLOR_A, ATK_COLOR_B, ATK_COLOR_BLACK, ATK_COLOR_G, ATK_COLOR_R, and d\&.
+.PP
+.nf
+38                                                                               {
+39     if(a == 0\&.0f)
+40         return d;
+41 
+42     if(a == 1\&.0f)
+43         return s;
+44 
+45     float ia = 1\&.0f - a;
+46     
+47     atk_color_t r = ATK_COLOR_BLACK;
+48     r[ATK_COLOR_A] = 1\&.0f;
+49     r[ATK_COLOR_R] = (s[ATK_COLOR_R] * a + d[ATK_COLOR_R] * ia);
+50     r[ATK_COLOR_G] = (s[ATK_COLOR_G] * a + d[ATK_COLOR_G] * ia);
+51     r[ATK_COLOR_B] = (s[ATK_COLOR_B] * a + d[ATK_COLOR_B] * ia);
+52 
+53     return r;
+54 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

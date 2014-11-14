@@ -266,7 +266,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/pipe.c" line="54" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="54" bodyend="59"/>
         <references refid="bufio_8c_1a2a92ff5d9427e2d5d88b4c95247b0f64" compoundref="bufio_8c" startline="118" endline="129">bufio_free</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" compoundref="pipe_8c" startline="21">pipeinfo::stream</references>
         <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
       </memberdef>

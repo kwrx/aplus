@@ -53,30 +53,33 @@ References \+\_\+\+\_\+bss\+\_\+start, \+\_\+\+\_\+init\+\_\+traps(), \+\_\+\+\_
 66         *(\textcolor{keywordtype}{char}*) i = 0;
 67 
 68 
-69     \hyperlink{crt0_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ} = (\textcolor{keywordtype}{char}**) aplus\_envp();
-70     \textcolor{keywordtype}{char}** argv = (\textcolor{keywordtype}{char}**) aplus\_argv();
+69     \hyperlink{crt0_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ} = (\textcolor{keywordtype}{char}**) \_\_get\_envp();
+70     \textcolor{keywordtype}{char}** argv = (\textcolor{keywordtype}{char}**) \_\_get\_argv();
 71 
 72     \textcolor{keywordtype}{int} argc = 0;
-73     \textcolor{keywordflow}{while}(argv[argc])
-74         argc += 1;
-75 
-76 
-77     open(\textcolor{stringliteral}{"/dev/stdin"}, 0, 0644);
-78     open(\textcolor{stringliteral}{"/dev/stdout"}, 0, 0644);
-79     open(\textcolor{stringliteral}{"/dev/stderr"}, 0, 0644);
-80 
-81 
-82     aplus\_install\_sighandler(\hyperlink{crt0_8c_a50595d26a35dfb272a9f822789821724}{\_\_sigtramp});
-83     \_init\_signal();
-84     \hyperlink{crt0_8c_a54dbf06bfcd3b86af2609c8d594b7907}{\_\_init\_traps}();
-85 
-86 \textcolor{preprocessor}{#if 0}
-87     atexit(\_\_do\_global\_dtors);
-88     \_\_do\_global\_ctors();
-89 \textcolor{preprocessor}{#endif}
-90 
-91     exit(\hyperlink{crt0_8c_ae867ea66194fc0112526615a67b773cf}{main}(argc, argv, \hyperlink{crt0_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ}));
-92 \}
+73 
+74     \textcolor{keywordflow}{if}(argv)
+75         \textcolor{keywordflow}{while}(argv[argc])
+76             argc += 1;
+77 
+78 
+79     open(\textcolor{stringliteral}{"/dev/stdin"}, 0, 0644);
+80     open(\textcolor{stringliteral}{"/dev/stdout"}, 0, 0644);
+81     open(\textcolor{stringliteral}{"/dev/stderr"}, 0, 0644);
+82 
+83 
+84 
+85     \_\_install\_sighandler(\hyperlink{crt0_8c_a50595d26a35dfb272a9f822789821724}{\_\_sigtramp});
+86     \_init\_signal();
+87     \hyperlink{crt0_8c_a54dbf06bfcd3b86af2609c8d594b7907}{\_\_init\_traps}();
+88 
+89 \textcolor{preprocessor}{#if 0}
+90     atexit(\_\_do\_global\_dtors);
+91     \_\_do\_global\_ctors();
+92 \textcolor{preprocessor}{#endif}
+93 
+94     exit(\hyperlink{crt0_8c_ae867ea66194fc0112526615a67b773cf}{main}(argc, argv, \hyperlink{crt0_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ}));
+95 \}
 \end{DoxyCode}
 \hypertarget{crt0_8c_aa7ab5703ee773f395bff8dc7abf214af}{\index{crt0.\+c@{crt0.\+c}!\+\_\+\+\_\+default\+\_\+sighandler\+\_\+\+\_\+@{\+\_\+\+\_\+default\+\_\+sighandler\+\_\+\+\_\+}}
 \index{\+\_\+\+\_\+default\+\_\+sighandler\+\_\+\+\_\+@{\+\_\+\+\_\+default\+\_\+sighandler\+\_\+\+\_\+}!crt0.\+c@{crt0.\+c}}

@@ -47,7 +47,7 @@ struct \hyperlink{structipv4__header}{ipv4\+\_\+header}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structipv4__header}{ipv4\+\_\+header} \hyperlink{ipv4_8h_aedc8b3a56af6d6fa02c12255c4176f30}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) ipv4\+\_\+header\+\_\+t
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Alloc memory from Kernel Heap. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -230,6 +230,18 @@ Definition at line 18 of file ipv4.\+h.
 )}}\label{ipv4_8h_aedc8b3a56af6d6fa02c12255c4176f30}
 
 
+Alloc memory from Kernel Heap. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Size of data to alloc. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Virtual Address of data. 
+\end{DoxyReturn}
+
+
 Definition at line 44 of file desc.\+c.
 
 
@@ -237,7 +249,7 @@ Definition at line 44 of file desc.\+c.
 46                        \{
 47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
 48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
-49 \} \hyperlink{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+49 \} \hyperlink{desc_8c_ae21df847b32e33e64ba0912dd628e610}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
 \end{DoxyCode}
 
 

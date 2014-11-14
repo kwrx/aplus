@@ -4,13 +4,13 @@
     <compoundname>hooks.h</compoundname>
     <includes local="no">sched.h</includes>
     <incdepgraph>
-      <node id="2172">
+      <node id="2246">
         <label>usr/src/libpthread/src/platform/posix/hooks.h</label>
         <link refid="posix/hooks.h"/>
-        <childnode refid="2173" relation="include">
+        <childnode refid="2247" relation="include">
         </childnode>
       </node>
-      <node id="2173">
+      <node id="2247">
         <label>sched.h</label>
       </node>
     </incdepgraph>

@@ -131,32 +131,30 @@ $(document).ready(function(){initNavTree('fstat_8c_source.html','');});
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="structinode.html">inode_t</a>* ino = current_task-&gt;<a class="code" href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">fd</a>[fd];</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">if</span>(!ino) {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;sys_fstat: %s.&quot;</span>, strerror(<a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a>));</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EBADF;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    st-&gt;st_mode = ino-&gt;<a class="code" href="structinode.html#a4902d9f6a1d7bd79c6f1bb73d83ce8e3">mode</a>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    st-&gt;st_ino = ino-&gt;<a class="code" href="structinode.html#a1a77be0f24a6c9a18bbdbcecfb75df7c">ino</a>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    st-&gt;st_dev = ino-&gt;<a class="code" href="structinode.html#a127a2eb030df332fa64a81188731ad6b">dev</a>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    st-&gt;st_uid = ino-&gt;<a class="code" href="structinode.html#a0eac94e96ded19029e871d5cce815bcb">uid</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    st-&gt;st_gid = ino-&gt;<a class="code" href="structinode.html#a8434fb9dd05057d00b37ed713713835d">gid</a>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    st-&gt;st_atime = ino-&gt;<a class="code" href="structinode.html#a7e52661a115f6def97778566f2be0d80">atime</a>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    st-&gt;st_ctime = ino-&gt;<a class="code" href="structinode.html#a27334a9d3c25fbac1c134ed5b9cbc566">ctime</a>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    st-&gt;st_mtime = ino-&gt;<a class="code" href="structinode.html#a19f0d407fa2962c942e406d3e00c1da4">mtime</a>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    st-&gt;st_nlink = ino-&gt;<a class="code" href="structinode.html#a1daedc820c86b5af32f0a137419f7a8f">nlink</a>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    st-&gt;st_size = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    st-&gt;st_rdev = ino-&gt;<a class="code" href="structinode.html#a3e7613383954ff7b5faf7c2188e1f61b">rdev</a>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    st-&gt;st_blksize = 512;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    st-&gt;st_blocks = st-&gt;st_size / st-&gt;st_blksize;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EBADF;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    st-&gt;st_mode = ino-&gt;<a class="code" href="structinode.html#a4902d9f6a1d7bd79c6f1bb73d83ce8e3">mode</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    st-&gt;st_ino = ino-&gt;<a class="code" href="structinode.html#a1a77be0f24a6c9a18bbdbcecfb75df7c">ino</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    st-&gt;st_dev = ino-&gt;<a class="code" href="structinode.html#a127a2eb030df332fa64a81188731ad6b">dev</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    st-&gt;st_uid = ino-&gt;<a class="code" href="structinode.html#a0eac94e96ded19029e871d5cce815bcb">uid</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    st-&gt;st_gid = ino-&gt;<a class="code" href="structinode.html#a8434fb9dd05057d00b37ed713713835d">gid</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    st-&gt;st_atime = ino-&gt;<a class="code" href="structinode.html#a7e52661a115f6def97778566f2be0d80">atime</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    st-&gt;st_ctime = ino-&gt;<a class="code" href="structinode.html#a27334a9d3c25fbac1c134ed5b9cbc566">ctime</a>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    st-&gt;st_mtime = ino-&gt;<a class="code" href="structinode.html#a19f0d407fa2962c942e406d3e00c1da4">mtime</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    st-&gt;st_nlink = ino-&gt;<a class="code" href="structinode.html#a1daedc820c86b5af32f0a137419f7a8f">nlink</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    st-&gt;st_size = ino-&gt;<a class="code" href="structinode.html#a53722b1b60b7136ce0204b66527bb400">size</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    st-&gt;st_rdev = ino-&gt;<a class="code" href="structinode.html#a3e7613383954ff7b5faf7c2188e1f61b">rdev</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    st-&gt;st_blksize = 512;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    st-&gt;st_blocks = st-&gt;st_size / st-&gt;st_blksize;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="fstat_8c.html#a4d257934d85058e9d4821db299a6544d">SYSCALL</a>(<a class="code" href="fstat_8c.html#a37940479e5cc923a96785a82989b7974">sys_fstat</a>, 4);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="fstat_8c.html#a4d257934d85058e9d4821db299a6544d">SYSCALL</a>(<a class="code" href="fstat_8c.html#a37940479e5cc923a96785a82989b7974">sys_fstat</a>, 4);</div>
 <div class="ttc" id="structinode_html_a0eac94e96ded19029e871d5cce815bcb"><div class="ttname"><a href="structinode.html#a0eac94e96ded19029e871d5cce815bcb">inode::uid</a></div><div class="ttdeci">uid_t uid</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00044">fs.h:44</a></div></div>
-<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
 <div class="ttc" id="fs_8h_html"><div class="ttname"><a href="fs_8h.html">fs.h</a></div></div>
 <div class="ttc" id="structinode_html_a19f0d407fa2962c942e406d3e00c1da4"><div class="ttname"><a href="structinode.html#a19f0d407fa2962c942e406d3e00c1da4">inode::mtime</a></div><div class="ttdeci">time_t mtime</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00051">fs.h:51</a></div></div>
 <div class="ttc" id="dirent_8h_html"><div class="ttname"><a href="dirent_8h.html">dirent.h</a></div></div>
@@ -185,7 +183,7 @@ $(document).ready(function(){initNavTree('fstat_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="fstat_8c.html">fstat.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 18:07:56 for aPlus by
+    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

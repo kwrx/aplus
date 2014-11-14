@@ -166,7 +166,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="68">
+      <node id="75">
         <label>pci_device</label>
         <link refid="structpci__device"/>
       </node>

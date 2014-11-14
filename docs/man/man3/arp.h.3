@@ -1,4 +1,4 @@
-.TH "src/include/aplus/net/arp.h" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/net/arp.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -63,6 +63,7 @@ src/include/aplus/net/arp.h \-
 .ti -1c
 .RI "struct \fBarp_header\fP \fB__attribute__\fP ((packed)) arp_header_t"
 .br
+.RI "\fIAlloc memory from Kernel Heap\&. \fP"
 .in -1c
 .SS "Variables"
 
@@ -132,6 +133,20 @@ Definition at line 21 of file arp\&.h\&.
 .SH "Function Documentation"
 .PP 
 .SS "struct \fBarp_header\fP __attribute__ ((packed))"
+
+.PP
+Alloc memory from Kernel Heap\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP Size of data to alloc\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Virtual Address of data\&. 
+.RE
+.PP
 
 .PP
 Definition at line 44 of file desc\&.c\&.

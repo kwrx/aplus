@@ -1,4 +1,4 @@
-.TH "usr/src/libcrt0/src/crt0.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libcrt0/src/crt0.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -62,30 +62,33 @@ References __bss_start, __init_traps(), __sigtramp(), _end, environ, and main()\
 66         *(char*) i = 0;
 67 
 68 
-69     environ = (char**) aplus_envp();
-70     char** argv = (char**) aplus_argv();
+69     environ = (char**) __get_envp();
+70     char** argv = (char**) __get_argv();
 71 
 72     int argc = 0;
-73     while(argv[argc])
-74         argc += 1;
-75 
-76 
-77     open("/dev/stdin", 0, 0644);
-78     open("/dev/stdout", 0, 0644);
-79     open("/dev/stderr", 0, 0644);
-80 
-81 
-82     aplus_install_sighandler(__sigtramp);
-83     _init_signal();
-84     __init_traps();
-85 
-86 #if 0
-87     atexit(__do_global_dtors);
-88     __do_global_ctors();
-89 #endif
-90 
-91     exit(main(argc, argv, environ));
-92 }
+73 
+74     if(argv)
+75         while(argv[argc])
+76             argc += 1;
+77 
+78 
+79     open("/dev/stdin", 0, 0644);
+80     open("/dev/stdout", 0, 0644);
+81     open("/dev/stderr", 0, 0644);
+82 
+83 
+84 
+85     __install_sighandler(__sigtramp);
+86     _init_signal();
+87     __init_traps();
+88 
+89 #if 0
+90     atexit(__do_global_dtors);
+91     __do_global_ctors();
+92 #endif
+93 
+94     exit(main(argc, argv, environ));
+95 }
 .fi
 .SS "static int __default_sighandler__ (intsig)\fC [static]\fP"
 

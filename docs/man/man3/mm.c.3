@@ -1,4 +1,4 @@
-.TH "src/mm/mm.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/mm/mm.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -34,21 +34,27 @@ src/mm/mm.c \-
 .ti -1c
 .RI "struct \fBblock\fP \fB__attribute__\fP ((packed))"
 .br
+.RI "\fIAlloc memory from Kernel Heap\&. \fP"
 .ti -1c
 .RI "void \fBkfree\fP (void *ptr)"
 .br
+.RI "\fIFree memory from Kernel Heap\&. \fP"
 .ti -1c
 .RI "void * \fBkrealloc\fP (void *ptr, size_t \fBsize\fP)"
 .br
+.RI "\fIRealloc memory from Kernel Heap\&. \fP"
 .ti -1c
 .RI "void \fBmm_setheap\fP (\fBheap_t\fP *\fBheap\fP)"
 .br
+.RI "\fISet current heap for memory operations\&. \fP"
 .ti -1c
 .RI "volatile \fBheap_t\fP * \fBmm_getheap\fP ()"
 .br
+.RI "\fIGet current heap for memory operations\&. \fP"
 .ti -1c
 .RI "int \fBmm_init\fP ()"
 .br
+.RI "\fIInitialize MMU\&. \fP"
 .in -1c
 .SS "Variables"
 
@@ -80,125 +86,170 @@ src/mm/mm.c \-
 .SS "struct \fBblock\fP __attribute__ ((packed))"
 
 .PP
+Alloc memory from Kernel Heap\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIsize\fP Size of data to alloc\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Virtual Address of data\&. 
+.RE
+.PP
+
+.PP
 Definition at line 47 of file mm\&.c\&.
 .PP
 .nf
-50                            {
-51     void* addr = (void*) halloc(current_heap, size);
-52     if(!addr)
-53         panic("halloc(): failed!");
-54 
-55 
-56     addr = mm_vaddr(addr);
-57 
-58     block_t* block = (block_t*) addr;
-59     block->magic = BLKMAGIC;
-60     block->size = size;
-61 
-62     return (void*) ((uint32_t) block + sizeof(block_t));
-63 }
+59                            {
+60     void* addr = (void*) halloc(current_heap, size);
+61     if(!addr)
+62         panic("halloc(): failed!");
+63 
+64 
+65     addr = mm_vaddr(addr);
+66 
+67     block_t* block = (block_t*) addr;
+68     block->magic = BLKMAGIC;
+69     block->size = size;
+70 
+71     return (void*) ((uint32_t) block + sizeof(block_t));
+72 }
 .fi
 .SS "void kfree (void *ptr)"
 
 .PP
-Definition at line 66 of file mm\&.c\&.
+Free memory from Kernel Heap\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP Pointer to data allocated\&. 
+.RE
+.PP
+
+.PP
+Definition at line 79 of file mm\&.c\&.
 .PP
 References BLKMAGIC, hfree(), mm_align(), mm_paddr(), and size\&.
 .PP
 .nf
-66                       {
-67     if(!ptr)
-68         return;
-69         
-70     
-71     block_t* block = (block_t*) ptr;
-72     if(block->magic != BLKMAGIC)
-73         return;
-74         
-75     size_t size = block->size;
-76     block->size = 0;
-77     block->magic = 0;
-78     
-79     
-80     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
-81 }
+79                       {
+80     if(!ptr)
+81         return;
+82         
+83     
+84     block_t* block = (block_t*) ptr;
+85     if(block->magic != BLKMAGIC)
+86         return;
+87         
+88     size_t size = block->size;
+89     block->size = 0;
+90     block->magic = 0;
+91     
+92     
+93     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+94 }
 .fi
 .SS "void* krealloc (void *ptr, size_tsize)"
 
 .PP
-Definition at line 84 of file mm\&.c\&.
+Realloc memory from Kernel Heap\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP Pointer to data allocated\&. 
+.br
+\fIsize\fP Size of data to alloc\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Virtual Address of data\&. 
+.RE
+.PP
+
+.PP
+Definition at line 103 of file mm\&.c\&.
 .PP
 References BLKMAGIC, kfree(), and kmalloc()\&.
 .PP
 .nf
-84                                        {
-85     if(ptr == NULL)
-86         return kmalloc(size);
-87         
-88     if(size == 0) {
-89         kfree(ptr);
-90         return NULL;
-91     }   
-92 
-93     block_t* block = (block_t*) ptr;
-94     if(block->magic != BLKMAGIC)
-95         return NULL;
-96         
-97     void* newptr = kmalloc(size);
-98     if(!newptr)
-99         return NULL;
-100         
-101     if(size > block->size)
-102         size = block->size;
-103         
-104     memcpy(newptr, ptr, size);
-105     kfree(ptr);
-106     
-107     return newptr;
-108 }
+103                                        {
+104     if(ptr == NULL)
+105         return kmalloc(size);
+106         
+107     if(size == 0) {
+108         kfree(ptr);
+109         return NULL;
+110     }   
+111 
+112     block_t* block = (block_t*) ptr;
+113     if(block->magic != BLKMAGIC)
+114         return NULL;
+115         
+116     void* newptr = kmalloc(size);
+117     if(!newptr)
+118         return NULL;
+119         
+120     if(size > block->size)
+121         size = block->size;
+122         
+123     memcpy(newptr, ptr, size);
+124     kfree(ptr);
+125     
+126     return newptr;
+127 }
 .fi
 .SS "volatile \fBheap_t\fP* mm_getheap ()"
 
 .PP
-Definition at line 117 of file mm\&.c\&.
+Get current heap for memory operations\&. 
+.PP
+Definition at line 141 of file mm\&.c\&.
 .PP
 References current_heap\&.
 .PP
 .nf
-117                               {
-118     return current_heap;
-119 }
+141                               {
+142     return current_heap;
+143 }
 .fi
 .SS "int mm_init ()"
 
 .PP
-Definition at line 122 of file mm\&.c\&.
+Initialize MMU\&. 
+.PP
+Definition at line 149 of file mm\&.c\&.
 .PP
 References kheap_init(), mbd, BootInfo_t::mem_lower, BootInfo_t::mem_upper, memsize, vmm_init(), and VMM_MAX_MEMORY\&.
 .PP
 .nf
-122               {
-123 
-124     memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
-125     if(memsize > VMM_MAX_MEMORY)
-126         memsize = VMM_MAX_MEMORY;
-127 
-128 
-129     kheap_init();
-130     vmm_init();
-131 
-132     return 0;
-133 }
+149               {
+150 
+151     memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
+152     if(memsize > VMM_MAX_MEMORY)
+153         memsize = VMM_MAX_MEMORY;
+154 
+155 
+156     kheap_init();
+157     vmm_init();
+158 
+159     return 0;
+160 }
 .fi
 .SS "void mm_setheap (\fBheap_t\fP *heap)"
 
 .PP
-Definition at line 113 of file mm\&.c\&.
+Set current heap for memory operations\&. 
+.PP
+Definition at line 134 of file mm\&.c\&.
 .PP
 .nf
-113                               {
-114     current_heap = heap;
-115 }
+134                               {
+135     current_heap = heap;
+136 }
 .fi
 .SH "Variable Documentation"
 .PP 

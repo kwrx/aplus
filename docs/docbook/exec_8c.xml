@@ -21,9 +21,23 @@
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structelf32__phdr">elf32_phdr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
         <simplesect>
             <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1ac12ef0a698cec32392148178e777a3a4">ELF32_ADDRSPACE_MIN_LENGTH</link> 0x100000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
             <para>
                 <itemizedlist>
                     <listitem>
@@ -258,6 +272,69 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                            <para>#define <link linkend="exec_8c_1a854729c1dc4623abeaeb765a1b745012">PT_NULL</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a84d7768fd6c6ece599d297090900cf92">PT_LOAD</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a2121a2f01c51e8462bfd4d47725649d8">PT_DYNAMIC</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1abcd3aa15bc567949c1ab6b1abc137710">PT_INTERP</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a72baf87d62607c7fdccd3b8010d4ce30">PT_NOTE</link> 4</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1abff9f38fd394e09e60f5640550a23e46">PT_SHLIB</link> 5</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a58ff00be749ca4000074f9b9066a1056">PT_PHDR</link> 6</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1acaa6971207ea507ed02f22ba574b8534">PT_LOPROC</link> 0x70000000</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a74427c5909fdced36b41134c11650249">PT_HIPROC</link> 0x7FFFFFFF</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                             <para>#define <link linkend="exec_8c_1aa3ea57d3d539b6618daaaaf7af4bec80">ELF_DEBUG</link><para><emphasis>Enable or disable debug for ELF.</emphasis></para>
 </para>
                     </listitem>
@@ -325,6 +402,13 @@
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structelf32__phdr">elf32_phdr</link>  <link linkend="exec_8c_1a6c037736a997fdd28ed9f6b734261b23">elf32_phdr_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
         <simplesect>
             <title>Functions</title>
@@ -339,8 +423,16 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>void * <link linkend="exec_8c_1a7473eb0ac8edeee7e0a7502c5ed08dc8">elf32_load</link> (
-void * image)</para>
+                        <para>int <link linkend="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc">elf32_getspace</link> (
+<link linkend="exec_8c_1a34edb44226509e467315e3bd81c3d7dc">elf32_hdr_t</link> * hdr, void ** ptr, size_t * size)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926">elf32_load</link> (
+void * image, int * vaddr, int * vsize)</para>
                     </listitem>
                 </itemizedlist>
             </para>

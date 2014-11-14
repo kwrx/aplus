@@ -13,115 +13,115 @@
     <includedby refid="rtl8139_8c" local="no">src/net/rtl8139/rtl8139.c</includedby>
     <includedby refid="udp_8c" local="no">src/net/udp.c</includedby>
     <incdepgraph>
-      <node id="692">
+      <node id="700">
         <label>stdarg.h</label>
       </node>
-      <node id="689">
+      <node id="697">
         <label>stdint.h</label>
       </node>
-      <node id="694">
+      <node id="702">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="691" relation="include">
+        <childnode refid="699" relation="include">
         </childnode>
-        <childnode refid="689" relation="include">
+        <childnode refid="697" relation="include">
         </childnode>
       </node>
-      <node id="695">
+      <node id="703">
         <label>stddef.h</label>
-      </node>
-      <node id="688">
-        <label>src/include/aplus/net/eth.h</label>
-        <link refid="eth.h"/>
-        <childnode refid="689" relation="include">
-        </childnode>
-        <childnode refid="690" relation="include">
-        </childnode>
-      </node>
-      <node id="691">
-        <label>aplus.h</label>
-        <link refid="aplus_8h"/>
-        <childnode refid="689" relation="include">
-        </childnode>
-        <childnode refid="692" relation="include">
-        </childnode>
-        <childnode refid="693" relation="include">
-        </childnode>
-      </node>
-      <node id="693">
-        <label>string.h</label>
-      </node>
-      <node id="690">
-        <label>aplus/netif.h</label>
-        <link refid="netif_8h"/>
-        <childnode refid="691" relation="include">
-        </childnode>
-        <childnode refid="694" relation="include">
-        </childnode>
-        <childnode refid="689" relation="include">
-        </childnode>
-        <childnode refid="695" relation="include">
-        </childnode>
-      </node>
-    </incdepgraph>
-    <invincdepgraph>
-      <node id="700">
-        <label>src/main.c</label>
-        <link refid="src_2main_8c"/>
-      </node>
-      <node id="704">
-        <label>src/net/rtl8139/rtl8139.c</label>
-        <link refid="rtl8139_8c"/>
-      </node>
-      <node id="699">
-        <label>src/net/netif.c</label>
-        <link refid="netif_8c"/>
       </node>
       <node id="696">
         <label>src/include/aplus/net/eth.h</label>
         <link refid="eth.h"/>
         <childnode refid="697" relation="include">
         </childnode>
-        <childnode refid="700" relation="include">
-        </childnode>
         <childnode refid="698" relation="include">
+        </childnode>
+      </node>
+      <node id="699">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="697" relation="include">
+        </childnode>
+        <childnode refid="700" relation="include">
         </childnode>
         <childnode refid="701" relation="include">
         </childnode>
+      </node>
+      <node id="701">
+        <label>string.h</label>
+      </node>
+      <node id="698">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="699" relation="include">
+        </childnode>
         <childnode refid="702" relation="include">
+        </childnode>
+        <childnode refid="697" relation="include">
         </childnode>
         <childnode refid="703" relation="include">
         </childnode>
-        <childnode refid="704" relation="include">
-        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="708">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="712">
+        <label>src/net/rtl8139/rtl8139.c</label>
+        <link refid="rtl8139_8c"/>
+      </node>
+      <node id="707">
+        <label>src/net/netif.c</label>
+        <link refid="netif_8c"/>
+      </node>
+      <node id="704">
+        <label>src/include/aplus/net/eth.h</label>
+        <link refid="eth.h"/>
         <childnode refid="705" relation="include">
         </childnode>
+        <childnode refid="708" relation="include">
+        </childnode>
+        <childnode refid="706" relation="include">
+        </childnode>
+        <childnode refid="709" relation="include">
+        </childnode>
+        <childnode refid="710" relation="include">
+        </childnode>
+        <childnode refid="711" relation="include">
+        </childnode>
+        <childnode refid="712" relation="include">
+        </childnode>
+        <childnode refid="713" relation="include">
+        </childnode>
       </node>
-      <node id="702">
+      <node id="710">
         <label>src/net/ipv4.c</label>
         <link refid="ipv4_8c"/>
       </node>
-      <node id="697">
+      <node id="705">
         <label>src/include/aplus/net/arp.h</label>
         <link refid="arp_8h"/>
-        <childnode refid="698" relation="include">
+        <childnode refid="706" relation="include">
         </childnode>
-        <childnode refid="699" relation="include">
+        <childnode refid="707" relation="include">
         </childnode>
       </node>
-      <node id="701">
+      <node id="709">
         <label>src/net/eth.c</label>
         <link refid="eth_8c"/>
       </node>
-      <node id="705">
+      <node id="713">
         <label>src/net/udp.c</label>
         <link refid="udp_8c"/>
       </node>
-      <node id="703">
+      <node id="711">
         <label>src/net/ipv6.c</label>
         <link refid="ipv6_8c"/>
       </node>
-      <node id="698">
+      <node id="706">
         <label>src/net/arp.c</label>
         <link refid="arp_8c"/>
       </node>
@@ -246,9 +246,18 @@
           <type>(packed)</type>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Alloc memory from Kernel Heap. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of data to alloc. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Virtual Address of data. </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/include/aplus/net/eth.h" line="43" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>

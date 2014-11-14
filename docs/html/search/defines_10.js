@@ -39,5 +39,6 @@ var searchData=
   ['syscall3',['syscall3',['../syscalls_8c.html#a6ebd56a469ce4c96b73134cc1e63b69e',1,'syscalls.c']]],
   ['syscall4',['syscall4',['../syscalls_8c.html#a67af7b4caa02d0e160fe462b03d3320f',1,'syscalls.c']]],
   ['syscall5',['syscall5',['../syscalls_8c.html#a68e3cd45619716c1f58001c8cf79f1c3',1,'syscalls.c']]],
+  ['syscall_5fdebug',['SYSCALL_DEBUG',['../syscall_8c.html#a7cee1b8da707d135695bc11acee66b63',1,'syscall.c']]],
   ['syscode',['SYSCODE',['../syscalls_8c.html#af6da46e3404bff9a08b470ccab480d38',1,'syscalls.c']]]
 ];

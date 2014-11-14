@@ -1,10 +1,12 @@
 var annotated =
 [
+    [ "__atk_widget_private", "struct____atk__widget__private.html", "struct____atk__widget__private" ],
     [ "__DIR", "struct____DIR.html", "struct____DIR" ],
     [ "__pthread_key", "struct____pthread__key.html", "struct____pthread__key" ],
     [ "__syscall", "struct____syscall.html", "struct____syscall" ],
     [ "arp_cache_entry", "structarp__cache__entry.html", "structarp__cache__entry" ],
     [ "arp_header", "structarp__header.html", "structarp__header" ],
+    [ "atk_widget", "structatk__widget.html", "structatk__widget" ],
     [ "attribute", "structattribute.html", "structattribute" ],
     [ "block", "structblock.html", "structblock" ],
     [ "BootInfo_t", "structBootInfo__t.html", "structBootInfo__t" ],
@@ -12,6 +14,7 @@ var annotated =
     [ "card", "structcard.html", "structcard" ],
     [ "dirent", "structdirent.html", "structdirent" ],
     [ "elf32_hdr", "structelf32__hdr.html", "structelf32__hdr" ],
+    [ "elf32_phdr", "structelf32__phdr.html", "structelf32__phdr" ],
     [ "elf32_shdr", "structelf32__shdr.html", "structelf32__shdr" ],
     [ "eth_header", "structeth__header.html", "structeth__header" ],
     [ "fsys", "structfsys.html", "structfsys" ],

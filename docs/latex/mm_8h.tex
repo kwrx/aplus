@@ -54,9 +54,9 @@ static void $\ast$ \hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\+\_\+a
 void $\ast$ \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc} (size\+\_\+t)
 \item 
 void \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree} (void $\ast$)
-\item 
+\begin{DoxyCompactList}\small\item\em Free memory from Kernel Heap. \end{DoxyCompactList}\item 
 void $\ast$ \hyperlink{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}{krealloc} (void $\ast$, size\+\_\+t)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Realloc memory from Kernel Heap. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Macro Definition Documentation}
@@ -164,12 +164,21 @@ Definition at line 54 of file mm.\+h.
 \index{kfree@{kfree}!mm.\+h@{mm.\+h}}
 \subsubsection[{kfree}]{\setlength{\rightskip}{0pt plus 5cm}void kfree (
 \begin{DoxyParamCaption}
-\item[{void $\ast$}]{}
+\item[{void $\ast$}]{ptr}
 \end{DoxyParamCaption}
 )}}\label{mm_8h_acee1960bdb3a19cb495341ec725cafef}
 
 
-Definition at line 66 of file mm.\+c.
+Free memory from Kernel Heap. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to data allocated. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 79 of file mm.\+c.
 
 
 
@@ -177,22 +186,22 @@ References B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), an
 
 
 \begin{DoxyCode}
-66                       \{
-67     \textcolor{keywordflow}{if}(!ptr)
-68         \textcolor{keywordflow}{return};
-69         
-70     
-71     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
-72     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
-73         \textcolor{keywordflow}{return};
-74         
-75     \textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
-76     block->size = 0;
-77     block->magic = 0;
-78     
-79     
-80     \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree}(\hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(\hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(ptr)), size);
-81 \}
+79                       \{
+80     \textcolor{keywordflow}{if}(!ptr)
+81         \textcolor{keywordflow}{return};
+82         
+83     
+84     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+85     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+86         \textcolor{keywordflow}{return};
+87         
+88     \textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+89     block->size = 0;
+90     block->magic = 0;
+91     
+92     
+93     \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree}(\hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(\hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(ptr)), size);
+94 \}
 \end{DoxyCode}
 \hypertarget{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{\index{mm.\+h@{mm.\+h}!kmalloc@{kmalloc}}
 \index{kmalloc@{kmalloc}!mm.\+h@{mm.\+h}}
@@ -205,13 +214,27 @@ References B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), an
 \index{krealloc@{krealloc}!mm.\+h@{mm.\+h}}
 \subsubsection[{krealloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ krealloc (
 \begin{DoxyParamCaption}
-\item[{void $\ast$}]{, }
-\item[{size\+\_\+t}]{}
+\item[{void $\ast$}]{ptr, }
+\item[{size\+\_\+t}]{size}
 \end{DoxyParamCaption}
 )}}\label{mm_8h_a2e2878c4e9b542b6e68d7ceccfdcfc86}
 
 
-Definition at line 84 of file mm.\+c.
+Realloc memory from Kernel Heap. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to data allocated. \\
+\hline
+{\em size} & Size of data to alloc. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Virtual Address of data. 
+\end{DoxyReturn}
+
+
+Definition at line 103 of file mm.\+c.
 
 
 
@@ -219,31 +242,31 @@ References B\+L\+K\+M\+A\+G\+I\+C, kfree(), and kmalloc().
 
 
 \begin{DoxyCode}
-84                                        \{
-85     \textcolor{keywordflow}{if}(ptr == NULL)
-86         \textcolor{keywordflow}{return} \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-87         
-88     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} == 0) \{
-89         \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
-90         \textcolor{keywordflow}{return} NULL;
-91     \}   
-92 
-93     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
-94     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
-95         \textcolor{keywordflow}{return} NULL;
-96         
-97     \textcolor{keywordtype}{void}* newptr = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-98     \textcolor{keywordflow}{if}(!newptr)
-99         \textcolor{keywordflow}{return} NULL;
-100         
-101     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > block->size)
-102         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
-103         
-104     memcpy(newptr, ptr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-105     \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
-106     
-107     \textcolor{keywordflow}{return} newptr;
-108 \}
+103                                        \{
+104     \textcolor{keywordflow}{if}(ptr == NULL)
+105         \textcolor{keywordflow}{return} \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+106         
+107     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} == 0) \{
+108         \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+109         \textcolor{keywordflow}{return} NULL;
+110     \}   
+111 
+112     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+113     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+114         \textcolor{keywordflow}{return} NULL;
+115         
+116     \textcolor{keywordtype}{void}* newptr = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+117     \textcolor{keywordflow}{if}(!newptr)
+118         \textcolor{keywordflow}{return} NULL;
+119         
+120     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > block->size)
+121         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+122         
+123     memcpy(newptr, ptr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+124     \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+125     
+126     \textcolor{keywordflow}{return} newptr;
+127 \}
 \end{DoxyCode}
 \hypertarget{mm_8h_acb964323e95c799eb3896dce8c61d329}{\index{mm.\+h@{mm.\+h}!mm\+\_\+align@{mm\+\_\+align}}
 \index{mm\+\_\+align@{mm\+\_\+align}!mm.\+h@{mm.\+h}}

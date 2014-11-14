@@ -10,119 +10,119 @@
     <includes refid="list_8h" local="no">aplus/list.h</includes>
     <includes refid="grub_8h" local="no">grub.h</includes>
     <incdepgraph>
-      <node id="1033">
+      <node id="1050">
         <label>sys/stat.h</label>
       </node>
-      <node id="1031">
+      <node id="1048">
         <label>stdarg.h</label>
       </node>
-      <node id="1032">
+      <node id="1049">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1026" relation="include">
+        <childnode refid="1043" relation="include">
         </childnode>
-        <childnode refid="1025" relation="include">
+        <childnode refid="1042" relation="include">
         </childnode>
-        <childnode refid="1024" relation="include">
+        <childnode refid="1041" relation="include">
         </childnode>
-        <childnode refid="1033" relation="include">
+        <childnode refid="1050" relation="include">
         </childnode>
-        <childnode refid="1034" relation="include">
+        <childnode refid="1051" relation="include">
         </childnode>
       </node>
-      <node id="1026">
+      <node id="1043">
         <label>stdint.h</label>
       </node>
-      <node id="1037">
+      <node id="1054">
         <label>setjmp.h</label>
       </node>
-      <node id="1029">
+      <node id="1046">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1026" relation="include">
+        <childnode refid="1043" relation="include">
         </childnode>
-        <childnode refid="1030" relation="include">
+        <childnode refid="1047" relation="include">
         </childnode>
-        <childnode refid="1032" relation="include">
+        <childnode refid="1049" relation="include">
         </childnode>
-        <childnode refid="1036" relation="include">
+        <childnode refid="1053" relation="include">
         </childnode>
-        <childnode refid="1024" relation="include">
+        <childnode refid="1041" relation="include">
         </childnode>
-        <childnode refid="1037" relation="include">
+        <childnode refid="1054" relation="include">
         </childnode>
       </node>
-      <node id="1039">
+      <node id="1056">
         <label>grub.h</label>
         <link refid="grub_8h"/>
       </node>
-      <node id="1025">
+      <node id="1042">
         <label>stddef.h</label>
       </node>
-      <node id="1038">
+      <node id="1055">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1025" relation="include">
+        <childnode refid="1042" relation="include">
         </childnode>
-        <childnode refid="1026" relation="include">
+        <childnode refid="1043" relation="include">
         </childnode>
-        <childnode refid="1024" relation="include">
+        <childnode refid="1041" relation="include">
         </childnode>
       </node>
-      <node id="1030">
+      <node id="1047">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1026" relation="include">
+        <childnode refid="1043" relation="include">
         </childnode>
-        <childnode refid="1031" relation="include">
+        <childnode refid="1048" relation="include">
         </childnode>
-        <childnode refid="1027" relation="include">
+        <childnode refid="1044" relation="include">
         </childnode>
       </node>
-      <node id="1024">
+      <node id="1041">
         <label>sys/types.h</label>
       </node>
-      <node id="1027">
+      <node id="1044">
         <label>string.h</label>
       </node>
-      <node id="1035">
+      <node id="1052">
         <label>unistd.h</label>
       </node>
-      <node id="1036">
+      <node id="1053">
         <label>signal.h</label>
       </node>
-      <node id="1028">
+      <node id="1045">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1026" relation="include">
+        <childnode refid="1043" relation="include">
         </childnode>
-        <childnode refid="1029" relation="include">
+        <childnode refid="1046" relation="include">
         </childnode>
       </node>
-      <node id="1034">
+      <node id="1051">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1035" relation="include">
+        <childnode refid="1052" relation="include">
         </childnode>
-        <childnode refid="1024" relation="include">
+        <childnode refid="1041" relation="include">
         </childnode>
       </node>
-      <node id="1023">
+      <node id="1040">
         <label>src/mm/mm.c</label>
         <link refid="mm.c"/>
-        <childnode refid="1024" relation="include">
+        <childnode refid="1041" relation="include">
         </childnode>
-        <childnode refid="1025" relation="include">
+        <childnode refid="1042" relation="include">
         </childnode>
-        <childnode refid="1026" relation="include">
+        <childnode refid="1043" relation="include">
         </childnode>
-        <childnode refid="1027" relation="include">
+        <childnode refid="1044" relation="include">
         </childnode>
-        <childnode refid="1028" relation="include">
+        <childnode refid="1045" relation="include">
         </childnode>
-        <childnode refid="1038" relation="include">
+        <childnode refid="1055" relation="include">
         </childnode>
-        <childnode refid="1039" relation="include">
+        <childnode refid="1056" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -230,12 +230,21 @@
           <type>(packed)</type>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Alloc memory from Kernel Heap. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of data to alloc. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Virtual Address of data. </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/mm.c" line="41" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="47" bodyend="63"/>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="41" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="47" bodyend="72"/>
       </memberdef>
       <memberdef kind="function" id="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -247,12 +256,20 @@
           <declname>ptr</declname>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Free memory from Kernel Heap. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>ptr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to data allocated. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/mm.c" line="66" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="66" bodyend="81"/>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="79" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="79" bodyend="94"/>
         <references refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" compoundref="mm_8h" startline="58">BLKMAGIC</references>
         <references refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" compoundref="heap_8c" startline="36" endline="40">hfree</references>
         <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="85" endline="87">mm_align</references>
@@ -273,14 +290,30 @@
           <declname>size</declname>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Realloc memory from Kernel Heap. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>ptr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to data allocated. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of data to alloc. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Virtual Address of data. </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/mm.c" line="84" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="84" bodyend="108"/>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="103" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="103" bodyend="127"/>
         <references refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" compoundref="mm_8h" startline="58">BLKMAGIC</references>
-        <references refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
       </memberdef>
       <memberdef kind="function" id="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -293,12 +326,12 @@
           <declname>heap</declname>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Set current heap for memory operations. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/mm.c" line="113" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="113" bodyend="115"/>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="134" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="134" bodyend="136"/>
       </memberdef>
       <memberdef kind="function" id="mm_8c_1a4e692b1c1f4e04a8b231f1493babb82f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300" kindref="member">heap_t</ref> *</type>
@@ -306,12 +339,12 @@
         <argsstring>()</argsstring>
         <name>mm_getheap</name>
         <briefdescription>
-        </briefdescription>
+<para>Get current heap for memory operations. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/mm.c" line="117" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="117" bodyend="119"/>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="141" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="141" bodyend="143"/>
         <references refid="mm_8c_1a3068f9054a832aa72e12ab9ad210dd99" compoundref="mm_8c" startline="36">current_heap</references>
       </memberdef>
       <memberdef kind="function" id="mm_8c_1a25db4b3982d49366c88b6be8331b9215" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -320,18 +353,18 @@
         <argsstring>()</argsstring>
         <name>mm_init</name>
         <briefdescription>
-        </briefdescription>
+<para>Initialize MMU. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/mm.c" line="122" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="122" bodyend="133"/>
+        <location file="/opt/prj/aPlus/src/mm/mm.c" line="149" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="149" bodyend="160"/>
         <references refid="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" compoundref="kheap_8c" startline="132" endline="148">kheap_init</references>
         <references refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962">mbd</references>
         <references refid="structBootInfo__t_1a4b144c9db5fe2c5a9d72522068d65138" compoundref="grub_8h" startline="66">BootInfo_t::mem_lower</references>
         <references refid="structBootInfo__t_1ab20281f521d626a49714e06b62291be9" compoundref="grub_8h" startline="67">BootInfo_t::mem_upper</references>
         <references refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" compoundref="mm_8c" startline="35">memsize</references>
-        <references refid="paging_8c_1aac183f585641487a954ca46c0d7bde31" compoundref="paging_8c" startline="165" endline="180">vmm_init</references>
+        <references refid="paging_8c_1aac183f585641487a954ca46c0d7bde31" compoundref="paging_8c" startline="184" endline="199">vmm_init</references>
         <references refid="mm_8h_1a17f8a27ab3548000488ca27d70785240" compoundref="mm_8h" startline="54">VMM_MAX_MEMORY</references>
       </memberdef>
       </sectiondef>
@@ -389,90 +422,93 @@
 <codeline lineno="47" refid="mm_8c_1a2cdc9850cc059eb848b6843d5327e37a" refkind="member"><highlight class="normal">}<sp/><ref refid="mm_8c_1a2cdc9850cc059eb848b6843d5327e37a" kindref="member">__attribute__</ref>((packed))<sp/>block_t;</highlight></codeline>
 <codeline lineno="48"><highlight class="normal"></highlight></codeline>
 <codeline lineno="49"><highlight class="normal"></highlight></codeline>
-<codeline lineno="50"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(current_heap,<sp/>size);</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!addr)</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;halloc():<sp/>failed!&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="54"><highlight class="normal"></highlight></codeline>
-<codeline lineno="55"><highlight class="normal"></highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>addr<sp/>=<sp/><ref refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" kindref="member">mm_vaddr</ref>(addr);</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"></highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>block_t*<sp/><ref refid="structblock" kindref="compound">block</ref><sp/>=<sp/>(block_t*)<sp/>addr;</highlight></codeline>
-<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;<ref refid="structblock_1a0dc8afecb033f59b42e0d8502a7f8ff0" kindref="member">magic</ref><sp/>=<sp/><ref refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" kindref="member">BLKMAGIC</ref>;</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;size<sp/>=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"></highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>block<sp/>+<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(block_t));</highlight></codeline>
-<codeline lineno="63"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>addr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(current_heap,<sp/>size);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!addr)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;halloc():<sp/>failed!&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
 <codeline lineno="64"><highlight class="normal"></highlight></codeline>
-<codeline lineno="65"><highlight class="normal"></highlight></codeline>
-<codeline lineno="66" refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kindref="member">kfree</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ptr)<sp/>{</highlight></codeline>
-<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ptr)</highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>block_t*<sp/><ref refid="structblock" kindref="compound">block</ref><sp/>=<sp/>(block_t*)<sp/>ptr;</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(block-&gt;magic<sp/>!=<sp/><ref refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" kindref="member">BLKMAGIC</ref>)</highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref><sp/>=<sp/>block-&gt;size;</highlight></codeline>
-<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;size<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;magic<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" kindref="member">hfree</ref>(current_heap,<sp/><ref refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" kindref="member">mm_paddr</ref>(<ref refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" kindref="member">mm_align</ref>(ptr)),<sp/>size);</highlight></codeline>
-<codeline lineno="81"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"></highlight></codeline>
-<codeline lineno="83"><highlight class="normal"></highlight></codeline>
-<codeline lineno="84" refid="mm_8c_1a0a2a93dff1df0b626cb5ff6d85d0553e" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8c_1a0a2a93dff1df0b626cb5ff6d85d0553e" kindref="member">krealloc</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ptr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ptr<sp/>==<sp/>NULL)</highlight></codeline>
-<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(size);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>addr<sp/>=<sp/><ref refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" kindref="member">mm_vaddr</ref>(addr);</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>block_t*<sp/><ref refid="structblock" kindref="compound">block</ref><sp/>=<sp/>(block_t*)<sp/>addr;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;<ref refid="structblock_1a0dc8afecb033f59b42e0d8502a7f8ff0" kindref="member">magic</ref><sp/>=<sp/><ref refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" kindref="member">BLKMAGIC</ref>;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;size<sp/>=<sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>block<sp/>+<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(block_t));</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79" refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kindref="member">kfree</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ptr)<sp/>{</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ptr)</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>block_t*<sp/><ref refid="structblock" kindref="compound">block</ref><sp/>=<sp/>(block_t*)<sp/>ptr;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(block-&gt;magic<sp/>!=<sp/><ref refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" kindref="member">BLKMAGIC</ref>)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>==<sp/>0)<sp/>{</highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kindref="member">kfree</ref>(ptr);</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="92"><highlight class="normal"></highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>block_t*<sp/><ref refid="structblock" kindref="compound">block</ref><sp/>=<sp/>(block_t*)<sp/>ptr;</highlight></codeline>
-<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(block-&gt;magic<sp/>!=<sp/><ref refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" kindref="member">BLKMAGIC</ref>)</highlight></codeline>
-<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>newptr<sp/>=<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(size);</highlight></codeline>
-<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!newptr)</highlight></codeline>
-<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>&gt;<sp/>block-&gt;size)</highlight></codeline>
-<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>=<sp/>block-&gt;size;</highlight></codeline>
-<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(newptr,<sp/>ptr,<sp/>size);</highlight></codeline>
-<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kindref="member">kfree</ref>(ptr);</highlight></codeline>
-<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>newptr;</highlight></codeline>
-<codeline lineno="108"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="109"><highlight class="normal"></highlight></codeline>
-<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref><sp/>=<sp/>block-&gt;size;</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;size<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>block-&gt;magic<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" kindref="member">hfree</ref>(current_heap,<sp/><ref refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" kindref="member">mm_paddr</ref>(<ref refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" kindref="member">mm_align</ref>(ptr)),<sp/>size);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103" refid="mm_8c_1a0a2a93dff1df0b626cb5ff6d85d0553e" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8c_1a0a2a93dff1df0b626cb5ff6d85d0553e" kindref="member">krealloc</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>ptr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ptr<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(size);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kindref="member">kfree</ref>(ptr);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="111"><highlight class="normal"></highlight></codeline>
-<codeline lineno="112"><highlight class="normal"></highlight></codeline>
-<codeline lineno="113" refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" kindref="member">mm_setheap</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/>current_heap<sp/>=<sp/>heap;</highlight></codeline>
-<codeline lineno="115"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="116"><highlight class="normal"></highlight></codeline>
-<codeline lineno="117" refid="mm_8c_1a4e692b1c1f4e04a8b231f1493babb82f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/><ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="mm_8c_1a4e692b1c1f4e04a8b231f1493babb82f" kindref="member">mm_getheap</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a3068f9054a832aa72e12ab9ad210dd99" kindref="member">current_heap</ref>;</highlight></codeline>
-<codeline lineno="119"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="120"><highlight class="normal"></highlight></codeline>
-<codeline lineno="121"><highlight class="normal"></highlight></codeline>
-<codeline lineno="122" refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" kindref="member">mm_init</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="123"><highlight class="normal"></highlight></codeline>
-<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>=<sp/>(<ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1ab20281f521d626a49714e06b62291be9" kindref="member">mem_upper</ref><sp/>+<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a4b144c9db5fe2c5a9d72522068d65138" kindref="member">mem_lower</ref>)<sp/>*<sp/>1024;</highlight></codeline>
-<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>&gt;<sp/><ref refid="mm_8h_1a17f8a27ab3548000488ca27d70785240" kindref="member">VMM_MAX_MEMORY</ref>)</highlight></codeline>
-<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>=<sp/><ref refid="mm_8h_1a17f8a27ab3548000488ca27d70785240" kindref="member">VMM_MAX_MEMORY</ref>;</highlight></codeline>
-<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/>block_t*<sp/><ref refid="structblock" kindref="compound">block</ref><sp/>=<sp/>(block_t*)<sp/>ptr;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(block-&gt;magic<sp/>!=<sp/><ref refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" kindref="member">BLKMAGIC</ref>)</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>newptr<sp/>=<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(size);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!newptr)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>&gt;<sp/>block-&gt;size)</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>=<sp/>block-&gt;size;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(newptr,<sp/>ptr,<sp/>size);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kindref="member">kfree</ref>(ptr);</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>newptr;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="128"><highlight class="normal"></highlight></codeline>
-<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" kindref="member">kheap_init</ref>();</highlight></codeline>
-<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1aac183f585641487a954ca46c0d7bde31" kindref="member">vmm_init</ref>();</highlight></codeline>
-<codeline lineno="131"><highlight class="normal"></highlight></codeline>
-<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="133"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134" refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" kindref="member">mm_setheap</ref>(<ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="structheap" kindref="compound">heap</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>current_heap<sp/>=<sp/>heap;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141" refid="mm_8c_1a4e692b1c1f4e04a8b231f1493babb82f" refkind="member"><highlight class="keyword">volatile</highlight><highlight class="normal"><sp/><ref refid="structheap" kindref="compound">heap_t</ref>*<sp/><ref refid="mm_8c_1a4e692b1c1f4e04a8b231f1493babb82f" kindref="member">mm_getheap</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a3068f9054a832aa72e12ab9ad210dd99" kindref="member">current_heap</ref>;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"></highlight></codeline>
+<codeline lineno="149" refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" kindref="member">mm_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>=<sp/>(<ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1ab20281f521d626a49714e06b62291be9" kindref="member">mem_upper</ref><sp/>+<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a4b144c9db5fe2c5a9d72522068d65138" kindref="member">mem_lower</ref>)<sp/>*<sp/>1024;</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>&gt;<sp/><ref refid="mm_8h_1a17f8a27ab3548000488ca27d70785240" kindref="member">VMM_MAX_MEMORY</ref>)</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kindref="member">memsize</ref><sp/>=<sp/><ref refid="mm_8h_1a17f8a27ab3548000488ca27d70785240" kindref="member">VMM_MAX_MEMORY</ref>;</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="kheap_8c_1ab761c0c9768623b035f3fd5c98f77b08" kindref="member">kheap_init</ref>();</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1aac183f585641487a954ca46c0d7bde31" kindref="member">vmm_init</ref>();</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="160"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/mm/mm.c"/>
   </compounddef>

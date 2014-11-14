@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structelf32__phdr" kind="struct" prot="public">
+    <compoundname>elf32_phdr</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structelf32__phdr_1ac875c2371d8cf5e6e2084050ae6ccf73" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_phdr::p_type</definition>
+        <argsstring></argsstring>
+        <name>p_type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="116" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="116" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__phdr_1af88bab5054a39a619ff2f8a5424c3316" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref></type>
+        <definition>Elf32_Off elf32_phdr::p_offset</definition>
+        <argsstring></argsstring>
+        <name>p_offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="117" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref></type>
+        <definition>Elf32_Addr elf32_phdr::p_vaddr</definition>
+        <argsstring></argsstring>
+        <name>p_vaddr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="118" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__phdr_1a7a76a0d640bab3bfdbf48ffd14d40fe9" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref></type>
+        <definition>Elf32_Addr elf32_phdr::p_paddr</definition>
+        <argsstring></argsstring>
+        <name>p_paddr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="119" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__phdr_1a4b9173c35966a1ad03681a72ceabe291" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_phdr::p_filesz</definition>
+        <argsstring></argsstring>
+        <name>p_filesz</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="120" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_phdr::p_memsz</definition>
+        <argsstring></argsstring>
+        <name>p_memsz</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="121" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__phdr_1a988c9108c42fa294891b5f94d60cb06e" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_phdr::p_flags</definition>
+        <argsstring></argsstring>
+        <name>p_flags</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="122" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__phdr_1a36b59708697a8e025409ec1a2614acdf" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_phdr::p_align</definition>
+        <argsstring></argsstring>
+        <name>p_align</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="123" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>ELF32 Program Header. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="36">
+        <label>elf32_phdr</label>
+        <link refid="structelf32__phdr"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/exec.c" line="115" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="115" bodyend="124"/>
+    <listofallmembers>
+      <member refid="structelf32__phdr_1a36b59708697a8e025409ec1a2614acdf" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_align</name></member>
+      <member refid="structelf32__phdr_1a4b9173c35966a1ad03681a72ceabe291" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_filesz</name></member>
+      <member refid="structelf32__phdr_1a988c9108c42fa294891b5f94d60cb06e" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_flags</name></member>
+      <member refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_memsz</name></member>
+      <member refid="structelf32__phdr_1af88bab5054a39a619ff2f8a5424c3316" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_offset</name></member>
+      <member refid="structelf32__phdr_1a7a76a0d640bab3bfdbf48ffd14d40fe9" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_paddr</name></member>
+      <member refid="structelf32__phdr_1ac875c2371d8cf5e6e2084050ae6ccf73" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_type</name></member>
+      <member refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" prot="public" virt="non-virtual"><scope>elf32_phdr</scope><name>p_vaddr</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

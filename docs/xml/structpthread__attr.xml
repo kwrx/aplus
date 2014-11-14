@@ -88,7 +88,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="76">
+      <node id="83">
         <label>pthread_attr</label>
         <link refid="structpthread__attr"/>
       </node>

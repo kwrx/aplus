@@ -7,6 +7,7 @@
     <includes local="no">stdint.h</includes>
     <includedby refid="syscall_8c" local="no">src/arch/syscall.c</includedby>
     <includedby refid="__exit_8c" local="no">src/syscall/_exit.c</includedby>
+    <includedby refid="args_8c" local="no">src/syscall/args.c</includedby>
     <includedby refid="chown_8c" local="no">src/syscall/chown.c</includedby>
     <includedby refid="clone_8c" local="no">src/syscall/clone.c</includedby>
     <includedby refid="close_8c" local="no">src/syscall/close.c</includedby>
@@ -28,6 +29,7 @@
     <includedby refid="read_8c" local="no">src/syscall/read.c</includedby>
     <includedby refid="src_2syscall_2readdir_8c" local="no">src/syscall/readdir.c</includedby>
     <includedby refid="sbrk_8c" local="no">src/syscall/sbrk.c</includedby>
+    <includedby refid="sighandler_8c" local="no">src/syscall/sighandler.c</includedby>
     <includedby refid="stat_8c" local="no">src/syscall/stat.c</includedby>
     <includedby refid="symlink_8c" local="no">src/syscall/symlink.c</includedby>
     <includedby refid="src_2syscall_2test_8c" local="no">src/syscall/test.c</includedby>
@@ -39,118 +41,102 @@
     <includedby refid="write_8c" local="no">src/syscall/write.c</includedby>
     <includedby refid="yield_8c" local="no">src/syscall/yield.c</includedby>
     <incdepgraph>
-      <node id="812">
+      <node id="820">
         <label>stdarg.h</label>
       </node>
-      <node id="814">
+      <node id="822">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="810" relation="include">
+        <childnode refid="818" relation="include">
         </childnode>
-        <childnode refid="815" relation="include">
+        <childnode refid="823" relation="include">
         </childnode>
-        <childnode refid="811" relation="include">
+        <childnode refid="819" relation="include">
         </childnode>
-        <childnode refid="813" relation="include">
+        <childnode refid="821" relation="include">
         </childnode>
-        <childnode refid="817" relation="include">
+        <childnode refid="825" relation="include">
         </childnode>
       </node>
-      <node id="811">
+      <node id="819">
         <label>stdint.h</label>
       </node>
-      <node id="809">
+      <node id="817">
         <label>src/include/aplus/syscall.h</label>
         <link refid="syscall.h"/>
-        <childnode refid="810" relation="include">
+        <childnode refid="818" relation="include">
         </childnode>
-        <childnode refid="814" relation="include">
+        <childnode refid="822" relation="include">
         </childnode>
-        <childnode refid="811" relation="include">
+        <childnode refid="819" relation="include">
         </childnode>
       </node>
-      <node id="816">
+      <node id="824">
         <label>stddef.h</label>
       </node>
-      <node id="815">
+      <node id="823">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="816" relation="include">
+        <childnode refid="824" relation="include">
         </childnode>
-        <childnode refid="811" relation="include">
+        <childnode refid="819" relation="include">
         </childnode>
-        <childnode refid="817" relation="include">
+        <childnode refid="825" relation="include">
         </childnode>
-      </node>
-      <node id="810">
-        <label>aplus.h</label>
-        <link refid="aplus_8h"/>
-        <childnode refid="811" relation="include">
-        </childnode>
-        <childnode refid="812" relation="include">
-        </childnode>
-        <childnode refid="813" relation="include">
-        </childnode>
-      </node>
-      <node id="817">
-        <label>sys/types.h</label>
-      </node>
-      <node id="813">
-        <label>string.h</label>
-      </node>
-    </incdepgraph>
-    <invincdepgraph>
-      <node id="825">
-        <label>src/syscall/fcntl.c</label>
-        <link refid="fcntl_8c"/>
-      </node>
-      <node id="835">
-        <label>src/syscall/lseek.c</label>
-        <link refid="lseek_8c"/>
-      </node>
-      <node id="836">
-        <label>src/syscall/mount.c</label>
-        <link refid="mount_8c"/>
-      </node>
-      <node id="823">
-        <label>src/syscall/close.c</label>
-        <link refid="close_8c"/>
-      </node>
-      <node id="832">
-        <label>src/syscall/isatty.c</label>
-        <link refid="isatty_8c"/>
-      </node>
-      <node id="838">
-        <label>src/syscall/openpty.c</label>
-        <link refid="openpty_8c"/>
-      </node>
-      <node id="831">
-        <label>src/syscall/ioctl.c</label>
-        <link refid="ioctl_8c"/>
-      </node>
-      <node id="841">
-        <label>src/syscall/sbrk.c</label>
-        <link refid="sbrk_8c"/>
       </node>
       <node id="818">
-        <label>src/include/aplus/syscall.h</label>
-        <link refid="syscall.h"/>
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
         <childnode refid="819" relation="include">
         </childnode>
         <childnode refid="820" relation="include">
         </childnode>
         <childnode refid="821" relation="include">
         </childnode>
-        <childnode refid="822" relation="include">
-        </childnode>
-        <childnode refid="823" relation="include">
-        </childnode>
-        <childnode refid="824" relation="include">
-        </childnode>
-        <childnode refid="825" relation="include">
-        </childnode>
-        <childnode refid="826" relation="include">
-        </childnode>
+      </node>
+      <node id="825">
+        <label>sys/types.h</label>
+      </node>
+      <node id="821">
+        <label>string.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="834">
+        <label>src/syscall/fcntl.c</label>
+        <link refid="fcntl_8c"/>
+      </node>
+      <node id="844">
+        <label>src/syscall/lseek.c</label>
+        <link refid="lseek_8c"/>
+      </node>
+      <node id="845">
+        <label>src/syscall/mount.c</label>
+        <link refid="mount_8c"/>
+      </node>
+      <node id="832">
+        <label>src/syscall/close.c</label>
+        <link refid="close_8c"/>
+      </node>
+      <node id="841">
+        <label>src/syscall/isatty.c</label>
+        <link refid="isatty_8c"/>
+      </node>
+      <node id="847">
+        <label>src/syscall/openpty.c</label>
+        <link refid="openpty_8c"/>
+      </node>
+      <node id="840">
+        <label>src/syscall/ioctl.c</label>
+        <link refid="ioctl_8c"/>
+      </node>
+      <node id="850">
+        <label>src/syscall/sbrk.c</label>
+        <link refid="sbrk_8c"/>
+      </node>
+      <node id="826">
+        <label>src/include/aplus/syscall.h</label>
+        <link refid="syscall.h"/>
         <childnode refid="827" relation="include">
         </childnode>
         <childnode refid="828" relation="include">
@@ -201,104 +187,132 @@
         </childnode>
         <childnode refid="851" relation="include">
         </childnode>
+        <childnode refid="852" relation="include">
+        </childnode>
+        <childnode refid="853" relation="include">
+        </childnode>
+        <childnode refid="854" relation="include">
+        </childnode>
+        <childnode refid="855" relation="include">
+        </childnode>
+        <childnode refid="856" relation="include">
+        </childnode>
+        <childnode refid="857" relation="include">
+        </childnode>
+        <childnode refid="858" relation="include">
+        </childnode>
+        <childnode refid="859" relation="include">
+        </childnode>
+        <childnode refid="860" relation="include">
+        </childnode>
+        <childnode refid="861" relation="include">
+        </childnode>
       </node>
-      <node id="828">
+      <node id="837">
         <label>src/syscall/getgroups.c</label>
         <link refid="getgroups_8c"/>
       </node>
-      <node id="850">
+      <node id="860">
         <label>src/syscall/write.c</label>
         <link refid="write_8c"/>
       </node>
-      <node id="845">
+      <node id="855">
         <label>src/syscall/time.c</label>
         <link refid="time_8c"/>
       </node>
-      <node id="843">
+      <node id="853">
         <label>src/syscall/symlink.c</label>
         <link refid="symlink_8c"/>
       </node>
-      <node id="851">
+      <node id="829">
+        <label>src/syscall/args.c</label>
+        <link refid="args_8c"/>
+      </node>
+      <node id="861">
         <label>src/syscall/yield.c</label>
         <link refid="yield_8c"/>
       </node>
-      <node id="839">
+      <node id="848">
         <label>src/syscall/read.c</label>
         <link refid="read_8c"/>
       </node>
-      <node id="822">
+      <node id="831">
         <label>src/syscall/clone.c</label>
         <link refid="clone_8c"/>
       </node>
-      <node id="847">
+      <node id="857">
         <label>src/syscall/umount.c</label>
         <link refid="umount_8c"/>
       </node>
-      <node id="829">
+      <node id="838">
         <label>src/syscall/getpid.c</label>
         <link refid="getpid_8c"/>
       </node>
-      <node id="820">
+      <node id="828">
         <label>src/syscall/_exit.c</label>
         <link refid="__exit_8c"/>
       </node>
-      <node id="837">
+      <node id="846">
         <label>src/syscall/open.c</label>
         <link refid="open_8c"/>
       </node>
-      <node id="826">
+      <node id="835">
         <label>src/syscall/fork.c</label>
         <link refid="fork_8c"/>
       </node>
-      <node id="842">
+      <node id="852">
         <label>src/syscall/stat.c</label>
         <link refid="stat_8c"/>
       </node>
-      <node id="834">
+      <node id="843">
         <label>src/syscall/link.c</label>
         <link refid="link_8c"/>
       </node>
-      <node id="844">
+      <node id="854">
         <label>src/syscall/test.c</label>
         <link refid="src_2syscall_2test_8c"/>
       </node>
-      <node id="830">
+      <node id="839">
         <label>src/syscall/gettimeofday.c</label>
         <link refid="gettimeofday_8c"/>
       </node>
-      <node id="824">
+      <node id="833">
         <label>src/syscall/execve.c</label>
         <link refid="execve_8c"/>
       </node>
-      <node id="821">
+      <node id="830">
         <label>src/syscall/chown.c</label>
         <link refid="chown_8c"/>
       </node>
-      <node id="840">
+      <node id="849">
         <label>src/syscall/readdir.c</label>
         <link refid="src_2syscall_2readdir_8c"/>
       </node>
-      <node id="846">
+      <node id="856">
         <label>src/syscall/times.c</label>
         <link refid="times_8c"/>
       </node>
-      <node id="819">
+      <node id="827">
         <label>src/arch/syscall.c</label>
         <link refid="syscall_8c"/>
       </node>
-      <node id="849">
+      <node id="859">
         <label>src/syscall/wait.c</label>
         <link refid="wait_8c"/>
       </node>
-      <node id="833">
+      <node id="851">
+        <label>src/syscall/sighandler.c</label>
+        <link refid="sighandler_8c"/>
+      </node>
+      <node id="842">
         <label>src/syscall/kill.c</label>
         <link refid="kill_8c"/>
       </node>
-      <node id="848">
+      <node id="858">
         <label>src/syscall/unlink.c</label>
         <link refid="unlink_8c"/>
       </node>
-      <node id="827">
+      <node id="836">
         <label>src/syscall/fstat.c</label>
         <link refid="fstat_8c"/>
       </node>

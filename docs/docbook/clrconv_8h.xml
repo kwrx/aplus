@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="clrconv_8h">
+    <title>clrconv.h File Reference</title>
+    <programlisting>#include &lt;atk.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43">V4F_TO_ARGB</link> (										\
+		((int32_t)(c[3] * 0xFF) &lt;&lt; 24) 	|	\
+		((int32_t)(c[2] * 0xFF) &lt;&lt; 16) 	|	\
+		((int32_t)(c[1] * 0xFF) &lt;&lt; 8) 	|	\
+		((int32_t)(c[0] * 0xFF)) 		|	\
+	)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4">V4F_TO_RGB</link> (										\
+		((int32_t)(c[2] * 0xFF) &lt;&lt; 16) 	|	\
+		((int32_t)(c[1] * 0xFF) &lt;&lt; 8) 	|	\
+		((int32_t)(c[0] * 0xFF)) 		|	\
+	)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac">V4F_TO_R5G6B5</link> (										\
+		((int16_t)(c[2] * 0x1F) &lt;&lt; 11)	|	\
+		((int16_t)(c[1] * 0x3F)	&lt;&lt; 5)	|	\
+		((int16_t)(c[0] * 0x1F))		|	\
+	)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> <link linkend="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f">__alphablend</link> (
+<link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> d, <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> s, float a)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libatk/src/clrconv.h</para>
+    </simplesect>
+</section>

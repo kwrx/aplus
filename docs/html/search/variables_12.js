@@ -2,9 +2,11 @@ var searchData=
 [
   ['task',['task',['../structbufio.html#a27683bf934579d5f42529dcea191db50',1,'bufio']]],
   ['task_5fqueue',['task_queue',['../task_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1',1,'task_queue():&#160;sched.c'],['../panic_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1',1,'task_queue():&#160;sched.c'],['../src_2sched_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1',1,'task_queue():&#160;sched.c']]],
+  ['text',['text',['../structatk__widget.html#a1d572a95740071ab836bb88609bb28c4',1,'atk_widget']]],
   ['tha',['tha',['../structarp__header.html#a013af95c55ed102d198feeab64ce45ee',1,'arp_header::tha()'],['../arp_8h.html#a3270389e5f50105152b1920f11844d3b',1,'tha():&#160;arp.h']]],
   ['tid',['tid',['../structpthread__context.html#a5b7aa396dbf3c140b1a54f09568c8253',1,'pthread_context']]],
   ['time',['time',['../structpthread__mutex.html#abd1e1875e0231a5dd6146adb8d6380c0',1,'pthread_mutex']]],
+  ['title',['title',['../structatk__widget.html#a1f6e2c4d43fa2723ea96e74e4369f915',1,'atk_widget']]],
   ['tos',['tos',['../structipv4__header.html#abd794754c36bf40eec3845d1b4a30715',1,'ipv4_header::tos()'],['../ipv4_8h.html#a3bdbe295d838b7f44e47ad5f4c3fac27',1,'tos():&#160;ipv4.h']]],
   ['total_5fmemory',['total_memory',['../structvesaInfo__t.html#ab94cc102e07cdfbf3cb53690bf205321',1,'vesaInfo_t']]],
   ['tpa',['tpa',['../structarp__header.html#aedc5d2cdff377ab3192ed264d060e914',1,'arp_header::tpa()'],['../arp_8h.html#ac69159d9b06000d1fe64c701014b1b19',1,'tpa():&#160;arp.h']]],

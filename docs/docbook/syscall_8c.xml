@@ -7,6 +7,16 @@
     <programlisting>#include &lt;aplus/attribute.h&gt;</programlisting>
     <programlisting>#include &lt;errno.h&gt;</programlisting>
         <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="syscall_8c_1a7cee1b8da707d135695bc11acee66b63">SYSCALL_DEBUG</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
             <title>Variables</title>
             <para>
                 <itemizedlist>
@@ -29,8 +39,8 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>int <link linkend="syscall_8c_1a271c3526b04dd2fe678f7f0d00cbf759">syscall_invoke</link> (
-void * handler, int p0, int p1, int p2, int p3, int p4)</para>
+                        <para>int <link linkend="syscall_8c_1a468aa05f3eb6adc7330d73e9bb5c6951">syscall_invoke</link> (
+int idx, int p0, int p1, int p2, int p3, int p4)</para>
                     </listitem>
                 </itemizedlist>
             </para>

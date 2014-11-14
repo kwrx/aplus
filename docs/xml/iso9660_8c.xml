@@ -142,7 +142,7 @@
         <references refid="fs_8c_1a8e53a98b93e6b136196b2ebd99e43dcd" compoundref="fs_8c" startline="16" endline="22">fs_read</references>
         <references refid="iso9660_8h_1a46d3c45c595db51113eb469111f8f47e" compoundref="iso9660_8h" startline="9">ISO9660_PVD</references>
         <references refid="iso9660_8h_1aa140ca7b27f39439a142a564aa47c06b" compoundref="iso9660_8h" startline="19">ISO9660_VOLDESC_SIZE</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="structinode_1a5756f61233e40d01652094d29b5daf6c" compoundref="fs_8h" startline="48">inode::position</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
@@ -167,7 +167,7 @@
         <references refid="iso9660_8h_1adb9a0b19d37ea681279fbc2fd12e78e9" compoundref="iso9660_8h" startline="10">ISO9660_ID</references>
         <references refid="iso9660_8h_1a46d3c45c595db51113eb469111f8f47e" compoundref="iso9660_8h" startline="9">ISO9660_PVD</references>
         <references refid="iso9660_8h_1aa140ca7b27f39439a142a564aa47c06b" compoundref="iso9660_8h" startline="19">ISO9660_VOLDESC_SIZE</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="structinode_1a5756f61233e40d01652094d29b5daf6c" compoundref="fs_8h" startline="48">inode::position</references>
       </memberdef>

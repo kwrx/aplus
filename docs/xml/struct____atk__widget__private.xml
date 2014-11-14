@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="struct____atk__widget__private" kind="struct" prot="public">
+    <compoundname>__atk_widget_private</compoundname>
+    <includes refid="widget_8h" local="no">widget.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct____atk__widget__private_1ad4c3a44969eed941222e6070a9618fd8" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* __atk_widget_private::buffer</definition>
+        <argsstring></argsstring>
+        <name>buffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="14" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct____atk__widget__private_1ae3e2eae5b840dd43fd3f458d077a8fe9" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* __atk_widget_private::draw)(atk_widget_t *)</definition>
+        <argsstring>)(atk_widget_t *)</argsstring>
+        <name>draw</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="16" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct____atk__widget__private_1a46674987ae41a9d4e1b33b9e2d9424bc" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* __atk_widget_private::event)(atk_widget_t *, int, void *)</definition>
+        <argsstring>)(atk_widget_t *, int, void *)</argsstring>
+        <name>event</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="17" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>__atk_widget_private</label>
+        <link refid="struct____atk__widget__private"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="13" bodyend="18"/>
+    <listofallmembers>
+      <member refid="struct____atk__widget__private_1ad4c3a44969eed941222e6070a9618fd8" prot="public" virt="non-virtual"><scope>__atk_widget_private</scope><name>buffer</name></member>
+      <member refid="struct____atk__widget__private_1ae3e2eae5b840dd43fd3f458d077a8fe9" prot="public" virt="non-virtual"><scope>__atk_widget_private</scope><name>draw</name></member>
+      <member refid="struct____atk__widget__private_1a46674987ae41a9d4e1b33b9e2d9424bc" prot="public" virt="non-virtual"><scope>__atk_widget_private</scope><name>event</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

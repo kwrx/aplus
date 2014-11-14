@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['backcolor',['backcolor',['../structatk__widget.html#a1ce3f914210cd44c532688e1b98e7ba7',1,'atk_widget']]],
   ['bank_5fsize',['bank_size',['../structvesaModeInfo__t.html#a6f7476f0df157c2fc8969131512a9bc1',1,'vesaModeInfo_t::bank_size()'],['../grub_8h.html#a32d05d9fdf87ed2f2fe33d299c279df7',1,'bank_size():&#160;grub.h']]],
   ['banks',['banks',['../structvesaModeInfo__t.html#a543f6b11b8caed004dc0f4dd8fed13c8',1,'vesaModeInfo_t::banks()'],['../grub_8h.html#af8898775b98504132a77f294f60914ad',1,'banks():&#160;grub.h']]],
   ['base_5fh',['base_h',['../structgdt__entry.html#af64e5321b471da1d5ddf85ff9b0a19d3',1,'gdt_entry::base_h()'],['../desc_8c.html#a8fef9c987f038778feaf85edfcc9c060',1,'base_h():&#160;desc.c']]],
@@ -27,7 +28,7 @@ var searchData=
   ['bootinfo',['BootInfo',['../grub_8h.html#aaf761d57d118a95f28fd464fd6eaf593',1,'grub.h']]],
   ['bootinfo_5ft',['BootInfo_t',['../structBootInfo__t.html',1,'']]],
   ['bpp',['bpp',['../structvesaModeInfo__t.html#acbf51c6b217de951bd6b40ae60b2343d',1,'vesaModeInfo_t::bpp()'],['../grub_8h.html#a29d3773a35b844e2dbb12bb5d895ab50',1,'bpp():&#160;grub.h']]],
-  ['buffer',['buffer',['../structslirpcard.html#a3a9cd572ee740f4844706613f6c1a98d',1,'slirpcard']]],
+  ['buffer',['buffer',['../structslirpcard.html#a3a9cd572ee740f4844706613f6c1a98d',1,'slirpcard::buffer()'],['../struct____atk__widget__private.html#ad4c3a44969eed941222e6070a9618fd8',1,'__atk_widget_private::buffer()']]],
   ['buffers_5flength',['buffers_length',['../bufio_8c.html#ae7827a32f1a587623ae8c9ac72981bd1',1,'bufio.c']]],
   ['bufio',['bufio',['../structbufio.html',1,'']]],
   ['bufio_2ec',['bufio.c',['../bufio_8c.html',1,'']]],

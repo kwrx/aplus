@@ -462,7 +462,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="kheap_8c_source.html#l00132">132</a> of file <a class="el" href="kheap_8c_source.html">kheap.c</a>.</p>
 
-<p>References <a class="el" href="kheap_8c_source.html#l00052">__bitmap</a>, <a class="el" href="mm_8h_source.html#l00067">heap::alloc</a>, <a class="el" href="mm_8h_source.html#l00063">heap::bitmap</a>, <a class="el" href="kheap_8c_source.html#l00075">bitmap_alloc()</a>, <a class="el" href="kheap_8c_source.html#l00106">bitmap_free()</a>, <a class="el" href="mm_8h_source.html#l00057">BLKSIZE</a>, <a class="el" href="mm_8h_source.html#l00068">heap::free</a>, <a class="el" href="heap_8c_source.html#l00028">halloc()</a>, <a class="el" href="mm_8c_source.html#l00035">memsize</a>, <a class="el" href="mm_8c_source.html#l00113">mm_setheap()</a>, <a class="el" href="mm_8h_source.html#l00064">heap::size</a>, and <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>.</p>
+<p>References <a class="el" href="kheap_8c_source.html#l00052">__bitmap</a>, <a class="el" href="mm_8h_source.html#l00067">heap::alloc</a>, <a class="el" href="mm_8h_source.html#l00063">heap::bitmap</a>, <a class="el" href="kheap_8c_source.html#l00075">bitmap_alloc()</a>, <a class="el" href="kheap_8c_source.html#l00106">bitmap_free()</a>, <a class="el" href="mm_8h_source.html#l00057">BLKSIZE</a>, <a class="el" href="mm_8h_source.html#l00068">heap::free</a>, <a class="el" href="heap_8c_source.html#l00028">halloc()</a>, <a class="el" href="mm_8c_source.html#l00035">memsize</a>, <a class="el" href="mm_8c_source.html#l00134">mm_setheap()</a>, <a class="el" href="mm_8h_source.html#l00064">heap::size</a>, and <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>.</p>
 <div class="fragment"><div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                 {</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <a class="code" href="kheap_8c.html#ab18276b758b671778bcef772dee38c85">kheap</a>.<a class="code" href="structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1">bitmap</a> = (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>*) <a class="code" href="kheap_8c.html#ab27b0e2ca68753b0298fd591615a6592">__bitmap</a>;</div>
@@ -480,7 +480,7 @@ Variables</h2></td></tr>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;}</div>
-<div class="ttc" id="mm_8c_html_a6f69e1474f69d9286294cfa23cdcc414"><div class="ttname"><a href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">mm_setheap</a></div><div class="ttdeci">void mm_setheap(heap_t *heap)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00113">mm.c:113</a></div></div>
+<div class="ttc" id="mm_8c_html_a6f69e1474f69d9286294cfa23cdcc414"><div class="ttname"><a href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">mm_setheap</a></div><div class="ttdeci">void mm_setheap(heap_t *heap)</div><div class="ttdoc">Set current heap for memory operations. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00134">mm.c:134</a></div></div>
 <div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
 <div class="ttc" id="heap_8c_html_ace4a8a1fe937911a1a107c92e6d40339"><div class="ttname"><a href="heap_8c.html#ace4a8a1fe937911a1a107c92e6d40339">halloc</a></div><div class="ttdeci">void * halloc(heap_t *heap, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="heap_8c_source.html#l00028">heap.c:28</a></div></div>
 <div class="ttc" id="mm_8h_html_ac4551bbc9efabf8378f35498f80b4679"><div class="ttname"><a href="mm_8h.html#ac4551bbc9efabf8378f35498f80b4679">BLKSIZE</a></div><div class="ttdeci">#define BLKSIZE</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00057">mm.h:57</a></div></div>
@@ -561,7 +561,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_e07adefefc5da1d7540fd182d8c11934.html">mm</a></li><li class="navelem"><a class="el" href="kheap_8c.html">kheap.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 18:07:57 for aPlus by
+    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

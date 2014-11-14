@@ -1,4 +1,4 @@
-.TH "src/include/aplus/mm.h" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/mm.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -86,9 +86,11 @@ src/include/aplus/mm.h \-
 .ti -1c
 .RI "void \fBkfree\fP (void *)"
 .br
+.RI "\fIFree memory from Kernel Heap\&. \fP"
 .ti -1c
 .RI "void * \fBkrealloc\fP (void *, size_t)"
 .br
+.RI "\fIRealloc memory from Kernel Heap\&. \fP"
 .in -1c
 .SH "Macro Definition Documentation"
 .PP 
@@ -150,66 +152,91 @@ Definition at line 54 of file mm\&.h\&.
 
 .SH "Function Documentation"
 .PP 
-.SS "void kfree (void *)"
+.SS "void kfree (void *ptr)"
 
 .PP
-Definition at line 66 of file mm\&.c\&.
+Free memory from Kernel Heap\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP Pointer to data allocated\&. 
+.RE
+.PP
+
+.PP
+Definition at line 79 of file mm\&.c\&.
 .PP
 References BLKMAGIC, hfree(), mm_align(), mm_paddr(), and size\&.
 .PP
 .nf
-66                       {
-67     if(!ptr)
-68         return;
-69         
-70     
-71     block_t* block = (block_t*) ptr;
-72     if(block->magic != BLKMAGIC)
-73         return;
-74         
-75     size_t size = block->size;
-76     block->size = 0;
-77     block->magic = 0;
-78     
-79     
-80     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
-81 }
+79                       {
+80     if(!ptr)
+81         return;
+82         
+83     
+84     block_t* block = (block_t*) ptr;
+85     if(block->magic != BLKMAGIC)
+86         return;
+87         
+88     size_t size = block->size;
+89     block->size = 0;
+90     block->magic = 0;
+91     
+92     
+93     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+94 }
 .fi
 .SS "void* kmalloc (size_t)"
 
-.SS "void* krealloc (void *, size_t)"
+.SS "void* krealloc (void *ptr, size_tsize)"
 
 .PP
-Definition at line 84 of file mm\&.c\&.
+Realloc memory from Kernel Heap\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIptr\fP Pointer to data allocated\&. 
+.br
+\fIsize\fP Size of data to alloc\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Virtual Address of data\&. 
+.RE
+.PP
+
+.PP
+Definition at line 103 of file mm\&.c\&.
 .PP
 References BLKMAGIC, kfree(), and kmalloc()\&.
 .PP
 .nf
-84                                        {
-85     if(ptr == NULL)
-86         return kmalloc(size);
-87         
-88     if(size == 0) {
-89         kfree(ptr);
-90         return NULL;
-91     }   
-92 
-93     block_t* block = (block_t*) ptr;
-94     if(block->magic != BLKMAGIC)
-95         return NULL;
-96         
-97     void* newptr = kmalloc(size);
-98     if(!newptr)
-99         return NULL;
-100         
-101     if(size > block->size)
-102         size = block->size;
-103         
-104     memcpy(newptr, ptr, size);
-105     kfree(ptr);
-106     
-107     return newptr;
-108 }
+103                                        {
+104     if(ptr == NULL)
+105         return kmalloc(size);
+106         
+107     if(size == 0) {
+108         kfree(ptr);
+109         return NULL;
+110     }   
+111 
+112     block_t* block = (block_t*) ptr;
+113     if(block->magic != BLKMAGIC)
+114         return NULL;
+115         
+116     void* newptr = kmalloc(size);
+117     if(!newptr)
+118         return NULL;
+119         
+120     if(size > block->size)
+121         size = block->size;
+122         
+123     memcpy(newptr, ptr, size);
+124     kfree(ptr);
+125     
+126     return newptr;
+127 }
 .fi
 .SS "static void* mm_align (void *vaddr)\fC [inline]\fP, \fC [static]\fP"
 

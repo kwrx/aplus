@@ -10,7 +10,7 @@ var desc_8c =
     [ "idt_set", "desc_8c.html#a57d9d99abdf93e1b7d838f47efc6af1c", null ],
     [ "PIT_FREQ", "desc_8c.html#aaad9208d1f30cc40267fdeb44f593a35", null ],
     [ "__asm__", "desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b", null ],
-    [ "__attribute__", "desc_8c.html#a7d771d9751c9e97e25096acd0dfd1a94", null ],
+    [ "__attribute__", "desc_8c.html#ae21df847b32e33e64ba0912dd628e610", null ],
     [ "desc_init", "desc_8c.html#a6a369f578313199f231869f97e16802d", null ],
     [ "irq_get", "desc_8c.html#ae5e75d23e9ca091bdf2f1c5007481202", null ],
     [ "irq_handler", "desc_8c.html#a16eb17da95d62143431a37e9381af3ee", null ],

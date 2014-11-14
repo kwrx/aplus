@@ -322,14 +322,14 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="15">
+      <node id="20">
         <label>BootInfo_t</label>
         <link refid="structBootInfo__t"/>
-        <childnode refid="16" relation="usage">
+        <childnode refid="21" relation="usage">
           <edgelabel>+vbe_mode</edgelabel>
         </childnode>
       </node>
-      <node id="16">
+      <node id="21">
         <label>vesaInfo_t</label>
         <link refid="structvesaInfo__t"/>
       </node>

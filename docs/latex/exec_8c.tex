@@ -11,9 +11,13 @@
 struct \hyperlink{structelf32__hdr}{elf32\+\_\+hdr}
 \begin{DoxyCompactList}\small\item\em E\+L\+F32 Header. \end{DoxyCompactList}\item 
 struct \hyperlink{structelf32__shdr}{elf32\+\_\+shdr}
-\begin{DoxyCompactList}\small\item\em E\+L\+F32 Section Header. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em E\+L\+F32 Section Header. \end{DoxyCompactList}\item 
+struct \hyperlink{structelf32__phdr}{elf32\+\_\+phdr}
+\begin{DoxyCompactList}\small\item\em E\+L\+F32 Program Header. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{exec_8c_ac12ef0a698cec32392148178e777a3a4}{E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H}~0x100000
 \item 
 \#define \hyperlink{exec_8c_ae407130db14180c6737390604ba7c1fe}{E\+I\+\_\+\+N\+I\+D\+E\+N\+T}~16
 \item 
@@ -81,6 +85,24 @@ struct \hyperlink{structelf32__shdr}{elf32\+\_\+shdr}
 \item 
 \#define \hyperlink{exec_8c_acf36e75ca9c55c229039ee298abb5bb0}{S\+H\+F\+\_\+\+M\+A\+S\+K}~0x\+F0000000
 \item 
+\#define \hyperlink{exec_8c_a854729c1dc4623abeaeb765a1b745012}{P\+T\+\_\+\+N\+U\+L\+L}~0
+\item 
+\#define \hyperlink{exec_8c_a84d7768fd6c6ece599d297090900cf92}{P\+T\+\_\+\+L\+O\+A\+D}~1
+\item 
+\#define \hyperlink{exec_8c_a2121a2f01c51e8462bfd4d47725649d8}{P\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C}~2
+\item 
+\#define \hyperlink{exec_8c_abcd3aa15bc567949c1ab6b1abc137710}{P\+T\+\_\+\+I\+N\+T\+E\+R\+P}~3
+\item 
+\#define \hyperlink{exec_8c_a72baf87d62607c7fdccd3b8010d4ce30}{P\+T\+\_\+\+N\+O\+T\+E}~4
+\item 
+\#define \hyperlink{exec_8c_abff9f38fd394e09e60f5640550a23e46}{P\+T\+\_\+\+S\+H\+L\+I\+B}~5
+\item 
+\#define \hyperlink{exec_8c_a58ff00be749ca4000074f9b9066a1056}{P\+T\+\_\+\+P\+H\+D\+R}~6
+\item 
+\#define \hyperlink{exec_8c_acaa6971207ea507ed02f22ba574b8534}{P\+T\+\_\+\+L\+O\+P\+R\+O\+C}~0x70000000
+\item 
+\#define \hyperlink{exec_8c_a74427c5909fdced36b41134c11650249}{P\+T\+\_\+\+H\+I\+P\+R\+O\+C}~0x7\+F\+F\+F\+F\+F\+F\+F
+\item 
 \#define \hyperlink{exec_8c_aa3ea57d3d539b6618daaaaf7af4bec80}{E\+L\+F\+\_\+\+D\+E\+B\+U\+G}
 \begin{DoxyCompactList}\small\item\em Enable or disable debug for E\+L\+F. \end{DoxyCompactList}\item 
 \#define \hyperlink{exec_8c_a9b7ee5bbb263671ca310a70e0d1526e9}{check}(cond)
@@ -101,13 +123,17 @@ typedef \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \h
 typedef struct \hyperlink{structelf32__hdr}{elf32\+\_\+hdr} \hyperlink{exec_8c_a34edb44226509e467315e3bd81c3d7dc}{elf32\+\_\+hdr\+\_\+t}
 \begin{DoxyCompactList}\small\item\em E\+L\+F32 Header. \end{DoxyCompactList}\item 
 typedef struct \hyperlink{structelf32__shdr}{elf32\+\_\+shdr} \hyperlink{exec_8c_ad7b97ddfcb82a63cd28a9cb88f21984a}{elf32\+\_\+shdr\+\_\+t}
-\begin{DoxyCompactList}\small\item\em E\+L\+F32 Section Header. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em E\+L\+F32 Section Header. \end{DoxyCompactList}\item 
+typedef struct \hyperlink{structelf32__phdr}{elf32\+\_\+phdr} \hyperlink{exec_8c_a6c037736a997fdd28ed9f6b734261b23}{elf32\+\_\+phdr\+\_\+t}
+\begin{DoxyCompactList}\small\item\em E\+L\+F32 Program Header. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{exec_8c_a2dc58db2f806ea913fdcb272f8ca618a}{elf32\+\_\+check} (\hyperlink{exec_8c_a34edb44226509e467315e3bd81c3d7dc}{elf32\+\_\+hdr\+\_\+t} $\ast$hdr)
 \begin{DoxyCompactList}\small\item\em Check for valid E\+L\+F32 header. \end{DoxyCompactList}\item 
-void $\ast$ \hyperlink{exec_8c_a7473eb0ac8edeee7e0a7502c5ed08dc8}{elf32\+\_\+load} (void $\ast$image)
+int \hyperlink{exec_8c_acfcbb641f4d43807d78c5f37bff2e9bc}{elf32\+\_\+getspace} (\hyperlink{exec_8c_a34edb44226509e467315e3bd81c3d7dc}{elf32\+\_\+hdr\+\_\+t} $\ast$hdr, void $\ast$$\ast$ptr, size\+\_\+t $\ast$\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\begin{DoxyCompactList}\small\item\em Get Address Space of E\+L\+F32 Executable. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{exec_8c_aeb05ad85647cdfbf15b432a9d2f32926}{elf32\+\_\+load} (void $\ast$image, int $\ast$vaddr, int $\ast$vsize)
 \begin{DoxyCompactList}\small\item\em Load a E\+L\+F32 Executable image. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -131,91 +157,98 @@ void $\ast$ \hyperlink{exec_8c_a7473eb0ac8edeee7e0a7502c5ed08dc8}{elf32\+\_\+loa
 \subsubsection[{E\+I\+\_\+\+C\+L\+A\+S\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+C\+L\+A\+S\+S~4}}\label{exec_8c_a5b508cacf6662e4bc0e98ffe1eb61636}
 
 
-Definition at line 20 of file exec.\+c.
+Definition at line 22 of file exec.\+c.
 
 \hypertarget{exec_8c_a79c714b4bf89638ff576e163d7d2144f}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+D\+A\+T\+A@{E\+I\+\_\+\+D\+A\+T\+A}}
 \index{E\+I\+\_\+\+D\+A\+T\+A@{E\+I\+\_\+\+D\+A\+T\+A}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+D\+A\+T\+A}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+D\+A\+T\+A~5}}\label{exec_8c_a79c714b4bf89638ff576e163d7d2144f}
 
 
-Definition at line 21 of file exec.\+c.
+Definition at line 23 of file exec.\+c.
 
 \hypertarget{exec_8c_aba717f40a418b0d99c2efd4cdab4f54f}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+M\+A\+G0@{E\+I\+\_\+\+M\+A\+G0}}
 \index{E\+I\+\_\+\+M\+A\+G0@{E\+I\+\_\+\+M\+A\+G0}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+M\+A\+G0}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+M\+A\+G0~0}}\label{exec_8c_aba717f40a418b0d99c2efd4cdab4f54f}
 
 
-Definition at line 16 of file exec.\+c.
+Definition at line 18 of file exec.\+c.
 
 \hypertarget{exec_8c_a2cae3878d982911632b418680718d53b}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+M\+A\+G1@{E\+I\+\_\+\+M\+A\+G1}}
 \index{E\+I\+\_\+\+M\+A\+G1@{E\+I\+\_\+\+M\+A\+G1}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+M\+A\+G1}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+M\+A\+G1~1}}\label{exec_8c_a2cae3878d982911632b418680718d53b}
 
 
-Definition at line 17 of file exec.\+c.
+Definition at line 19 of file exec.\+c.
 
 \hypertarget{exec_8c_a2884a339ef7aefee59d160ed3fbb1739}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+M\+A\+G2@{E\+I\+\_\+\+M\+A\+G2}}
 \index{E\+I\+\_\+\+M\+A\+G2@{E\+I\+\_\+\+M\+A\+G2}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+M\+A\+G2}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+M\+A\+G2~2}}\label{exec_8c_a2884a339ef7aefee59d160ed3fbb1739}
 
 
-Definition at line 18 of file exec.\+c.
+Definition at line 20 of file exec.\+c.
 
 \hypertarget{exec_8c_ace03d4c5e8952e27b8505581432c3b84}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+M\+A\+G3@{E\+I\+\_\+\+M\+A\+G3}}
 \index{E\+I\+\_\+\+M\+A\+G3@{E\+I\+\_\+\+M\+A\+G3}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+M\+A\+G3}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+M\+A\+G3~3}}\label{exec_8c_ace03d4c5e8952e27b8505581432c3b84}
 
 
-Definition at line 19 of file exec.\+c.
+Definition at line 21 of file exec.\+c.
 
 \hypertarget{exec_8c_ae407130db14180c6737390604ba7c1fe}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+N\+I\+D\+E\+N\+T@{E\+I\+\_\+\+N\+I\+D\+E\+N\+T}}
 \index{E\+I\+\_\+\+N\+I\+D\+E\+N\+T@{E\+I\+\_\+\+N\+I\+D\+E\+N\+T}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+N\+I\+D\+E\+N\+T}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+N\+I\+D\+E\+N\+T~16}}\label{exec_8c_ae407130db14180c6737390604ba7c1fe}
 
 
-Definition at line 15 of file exec.\+c.
+Definition at line 17 of file exec.\+c.
 
 \hypertarget{exec_8c_aed24a379d553d0e36853949dd6ddd6c1}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+P\+A\+D@{E\+I\+\_\+\+P\+A\+D}}
 \index{E\+I\+\_\+\+P\+A\+D@{E\+I\+\_\+\+P\+A\+D}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+P\+A\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+P\+A\+D~7}}\label{exec_8c_aed24a379d553d0e36853949dd6ddd6c1}
 
 
-Definition at line 23 of file exec.\+c.
+Definition at line 25 of file exec.\+c.
 
 \hypertarget{exec_8c_aac8694b14e6500d9dc5047ef62518845}{\index{exec.\+c@{exec.\+c}!E\+I\+\_\+\+V\+E\+R\+S\+I\+O\+N@{E\+I\+\_\+\+V\+E\+R\+S\+I\+O\+N}}
 \index{E\+I\+\_\+\+V\+E\+R\+S\+I\+O\+N@{E\+I\+\_\+\+V\+E\+R\+S\+I\+O\+N}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+I\+\_\+\+V\+E\+R\+S\+I\+O\+N}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+I\+\_\+\+V\+E\+R\+S\+I\+O\+N~6}}\label{exec_8c_aac8694b14e6500d9dc5047ef62518845}
 
 
-Definition at line 22 of file exec.\+c.
+Definition at line 24 of file exec.\+c.
+
+\hypertarget{exec_8c_ac12ef0a698cec32392148178e777a3a4}{\index{exec.\+c@{exec.\+c}!E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H@{E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H}}
+\index{E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H@{E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H}!exec.\+c@{exec.\+c}}
+\subsubsection[{E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H~0x100000}}\label{exec_8c_ac12ef0a698cec32392148178e777a3a4}
+
+
+Definition at line 7 of file exec.\+c.
 
 \hypertarget{exec_8c_a49574a2fb2e62bcff73812b26da8fe69}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32@{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32}}
 \index{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32@{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32~1}}\label{exec_8c_a49574a2fb2e62bcff73812b26da8fe69}
 
 
-Definition at line 30 of file exec.\+c.
+Definition at line 32 of file exec.\+c.
 
 \hypertarget{exec_8c_a24ed2e132c3545d8d8d680f2ca2cd7fb}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+64@{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+64}}
 \index{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+64@{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+64}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+64}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+64~2}}\label{exec_8c_a24ed2e132c3545d8d8d680f2ca2cd7fb}
 
 
-Definition at line 31 of file exec.\+c.
+Definition at line 33 of file exec.\+c.
 
 \hypertarget{exec_8c_a2746b48aac96a65735bed83598d5d68a}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B@{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B}}
 \index{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B@{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B~1}}\label{exec_8c_a2746b48aac96a65735bed83598d5d68a}
 
 
-Definition at line 33 of file exec.\+c.
+Definition at line 35 of file exec.\+c.
 
 \hypertarget{exec_8c_a716af0ca966a3f918b82c4a4a8a73f9e}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+M\+S\+B@{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+M\+S\+B}}
 \index{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+M\+S\+B@{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+M\+S\+B}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+M\+S\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+M\+S\+B~2}}\label{exec_8c_a716af0ca966a3f918b82c4a4a8a73f9e}
 
 
-Definition at line 34 of file exec.\+c.
+Definition at line 36 of file exec.\+c.
 
 \hypertarget{exec_8c_aa3ea57d3d539b6618daaaaf7af4bec80}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+D\+E\+B\+U\+G@{E\+L\+F\+\_\+\+D\+E\+B\+U\+G}}
 \index{E\+L\+F\+\_\+\+D\+E\+B\+U\+G@{E\+L\+F\+\_\+\+D\+E\+B\+U\+G}!exec.\+c@{exec.\+c}}
@@ -226,147 +259,210 @@ Enable or disable debug for E\+L\+F.
 
 
 
-Definition at line 58 of file exec.\+c.
+Definition at line 72 of file exec.\+c.
 
 \hypertarget{exec_8c_a8d944947af59b67d47a445ae2bef32e3}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+M\+A\+G0@{E\+L\+F\+\_\+\+M\+A\+G0}}
 \index{E\+L\+F\+\_\+\+M\+A\+G0@{E\+L\+F\+\_\+\+M\+A\+G0}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+M\+A\+G0}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+M\+A\+G0~0x7\+F}}\label{exec_8c_a8d944947af59b67d47a445ae2bef32e3}
 
 
-Definition at line 25 of file exec.\+c.
+Definition at line 27 of file exec.\+c.
 
 \hypertarget{exec_8c_abdd5eae694123f4e5e0a5449b3591cc9}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+M\+A\+G1@{E\+L\+F\+\_\+\+M\+A\+G1}}
 \index{E\+L\+F\+\_\+\+M\+A\+G1@{E\+L\+F\+\_\+\+M\+A\+G1}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+M\+A\+G1}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+M\+A\+G1~'E'}}\label{exec_8c_abdd5eae694123f4e5e0a5449b3591cc9}
 
 
-Definition at line 26 of file exec.\+c.
+Definition at line 28 of file exec.\+c.
 
 \hypertarget{exec_8c_a60668f0dfd2613d5ccccac355f147726}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+M\+A\+G2@{E\+L\+F\+\_\+\+M\+A\+G2}}
 \index{E\+L\+F\+\_\+\+M\+A\+G2@{E\+L\+F\+\_\+\+M\+A\+G2}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+M\+A\+G2}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+M\+A\+G2~'L'}}\label{exec_8c_a60668f0dfd2613d5ccccac355f147726}
 
 
-Definition at line 27 of file exec.\+c.
+Definition at line 29 of file exec.\+c.
 
 \hypertarget{exec_8c_a40443fcac019afd6b173b8890fd25e6c}{\index{exec.\+c@{exec.\+c}!E\+L\+F\+\_\+\+M\+A\+G3@{E\+L\+F\+\_\+\+M\+A\+G3}}
 \index{E\+L\+F\+\_\+\+M\+A\+G3@{E\+L\+F\+\_\+\+M\+A\+G3}!exec.\+c@{exec.\+c}}
 \subsubsection[{E\+L\+F\+\_\+\+M\+A\+G3}]{\setlength{\rightskip}{0pt plus 5cm}\#define E\+L\+F\+\_\+\+M\+A\+G3~'F'}}\label{exec_8c_a40443fcac019afd6b173b8890fd25e6c}
 
 
-Definition at line 28 of file exec.\+c.
+Definition at line 30 of file exec.\+c.
+
+\hypertarget{exec_8c_a2121a2f01c51e8462bfd4d47725649d8}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C@{P\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C}}
+\index{P\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C@{P\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C~2}}\label{exec_8c_a2121a2f01c51e8462bfd4d47725649d8}
+
+
+Definition at line 61 of file exec.\+c.
+
+\hypertarget{exec_8c_a74427c5909fdced36b41134c11650249}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+H\+I\+P\+R\+O\+C@{P\+T\+\_\+\+H\+I\+P\+R\+O\+C}}
+\index{P\+T\+\_\+\+H\+I\+P\+R\+O\+C@{P\+T\+\_\+\+H\+I\+P\+R\+O\+C}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+H\+I\+P\+R\+O\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+H\+I\+P\+R\+O\+C~0x7\+F\+F\+F\+F\+F\+F\+F}}\label{exec_8c_a74427c5909fdced36b41134c11650249}
+
+
+Definition at line 67 of file exec.\+c.
+
+\hypertarget{exec_8c_abcd3aa15bc567949c1ab6b1abc137710}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+I\+N\+T\+E\+R\+P@{P\+T\+\_\+\+I\+N\+T\+E\+R\+P}}
+\index{P\+T\+\_\+\+I\+N\+T\+E\+R\+P@{P\+T\+\_\+\+I\+N\+T\+E\+R\+P}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+I\+N\+T\+E\+R\+P}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+I\+N\+T\+E\+R\+P~3}}\label{exec_8c_abcd3aa15bc567949c1ab6b1abc137710}
+
+
+Definition at line 62 of file exec.\+c.
+
+\hypertarget{exec_8c_a84d7768fd6c6ece599d297090900cf92}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+L\+O\+A\+D@{P\+T\+\_\+\+L\+O\+A\+D}}
+\index{P\+T\+\_\+\+L\+O\+A\+D@{P\+T\+\_\+\+L\+O\+A\+D}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+L\+O\+A\+D}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+L\+O\+A\+D~1}}\label{exec_8c_a84d7768fd6c6ece599d297090900cf92}
+
+
+Definition at line 60 of file exec.\+c.
+
+\hypertarget{exec_8c_acaa6971207ea507ed02f22ba574b8534}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+L\+O\+P\+R\+O\+C@{P\+T\+\_\+\+L\+O\+P\+R\+O\+C}}
+\index{P\+T\+\_\+\+L\+O\+P\+R\+O\+C@{P\+T\+\_\+\+L\+O\+P\+R\+O\+C}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+L\+O\+P\+R\+O\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+L\+O\+P\+R\+O\+C~0x70000000}}\label{exec_8c_acaa6971207ea507ed02f22ba574b8534}
+
+
+Definition at line 66 of file exec.\+c.
+
+\hypertarget{exec_8c_a72baf87d62607c7fdccd3b8010d4ce30}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+N\+O\+T\+E@{P\+T\+\_\+\+N\+O\+T\+E}}
+\index{P\+T\+\_\+\+N\+O\+T\+E@{P\+T\+\_\+\+N\+O\+T\+E}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+N\+O\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+N\+O\+T\+E~4}}\label{exec_8c_a72baf87d62607c7fdccd3b8010d4ce30}
+
+
+Definition at line 63 of file exec.\+c.
+
+\hypertarget{exec_8c_a854729c1dc4623abeaeb765a1b745012}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+N\+U\+L\+L@{P\+T\+\_\+\+N\+U\+L\+L}}
+\index{P\+T\+\_\+\+N\+U\+L\+L@{P\+T\+\_\+\+N\+U\+L\+L}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+N\+U\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+N\+U\+L\+L~0}}\label{exec_8c_a854729c1dc4623abeaeb765a1b745012}
+
+
+Definition at line 59 of file exec.\+c.
+
+\hypertarget{exec_8c_a58ff00be749ca4000074f9b9066a1056}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+P\+H\+D\+R@{P\+T\+\_\+\+P\+H\+D\+R}}
+\index{P\+T\+\_\+\+P\+H\+D\+R@{P\+T\+\_\+\+P\+H\+D\+R}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+P\+H\+D\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+P\+H\+D\+R~6}}\label{exec_8c_a58ff00be749ca4000074f9b9066a1056}
+
+
+Definition at line 65 of file exec.\+c.
+
+\hypertarget{exec_8c_abff9f38fd394e09e60f5640550a23e46}{\index{exec.\+c@{exec.\+c}!P\+T\+\_\+\+S\+H\+L\+I\+B@{P\+T\+\_\+\+S\+H\+L\+I\+B}}
+\index{P\+T\+\_\+\+S\+H\+L\+I\+B@{P\+T\+\_\+\+S\+H\+L\+I\+B}!exec.\+c@{exec.\+c}}
+\subsubsection[{P\+T\+\_\+\+S\+H\+L\+I\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define P\+T\+\_\+\+S\+H\+L\+I\+B~5}}\label{exec_8c_abff9f38fd394e09e60f5640550a23e46}
+
+
+Definition at line 64 of file exec.\+c.
 
 \hypertarget{exec_8c_a38476fe4ed88ac83ba86a4e103199a86}{\index{exec.\+c@{exec.\+c}!S\+H\+F\+\_\+\+A\+L\+L\+O\+C@{S\+H\+F\+\_\+\+A\+L\+L\+O\+C}}
 \index{S\+H\+F\+\_\+\+A\+L\+L\+O\+C@{S\+H\+F\+\_\+\+A\+L\+L\+O\+C}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+F\+\_\+\+A\+L\+L\+O\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+F\+\_\+\+A\+L\+L\+O\+C~2}}\label{exec_8c_a38476fe4ed88ac83ba86a4e103199a86}
 
 
-Definition at line 51 of file exec.\+c.
+Definition at line 53 of file exec.\+c.
 
 \hypertarget{exec_8c_ab3780594e35fbbc6e5028bcb921d0a76}{\index{exec.\+c@{exec.\+c}!S\+H\+F\+\_\+\+E\+X\+E\+C\+I\+N\+S\+T\+R@{S\+H\+F\+\_\+\+E\+X\+E\+C\+I\+N\+S\+T\+R}}
 \index{S\+H\+F\+\_\+\+E\+X\+E\+C\+I\+N\+S\+T\+R@{S\+H\+F\+\_\+\+E\+X\+E\+C\+I\+N\+S\+T\+R}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+F\+\_\+\+E\+X\+E\+C\+I\+N\+S\+T\+R}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+F\+\_\+\+E\+X\+E\+C\+I\+N\+S\+T\+R~4}}\label{exec_8c_ab3780594e35fbbc6e5028bcb921d0a76}
 
 
-Definition at line 52 of file exec.\+c.
+Definition at line 54 of file exec.\+c.
 
 \hypertarget{exec_8c_acf36e75ca9c55c229039ee298abb5bb0}{\index{exec.\+c@{exec.\+c}!S\+H\+F\+\_\+\+M\+A\+S\+K@{S\+H\+F\+\_\+\+M\+A\+S\+K}}
 \index{S\+H\+F\+\_\+\+M\+A\+S\+K@{S\+H\+F\+\_\+\+M\+A\+S\+K}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+F\+\_\+\+M\+A\+S\+K}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+F\+\_\+\+M\+A\+S\+K~0x\+F0000000}}\label{exec_8c_acf36e75ca9c55c229039ee298abb5bb0}
 
 
-Definition at line 53 of file exec.\+c.
+Definition at line 55 of file exec.\+c.
 
 \hypertarget{exec_8c_a025c79223b0fee4676337d660f76b59b}{\index{exec.\+c@{exec.\+c}!S\+H\+F\+\_\+\+W\+R\+I\+T\+E@{S\+H\+F\+\_\+\+W\+R\+I\+T\+E}}
 \index{S\+H\+F\+\_\+\+W\+R\+I\+T\+E@{S\+H\+F\+\_\+\+W\+R\+I\+T\+E}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+F\+\_\+\+W\+R\+I\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+F\+\_\+\+W\+R\+I\+T\+E~1}}\label{exec_8c_a025c79223b0fee4676337d660f76b59b}
 
 
-Definition at line 50 of file exec.\+c.
+Definition at line 52 of file exec.\+c.
 
 \hypertarget{exec_8c_a3a9278d12cf2c9e7eaca87688d0a6e37}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C@{S\+H\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C}}
 \index{S\+H\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C@{S\+H\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+D\+Y\+N\+A\+M\+I\+C~6}}\label{exec_8c_a3a9278d12cf2c9e7eaca87688d0a6e37}
 
 
-Definition at line 43 of file exec.\+c.
+Definition at line 45 of file exec.\+c.
 
 \hypertarget{exec_8c_aa9949aedf49107f6a07e618d5d791d40}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+D\+Y\+N\+S\+Y\+M@{S\+H\+T\+\_\+\+D\+Y\+N\+S\+Y\+M}}
 \index{S\+H\+T\+\_\+\+D\+Y\+N\+S\+Y\+M@{S\+H\+T\+\_\+\+D\+Y\+N\+S\+Y\+M}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+D\+Y\+N\+S\+Y\+M}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+D\+Y\+N\+S\+Y\+M~11}}\label{exec_8c_aa9949aedf49107f6a07e618d5d791d40}
 
 
-Definition at line 48 of file exec.\+c.
+Definition at line 50 of file exec.\+c.
 
 \hypertarget{exec_8c_a446fd322326bea21373453c80c3f7925}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+H\+A\+S\+H@{S\+H\+T\+\_\+\+H\+A\+S\+H}}
 \index{S\+H\+T\+\_\+\+H\+A\+S\+H@{S\+H\+T\+\_\+\+H\+A\+S\+H}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+H\+A\+S\+H}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+H\+A\+S\+H~5}}\label{exec_8c_a446fd322326bea21373453c80c3f7925}
 
 
-Definition at line 42 of file exec.\+c.
+Definition at line 44 of file exec.\+c.
 
 \hypertarget{exec_8c_a820ff00317949be2ea1fd634a17dc13e}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+N\+O\+B\+I\+T\+S@{S\+H\+T\+\_\+\+N\+O\+B\+I\+T\+S}}
 \index{S\+H\+T\+\_\+\+N\+O\+B\+I\+T\+S@{S\+H\+T\+\_\+\+N\+O\+B\+I\+T\+S}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+N\+O\+B\+I\+T\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+N\+O\+B\+I\+T\+S~8}}\label{exec_8c_a820ff00317949be2ea1fd634a17dc13e}
 
 
-Definition at line 45 of file exec.\+c.
+Definition at line 47 of file exec.\+c.
 
 \hypertarget{exec_8c_a65506a79f0e972c851851af7b1008d94}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+N\+O\+T\+E@{S\+H\+T\+\_\+\+N\+O\+T\+E}}
 \index{S\+H\+T\+\_\+\+N\+O\+T\+E@{S\+H\+T\+\_\+\+N\+O\+T\+E}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+N\+O\+T\+E}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+N\+O\+T\+E~7}}\label{exec_8c_a65506a79f0e972c851851af7b1008d94}
 
 
-Definition at line 44 of file exec.\+c.
+Definition at line 46 of file exec.\+c.
 
 \hypertarget{exec_8c_a1566f4c14cff9f4b539b00af54d62dbb}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+N\+U\+L\+L@{S\+H\+T\+\_\+\+N\+U\+L\+L}}
 \index{S\+H\+T\+\_\+\+N\+U\+L\+L@{S\+H\+T\+\_\+\+N\+U\+L\+L}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+N\+U\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+N\+U\+L\+L~0}}\label{exec_8c_a1566f4c14cff9f4b539b00af54d62dbb}
 
 
-Definition at line 37 of file exec.\+c.
+Definition at line 39 of file exec.\+c.
 
 \hypertarget{exec_8c_a4bff22edbae51353ba9b3572d424b91a}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+P\+R\+O\+G\+B\+I\+T\+S@{S\+H\+T\+\_\+\+P\+R\+O\+G\+B\+I\+T\+S}}
 \index{S\+H\+T\+\_\+\+P\+R\+O\+G\+B\+I\+T\+S@{S\+H\+T\+\_\+\+P\+R\+O\+G\+B\+I\+T\+S}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+P\+R\+O\+G\+B\+I\+T\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+P\+R\+O\+G\+B\+I\+T\+S~1}}\label{exec_8c_a4bff22edbae51353ba9b3572d424b91a}
 
 
-Definition at line 38 of file exec.\+c.
+Definition at line 40 of file exec.\+c.
 
 \hypertarget{exec_8c_a2aea2ed985f81f13a157fe2da02a621a}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+R\+E\+L@{S\+H\+T\+\_\+\+R\+E\+L}}
 \index{S\+H\+T\+\_\+\+R\+E\+L@{S\+H\+T\+\_\+\+R\+E\+L}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+R\+E\+L}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+R\+E\+L~9}}\label{exec_8c_a2aea2ed985f81f13a157fe2da02a621a}
 
 
-Definition at line 46 of file exec.\+c.
+Definition at line 48 of file exec.\+c.
 
 \hypertarget{exec_8c_abf2fc2781a2869352c2ffa0555f34118}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+R\+E\+L\+A@{S\+H\+T\+\_\+\+R\+E\+L\+A}}
 \index{S\+H\+T\+\_\+\+R\+E\+L\+A@{S\+H\+T\+\_\+\+R\+E\+L\+A}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+R\+E\+L\+A}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+R\+E\+L\+A~4}}\label{exec_8c_abf2fc2781a2869352c2ffa0555f34118}
 
 
-Definition at line 41 of file exec.\+c.
+Definition at line 43 of file exec.\+c.
 
 \hypertarget{exec_8c_ace0ce008ff50406077a9450174fe55a5}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+S\+H\+L\+I\+B@{S\+H\+T\+\_\+\+S\+H\+L\+I\+B}}
 \index{S\+H\+T\+\_\+\+S\+H\+L\+I\+B@{S\+H\+T\+\_\+\+S\+H\+L\+I\+B}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+S\+H\+L\+I\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+S\+H\+L\+I\+B~10}}\label{exec_8c_ace0ce008ff50406077a9450174fe55a5}
 
 
-Definition at line 47 of file exec.\+c.
+Definition at line 49 of file exec.\+c.
 
 \hypertarget{exec_8c_af4b916dc4ca5016fb5c374068002a532}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+S\+T\+R\+T\+A\+B@{S\+H\+T\+\_\+\+S\+T\+R\+T\+A\+B}}
 \index{S\+H\+T\+\_\+\+S\+T\+R\+T\+A\+B@{S\+H\+T\+\_\+\+S\+T\+R\+T\+A\+B}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+S\+T\+R\+T\+A\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+S\+T\+R\+T\+A\+B~3}}\label{exec_8c_af4b916dc4ca5016fb5c374068002a532}
 
 
-Definition at line 40 of file exec.\+c.
+Definition at line 42 of file exec.\+c.
 
 \hypertarget{exec_8c_a4add7784e43ec3d3b9c09d3ffc476a81}{\index{exec.\+c@{exec.\+c}!S\+H\+T\+\_\+\+S\+Y\+M\+T\+A\+B@{S\+H\+T\+\_\+\+S\+Y\+M\+T\+A\+B}}
 \index{S\+H\+T\+\_\+\+S\+Y\+M\+T\+A\+B@{S\+H\+T\+\_\+\+S\+Y\+M\+T\+A\+B}!exec.\+c@{exec.\+c}}
 \subsubsection[{S\+H\+T\+\_\+\+S\+Y\+M\+T\+A\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+H\+T\+\_\+\+S\+Y\+M\+T\+A\+B~2}}\label{exec_8c_a4add7784e43ec3d3b9c09d3ffc476a81}
 
 
-Definition at line 39 of file exec.\+c.
+Definition at line 41 of file exec.\+c.
 
 
 
@@ -376,14 +472,14 @@ Definition at line 39 of file exec.\+c.
 \subsubsection[{Elf32\+\_\+\+Addr}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint32\+\_\+t} {\bf Elf32\+\_\+\+Addr}}}\label{exec_8c_a40c6d4571e6001f443cc6a6474620158}
 
 
-Definition at line 8 of file exec.\+c.
+Definition at line 10 of file exec.\+c.
 
 \hypertarget{exec_8c_a2ff0787d7d1bae0f251192806a2974ca}{\index{exec.\+c@{exec.\+c}!Elf32\+\_\+\+Half@{Elf32\+\_\+\+Half}}
 \index{Elf32\+\_\+\+Half@{Elf32\+\_\+\+Half}!exec.\+c@{exec.\+c}}
 \subsubsection[{Elf32\+\_\+\+Half}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint16\+\_\+t} {\bf Elf32\+\_\+\+Half}}}\label{exec_8c_a2ff0787d7d1bae0f251192806a2974ca}
 
 
-Definition at line 9 of file exec.\+c.
+Definition at line 11 of file exec.\+c.
 
 \hypertarget{exec_8c_a34edb44226509e467315e3bd81c3d7dc}{\index{exec.\+c@{exec.\+c}!elf32\+\_\+hdr\+\_\+t@{elf32\+\_\+hdr\+\_\+t}}
 \index{elf32\+\_\+hdr\+\_\+t@{elf32\+\_\+hdr\+\_\+t}!exec.\+c@{exec.\+c}}
@@ -397,7 +493,14 @@ E\+L\+F32 Header.
 \subsubsection[{Elf32\+\_\+\+Off}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint32\+\_\+t} {\bf Elf32\+\_\+\+Off}}}\label{exec_8c_a655751f9b317369b93c581ea8ed84516}
 
 
-Definition at line 10 of file exec.\+c.
+Definition at line 12 of file exec.\+c.
+
+\hypertarget{exec_8c_a6c037736a997fdd28ed9f6b734261b23}{\index{exec.\+c@{exec.\+c}!elf32\+\_\+phdr\+\_\+t@{elf32\+\_\+phdr\+\_\+t}}
+\index{elf32\+\_\+phdr\+\_\+t@{elf32\+\_\+phdr\+\_\+t}!exec.\+c@{exec.\+c}}
+\subsubsection[{elf32\+\_\+phdr\+\_\+t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf elf32\+\_\+phdr}  {\bf elf32\+\_\+phdr\+\_\+t}}}\label{exec_8c_a6c037736a997fdd28ed9f6b734261b23}
+
+
+E\+L\+F32 Program Header. 
 
 \hypertarget{exec_8c_ad7b97ddfcb82a63cd28a9cb88f21984a}{\index{exec.\+c@{exec.\+c}!elf32\+\_\+shdr\+\_\+t@{elf32\+\_\+shdr\+\_\+t}}
 \index{elf32\+\_\+shdr\+\_\+t@{elf32\+\_\+shdr\+\_\+t}!exec.\+c@{exec.\+c}}
@@ -411,14 +514,14 @@ E\+L\+F32 Section Header.
 \subsubsection[{Elf32\+\_\+\+Sword}]{\setlength{\rightskip}{0pt plus 5cm}typedef int32\+\_\+t {\bf Elf32\+\_\+\+Sword}}}\label{exec_8c_a30ce6352cf03c667272698ada477da95}
 
 
-Definition at line 11 of file exec.\+c.
+Definition at line 13 of file exec.\+c.
 
 \hypertarget{exec_8c_af5924ece606c732e86f8263a19408e45}{\index{exec.\+c@{exec.\+c}!Elf32\+\_\+\+Word@{Elf32\+\_\+\+Word}}
 \index{Elf32\+\_\+\+Word@{Elf32\+\_\+\+Word}!exec.\+c@{exec.\+c}}
 \subsubsection[{Elf32\+\_\+\+Word}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf uint32\+\_\+t} {\bf Elf32\+\_\+\+Word}}}\label{exec_8c_af5924ece606c732e86f8263a19408e45}
 
 
-Definition at line 12 of file exec.\+c.
+Definition at line 14 of file exec.\+c.
 
 
 
@@ -444,42 +547,121 @@ Check for valid E\+L\+F32 header.
 \end{DoxyReturn}
 
 
-Definition at line 104 of file exec.\+c.
+Definition at line 132 of file exec.\+c.
 
 
 
-References check, elf32\+\_\+hdr\+::e\+\_\+ident, E\+I\+\_\+\+C\+L\+A\+S\+S, E\+I\+\_\+\+D\+A\+T\+A, E\+I\+\_\+\+M\+A\+G0, E\+I\+\_\+\+M\+A\+G1, E\+I\+\_\+\+M\+A\+G2, E\+I\+\_\+\+M\+A\+G3, E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32, E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B, E\+L\+F\+\_\+\+M\+A\+G0, E\+L\+F\+\_\+\+M\+A\+G1, E\+L\+F\+\_\+\+M\+A\+G2, and E\+L\+F\+\_\+\+M\+A\+G3.
+References check, elf32\+\_\+hdr\+::e\+\_\+ident, E\+I\+\_\+\+C\+L\+A\+S\+S, E\+I\+\_\+\+D\+A\+T\+A, E\+I\+\_\+\+M\+A\+G0, E\+I\+\_\+\+M\+A\+G1, E\+I\+\_\+\+M\+A\+G2, E\+I\+\_\+\+M\+A\+G3, E\+L\+F\+\_\+\+C\+L\+A\+S\+S\+\_\+32, E\+L\+F\+\_\+\+D\+A\+T\+A\+\_\+\+L\+S\+B, E\+L\+F\+\_\+\+M\+A\+G0, E\+L\+F\+\_\+\+M\+A\+G1, E\+L\+F\+\_\+\+M\+A\+G2, E\+L\+F\+\_\+\+M\+A\+G3, and errno.
 
 
 \begin{DoxyCode}
-104                                   \{
-105 
-106 \textcolor{preprocessor}{    #define check(cond)             \(\backslash\)}
-107 \textcolor{preprocessor}{        if(cond) \{                  \(\backslash\)}
-108 \textcolor{preprocessor}{            errno = ENOEXEC;        \(\backslash\)}
-109 \textcolor{preprocessor}{            return -1;              \(\backslash\)}
-110 \textcolor{preprocessor}{        \}}
-111 
-112     \hyperlink{exec_8c_a9b7ee5bbb263671ca310a70e0d1526e9}{check}(
-113         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_aba717f40a418b0d99c2efd4cdab4f54f}{EI\_MAG0}] != \hyperlink{exec_8c_a8d944947af59b67d47a445ae2bef32e3}{ELF\_MAG0}) ||
-114         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_a2cae3878d982911632b418680718d53b}{EI\_MAG1}] != \hyperlink{exec_8c_abdd5eae694123f4e5e0a5449b3591cc9}{ELF\_MAG1}) ||
-115         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_a2884a339ef7aefee59d160ed3fbb1739}{EI\_MAG2}] != \hyperlink{exec_8c_a60668f0dfd2613d5ccccac355f147726}{ELF\_MAG2}) ||
-116         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_ace03d4c5e8952e27b8505581432c3b84}{EI\_MAG3}] != \hyperlink{exec_8c_a40443fcac019afd6b173b8890fd25e6c}{ELF\_MAG3})
-117     )
-118 
-119     \hyperlink{exec_8c_a9b7ee5bbb263671ca310a70e0d1526e9}{check}(hdr->e\_ident[\hyperlink{exec_8c_a5b508cacf6662e4bc0e98ffe1eb61636}{EI\_CLASS}] != \hyperlink{exec_8c_a49574a2fb2e62bcff73812b26da8fe69}{ELF\_CLASS\_32})
-120     \hyperlink{exec_8c_a9b7ee5bbb263671ca310a70e0d1526e9}{check}(hdr->e\_ident[\hyperlink{exec_8c_a79c714b4bf89638ff576e163d7d2144f}{EI\_DATA}] != \hyperlink{exec_8c_a2746b48aac96a65735bed83598d5d68a}{ELF\_DATA\_LSB})
-121 
-122     return 0;
-123 \}
+132                                   \{
+133 
+134     \textcolor{keywordflow}{if}(!hdr) \{
+135         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;    
+136         \textcolor{keywordflow}{return} -1;
+137     \}
+138 
+139 \textcolor{preprocessor}{    #define check(cond)             \(\backslash\)}
+140 \textcolor{preprocessor}{        if(cond) \{                  \(\backslash\)}
+141 \textcolor{preprocessor}{            errno = ENOEXEC;        \(\backslash\)}
+142 \textcolor{preprocessor}{            return -1;              \(\backslash\)}
+143 \textcolor{preprocessor}{        \}}
+144 
+145     \hyperlink{exec_8c_a9b7ee5bbb263671ca310a70e0d1526e9}{check}(
+146         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_aba717f40a418b0d99c2efd4cdab4f54f}{EI\_MAG0}] != \hyperlink{exec_8c_a8d944947af59b67d47a445ae2bef32e3}{ELF\_MAG0}) ||
+147         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_a2cae3878d982911632b418680718d53b}{EI\_MAG1}] != \hyperlink{exec_8c_abdd5eae694123f4e5e0a5449b3591cc9}{ELF\_MAG1}) ||
+148         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_a2884a339ef7aefee59d160ed3fbb1739}{EI\_MAG2}] != \hyperlink{exec_8c_a60668f0dfd2613d5ccccac355f147726}{ELF\_MAG2}) ||
+149         (hdr->\hyperlink{structelf32__hdr_a47cad02c87b35eab4d8fda5f3f0fefd4}{e\_ident}[\hyperlink{exec_8c_ace03d4c5e8952e27b8505581432c3b84}{EI\_MAG3}] != \hyperlink{exec_8c_a40443fcac019afd6b173b8890fd25e6c}{ELF\_MAG3})
+150     )
+151 
+152     \hyperlink{exec_8c_a9b7ee5bbb263671ca310a70e0d1526e9}{check}(hdr->e\_ident[\hyperlink{exec_8c_a5b508cacf6662e4bc0e98ffe1eb61636}{EI\_CLASS}] != \hyperlink{exec_8c_a49574a2fb2e62bcff73812b26da8fe69}{ELF\_CLASS\_32})
+153     \hyperlink{exec_8c_a9b7ee5bbb263671ca310a70e0d1526e9}{check}(hdr->e\_ident[\hyperlink{exec_8c_a79c714b4bf89638ff576e163d7d2144f}{EI\_DATA}] != \hyperlink{exec_8c_a2746b48aac96a65735bed83598d5d68a}{ELF\_DATA\_LSB})
+154 
+155     return 0;
+156 \}
 \end{DoxyCode}
-\hypertarget{exec_8c_a7473eb0ac8edeee7e0a7502c5ed08dc8}{\index{exec.\+c@{exec.\+c}!elf32\+\_\+load@{elf32\+\_\+load}}
+\hypertarget{exec_8c_acfcbb641f4d43807d78c5f37bff2e9bc}{\index{exec.\+c@{exec.\+c}!elf32\+\_\+getspace@{elf32\+\_\+getspace}}
+\index{elf32\+\_\+getspace@{elf32\+\_\+getspace}!exec.\+c@{exec.\+c}}
+\subsubsection[{elf32\+\_\+getspace}]{\setlength{\rightskip}{0pt plus 5cm}int elf32\+\_\+getspace (
+\begin{DoxyParamCaption}
+\item[{{\bf elf32\+\_\+hdr\+\_\+t} $\ast$}]{hdr, }
+\item[{void $\ast$$\ast$}]{ptr, }
+\item[{size\+\_\+t $\ast$}]{size}
+\end{DoxyParamCaption}
+)}}\label{exec_8c_acfcbb641f4d43807d78c5f37bff2e9bc}
+
+
+Get Address Space of E\+L\+F32 Executable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hdr} & E\+L\+F32 Header. \\
+\hline
+{\em ptr} & Pointer to start of memory address. \\
+\hline
+{\em size} & Size of memory address. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if success 0, otherwise -\/1. 
+\end{DoxyReturn}
+
+
+Definition at line 166 of file exec.\+c.
+
+
+
+References elf32\+\_\+hdr\+::e\+\_\+phoff, E\+L\+F32\+\_\+\+A\+D\+D\+R\+S\+P\+A\+C\+E\+\_\+\+M\+I\+N\+\_\+\+L\+E\+N\+G\+T\+H, elf32\+\_\+check(), kprintf(), elf32\+\_\+phdr\+::p\+\_\+memsz, elf32\+\_\+phdr\+::p\+\_\+vaddr, and uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+166                                                                \{
+167     \textcolor{keywordflow}{if}(\hyperlink{exec_8c_a2dc58db2f806ea913fdcb272f8ca618a}{elf32\_check}(hdr) < 0)
+168         \textcolor{keywordflow}{return} -1;
+169 
+170     \hyperlink{structelf32__phdr}{elf32\_phdr\_t}* phdr = (\hyperlink{structelf32__phdr}{elf32\_phdr\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) hdr->
+      \hyperlink{structelf32__hdr_a88337612d820200d75185c304124ad24}{e\_phoff} + (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) hdr);
+171     \textcolor{keywordtype}{int} pn = hdr->e\_phnum;
+172     \textcolor{keywordtype}{int} ps = hdr->e\_phentsize;
+173 
+174     \textcolor{keywordtype}{int} p = 0;
+175     \textcolor{keywordtype}{int} s = 0;
+176 
+177     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < pn; i++) \{
+178         \textcolor{keywordflow}{if}(!p || p > phdr->\hyperlink{structelf32__phdr_a4ce34fb0d117afd27046b923756faa11}{p\_vaddr})
+179             p = phdr->\hyperlink{structelf32__phdr_a4ce34fb0d117afd27046b923756faa11}{p\_vaddr};
+180 
+181         s += phdr->\hyperlink{structelf32__phdr_af44d75db8b3ebcfa04742e55b49e7eb6}{p\_memsz};
+182         phdr = (\hyperlink{structelf32__phdr}{elf32\_phdr\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) phdr + ps);
+183     \}
+184 
+185     \textcolor{keywordflow}{if}(s < \hyperlink{exec_8c_ac12ef0a698cec32392148178e777a3a4}{ELF32\_ADDRSPACE\_MIN\_LENGTH})
+186         s = \hyperlink{exec_8c_ac12ef0a698cec32392148178e777a3a4}{ELF32\_ADDRSPACE\_MIN\_LENGTH};
+187 
+188 \textcolor{preprocessor}{#ifdef ELF\_DEBUG}
+189     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"elf: address space at 0x%x (%d Bytes)\(\backslash\)n"}, p, s);
+190 \textcolor{preprocessor}{#endif}
+191 
+192 
+193     \textcolor{keywordflow}{if}(ptr)
+194         *ptr = p;
+195 
+196     \textcolor{keywordflow}{if}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size})
+197         *\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = s;
+198 
+199     \textcolor{keywordflow}{return} 0;
+200 \}
+\end{DoxyCode}
+\hypertarget{exec_8c_aeb05ad85647cdfbf15b432a9d2f32926}{\index{exec.\+c@{exec.\+c}!elf32\+\_\+load@{elf32\+\_\+load}}
 \index{elf32\+\_\+load@{elf32\+\_\+load}!exec.\+c@{exec.\+c}}
 \subsubsection[{elf32\+\_\+load}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ elf32\+\_\+load (
 \begin{DoxyParamCaption}
-\item[{void $\ast$}]{image}
+\item[{void $\ast$}]{image, }
+\item[{int $\ast$}]{vaddr, }
+\item[{int $\ast$}]{vsize}
 \end{DoxyParamCaption}
-)}}\label{exec_8c_a7473eb0ac8edeee7e0a7502c5ed08dc8}
+)}}\label{exec_8c_aeb05ad85647cdfbf15b432a9d2f32926}
 
 
 Load a E\+L\+F32 Executable image. 
@@ -488,66 +670,80 @@ Load a E\+L\+F32 Executable image.
 \begin{DoxyParams}{Parameters}
 {\em image} & pointer to buffer address of a executable loaded in memory. \\
 \hline
+{\em vaddr} & Address of memory space needed. \\
+\hline
+{\em vsize} & Size of memory space. \\
+\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Entry Point address. 
 \end{DoxyReturn}
 
 
-Definition at line 131 of file exec.\+c.
+Definition at line 210 of file exec.\+c.
 
 
 
-References elf32\+\_\+hdr\+::e\+\_\+shoff, elf32\+\_\+check(), errno, kprintf(), M\+M\+\_\+\+U\+B\+A\+S\+E, M\+M\+\_\+\+U\+S\+I\+Z\+E, panic(), elf32\+\_\+shdr\+::sh\+\_\+addr, elf32\+\_\+shdr\+::sh\+\_\+offset, elf32\+\_\+shdr\+::sh\+\_\+size, uint32\+\_\+t, vmm\+\_\+alloc(), V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T, and V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R.
+References elf32\+\_\+hdr\+::e\+\_\+shoff, elf32\+\_\+check(), elf32\+\_\+getspace(), errno, kprintf(), M\+M\+\_\+\+U\+B\+A\+S\+E, M\+M\+\_\+\+U\+S\+I\+Z\+E, panic(), elf32\+\_\+shdr\+::sh\+\_\+addr, elf32\+\_\+shdr\+::sh\+\_\+offset, elf32\+\_\+shdr\+::sh\+\_\+size, uint32\+\_\+t, vmm\+\_\+alloc(), V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+D\+E\+F\+A\+U\+L\+T, and V\+M\+M\+\_\+\+F\+L\+A\+G\+S\+\_\+\+U\+S\+E\+R.
 
 
 \begin{DoxyCode}
-131                               \{
-132     \textcolor{keywordflow}{if}(image == NULL) \{
-133         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-134         \textcolor{keywordflow}{return} NULL;
-135     \}
-136 
-137     \textcolor{keywordflow}{if}(\hyperlink{exec_8c_a2dc58db2f806ea913fdcb272f8ca618a}{elf32\_check}(image) < 0)
-138         \textcolor{keywordflow}{return} NULL;
-139 
-140     \hyperlink{structelf32__hdr}{elf32\_hdr\_t}* hdr = (\hyperlink{structelf32__hdr}{elf32\_hdr\_t}*) image;
-141     \hyperlink{structelf32__shdr}{elf32\_shdr\_t}* sec = (\hyperlink{structelf32__shdr}{elf32\_shdr\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) hdr->
+210                                                       \{
+211     \textcolor{keywordflow}{if}(image == NULL) \{
+212         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+213         \textcolor{keywordflow}{return} NULL;
+214     \}
+215 
+216     \textcolor{keywordflow}{if}(\hyperlink{exec_8c_a2dc58db2f806ea913fdcb272f8ca618a}{elf32\_check}(image) < 0)
+217         \textcolor{keywordflow}{return} NULL;
+218 
+219     \hyperlink{structelf32__hdr}{elf32\_hdr\_t}* hdr = (\hyperlink{structelf32__hdr}{elf32\_hdr\_t}*) image;
+220 
+221     \textcolor{keywordtype}{int} iptr, isiz;
+222     \textcolor{keywordflow}{if}(\hyperlink{exec_8c_acfcbb641f4d43807d78c5f37bff2e9bc}{elf32\_getspace}(hdr, &iptr, &isiz) != 0)
+223         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"elf: cannot found a valid address space"}); 
+224     \hyperlink{paging_8c_aebed4a90dd887506ed125f9efb953c93}{vmm\_alloc}(iptr, isiz, \hyperlink{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}{VMM\_FLAGS\_DEFAULT} | 
+      \hyperlink{mm_8h_a4f995b267ef97c4638c27370badecb21}{VMM\_FLAGS\_USER});
+225 
+226 
+227     \textcolor{keywordflow}{if}(vaddr)
+228         *vaddr = iptr;
+229     \textcolor{keywordflow}{if}(vsize)
+230         *vsize = isiz;
+231 
+232 
+233     \hyperlink{structelf32__shdr}{elf32\_shdr\_t}* sec = (\hyperlink{structelf32__shdr}{elf32\_shdr\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) hdr->
       \hyperlink{structelf32__hdr_afd8ce4ec0f05960b2306f98625be6db0}{e\_shoff} + (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) hdr);
-142     
-143     \textcolor{keywordtype}{int} sn = hdr->e\_shnum;
-144     \textcolor{keywordtype}{int} ss = hdr->e\_shentsize;
-145      
-146     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < sn; i++) \{
-147         
-148         \textcolor{keywordflow}{if}(sec->\hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr} && sec->\hyperlink{structelf32__shdr_a4dea3a6fbd3a62a649d327b515c70cd6}{sh\_offset}) \{
-149 
-150 \textcolor{preprocessor}{#ifdef ELF\_DEBUG}
-151             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"elf: copy section to 0x%8x (%d Bytes)\(\backslash\)n"}, sec->
+234     
+235     \textcolor{keywordtype}{int} sn = hdr->e\_shnum;
+236     \textcolor{keywordtype}{int} ss = hdr->e\_shentsize;
+237 
+238     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < sn; i++) \{
+239         
+240         \textcolor{keywordflow}{if}(sec->\hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr} && sec->\hyperlink{structelf32__shdr_a4dea3a6fbd3a62a649d327b515c70cd6}{sh\_offset}) \{
+241 
+242 \textcolor{preprocessor}{#ifdef ELF\_DEBUG}
+243             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"elf: copy section to 0x%8x (%d Bytes)\(\backslash\)n"}, sec->
       \hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr}, sec->\hyperlink{structelf32__shdr_a4addb97e16e7303912fc84daa6f3ac77}{sh\_size});
-152 \textcolor{preprocessor}{#endif}
-153 
-154 
-155             \textcolor{keywordflow}{if}((sec->\hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr} + sec->\hyperlink{structelf32__shdr_a4addb97e16e7303912fc84daa6f3ac77}{sh\_size}) < \hyperlink{mm_8h_a61d9fae3cb95715f92171f153d9ff018}{MM\_UBASE} || (sec->
+244 \textcolor{preprocessor}{#endif}
+245 
+246 
+247             \textcolor{keywordflow}{if}((sec->\hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr} + sec->\hyperlink{structelf32__shdr_a4addb97e16e7303912fc84daa6f3ac77}{sh\_size}) < \hyperlink{mm_8h_a61d9fae3cb95715f92171f153d9ff018}{MM\_UBASE} || (sec->
       \hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr} + sec->\hyperlink{structelf32__shdr_a4addb97e16e7303912fc84daa6f3ac77}{sh\_size}) > (\hyperlink{mm_8h_a61d9fae3cb95715f92171f153d9ff018}{MM\_UBASE} + \hyperlink{mm_8h_a600b21bbb74401132349a1325dadfdbe}{MM\_USIZE}))
-156                 \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"elf section overflow"});
-157             
-158 
-159             \textcolor{keywordflow}{if}(\hyperlink{paging_8c_aebed4a90dd887506ed125f9efb953c93}{vmm\_alloc}((\textcolor{keywordtype}{void}*) sec->\hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr}, sec->\hyperlink{structelf32__shdr_a4addb97e16e7303912fc84daa6f3ac77}{sh\_size}, 
-      \hyperlink{mm_8h_ab630ce3a249eeb08c1242b082f4e50ce}{VMM\_FLAGS\_DEFAULT} | \hyperlink{mm_8h_a4f995b267ef97c4638c27370badecb21}{VMM\_FLAGS\_USER}))
-160                 memcpy((\textcolor{keywordtype}{void}*) sec->\hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr}, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) hdr + sec->
+248                 \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"elf: section overflow"});
+249             
+250             
+251             memcpy((\textcolor{keywordtype}{void}*) sec->\hyperlink{structelf32__shdr_a7054ce2ce815d205d451bfe7ce2e145e}{sh\_addr}, (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) hdr + sec->
       \hyperlink{structelf32__shdr_a4dea3a6fbd3a62a649d327b515c70cd6}{sh\_offset}), sec->\hyperlink{structelf32__shdr_a4addb97e16e7303912fc84daa6f3ac77}{sh\_size});
-161             \textcolor{keywordflow}{else}
-162                 \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"elf: cannot allocate memory"});
-163         \}
-164 
-165         sec = (\hyperlink{structelf32__shdr}{elf32\_shdr\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) sec + ss);
-166     \}
-167 
-168 \textcolor{preprocessor}{#ifdef ELF\_DEBUG}
-169     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"elf: entrypoint at 0x%8x\(\backslash\)n"}, hdr->e\_entry);
-170 \textcolor{preprocessor}{#endif}
-171 
-172     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) hdr->e\_entry;
-173 \}
+252         \}
+253 
+254         sec = (\hyperlink{structelf32__shdr}{elf32\_shdr\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) sec + ss);
+255     \}
+256 
+257 \textcolor{preprocessor}{#ifdef ELF\_DEBUG}
+258     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"elf: entrypoint at 0x%8x\(\backslash\)n"}, hdr->e\_entry);
+259 \textcolor{preprocessor}{#endif}
+260 
+261     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) hdr->e\_entry;
+262 \}
 \end{DoxyCode}

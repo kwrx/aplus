@@ -176,30 +176,33 @@ $(document).ready(function(){initNavTree('crt0_8c_source.html','');});
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        *(<span class="keywordtype">char</span>*) i = 0;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a> = (<span class="keywordtype">char</span>**) aplus_envp();</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">char</span>** argv = (<span class="keywordtype">char</span>**) aplus_argv();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a> = (<span class="keywordtype">char</span>**) __get_envp();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">char</span>** argv = (<span class="keywordtype">char</span>**) __get_argv();</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">int</span> argc = 0;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">while</span>(argv[argc])</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        argc += 1;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    open(<span class="stringliteral">&quot;/dev/stdin&quot;</span>, 0, 0644);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    open(<span class="stringliteral">&quot;/dev/stdout&quot;</span>, 0, 0644);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    open(<span class="stringliteral">&quot;/dev/stderr&quot;</span>, 0, 0644);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    aplus_install_sighandler(<a class="code" href="crt0_8c.html#a50595d26a35dfb272a9f822789821724">__sigtramp</a>);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    _init_signal();</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="crt0_8c.html#a54dbf06bfcd3b86af2609c8d594b7907">__init_traps</a>();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#if 0</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    atexit(__do_global_dtors);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    __do_global_ctors();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    exit(<a class="code" href="crt0_8c.html#ae867ea66194fc0112526615a67b773cf">main</a>(argc, argv, <a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a>));</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">if</span>(argv)</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">while</span>(argv[argc])</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            argc += 1;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    open(<span class="stringliteral">&quot;/dev/stdin&quot;</span>, 0, 0644);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    open(<span class="stringliteral">&quot;/dev/stdout&quot;</span>, 0, 0644);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    open(<span class="stringliteral">&quot;/dev/stderr&quot;</span>, 0, 0644);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    __install_sighandler(<a class="code" href="crt0_8c.html#a50595d26a35dfb272a9f822789821724">__sigtramp</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    _init_signal();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="crt0_8c.html#a54dbf06bfcd3b86af2609c8d594b7907">__init_traps</a>();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    atexit(__do_global_dtors);</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    __do_global_ctors();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    exit(<a class="code" href="crt0_8c.html#ae867ea66194fc0112526615a67b773cf">main</a>(argc, argv, <a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a>));</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
 <div class="ttc" id="crt0_8c_html_aa006daaf11f1e2e45a6ababaf463212b"><div class="ttname"><a href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a></div><div class="ttdeci">char ** environ</div><div class="ttdef"><b>Definition:</b> <a href="environ_8c_source.html#l00003">environ.c:3</a></div></div>
 <div class="ttc" id="aplus_8h_html_a2ffb5cf275c124e8f8ff30e1d4449f80"><div class="ttname"><a href="aplus_8h.html#a2ffb5cf275c124e8f8ff30e1d4449f80">fs</a></div><div class="ttdeci">uint32_t fs</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
 <div class="ttc" id="syscalls_8c_html"><div class="ttname"><a href="syscalls_8c.html">syscalls.c</a></div></div>
@@ -216,7 +219,7 @@ $(document).ready(function(){initNavTree('crt0_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_7eba538d4a0daa44b244b3c2ce5d4eb1.html">libcrt0</a></li><li class="navelem"><a class="el" href="dir_d8973e1d382d4046c5526cf7094d954c.html">src</a></li><li class="navelem"><a class="el" href="crt0_8c.html">crt0.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 18:07:56 for aPlus by
+    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

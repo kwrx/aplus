@@ -158,7 +158,7 @@
         <references refid="iso9660_8c_1a42e767e05480219cfb4878964b4f0192" compoundref="iso9660_8c" startline="47" endline="59">iso9660_checkname</references>
         <references refid="iso9660_8c_1a0e3f94f923e7f615525349cee099f701" compoundref="iso9660_8c" startline="73" endline="75">iso9660_getlsb32</references>
         <references refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" compoundref="iso9660_8h" startline="7">ISO9660_SECTOR_SIZE</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="structinode_1a5756f61233e40d01652094d29b5daf6c" compoundref="fs_8h" startline="48">inode::position</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>

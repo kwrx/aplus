@@ -62,7 +62,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="52">
+      <node id="59">
         <label>iso9660_volume_descriptor</label>
         <link refid="structiso9660__volume__descriptor"/>
       </node>

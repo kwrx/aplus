@@ -19,29 +19,69 @@
     <includes refid="ipv4_8h" local="no">aplus/net/ipv4.h</includes>
     <includes refid="ipv6_8h" local="no">aplus/net/ipv6.h</includes>
     <incdepgraph>
-      <node id="956">
+      <node id="968">
         <label>sys/stat.h</label>
       </node>
-      <node id="948">
+      <node id="960">
         <label>src/main.c</label>
         <link refid="src/main.c"/>
-        <childnode refid="949" relation="include">
-        </childnode>
-        <childnode refid="953" relation="include">
-        </childnode>
-        <childnode refid="959" relation="include">
-        </childnode>
-        <childnode refid="960" relation="include">
-        </childnode>
         <childnode refid="961" relation="include">
-        </childnode>
-        <childnode refid="964" relation="include">
         </childnode>
         <childnode refid="965" relation="include">
         </childnode>
-        <childnode refid="954" relation="include">
+        <childnode refid="971" relation="include">
         </childnode>
-        <childnode refid="958" relation="include">
+        <childnode refid="972" relation="include">
+        </childnode>
+        <childnode refid="973" relation="include">
+        </childnode>
+        <childnode refid="976" relation="include">
+        </childnode>
+        <childnode refid="977" relation="include">
+        </childnode>
+        <childnode refid="966" relation="include">
+        </childnode>
+        <childnode refid="970" relation="include">
+        </childnode>
+        <childnode refid="978" relation="include">
+        </childnode>
+        <childnode refid="979" relation="include">
+        </childnode>
+        <childnode refid="980" relation="include">
+        </childnode>
+        <childnode refid="981" relation="include">
+        </childnode>
+        <childnode refid="983" relation="include">
+        </childnode>
+        <childnode refid="984" relation="include">
+        </childnode>
+        <childnode refid="985" relation="include">
+        </childnode>
+      </node>
+      <node id="963">
+        <label>stdarg.h</label>
+      </node>
+      <node id="976">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="961" relation="include">
+        </childnode>
+        <childnode refid="971" relation="include">
+        </childnode>
+        <childnode refid="962" relation="include">
+        </childnode>
+        <childnode refid="964" relation="include">
+        </childnode>
+        <childnode refid="967" relation="include">
+        </childnode>
+      </node>
+      <node id="979">
+        <label>sys/times.h</label>
+      </node>
+      <node id="965">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="962" relation="include">
         </childnode>
         <childnode refid="966" relation="include">
         </childnode>
@@ -51,172 +91,132 @@
         </childnode>
         <childnode refid="969" relation="include">
         </childnode>
-        <childnode refid="971" relation="include">
+      </node>
+      <node id="962">
+        <label>stdint.h</label>
+      </node>
+      <node id="975">
+        <label>setjmp.h</label>
+      </node>
+      <node id="973">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="962" relation="include">
         </childnode>
-        <childnode refid="972" relation="include">
+        <childnode refid="961" relation="include">
+        </childnode>
+        <childnode refid="965" relation="include">
+        </childnode>
+        <childnode refid="974" relation="include">
+        </childnode>
+        <childnode refid="967" relation="include">
+        </childnode>
+        <childnode refid="975" relation="include">
+        </childnode>
+      </node>
+      <node id="978">
+        <label>fcntl.h</label>
+      </node>
+      <node id="985">
+        <label>aplus/net/ipv6.h</label>
+        <link refid="ipv6_8h"/>
+        <childnode refid="962" relation="include">
+        </childnode>
+        <childnode refid="981" relation="include">
+        </childnode>
+      </node>
+      <node id="982">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="961" relation="include">
+        </childnode>
+        <childnode refid="962" relation="include">
+        </childnode>
+      </node>
+      <node id="972">
+        <label>grub.h</label>
+        <link refid="grub_8h"/>
+      </node>
+      <node id="966">
+        <label>stddef.h</label>
+      </node>
+      <node id="971">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="966" relation="include">
+        </childnode>
+        <childnode refid="962" relation="include">
+        </childnode>
+        <childnode refid="967" relation="include">
+        </childnode>
+      </node>
+      <node id="983">
+        <label>aplus/net/eth.h</label>
+        <link refid="eth_8h"/>
+        <childnode refid="962" relation="include">
+        </childnode>
+        <childnode refid="981" relation="include">
+        </childnode>
+      </node>
+      <node id="961">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="962" relation="include">
+        </childnode>
+        <childnode refid="963" relation="include">
+        </childnode>
+        <childnode refid="964" relation="include">
+        </childnode>
+      </node>
+      <node id="967">
+        <label>sys/types.h</label>
+      </node>
+      <node id="964">
+        <label>string.h</label>
+      </node>
+      <node id="970">
+        <label>unistd.h</label>
+      </node>
+      <node id="974">
+        <label>signal.h</label>
+      </node>
+      <node id="981">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="961" relation="include">
+        </childnode>
+        <childnode refid="982" relation="include">
+        </childnode>
+        <childnode refid="962" relation="include">
+        </childnode>
+        <childnode refid="966" relation="include">
+        </childnode>
+      </node>
+      <node id="977">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="962" relation="include">
         </childnode>
         <childnode refid="973" relation="include">
         </childnode>
       </node>
-      <node id="951">
-        <label>stdarg.h</label>
-      </node>
-      <node id="964">
-        <label>aplus/attribute.h</label>
-        <link refid="attribute_8h"/>
-        <childnode refid="949" relation="include">
-        </childnode>
-        <childnode refid="959" relation="include">
-        </childnode>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="952" relation="include">
-        </childnode>
-        <childnode refid="955" relation="include">
-        </childnode>
-      </node>
-      <node id="967">
-        <label>sys/times.h</label>
-      </node>
-      <node id="953">
-        <label>aplus/fs.h</label>
-        <link refid="fs_8h"/>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="954" relation="include">
-        </childnode>
-        <childnode refid="955" relation="include">
-        </childnode>
-        <childnode refid="956" relation="include">
-        </childnode>
-        <childnode refid="957" relation="include">
-        </childnode>
-      </node>
-      <node id="950">
-        <label>stdint.h</label>
-      </node>
-      <node id="963">
-        <label>setjmp.h</label>
-      </node>
-      <node id="961">
-        <label>aplus/task.h</label>
-        <link refid="task_8h"/>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="949" relation="include">
-        </childnode>
-        <childnode refid="953" relation="include">
-        </childnode>
-        <childnode refid="962" relation="include">
-        </childnode>
-        <childnode refid="955" relation="include">
-        </childnode>
-        <childnode refid="963" relation="include">
-        </childnode>
-      </node>
-      <node id="966">
-        <label>fcntl.h</label>
-      </node>
-      <node id="973">
-        <label>aplus/net/ipv6.h</label>
-        <link refid="ipv6_8h"/>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="969" relation="include">
-        </childnode>
-      </node>
-      <node id="970">
-        <label>aplus/pci.h</label>
-        <link refid="pci_8h"/>
-        <childnode refid="949" relation="include">
-        </childnode>
-        <childnode refid="950" relation="include">
-        </childnode>
-      </node>
-      <node id="960">
-        <label>grub.h</label>
-        <link refid="grub_8h"/>
-      </node>
-      <node id="954">
-        <label>stddef.h</label>
-      </node>
-      <node id="959">
-        <label>aplus/list.h</label>
-        <link refid="list_8h"/>
-        <childnode refid="954" relation="include">
-        </childnode>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="955" relation="include">
-        </childnode>
-      </node>
-      <node id="971">
-        <label>aplus/net/eth.h</label>
-        <link refid="eth_8h"/>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="969" relation="include">
-        </childnode>
-      </node>
-      <node id="949">
-        <label>aplus.h</label>
-        <link refid="aplus_8h"/>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="951" relation="include">
-        </childnode>
-        <childnode refid="952" relation="include">
-        </childnode>
-      </node>
-      <node id="955">
-        <label>sys/types.h</label>
-      </node>
-      <node id="952">
-        <label>string.h</label>
-      </node>
-      <node id="958">
-        <label>unistd.h</label>
-      </node>
-      <node id="962">
-        <label>signal.h</label>
-      </node>
-      <node id="969">
-        <label>aplus/netif.h</label>
-        <link refid="netif_8h"/>
-        <childnode refid="949" relation="include">
-        </childnode>
-        <childnode refid="970" relation="include">
-        </childnode>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="954" relation="include">
-        </childnode>
-      </node>
-      <node id="965">
-        <label>aplus/mm.h</label>
-        <link refid="mm_8h"/>
-        <childnode refid="950" relation="include">
-        </childnode>
-        <childnode refid="961" relation="include">
-        </childnode>
-      </node>
-      <node id="968">
+      <node id="980">
         <label>time.h</label>
       </node>
-      <node id="957">
+      <node id="969">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="958" relation="include">
+        <childnode refid="970" relation="include">
         </childnode>
-        <childnode refid="955" relation="include">
+        <childnode refid="967" relation="include">
         </childnode>
       </node>
-      <node id="972">
+      <node id="984">
         <label>aplus/net/ipv4.h</label>
         <link refid="ipv4_8h"/>
-        <childnode refid="950" relation="include">
+        <childnode refid="962" relation="include">
         </childnode>
-        <childnode refid="969" relation="include">
+        <childnode refid="981" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -260,9 +260,10 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/main.c" line="50" column="1" bodyfile="/opt/prj/aPlus/src/main.c" bodystart="50" bodyend="55"/>
+        <location file="/opt/prj/aPlus/src/main.c" line="50" column="1" bodyfile="/opt/prj/aPlus/src/main.c" bodystart="50" bodyend="57"/>
         <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
-        <references refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" compoundref="src_2sched_8c" startline="168" endline="173">schedule_setpriority</references>
+        <references refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" compoundref="src_2sched_8c" startline="178" endline="183">schedule_setpriority</references>
+        <references refid="execve_8c_1af44a7e309f4bd49757f52b4178676ea7" compoundref="execve_8c" startline="27" endline="77">sys_execve</references>
         <references refid="task_8h_1a00a0568927a39311236b718f2018c0ab" compoundref="task_8h" startline="45">TASK_PRIORITY_LOW</references>
       </memberdef>
       <memberdef kind="function" id="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -276,13 +277,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/main.c" line="61" column="1" bodyfile="/opt/prj/aPlus/src/main.c" bodystart="61" bodyend="99"/>
+        <location file="/opt/prj/aPlus/src/main.c" line="63" column="1" bodyfile="/opt/prj/aPlus/src/main.c" bodystart="63" bodyend="108"/>
         <references refid="bufio_8c_1a8553eb3703bbc2ac89010ccfaefe760f" compoundref="bufio_8c" startline="31" endline="35">bufio_init</references>
         <references refid="desc_8c_1a6a369f578313199f231869f97e16802d" compoundref="desc_8c" startline="195" endline="330">desc_init</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
         <references refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962">mbd</references>
         <references refid="ramdev_8c_1a0c040a7a5a5150b0b0d18354ac6f4958" compoundref="ramdev_8c" startline="76" endline="92">mkramdev</references>
-        <references refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" compoundref="mm_8c" startline="122" endline="133">mm_init</references>
+        <references refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" compoundref="mm_8c" startline="149" endline="160">mm_init</references>
         <references refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" compoundref="grub_8h" startline="71">BootInfo_t::mods_addr</references>
         <references refid="structBootInfo__t_1a178ef95a8fbd89ec018899b9ba241d92" compoundref="grub_8h" startline="70">BootInfo_t::mods_count</references>
         <references refid="netif_8c_1af7c3254022249b2dfa78151c8f345e77" compoundref="netif_8c" startline="221" endline="239">netif_init</references>
@@ -290,9 +291,10 @@
         <references refid="pci_8c_1a5c450b9e2534226b162a16de0ef6b434" compoundref="pci_8c" startline="144" endline="184">pci_init</references>
         <references refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" compoundref="src_2sched_8c" startline="100" endline="107">schedule_init</references>
         <references refid="serial_8c_1a459999cfa35c788b64284953a93c4b57" compoundref="serial_8c" startline="22" endline="34">serial_init</references>
+        <references refid="kill_8c_1a67e972ab20c5a148b4c3874eb4ccccc3" compoundref="kill_8c" startline="10" endline="19">sys_kill</references>
         <references refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" compoundref="mount_8c" startline="22" endline="99">sys_mount</references>
-        <references refid="syscall_8c_1a15662fc3572d9f3abd72a439727767c3" compoundref="syscall_8c" startline="11" endline="50">syscall_init</references>
-        <references refid="src_2main_8c_1aef7c73ff9178a16543352d9e530d8c60" compoundref="src_2main_8c" startline="50" endline="55">sysidle</references>
+        <references refid="syscall_8c_1a15662fc3572d9f3abd72a439727767c3" compoundref="syscall_8c" startline="14" endline="53">syscall_init</references>
+        <references refid="src_2main_8c_1aef7c73ff9178a16543352d9e530d8c60" compoundref="src_2main_8c" startline="50" endline="57">sysidle</references>
         <references refid="task_8c_1afed7d6a4dd3580596c0c925e766c4163" compoundref="task_8c" startline="51" endline="130">task_clone</references>
         <references refid="tty_8c_1aab365abb615be7027fa0bdb2c09569cb" compoundref="tty_8c" startline="307" endline="334">tty_init</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
@@ -353,51 +355,60 @@
 <codeline lineno="50" refid="src_2main_8c_1aef7c73ff9178a16543352d9e530d8c60" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2main_8c_1aef7c73ff9178a16543352d9e530d8c60" kindref="member">sysidle</ref>()<sp/>{</highlight></codeline>
 <codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" kindref="member">schedule_setpriority</ref>(<ref refid="task_8h_1a00a0568927a39311236b718f2018c0ab" kindref="member">TASK_PRIORITY_LOW</ref>);</highlight></codeline>
 <codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;)</highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>(</highlight><highlight class="stringliteral">&quot;pause&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="55"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"></highlight></codeline>
-<codeline lineno="57"><highlight class="normal"></highlight></codeline>
-<codeline lineno="61" refid="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kindref="member">main</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a459999cfa35c788b64284953a93c4b57" kindref="member">serial_init</ref>();</highlight></codeline>
-<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" kindref="member">mm_init</ref>();</highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a6a369f578313199f231869f97e16802d" kindref="member">desc_init</ref>();</highlight></codeline>
-<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="syscall_8c_1a15662fc3572d9f3abd72a439727767c3" kindref="member">syscall_init</ref>();</highlight></codeline>
-<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vfs_8c_1aca585ca14c08d6c1a07e1b886fc9749a" kindref="member">vfs_init</ref>();</highlight></codeline>
-<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" kindref="member">schedule_init</ref>();</highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1a8553eb3703bbc2ac89010ccfaefe760f" kindref="member">bufio_init</ref>();</highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pci_8c_1a5c450b9e2534226b162a16de0ef6b434" kindref="member">pci_init</ref>();</highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="tty_8c_1aab365abb615be7027fa0bdb2c09569cb" kindref="member">tty_init</ref>();</highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8c_1af7c3254022249b2dfa78151c8f345e77" kindref="member">netif_init</ref>();</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="73"><highlight class="normal"></highlight></codeline>
-<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a178ef95a8fbd89ec018899b9ba241d92" kindref="member">mods_count</ref><sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;no<sp/>initrd<sp/>module<sp/>found&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="77"><highlight class="normal"></highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>addr<sp/>=<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" kindref="member">mods_addr</ref>)<sp/>[0];</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>endp<sp/>=<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" kindref="member">mods_addr</ref>)<sp/>[1];</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"></highlight></codeline>
-<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;initrd:<sp/>module<sp/>found<sp/>at<sp/>addess:<sp/>0x%x<sp/>(%d<sp/>KB)\n&quot;</highlight><highlight class="normal">,<sp/>addr,<sp/>(endp<sp/>-<sp/>addr)<sp/>/<sp/>1024);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="execve_8c_1af44a7e309f4bd49757f52b4178676ea7" kindref="member">sys_execve</ref>(</highlight><highlight class="stringliteral">&quot;/dev/ramdisk/test&quot;</highlight><highlight class="normal">,<sp/>NULL,<sp/>NULL);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;)</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>(</highlight><highlight class="stringliteral">&quot;pause&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kindref="member">main</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="serial_8c_1a459999cfa35c788b64284953a93c4b57" kindref="member">serial_init</ref>();</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" kindref="member">mm_init</ref>();</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1a6a369f578313199f231869f97e16802d" kindref="member">desc_init</ref>();</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="syscall_8c_1a15662fc3572d9f3abd72a439727767c3" kindref="member">syscall_init</ref>();</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="vfs_8c_1aca585ca14c08d6c1a07e1b886fc9749a" kindref="member">vfs_init</ref>();</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" kindref="member">schedule_init</ref>();</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1a8553eb3703bbc2ac89010ccfaefe760f" kindref="member">bufio_init</ref>();</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pci_8c_1a5c450b9e2534226b162a16de0ef6b434" kindref="member">pci_init</ref>();</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="tty_8c_1aab365abb615be7027fa0bdb2c09569cb" kindref="member">tty_init</ref>();</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="netif_8c_1af7c3254022249b2dfa78151c8f345e77" kindref="member">netif_init</ref>();</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a178ef95a8fbd89ec018899b9ba241d92" kindref="member">mods_count</ref><sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;no<sp/>initrd<sp/>module<sp/>found&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>addr<sp/>=<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" kindref="member">mods_addr</ref>)<sp/>[0];</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>endp<sp/>=<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1a1be510e25cd3a21bfd0d4d3b303e0543" kindref="member">mods_addr</ref>)<sp/>[1];</highlight></codeline>
 <codeline lineno="82"><highlight class="normal"></highlight></codeline>
-<codeline lineno="83"><highlight class="normal"></highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!<ref refid="ramdev_8c_1a0c040a7a5a5150b0b0d18354ac6f4958" kindref="member">mkramdev</ref>(</highlight><highlight class="stringliteral">&quot;/dev/ram0&quot;</highlight><highlight class="normal">,<sp/>addr,<sp/>endp<sp/>-<sp/>addr))</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;initrd:<sp/>cannot<sp/>create<sp/>/dev/ram0&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="86"><highlight class="normal"></highlight></codeline>
-<codeline lineno="87"><highlight class="normal"></highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" kindref="member">sys_mount</ref>(</highlight><highlight class="stringliteral">&quot;/dev/ram0&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;/dev/ramdisk&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;iso9660&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0)<sp/>!=<sp/>0)</highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;initrd:<sp/>cannot<sp/>mount<sp/>ramdisk&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"></highlight></codeline>
-<codeline lineno="91"><highlight class="normal"></highlight></codeline>
-<codeline lineno="92"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
-<codeline lineno="93"><highlight class="comment"><sp/><sp/><sp/><sp/>if(fork()<sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="94"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>execl(&quot;/bin/init&quot;,<sp/>&quot;/bin/init&quot;,<sp/>0);</highlight></codeline>
-<codeline lineno="95"><highlight class="comment"><sp/><sp/><sp/><sp/>else</highlight></codeline>
-<codeline lineno="96"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1afed7d6a4dd3580596c0c925e766c4163" kindref="member">task_clone</ref>(<ref refid="src_2main_8c_1aef7c73ff9178a16543352d9e530d8c60" kindref="member">sysidle</ref>,<sp/>NULL,<sp/>NULL,<sp/>0);</highlight></codeline>
-<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;);</highlight></codeline>
-<codeline lineno="99"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;initrd:<sp/>module<sp/>found<sp/>at<sp/>addess:<sp/>0x%x<sp/>(%d<sp/>KB)\n&quot;</highlight><highlight class="normal">,<sp/>addr,<sp/>(endp<sp/>-<sp/>addr)<sp/>/<sp/>1024);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!<ref refid="ramdev_8c_1a0c040a7a5a5150b0b0d18354ac6f4958" kindref="member">mkramdev</ref>(</highlight><highlight class="stringliteral">&quot;/dev/ram0&quot;</highlight><highlight class="normal">,<sp/>addr,<sp/>endp<sp/>-<sp/>addr))</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;initrd:<sp/>cannot<sp/>create<sp/>/dev/ram0&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="mount_8c_1adbb2f2f41fa719d188b9291a25afdd98" kindref="member">sys_mount</ref>(</highlight><highlight class="stringliteral">&quot;/dev/ram0&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;/dev/ramdisk&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;iso9660&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0)<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;initrd:<sp/>cannot<sp/>mount<sp/>ramdisk&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="97"><highlight class="comment"><sp/><sp/><sp/><sp/>if(fork()<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="98"><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>execl(&quot;/bin/init&quot;,<sp/>&quot;/bin/init&quot;,<sp/>0);</highlight></codeline>
+<codeline lineno="99"><highlight class="comment"><sp/><sp/><sp/><sp/>else</highlight></codeline>
+<codeline lineno="100"><highlight class="comment">*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1afed7d6a4dd3580596c0c925e766c4163" kindref="member">task_clone</ref>(<ref refid="src_2main_8c_1aef7c73ff9178a16543352d9e530d8c60" kindref="member">sysidle</ref>,<sp/>NULL,<sp/>NULL,<sp/>0);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>100000000;<sp/>i++);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\n\nKILLING<sp/>%d\n\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="kill_8c_1a67e972ab20c5a148b4c3874eb4ccccc3" kindref="member">sys_kill</ref>(1,<sp/>1));</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/main.c"/>
   </compounddef>

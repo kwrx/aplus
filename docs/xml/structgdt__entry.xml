@@ -87,7 +87,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="37">
+      <node id="44">
         <label>gdt_entry</label>
         <link refid="structgdt__entry"/>
       </node>

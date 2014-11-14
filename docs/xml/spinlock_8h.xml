@@ -22,101 +22,85 @@
     <includedby refid="src_2sched_8c" local="no">src/sched.c</includedby>
     <includedby refid="spinlock_8c" local="no">src/spinlock.c</includedby>
     <invincdepgraph>
-      <node id="793">
+      <node id="801">
         <label>src/debug.c</label>
         <link refid="debug_8c"/>
       </node>
-      <node id="805">
+      <node id="813">
         <label>src/include/aplus/tty.h</label>
         <link refid="tty_8h"/>
-        <childnode refid="799" relation="include">
+        <childnode refid="807" relation="include">
         </childnode>
-        <childnode refid="806" relation="include">
+        <childnode refid="814" relation="include">
         </childnode>
       </node>
-      <node id="803">
+      <node id="811">
         <label>src/net/rtl8139/rtl8139.c</label>
         <link refid="rtl8139_8c"/>
       </node>
-      <node id="788">
+      <node id="796">
         <label>src/arch/desc.c</label>
         <link refid="desc_8c"/>
       </node>
-      <node id="806">
+      <node id="814">
         <label>src/syscall/openpty.c</label>
         <link refid="openpty_8c"/>
       </node>
-      <node id="808">
+      <node id="816">
         <label>src/spinlock.c</label>
         <link refid="spinlock_8c"/>
       </node>
-      <node id="804">
+      <node id="812">
         <label>src/net/slirp/slirp.c</label>
         <link refid="slirp_8c"/>
       </node>
-      <node id="802">
+      <node id="810">
         <label>src/net/loopback/loopback.c</label>
         <link refid="loopback_8c"/>
       </node>
-      <node id="791">
+      <node id="799">
         <label>src/arch/task.c</label>
         <link refid="task_8c"/>
       </node>
-      <node id="798">
+      <node id="806">
         <label>src/fs/pipe.c</label>
         <link refid="pipe_8c"/>
       </node>
-      <node id="795">
+      <node id="803">
         <label>src/fs/iso9660/iso9660_mount.c</label>
         <link refid="iso9660__mount_8c"/>
       </node>
-      <node id="796">
+      <node id="804">
         <label>src/fs/iso9660/iso9660_read.c</label>
         <link refid="iso9660__read_8c"/>
       </node>
-      <node id="792">
+      <node id="800">
         <label>src/bufio.c</label>
         <link refid="bufio_8c"/>
       </node>
-      <node id="797">
+      <node id="805">
         <label>src/fs/iso9660/iso9660_readdir.c</label>
         <link refid="iso9660__readdir_8c"/>
       </node>
-      <node id="807">
+      <node id="815">
         <label>src/sched.c</label>
         <link refid="src_2sched_8c"/>
       </node>
-      <node id="801">
+      <node id="809">
         <label>src/fs/ramdev.c</label>
         <link refid="ramdev_8c"/>
       </node>
-      <node id="799">
+      <node id="807">
         <label>src/fs/tty.c</label>
         <link refid="tty_8c"/>
       </node>
-      <node id="790">
+      <node id="798">
         <label>src/arch/syscall.c</label>
         <link refid="syscall_8c"/>
       </node>
-      <node id="787">
+      <node id="795">
         <label>src/include/aplus/spinlock.h</label>
         <link refid="spinlock.h"/>
-        <childnode refid="788" relation="include">
-        </childnode>
-        <childnode refid="789" relation="include">
-        </childnode>
-        <childnode refid="790" relation="include">
-        </childnode>
-        <childnode refid="791" relation="include">
-        </childnode>
-        <childnode refid="792" relation="include">
-        </childnode>
-        <childnode refid="793" relation="include">
-        </childnode>
-        <childnode refid="794" relation="include">
-        </childnode>
-        <childnode refid="795" relation="include">
-        </childnode>
         <childnode refid="796" relation="include">
         </childnode>
         <childnode refid="797" relation="include">
@@ -127,26 +111,6 @@
         </childnode>
         <childnode refid="800" relation="include">
         </childnode>
-        <childnode refid="805" relation="include">
-        </childnode>
-        <childnode refid="802" relation="include">
-        </childnode>
-        <childnode refid="803" relation="include">
-        </childnode>
-        <childnode refid="804" relation="include">
-        </childnode>
-        <childnode refid="807" relation="include">
-        </childnode>
-        <childnode refid="808" relation="include">
-        </childnode>
-      </node>
-      <node id="800">
-        <label>src/include/aplus/bufio.h</label>
-        <link refid="bufio_8h"/>
-        <childnode refid="792" relation="include">
-        </childnode>
-        <childnode refid="798" relation="include">
-        </childnode>
         <childnode refid="801" relation="include">
         </childnode>
         <childnode refid="802" relation="include">
@@ -155,12 +119,48 @@
         </childnode>
         <childnode refid="804" relation="include">
         </childnode>
+        <childnode refid="805" relation="include">
+        </childnode>
+        <childnode refid="806" relation="include">
+        </childnode>
+        <childnode refid="807" relation="include">
+        </childnode>
+        <childnode refid="808" relation="include">
+        </childnode>
+        <childnode refid="813" relation="include">
+        </childnode>
+        <childnode refid="810" relation="include">
+        </childnode>
+        <childnode refid="811" relation="include">
+        </childnode>
+        <childnode refid="812" relation="include">
+        </childnode>
+        <childnode refid="815" relation="include">
+        </childnode>
+        <childnode refid="816" relation="include">
+        </childnode>
       </node>
-      <node id="789">
+      <node id="808">
+        <label>src/include/aplus/bufio.h</label>
+        <link refid="bufio_8h"/>
+        <childnode refid="800" relation="include">
+        </childnode>
+        <childnode refid="806" relation="include">
+        </childnode>
+        <childnode refid="809" relation="include">
+        </childnode>
+        <childnode refid="810" relation="include">
+        </childnode>
+        <childnode refid="811" relation="include">
+        </childnode>
+        <childnode refid="812" relation="include">
+        </childnode>
+      </node>
+      <node id="797">
         <label>src/arch/serial.c</label>
         <link refid="serial_8c"/>
       </node>
-      <node id="794">
+      <node id="802">
         <label>src/fs/iso9660/iso9660_finddir.c</label>
         <link refid="iso9660__finddir_8c"/>
       </node>
@@ -364,7 +364,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/include/aplus/spinlock.h" line="34" column="1" bodyfile="/opt/prj/aPlus/src/spinlock.c" bodystart="68" bodyend="70"/>
-        <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="153" endline="161">schedule_yield</references>
+        <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="163" endline="171">schedule_yield</references>
       </memberdef>
       <memberdef kind="function" id="spinlock_8h_1a2bf717efcda7e5189e3192e09e49c249" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>

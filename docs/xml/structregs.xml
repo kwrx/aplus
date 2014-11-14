@@ -244,7 +244,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="105">
+      <node id="112">
         <label>regs</label>
         <link refid="structregs"/>
       </node>

@@ -203,7 +203,7 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>struct <link linkend="structgdt__entry">gdt_entry</link> <link linkend="desc_8c_1a7d771d9751c9e97e25096acd0dfd1a94">__attribute__</link> (
+                        <para>struct <link linkend="structgdt__entry">gdt_entry</link> <link linkend="desc_8c_1ae21df847b32e33e64ba0912dd628e610">__attribute__</link> (
 (packed) )</para>
                     </listitem>
                 </itemizedlist>

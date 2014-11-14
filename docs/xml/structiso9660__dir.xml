@@ -153,7 +153,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="48">
+      <node id="55">
         <label>iso9660_dir</label>
         <link refid="structiso9660__dir"/>
       </node>

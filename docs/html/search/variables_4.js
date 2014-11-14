@@ -14,6 +14,7 @@ var searchData=
   ['directcolor_5fattributes',['directcolor_attributes',['../structvesaModeInfo__t.html#afb95209f1e3ffa74635cb68495ecec26',1,'vesaModeInfo_t::directcolor_attributes()'],['../grub_8h.html#a8badd781205f0a5db81752962c9357a6',1,'directcolor_attributes():&#160;grub.h']]],
   ['dns',['dns',['../structnetif.html#a30f1247e8e2ef8ac954833c81873608e',1,'netif']]],
   ['done',['done',['../structpthread__once.html#acffdc3852414e4eeece3c8e7cf80ffc1',1,'pthread_once']]],
+  ['draw',['draw',['../struct____atk__widget__private.html#ae3e2eae5b840dd43fd3f458d077a8fe9',1,'__atk_widget_private']]],
   ['drives_5faddr',['drives_addr',['../structBootInfo__t.html#aa355db96d835f264c29a00f15ba126bf',1,'BootInfo_t']]],
   ['drives_5flength',['drives_length',['../structBootInfo__t.html#adc0745eb234059fc6eb37d8a6c18e4b4',1,'BootInfo_t']]],
   ['ds',['ds',['../structregs.html#aa29daa3553339a188913853a1d91e30a',1,'regs::ds()'],['../aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b',1,'ds():&#160;aplus.h']]],

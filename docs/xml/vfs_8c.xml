@@ -190,7 +190,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="27" bodyend="30"/>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
       </memberdef>
       <memberdef kind="function" id="vfs_8c_1a99334446cfc1dfc32088d838b4f2895c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">

@@ -338,7 +338,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/bufio.c" line="118" column="1" bodyfile="/opt/prj/aPlus/src/bufio.c" bodystart="118" bodyend="129"/>
         <references refid="bufio_8c_1ae7827a32f1a587623ae8c9ac72981bd1" compoundref="bufio_8c" startline="23">buffers_length</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
         <references refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" compoundref="spinlock_8h" startline="38">lock</references>
         <references refid="structbufio_1a7d5a293fbae342f7f9da0390aa04d74a" compoundref="bufio_8h" startline="33">bufio::raw</references>

@@ -75,7 +75,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="39">
+      <node id="46">
         <label>heap</label>
         <link refid="structheap"/>
       </node>

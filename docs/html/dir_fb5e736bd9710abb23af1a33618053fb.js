@@ -1,6 +1,7 @@
 var dir_fb5e736bd9710abb23af1a33618053fb =
 [
     [ "_exit.c", "__exit_8c.html", "__exit_8c" ],
+    [ "args.c", "args_8c.html", "args_8c" ],
     [ "chown.c", "chown_8c.html", "chown_8c" ],
     [ "clone.c", "clone_8c.html", "clone_8c" ],
     [ "close.c", "close_8c.html", "close_8c" ],
@@ -22,6 +23,7 @@ var dir_fb5e736bd9710abb23af1a33618053fb =
     [ "read.c", "read_8c.html", "read_8c" ],
     [ "readdir.c", "src_2syscall_2readdir_8c.html", "src_2syscall_2readdir_8c" ],
     [ "sbrk.c", "sbrk_8c.html", "sbrk_8c" ],
+    [ "sighandler.c", "sighandler_8c.html", "sighandler_8c" ],
     [ "stat.c", "stat_8c.html", "stat_8c" ],
     [ "symlink.c", "symlink_8c.html", "symlink_8c" ],
     [ "test.c", "src_2syscall_2test_8c.html", "src_2syscall_2test_8c" ],

@@ -47,6 +47,10 @@ typedef struct block {
 } __attribute__((packed)) block_t;
 
 
+
+
+
+
 /**
  *	\brief Alloc memory from Kernel Heap.
  * 	\param size Size of data to alloc.

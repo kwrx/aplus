@@ -1,4 +1,4 @@
-.TH "src/arch/syscall.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/syscall.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -17,6 +17,13 @@ src/arch/syscall.c \-
 \fC#include <errno\&.h>\fP
 .br
 
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSYSCALL_DEBUG\fP"
+.br
+.in -1c
 .SS "Functions"
 
 .in +1c
@@ -24,7 +31,7 @@ src/arch/syscall.c \-
 .RI "int \fBsyscall_init\fP ()"
 .br
 .ti -1c
-.RI "int \fBsyscall_invoke\fP (void *handler, int p0, int p1, int p2, int p3, int p4)"
+.RI "int \fBsyscall_invoke\fP (int idx, int p0, int p1, int p2, int p3, int p4)"
 .br
 .ti -1c
 .RI "int \fBsyscall_handler\fP (regs_t *r)"
@@ -37,107 +44,125 @@ src/arch/syscall.c \-
 .RI "static void ** \fBsyscall_handlers\fP = NULL"
 .br
 .in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define SYSCALL_DEBUG"
+
+.PP
+Definition at line 9 of file syscall\&.c\&.
 .SH "Function Documentation"
 .PP 
 .SS "int syscall_handler (regs_t *r)"
 
 .PP
-Definition at line 77 of file syscall\&.c\&.
+Definition at line 81 of file syscall\&.c\&.
 .PP
-References syscall_handlers, and syscall_invoke()\&.
+References kprintf(), and syscall_invoke()\&.
 .PP
 .nf
-77                                {
-78     return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
-79 }
+81                                {
+82 
+83 #ifdef SYSCALL_DEBUG
+84     kprintf("syscall: called %d (%x, %x, %x, %x, %x);", r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+85 #endif
+86 
+87     int ret = syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+88 
+89 #ifdef SYSCALL_DEBUG
+90     kprintf(" returned %x\n", ret);
+91 #endif
+92 
+93     return ret;
+94 }
 .fi
 .SS "int syscall_init ()"
 
 .PP
-Definition at line 11 of file syscall\&.c\&.
+Definition at line 14 of file syscall\&.c\&.
 .PP
 References attribute(), __syscall::handler, kmalloc(), kprintf(), list_destroy, list_foreach, __syscall::number, list::size, syscall_handlers, and value\&.
 .PP
 .nf
-11                    {
-12     list_t* syslist = attribute("syscall");
-13 
-14     syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist->size);
-15     memset(syscall_handlers, 0, sizeof(void*) * syslist->size);
+14                    {
+15     list_t* syslist = attribute("syscall");
 16 
-17     list_foreach(value, syslist) {
-18         syscall_t* sys = (syscall_t*) value;
+17     syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist->size);
+18     memset(syscall_handlers, 0, sizeof(void*) * syslist->size);
 19 
-20         if(syscall_handlers[sys->number])
-21             kprintf("syscall: duplicate number of %d handler\n");
+20     list_foreach(value, syslist) {
+21         syscall_t* sys = (syscall_t*) value;
 22 
-23         syscall_handlers[sys->number] = sys->handler;
-24     }
+23         if(syscall_handlers[sys->number])
+24             kprintf("syscall: duplicate number of %d handler\n");
 25 
-26     kprintf("syscall: loaded %d handlers\n", syslist->size);
-27     list_destroy(syslist);
+26         syscall_handlers[sys->number] = sys->handler;
+27     }
 28 
-29 
-30 #ifdef DEBUG
-31     #define NSYSCALLS       1024
+29     kprintf("syscall: loaded %d handlers\n", syslist->size);
+30     list_destroy(syslist);
+31 
 32 
-33     for(int i = 0, s = 0; i < NSYSCALLS; i++) {
-34         if(syscall_handlers[i] == NULL) {
-35             if(!s)
-36                 continue;
-37 
-38             if(s > 1)
-39                 kprintf("\t%d\&.\&.%d\n", i - s, i - 1);
-40             else
-41                 kprintf("\t%d\n", i - s);
-42 
-43             s = 0;
-44         } else
-45             s++;
-46     }
-47 #endif
-48 
-49     return 0;
-50 }
+33 #ifdef DEBUG
+34     #define NSYSCALLS       1024
+35 
+36     for(int i = 0, s = 0; i < NSYSCALLS; i++) {
+37         if(syscall_handlers[i] == NULL) {
+38             if(!s)
+39                 continue;
+40 
+41             if(s > 1)
+42                 kprintf("\t%d\&.\&.%d\n", i - s, i - 1);
+43             else
+44                 kprintf("\t%d\n", i - s);
+45 
+46             s = 0;
+47         } else
+48             s++;
+49     }
+50 #endif
+51 
+52     return 0;
+53 }
 .fi
-.SS "int syscall_invoke (void *handler, intp0, intp1, intp2, intp3, intp4)"
+.SS "int syscall_invoke (intidx, intp0, intp1, intp2, intp3, intp4)"
 
 .PP
-Definition at line 52 of file syscall\&.c\&.
+Definition at line 55 of file syscall\&.c\&.
 .PP
-References __asm__(), and errno\&.
+References __asm__(), errno, and syscall_handlers\&.
 .PP
 .nf
-52                                                                           {
-53     if(handler == NULL) {
-54         errno = ENOSYS;
-55         return -1;
-56     }
+55                                                                     {
+56     void* handler = syscall_handlers[idx];  
 57 
-58 
-59     int r = 0;
-60 
-61     __asm__ (
-62         "push ebx           \n"
-63         "push ecx           \n"
-64         "push edx           \n"
-65         "push esi           \n"
-66         "push edi           \n"
-67         "call eax           \n"
-68         "add esp, 20        \n"
-69         : "=a"(r) 
-70         : "a"(handler), "b"(p4), "c"(p3), "d"(p2), "S"(p1), "D"(p0)
-71     );
-72 
-73     return r;
-74 }
+58     if(handler == NULL) {
+59         errno = ENOSYS;
+60         return -1;
+61     }
+62 
+63     int r = 0;
+64 
+65     __asm__ (
+66         "push ebx           \n"
+67         "push ecx           \n"
+68         "push edx           \n"
+69         "push esi           \n"
+70         "push edi           \n"
+71         "call eax           \n"
+72         "add esp, 20        \n"
+73         : "=a"(r) 
+74         : "a"(handler), "b"(p4), "c"(p3), "d"(p2), "S"(p1), "D"(p0)
+75     );
+76 
+77     return r;
+78 }
 .fi
 .SH "Variable Documentation"
 .PP 
 .SS "void** syscall_handlers = NULL\fC [static]\fP"
 
 .PP
-Definition at line 9 of file syscall\&.c\&.
+Definition at line 12 of file syscall\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

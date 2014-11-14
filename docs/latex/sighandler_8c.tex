@@ -1,0 +1,74 @@
+\hypertarget{sighandler_8c}{\section{src/syscall/sighandler.c File Reference}
+\label{sighandler_8c}\index{src/syscall/sighandler.\+c@{src/syscall/sighandler.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{sighandler_8c_ab8fd6461cebcd1c3c921f9cbf09e2846}{sys\+\_\+\+\_\+install\+\_\+sighandler} (void $\ast$handler)
+\item 
+\hyperlink{sighandler_8c_a35314b503840bda636b115cf4f8614ae}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{sighandler_8c_ab8fd6461cebcd1c3c921f9cbf09e2846}{sys\+\_\+\+\_\+install\+\_\+sighandler}, 102)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{sighandler_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{sighandler_8c_ab8fd6461cebcd1c3c921f9cbf09e2846}{\index{sighandler.\+c@{sighandler.\+c}!sys\+\_\+\+\_\+install\+\_\+sighandler@{sys\+\_\+\+\_\+install\+\_\+sighandler}}
+\index{sys\+\_\+\+\_\+install\+\_\+sighandler@{sys\+\_\+\+\_\+install\+\_\+sighandler}!sighandler.\+c@{sighandler.\+c}}
+\subsubsection[{sys\+\_\+\+\_\+install\+\_\+sighandler}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+\+\_\+install\+\_\+sighandler (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{handler}
+\end{DoxyParamCaption}
+)}}\label{sighandler_8c_ab8fd6461cebcd1c3c921f9cbf09e2846}
+
+
+Definition at line 16 of file sighandler.\+c.
+
+
+
+References task\+::signal\+\_\+handler.
+
+
+\begin{DoxyCode}
+16                                            \{
+17     \textcolor{keywordflow}{if}(!\hyperlink{sighandler_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+18         \textcolor{keywordflow}{return} -1;
+19         
+20     \hyperlink{sighandler_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{signal\_handler} = (void (*)(int)) handler;
+21     \textcolor{keywordflow}{return} 0;
+22 \}
+\end{DoxyCode}
+\hypertarget{sighandler_8c_a35314b503840bda636b115cf4f8614ae}{\index{sighandler.\+c@{sighandler.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!sighandler.\+c@{sighandler.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+\+\_\+install\+\_\+sighandler}}]{, }
+\item[{102}]{}
+\end{DoxyParamCaption}
+)}}\label{sighandler_8c_a35314b503840bda636b115cf4f8614ae}
+
+
+\subsection{Variable Documentation}
+\hypertarget{sighandler_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{sighandler.\+c@{sighandler.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!sighandler.\+c@{sighandler.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{sighandler_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
+

@@ -1,0 +1,120 @@
+\hypertarget{clrconv_8h}{\section{usr/src/libatk/src/clrconv.h File Reference}
+\label{clrconv_8h}\index{usr/src/libatk/src/clrconv.\+h@{usr/src/libatk/src/clrconv.\+h}}
+}
+{\ttfamily \#include $<$atk.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{clrconv_8h_ae1e5d1080f853c20f27978351f278d43}{V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B}(c)
+\item 
+\#define \hyperlink{clrconv_8h_aa375c3354e6d58c2f6a15e61fc5b95d4}{V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B}(c)
+\item 
+\#define \hyperlink{clrconv_8h_a37a361b71cb30457e00beba77d3ccfac}{V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5}(c)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} \hyperlink{clrconv_8h_ab7d4dfdb7e512b070be9ba847e71547f}{\+\_\+\+\_\+alphablend} (\hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}, \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} s, float a)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\hypertarget{clrconv_8h_ae1e5d1080f853c20f27978351f278d43}{\index{clrconv.\+h@{clrconv.\+h}!V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B@{V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B}}
+\index{V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B@{V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B}!clrconv.\+h@{clrconv.\+h}}
+\subsubsection[{V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B(
+\begin{DoxyParamCaption}
+\item[{}]{c}
+\end{DoxyParamCaption}
+)}}\label{clrconv_8h_ae1e5d1080f853c20f27978351f278d43}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(                                       \(\backslash\)
+        ((int32\_t)(c[3] * 0xFF) << 24)  |   \(\backslash\)
+        ((int32\_t)(c[2] * 0xFF) << 16)  |   \(\backslash\)
+        ((int32\_t)(c[1] * 0xFF) << 8)   |   \(\backslash\)
+        ((int32\_t)(c[0] * 0xFF))        |   \(\backslash\)
+    )
+\end{DoxyCode}
+
+
+Definition at line 14 of file clrconv.\+h.
+
+\hypertarget{clrconv_8h_a37a361b71cb30457e00beba77d3ccfac}{\index{clrconv.\+h@{clrconv.\+h}!V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5@{V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5}}
+\index{V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5@{V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5}!clrconv.\+h@{clrconv.\+h}}
+\subsubsection[{V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5}]{\setlength{\rightskip}{0pt plus 5cm}\#define V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5(
+\begin{DoxyParamCaption}
+\item[{}]{c}
+\end{DoxyParamCaption}
+)}}\label{clrconv_8h_a37a361b71cb30457e00beba77d3ccfac}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(                                       \(\backslash\)
+        ((int16\_t)(c[2] * 0x1F) << 11)  |   \(\backslash\)
+        ((int16\_t)(c[1] * 0x3F) << 5)   |   \(\backslash\)
+        ((int16\_t)(c[0] * 0x1F))        |   \(\backslash\)
+    )
+\end{DoxyCode}
+
+
+Definition at line 29 of file clrconv.\+h.
+
+\hypertarget{clrconv_8h_aa375c3354e6d58c2f6a15e61fc5b95d4}{\index{clrconv.\+h@{clrconv.\+h}!V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B@{V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B}}
+\index{V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B@{V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B}!clrconv.\+h@{clrconv.\+h}}
+\subsubsection[{V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B}]{\setlength{\rightskip}{0pt plus 5cm}\#define V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B(
+\begin{DoxyParamCaption}
+\item[{}]{c}
+\end{DoxyParamCaption}
+)}}\label{clrconv_8h_aa375c3354e6d58c2f6a15e61fc5b95d4}
+{\bfseries Value\+:}
+\begin{DoxyCode}
+(                                       \(\backslash\)
+        ((int32\_t)(c[2] * 0xFF) << 16)  |   \(\backslash\)
+        ((int32\_t)(c[1] * 0xFF) << 8)   |   \(\backslash\)
+        ((int32\_t)(c[0] * 0xFF))        |   \(\backslash\)
+    )
+\end{DoxyCode}
+
+
+Definition at line 22 of file clrconv.\+h.
+
+
+
+\subsection{Function Documentation}
+\hypertarget{clrconv_8h_ab7d4dfdb7e512b070be9ba847e71547f}{\index{clrconv.\+h@{clrconv.\+h}!\+\_\+\+\_\+alphablend@{\+\_\+\+\_\+alphablend}}
+\index{\+\_\+\+\_\+alphablend@{\+\_\+\+\_\+alphablend}!clrconv.\+h@{clrconv.\+h}}
+\subsubsection[{\+\_\+\+\_\+alphablend}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf atk\+\_\+color\+\_\+t} \+\_\+\+\_\+alphablend (
+\begin{DoxyParamCaption}
+\item[{{\bf atk\+\_\+color\+\_\+t}}]{d, }
+\item[{{\bf atk\+\_\+color\+\_\+t}}]{s, }
+\item[{float}]{a}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}}\label{clrconv_8h_ab7d4dfdb7e512b070be9ba847e71547f}
+
+
+Definition at line 38 of file clrconv.\+h.
+
+
+
+References A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+A, A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+B, A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+B\+L\+A\+C\+K, A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+G, A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+R, and d.
+
+
+\begin{DoxyCode}
+38                                                                               \{
+39     \textcolor{keywordflow}{if}(a == 0.0f)
+40         \textcolor{keywordflow}{return} \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d};
+41 
+42     \textcolor{keywordflow}{if}(a == 1.0f)
+43         \textcolor{keywordflow}{return} s;
+44 
+45     \textcolor{keywordtype}{float} ia = 1.0f - a;
+46     
+47     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} r = \hyperlink{atk_8h_a29a69073b13d8b13b9732b4fdabae599}{ATK\_COLOR\_BLACK};
+48     r[\hyperlink{atk_8h_a170621735809dd7efded8c8517347596}{ATK\_COLOR\_A}] = 1.0f;
+49     r[\hyperlink{atk_8h_ae15b47dc39550cad42dbac4d50bc2c5c}{ATK\_COLOR\_R}] = (s[\hyperlink{atk_8h_ae15b47dc39550cad42dbac4d50bc2c5c}{ATK\_COLOR\_R}] * a + \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}[\hyperlink{atk_8h_ae15b47dc39550cad42dbac4d50bc2c5c}{ATK\_COLOR\_R}] * ia);
+50     r[\hyperlink{atk_8h_a4c5c8f9331ebcd8142b22cee6075d2ac}{ATK\_COLOR\_G}] = (s[\hyperlink{atk_8h_a4c5c8f9331ebcd8142b22cee6075d2ac}{ATK\_COLOR\_G}] * a + \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}[\hyperlink{atk_8h_a4c5c8f9331ebcd8142b22cee6075d2ac}{ATK\_COLOR\_G}] * ia);
+51     r[\hyperlink{atk_8h_ac9a57bbb2de01caedab3ca03602144bd}{ATK\_COLOR\_B}] = (s[\hyperlink{atk_8h_ac9a57bbb2de01caedab3ca03602144bd}{ATK\_COLOR\_B}] * a + \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d}[\hyperlink{atk_8h_ac9a57bbb2de01caedab3ca03602144bd}{ATK\_COLOR\_B}] * ia);
+52 
+53     \textcolor{keywordflow}{return} r;
+54 \}
+\end{DoxyCode}

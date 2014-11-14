@@ -101,14 +101,14 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="98">
+      <node id="105">
         <label>pthread_mutex</label>
         <link refid="structpthread__mutex"/>
       </node>
-      <node id="97">
+      <node id="104">
         <label>pthread_rwlock</label>
         <link refid="structpthread__rwlock"/>
-        <childnode refid="98" relation="usage">
+        <childnode refid="105" relation="usage">
           <edgelabel>+wrmutex</edgelabel>
           <edgelabel>+rdmutex</edgelabel>
         </childnode>

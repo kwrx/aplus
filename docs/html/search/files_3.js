@@ -5,6 +5,7 @@ var searchData=
   ['clone_2ec',['clone.c',['../clone_8c.html',1,'']]],
   ['close_2ec',['close.c',['../close_8c.html',1,'']]],
   ['closedir_2ec',['closedir.c',['../closedir_8c.html',1,'']]],
+  ['clrconv_2eh',['clrconv.h',['../clrconv_8h.html',1,'']]],
   ['config_2eh',['config.h',['../config_8h.html',1,'']]],
   ['crt0_2ec',['crt0.c',['../crt0_8c.html',1,'']]]
 ];

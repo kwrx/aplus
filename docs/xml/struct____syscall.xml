@@ -36,7 +36,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="5">
+      <node id="7">
         <label>__syscall</label>
         <link refid="struct____syscall"/>
       </node>

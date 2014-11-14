@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="widget_8h" kind="file">
+    <compoundname>widget.h</compoundname>
+    <includes refid="atk_8h" local="no">atk.h</includes>
+    <includedby refid="atk_8h" local="no">usr/src/libatk/src/include/atk.h</includedby>
+    <incdepgraph>
+      <node id="1957">
+        <label>usr/src/libatk/src/include/atk/widget.h</label>
+        <link refid="widget.h"/>
+        <childnode refid="1958" relation="include">
+        </childnode>
+      </node>
+      <node id="1958">
+        <label>atk.h</label>
+        <link refid="atk_8h"/>
+        <childnode refid="1957" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="1959">
+        <label>usr/src/libatk/src/include/atk/widget.h</label>
+        <link refid="widget.h"/>
+        <childnode refid="1960" relation="include">
+        </childnode>
+      </node>
+      <node id="1960">
+        <label>usr/src/libatk/src/include/atk.h</label>
+        <link refid="atk_8h"/>
+        <childnode refid="1961" relation="include">
+        </childnode>
+        <childnode refid="1959" relation="include">
+        </childnode>
+      </node>
+      <node id="1961">
+        <label>usr/src/libatk/src/clrconv.h</label>
+        <link refid="clrconv_8h"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="struct____atk__widget__private" prot="public">__atk_widget_private</innerclass>
+    <innerclass refid="structatk__widget" prot="public">atk_widget</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="widget_8h_1ac037e282f60131e69cb1fae7361fa85b" prot="public" static="no">
+        <name>ATK_WIDGET_FLAGS_ENABLED</name>
+        <initializer>0x01</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="8" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="widget_8h_1a8c22ba171444941248556d0231f64292" prot="public" static="no">
+        <name>ATK_WIDGET_FLAGS_FOCUS</name>
+        <initializer>0x02</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="9" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="widget_8h_1a4362905a142648a5013b61a47c89fe06" prot="public" static="no">
+        <name>ATK_WIDGET_FLAGS_TOPMOST</name>
+        <initializer>0x04</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="10" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="widget_8h_1a544e7cd50238d158c5a155ae3f3c1748" prot="public" static="no">
+        <type>struct <ref refid="structatk__widget" kindref="compound">atk_widget</ref></type>
+        <definition>typedef struct atk_widget atk_widget_t</definition>
+        <argsstring></argsstring>
+        <name>atk_widget_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" line="38" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_ATK_WIDGET_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_ATK_WIDGET_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="atk_8h" kindref="compound">atk.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="widget_8h_1a544e7cd50238d158c5a155ae3f3c1748" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structatk__widget" kindref="compound">atk_widget</ref><sp/><ref refid="structatk__widget" kindref="compound">atk_widget_t</ref>;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="widget_8h_1ac037e282f60131e69cb1fae7361fa85b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_WIDGET_FLAGS_ENABLED<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x01</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="widget_8h_1a8c22ba171444941248556d0231f64292" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_WIDGET_FLAGS_FOCUS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x02</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="widget_8h_1a4362905a142648a5013b61a47c89fe06" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_WIDGET_FLAGS_TOPMOST<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x04</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="struct____atk__widget__private" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="struct____atk__widget__private" kindref="compound">__atk_widget_private</ref><sp/>{</highlight></codeline>
+<codeline lineno="14" refid="struct____atk__widget__private_1ad4c3a44969eed941222e6070a9618fd8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="struct____atk__widget__private_1ad4c3a44969eed941222e6070a9618fd8" kindref="member">buffer</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="struct____atk__widget__private_1ae3e2eae5b840dd43fd3f458d077a8fe9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="struct____atk__widget__private_1ae3e2eae5b840dd43fd3f458d077a8fe9" kindref="member">draw</ref>)<sp/>(<ref refid="structatk__widget" kindref="compound">atk_widget_t</ref>*);</highlight></codeline>
+<codeline lineno="17" refid="struct____atk__widget__private_1a46674987ae41a9d4e1b33b9e2d9424bc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="struct____atk__widget__private_1a46674987ae41a9d4e1b33b9e2d9424bc" kindref="member">event</ref>)<sp/>(<ref refid="structatk__widget" kindref="compound">atk_widget_t</ref>*,<sp/>int,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="structatk__widget" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structatk__widget" kindref="compound">atk_widget</ref><sp/>{</highlight></codeline>
+<codeline lineno="21" refid="structatk__widget_1a24145b1d5428ec2211dabe700dfe2076" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>atk_v2si<sp/><ref refid="structatk__widget_1a24145b1d5428ec2211dabe700dfe2076" kindref="member">position</ref>;</highlight></codeline>
+<codeline lineno="22" refid="structatk__widget_1a03bb553a3c4b8b7523a56bcebd489fbc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>atk_v2si<sp/><ref refid="structatk__widget_1a03bb553a3c4b8b7523a56bcebd489fbc" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="24" refid="structatk__widget_1a1ce3f914210cd44c532688e1b98e7ba7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="structatk__widget_1a1ce3f914210cd44c532688e1b98e7ba7" kindref="member">backcolor</ref>;</highlight></codeline>
+<codeline lineno="25" refid="structatk__widget_1a303ad035289ebebf801d76720ff37065" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="structatk__widget_1a303ad035289ebebf801d76720ff37065" kindref="member">forecolor</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="structatk__widget_1a1f6e2c4d43fa2723ea96e74e4369f915" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="structatk__widget_1a1f6e2c4d43fa2723ea96e74e4369f915" kindref="member">title</ref>;</highlight></codeline>
+<codeline lineno="28" refid="structatk__widget_1a1d572a95740071ab836bb88609bb28c4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="structatk__widget_1a1d572a95740071ab836bb88609bb28c4" kindref="member">text</ref>;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="structatk__widget_1a5b936c20bb006d5a45855873bb96f4f5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structatk__widget_1a5b936c20bb006d5a45855873bb96f4f5" kindref="member">flags</ref>;</highlight></codeline>
+<codeline lineno="31" refid="structatk__widget_1a7476e90289581e13fe6978ac3dbc9b0c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structatk__widget_1a7476e90289581e13fe6978ac3dbc9b0c" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="structatk__widget_1a7309354f2c4bcf58373c2aebf599a2e1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a2c8c224ba001105422a0814f71ae5887" kindref="member">atk_list_t</ref>*<sp/><ref refid="structatk__widget_1a7309354f2c4bcf58373c2aebf599a2e1" kindref="member">childs</ref>;</highlight></codeline>
+<codeline lineno="34" refid="structatk__widget_1ae82913e03415708354bc5088890f7b19" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structatk__widget" kindref="compound">atk_widget</ref>*<sp/><ref refid="structatk__widget_1ae82913e03415708354bc5088890f7b19" kindref="member">parent</ref>;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="structatk__widget_1a2af132bf83c5a165c04ec1dd67e781e5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="struct____atk__widget__private" kindref="compound">__atk_widget_private</ref><sp/><ref refid="structatk__widget_1a2af132bf83c5a165c04ec1dd67e781e5" kindref="member">__data</ref>;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/widget.h"/>
+  </compounddef>
+</doxygen>

@@ -1,7 +1,10 @@
 var searchData=
 [
+  ['v4f_5fto_5fargb',['V4F_TO_ARGB',['../clrconv_8h.html#ae1e5d1080f853c20f27978351f278d43',1,'clrconv.h']]],
+  ['v4f_5fto_5fr5g6b5',['V4F_TO_R5G6B5',['../clrconv_8h.html#a37a361b71cb30457e00beba77d3ccfac',1,'clrconv.h']]],
+  ['v4f_5fto_5frgb',['V4F_TO_RGB',['../clrconv_8h.html#aa375c3354e6d58c2f6a15e61fc5b95d4',1,'clrconv.h']]],
   ['vaddr',['vaddr',['../structtask.html#a340cbedbdc4b542793e7677dd4966ade',1,'task']]],
-  ['value',['value',['../structattribute.html#a868a57c7ba49cfa75755e4061662abe3',1,'attribute::value()'],['../structlist__body.html#ae3194d24911b82410a61d50f5e6f588d',1,'list_body::value()'],['../struct____pthread__key.html#a35d38627e4a0de2e247671f0b5b6322a',1,'__pthread_key::value()'],['../attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd',1,'value():&#160;attribute.h']]],
+  ['value',['value',['../structattribute.html#a868a57c7ba49cfa75755e4061662abe3',1,'attribute::value()'],['../structlist__body.html#ae3194d24911b82410a61d50f5e6f588d',1,'list_body::value()'],['../structatk__widget.html#a7476e90289581e13fe6978ac3dbc9b0c',1,'atk_widget::value()'],['../struct____pthread__key.html#a35d38627e4a0de2e247671f0b5b6322a',1,'__pthread_key::value()'],['../attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd',1,'value():&#160;attribute.h']]],
   ['vasprintf',['vasprintf',['../debug_8c.html#a1c492cd47880cc15e2274cd13f62f617',1,'debug.c']]],
   ['vbe_5fcontrol_5finfo',['vbe_control_info',['../structBootInfo__t.html#a8a09488fd20d514ccd02e07e5ca45d6d',1,'BootInfo_t']]],
   ['vbe_5finterface_5flen',['vbe_interface_len',['../structBootInfo__t.html#a47ae9ab2b4242be9be167ea095956097',1,'BootInfo_t']]],
@@ -33,6 +36,7 @@ var searchData=
   ['vmm_5fflags_5fpresent',['VMM_FLAGS_PRESENT',['../mm_8h.html#a9da196e1c5da9da3454cbcfa6d56c96e',1,'mm.h']]],
   ['vmm_5fflags_5frdwr',['VMM_FLAGS_RDWR',['../mm_8h.html#a39ac3cb44ab9c4695214a59a3d199557',1,'mm.h']]],
   ['vmm_5fflags_5fuser',['VMM_FLAGS_USER',['../mm_8h.html#a4f995b267ef97c4638c27370badecb21',1,'mm.h']]],
+  ['vmm_5ffree',['vmm_free',['../paging_8c.html#a2840d14db66d94b76ebcf3adf3e971e0',1,'paging.c']]],
   ['vmm_5finit',['vmm_init',['../paging_8c.html#aac183f585641487a954ca46c0d7bde31',1,'paging.c']]],
   ['vmm_5fmap',['vmm_map',['../paging_8c.html#ae969f54f1646d5d8a871bef828a24239',1,'paging.c']]],
   ['vmm_5fmapkernel',['vmm_mapkernel',['../paging_8c.html#a8828597ede1b2c5bcc5ea1a4ca7919a9',1,'paging.c']]],

@@ -1,4 +1,4 @@
-.TH "src/mm/paging.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/mm/paging.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -67,6 +67,9 @@ src/mm/paging.c \-
 .br
 .ti -1c
 .RI "void * \fBvmm_alloc\fP (void *vaddr, size_t \fBsize\fP, int \fBflags\fP)"
+.br
+.ti -1c
+.RI "void \fBvmm_free\fP (void *vaddr, size_t \fBsize\fP)"
 .br
 .ti -1c
 .RI "void \fBvmm_mapkernel\fP (\fBuint32_t\fP *\fBdest\fP)"
@@ -147,32 +150,32 @@ References current_vmm, halloc(), and vmm_map()\&.
 .SS "\fBuint32_t\fP* vmm_create ()"
 
 .PP
-Definition at line 151 of file paging\&.c\&.
+Definition at line 170 of file paging\&.c\&.
 .PP
 References kmalloc(), mm_align(), PDSIZE, and uint32_t\&.
 .PP
 .nf
-151                        {
-152     uint32_t* addr = (uint32_t*) mm_align((void*) kmalloc(PDSIZE * sizeof(uint32_t)));
-153     if(!addr)
-154         return NULL;
-155         
-156 
-157     memset(addr, 0, PDSIZE * sizeof(uint32_t));
-158     return addr;
-159 }
+170                        {
+171     uint32_t* addr = (uint32_t*) mm_align((void*) kmalloc(PDSIZE * sizeof(uint32_t)));
+172     if(!addr)
+173         return NULL;
+174         
+175 
+176     memset(addr, 0, PDSIZE * sizeof(uint32_t));
+177     return addr;
+178 }
 .fi
 .SS "void vmm_destroy (\fBuint32_t\fP *vmm)"
 
 .PP
-Definition at line 161 of file paging\&.c\&.
+Definition at line 180 of file paging\&.c\&.
 .PP
 References PDSIZE, and uint32_t\&.
 .PP
 .nf
-161                                 {
-162     memset(vmm, 0, PDSIZE * sizeof(uint32_t));
-163 }
+180                                 {
+181     memset(vmm, 0, PDSIZE * sizeof(uint32_t));
+182 }
 .fi
 .SS "void vmm_disable ()"
 
@@ -195,30 +198,57 @@ Definition at line 60 of file paging\&.c\&.
 62     write_cr0(read_cr0() | 0x80000000);
 63 }
 .fi
+.SS "void vmm_free (void *vaddr, size_tsize)"
+
+.PP
+Definition at line 138 of file paging\&.c\&.
+.PP
+References current_vmm, hfree(), PDENTRY, PGSIZE, PTENTRY, size, uint32_t, and vmm_umap()\&.
+.PP
+.nf
+138                                         {
+139 
+140     int pages = (size / PGSIZE) + 1;
+141     uint32_t frame = (uint32_t) vaddr;
+142     uint32_t* pd = (uint32_t*) current_vmm;
+143 
+144     for(int i = 0; i < size; i++) {
+145         uint32_t* e = &pd[PDENTRY(frame)];
+146 
+147         if((*e & 1) != 1)
+148             continue;
+149 
+150         uint32_t* table = (uint32_t*) (*e & ~0xFFF);
+151         hfree(current_heap, table[PTENTRY(frame)] & ~0xFFF, PGSIZE);
+152     }
+153 
+154     vmm_umap(current_vmm, vaddr, size);
+155 }
+.fi
 .SS "int vmm_init ()"
 
 .PP
-Definition at line 165 of file paging\&.c\&.
+Definition at line 184 of file paging\&.c\&.
 .PP
 References halloc(), kernel_vmm, list_init, panic(), PDSIZE, uint32_t, vmm_enable(), vmm_mapkernel(), and vmm_switch()\&.
 .PP
 .nf
-165                {
-166 
-167     kernel_vmm = (uint32_t*) halloc(current_heap, PDSIZE * sizeof(uint32_t));
-168     if(!kernel_vmm)
-169         panic("Could not initialize VMM");
-170     
-171 
-172     memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
-173     
-174     vmm_mapkernel(kernel_vmm);
-175     vmm_switch(kernel_vmm);
-176     vmm_enable();
-177 
-178     list_init(vmm_queue);
-179     return 0;
-180 }
+184                {
+185 
+186     kernel_vmm = (uint32_t*) halloc(current_heap, PDSIZE * sizeof(uint32_t));
+187     if(!kernel_vmm)
+188         panic("Could not initialize VMM");
+189     
+190 
+191     memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
+192     
+193     vmm_mapkernel(kernel_vmm);
+194     vmm_switch(kernel_vmm);
+195     vmm_enable();
+196 
+197     list_init(vmm_queue);
+198     return 0;
+199 }
 .fi
 .SS "void* vmm_map (\fBuint32_t\fP *pd, void *paddr, void *vaddr, size_tlen, intflags)"
 
@@ -267,21 +297,21 @@ References current_vmm, flags, halloc(), mm_align(), panic(), PDENTRY, PGSIZE, P
 .SS "void vmm_mapkernel (\fBuint32_t\fP *dest)"
 
 .PP
-Definition at line 138 of file paging\&.c\&.
+Definition at line 157 of file paging\&.c\&.
 .PP
 References memsize, MM_LBASE, MM_LSIZE, mm_vaddr(), VMM_FLAGS_DEFAULT, VMM_FLAGS_USER, and vmm_map()\&.
 .PP
 .nf
-138                                    {
-139     // Map 8MB to low area (kernel reserved)
-140     vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);
-141 
-142     // Map all high-memory (kernel reserved)
-143     vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT);
-144 
-145     // Map Linear Frame Buffer
-146     vmm_map(dest, (void*) 0xE0000000, (void*) 0xE0000000, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-147 }
+157                                    {
+158     // Map 8MB to low area (kernel reserved)
+159     vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);
+160 
+161     // Map all high-memory (kernel reserved)
+162     vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT);
+163 
+164     // Map Linear Frame Buffer
+165     vmm_map(dest, (void*) 0xE0000000, (void*) 0xE0000000, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+166 }
 .fi
 .SS "void vmm_switch (\fBuint32_t\fP *addr)"
 

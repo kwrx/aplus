@@ -54,7 +54,7 @@ Definition at line 24 of file fstat.\+c.
 
 
 
-References inode\+::atime, inode\+::ctime, inode\+::dev, errno, task\+::fd, inode\+::gid, inode\+::ino, kprintf(), inode\+::mode, inode\+::mtime, inode\+::nlink, inode\+::rdev, inode\+::size, and inode\+::uid.
+References inode\+::atime, inode\+::ctime, inode\+::dev, errno, task\+::fd, inode\+::gid, inode\+::ino, inode\+::mode, inode\+::mtime, inode\+::nlink, inode\+::rdev, inode\+::size, and inode\+::uid.
 
 
 \begin{DoxyCode}
@@ -66,27 +66,26 @@ References inode\+::atime, inode\+::ctime, inode\+::dev, errno, task\+::fd, inod
 29 
 30     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{fstat_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
 31     \textcolor{keywordflow}{if}(!ino) \{
-32         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_fstat: %s."}, strerror(\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}));
-33         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
-34         \textcolor{keywordflow}{return} -1;
-35     \}
-36     
-37     st->st\_mode = ino->\hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode};
-38     st->st\_ino = ino->\hyperlink{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{ino};
-39     st->st\_dev = ino->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev};
-40     st->st\_uid = ino->\hyperlink{structinode_a0eac94e96ded19029e871d5cce815bcb}{uid};
-41     st->st\_gid = ino->\hyperlink{structinode_a8434fb9dd05057d00b37ed713713835d}{gid};
-42     st->st\_atime = ino->\hyperlink{structinode_a7e52661a115f6def97778566f2be0d80}{atime};
-43     st->st\_ctime = ino->\hyperlink{structinode_a27334a9d3c25fbac1c134ed5b9cbc566}{ctime};
-44     st->st\_mtime = ino->\hyperlink{structinode_a19f0d407fa2962c942e406d3e00c1da4}{mtime};
-45     st->st\_nlink = ino->\hyperlink{structinode_a1daedc820c86b5af32f0a137419f7a8f}{nlink};
-46     st->st\_size = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
-47     st->st\_rdev = ino->\hyperlink{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{rdev};
-48     st->st\_blksize = 512;
-49     st->st\_blocks = st->st\_size / st->st\_blksize;
-50     
-51     \textcolor{keywordflow}{return} 0;
-52 \}
+32         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+33         \textcolor{keywordflow}{return} -1;
+34     \}
+35     
+36     st->st\_mode = ino->\hyperlink{structinode_a4902d9f6a1d7bd79c6f1bb73d83ce8e3}{mode};
+37     st->st\_ino = ino->\hyperlink{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{ino};
+38     st->st\_dev = ino->\hyperlink{structinode_a127a2eb030df332fa64a81188731ad6b}{dev};
+39     st->st\_uid = ino->\hyperlink{structinode_a0eac94e96ded19029e871d5cce815bcb}{uid};
+40     st->st\_gid = ino->\hyperlink{structinode_a8434fb9dd05057d00b37ed713713835d}{gid};
+41     st->st\_atime = ino->\hyperlink{structinode_a7e52661a115f6def97778566f2be0d80}{atime};
+42     st->st\_ctime = ino->\hyperlink{structinode_a27334a9d3c25fbac1c134ed5b9cbc566}{ctime};
+43     st->st\_mtime = ino->\hyperlink{structinode_a19f0d407fa2962c942e406d3e00c1da4}{mtime};
+44     st->st\_nlink = ino->\hyperlink{structinode_a1daedc820c86b5af32f0a137419f7a8f}{nlink};
+45     st->st\_size = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
+46     st->st\_rdev = ino->\hyperlink{structinode_a3e7613383954ff7b5faf7c2188e1f61b}{rdev};
+47     st->st\_blksize = 512;
+48     st->st\_blocks = st->st\_size / st->st\_blksize;
+49     
+50     \textcolor{keywordflow}{return} 0;
+51 \}
 \end{DoxyCode}
 \hypertarget{fstat_8c_a4d257934d85058e9d4821db299a6544d}{\index{fstat.\+c@{fstat.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!fstat.\+c@{fstat.\+c}}

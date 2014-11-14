@@ -2,6 +2,7 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
   <compounddef id="dir_ad28aaba48d2c38b82664458471fa334" kind="dir">
     <compoundname>usr/src</compoundname>
+    <innerdir refid="dir_425f1d86d53c9d3e80d2d726a823d2ee">usr/src/libatk</innerdir>
     <innerdir refid="dir_7eba538d4a0daa44b244b3c2ce5d4eb1">usr/src/libcrt0</innerdir>
     <innerdir refid="dir_4e1c7ae8f9024ef006e86a9c3fc355ed">usr/src/libposix</innerdir>
     <innerdir refid="dir_c23ec9db109baf02f825a52e3d8bd742">usr/src/libpthread</innerdir>

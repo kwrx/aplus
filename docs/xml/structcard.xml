@@ -127,24 +127,24 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="23">
+      <node id="28">
         <label>card</label>
         <link refid="structcard"/>
-        <childnode refid="24" relation="usage">
+        <childnode refid="29" relation="usage">
           <edgelabel>+device</edgelabel>
         </childnode>
-        <childnode refid="25" relation="usage">
+        <childnode refid="30" relation="usage">
           <edgelabel>+netif</edgelabel>
         </childnode>
       </node>
-      <node id="24">
+      <node id="29">
         <label>pci_device</label>
         <link refid="structpci__device"/>
       </node>
-      <node id="25">
+      <node id="30">
         <label>netif</label>
         <link refid="structnetif"/>
-        <childnode refid="24" relation="usage">
+        <childnode refid="29" relation="usage">
           <edgelabel>+device</edgelabel>
         </childnode>
       </node>

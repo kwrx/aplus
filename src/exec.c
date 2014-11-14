@@ -203,6 +203,8 @@ int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
 /**
  *	\brief Load a ELF32 Executable image.
  *	\param image pointer to buffer address of a executable loaded in memory.
+ *	\param vaddr Address of memory space needed.
+ * 	\param vsize Size of memory space.
  *	\return Entry Point address.
  */
 void* elf32_load(void* image, int* vaddr, int* vsize) {

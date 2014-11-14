@@ -6,29 +6,29 @@
     <includes local="no">stdlib.h</includes>
     <includes local="no">signal.h</includes>
     <incdepgraph>
-      <node id="1893">
+      <node id="1965">
         <label>stdlib.h</label>
       </node>
-      <node id="1892">
+      <node id="1964">
         <label>errno.h</label>
       </node>
-      <node id="1891">
+      <node id="1963">
         <label>syscalls.c</label>
         <link refid="syscalls_8c"/>
-        <childnode refid="1892" relation="include">
+        <childnode refid="1964" relation="include">
         </childnode>
       </node>
-      <node id="1894">
+      <node id="1966">
         <label>signal.h</label>
       </node>
-      <node id="1890">
+      <node id="1962">
         <label>usr/src/libcrt0/src/crt0.c</label>
         <link refid="crt0.c"/>
-        <childnode refid="1891" relation="include">
+        <childnode refid="1963" relation="include">
         </childnode>
-        <childnode refid="1893" relation="include">
+        <childnode refid="1965" relation="include">
         </childnode>
-        <childnode refid="1894" relation="include">
+        <childnode refid="1966" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -158,7 +158,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/crt0.c" line="61" column="1" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/crt0.c" bodystart="61" bodyend="92"/>
+        <location file="/opt/prj/aPlus/usr/src/libcrt0/src/crt0.c" line="61" column="1" bodyfile="/opt/prj/aPlus/usr/src/libcrt0/src/crt0.c" bodystart="61" bodyend="95"/>
         <references refid="crt0_8c_1aa3934073cbcfb3be9e79fd3ba6c6c18b">__bss_start</references>
         <references refid="crt0_8c_1a54dbf06bfcd3b86af2609c8d594b7907" compoundref="crt0_8c" startline="51" endline="58">__init_traps</references>
         <references refid="crt0_8c_1a50595d26a35dfb272a9f822789821724">__sigtramp</references>
@@ -240,30 +240,33 @@
 <codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>i<sp/>=<sp/>0;</highlight></codeline>
 <codeline lineno="67"><highlight class="normal"></highlight></codeline>
 <codeline lineno="68"><highlight class="normal"></highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**)<sp/>aplus_envp();</highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/>argv<sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**)<sp/>aplus_argv();</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**)<sp/>__get_envp();</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/>argv<sp/>=<sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**)<sp/>__get_argv();</highlight></codeline>
 <codeline lineno="71"><highlight class="normal"></highlight></codeline>
 <codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(argv[argc])</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>argc<sp/>+=<sp/>1;</highlight></codeline>
-<codeline lineno="75"><highlight class="normal"></highlight></codeline>
-<codeline lineno="76"><highlight class="normal"></highlight></codeline>
-<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>open(</highlight><highlight class="stringliteral">&quot;/dev/stdin&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0644);</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>open(</highlight><highlight class="stringliteral">&quot;/dev/stdout&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0644);</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>open(</highlight><highlight class="stringliteral">&quot;/dev/stderr&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0644);</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"></highlight></codeline>
-<codeline lineno="81"><highlight class="normal"></highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>aplus_install_sighandler(<ref refid="crt0_8c_1a50595d26a35dfb272a9f822789821724" kindref="member">__sigtramp</ref>);</highlight></codeline>
-<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>_init_signal();</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="crt0_8c_1a54dbf06bfcd3b86af2609c8d594b7907" kindref="member">__init_traps</ref>();</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"></highlight></codeline>
-<codeline lineno="86"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>0</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>atexit(__do_global_dtors);</highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>__do_global_ctors();</highlight></codeline>
-<codeline lineno="89"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="90"><highlight class="normal"></highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>exit(<ref refid="crt0_8c_1ae867ea66194fc0112526615a67b773cf" kindref="member">main</ref>(argc,<sp/>argv,<sp/><ref refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref>));</highlight></codeline>
-<codeline lineno="92"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(argv)</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(argv[argc])</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>argc<sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>open(</highlight><highlight class="stringliteral">&quot;/dev/stdin&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0644);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>open(</highlight><highlight class="stringliteral">&quot;/dev/stdout&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0644);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>open(</highlight><highlight class="stringliteral">&quot;/dev/stderr&quot;</highlight><highlight class="normal">,<sp/>0,<sp/>0644);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>__install_sighandler(<ref refid="crt0_8c_1a50595d26a35dfb272a9f822789821724" kindref="member">__sigtramp</ref>);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>_init_signal();</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="crt0_8c_1a54dbf06bfcd3b86af2609c8d594b7907" kindref="member">__init_traps</ref>();</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>atexit(__do_global_dtors);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>__do_global_ctors();</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>exit(<ref refid="crt0_8c_1ae867ea66194fc0112526615a67b773cf" kindref="member">main</ref>(argc,<sp/>argv,<sp/><ref refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref>));</highlight></codeline>
+<codeline lineno="95"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libcrt0/src/crt0.c"/>
   </compounddef>

@@ -157,101 +157,104 @@ $(document).ready(function(){initNavTree('mm_8c_source.html','');});
 <div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="mm_8c.html#a2cdc9850cc059eb848b6843d5327e37a">   47</a></span>&#160;} <a class="code" href="mm_8c.html#a2cdc9850cc059eb848b6843d5327e37a">__attribute__</a>((packed)) block_t;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keywordtype">size_t</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>) {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span>* addr = (<span class="keywordtype">void</span>*) <a class="code" href="heap_8c.html#ace4a8a1fe937911a1a107c92e6d40339">halloc</a>(current_heap, size);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">if</span>(!addr)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;halloc(): failed!&quot;</span>);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    addr = <a class="code" href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</a>(addr);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    block_t* <a class="code" href="structblock.html">block</a> = (block_t*) addr;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    block-&gt;<a class="code" href="structblock.html#a0dc8afecb033f59b42e0d8502a7f8ff0">magic</a> = <a class="code" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    block-&gt;size = <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) block + <span class="keyword">sizeof</span>(block_t));</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keywordtype">size_t</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span>* addr = (<span class="keywordtype">void</span>*) <a class="code" href="heap_8c.html#ace4a8a1fe937911a1a107c92e6d40339">halloc</a>(current_heap, size);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">if</span>(!addr)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;halloc(): failed!&quot;</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">   66</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a>(<span class="keywordtype">void</span>* ptr) {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span>(!ptr)</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    block_t* <a class="code" href="structblock.html">block</a> = (block_t*) ptr;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span>(block-&gt;magic != <a class="code" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</a>)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">size_t</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = block-&gt;size;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    block-&gt;size = 0;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    block-&gt;magic = 0;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="heap_8c.html#ad3d08e75d8a9f8e12e405536dccdd851">hfree</a>(current_heap, <a class="code" href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</a>(<a class="code" href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">mm_align</a>(ptr)), size);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;}</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e">   84</a></span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e">krealloc</a>(<span class="keywordtype">void</span>* ptr, <span class="keywordtype">size_t</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">if</span>(ptr == NULL)</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(size);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    addr = <a class="code" href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</a>(addr);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    block_t* <a class="code" href="structblock.html">block</a> = (block_t*) addr;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    block-&gt;<a class="code" href="structblock.html#a0dc8afecb033f59b42e0d8502a7f8ff0">magic</a> = <a class="code" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</a>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    block-&gt;size = <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">return</span> (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) block + <span class="keyword">sizeof</span>(block_t));</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;}</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">   79</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a>(<span class="keywordtype">void</span>* ptr) {</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">if</span>(!ptr)</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordflow">return</span>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    block_t* <a class="code" href="structblock.html">block</a> = (block_t*) ptr;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">if</span>(block-&gt;magic != <a class="code" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</a>)</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">if</span>(size == 0) {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a>(ptr);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }   </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    block_t* <a class="code" href="structblock.html">block</a> = (block_t*) ptr;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">if</span>(block-&gt;magic != <a class="code" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</a>)</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">void</span>* newptr = <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(size);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">if</span>(!newptr)</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">if</span>(size &gt; block-&gt;size)</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        size = block-&gt;size;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    memcpy(newptr, ptr, size);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a>(ptr);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">return</span> newptr;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">size_t</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a> = block-&gt;size;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    block-&gt;size = 0;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    block-&gt;magic = 0;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    </div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="heap_8c.html#ad3d08e75d8a9f8e12e405536dccdd851">hfree</a>(current_heap, <a class="code" href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</a>(<a class="code" href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">mm_align</a>(ptr)), size);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e">  103</a></span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e">krealloc</a>(<span class="keywordtype">void</span>* ptr, <span class="keywordtype">size_t</span> <a class="code" href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a>) {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">if</span>(ptr == NULL)</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(size);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">if</span>(size == 0) {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <a class="code" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a>(ptr);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    }   </div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">  113</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">mm_setheap</a>(<a class="code" href="structheap.html">heap_t</a>* <a class="code" href="structheap.html">heap</a>) {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    current_heap = heap;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="mm_8c.html#a4e692b1c1f4e04a8b231f1493babb82f">  117</a></span>&#160;<span class="keyword">volatile</span> <a class="code" href="structheap.html">heap_t</a>* <a class="code" href="mm_8c.html#a4e692b1c1f4e04a8b231f1493babb82f">mm_getheap</a>() {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="mm_8c.html#a3068f9054a832aa72e12ab9ad210dd99">current_heap</a>;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">  122</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">mm_init</a>() {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="mm_8c.html#a8ffb348d372acd38099f16b08bdaf4b5">memsize</a> = (<a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#ab20281f521d626a49714e06b62291be9">mem_upper</a> + <a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a4b144c9db5fe2c5a9d72522068d65138">mem_lower</a>) * 1024;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="mm_8c.html#a8ffb348d372acd38099f16b08bdaf4b5">memsize</a> &gt; <a class="code" href="mm_8h.html#a17f8a27ab3548000488ca27d70785240">VMM_MAX_MEMORY</a>)</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <a class="code" href="mm_8c.html#a8ffb348d372acd38099f16b08bdaf4b5">memsize</a> = <a class="code" href="mm_8h.html#a17f8a27ab3548000488ca27d70785240">VMM_MAX_MEMORY</a>;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    block_t* <a class="code" href="structblock.html">block</a> = (block_t*) ptr;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">if</span>(block-&gt;magic != <a class="code" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</a>)</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">void</span>* newptr = <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(size);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordflow">if</span>(!newptr)</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">if</span>(size &gt; block-&gt;size)</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        size = block-&gt;size;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    memcpy(newptr, ptr, size);</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a>(ptr);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">return</span> newptr;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <a class="code" href="kheap_8c.html#ab761c0c9768623b035f3fd5c98f77b08">kheap_init</a>();</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="code" href="paging_8c.html#aac183f585641487a954ca46c0d7bde31">vmm_init</a>();</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">  134</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">mm_setheap</a>(<a class="code" href="structheap.html">heap_t</a>* <a class="code" href="structheap.html">heap</a>) {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    current_heap = heap;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="mm_8c.html#a4e692b1c1f4e04a8b231f1493babb82f">  141</a></span>&#160;<span class="keyword">volatile</span> <a class="code" href="structheap.html">heap_t</a>* <a class="code" href="mm_8c.html#a4e692b1c1f4e04a8b231f1493babb82f">mm_getheap</a>() {</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="mm_8c.html#a3068f9054a832aa72e12ab9ad210dd99">current_heap</a>;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;}</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno"><a class="line" href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">  149</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">mm_init</a>() {</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <a class="code" href="mm_8c.html#a8ffb348d372acd38099f16b08bdaf4b5">memsize</a> = (<a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#ab20281f521d626a49714e06b62291be9">mem_upper</a> + <a class="code" href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a>-&gt;<a class="code" href="structBootInfo__t.html#a4b144c9db5fe2c5a9d72522068d65138">mem_lower</a>) * 1024;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="mm_8c.html#a8ffb348d372acd38099f16b08bdaf4b5">memsize</a> &gt; <a class="code" href="mm_8h.html#a17f8a27ab3548000488ca27d70785240">VMM_MAX_MEMORY</a>)</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <a class="code" href="mm_8c.html#a8ffb348d372acd38099f16b08bdaf4b5">memsize</a> = <a class="code" href="mm_8h.html#a17f8a27ab3548000488ca27d70785240">VMM_MAX_MEMORY</a>;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <a class="code" href="kheap_8c.html#ab761c0c9768623b035f3fd5c98f77b08">kheap_init</a>();</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <a class="code" href="paging_8c.html#aac183f585641487a954ca46c0d7bde31">vmm_init</a>();</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;}</div>
 <div class="ttc" id="mm_8c_html_a854352f53b148adc24983a58a1866d66"><div class="ttname"><a href="mm_8c.html#a854352f53b148adc24983a58a1866d66">size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00043">mm.c:43</a></div></div>
 <div class="ttc" id="structblock_html_a40c8e08013eb90aa6db19e1cbc7f3186"><div class="ttname"><a href="structblock.html#a40c8e08013eb90aa6db19e1cbc7f3186">block::size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00046">mm.c:46</a></div></div>
-<div class="ttc" id="mm_8c_html_a2cdc9850cc059eb848b6843d5327e37a"><div class="ttname"><a href="mm_8c.html#a2cdc9850cc059eb848b6843d5327e37a">__attribute__</a></div><div class="ttdeci">struct block __attribute__((packed))</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00047">mm.c:47</a></div></div>
+<div class="ttc" id="mm_8c_html_a2cdc9850cc059eb848b6843d5327e37a"><div class="ttname"><a href="mm_8c.html#a2cdc9850cc059eb848b6843d5327e37a">__attribute__</a></div><div class="ttdeci">struct block __attribute__((packed))</div><div class="ttdoc">Alloc memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00047">mm.c:47</a></div></div>
 <div class="ttc" id="structBootInfo__t_html_ab20281f521d626a49714e06b62291be9"><div class="ttname"><a href="structBootInfo__t.html#ab20281f521d626a49714e06b62291be9">BootInfo_t::mem_upper</a></div><div class="ttdeci">unsigned int mem_upper</div><div class="ttdef"><b>Definition:</b> <a href="grub_8h_source.html#l00067">grub.h:67</a></div></div>
-<div class="ttc" id="mm_8c_html_a6f69e1474f69d9286294cfa23cdcc414"><div class="ttname"><a href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">mm_setheap</a></div><div class="ttdeci">void mm_setheap(heap_t *heap)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00113">mm.c:113</a></div></div>
+<div class="ttc" id="mm_8c_html_a6f69e1474f69d9286294cfa23cdcc414"><div class="ttname"><a href="mm_8c.html#a6f69e1474f69d9286294cfa23cdcc414">mm_setheap</a></div><div class="ttdeci">void mm_setheap(heap_t *heap)</div><div class="ttdoc">Set current heap for memory operations. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00134">mm.c:134</a></div></div>
 <div class="ttc" id="mm_8h_html_acb964323e95c799eb3896dce8c61d329"><div class="ttname"><a href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">mm_align</a></div><div class="ttdeci">static void * mm_align(void *vaddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00085">mm.h:85</a></div></div>
 <div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
 <div class="ttc" id="panic_8c_html_a92ad17d19a46880dd5e6c99143666b4a"><div class="ttname"><a href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a></div><div class="ttdeci">void panic(char *msg)</div><div class="ttdoc">Go in Kernel Panic, halt system. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00102">panic.c:102</a></div></div>
 <div class="ttc" id="grub_8h_html_abac514a5a8c938a1de6fb08f542f5962"><div class="ttname"><a href="grub_8h.html#abac514a5a8c938a1de6fb08f542f5962">mbd</a></div><div class="ttdeci">BootInfo * mbd</div></div>
-<div class="ttc" id="mm_8c_html_a25db4b3982d49366c88b6be8331b9215"><div class="ttname"><a href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">mm_init</a></div><div class="ttdeci">int mm_init()</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00122">mm.c:122</a></div></div>
-<div class="ttc" id="mm_8c_html_a0a2a93dff1df0b626cb5ff6d85d0553e"><div class="ttname"><a href="mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e">krealloc</a></div><div class="ttdeci">void * krealloc(void *ptr, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00084">mm.c:84</a></div></div>
+<div class="ttc" id="mm_8c_html_a25db4b3982d49366c88b6be8331b9215"><div class="ttname"><a href="mm_8c.html#a25db4b3982d49366c88b6be8331b9215">mm_init</a></div><div class="ttdeci">int mm_init()</div><div class="ttdoc">Initialize MMU. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00149">mm.c:149</a></div></div>
+<div class="ttc" id="mm_8c_html_a0a2a93dff1df0b626cb5ff6d85d0553e"><div class="ttname"><a href="mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e">krealloc</a></div><div class="ttdeci">void * krealloc(void *ptr, size_t size)</div><div class="ttdoc">Realloc memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00103">mm.c:103</a></div></div>
 <div class="ttc" id="mm_8c_html_a8ffb348d372acd38099f16b08bdaf4b5"><div class="ttname"><a href="mm_8c.html#a8ffb348d372acd38099f16b08bdaf4b5">memsize</a></div><div class="ttdeci">uint32_t memsize</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00035">mm.c:35</a></div></div>
 <div class="ttc" id="heap_8c_html_ace4a8a1fe937911a1a107c92e6d40339"><div class="ttname"><a href="heap_8c.html#ace4a8a1fe937911a1a107c92e6d40339">halloc</a></div><div class="ttdeci">void * halloc(heap_t *heap, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="heap_8c_source.html#l00028">heap.c:28</a></div></div>
 <div class="ttc" id="mm_8c_html_a3744f58bc6d40534a3e026b2f242ab25"><div class="ttname"><a href="mm_8c.html#a3744f58bc6d40534a3e026b2f242ab25">vmm_queue</a></div><div class="ttdeci">list_t * vmm_queue</div><div class="ttdef"><b>Definition:</b> <a href="paging_8c_source.html#l00049">paging.c:49</a></div></div>
@@ -264,18 +267,18 @@ $(document).ready(function(){initNavTree('mm_8c_source.html','');});
 <div class="ttc" id="mm_8h_html_a24ee1b93dcb4a2d30a151491245967ec"><div class="ttname"><a href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">BLKMAGIC</a></div><div class="ttdeci">#define BLKMAGIC</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00058">mm.h:58</a></div></div>
 <div class="ttc" id="kheap_8c_html_ab761c0c9768623b035f3fd5c98f77b08"><div class="ttname"><a href="kheap_8c.html#ab761c0c9768623b035f3fd5c98f77b08">kheap_init</a></div><div class="ttdeci">int kheap_init()</div><div class="ttdef"><b>Definition:</b> <a href="kheap_8c_source.html#l00132">kheap.c:132</a></div></div>
 <div class="ttc" id="structblock_html"><div class="ttname"><a href="structblock.html">block</a></div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00044">mm.c:44</a></div></div>
-<div class="ttc" id="mm_8c_html_a069f85a5001d71bc44d8be6532a4e432"><div class="ttname"><a href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a></div><div class="ttdeci">void kfree(void *ptr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00066">mm.c:66</a></div></div>
+<div class="ttc" id="mm_8c_html_a069f85a5001d71bc44d8be6532a4e432"><div class="ttname"><a href="mm_8c.html#a069f85a5001d71bc44d8be6532a4e432">kfree</a></div><div class="ttdeci">void kfree(void *ptr)</div><div class="ttdoc">Free memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00079">mm.c:79</a></div></div>
 <div class="ttc" id="mm_8h_html_a17f8a27ab3548000488ca27d70785240"><div class="ttname"><a href="mm_8h.html#a17f8a27ab3548000488ca27d70785240">VMM_MAX_MEMORY</a></div><div class="ttdeci">#define VMM_MAX_MEMORY</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00054">mm.h:54</a></div></div>
 <div class="ttc" id="heap_8c_html_ad3d08e75d8a9f8e12e405536dccdd851"><div class="ttname"><a href="heap_8c.html#ad3d08e75d8a9f8e12e405536dccdd851">hfree</a></div><div class="ttdeci">void hfree(heap_t *heap, void *addr, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="heap_8c_source.html#l00036">heap.c:36</a></div></div>
 <div class="ttc" id="aplus_8h_html_a5a8b2dc9e45a9ee81a94ef304fb62505"><div class="ttname"><a href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a></div><div class="ttdeci">uint16_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00102">aplus.h:102</a></div></div>
 <div class="ttc" id="structheap_html"><div class="ttname"><a href="structheap.html">heap</a></div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00062">mm.h:62</a></div></div>
 <div class="ttc" id="structlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00050">list.h:50</a></div></div>
 <div class="ttc" id="structblock_html_a0dc8afecb033f59b42e0d8502a7f8ff0"><div class="ttname"><a href="structblock.html#a0dc8afecb033f59b42e0d8502a7f8ff0">block::magic</a></div><div class="ttdeci">uint16_t magic</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00045">mm.c:45</a></div></div>
-<div class="ttc" id="mm_8c_html_a4e692b1c1f4e04a8b231f1493babb82f"><div class="ttname"><a href="mm_8c.html#a4e692b1c1f4e04a8b231f1493babb82f">mm_getheap</a></div><div class="ttdeci">volatile heap_t * mm_getheap()</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00117">mm.c:117</a></div></div>
+<div class="ttc" id="mm_8c_html_a4e692b1c1f4e04a8b231f1493babb82f"><div class="ttname"><a href="mm_8c.html#a4e692b1c1f4e04a8b231f1493babb82f">mm_getheap</a></div><div class="ttdeci">volatile heap_t * mm_getheap()</div><div class="ttdoc">Get current heap for memory operations. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00141">mm.c:141</a></div></div>
 <div class="ttc" id="mm_8c_html_a9bed7071511863f81c2de43b3c3f7db9"><div class="ttname"><a href="mm_8c.html#a9bed7071511863f81c2de43b3c3f7db9">current_vmm</a></div><div class="ttdeci">uint32_t * current_vmm</div><div class="ttdef"><b>Definition:</b> <a href="paging_8c_source.html#l00046">paging.c:46</a></div></div>
 <div class="ttc" id="grub_8h_html"><div class="ttname"><a href="grub_8h.html">grub.h</a></div></div>
 <div class="ttc" id="mm_8h_html_a3fbcc6a4fcc3452357e636f90b925554"><div class="ttname"><a href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</a></div><div class="ttdeci">static void * mm_paddr(void *vaddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00071">mm.h:71</a></div></div>
-<div class="ttc" id="paging_8c_html_aac183f585641487a954ca46c0d7bde31"><div class="ttname"><a href="paging_8c.html#aac183f585641487a954ca46c0d7bde31">vmm_init</a></div><div class="ttdeci">int vmm_init()</div><div class="ttdef"><b>Definition:</b> <a href="paging_8c_source.html#l00165">paging.c:165</a></div></div>
+<div class="ttc" id="paging_8c_html_aac183f585641487a954ca46c0d7bde31"><div class="ttname"><a href="paging_8c.html#aac183f585641487a954ca46c0d7bde31">vmm_init</a></div><div class="ttdeci">int vmm_init()</div><div class="ttdef"><b>Definition:</b> <a href="paging_8c_source.html#l00184">paging.c:184</a></div></div>
 <div class="ttc" id="mm_8h_html_a5e7e52cb995fbefca3ca2a7bab8556e6"><div class="ttname"><a href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</a></div><div class="ttdeci">static void * mm_vaddr(void *paddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00078">mm.h:78</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -283,7 +286,7 @@ $(document).ready(function(){initNavTree('mm_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_e07adefefc5da1d7540fd182d8c11934.html">mm</a></li><li class="navelem"><a class="el" href="mm_8c.html">mm.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 18:07:56 for aPlus by
+    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

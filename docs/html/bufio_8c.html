@@ -375,7 +375,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="bufio_8c_source.html#l00118">118</a> of file <a class="el" href="bufio_8c_source.html">bufio.c</a>.</p>
 
-<p>References <a class="el" href="bufio_8c_source.html#l00023">buffers_length</a>, <a class="el" href="mm_8c_source.html#l00066">kfree()</a>, <a class="el" href="list_8h_source.html#l00102">list_remove()</a>, <a class="el" href="spinlock_8h_source.html#l00038">lock</a>, <a class="el" href="bufio_8h_source.html#l00033">bufio::raw</a>, <a class="el" href="bufio_8h_source.html#l00034">bufio::size</a>, and <a class="el" href="spinlock_8h_source.html#l00042">unlock</a>.</p>
+<p>References <a class="el" href="bufio_8c_source.html#l00023">buffers_length</a>, <a class="el" href="mm_8c_source.html#l00079">kfree()</a>, <a class="el" href="list_8h_source.html#l00102">list_remove()</a>, <a class="el" href="spinlock_8h_source.html#l00038">lock</a>, <a class="el" href="bufio_8h_source.html#l00033">bufio::raw</a>, <a class="el" href="bufio_8h_source.html#l00034">bufio::size</a>, and <a class="el" href="spinlock_8h_source.html#l00042">unlock</a>.</p>
 <div class="fragment"><div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                              {</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="spinlock_8h.html#aea28b4c44db4f0f1d0f222d6382c04c0">lock</a>();</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="bufio_8c.html#ae7827a32f1a587623ae8c9ac72981bd1">buffers_length</a> -= buf-&gt;<a class="code" href="structbufio.html#a233f5f8090a3f39d9471333db439e2bb">size</a>;</div>
@@ -394,7 +394,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="bufio_8c_html_ae7827a32f1a587623ae8c9ac72981bd1"><div class="ttname"><a href="bufio_8c.html#ae7827a32f1a587623ae8c9ac72981bd1">buffers_length</a></div><div class="ttdeci">static uint64_t buffers_length</div><div class="ttdoc">Allocated RAM of all buffers. </div><div class="ttdef"><b>Definition:</b> <a href="bufio_8c_source.html#l00023">bufio.c:23</a></div></div>
 <div class="ttc" id="structbufio_html_a7d5a293fbae342f7f9da0390aa04d74a"><div class="ttname"><a href="structbufio.html#a7d5a293fbae342f7f9da0390aa04d74a">bufio::raw</a></div><div class="ttdeci">void * raw</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8h_source.html#l00033">bufio.h:33</a></div></div>
 <div class="ttc" id="list_8h_html_a83bc1af7566502e08756b8d8c425972e"><div class="ttname"><a href="list_8h.html#a83bc1af7566502e08756b8d8c425972e">listval_t</a></div><div class="ttdeci">uint32_t listval_t</div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00042">list.h:42</a></div></div>
-<div class="ttc" id="mm_8h_html_acee1960bdb3a19cb495341ec725cafef"><div class="ttname"><a href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a></div><div class="ttdeci">void kfree(void *)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00066">mm.c:66</a></div></div>
+<div class="ttc" id="mm_8h_html_acee1960bdb3a19cb495341ec725cafef"><div class="ttname"><a href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a></div><div class="ttdeci">void kfree(void *)</div><div class="ttdoc">Free memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00079">mm.c:79</a></div></div>
 <div class="ttc" id="list_8h_html_a4470c240b622941415ae5250067699b5"><div class="ttname"><a href="list_8h.html#a4470c240b622941415ae5250067699b5">list_remove</a></div><div class="ttdeci">static int list_remove(list_t *list, listval_t v)</div><div class="ttdoc">Remove value to the list. </div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00102">list.h:102</a></div></div>
 <div class="ttc" id="structbufio_html_a233f5f8090a3f39d9471333db439e2bb"><div class="ttname"><a href="structbufio.html#a233f5f8090a3f39d9471333db439e2bb">bufio::size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> <a href="bufio_8h_source.html#l00034">bufio.h:34</a></div></div>
 </div><!-- fragment -->
@@ -796,7 +796,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="bufio_8c.html">bufio.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 18:07:57 for aPlus by
+    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

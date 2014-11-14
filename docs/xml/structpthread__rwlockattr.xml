@@ -23,7 +23,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="100">
+      <node id="107">
         <label>pthread_rwlockattr</label>
         <link refid="structpthread__rwlockattr"/>
       </node>

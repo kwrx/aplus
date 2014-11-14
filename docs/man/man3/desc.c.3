@@ -1,4 +1,4 @@
-.TH "src/arch/desc.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/desc.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -235,7 +235,7 @@ Definition at line 38 of file desc\&.c\&.
 .PP 
 .SS "__asm__ ('\&.section \&.text \\n\\ \&.global gdt_load \\n\\ gdt_load: \\n\\ lgdt  \\n\\ \\n\\ movax[gdt_p], 0x10\\n\\movds, ax\\n\\moves, ax\\n\\movfs, ax\\n\\movgs, ax\\n\\movss, ax\\n\\jmp 0x08:\&.done\\n\\\\n\\\&.done:\\n\\ret\\n\\\\n\\\\n\\\\n\\\\n\\\&.global idt_load\\n\\idt_load:\\n\\lidt\\n\\ret\\n\\\\n\\\\n'[idt_p])"
 
-.SS "struct \fBiso9660_dir\fP __attribute__ ((packed))"
+.SS "struct \fBgdt_entry\fP __attribute__ ((packed))"
 
 .PP
 Definition at line 44 of file desc\&.c\&.
@@ -574,7 +574,7 @@ Perform a scheduling and check TTL (Time To Live) for current task\&.
 .PP
 Definition at line 133 of file sched\&.c\&.
 .PP
-References task::clock, list_empty(), task::priority, sched_enabled, schedule_next(), and task_switch()\&.
+References task::clock, list_empty(), task::priority, sched_enabled, schedule_next(), task::signal_handler, task::signal_sig, and task_switch()\&.
 .PP
 .nf
 133                 {
@@ -584,26 +584,47 @@ References task::clock, list_empty(), task::priority, sched_enabled, schedule_ne
 137     if(list_empty(task_queue))
 138         return;
 139 
-140         
-141     current_task->clock += 1;
-142     
-143     if(current_task->clock % current_task->priority)
-144         return;
-145         
-146     task_switch(schedule_next());
-147 }
+140 
+141     if(current_task->signal_sig) {
+142         if(current_task->signal_handler) {
+143             current_task->signal_handler(current_task->signal_sig);
+144             current_task->signal_sig = 0;
+145         }
+146     }
+147         
+148 
+149 
+150     current_task->clock += 1;
+151     
+152     if(current_task->clock % current_task->priority)
+153         return;
+154 
+155     
+156     task_switch(schedule_next());
+157 }
 .fi
 .SS "void syscall_handler (regs_t *)"
 
 .PP
-Definition at line 77 of file syscall\&.c\&.
+Definition at line 81 of file syscall\&.c\&.
 .PP
-References syscall_handlers, and syscall_invoke()\&.
+References kprintf(), and syscall_invoke()\&.
 .PP
 .nf
-77                                {
-78     return syscall_invoke(syscall_handlers[r->eax], r->ebx, r->ecx, r->edx, r->esi, r->edi);
-79 }
+81                                {
+82 
+83 #ifdef SYSCALL_DEBUG
+84     kprintf("syscall: called %d (%x, %x, %x, %x, %x);", r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+85 #endif
+86 
+87     int ret = syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+88 
+89 #ifdef SYSCALL_DEBUG
+90     kprintf(" returned %x\n", ret);
+91 #endif
+92 
+93     return ret;
+94 }
 .fi
 .SH "Variable Documentation"
 .PP 

@@ -9,135 +9,135 @@
     <includes local="no">fcntl.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="1361">
+      <node id="1398">
         <label>sys/stat.h</label>
       </node>
-      <node id="1355">
+      <node id="1392">
         <label>stdarg.h</label>
       </node>
-      <node id="1367">
+      <node id="1404">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1353" relation="include">
+        <childnode refid="1390" relation="include">
         </childnode>
-        <childnode refid="1368" relation="include">
+        <childnode refid="1405" relation="include">
         </childnode>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1391" relation="include">
         </childnode>
-        <childnode refid="1356" relation="include">
+        <childnode refid="1393" relation="include">
         </childnode>
-        <childnode refid="1360" relation="include">
+        <childnode refid="1397" relation="include">
         </childnode>
       </node>
-      <node id="1358">
+      <node id="1395">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1391" relation="include">
         </childnode>
-        <childnode refid="1359" relation="include">
+        <childnode refid="1396" relation="include">
         </childnode>
-        <childnode refid="1360" relation="include">
+        <childnode refid="1397" relation="include">
         </childnode>
-        <childnode refid="1361" relation="include">
+        <childnode refid="1398" relation="include">
         </childnode>
-        <childnode refid="1362" relation="include">
+        <childnode refid="1399" relation="include">
         </childnode>
       </node>
-      <node id="1354">
+      <node id="1391">
         <label>stdint.h</label>
       </node>
-      <node id="1366">
+      <node id="1403">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1353" relation="include">
+        <childnode refid="1390" relation="include">
         </childnode>
-        <childnode refid="1367" relation="include">
+        <childnode refid="1404" relation="include">
         </childnode>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1391" relation="include">
         </childnode>
       </node>
-      <node id="1365">
+      <node id="1402">
         <label>setjmp.h</label>
       </node>
-      <node id="1357">
+      <node id="1394">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1391" relation="include">
         </childnode>
-        <childnode refid="1353" relation="include">
+        <childnode refid="1390" relation="include">
         </childnode>
-        <childnode refid="1358" relation="include">
+        <childnode refid="1395" relation="include">
         </childnode>
-        <childnode refid="1364" relation="include">
+        <childnode refid="1401" relation="include">
         </childnode>
-        <childnode refid="1360" relation="include">
+        <childnode refid="1397" relation="include">
         </childnode>
-        <childnode refid="1365" relation="include">
+        <childnode refid="1402" relation="include">
         </childnode>
       </node>
-      <node id="1370">
+      <node id="1407">
         <label>errno.h</label>
       </node>
-      <node id="1369">
+      <node id="1406">
         <label>fcntl.h</label>
       </node>
-      <node id="1359">
+      <node id="1396">
         <label>stddef.h</label>
       </node>
-      <node id="1368">
+      <node id="1405">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1359" relation="include">
+        <childnode refid="1396" relation="include">
         </childnode>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1391" relation="include">
         </childnode>
-        <childnode refid="1360" relation="include">
+        <childnode refid="1397" relation="include">
         </childnode>
       </node>
-      <node id="1353">
+      <node id="1390">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1391" relation="include">
         </childnode>
-        <childnode refid="1355" relation="include">
+        <childnode refid="1392" relation="include">
         </childnode>
-        <childnode refid="1356" relation="include">
+        <childnode refid="1393" relation="include">
         </childnode>
       </node>
-      <node id="1360">
+      <node id="1397">
         <label>sys/types.h</label>
       </node>
-      <node id="1356">
+      <node id="1393">
         <label>string.h</label>
       </node>
-      <node id="1363">
+      <node id="1400">
         <label>unistd.h</label>
       </node>
-      <node id="1364">
+      <node id="1401">
         <label>signal.h</label>
       </node>
-      <node id="1352">
+      <node id="1389">
         <label>src/syscall/execve.c</label>
         <link refid="execve.c"/>
-        <childnode refid="1353" relation="include">
+        <childnode refid="1390" relation="include">
         </childnode>
-        <childnode refid="1357" relation="include">
+        <childnode refid="1394" relation="include">
         </childnode>
-        <childnode refid="1366" relation="include">
+        <childnode refid="1403" relation="include">
         </childnode>
-        <childnode refid="1363" relation="include">
+        <childnode refid="1400" relation="include">
         </childnode>
-        <childnode refid="1369" relation="include">
+        <childnode refid="1406" relation="include">
         </childnode>
-        <childnode refid="1370" relation="include">
+        <childnode refid="1407" relation="include">
         </childnode>
       </node>
-      <node id="1362">
+      <node id="1399">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1363" relation="include">
+        <childnode refid="1400" relation="include">
         </childnode>
-        <childnode refid="1360" relation="include">
+        <childnode refid="1397" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -207,21 +207,25 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/execve.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/syscall/execve.c" bodystart="27" bodyend="73"/>
+        <location file="/opt/prj/aPlus/src/syscall/execve.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/syscall/execve.c" bodystart="27" bodyend="77"/>
         <references refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" compoundref="task_8h" startline="117">task::argv</references>
-        <references refid="exec_8c_1a7473eb0ac8edeee7e0a7502c5ed08dc8" compoundref="exec_8c" startline="131" endline="173">elf32_load</references>
+        <references refid="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" compoundref="exec_8c" startline="210" endline="262">elf32_load</references>
         <references refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" compoundref="environ_8c" startline="3">environ</references>
         <references refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" compoundref="task_8h" startline="118">task::envp</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structtask_1a22a59fcfc18d5f671340669f96571768" compoundref="task_8h" startline="104">task::exe</references>
         <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="105">task::fd</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107">task::image</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" compoundref="task_8h" startline="110">task::length</references>
+        <references refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" compoundref="task_8h" startline="109">task::ptr</references>
         <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="74">size</references>
         <references refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" compoundref="close_8c" startline="26" endline="37">sys_close</references>
         <references refid="lseek_8c_1a73c739226f6bf069953b03bdc19e15d6" compoundref="lseek_8c" startline="18" endline="45">sys_lseek</references>
         <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="127" endline="154">sys_open</references>
         <references refid="read_8c_1a508cbee9c162869815810e15a3d0e1b0" compoundref="read_8c" startline="19" endline="32">sys_read</references>
+        <references refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" compoundref="task_8h" startline="108">task::vaddr</references>
       </memberdef>
       <memberdef kind="function" id="execve_8c_1ad7d0c3131e92bac14e1e9ac6b73f6ec8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -240,7 +244,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/execve.c" line="76" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/execve.c" line="80" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -289,27 +293,31 @@
 <codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="54"><highlight class="normal"></highlight></codeline>
 <codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="56"><highlight class="normal"></highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*entry)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*)<sp/>())<sp/><ref refid="exec_8c_1a7473eb0ac8edeee7e0a7502c5ed08dc8" kindref="member">elf32_load</ref>(image);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>vaddr,<sp/>vsize;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*entry)<sp/>()<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*)<sp/>())<sp/><ref refid="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" kindref="member">elf32_load</ref>(image,<sp/>&amp;vaddr,<sp/>&amp;vsize);</highlight></codeline>
 <codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(entry)<sp/>{</highlight></codeline>
 <codeline lineno="59"><highlight class="normal"></highlight></codeline>
 <codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a22a59fcfc18d5f671340669f96571768" kindref="member">exe</ref><sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
 <codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" kindref="member">argv</ref><sp/>=<sp/>argv;</highlight></codeline>
 <codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" kindref="member">envp</ref><sp/>=<sp/><ref refid="crt0_8c_1aa006daaf11f1e2e45a6ababaf463212b" kindref="member">environ</ref>;</highlight></codeline>
 <codeline lineno="63"><highlight class="normal"></highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(fd);</highlight></codeline>
-<codeline lineno="65"><highlight class="normal"></highlight></codeline>
-<codeline lineno="66"><highlight class="normal"></highlight></codeline>
-<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>entry();<sp/></highlight><highlight class="comment">/*<sp/>never<sp/>return<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" kindref="member">ptr</ref><sp/>=<sp/>image;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>=<sp/>vaddr;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref><sp/>=<sp/>vsize;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(fd);</highlight></codeline>
 <codeline lineno="69"><highlight class="normal"></highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(fd);</highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(image);</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="73"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"></highlight></codeline>
-<codeline lineno="75"><highlight class="normal"></highlight></codeline>
-<codeline lineno="76"><highlight class="normal"><ref refid="execve_8c_1ad7d0c3131e92bac14e1e9ac6b73f6ec8" kindref="member">SYSCALL</ref>(<ref refid="execve_8c_1af44a7e309f4bd49757f52b4178676ea7" kindref="member">sys_execve</ref>,<sp/>2);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>entry();<sp/></highlight><highlight class="comment">/*<sp/>never<sp/>return<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" kindref="member">sys_close</ref>(fd);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(image);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><ref refid="execve_8c_1ad7d0c3131e92bac14e1e9ac6b73f6ec8" kindref="member">SYSCALL</ref>(<ref refid="execve_8c_1af44a7e309f4bd49757f52b4178676ea7" kindref="member">sys_execve</ref>,<sp/>2);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/execve.c"/>
   </compounddef>

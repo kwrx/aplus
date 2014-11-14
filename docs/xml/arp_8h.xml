@@ -9,86 +9,86 @@
     <includedby refid="arp_8c" local="no">src/net/arp.c</includedby>
     <includedby refid="netif_8c" local="no">src/net/netif.c</includedby>
     <incdepgraph>
-      <node id="679">
+      <node id="687">
         <label>stdarg.h</label>
       </node>
-      <node id="676">
+      <node id="684">
         <label>stdint.h</label>
       </node>
-      <node id="681">
+      <node id="689">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="678" relation="include">
-        </childnode>
-        <childnode refid="676" relation="include">
-        </childnode>
-      </node>
-      <node id="682">
-        <label>stddef.h</label>
-      </node>
-      <node id="683">
-        <label>aplus/net/eth.h</label>
-        <link refid="eth_8h"/>
-        <childnode refid="676" relation="include">
-        </childnode>
-        <childnode refid="677" relation="include">
-        </childnode>
-      </node>
-      <node id="675">
-        <label>src/include/aplus/net/arp.h</label>
-        <link refid="arp.h"/>
-        <childnode refid="676" relation="include">
-        </childnode>
-        <childnode refid="677" relation="include">
-        </childnode>
-        <childnode refid="683" relation="include">
+        <childnode refid="686" relation="include">
         </childnode>
         <childnode refid="684" relation="include">
         </childnode>
       </node>
-      <node id="678">
+      <node id="690">
+        <label>stddef.h</label>
+      </node>
+      <node id="691">
+        <label>aplus/net/eth.h</label>
+        <link refid="eth_8h"/>
+        <childnode refid="684" relation="include">
+        </childnode>
+        <childnode refid="685" relation="include">
+        </childnode>
+      </node>
+      <node id="683">
+        <label>src/include/aplus/net/arp.h</label>
+        <link refid="arp.h"/>
+        <childnode refid="684" relation="include">
+        </childnode>
+        <childnode refid="685" relation="include">
+        </childnode>
+        <childnode refid="691" relation="include">
+        </childnode>
+        <childnode refid="692" relation="include">
+        </childnode>
+      </node>
+      <node id="686">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="676" relation="include">
+        <childnode refid="684" relation="include">
         </childnode>
-        <childnode refid="679" relation="include">
+        <childnode refid="687" relation="include">
         </childnode>
-        <childnode refid="680" relation="include">
+        <childnode refid="688" relation="include">
         </childnode>
       </node>
-      <node id="680">
+      <node id="688">
         <label>string.h</label>
       </node>
-      <node id="677">
+      <node id="685">
         <label>aplus/netif.h</label>
         <link refid="netif_8h"/>
-        <childnode refid="678" relation="include">
+        <childnode refid="686" relation="include">
         </childnode>
-        <childnode refid="681" relation="include">
+        <childnode refid="689" relation="include">
         </childnode>
-        <childnode refid="676" relation="include">
+        <childnode refid="684" relation="include">
         </childnode>
-        <childnode refid="682" relation="include">
+        <childnode refid="690" relation="include">
         </childnode>
       </node>
-      <node id="684">
+      <node id="692">
         <label>time.h</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="687">
+      <node id="695">
         <label>src/net/netif.c</label>
         <link refid="netif_8c"/>
       </node>
-      <node id="685">
+      <node id="693">
         <label>src/include/aplus/net/arp.h</label>
         <link refid="arp.h"/>
-        <childnode refid="686" relation="include">
+        <childnode refid="694" relation="include">
         </childnode>
-        <childnode refid="687" relation="include">
+        <childnode refid="695" relation="include">
         </childnode>
       </node>
-      <node id="686">
+      <node id="694">
         <label>src/net/arp.c</label>
         <link refid="arp_8c"/>
       </node>
@@ -318,9 +318,18 @@
           <type>(packed)</type>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Alloc memory from Kernel Heap. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of data to alloc. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Virtual Address of data. </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="68" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>

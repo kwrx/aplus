@@ -49,17 +49,17 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="54">
+      <node id="61">
         <label>list</label>
         <link refid="structlist"/>
-        <childnode refid="55" relation="usage">
+        <childnode refid="62" relation="usage">
           <edgelabel>+body</edgelabel>
         </childnode>
       </node>
-      <node id="55">
+      <node id="62">
         <label>list_body</label>
         <link refid="structlist__body"/>
-        <childnode refid="55" relation="usage">
+        <childnode refid="62" relation="usage">
           <edgelabel>+next</edgelabel>
         </childnode>
       </node>

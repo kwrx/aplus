@@ -23,7 +23,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="84">
+      <node id="91">
         <label>pthread_condattr</label>
         <link refid="structpthread__condattr"/>
       </node>

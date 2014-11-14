@@ -7,61 +7,11 @@
     <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
     <includedby refid="ipv6_8c" local="no">src/net/ipv6.c</includedby>
     <incdepgraph>
-      <node id="721">
+      <node id="729">
         <label>stdarg.h</label>
       </node>
-      <node id="718">
-        <label>stdint.h</label>
-      </node>
-      <node id="717">
-        <label>src/include/aplus/net/ipv6.h</label>
-        <link refid="ipv6.h"/>
-        <childnode refid="718" relation="include">
-        </childnode>
-        <childnode refid="719" relation="include">
-        </childnode>
-      </node>
-      <node id="723">
-        <label>aplus/pci.h</label>
-        <link refid="pci_8h"/>
-        <childnode refid="720" relation="include">
-        </childnode>
-        <childnode refid="718" relation="include">
-        </childnode>
-      </node>
-      <node id="724">
-        <label>stddef.h</label>
-      </node>
-      <node id="720">
-        <label>aplus.h</label>
-        <link refid="aplus_8h"/>
-        <childnode refid="718" relation="include">
-        </childnode>
-        <childnode refid="721" relation="include">
-        </childnode>
-        <childnode refid="722" relation="include">
-        </childnode>
-      </node>
-      <node id="722">
-        <label>string.h</label>
-      </node>
-      <node id="719">
-        <label>aplus/netif.h</label>
-        <link refid="netif_8h"/>
-        <childnode refid="720" relation="include">
-        </childnode>
-        <childnode refid="723" relation="include">
-        </childnode>
-        <childnode refid="718" relation="include">
-        </childnode>
-        <childnode refid="724" relation="include">
-        </childnode>
-      </node>
-    </incdepgraph>
-    <invincdepgraph>
       <node id="726">
-        <label>src/main.c</label>
-        <link refid="src_2main_8c"/>
+        <label>stdint.h</label>
       </node>
       <node id="725">
         <label>src/include/aplus/net/ipv6.h</label>
@@ -71,7 +21,57 @@
         <childnode refid="727" relation="include">
         </childnode>
       </node>
+      <node id="731">
+        <label>aplus/pci.h</label>
+        <link refid="pci_8h"/>
+        <childnode refid="728" relation="include">
+        </childnode>
+        <childnode refid="726" relation="include">
+        </childnode>
+      </node>
+      <node id="732">
+        <label>stddef.h</label>
+      </node>
+      <node id="728">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="726" relation="include">
+        </childnode>
+        <childnode refid="729" relation="include">
+        </childnode>
+        <childnode refid="730" relation="include">
+        </childnode>
+      </node>
+      <node id="730">
+        <label>string.h</label>
+      </node>
       <node id="727">
+        <label>aplus/netif.h</label>
+        <link refid="netif_8h"/>
+        <childnode refid="728" relation="include">
+        </childnode>
+        <childnode refid="731" relation="include">
+        </childnode>
+        <childnode refid="726" relation="include">
+        </childnode>
+        <childnode refid="732" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="734">
+        <label>src/main.c</label>
+        <link refid="src_2main_8c"/>
+      </node>
+      <node id="733">
+        <label>src/include/aplus/net/ipv6.h</label>
+        <link refid="ipv6.h"/>
+        <childnode refid="734" relation="include">
+        </childnode>
+        <childnode refid="735" relation="include">
+        </childnode>
+      </node>
+      <node id="735">
         <label>src/net/ipv6.c</label>
         <link refid="ipv6_8c"/>
       </node>
@@ -251,9 +251,18 @@
           <type>(packed)</type>
         </param>
         <briefdescription>
-        </briefdescription>
+<para>Alloc memory from Kernel Heap. </para>        </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of data to alloc. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Virtual Address of data. </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/include/aplus/net/ipv6.h" line="57" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>

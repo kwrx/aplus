@@ -6,6 +6,7 @@ var searchData=
   ['sched_2ec',['sched.c',['../usr_2src_2libposix_2src_2sched_8c.html',1,'']]],
   ['seekdir_2ec',['seekdir.c',['../seekdir_8c.html',1,'']]],
   ['serial_2ec',['serial.c',['../serial_8c.html',1,'']]],
+  ['sighandler_2ec',['sighandler.c',['../sighandler_8c.html',1,'']]],
   ['sleep_2ec',['sleep.c',['../sleep_8c.html',1,'']]],
   ['slirp_2ec',['slirp.c',['../slirp_8c.html',1,'']]],
   ['slirp_2eh',['slirp.h',['../slirp_8h.html',1,'']]],

@@ -166,7 +166,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="117">
+      <node id="124">
         <label>tty</label>
         <link refid="structtty"/>
       </node>

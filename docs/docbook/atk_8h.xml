@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="atk_8h">
+    <title>atk.h File Reference</title>
+    <programlisting>#include &lt;atk/widget.h&gt;</programlisting>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a29a69073b13d8b13b9732b4fdabae599">ATK_COLOR_BLACK</link> { 1.0f, 0.0f, 0.0f, 0.0f }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a8bd5836e5294a7a657fefd618925937d">ATK_COLOR_WHITE</link> { 1.0f, 1.0f, 1.0f, 1.0f }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1ae65816298e7a25c2ea3d12df5e0c8b28">ATK_COLOR_TRANSPARENT</link> { 0.0f, 0.0f, 0.0f, 0.0f }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a170621735809dd7efded8c8517347596">ATK_COLOR_A</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef int atk_v2si  <link linkend="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef atk_v4f  <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef void  <link linkend="atk_8h_1a2c8c224ba001105422a0814f71ae5887">atk_list_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libatk/src/include/atk.h</para>
+    </simplesect>
+</section>

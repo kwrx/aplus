@@ -4,14 +4,14 @@
     <compoundname>slirp.h</compoundname>
     <includedby refid="slirp_8c" local="yes">src/net/slirp/slirp.c</includedby>
     <invincdepgraph>
-      <node id="1210">
+      <node id="1227">
         <label>src/net/slirp/slirp.c</label>
         <link refid="slirp_8c"/>
       </node>
-      <node id="1209">
+      <node id="1226">
         <label>src/net/slirp/slirp.h</label>
         <link refid="slirp.h"/>
-        <childnode refid="1210" relation="include">
+        <childnode refid="1227" relation="include">
         </childnode>
       </node>
     </invincdepgraph>

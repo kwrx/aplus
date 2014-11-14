@@ -88,39 +88,39 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="20">
+      <node id="25">
         <label>inode</label>
         <link refid="structinode"/>
-        <childnode refid="20" relation="usage">
+        <childnode refid="25" relation="usage">
           <edgelabel>+finddir</edgelabel>
           <edgelabel>+link</edgelabel>
           <edgelabel>+parent</edgelabel>
           <edgelabel>+creat</edgelabel>
         </childnode>
-        <childnode refid="21" relation="usage">
+        <childnode refid="26" relation="usage">
           <edgelabel>+readdir</edgelabel>
         </childnode>
       </node>
-      <node id="19">
+      <node id="24">
         <label>task</label>
         <link refid="structtask"/>
-        <childnode refid="20" relation="usage">
+        <childnode refid="25" relation="usage">
           <edgelabel>+cwd</edgelabel>
           <edgelabel>+exe</edgelabel>
           <edgelabel>+fd</edgelabel>
         </childnode>
-        <childnode refid="19" relation="usage">
+        <childnode refid="24" relation="usage">
           <edgelabel>+parent</edgelabel>
         </childnode>
       </node>
-      <node id="21">
+      <node id="26">
         <label>dirent</label>
         <link refid="structdirent"/>
       </node>
-      <node id="18">
+      <node id="23">
         <label>bufio</label>
         <link refid="structbufio"/>
-        <childnode refid="19" relation="usage">
+        <childnode refid="24" relation="usage">
           <edgelabel>+task</edgelabel>
         </childnode>
       </node>

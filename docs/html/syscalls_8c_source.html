@@ -220,9 +220,9 @@ $(document).ready(function(){initNavTree('syscalls_8c_source.html','');});
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#ifdef __aplus__</span></div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<a class="code" href="syscalls_8c.html#a1ea836cfb65e3b32b607af3e81e144f1">syscall2</a>(80, aplus_readdir)</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;syscall2(81, aplus_getgroups)</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;syscall0(100, aplus_argv)</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;syscall0(101, aplus_envp)</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;syscall1(102, aplus_install_sighandler);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;syscall0(100, __get_argv)</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;syscall0(101, __get_envp)</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;syscall1(102, __install_sighandler);</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
@@ -243,7 +243,7 @@ $(document).ready(function(){initNavTree('syscalls_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_7eba538d4a0daa44b244b3c2ce5d4eb1.html">libcrt0</a></li><li class="navelem"><a class="el" href="dir_d8973e1d382d4046c5526cf7094d954c.html">src</a></li><li class="navelem"><a class="el" href="syscalls_8c.html">syscalls.c</a></li>
-    <li class="footer">Generated on Wed Nov 12 2014 18:07:56 for aPlus by
+    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

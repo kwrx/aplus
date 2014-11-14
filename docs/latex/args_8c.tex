@@ -1,0 +1,109 @@
+\hypertarget{args_8c}{\section{src/syscall/args.c File Reference}
+\label{args_8c}\index{src/syscall/args.\+c@{src/syscall/args.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$$\ast$ \hyperlink{args_8c_a12fe6c5461e35f6fba0b77aec0d3c2a5}{sys\+\_\+\+\_\+get\+\_\+argv} ()
+\item 
+char $\ast$$\ast$ \hyperlink{args_8c_a8ebacd09700f4f7c4ec2511974ba4d21}{sys\+\_\+\+\_\+get\+\_\+envp} ()
+\item 
+\hyperlink{args_8c_a02df3ac1abd0794e1ff35df04311a8fa}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{args_8c_a12fe6c5461e35f6fba0b77aec0d3c2a5}{sys\+\_\+\+\_\+get\+\_\+argv}, 100)
+\item 
+\hyperlink{args_8c_a6d18aae0595a8306aa274d697d4eadac}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{args_8c_a8ebacd09700f4f7c4ec2511974ba4d21}{sys\+\_\+\+\_\+get\+\_\+envp}, 101)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{args_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{args_8c_a12fe6c5461e35f6fba0b77aec0d3c2a5}{\index{args.\+c@{args.\+c}!sys\+\_\+\+\_\+get\+\_\+argv@{sys\+\_\+\+\_\+get\+\_\+argv}}
+\index{sys\+\_\+\+\_\+get\+\_\+argv@{sys\+\_\+\+\_\+get\+\_\+argv}!args.\+c@{args.\+c}}
+\subsubsection[{sys\+\_\+\+\_\+get\+\_\+argv}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$ sys\+\_\+\+\_\+get\+\_\+argv (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{args_8c_a12fe6c5461e35f6fba0b77aec0d3c2a5}
+
+
+Definition at line 16 of file args.\+c.
+
+
+
+References task\+::argv.
+
+
+\begin{DoxyCode}
+16                        \{
+17     \textcolor{keywordflow}{if}(!\hyperlink{args_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+18         \textcolor{keywordflow}{return} NULL;
+19         
+20     \textcolor{keywordflow}{return} \hyperlink{args_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a91e7540d20695c7439f7d0755a7a0545}{argv};
+21 \}
+\end{DoxyCode}
+\hypertarget{args_8c_a8ebacd09700f4f7c4ec2511974ba4d21}{\index{args.\+c@{args.\+c}!sys\+\_\+\+\_\+get\+\_\+envp@{sys\+\_\+\+\_\+get\+\_\+envp}}
+\index{sys\+\_\+\+\_\+get\+\_\+envp@{sys\+\_\+\+\_\+get\+\_\+envp}!args.\+c@{args.\+c}}
+\subsubsection[{sys\+\_\+\+\_\+get\+\_\+envp}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$ sys\+\_\+\+\_\+get\+\_\+envp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{args_8c_a8ebacd09700f4f7c4ec2511974ba4d21}
+
+
+Definition at line 23 of file args.\+c.
+
+
+
+References task\+::envp.
+
+
+\begin{DoxyCode}
+23                        \{
+24     \textcolor{keywordflow}{if}(!\hyperlink{args_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+25         \textcolor{keywordflow}{return} NULL;
+26         
+27     \textcolor{keywordflow}{return} \hyperlink{args_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a09fbc78d666a0b49e2e2064121d28364}{envp};
+28 \}
+\end{DoxyCode}
+\hypertarget{args_8c_a02df3ac1abd0794e1ff35df04311a8fa}{\index{args.\+c@{args.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!args.\+c@{args.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+\+\_\+get\+\_\+argv}}]{, }
+\item[{100}]{}
+\end{DoxyParamCaption}
+)}}\label{args_8c_a02df3ac1abd0794e1ff35df04311a8fa}
+\hypertarget{args_8c_a6d18aae0595a8306aa274d697d4eadac}{\index{args.\+c@{args.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!args.\+c@{args.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+\+\_\+get\+\_\+envp}}]{, }
+\item[{101}]{}
+\end{DoxyParamCaption}
+)}}\label{args_8c_a6d18aae0595a8306aa274d697d4eadac}
+
+
+\subsection{Variable Documentation}
+\hypertarget{args_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{args.\+c@{args.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!args.\+c@{args.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{args_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 35 of file sched.\+c.
+

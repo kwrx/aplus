@@ -8,11 +8,13 @@
         <xi:include href="md_usr_src_libpthread_README.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <chapter>
         <title>Class Documentation</title>
+        <xi:include href="struct____atk__widget__private.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="struct____DIR.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="struct____pthread__key.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="struct____syscall.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structarp__cache__entry.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structarp__header.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="structatk__widget.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structattribute.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structblock.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structBootInfo__t.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
@@ -20,6 +22,7 @@
         <xi:include href="structcard.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structdirent.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structelf32__hdr.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="structelf32__phdr.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structelf32__shdr.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structeth__header.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="structfsys.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
@@ -106,6 +109,7 @@
         <xi:include href="tty_8h.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="grub_8h.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="src_2main_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="usr_2src_2libatk_2test_2main_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="usr_2src_2libcrt0_2test_2main_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="usr_2src_2libpthread_2test_2main_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="heap_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
@@ -128,6 +132,7 @@
         <xi:include href="usr_2src_2libposix_2src_2sched_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="spinlock_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="__exit_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="args_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="chown_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="clone_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="close_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
@@ -150,6 +155,7 @@
         <xi:include href="src_2syscall_2readdir_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="usr_2src_2libposix_2src_2readdir_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="sbrk_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="sighandler_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="stat_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="symlink_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="time_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
@@ -159,6 +165,9 @@
         <xi:include href="wait_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="write_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="yield_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="clrconv_8h.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="atk_8h.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+        <xi:include href="widget_8h.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="crt0_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="syscalls_8c.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
         <xi:include href="dirent_8h.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>

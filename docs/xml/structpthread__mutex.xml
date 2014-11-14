@@ -88,7 +88,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="91">
+      <node id="98">
         <label>pthread_mutex</label>
         <link refid="structpthread__mutex"/>
       </node>

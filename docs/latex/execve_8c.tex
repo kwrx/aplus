@@ -61,7 +61,7 @@ Definition at line 27 of file execve.\+c.
 
 
 
-References task\+::argv, elf32\+\_\+load(), environ, task\+::envp, errno, task\+::exe, task\+::fd, kfree(), kmalloc(), size, sys\+\_\+close(), sys\+\_\+lseek(), sys\+\_\+open(), and sys\+\_\+read().
+References task\+::argv, elf32\+\_\+load(), environ, task\+::envp, errno, task\+::exe, task\+::fd, task\+::image, kfree(), kmalloc(), task\+::length, task\+::ptr, size, sys\+\_\+close(), sys\+\_\+lseek(), sys\+\_\+open(), sys\+\_\+read(), and task\+::vaddr.
 
 
 \begin{DoxyCode}
@@ -94,24 +94,28 @@ References task\+::argv, elf32\+\_\+load(), environ, task\+::envp, errno, task\+
 53     \}
 54 
 55     
-56 
-57     void (*entry) () = (\textcolor{keywordtype}{void} (*) ()) \hyperlink{exec_8c_a7473eb0ac8edeee7e0a7502c5ed08dc8}{elf32\_load}(image);
+56     \textcolor{keywordtype}{int} vaddr, vsize;
+57     void (*entry) () = (\textcolor{keywordtype}{void} (*) ()) \hyperlink{exec_8c_aeb05ad85647cdfbf15b432a9d2f32926}{elf32\_load}(image, &vaddr, &vsize);
 58     \textcolor{keywordflow}{if}(entry) \{
 59 
 60         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a22a59fcfc18d5f671340669f96571768}{exe} = \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
 61         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a91e7540d20695c7439f7d0755a7a0545}{argv} = argv;
 62         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a09fbc78d666a0b49e2e2064121d28364}{envp} = \hyperlink{crt0_8c_aa006daaf11f1e2e45a6ababaf463212b}{environ};
 63 
-64         \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
-65 
-66 
-67         entry(); \textcolor{comment}{/* never return */}
-68     \}
+64         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_afbc0623ab058e402e92ea084dc37ab6a}{ptr} = image;
+65         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_a340cbedbdc4b542793e7677dd4966ade}{vaddr} = vaddr;
+66         \hyperlink{execve_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{image}.\hyperlink{structtask_aa90dc3e7e232d6ba3f04700b3197b366}{length} = vsize;
+67 
+68         \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
 69 
-70     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
-71     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(image);
-72     \textcolor{keywordflow}{return} -1;
-73 \}
+70 
+71         entry(); \textcolor{comment}{/* never return */}
+72     \}
+73 
+74     \hyperlink{close_8c_a9d94cbe3ac3c59ac54d9e884a024d9c5}{sys\_close}(fd);
+75     \hyperlink{mm_8h_acee1960bdb3a19cb495341ec725cafef}{kfree}(image);
+76     \textcolor{keywordflow}{return} -1;
+77 \}
 \end{DoxyCode}
 \hypertarget{execve_8c_ad7d0c3131e92bac14e1e9ac6b73f6ec8}{\index{execve.\+c@{execve.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!execve.\+c@{execve.\+c}}

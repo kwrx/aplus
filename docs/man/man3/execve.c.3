@@ -1,4 +1,4 @@
-.TH "src/syscall/execve.c" 3 "Wed Nov 12 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/execve.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -78,7 +78,7 @@ Does not return on success, and the text, data, bss, and stack of the calling pr
 .PP
 Definition at line 27 of file execve\&.c\&.
 .PP
-References task::argv, elf32_load(), environ, task::envp, errno, task::exe, task::fd, kfree(), kmalloc(), size, sys_close(), sys_lseek(), sys_open(), and sys_read()\&.
+References task::argv, elf32_load(), environ, task::envp, errno, task::exe, task::fd, task::image, kfree(), kmalloc(), task::length, task::ptr, size, sys_close(), sys_lseek(), sys_open(), sys_read(), and task::vaddr\&.
 .PP
 .nf
 27                                                             {
@@ -110,24 +110,28 @@ References task::argv, elf32_load(), environ, task::envp, errno, task::exe, task
 53     }
 54 
 55     
-56 
-57     void (*entry) () = (void (*) ()) elf32_load(image);
+56     int vaddr, vsize;
+57     void (*entry) () = (void (*) ()) elf32_load(image, &vaddr, &vsize);
 58     if(entry) {
 59 
 60         current_task->exe = current_task->fd[fd];
 61         current_task->argv = argv;
 62         current_task->envp = environ;
 63 
-64         sys_close(fd);
-65 
-66 
-67         entry(); /* never return */
-68     }
+64         current_task->image\&.ptr = image;
+65         current_task->image\&.vaddr = vaddr;
+66         current_task->image\&.length = vsize;
+67 
+68         sys_close(fd);
 69 
-70     sys_close(fd);
-71     kfree(image);
-72     return -1;
-73 }
+70 
+71         entry(); /* never return */
+72     }
+73 
+74     sys_close(fd);
+75     kfree(image);
+76     return -1;
+77 }
 .fi
 .SS "SYSCALL (\fBsys_execve\fP, 2)"
 

@@ -127,7 +127,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="9">
+      <node id="11">
         <label>arp_header</label>
         <link refid="structarp__header"/>
       </node>

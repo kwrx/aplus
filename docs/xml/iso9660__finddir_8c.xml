@@ -155,7 +155,7 @@
         <references refid="devfs_8c_1a226c953aff43f9b1e9736908bb6802f3" compoundref="devfs_8c" startline="23" endline="32">devfs_getdevice</references>
         <references refid="fs_8c_1a8e53a98b93e6b136196b2ebd99e43dcd" compoundref="fs_8c" startline="16" endline="22">fs_read</references>
         <references refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" compoundref="iso9660_8h" startline="7">ISO9660_SECTOR_SIZE</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="structinode_1a5756f61233e40d01652094d29b5daf6c" compoundref="fs_8h" startline="48">inode::position</references>
         <references refid="structinode_1a53722b1b60b7136ce0204b66527bb400" compoundref="fs_8h" startline="47">inode::size</references>
@@ -221,7 +221,7 @@
         <references refid="iso9660__finddir_8c_1a2bb6ca6da6e6172eca945f7367e63d56" compoundref="iso9660__read_8c" startline="16" endline="48">iso9660_read</references>
         <references refid="iso9660__finddir_8c_1a7863db87f2e6fa050ede770aebcf1087" compoundref="iso9660__readdir_8c" startline="15" endline="68">iso9660_readdir</references>
         <references refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" compoundref="iso9660_8h" startline="7">ISO9660_SECTOR_SIZE</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="structinode_1a3533c53c5391601c66b3ae0f389c0843" compoundref="fs_8h" startline="72">inode::link</references>
         <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="42">inode::mode</references>

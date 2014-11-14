@@ -13,6 +13,7 @@ var searchData=
   ['vmm_5fdestroy',['vmm_destroy',['../paging_8c.html#a22fcc252d0f4746924875b97d803b18b',1,'paging.c']]],
   ['vmm_5fdisable',['vmm_disable',['../paging_8c.html#ae6c3d7080850f24c974dc0c53b653110',1,'paging.c']]],
   ['vmm_5fenable',['vmm_enable',['../paging_8c.html#aa760eb29c4563f9ab05cc3d9331944ac',1,'paging.c']]],
+  ['vmm_5ffree',['vmm_free',['../paging_8c.html#a2840d14db66d94b76ebcf3adf3e971e0',1,'paging.c']]],
   ['vmm_5finit',['vmm_init',['../paging_8c.html#aac183f585641487a954ca46c0d7bde31',1,'paging.c']]],
   ['vmm_5fmap',['vmm_map',['../paging_8c.html#ae969f54f1646d5d8a871bef828a24239',1,'paging.c']]],
   ['vmm_5fmapkernel',['vmm_mapkernel',['../paging_8c.html#a8828597ede1b2c5bcc5ea1a4ca7919a9',1,'paging.c']]],

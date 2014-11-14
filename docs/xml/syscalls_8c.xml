@@ -5,24 +5,24 @@
     <includes local="no">errno.h</includes>
     <includedby refid="crt0_8c" local="yes">usr/src/libcrt0/src/crt0.c</includedby>
     <incdepgraph>
-      <node id="1897">
+      <node id="1969">
         <label>errno.h</label>
       </node>
-      <node id="1896">
+      <node id="1968">
         <label>usr/src/libcrt0/src/syscalls.c</label>
         <link refid="syscalls.c"/>
-        <childnode refid="1897" relation="include">
+        <childnode refid="1969" relation="include">
         </childnode>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="1898">
+      <node id="1970">
         <label>usr/src/libcrt0/src/syscalls.c</label>
         <link refid="syscalls.c"/>
-        <childnode refid="1899" relation="include">
+        <childnode refid="1971" relation="include">
         </childnode>
       </node>
-      <node id="1899">
+      <node id="1971">
         <label>usr/src/libcrt0/src/crt0.c</label>
         <link refid="crt0_8c"/>
       </node>
@@ -292,9 +292,9 @@
 <codeline lineno="110"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>__aplus__</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="111"><highlight class="normal"><ref refid="syscalls_8c_1a1ea836cfb65e3b32b607af3e81e144f1" kindref="member">syscall2</ref>(80,<sp/>aplus_readdir)</highlight></codeline>
 <codeline lineno="112"><highlight class="normal">syscall2(81,<sp/>aplus_getgroups)</highlight></codeline>
-<codeline lineno="113"><highlight class="normal">syscall0(100,<sp/>aplus_argv)</highlight></codeline>
-<codeline lineno="114"><highlight class="normal">syscall0(101,<sp/>aplus_envp)</highlight></codeline>
-<codeline lineno="115"><highlight class="normal">syscall1(102,<sp/>aplus_install_sighandler);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal">syscall0(100,<sp/>__get_argv)</highlight></codeline>
+<codeline lineno="114"><highlight class="normal">syscall0(101,<sp/>__get_envp)</highlight></codeline>
+<codeline lineno="115"><highlight class="normal">syscall1(102,<sp/>__install_sighandler);</highlight></codeline>
 <codeline lineno="116"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="117"><highlight class="normal"></highlight></codeline>
 <codeline lineno="118"><highlight class="normal"></highlight></codeline>

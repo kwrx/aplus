@@ -344,9 +344,9 @@
         <references refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" compoundref="task_8h" startline="100">task::uid</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
         <references refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" compoundref="task_8h" startline="108">task::vaddr</references>
-        <references refid="paging_8c_1a200ca682c57c6acaa05f2f56c9f6f6de" compoundref="paging_8c" startline="151" endline="159">vmm_create</references>
+        <references refid="paging_8c_1a200ca682c57c6acaa05f2f56c9f6f6de" compoundref="paging_8c" startline="170" endline="178">vmm_create</references>
         <references refid="paging_8c_1ae969f54f1646d5d8a871bef828a24239" compoundref="paging_8c" startline="72" endline="106">vmm_map</references>
-        <references refid="paging_8c_1a8828597ede1b2c5bcc5ea1a4ca7919a9" compoundref="paging_8c" startline="138" endline="147">vmm_mapkernel</references>
+        <references refid="paging_8c_1a8828597ede1b2c5bcc5ea1a4ca7919a9" compoundref="paging_8c" startline="157" endline="166">vmm_mapkernel</references>
       </memberdef>
       <memberdef kind="function" id="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>

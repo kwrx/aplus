@@ -426,7 +426,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="123">
+      <node id="130">
         <label>vesaModeInfo_t</label>
         <link refid="structvesaModeInfo__t"/>
       </node>

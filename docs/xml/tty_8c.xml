@@ -389,7 +389,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/tty.c" line="221" column="1" bodyfile="/opt/prj/aPlus/src/fs/tty.c" bodystart="221" bodyend="230"/>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="66" endline="81">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
         <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
         <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
       </memberdef>

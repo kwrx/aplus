@@ -1,0 +1,98 @@
+.TH "src/syscall/args.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/args.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "char ** \fBsys__get_argv\fP ()"
+.br
+.ti -1c
+.RI "char ** \fBsys__get_envp\fP ()"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys__get_argv\fP, 100)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys__get_envp\fP, 101)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.RI "\fICurrent task address\&. \fP"
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "char** sys__get_argv ()"
+
+.PP
+Definition at line 16 of file args\&.c\&.
+.PP
+References task::argv\&.
+.PP
+.nf
+16                        {
+17     if(!current_task)
+18         return NULL;
+19         
+20     return current_task->argv;
+21 }
+.fi
+.SS "char** sys__get_envp ()"
+
+.PP
+Definition at line 23 of file args\&.c\&.
+.PP
+References task::envp\&.
+.PP
+.nf
+23                        {
+24     if(!current_task)
+25         return NULL;
+26         
+27     return current_task->envp;
+28 }
+.fi
+.SS "SYSCALL (\fBsys__get_argv\fP, 100)"
+
+.SS "SYSCALL (\fBsys__get_envp\fP, 101)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Current task address\&. 
+.PP
+Definition at line 35 of file sched\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

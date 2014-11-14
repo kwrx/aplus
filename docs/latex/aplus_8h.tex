@@ -46,7 +46,7 @@ ax \hyperlink{aplus_8h_abcecb037b3c7e732c79357cb49a12edd}{outsx} (l, \hyperlink{
 ax al \hyperlink{aplus_8h_a2909bcf2b714fa2ffe34d438c8aca706}{insx} (w, \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t}, ax) insx(l
 \item 
 ax al \hyperlink{aplus_8h_a93d929ad1fc57af9d4f1793c361fb4f2}{eax} struct \hyperlink{structregs}{regs} \hyperlink{aplus_8h_a828ca35a80f14c0f9432022c5f3823a4}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed)) regs\+\_\+t
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Alloc memory from Kernel Heap. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -229,6 +229,18 @@ Definition at line 66 of file aplus.\+h.
 )}}\label{aplus_8h_a828ca35a80f14c0f9432022c5f3823a4}
 
 
+Alloc memory from Kernel Heap. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Size of data to alloc. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Virtual Address of data. 
+\end{DoxyReturn}
+
+
 Definition at line 44 of file desc.\+c.
 
 
@@ -236,7 +248,7 @@ Definition at line 44 of file desc.\+c.
 46                        \{
 47     \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t} limit;
 48     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} base;
-49 \} \hyperlink{desc_8c_a7d771d9751c9e97e25096acd0dfd1a94}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
+49 \} \hyperlink{desc_8c_ae21df847b32e33e64ba0912dd628e610}{\_\_attribute\_\_}((packed)) gdt\_ptr\_t;
 \end{DoxyCode}
 \hypertarget{aplus_8h_a2909bcf2b714fa2ffe34d438c8aca706}{\index{aplus.\+h@{aplus.\+h}!insx@{insx}}
 \index{insx@{insx}!aplus.\+h@{aplus.\+h}}

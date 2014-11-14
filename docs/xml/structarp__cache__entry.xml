@@ -49,7 +49,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="7">
+      <node id="9">
         <label>arp_cache_entry</label>
         <link refid="structarp__cache__entry"/>
       </node>
