@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <errno.h>
 
+#include <grub.h>
+
 #define ELF32_ADDRSPACE_MIN_LENGTH		0x100000
 
 
@@ -66,6 +68,10 @@ typedef uint32_t Elf32_Word;
 #define PT_LOPROC			0x70000000
 #define PT_HIPROC			0x7FFFFFFF
 
+
+#define ELF32_ST_BIND(i)	((i >> 4))
+#define ELF32_ST_TYPE(i)	((i) & 0x0F)
+
 /**
  *	\brief Enable or disable debug for ELF.
  */
@@ -123,6 +129,18 @@ typedef struct elf32_phdr {
 	Elf32_Word p_align;
 } elf32_phdr_t;
 
+
+/**
+ *	\brief ELF32 Symbol
+ */
+typedef struct elf32_sym_t {
+	Elf32_Word st_name;
+	Elf32_Addr st_value;
+	Elf32_Word st_size;
+	uint8_t st_info;
+	uint8_t st_other;
+	Elf32_Half st_shndx;
+} elf32_sym_t;
 
 /**
  *	\brief Check for valid ELF32 header.
@@ -191,7 +209,7 @@ int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
 
 
 	if(ptr)
-		*ptr = p;
+		*ptr = (void*) p;
 
 	if(size)
 		*size = s;
@@ -219,7 +237,7 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 	elf32_hdr_t* hdr = (elf32_hdr_t*) image;
 
 	int iptr, isiz;
-	if(elf32_getspace(hdr, &iptr, &isiz) != 0)
+	if(elf32_getspace(hdr, (void**) &iptr, (size_t*) &isiz) != 0)
 		panic("elf: cannot found a valid address space"); 
 	vmm_alloc(iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 
@@ -236,19 +254,20 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 	int ss = hdr->e_shentsize;
 
 	for(int i = 0; i < sn; i++) {
-		
 		if(sec->sh_addr && sec->sh_offset) {
 
 #ifdef ELF_DEBUG
-			kprintf("elf: copy section to 0x%8x (%d Bytes)\n", sec->sh_addr, sec->sh_size);
+			kprintf("elf: copy section to 0x%8x [%d] (%d Bytes)\n", sec->sh_addr, sec->sh_type, sec->sh_size);
 #endif
-
 
 			if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
 				panic("elf: section overflow");
 			
 			
 			memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
+			
+			if(sec->sh_type == SHT_NOBITS)
+				memset((void*) sec->sh_addr, 0, sec->sh_size);
 		}
 
 		sec = (elf32_shdr_t*) ((uint32_t) sec + ss);
@@ -259,6 +278,47 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 #endif
 
 	return (void*) hdr->e_entry;
+}
+
+
+
+char* elf_kernel_lookup(uint32_t symaddr) {
+	elf32_shdr_t* shdr = (elf32_shdr_t*) mbd->addr;
+	
+	uint32_t shstrtab = shdr[mbd->shndx].sh_addr;
+	
+	const char* strtab = NULL;
+	elf32_sym_t* symtab = NULL;
+
+	uint32_t strtabsz = 0;
+	uint32_t symtabsz = 0;
+
+	for(int i = 0; i < mbd->num; i++) {
+		const char* name = (const char*) (shstrtab + shdr[i].sh_name);
+
+		if(strcmp(name, ".strtab") == 0) {
+			strtab = (const char*) shdr[i].sh_addr;
+			strtabsz = shdr[i].sh_size;
+		}
+
+		if(strcmp(name, ".symtab") == 0) {
+			symtab = (elf32_sym_t*) shdr[i].sh_addr;
+			symtabsz = shdr[i].sh_size;
+		}
+	}
+
+
+	for(int i = 0; i < (symtabsz / sizeof(elf32_sym_t)); i++) {
+		if(ELF32_ST_TYPE(symtab[i].st_info) != 0x02)
+			continue;
+
+		if((symaddr >= symtab[i].st_value) && (symaddr < (symtab[i].st_value + symtab[i].st_size))) {
+			const char* name = (const char*) ((uint32_t) strtab + symtab[i].st_name);
+			return (char*) name;
+		}
+	}
+
+	return NULL;
 }
 
 

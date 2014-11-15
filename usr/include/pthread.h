@@ -111,7 +111,7 @@ typedef struct pthread_cond {
 
 
 
-#define PTHREAD_BARRIER_SERIAL_THREAD		1
+#define PTHREAD_BARRIER_SERIAL_THREAD		~0
 
 typedef struct pthread_barrierattr {
 	int pshared;
@@ -121,6 +121,7 @@ typedef struct pthread_barrierattr {
 typedef struct pthread_barrier {
 	uint32_t curr_height;
 	uint32_t init_height;
+	pthread_t owner;
 } pthread_barrier_t;
 
 

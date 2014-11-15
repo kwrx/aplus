@@ -14,7 +14,7 @@ AR			:= $(TARGET)-ar
 endif
 
 
-CFLAGS		+= -DDEBUG -I $(SRCDIR)/include
+CFLAGS		+= -DDEBUG -I $(SRCDIR)/include -std=c99
 CXXFLAGS	+=
 LDFLAGS		+=
 ARFLAGS		+= -rcs
@@ -27,11 +27,11 @@ OFILES		:= $(CFILES:.c=.o)
 all: $(OUTPUT)
 
 $(OUTPUT) : $(OFILES)
-	@echo "AR\t" $(notdir $@)
+	@echo "AR   " $(notdir $@)
 	@$(AR) $(ARFLAGS) $@ $(OFILES)
 
 .c.o:
-	@echo "CC\t" $(notdir $<)
+	@echo "CC   " $(notdir $<)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 test: $(TSTDIR)/main

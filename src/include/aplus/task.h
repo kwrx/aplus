@@ -93,7 +93,9 @@ typedef struct task {
 	struct {
 		task_env_t* env;
 		uint32_t stack;
+
 		uint32_t cr3;
+		pid_t owner;
 	} context;
 
 

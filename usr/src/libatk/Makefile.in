@@ -1,4 +1,5 @@
-
+SHELL	:= /bin/bash
+PATH	:= /opt/cross/usr/bin:$(PATH)
 
 TARGET		:= i686-aplus
 PREFIX		:= /usr

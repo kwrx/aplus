@@ -128,6 +128,24 @@ static task_t* schedule_next() {
 
 
 /**
+ * 	\brief Send a signal to task.
+ * 	\param task Pointer of Task.
+ * 	\param sig Signal to send.
+ */
+void schedule_signal(task_t* task, int sig) {
+	if(!task)
+		return;
+
+	task->signal_sig = 0;
+	if(!task->signal_handler)
+		return;
+
+	task_switch_ack();
+	task->signal_handler(sig);
+}
+
+
+/**
  *	\brief Perform a scheduling and check TTL (Time To Live) for current task.
  */
 void schedule() {
@@ -138,14 +156,8 @@ void schedule() {
 		return;
 
 
-	if(current_task->signal_sig) {
-		if(current_task->signal_handler) {
-			current_task->signal_handler(current_task->signal_sig);
-			current_task->signal_sig = 0;
-		}
-	}
-		
-
+	if(current_task->signal_sig)
+		schedule_signal(current_task, current_task->signal_sig);
 
 	current_task->clock += 1;
 	
@@ -215,6 +227,22 @@ task_t* schedule_child() {
 	return NULL;
 }
 
+
+/**
+ *	\brief Release allocated resources from task.
+ * 	\param task Pointer to task structure.
+ */
+void schedule_release(task_t* task) {
+	if(!task)
+		return;
+
+	if(task->image.ptr)
+		kfree((void*) task->image.ptr);
+
+	if(task->image.vaddr && task->image.length)
+		vmm_free(task->image.vaddr, task->image.length);
+}
+
 /**
  *	\brief Terminate a task with an Exit Value.
  *	\param task Task to close.
@@ -229,10 +257,8 @@ void schedule_exit2(task_t* task, int status) {
 	task->state = TASK_STATE_DEAD;
 	task->exitcode = status;
 	
-	kfree((void*) task->image.ptr);
-	vmm_free(task->image.vaddr, task->image.length);
-
-	schedule_yield();
+	if(task->context.owner == task->pid)
+		schedule_release(task);
 }
 
 
@@ -243,6 +269,9 @@ void schedule_exit2(task_t* task, int status) {
  */
 void schedule_exit(int status) {
 	schedule_exit2(current_task, status);
+	schedule_yield();
+	
+	for(;;);
 }
 
 

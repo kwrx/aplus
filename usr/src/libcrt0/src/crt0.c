@@ -16,7 +16,7 @@ extern int __sigtramp(int sig);
 
 static int __default_sighandler__(int sig) {
 	signal(sig, __default_sighandler__);
-	exit(sig);
+	_exit(sig);
 }
 
 

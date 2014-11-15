@@ -141,7 +141,7 @@ void vmm_free(void* vaddr, size_t size) {
 	uint32_t frame = (uint32_t) vaddr;
 	uint32_t* pd = (uint32_t*) current_vmm;
 
-	for(int i = 0; i < size; i++) {
+	for(int i = 0; i < pages; i++) {
 		uint32_t* e = &pd[PDENTRY(frame)];
 
 		if((*e & 1) != 1)

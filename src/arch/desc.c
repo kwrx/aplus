@@ -149,7 +149,7 @@ __asm__ (
 
 
 void isr_handler(regs_t* r) {
-	panic(exception_messages[r->int_no]);
+	panic_r(exception_messages[r->int_no], r);
 }
 
 void irq_handler(regs_t* r) {
@@ -185,7 +185,7 @@ void pagefault_handler(regs_t* r) {
 	__asm__ __volatile__("mov eax, cr2" : "=a"(faultaddr));
 
 	kprintf("Page fault at address: 0x%x\n", faultaddr);
-	panic("Page Fault");
+	panic_r("Page Fault", r);
 }
 
 

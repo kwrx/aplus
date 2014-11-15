@@ -21,43 +21,14 @@ static void dump_errno() {
 /**
  *	\brief Print current registers.
  */
-static void dump_registers() {
-
+static void dump_registers(regs_t* r) {
 	kprintf("Registers:\n");
-
-	#define d(reg);								\
-		kprintf(#reg ": 0x%x\t\t", read_##reg());
-		
-	#define _d();								\
-		kprintf("\n");	
-			
-	d(eax);
-	d(ebx);
-	d(ecx);
-	d(edx);
-	d(esi);
-	d(edi);
-	_d();
-	d(eip);
-	d(eflags);
-	d(esp);
-	d(ebp);
-	_d();
-	d(cs);
-	d(ds);
-	d(es);
-	d(fs);
-	d(gs);
-	_d();
-	d(cr0);
-	d(cr2);
-	d(cr3);
-	d(cr4);
-	_d();
-	_d();
-	
-	#undef d
-	#undef _d
+	kprintf("eip: 0x%8x\n", r->eip);
+	kprintf("err: 0x%8x\n", r->err_code);
+	kprintf("int: 0x%8x\n", r->int_no);
+	kprintf("esp: 0x%8x\n", r->esp);
+	kprintf("usp: 0x%8x\n", r->useresp);
+	kprintf("\n\n");
 }
 
 
@@ -66,7 +37,22 @@ static void dump_registers() {
  */
 static void dump_stacktrace(int count) {
 	kprintf("Stack trace:\n");
-	kprintf("TODO\n\n");
+	
+	int* esp; 
+	__asm__("mov eax, ebp" : "=a"(esp));
+
+
+	for(int i = 0; i < count; i++) {
+		int eip = *(++esp);
+		kprintf("[%d] 0x%x - %s\n", i, eip, elf_kernel_lookup(eip));
+		
+
+		esp = *(--esp);
+		if(!esp)
+			break;
+	}
+
+	kprintf("\n\n");
 }
 
 
@@ -96,18 +82,30 @@ static void dump_task() {
 }
 
 
+
 /**
- *	\brief Go in Kernel Panic, halt system.
+ *	\brief Go in Kernel Panic, dump exception registers, halt system.
  */
-void panic(char* msg) {
+void panic_r(char* msg, regs_t* r) {
 	__asm__ ("cli");
 	kprintf("panic: \"%s\"\n", msg);
 	
 	
-	dump_registers();
+	if(r)
+		dump_registers(r);
+
 	dump_stacktrace(6);
 	dump_task();
 	dump_errno();
 	
 	for(;;);
 }
+
+/**
+ *	\brief Go in Kernel Panic, halt system.
+ */
+void panic(char* msg) {
+	panic_r(msg, NULL);
+}
+
+

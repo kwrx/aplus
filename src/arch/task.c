@@ -47,6 +47,9 @@ extern volatile inode_t* vfs_root;
 extern void task_context_switch(task_env_t** old, task_env_t** new);
 
 
+void task_switch_ack() {
+	outb(0x20, 0x20);
+}
 
 task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	if(entry == NULL)
@@ -92,26 +95,26 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	}
 
 
-	if(flags & CLONE_VM) {
-		child->image.vaddr = current_task->image.vaddr;
-		child->image.length = current_task->image.length;
-		child->image.ptr = current_task->image.ptr;
+	child->image.vaddr = current_task->image.vaddr;
+	child->image.length = current_task->image.length;
+	child->image.ptr = current_task->image.ptr;
 
+
+	if(flags & CLONE_VM) {
 		child->context.cr3 = current_task->context.cr3;
+		child->context.owner = current_task->pid;
 	} else {
 
+		child->context.owner = child->pid;
 		child->context.cr3 = vmm_create();
 		vmm_mapkernel(child->context.cr3);
 
-		child->image.vaddr = current_task->image.vaddr;
-		child->image.length = current_task->image.length;
 
-		if(current_task->image.ptr) {
+		if(current_task->image.vaddr && current_task->image.length) {
 			void* addr = (void*) kmalloc(child->image.length);
 			memcpy(addr, (void*) child->image.vaddr, child->image.length);
 
 			vmm_map(child->context.cr3, mm_paddr(addr), child->image.vaddr, child->image.length);
-			child->image.ptr = (uint32_t) mm_paddr(addr);
 		}
 	}
 
@@ -136,8 +139,9 @@ void task_switch(task_t* newtask) {
 	current_task = newtask;
 
 	vmm_switch(current_task->context.cr3);
-	outb(0x20, 0x20);
 
+
+	task_switch_ack();
 	task_context_switch(&old->context.env, &current_task->context.env);
 }
 
@@ -147,8 +151,8 @@ static jmp_buf __fork_buf;
 
 static int __fork_child() {
 
-	uint32_t oldesp = __fork_buf->esp;
 
+	uint32_t oldesp = __fork_buf->esp;
 	uint32_t stack = (uint32_t) mm_align(kmalloc(TASK_STACKSIZE));
 
 	for(int i = 0; i < TASK_STACKSIZE; i++)
@@ -167,13 +171,12 @@ task_t* task_fork() {
 		return NULL;
 
 	schedule_disable();
-	task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);		
+	task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);	
 
 	if(setjmp(__fork_buf) == 1) {
 		schedule_enable();
 		return NULL;
 	}
-
 
 	task_switch(child);
 	return child; 

@@ -25,10 +25,10 @@ typedef uint8_t macaddr_t[6];
 
 #define NETIF_FLAGS_ENABLE			1
 
-
+#ifdef DEBUG
 #define ARP_DEBUG
 #define RTL8139_DEBUG
-
+#endif
 
 typedef struct netif {
 	char name[32];

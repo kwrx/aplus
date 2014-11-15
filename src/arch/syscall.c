@@ -5,9 +5,9 @@
 
 #include <errno.h>
 
-
+#ifdef DEBUG
 #define SYSCALL_DEBUG
-
+#endif
 
 static void** syscall_handlers = NULL;
 
@@ -81,13 +81,13 @@ int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4) {
 int syscall_handler(regs_t* r) {
 
 #ifdef SYSCALL_DEBUG
-	kprintf("syscall: called %d (%x, %x, %x, %x, %x);", r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+	kprintf("syscall: %d call %d (%x, %x, %x, %x, %x);\n", sys_getpid(), r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
 #endif
 
 	int ret = syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
 
 #ifdef SYSCALL_DEBUG
-	kprintf(" returned %x\n", ret);
+	kprintf("% returned %x\n", ret);
 #endif
 
 	return ret;
