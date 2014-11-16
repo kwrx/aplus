@@ -14,8 +14,8 @@ var searchData=
   ['body',['body',['../structlist.html#a86cadf6e44fd6505728c5149b336d3db',1,'list']]],
   ['boot_5fdevice',['boot_device',['../structBootInfo__t.html#a11fa989df3074f1a90fcb646aa434b97',1,'BootInfo_t']]],
   ['boot_5floader_5fname',['boot_loader_name',['../structBootInfo__t.html#a49973d2d24c8f4159b125f2fe0a42e3d',1,'BootInfo_t']]],
-  ['bpp',['bpp',['../structvesaModeInfo__t.html#acbf51c6b217de951bd6b40ae60b2343d',1,'vesaModeInfo_t::bpp()'],['../grub_8h.html#a29d3773a35b844e2dbb12bb5d895ab50',1,'bpp():&#160;grub.h']]],
-  ['buffer',['buffer',['../structslirpcard.html#a3a9cd572ee740f4844706613f6c1a98d',1,'slirpcard::buffer()'],['../struct____atk__widget__private.html#ad4c3a44969eed941222e6070a9618fd8',1,'__atk_widget_private::buffer()']]],
+  ['bpp',['bpp',['../structvesaModeInfo__t.html#acbf51c6b217de951bd6b40ae60b2343d',1,'vesaModeInfo_t::bpp()'],['../structatk__gfx.html#a27d24c7a918386527067975cfd8da971',1,'atk_gfx::bpp()'],['../grub_8h.html#a29d3773a35b844e2dbb12bb5d895ab50',1,'bpp():&#160;grub.h']]],
+  ['buffer',['buffer',['../structslirpcard.html#a3a9cd572ee740f4844706613f6c1a98d',1,'slirpcard::buffer()'],['../structatk__bitmap.html#a3bed7ee0d49e89b2a1dd250ee2e58ab6',1,'atk_bitmap::buffer()'],['../struct____atk__widget__private.html#ad4c3a44969eed941222e6070a9618fd8',1,'__atk_widget_private::buffer()']]],
   ['buffers_5flength',['buffers_length',['../bufio_8c.html#ae7827a32f1a587623ae8c9ac72981bd1',1,'bufio.c']]],
   ['bus',['bus',['../structpci__device.html#a832940e219d52a08725a39fc97663d07',1,'pci_device']]]
 ];

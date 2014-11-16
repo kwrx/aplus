@@ -1,8 +1,8 @@
-.TH "src/arch/desc.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/i386/desc.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-src/arch/desc.c \- 
+src/arch/i386/desc.c \- 
 .SH SYNOPSIS
 .br
 .PP
@@ -466,11 +466,11 @@ References errno\&.
 .PP
 Definition at line 151 of file desc\&.c\&.
 .PP
-References panic()\&.
+References panic_r()\&.
 .PP
 .nf
 151                             {
-152     panic(exception_messages[r->int_no]);
+152     panic_r(exception_messages[r->int_no], r);
 153 }
 .fi
 .SS "void pagefault_handler (regs_t *r)"
@@ -478,7 +478,7 @@ References panic()\&.
 .PP
 Definition at line 183 of file desc\&.c\&.
 .PP
-References __asm__(), kprintf(), panic(), and uint32_t\&.
+References __asm__(), kprintf(), panic_r(), and uint32_t\&.
 .PP
 .nf
 183                                   {
@@ -486,7 +486,7 @@ References __asm__(), kprintf(), panic(), and uint32_t\&.
 185     __asm__ __volatile__("mov eax, cr2" : "=a"(faultaddr));
 186 
 187     kprintf("Page fault at address: 0x%x\n", faultaddr);
-188     panic("Page Fault");
+188     panic_r("Page Fault", r);
 189 }
 .fi
 .SS "\fBuint32_t\fP pit_getticks ()"
@@ -572,59 +572,42 @@ References __asm__(), and uint8_t\&.
 .PP
 Perform a scheduling and check TTL (Time To Live) for current task\&. 
 .PP
-Definition at line 133 of file sched\&.c\&.
+Definition at line 153 of file sched\&.c\&.
 .PP
-References task::clock, list_empty(), task::priority, sched_enabled, schedule_next(), task::signal_handler, task::signal_sig, and task_switch()\&.
+References task::clock, list_empty(), task::priority, sched_enabled, schedule_next(), schedule_signal(), task::signal_sig, and task_switch()\&.
 .PP
 .nf
-133                 {
-134     if(sched_enabled == 0)
-135         return;
-136         
-137     if(list_empty(task_queue))
-138         return;
-139 
-140 
-141     if(current_task->signal_sig) {
-142         if(current_task->signal_handler) {
-143             current_task->signal_handler(current_task->signal_sig);
-144             current_task->signal_sig = 0;
-145         }
-146     }
-147         
-148 
-149 
-150     current_task->clock += 1;
-151     
-152     if(current_task->clock % current_task->priority)
-153         return;
-154 
-155     
-156     task_switch(schedule_next());
-157 }
+153                 {
+154     if(sched_enabled == 0)
+155         return;
+156         
+157     if(list_empty(task_queue))
+158         return;
+159 
+160 
+161     if(current_task->signal_sig)
+162         schedule_signal(current_task, current_task->signal_sig);
+163 
+164     current_task->clock += 1;
+165     
+166     if(current_task->clock % current_task->priority)
+167         return;
+168 
+169     
+170     task_switch(schedule_next());
+171 }
 .fi
 .SS "void syscall_handler (regs_t *)"
 
 .PP
-Definition at line 81 of file syscall\&.c\&.
+Definition at line 95 of file syscall\&.c\&.
 .PP
-References kprintf(), and syscall_invoke()\&.
+References syscall_invoke()\&.
 .PP
 .nf
-81                                {
-82 
-83 #ifdef SYSCALL_DEBUG
-84     kprintf("syscall: called %d (%x, %x, %x, %x, %x);", r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
-85 #endif
-86 
-87     int ret = syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
-88 
-89 #ifdef SYSCALL_DEBUG
-90     kprintf(" returned %x\n", ret);
-91 #endif
-92 
-93     return ret;
-94 }
+95                                {
+96     return syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+97 }
 .fi
 .SH "Variable Documentation"
 .PP 

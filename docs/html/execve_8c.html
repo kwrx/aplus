@@ -122,6 +122,8 @@ $(document).ready(function(){initNavTree('execve_8c.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a1c466d3de8a7f4192d6e9bbfe413dfb0"><td class="memItemLeft" align="right" valign="top">static char **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execve_8c.html#a1c466d3de8a7f4192d6e9bbfe413dfb0">__args_dup</a> (char **a)</td></tr>
+<tr class="separator:a1c466d3de8a7f4192d6e9bbfe413dfb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af44a7e309f4bd49757f52b4178676ea7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="execve_8c.html#af44a7e309f4bd49757f52b4178676ea7">sys_execve</a> (char *filename, char **argv, char **<a class="el" href="environ_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a>)</td></tr>
 <tr class="memdesc:af44a7e309f4bd49757f52b4178676ea7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the program pointed to by filename.<br />
  filename must be either a binary executable, or a script starting with a line of the form.<br />
@@ -137,6 +139,52 @@ Variables</h2></td></tr>
 <tr class="separator:a4743b3673a8794b8e7bd0b6c91a63cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a1c466d3de8a7f4192d6e9bbfe413dfb0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static char** __args_dup </td>
+          <td>(</td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>a</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="execve_8c_source.html#l00013">13</a> of file <a class="el" href="execve_8c_source.html">execve.c</a>.</p>
+
+<p>References <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                                   {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">if</span>(!a)</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordflow">return</span> NULL;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">char</span>** p = (<span class="keywordtype">char</span>**) <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(255 * <span class="keyword">sizeof</span>(<span class="keywordtype">char</span>*));</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    memset(p, 0, 255 * <span class="keyword">sizeof</span>(<span class="keywordtype">char</span>*));</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">int</span> i = 0;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">while</span>(a[i]) {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        p[i] = (<span class="keywordtype">char</span>*) <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(strlen(a[i]) + 1);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        strcpy(p[i], a[i]);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        i++;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    }</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> p;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="ttc" id="mm_8h_html_a1f5d4240b2decc62c0e6eae06c72916c"><div class="ttname"><a href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a></div><div class="ttdeci">void * kmalloc(size_t)</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a class="anchor" id="af44a7e309f4bd49757f52b4178676ea7"></a>
 <div class="memitem">
 <div class="memproto">
@@ -182,79 +230,83 @@ Variables</h2></td></tr>
 <dl class="section warning"><dt>Warning</dt><dd>Both argv and environ must be terminated by a null pointer. </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>Does not return on success, and the text, data, bss, and stack of the calling process are overwritten by that of the program loaded. </dd></dl>
 
-<p>Definition at line <a class="el" href="execve_8c_source.html#l00027">27</a> of file <a class="el" href="execve_8c_source.html">execve.c</a>.</p>
+<p>Definition at line <a class="el" href="execve_8c_source.html#l00047">47</a> of file <a class="el" href="execve_8c_source.html">execve.c</a>.</p>
 
-<p>References <a class="el" href="task_8h_source.html#l00117">task::argv</a>, <a class="el" href="exec_8c_source.html#l00210">elf32_load()</a>, <a class="el" href="environ_8c_source.html#l00003">environ</a>, <a class="el" href="task_8h_source.html#l00118">task::envp</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00104">task::exe</a>, <a class="el" href="task_8h_source.html#l00105">task::fd</a>, <a class="el" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">task::image</a>, <a class="el" href="mm_8c_source.html#l00079">kfree()</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="task_8h_source.html#l00110">task::length</a>, <a class="el" href="task_8h_source.html#l00109">task::ptr</a>, <a class="el" href="iso9660_8h_source.html#l00074">size</a>, <a class="el" href="close_8c_source.html#l00026">sys_close()</a>, <a class="el" href="lseek_8c_source.html#l00018">sys_lseek()</a>, <a class="el" href="open_8c_source.html#l00127">sys_open()</a>, <a class="el" href="read_8c_source.html#l00019">sys_read()</a>, and <a class="el" href="task_8h_source.html#l00108">task::vaddr</a>.</p>
-<div class="fragment"><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                                                            {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">int</span> fd = <a class="code" href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a>(filename, O_RDONLY, 0644);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">if</span>(fd &lt; 0) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOENT;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="lseek_8c.html#a73c739226f6bf069953b03bdc19e15d6">sys_lseek</a>(fd, 0, SEEK_END);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">size_t</span> <a class="code" href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a> = <a class="code" href="lseek_8c.html#a73c739226f6bf069953b03bdc19e15d6">sys_lseek</a>(fd, 0, SEEK_CUR);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="lseek_8c.html#a73c739226f6bf069953b03bdc19e15d6">sys_lseek</a>(fd, 0, SEEK_SET);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">void</span>* image = <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(size);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span>(!image) {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOMEM;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="read_8c.html#a508cbee9c162869815810e15a3d0e1b0">sys_read</a>(fd, image, size) &lt; size) {</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <a class="code" href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a>(image);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EIO;</div>
+<p>References <a class="el" href="execve_8c_source.html#l00013">__args_dup()</a>, <a class="el" href="task_8h_source.html#l00119">task::argv</a>, <a class="el" href="exec_8c_source.html#l00232">elf32_load()</a>, <a class="el" href="environ_8c_source.html#l00003">environ</a>, <a class="el" href="task_8h_source.html#l00120">task::envp</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00106">task::exe</a>, <a class="el" href="task_8h_source.html#l00107">task::fd</a>, <a class="el" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">task::image</a>, <a class="el" href="mm_8c_source.html#l00151">kfree()</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="task_8h_source.html#l00112">task::length</a>, <a class="el" href="task_8h_source.html#l00111">task::ptr</a>, <a class="el" href="iso9660_8h_source.html#l00073">size</a>, <a class="el" href="close_8c_source.html#l00026">sys_close()</a>, <a class="el" href="lseek_8c_source.html#l00018">sys_lseek()</a>, <a class="el" href="open_8c_source.html#l00127">sys_open()</a>, <a class="el" href="read_8c_source.html#l00019">sys_read()</a>, and <a class="el" href="task_8h_source.html#l00110">task::vaddr</a>.</p>
+<div class="fragment"><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                                            {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">int</span> fd = <a class="code" href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a>(filename, O_RDONLY, 0644);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">if</span>(fd &lt; 0) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOENT;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    }</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">int</span> vaddr, vsize;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    void (*entry) () = (<span class="keywordtype">void</span> (*) ()) <a class="code" href="exec_8c.html#aeb05ad85647cdfbf15b432a9d2f32926">elf32_load</a>(image, &amp;vaddr, &amp;vsize);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">if</span>(entry) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a22a59fcfc18d5f671340669f96571768">exe</a> = <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">fd</a>[fd];</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a91e7540d20695c7439f7d0755a7a0545">argv</a> = argv;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a09fbc78d666a0b49e2e2064121d28364">envp</a> = <a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a>;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">image</a>.<a class="code" href="structtask.html#afbc0623ab058e402e92ea084dc37ab6a">ptr</a> = image;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">image</a>.<a class="code" href="structtask.html#a340cbedbdc4b542793e7677dd4966ade">vaddr</a> = vaddr;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">image</a>.<a class="code" href="structtask.html#aa90dc3e7e232d6ba3f04700b3197b366">length</a> = vsize;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="lseek_8c.html#a73c739226f6bf069953b03bdc19e15d6">sys_lseek</a>(fd, 0, SEEK_END);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">size_t</span> <a class="code" href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a> = <a class="code" href="lseek_8c.html#a73c739226f6bf069953b03bdc19e15d6">sys_lseek</a>(fd, 0, SEEK_CUR);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="lseek_8c.html#a73c739226f6bf069953b03bdc19e15d6">sys_lseek</a>(fd, 0, SEEK_SET);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span>* image = <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(size);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">if</span>(!image) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOMEM;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="read_8c.html#a508cbee9c162869815810e15a3d0e1b0">sys_read</a>(fd, image, size) &lt; size) {</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        entry(); <span class="comment">/* never return */</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a>(image);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <a class="code" href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a>(image);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EIO;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">int</span> vaddr, vsize;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    void (*entry) () = (<span class="keywordtype">void</span> (*) ()) <a class="code" href="exec_8c.html#aeb05ad85647cdfbf15b432a9d2f32926">elf32_load</a>(image, &amp;vaddr, &amp;vsize);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">if</span>(entry) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        argv = <a class="code" href="execve_8c.html#a1c466d3de8a7f4192d6e9bbfe413dfb0">__args_dup</a>(argv);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a> = <a class="code" href="execve_8c.html#a1c466d3de8a7f4192d6e9bbfe413dfb0">__args_dup</a>(<a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a22a59fcfc18d5f671340669f96571768">exe</a> = <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">fd</a>[fd];</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a91e7540d20695c7439f7d0755a7a0545">argv</a> = argv;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a09fbc78d666a0b49e2e2064121d28364">envp</a> = <a class="code" href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">image</a>.<a class="code" href="structtask.html#afbc0623ab058e402e92ea084dc37ab6a">ptr</a> = (int) image;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">image</a>.<a class="code" href="structtask.html#a340cbedbdc4b542793e7677dd4966ade">vaddr</a> = vaddr;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <a class="code" href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">image</a>.<a class="code" href="structtask.html#aa90dc3e7e232d6ba3f04700b3197b366">length</a> = vsize;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        entry(); <span class="comment">/* never return */</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a>(image);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
 <div class="ttc" id="crt0_8c_html_aa006daaf11f1e2e45a6ababaf463212b"><div class="ttname"><a href="crt0_8c.html#aa006daaf11f1e2e45a6ababaf463212b">environ</a></div><div class="ttdeci">char ** environ</div><div class="ttdef"><b>Definition:</b> <a href="environ_8c_source.html#l00003">environ.c:3</a></div></div>
-<div class="ttc" id="structtask_html_aa90dc3e7e232d6ba3f04700b3197b366"><div class="ttname"><a href="structtask.html#aa90dc3e7e232d6ba3f04700b3197b366">task::length</a></div><div class="ttdeci">uint32_t length</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00110">task.h:110</a></div></div>
-<div class="ttc" id="structtask_html_a340cbedbdc4b542793e7677dd4966ade"><div class="ttname"><a href="structtask.html#a340cbedbdc4b542793e7677dd4966ade">task::vaddr</a></div><div class="ttdeci">uint32_t vaddr</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00108">task.h:108</a></div></div>
-<div class="ttc" id="exec_8c_html_aeb05ad85647cdfbf15b432a9d2f32926"><div class="ttname"><a href="exec_8c.html#aeb05ad85647cdfbf15b432a9d2f32926">elf32_load</a></div><div class="ttdeci">void * elf32_load(void *image, int *vaddr, int *vsize)</div><div class="ttdoc">Load a ELF32 Executable image. </div><div class="ttdef"><b>Definition:</b> <a href="exec_8c_source.html#l00210">exec.c:210</a></div></div>
+<div class="ttc" id="structtask_html_aa90dc3e7e232d6ba3f04700b3197b366"><div class="ttname"><a href="structtask.html#aa90dc3e7e232d6ba3f04700b3197b366">task::length</a></div><div class="ttdeci">uint32_t length</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00112">task.h:112</a></div></div>
+<div class="ttc" id="structtask_html_a340cbedbdc4b542793e7677dd4966ade"><div class="ttname"><a href="structtask.html#a340cbedbdc4b542793e7677dd4966ade">task::vaddr</a></div><div class="ttdeci">uint32_t vaddr</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00110">task.h:110</a></div></div>
+<div class="ttc" id="exec_8c_html_aeb05ad85647cdfbf15b432a9d2f32926"><div class="ttname"><a href="exec_8c.html#aeb05ad85647cdfbf15b432a9d2f32926">elf32_load</a></div><div class="ttdeci">void * elf32_load(void *image, int *vaddr, int *vsize)</div><div class="ttdoc">Load a ELF32 Executable image. </div><div class="ttdef"><b>Definition:</b> <a href="exec_8c_source.html#l00232">exec.c:232</a></div></div>
 <div class="ttc" id="structtask_html_a3eac6c8a544ff49a836c5eed9ec48107"><div class="ttname"><a href="structtask.html#a3eac6c8a544ff49a836c5eed9ec48107">task::image</a></div><div class="ttdeci">struct task::@5 image</div></div>
-<div class="ttc" id="structtask_html_a91e7540d20695c7439f7d0755a7a0545"><div class="ttname"><a href="structtask.html#a91e7540d20695c7439f7d0755a7a0545">task::argv</a></div><div class="ttdeci">char ** argv</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00117">task.h:117</a></div></div>
+<div class="ttc" id="structtask_html_a91e7540d20695c7439f7d0755a7a0545"><div class="ttname"><a href="structtask.html#a91e7540d20695c7439f7d0755a7a0545">task::argv</a></div><div class="ttdeci">char ** argv</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00119">task.h:119</a></div></div>
 <div class="ttc" id="read_8c_html_a508cbee9c162869815810e15a3d0e1b0"><div class="ttname"><a href="read_8c.html#a508cbee9c162869815810e15a3d0e1b0">sys_read</a></div><div class="ttdeci">int sys_read(int fd, void *ptr, size_t size)</div><div class="ttdef"><b>Definition:</b> <a href="read_8c_source.html#l00019">read.c:19</a></div></div>
-<div class="ttc" id="structtask_html_a22a59fcfc18d5f671340669f96571768"><div class="ttname"><a href="structtask.html#a22a59fcfc18d5f671340669f96571768">task::exe</a></div><div class="ttdeci">inode_t * exe</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00104">task.h:104</a></div></div>
-<div class="ttc" id="iso9660_8h_html_ae5dc6ffcd9b7605c7787791e40cc6bb0"><div class="ttname"><a href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a></div><div class="ttdeci">uint8_t size</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00074">iso9660.h:74</a></div></div>
+<div class="ttc" id="execve_8c_html_a1c466d3de8a7f4192d6e9bbfe413dfb0"><div class="ttname"><a href="execve_8c.html#a1c466d3de8a7f4192d6e9bbfe413dfb0">__args_dup</a></div><div class="ttdeci">static char ** __args_dup(char **a)</div><div class="ttdef"><b>Definition:</b> <a href="execve_8c_source.html#l00013">execve.c:13</a></div></div>
+<div class="ttc" id="structtask_html_a22a59fcfc18d5f671340669f96571768"><div class="ttname"><a href="structtask.html#a22a59fcfc18d5f671340669f96571768">task::exe</a></div><div class="ttdeci">inode_t * exe</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00106">task.h:106</a></div></div>
+<div class="ttc" id="iso9660_8h_html_ae5dc6ffcd9b7605c7787791e40cc6bb0"><div class="ttname"><a href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a></div><div class="ttdeci">uint8_t size</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00073">iso9660.h:73</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 <div class="ttc" id="mm_8h_html_a1f5d4240b2decc62c0e6eae06c72916c"><div class="ttname"><a href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a></div><div class="ttdeci">void * kmalloc(size_t)</div></div>
 <div class="ttc" id="lseek_8c_html_a73c739226f6bf069953b03bdc19e15d6"><div class="ttname"><a href="lseek_8c.html#a73c739226f6bf069953b03bdc19e15d6">sys_lseek</a></div><div class="ttdeci">int sys_lseek(int fd, int pos, int dir)</div><div class="ttdef"><b>Definition:</b> <a href="lseek_8c_source.html#l00018">lseek.c:18</a></div></div>
-<div class="ttc" id="structtask_html_a09fbc78d666a0b49e2e2064121d28364"><div class="ttname"><a href="structtask.html#a09fbc78d666a0b49e2e2064121d28364">task::envp</a></div><div class="ttdeci">char ** envp</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00118">task.h:118</a></div></div>
-<div class="ttc" id="execve_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
-<div class="ttc" id="structtask_html_afbc0623ab058e402e92ea084dc37ab6a"><div class="ttname"><a href="structtask.html#afbc0623ab058e402e92ea084dc37ab6a">task::ptr</a></div><div class="ttdeci">uint32_t ptr</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00109">task.h:109</a></div></div>
-<div class="ttc" id="mm_8h_html_acee1960bdb3a19cb495341ec725cafef"><div class="ttname"><a href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a></div><div class="ttdeci">void kfree(void *)</div><div class="ttdoc">Free memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00079">mm.c:79</a></div></div>
+<div class="ttc" id="structtask_html_a09fbc78d666a0b49e2e2064121d28364"><div class="ttname"><a href="structtask.html#a09fbc78d666a0b49e2e2064121d28364">task::envp</a></div><div class="ttdeci">char ** envp</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00120">task.h:120</a></div></div>
+<div class="ttc" id="execve_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="execve_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00037">sched.c:37</a></div></div>
+<div class="ttc" id="structtask_html_afbc0623ab058e402e92ea084dc37ab6a"><div class="ttname"><a href="structtask.html#afbc0623ab058e402e92ea084dc37ab6a">task::ptr</a></div><div class="ttdeci">uint32_t ptr</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00111">task.h:111</a></div></div>
+<div class="ttc" id="mm_8h_html_acee1960bdb3a19cb495341ec725cafef"><div class="ttname"><a href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a></div><div class="ttdeci">void kfree(void *)</div><div class="ttdoc">Free memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00151">mm.c:151</a></div></div>
 <div class="ttc" id="open_8c_html_ab7835c4352479c7a3d7af78c138e81c1"><div class="ttname"><a href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a></div><div class="ttdeci">int sys_open(char *filename, int flags, mode_t mode)</div><div class="ttdef"><b>Definition:</b> <a href="open_8c_source.html#l00127">open.c:127</a></div></div>
 <div class="ttc" id="close_8c_html_a9d94cbe3ac3c59ac54d9e884a024d9c5"><div class="ttname"><a href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a></div><div class="ttdeci">int sys_close(int fd)</div><div class="ttdoc">This function shall deallocate the file descriptor indicated by fildes. To deallocate means to make t...</div><div class="ttdef"><b>Definition:</b> <a href="close_8c_source.html#l00026">close.c:26</a></div></div>
-<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00105">task.h:105</a></div></div>
+<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00107">task.h:107</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -297,7 +349,7 @@ Variables</h2></td></tr>
 
 <p>Current task address. </p>
 
-<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00035">35</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00037">37</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
 
 </div>
 </div>
@@ -307,7 +359,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="execve_8c.html">execve.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

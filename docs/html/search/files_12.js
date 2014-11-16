@@ -7,6 +7,7 @@ var searchData=
   ['test_2ec',['test.c',['../initrd_2test_8c.html',1,'']]],
   ['time_2ec',['time.c',['../time_8c.html',1,'']]],
   ['times_2ec',['times.c',['../times_8c.html',1,'']]],
-  ['tty_2ec',['tty.c',['../tty_8c.html',1,'']]],
+  ['tty_2ec',['tty.c',['../src_2fs_2tty_8c.html',1,'']]],
+  ['tty_2ec',['tty.c',['../usr_2src_2libposix_2src_2tty_8c.html',1,'']]],
   ['tty_2eh',['tty.h',['../tty_8h.html',1,'']]]
 ];

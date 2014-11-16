@@ -121,66 +121,99 @@ $(document).ready(function(){initNavTree('clrconv_8h_source.html','');});
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="clrconv_8h.html#ae1e5d1080f853c20f27978351f278d43">   14</a></span>&#160;<span class="preprocessor">#define V4F_TO_ARGB(c)                      \</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">    (                                       \</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">        ((int32_t)(c[3] * 0xFF) &lt;&lt; 24)  |   \</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">        ((int32_t)(c[2] * 0xFF) &lt;&lt; 16)  |   \</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">        ((int32_t)(c[1] * 0xFF) &lt;&lt; 8)   |   \</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">        ((int32_t)(c[0] * 0xFF))        |   \</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="clrconv_8h.html#ae1e5d1080f853c20f27978351f278d43">   14</a></span>&#160;<span class="preprocessor">#define V4F_TO_ARGB(c)                                      \</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">    (                                                       \</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">        ((int32_t)(c[ATK_COLOR_A] * 0xFF) &lt;&lt; 24)    |       \</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">        ((int32_t)(c[ATK_COLOR_R] * 0xFF) &lt;&lt; 16)    |       \</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">        ((int32_t)(c[ATK_COLOR_G] * 0xFF) &lt;&lt; 8)     |       \</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">        ((int32_t)(c[ATK_COLOR_B] * 0xFF))                  \</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">    )</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="clrconv_8h.html#aa375c3354e6d58c2f6a15e61fc5b95d4">   22</a></span>&#160;<span class="preprocessor">#define V4F_TO_RGB(c)                       \</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">    (                                       \</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">        ((int32_t)(c[2] * 0xFF) &lt;&lt; 16)  |   \</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">        ((int32_t)(c[1] * 0xFF) &lt;&lt; 8)   |   \</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">        ((int32_t)(c[0] * 0xFF))        |   \</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="clrconv_8h.html#aa375c3354e6d58c2f6a15e61fc5b95d4">   22</a></span>&#160;<span class="preprocessor">#define V4F_TO_RGB(c)                                       \</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">    (                                                       \</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">        ((int32_t)(c[ATK_COLOR_R] * 0xFF) &lt;&lt; 16)    |       \</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">        ((int32_t)(c[ATK_COLOR_G] * 0xFF) &lt;&lt; 8)     |       \</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">        ((int32_t)(c[ATK_COLOR_B] * 0xFF))                  \</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">    )</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="clrconv_8h.html#a37a361b71cb30457e00beba77d3ccfac">   29</a></span>&#160;<span class="preprocessor">#define V4F_TO_R5G6B5(c)                    \</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">    (                                       \</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">        ((int16_t)(c[2] * 0x1F) &lt;&lt; 11)  |   \</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">        ((int16_t)(c[1] * 0x3F) &lt;&lt; 5)   |   \</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">        ((int16_t)(c[0] * 0x1F))        |   \</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="clrconv_8h.html#a37a361b71cb30457e00beba77d3ccfac">   29</a></span>&#160;<span class="preprocessor">#define V4F_TO_R5G6B5(c)                                    \</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">    (                                                       \</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">        ((int16_t)(c[ATK_COLOR_R] * 0x1F) &lt;&lt; 11)    |       \</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">        ((int16_t)(c[ATK_COLOR_R] * 0x3F) &lt;&lt; 5)     |       \</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">        ((int16_t)(c[ATK_COLOR_R] * 0x1F))                  \</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">    )</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="clrconv_8h.html#ab7d4dfdb7e512b070be9ba847e71547f">   38</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> <a class="code" href="clrconv_8h.html#ab7d4dfdb7e512b070be9ba847e71547f">__alphablend</a>(<a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>, <a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> s, <span class="keywordtype">float</span> a) {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">if</span>(a == 0.0f)</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span>(a == 1.0f)</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">return</span> s;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="clrconv_8h.html#accad078885c0425eb1861291a1769717">   37</a></span>&#160;<span class="preprocessor">#define ARGB_TO_V4F(c)                          \</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">    {                                           \</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">        ((float) ((c &gt;&gt; 24) &amp; 0xFF)) / 0xFF,    \</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">        ((float) ((c &gt;&gt; 16) &amp; 0xFF)) / 0xFF,    \</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">        ((float) ((c &gt;&gt; 8) &amp; 0xFF)) / 0xFF,     \</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">        ((float) (c &amp; 0xFF)) / 0xFF             \</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">    }</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">float</span> ia = 1.0f - a;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> r = <a class="code" href="atk_8h.html#a29a69073b13d8b13b9732b4fdabae599">ATK_COLOR_BLACK</a>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    r[<a class="code" href="atk_8h.html#a170621735809dd7efded8c8517347596">ATK_COLOR_A</a>] = 1.0f;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    r[<a class="code" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a>] = (s[<a class="code" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a>] * a + d[<a class="code" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a>] * ia);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    r[<a class="code" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a>] = (s[<a class="code" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a>] * a + d[<a class="code" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a>] * ia);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    r[<a class="code" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a>] = (s[<a class="code" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a>] * a + d[<a class="code" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a>] * ia);</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="clrconv_8h.html#a19e916ae304100c410afd14f3afaa3a8">   45</a></span>&#160;<span class="preprocessor">#define RGB_TO_V4F(c)                           \</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">    {                                           \</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">        1.0,                                    \</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">        ((float) ((c &gt;&gt; 16) &amp; 0xFF)) / 0xFF,    \</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">        ((float) ((c &gt;&gt; 8) &amp; 0xFF)) / 0xFF,     \</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">        ((float) (c &amp; 0xFF)) / 0xFF             \</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">    }</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> r;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="atk_8h_html_a170621735809dd7efded8c8517347596"><div class="ttname"><a href="atk_8h.html#a170621735809dd7efded8c8517347596">ATK_COLOR_A</a></div><div class="ttdeci">#define ATK_COLOR_A</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00026">atk.h:26</a></div></div>
-<div class="ttc" id="clrconv_8h_html_ab7d4dfdb7e512b070be9ba847e71547f"><div class="ttname"><a href="clrconv_8h.html#ab7d4dfdb7e512b070be9ba847e71547f">__alphablend</a></div><div class="ttdeci">static atk_color_t __alphablend(atk_color_t d, atk_color_t s, float a)</div><div class="ttdef"><b>Definition:</b> <a href="clrconv_8h_source.html#l00038">clrconv.h:38</a></div></div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="clrconv_8h.html#af7d04bfd25b3866ae4592547dc8a7909">   53</a></span>&#160;<span class="preprocessor">#define R5G6B5_TO_V4F(c)                        \</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">    {                                           \</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">        1.0,                                    \</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">        ((float) ((c &gt;&gt; 11) &amp; 0x1F)) / 0x1F,    \</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">        ((float) ((c &gt;&gt; 5) &amp; 0x3F)) / 0x3F,     \</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">        ((float) (c &amp; 0x1F)) / 0x1F             \</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="clrconv_8h.html#ab7d4dfdb7e512b070be9ba847e71547f">   64</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> <a class="code" href="clrconv_8h.html#ab7d4dfdb7e512b070be9ba847e71547f">__alphablend</a>(<a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> d, <a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> s, <span class="keywordtype">float</span> a) {</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">if</span>(a == 0.0f)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">return</span> d;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span>(a == 1.0f)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordflow">return</span> s;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">float</span> ia = 1.0f - a;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a> r = <a class="code" href="atk_8h.html#a29a69073b13d8b13b9732b4fdabae599">ATK_COLOR_BLACK</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    r[<a class="code" href="atk_8h.html#a170621735809dd7efded8c8517347596">ATK_COLOR_A</a>] = 1.0f;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    r[<a class="code" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a>] = (s[<a class="code" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a>] * a + d[<a class="code" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a>] * ia);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    r[<a class="code" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a>] = (s[<a class="code" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a>] * a + d[<a class="code" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a>] * ia);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    r[<a class="code" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a>] = (s[<a class="code" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a>] * a + d[<a class="code" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a>] * ia);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">return</span> r;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="clrconv_8h.html#a9abc90ae1044063128acfb1505666e49">   83</a></span>&#160;<span class="preprocessor">#define __SWAP(x, y)        \</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">    {                       \</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">        x ^= y;             \</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">        y ^= x;             \</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">        x ^= y;             \</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="atk_8h_html_a170621735809dd7efded8c8517347596"><div class="ttname"><a href="atk_8h.html#a170621735809dd7efded8c8517347596">ATK_COLOR_A</a></div><div class="ttdeci">#define ATK_COLOR_A</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00029">atk.h:29</a></div></div>
+<div class="ttc" id="clrconv_8h_html_ab7d4dfdb7e512b070be9ba847e71547f"><div class="ttname"><a href="clrconv_8h.html#ab7d4dfdb7e512b070be9ba847e71547f">__alphablend</a></div><div class="ttdeci">static atk_color_t __alphablend(atk_color_t d, atk_color_t s, float a)</div><div class="ttdef"><b>Definition:</b> <a href="clrconv_8h_source.html#l00064">clrconv.h:64</a></div></div>
 <div class="ttc" id="atk_8h_html"><div class="ttname"><a href="atk_8h.html">atk.h</a></div></div>
-<div class="ttc" id="atk_8h_html_a29a69073b13d8b13b9732b4fdabae599"><div class="ttname"><a href="atk_8h.html#a29a69073b13d8b13b9732b4fdabae599">ATK_COLOR_BLACK</a></div><div class="ttdeci">#define ATK_COLOR_BLACK</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00022">atk.h:22</a></div></div>
-<div class="ttc" id="atk_8h_html_a4c5c8f9331ebcd8142b22cee6075d2ac"><div class="ttname"><a href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a></div><div class="ttdeci">#define ATK_COLOR_G</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00028">atk.h:28</a></div></div>
+<div class="ttc" id="atk_8h_html_a29a69073b13d8b13b9732b4fdabae599"><div class="ttname"><a href="atk_8h.html#a29a69073b13d8b13b9732b4fdabae599">ATK_COLOR_BLACK</a></div><div class="ttdeci">#define ATK_COLOR_BLACK</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00025">atk.h:25</a></div></div>
+<div class="ttc" id="atk_8h_html_a4c5c8f9331ebcd8142b22cee6075d2ac"><div class="ttname"><a href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">ATK_COLOR_G</a></div><div class="ttdeci">#define ATK_COLOR_G</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00031">atk.h:31</a></div></div>
 <div class="ttc" id="atk_8h_html_a85e5d8dafaa1bf57b05a1cd0dd9d3b82"><div class="ttname"><a href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a></div><div class="ttdeci">atk_v4f atk_color_t</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00017">atk.h:17</a></div></div>
-<div class="ttc" id="atk_8h_html_ae15b47dc39550cad42dbac4d50bc2c5c"><div class="ttname"><a href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a></div><div class="ttdeci">#define ATK_COLOR_R</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00027">atk.h:27</a></div></div>
-<div class="ttc" id="panic_8c_html_a77b5b9b7c5109d0943ef9f2e5c557fb9"><div class="ttname"><a href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a></div><div class="ttdeci">#define d(reg)</div></div>
-<div class="ttc" id="atk_8h_html_ac9a57bbb2de01caedab3ca03602144bd"><div class="ttname"><a href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a></div><div class="ttdeci">#define ATK_COLOR_B</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00029">atk.h:29</a></div></div>
+<div class="ttc" id="atk_8h_html_ae15b47dc39550cad42dbac4d50bc2c5c"><div class="ttname"><a href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</a></div><div class="ttdeci">#define ATK_COLOR_R</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00030">atk.h:30</a></div></div>
+<div class="ttc" id="atk_8h_html_ac9a57bbb2de01caedab3ca03602144bd"><div class="ttname"><a href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">ATK_COLOR_B</a></div><div class="ttdeci">#define ATK_COLOR_B</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00032">atk.h:32</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_425f1d86d53c9d3e80d2d726a823d2ee.html">libatk</a></li><li class="navelem"><a class="el" href="dir_dcca76c011e832220d29d17b7840bb01.html">src</a></li><li class="navelem"><a class="el" href="clrconv_8h.html">clrconv.h</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

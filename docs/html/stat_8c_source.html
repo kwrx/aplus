@@ -124,25 +124,22 @@ $(document).ready(function(){initNavTree('stat_8c_source.html','');});
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="stat_8c.html#a9c87666780aa51f709d34f50e05f1ef9">   15</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="stat_8c.html#a9c87666780aa51f709d34f50e05f1ef9">sys_stat</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* filename, <span class="keyword">struct</span> stat* st) {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">int</span> fd = <a class="code" href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a>(filename, O_RDONLY, 0644);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(fd &lt; 0) {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;sys_stat: %s.&quot;</span>, strerror(<a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a>));      </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordtype">int</span> ret = <a class="code" href="fstat_8c.html#a37940479e5cc923a96785a82989b7974">sys_fstat</a>(fd, st);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<a class="code" href="stat_8c.html#ab45af51509d61db3d12d130a3dbc84b2">SYSCALL</a>(<a class="code" href="stat_8c.html#a9c87666780aa51f709d34f50e05f1ef9">sys_stat</a>, 13);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(fd &lt; 0)</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">int</span> ret = <a class="code" href="fstat_8c.html#a37940479e5cc923a96785a82989b7974">sys_fstat</a>(fd, st);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a>(fd);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<a class="code" href="stat_8c.html#ab45af51509d61db3d12d130a3dbc84b2">SYSCALL</a>(<a class="code" href="stat_8c.html#a9c87666780aa51f709d34f50e05f1ef9">sys_stat</a>, 13);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
 <div class="ttc" id="stat_8c_html_a9c87666780aa51f709d34f50e05f1ef9"><div class="ttname"><a href="stat_8c.html#a9c87666780aa51f709d34f50e05f1ef9">sys_stat</a></div><div class="ttdeci">int sys_stat(const char *filename, struct stat *st)</div><div class="ttdef"><b>Definition:</b> <a href="stat_8c_source.html#l00015">stat.c:15</a></div></div>
-<div class="ttc" id="stat_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="stat_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
-<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
+<div class="ttc" id="stat_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="stat_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00037">sched.c:37</a></div></div>
 <div class="ttc" id="fs_8h_html"><div class="ttname"><a href="fs_8h.html">fs.h</a></div></div>
 <div class="ttc" id="dirent_8h_html"><div class="ttname"><a href="dirent_8h.html">dirent.h</a></div></div>
-<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 <div class="ttc" id="fstat_8c_html_a37940479e5cc923a96785a82989b7974"><div class="ttname"><a href="fstat_8c.html#a37940479e5cc923a96785a82989b7974">sys_fstat</a></div><div class="ttdeci">int sys_fstat(int fd, struct stat *st)</div><div class="ttdoc">This function shall obtain information about an open file associated with the file descriptor fildes...</div><div class="ttdef"><b>Definition:</b> <a href="fstat_8c_source.html#l00024">fstat.c:24</a></div></div>
 <div class="ttc" id="aplus_8h_html"><div class="ttname"><a href="aplus_8h.html">aplus.h</a></div></div>
 <div class="ttc" id="stat_8c_html_ab45af51509d61db3d12d130a3dbc84b2"><div class="ttname"><a href="stat_8c.html#ab45af51509d61db3d12d130a3dbc84b2">SYSCALL</a></div><div class="ttdeci">SYSCALL(sys_stat, 13)</div></div>
@@ -157,7 +154,7 @@ $(document).ready(function(){initNavTree('stat_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="stat_8c.html">stat.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

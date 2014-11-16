@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_join.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_join.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -35,7 +35,7 @@ References pthread_once::done, errno, pthread_context::exitval, pthread_context:
 8                                                             {
 9     if(!thread) {
 10         errno = EINVAL;
-11         return 1;
+11         return -1;
 12     }
 13 
 14     pthread_context_t* ctx = (pthread_context_t*) thread;

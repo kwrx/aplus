@@ -1,4 +1,4 @@
-.TH "src/include/aplus/net/arp.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/net/arp.h" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -63,7 +63,6 @@ src/include/aplus/net/arp.h \-
 .ti -1c
 .RI "struct \fBarp_header\fP \fB__attribute__\fP ((packed)) arp_header_t"
 .br
-.RI "\fIAlloc memory from Kernel Heap\&. \fP"
 .in -1c
 .SS "Variables"
 
@@ -135,20 +134,6 @@ Definition at line 21 of file arp\&.h\&.
 .SS "struct \fBarp_header\fP __attribute__ ((packed))"
 
 .PP
-Alloc memory from Kernel Heap\&. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIsize\fP Size of data to alloc\&. 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-Virtual Address of data\&. 
-.RE
-.PP
-
-.PP
 Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
@@ -162,39 +147,39 @@ Definition at line 44 of file desc\&.c\&.
 .SS "\fBuint8_t\fP hwlen"
 
 .PP
-Definition at line 71 of file arp\&.h\&.
+Definition at line 74 of file arp\&.h\&.
 .SS "\fBuint16_t\fP hwtype"
 
 .PP
-Definition at line 69 of file arp\&.h\&.
+Definition at line 72 of file arp\&.h\&.
 .SS "\fBuint16_t\fP operation"
 
 .PP
-Definition at line 73 of file arp\&.h\&.
+Definition at line 76 of file arp\&.h\&.
 .SS "\fBuint8_t\fP prlen"
 
 .PP
-Definition at line 72 of file arp\&.h\&.
+Definition at line 75 of file arp\&.h\&.
 .SS "\fBuint16_t\fP prtype"
 
 .PP
-Definition at line 70 of file arp\&.h\&.
+Definition at line 73 of file arp\&.h\&.
 .SS "\fBmacaddr_t\fP sha"
 
 .PP
-Definition at line 74 of file arp\&.h\&.
+Definition at line 77 of file arp\&.h\&.
 .SS "\fBipv4_t\fP spa"
 
 .PP
-Definition at line 75 of file arp\&.h\&.
+Definition at line 78 of file arp\&.h\&.
 .SS "\fBmacaddr_t\fP tha"
 
 .PP
-Definition at line 76 of file arp\&.h\&.
+Definition at line 79 of file arp\&.h\&.
 .SS "\fBipv4_t\fP tpa"
 
 .PP
-Definition at line 77 of file arp\&.h\&.
+Definition at line 80 of file arp\&.h\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

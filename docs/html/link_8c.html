@@ -156,16 +156,11 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="link_8c_source.html#l00014">14</a> of file <a class="el" href="link_8c_source.html">link.c</a>.</p>
 
-<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>.</p>
+<p>References <a class="el" href="symlink_8c_source.html#l00016">sys_symlink()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                                         {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="comment">/* TODO */</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;sys_link: TODO&quot;</span>);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
-<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
-<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="symlink_8c.html#aca4e437a3e65d900c99763ccd3032c1f">sys_symlink</a>(filename, link);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
+<div class="ttc" id="symlink_8c_html_aca4e437a3e65d900c99763ccd3032c1f"><div class="ttname"><a href="symlink_8c.html#aca4e437a3e65d900c99763ccd3032c1f">sys_symlink</a></div><div class="ttdeci">int sys_symlink(char *path, char *link)</div><div class="ttdef"><b>Definition:</b> <a href="symlink_8c_source.html#l00016">symlink.c:16</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -201,7 +196,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="link_8c.html">link.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -34,6 +34,27 @@
     <member refid="structarp__header_1a013af95c55ed102d198feeab64ce45ee" kind="variable"><name>tha</name></member>
     <member refid="structarp__header_1aedc5d2cdff377ab3192ed264d060e914" kind="variable"><name>tpa</name></member>
   </compound>
+  <compound refid="structatk__bitmap" kind="struct"><name>atk_bitmap</name>
+    <member refid="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" kind="variable"><name>size</name></member>
+    <member refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" kind="variable"><name>stride</name></member>
+    <member refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" kind="variable"><name>buffer</name></member>
+    <member refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" kind="variable"><name>lock</name></member>
+    <member refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kind="variable"><name>__lockdata</name></member>
+  </compound>
+  <compound refid="structatk__bitmap__lockdata" kind="struct"><name>atk_bitmap_lockdata</name>
+    <member refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kind="variable"><name>region</name></member>
+    <member refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" kind="variable"><name>flags</name></member>
+    <member refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" kind="variable"><name>data</name></member>
+  </compound>
+  <compound refid="structatk__gfx" kind="struct"><name>atk_gfx</name>
+    <member refid="structatk__gfx_1a8c8d73df98a82572a666824b52b99964" kind="variable"><name>width</name></member>
+    <member refid="structatk__gfx_1a5dcdddc358345ad49f4015253f1acbe6" kind="variable"><name>height</name></member>
+    <member refid="structatk__gfx_1a7f050db1e3d134473b2077ab5275b727" kind="variable"><name>stride</name></member>
+    <member refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kind="variable"><name>bpp</name></member>
+    <member refid="structatk__gfx_1a00413765e42e1a347e45401e1a2e95bf" kind="variable"><name>framebuffer</name></member>
+    <member refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kind="variable"><name>__plot</name></member>
+    <member refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" kind="variable"><name>__get</name></member>
+  </compound>
   <compound refid="structatk__widget" kind="struct"><name>atk_widget</name>
     <member refid="structatk__widget_1a24145b1d5428ec2211dabe700dfe2076" kind="variable"><name>position</name></member>
     <member refid="structatk__widget_1a03bb553a3c4b8b7523a56bcebd489fbc" kind="variable"><name>size</name></member>
@@ -141,6 +162,14 @@
     <member refid="structelf32__shdr_1a7063aa23af4d41832485d03b54f01626" kind="variable"><name>sh_info</name></member>
     <member refid="structelf32__shdr_1a74275f49dbae08127832dc1061ed24ab" kind="variable"><name>sh_addralign</name></member>
     <member refid="structelf32__shdr_1a0360b455d1586deda50df0adaa7a87e0" kind="variable"><name>sh_entsize</name></member>
+  </compound>
+  <compound refid="structelf32__sym__t" kind="struct"><name>elf32_sym_t</name>
+    <member refid="structelf32__sym__t_1a232decf1719e5b3c2710f36527196ee0" kind="variable"><name>st_name</name></member>
+    <member refid="structelf32__sym__t_1ae0b3ec7941f44c78c2328c7071144062" kind="variable"><name>st_value</name></member>
+    <member refid="structelf32__sym__t_1a2ab0bc42b4be7785283d7a9c8529c6fd" kind="variable"><name>st_size</name></member>
+    <member refid="structelf32__sym__t_1a6d8d3d0c4c824b83847583591b9a13e2" kind="variable"><name>st_info</name></member>
+    <member refid="structelf32__sym__t_1a7e4c7a5bc8b91ec5cdabbde350b5623e" kind="variable"><name>st_other</name></member>
+    <member refid="structelf32__sym__t_1a4c80a4806fb05b61db91827dc13f0666" kind="variable"><name>st_shndx</name></member>
   </compound>
   <compound refid="structeth__header" kind="struct"><name>eth_header</name>
     <member refid="structeth__header_1a60d1b5300409163d627fbe1f033ef3bc" kind="variable"><name>dest</name></member>
@@ -345,6 +374,7 @@
   <compound refid="structpthread__barrier" kind="struct"><name>pthread_barrier</name>
     <member refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kind="variable"><name>curr_height</name></member>
     <member refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" kind="variable"><name>init_height</name></member>
+    <member refid="structpthread__barrier_1a8ec820115bfcd6be50432579aac440fa" kind="variable"><name>owner</name></member>
   </compound>
   <compound refid="structpthread__barrierattr" kind="struct"><name>pthread_barrierattr</name>
     <member refid="structpthread__barrierattr_1a50ef34671e6743cc59c895dd878c4a86" kind="variable"><name>pshared</name></member>
@@ -431,6 +461,7 @@
     <member refid="structtask_1a8dbbb79f7c29771d36f1d98ec84cbbdf" kind="variable"><name>env</name></member>
     <member refid="structtask_1a71232ebd31259f41c057b3e789b44587" kind="variable"><name>stack</name></member>
     <member refid="structtask_1a5f4968459d4640f19c7e802ae7057179" kind="variable"><name>cr3</name></member>
+    <member refid="structtask_1a34a5abdae35b067ec6cde7fc81a43598" kind="variable"><name>owner</name></member>
     <member refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1" kind="variable"><name>context</name></member>
     <member refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" kind="variable"><name>uid</name></member>
     <member refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" kind="variable"><name>gid</name></member>
@@ -529,7 +560,7 @@
     <member refid="structvesaModeInfo__t_1a5ffbef6f6a9ac0ae6975827208b77ec5" kind="variable"><name>reserved2</name></member>
   </compound>
   <compound refid="initrd_2test_8c" kind="file"><name>test.c</name>
-    <member refid="initrd_2test_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kind="function"><name>main</name></member>
+    <member refid="initrd_2test_8c_1a3c04138a5bfe5d72780bb7e82a18e627" kind="function"><name>main</name></member>
   </compound>
   <compound refid="src_2syscall_2test_8c" kind="file"><name>test.c</name>
     <member refid="src_2syscall_2test_8c_1a51f2edf7c5fd86bddffcc964a5af69da" kind="function"><name>sys_test</name></member>
@@ -613,7 +644,7 @@
     <member refid="serial_8c_1a459999cfa35c788b64284953a93c4b57" kind="function"><name>serial_init</name></member>
   </compound>
   <compound refid="syscall_8c" kind="file"><name>syscall.c</name>
-    <member refid="syscall_8c_1a7cee1b8da707d135695bc11acee66b63" kind="define"><name>SYSCALL_DEBUG</name></member>
+    <member refid="syscall_8c_1aae19ed96e8d4fe9da0d4bb8c5d0a9d6e" kind="define"><name>NSYSCALLS</name></member>
     <member refid="syscall_8c_1afb85e77f03c9acf2f02687360c17dd91" kind="variable"><name>syscall_handlers</name></member>
     <member refid="syscall_8c_1a15662fc3572d9f3abd72a439727767c3" kind="function"><name>syscall_init</name></member>
     <member refid="syscall_8c_1a468aa05f3eb6adc7330d73e9bb5c6951" kind="function"><name>syscall_invoke</name></member>
@@ -629,6 +660,7 @@
     <member refid="task_8c_1a65552f86d5e6567721f1d1afcb34e7ab" kind="variable"><name>__fork_buf</name></member>
     <member refid="task_8c_1a30c5de54c48d098388d2048073a393a7" kind="function"><name>__asm__</name></member>
     <member refid="task_8c_1a82b2dfd3955cf0689cda053f3dc24481" kind="function"><name>task_context_switch</name></member>
+    <member refid="task_8c_1a95af5e989199ecb9dd3cd23c264c6944" kind="function"><name>task_switch_ack</name></member>
     <member refid="task_8c_1afed7d6a4dd3580596c0c925e766c4163" kind="function"><name>task_clone</name></member>
     <member refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" kind="function"><name>task_switch</name></member>
     <member refid="task_8c_1ae020ae98e6a6fc90f836f38cc405290c" kind="function"><name>__fork_child</name></member>
@@ -703,6 +735,8 @@
     <member refid="exec_8c_1a58ff00be749ca4000074f9b9066a1056" kind="define"><name>PT_PHDR</name></member>
     <member refid="exec_8c_1acaa6971207ea507ed02f22ba574b8534" kind="define"><name>PT_LOPROC</name></member>
     <member refid="exec_8c_1a74427c5909fdced36b41134c11650249" kind="define"><name>PT_HIPROC</name></member>
+    <member refid="exec_8c_1a3b84f3e0e035d1264115f5c76227c5eb" kind="define"><name>ELF32_ST_BIND</name></member>
+    <member refid="exec_8c_1a54dd2783f11c5f926d8db9250e1baa35" kind="define"><name>ELF32_ST_TYPE</name></member>
     <member refid="exec_8c_1aa3ea57d3d539b6618daaaaf7af4bec80" kind="define"><name>ELF_DEBUG</name></member>
     <member refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" kind="define"><name>check</name></member>
     <member refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kind="typedef"><name>Elf32_Addr</name></member>
@@ -713,9 +747,12 @@
     <member refid="exec_8c_1a34edb44226509e467315e3bd81c3d7dc" kind="typedef"><name>elf32_hdr_t</name></member>
     <member refid="exec_8c_1ad7b97ddfcb82a63cd28a9cb88f21984a" kind="typedef"><name>elf32_shdr_t</name></member>
     <member refid="exec_8c_1a6c037736a997fdd28ed9f6b734261b23" kind="typedef"><name>elf32_phdr_t</name></member>
+    <member refid="exec_8c_1a0a07204ebf864bb143d95b4525e80938" kind="typedef"><name>elf32_sym_t</name></member>
+    <member refid="exec_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
     <member refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" kind="function"><name>elf32_check</name></member>
     <member refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" kind="function"><name>elf32_getspace</name></member>
     <member refid="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" kind="function"><name>elf32_load</name></member>
+    <member refid="exec_8c_1ac79bb43069a3d3c097c8d95dcf0c2784" kind="function"><name>elf_kernel_lookup</name></member>
   </compound>
   <compound refid="devfs_8c" kind="file"><name>devfs.c</name>
     <member refid="devfs_8c_1a9af8258c3554800f6613f8147544225f" kind="variable"><name>vfs_root</name></member>
@@ -825,13 +862,18 @@
   <compound refid="iso9660__readdir_8c" kind="file"><name>iso9660_readdir.c</name>
     <member refid="iso9660__readdir_8c_1af42ce9ccc832430f26878d3e36db0303" kind="function"><name>iso9660_readdir</name></member>
   </compound>
-  <compound refid="pipe_8c" kind="file"><name>pipe.c</name>
-    <member refid="pipe_8c_1ac26d15f7a161e67a1245925bf9ec0b64" kind="typedef"><name>pipeinfo_t</name></member>
-    <member refid="pipe_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
-    <member refid="pipe_8c_1acd58301025c57832d88e9303748a4990" kind="function"><name>pipe_read</name></member>
-    <member refid="pipe_8c_1afb255ec0586d3ec2fb72fde723b9f058" kind="function"><name>pipe_write</name></member>
-    <member refid="pipe_8c_1acf87459626267621da125c794e573354" kind="function"><name>pipe_flush</name></member>
-    <member refid="pipe_8c_1a8d87f2f91d56a198bbf85f4773868765" kind="function"><name>pipe_create</name></member>
+  <compound refid="fs_2pipe_8c" kind="file"><name>pipe.c</name>
+    <member refid="fs_2pipe_8c_1ac26d15f7a161e67a1245925bf9ec0b64" kind="typedef"><name>pipeinfo_t</name></member>
+    <member refid="fs_2pipe_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="fs_2pipe_8c_1acd58301025c57832d88e9303748a4990" kind="function"><name>pipe_read</name></member>
+    <member refid="fs_2pipe_8c_1afb255ec0586d3ec2fb72fde723b9f058" kind="function"><name>pipe_write</name></member>
+    <member refid="fs_2pipe_8c_1acf87459626267621da125c794e573354" kind="function"><name>pipe_flush</name></member>
+    <member refid="fs_2pipe_8c_1a8d87f2f91d56a198bbf85f4773868765" kind="function"><name>pipe_create</name></member>
+  </compound>
+  <compound refid="syscall_2pipe_8c" kind="file"><name>pipe.c</name>
+    <member refid="syscall_2pipe_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="syscall_2pipe_8c_1a73d217d7e665e552f8511f5f4d44a06d" kind="function"><name>sys_pipe</name></member>
+    <member refid="syscall_2pipe_8c_1a0bd500744bcdc8b9d447a0d5bfefa9a1" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="ramdev_8c" kind="file"><name>ramdev.c</name>
     <member refid="ramdev_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
@@ -840,18 +882,22 @@
     <member refid="ramdev_8c_1ac9ef7e9fc03cb083b7c94bda843576bd" kind="function"><name>ramdev_flush</name></member>
     <member refid="ramdev_8c_1a0c040a7a5a5150b0b0d18354ac6f4958" kind="function"><name>mkramdev</name></member>
   </compound>
-  <compound refid="tty_8c" kind="file"><name>tty.c</name>
-    <member refid="tty_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
-    <member refid="tty_8c_1ac08620610e2419aca3878305400a96b7" kind="variable"><name>kernel_task</name></member>
-    <member refid="tty_8c_1ae98e607f54aef5eccd498dd30a6d005c" kind="variable"><name>ttydevs</name></member>
-    <member refid="tty_8c_1aa83abb5e9683a5205b3f41cf64859d46" kind="variable"><name>ttydefchars</name></member>
-    <member refid="tty_8c_1a4cb6812ea931081c175160c7832bd5cb" kind="function"><name>__default_tty_output</name></member>
-    <member refid="tty_8c_1af44ca2aed8cc67a67083f2632f2e8e9a" kind="function"><name>tty_ioctl</name></member>
-    <member refid="tty_8c_1a2c6de64e1d558b54c9ebd0954612acd8" kind="function"><name>tty_write</name></member>
-    <member refid="tty_8c_1af4257a33321700bf011d106a0491199f" kind="function"><name>tty_read</name></member>
-    <member refid="tty_8c_1ab570955fda22cdef6b32ab99a4d59e6f" kind="function"><name>tty_flush</name></member>
-    <member refid="tty_8c_1a73bb587a850df0de01eab91fa87e40d0" kind="function"><name>tty_open</name></member>
-    <member refid="tty_8c_1aab365abb615be7027fa0bdb2c09569cb" kind="function"><name>tty_init</name></member>
+  <compound refid="src_2fs_2tty_8c" kind="file"><name>tty.c</name>
+    <member refid="src_2fs_2tty_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="src_2fs_2tty_8c_1ac08620610e2419aca3878305400a96b7" kind="variable"><name>kernel_task</name></member>
+    <member refid="src_2fs_2tty_8c_1ae98e607f54aef5eccd498dd30a6d005c" kind="variable"><name>ttydevs</name></member>
+    <member refid="src_2fs_2tty_8c_1aa83abb5e9683a5205b3f41cf64859d46" kind="variable"><name>ttydefchars</name></member>
+    <member refid="src_2fs_2tty_8c_1a4cb6812ea931081c175160c7832bd5cb" kind="function"><name>__default_tty_output</name></member>
+    <member refid="src_2fs_2tty_8c_1af44ca2aed8cc67a67083f2632f2e8e9a" kind="function"><name>tty_ioctl</name></member>
+    <member refid="src_2fs_2tty_8c_1a2c6de64e1d558b54c9ebd0954612acd8" kind="function"><name>tty_write</name></member>
+    <member refid="src_2fs_2tty_8c_1af4257a33321700bf011d106a0491199f" kind="function"><name>tty_read</name></member>
+    <member refid="src_2fs_2tty_8c_1ab570955fda22cdef6b32ab99a4d59e6f" kind="function"><name>tty_flush</name></member>
+    <member refid="src_2fs_2tty_8c_1a73bb587a850df0de01eab91fa87e40d0" kind="function"><name>tty_open</name></member>
+    <member refid="src_2fs_2tty_8c_1aab365abb615be7027fa0bdb2c09569cb" kind="function"><name>tty_init</name></member>
+  </compound>
+  <compound refid="usr_2src_2libposix_2src_2tty_8c" kind="file"><name>tty.c</name>
+    <member refid="usr_2src_2libposix_2src_2tty_8c_1a30c3edb2b02399d64b5e8eaaf7fe40e6" kind="function"><name>tcgetpgrp</name></member>
+    <member refid="usr_2src_2libposix_2src_2tty_8c_1affb89581103fbd19d7ce7e89d1a39c90" kind="function"><name>tcsetpgrp</name></member>
   </compound>
   <compound refid="vfs_8c" kind="file"><name>vfs.c</name>
     <member refid="vfs_8c_1ab78229df5c858687756417b32ac398ff" kind="variable"><name>list_inodes</name></member>
@@ -1063,8 +1109,6 @@
     <member refid="netif_8h_1aaca7f6ff0ebc3b44543507ad70e9685f" kind="define"><name>NETIF_ICMP</name></member>
     <member refid="netif_8h_1a63655cdcdbc2051668addaa61d30386c" kind="define"><name>NETIF_TELNET</name></member>
     <member refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" kind="define"><name>NETIF_FLAGS_ENABLE</name></member>
-    <member refid="netif_8h_1a7fa8be0d28d77b4ab4f44d924d4d69e2" kind="define"><name>ARP_DEBUG</name></member>
-    <member refid="netif_8h_1afb47e3cd6431190b167127036fd827eb" kind="define"><name>RTL8139_DEBUG</name></member>
     <member refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kind="typedef"><name>ipv4_t</name></member>
     <member refid="netif_8h_1a0a195da7affbedb767969c3a02c9a82d" kind="typedef"><name>ipv6_t</name></member>
     <member refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kind="typedef"><name>macaddr_t</name></member>
@@ -1206,11 +1250,7 @@
     <member refid="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kind="function"><name>main</name></member>
   </compound>
   <compound refid="usr_2src_2libatk_2test_2main_8c" kind="file"><name>main.c</name>
-    <member refid="usr_2src_2libatk_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900" kind="function"><name>__test_signals__</name></member>
-    <member refid="usr_2src_2libatk_2test_2main_8c_1afe4dfd5e49215955311250c669123180" kind="function"><name>test_stdio</name></member>
-    <member refid="usr_2src_2libatk_2test_2main_8c_1a72b40b42ede33a5df17620eb3ebfbcb7" kind="function"><name>test_args</name></member>
-    <member refid="usr_2src_2libatk_2test_2main_8c_1a1bc601ec27d4ef9c2b6ee94175fe3439" kind="function"><name>test_signals</name></member>
-    <member refid="usr_2src_2libatk_2test_2main_8c_1a3c04138a5bfe5d72780bb7e82a18e627" kind="function"><name>main</name></member>
+    <member refid="usr_2src_2libatk_2test_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kind="function"><name>main</name></member>
   </compound>
   <compound refid="usr_2src_2libcrt0_2test_2main_8c" kind="file"><name>main.c</name>
     <member refid="usr_2src_2libcrt0_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900" kind="function"><name>__test_signals__</name></member>
@@ -1242,17 +1282,20 @@
   </compound>
   <compound refid="mm_8c" kind="file"><name>mm.c</name>
     <member refid="mm_8c_1a8ffb348d372acd38099f16b08bdaf4b5" kind="variable"><name>memsize</name></member>
-    <member refid="mm_8c_1a3068f9054a832aa72e12ab9ad210dd99" kind="variable"><name>current_heap</name></member>
+    <member refid="mm_8c_1a24421f8f89c962d802b391886447543b" kind="variable"><name>current_heap</name></member>
     <member refid="mm_8c_1a9bed7071511863f81c2de43b3c3f7db9" kind="variable"><name>current_vmm</name></member>
     <member refid="mm_8c_1afac53891df03c313fc0b5b24e0acc8a9" kind="variable"><name>kernel_vmm</name></member>
+    <member refid="mm_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="mm_8c_1ac08620610e2419aca3878305400a96b7" kind="variable"><name>kernel_task</name></member>
     <member refid="mm_8c_1a3744f58bc6d40534a3e026b2f242ab25" kind="variable"><name>vmm_queue</name></member>
     <member refid="mm_8c_1a8c61e64b8675498cee79c59d3f8131e2" kind="variable"><name>magic</name></member>
     <member refid="mm_8c_1a854352f53b148adc24983a58a1866d66" kind="variable"><name>size</name></member>
     <member refid="mm_8c_1a2cdc9850cc059eb848b6843d5327e37a" kind="function"><name>__attribute__</name></member>
+    <member refid="mm_8c_1a0fa5db9ef345269ef8fb232a31c0b5cc" kind="function"><name>kvmalloc</name></member>
     <member refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" kind="function"><name>kfree</name></member>
     <member refid="mm_8c_1a0a2a93dff1df0b626cb5ff6d85d0553e" kind="function"><name>krealloc</name></member>
     <member refid="mm_8c_1a6f69e1474f69d9286294cfa23cdcc414" kind="function"><name>mm_setheap</name></member>
-    <member refid="mm_8c_1a4e692b1c1f4e04a8b231f1493babb82f" kind="function"><name>mm_getheap</name></member>
+    <member refid="mm_8c_1accbfbfd24536b985a875baf4e16a98f9" kind="function"><name>mm_getheap</name></member>
     <member refid="mm_8c_1a25db4b3982d49366c88b6be8331b9215" kind="function"><name>mm_init</name></member>
   </compound>
   <compound refid="paging_8c" kind="file"><name>paging.c</name>
@@ -1272,8 +1315,8 @@
     <member refid="paging_8c_1ae6c3d7080850f24c974dc0c53b653110" kind="function"><name>vmm_disable</name></member>
     <member refid="paging_8c_1ae969f54f1646d5d8a871bef828a24239" kind="function"><name>vmm_map</name></member>
     <member refid="paging_8c_1ab6841aac2bf44152a7c0c12293a97440" kind="function"><name>vmm_umap</name></member>
-    <member refid="paging_8c_1aebed4a90dd887506ed125f9efb953c93" kind="function"><name>vmm_alloc</name></member>
-    <member refid="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" kind="function"><name>vmm_free</name></member>
+    <member refid="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" kind="function"><name>vmm_alloc</name></member>
+    <member refid="paging_8c_1a355e6cafe37d994830abeebcb69e390d" kind="function"><name>vmm_free</name></member>
     <member refid="paging_8c_1a8828597ede1b2c5bcc5ea1a4ca7919a9" kind="function"><name>vmm_mapkernel</name></member>
     <member refid="paging_8c_1a200ca682c57c6acaa05f2f56c9f6f6de" kind="function"><name>vmm_create</name></member>
     <member refid="paging_8c_1a22fcc252d0f4746924875b97d803b18b" kind="function"><name>vmm_destroy</name></member>
@@ -1412,15 +1455,15 @@
     <member refid="udp_8c_1a9721c26507ac0169090b8934a33b1098" kind="function"><name>udp_recv</name></member>
   </compound>
   <compound refid="panic_8c" kind="file"><name>panic.c</name>
-    <member refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kind="define"><name>d</name></member>
-    <member refid="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724" kind="define"><name>_d</name></member>
     <member refid="panic_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" kind="variable"><name>task_queue</name></member>
     <member refid="panic_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
     <member refid="panic_8c_1ac08620610e2419aca3878305400a96b7" kind="variable"><name>kernel_task</name></member>
     <member refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" kind="function"><name>dump_errno</name></member>
-    <member refid="panic_8c_1ad829ba2d1c19b556fd15c8eda84f06fa" kind="function"><name>dump_registers</name></member>
+    <member refid="panic_8c_1a20563f9e0fecc6db792f5b9308309272" kind="function"><name>dump_cpu</name></member>
     <member refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" kind="function"><name>dump_stacktrace</name></member>
     <member refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" kind="function"><name>dump_task</name></member>
+    <member refid="panic_8c_1a9e0d1c1bd35fd6b517160ba5abcf6681" kind="function"><name>dump_mmu</name></member>
+    <member refid="panic_8c_1a0becae034664f94c1553072830270ecb" kind="function"><name>panic_r</name></member>
     <member refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kind="function"><name>panic</name></member>
   </compound>
   <compound refid="src_2sched_8c" kind="file"><name>sched.c</name>
@@ -1434,16 +1477,19 @@
     <member refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" kind="function"><name>schedule_nextpid</name></member>
     <member refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" kind="function"><name>schedule_init</name></member>
     <member refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" kind="function"><name>schedule_next</name></member>
+    <member refid="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87" kind="function"><name>schedule_signal</name></member>
     <member refid="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce" kind="function"><name>schedule</name></member>
     <member refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" kind="function"><name>schedule_yield</name></member>
     <member refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" kind="function"><name>schedule_setpriority</name></member>
     <member refid="src_2sched_8c_1a74e91e3418aedd28c8ddf5d150859a70" kind="function"><name>schedule_wait</name></member>
     <member refid="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" kind="function"><name>schedule_child</name></member>
+    <member refid="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" kind="function"><name>schedule_release</name></member>
     <member refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" kind="function"><name>schedule_exit2</name></member>
     <member refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" kind="function"><name>schedule_exit</name></member>
     <member refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" kind="function"><name>schedule_getpid</name></member>
     <member refid="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" kind="function"><name>schedule_getbypid</name></member>
     <member refid="src_2sched_8c_1a5af6764b80e6b9a24df59f7bb636f3d4" kind="function"><name>schedule_sbrk</name></member>
+    <member refid="src_2sched_8c_1afbffdc5298c98f92960a4fb9ba498063" kind="function"><name>schedule_append_fd</name></member>
   </compound>
   <compound refid="usr_2src_2libposix_2src_2sched_8c" kind="file"><name>sched.c</name>
     <member refid="usr_2src_2libposix_2src_2sched_8c_1acd49b6ab6b9adcb42cdf2f6a0db877e1" kind="typedef"><name>cpu_set_t</name></member>
@@ -1492,8 +1538,14 @@
   </compound>
   <compound refid="execve_8c" kind="file"><name>execve.c</name>
     <member refid="execve_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="execve_8c_1a1c466d3de8a7f4192d6e9bbfe413dfb0" kind="function"><name>__args_dup</name></member>
     <member refid="execve_8c_1af44a7e309f4bd49757f52b4178676ea7" kind="function"><name>sys_execve</name></member>
     <member refid="execve_8c_1ad7d0c3131e92bac14e1e9ac6b73f6ec8" kind="function"><name>SYSCALL</name></member>
+  </compound>
+  <compound refid="fchdir_8c" kind="file"><name>fchdir.c</name>
+    <member refid="fchdir_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="fchdir_8c_1a58569b5c13bd9e4300954e28b138473a" kind="function"><name>sys_fchdir</name></member>
+    <member refid="fchdir_8c_1a271d2184f43cc5ec6f69b0d305cf87ab" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="fcntl_8c" kind="file"><name>fcntl.c</name>
     <member refid="fcntl_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
@@ -1517,8 +1569,11 @@
     <member refid="getgroups_8c_1ab7992f4bd1543b490f49298451a680e3" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="getpid_8c" kind="file"><name>getpid.c</name>
+    <member refid="getpid_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
     <member refid="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" kind="function"><name>sys_getpid</name></member>
+    <member refid="getpid_8c_1a3f9a9a94f33dc16eac796ae714736d07" kind="function"><name>sys_getppid</name></member>
     <member refid="getpid_8c_1a74381482f24d171c9ad80f0c85fe2b3b" kind="function"><name>SYSCALL</name></member>
+    <member refid="getpid_8c_1a93b6153d2f6727c9a54dd537cde1f6f5" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="gettimeofday_8c" kind="file"><name>gettimeofday.c</name>
     <member refid="gettimeofday_8c_1a0aa843ff444635c69c76f13b2f6b6ec6" kind="function"><name>sys_gettimeofday</name></member>
@@ -1612,13 +1667,25 @@
     <member refid="umount_8c_1a3576e97b06555aee2a1ccdc01d28a5ed" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="unlink_8c" kind="file"><name>unlink.c</name>
+    <member refid="unlink_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="unlink_8c_1a9af8258c3554800f6613f8147544225f" kind="variable"><name>vfs_root</name></member>
+    <member refid="unlink_8c_1a6fae53653306206ed481c3589c7aa51b" kind="function"><name>dupstr</name></member>
     <member refid="unlink_8c_1a1f6398df52f7ff1425ea46d566e6d406" kind="function"><name>sys_unlink</name></member>
     <member refid="unlink_8c_1ad98c9664626206607298e17936a4421e" kind="function"><name>SYSCALL</name></member>
   </compound>
-  <compound refid="wait_8c" kind="file"><name>wait.c</name>
-    <member refid="wait_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
-    <member refid="wait_8c_1a71b3c0272e1d256262db857a794e3899" kind="function"><name>sys_wait</name></member>
-    <member refid="wait_8c_1a4a7121092029355dc4b74d1515420c88" kind="function"><name>SYSCALL</name></member>
+  <compound refid="src_2syscall_2wait_8c" kind="file"><name>wait.c</name>
+    <member refid="src_2syscall_2wait_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899" kind="function"><name>sys_wait</name></member>
+    <member refid="src_2syscall_2wait_8c_1a4a7121092029355dc4b74d1515420c88" kind="function"><name>SYSCALL</name></member>
+  </compound>
+  <compound refid="usr_2src_2libposix_2src_2wait_8c" kind="file"><name>wait.c</name>
+    <member refid="usr_2src_2libposix_2src_2wait_8c_1accbd09491ae2dc67211eefe5afee6b87" kind="function"><name>wait3</name></member>
+    <member refid="usr_2src_2libposix_2src_2wait_8c_1ae7553f48d10483d6ab00010d8b4030da" kind="function"><name>wait4</name></member>
+  </compound>
+  <compound refid="waitpid_8c" kind="file"><name>waitpid.c</name>
+    <member refid="waitpid_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
+    <member refid="waitpid_8c_1a6b16504dd1c74be11c75e5739f9906f1" kind="function"><name>sys_waitpid</name></member>
+    <member refid="waitpid_8c_1a202384fbf44c4383fb36d9fe3c746b00" kind="function"><name>SYSCALL</name></member>
   </compound>
   <compound refid="write_8c" kind="file"><name>write.c</name>
     <member refid="write_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kind="variable"><name>current_task</name></member>
@@ -1630,11 +1697,36 @@
     <member refid="yield_8c_1a1b3e74d65228b4578f1021261a5f858b" kind="function"><name>sys_yield</name></member>
     <member refid="yield_8c_1ac015462b27f6721140f30824adc6ba73" kind="function"><name>SYSCALL</name></member>
   </compound>
+  <compound refid="bitmap_8c" kind="file"><name>bitmap.c</name>
+    <member refid="bitmap_8c_1ad14b67fdaef2472b7a218076ee8a8295" kind="variable"><name>__gfx</name></member>
+    <member refid="bitmap_8c_1a6131842322871f3dd968097b582f149a" kind="function"><name>atk_bitmap_create_for_data</name></member>
+    <member refid="bitmap_8c_1a39e44147dc16a3a97f5178e455301f3b" kind="function"><name>atk_bitmap_create</name></member>
+    <member refid="bitmap_8c_1a0ebc106790ae78b673ddeec287f9a8b6" kind="function"><name>atk_destroy_bitmap</name></member>
+    <member refid="bitmap_8c_1af2d4d028cb46ed7c8c7e2e34a15cede1" kind="function"><name>atk_bitmap_lockbits</name></member>
+    <member refid="bitmap_8c_1abbf711383513c744fe96b307880fb3d8" kind="function"><name>atk_bitmap_unlockbits</name></member>
+  </compound>
   <compound refid="clrconv_8h" kind="file"><name>clrconv.h</name>
     <member refid="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43" kind="define"><name>V4F_TO_ARGB</name></member>
     <member refid="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4" kind="define"><name>V4F_TO_RGB</name></member>
     <member refid="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac" kind="define"><name>V4F_TO_R5G6B5</name></member>
+    <member refid="clrconv_8h_1accad078885c0425eb1861291a1769717" kind="define"><name>ARGB_TO_V4F</name></member>
+    <member refid="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8" kind="define"><name>RGB_TO_V4F</name></member>
+    <member refid="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909" kind="define"><name>R5G6B5_TO_V4F</name></member>
+    <member refid="clrconv_8h_1a9abc90ae1044063128acfb1505666e49" kind="define"><name>__SWAP</name></member>
     <member refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" kind="function"><name>__alphablend</name></member>
+  </compound>
+  <compound refid="gfx_8c" kind="file"><name>gfx.c</name>
+    <member refid="gfx_8c_1ad14b67fdaef2472b7a218076ee8a8295" kind="variable"><name>__gfx</name></member>
+    <member refid="gfx_8c_1a9b2502bd0ce8f0310181c6e5f942971a" kind="function"><name>__gfx_plot_pixel_32</name></member>
+    <member refid="gfx_8c_1a03463c4b1cb7f47ad907238ade0253b9" kind="function"><name>__gfx_plot_pixel_24</name></member>
+    <member refid="gfx_8c_1a7aaa9f57c899dd3abbc89f333cf033cd" kind="function"><name>__gfx_plot_pixel_16</name></member>
+    <member refid="gfx_8c_1a6fb53066ae07aa5d373749f3cd604667" kind="function"><name>__gfx_read_pixel_32</name></member>
+    <member refid="gfx_8c_1ae7c30dc3d12e86efeeac3d10e2402ecc" kind="function"><name>__gfx_read_pixel_24</name></member>
+    <member refid="gfx_8c_1acf0e69d2f398da36b549cd8700e8ed7a" kind="function"><name>__gfx_read_pixel_16</name></member>
+    <member refid="gfx_8c_1ac05b6147f547ac7cf1a6600226eaff0b" kind="function"><name>atk_gfx_create</name></member>
+    <member refid="gfx_8c_1a0f767522ab60d278c9c47033b8b73ddb" kind="function"><name>atk_gfx_set</name></member>
+    <member refid="gfx_8c_1ab7e9db411a46b785c93e3a729737c894" kind="function"><name>atk_gfx_get</name></member>
+    <member refid="gfx_8c_1a553c125db6cad5a8f0176b48a2f66f1d" kind="function"><name>atk_gfx_line</name></member>
   </compound>
   <compound refid="atk_8h" kind="file"><name>atk.h</name>
     <member refid="atk_8h_1a29a69073b13d8b13b9732b4fdabae599" kind="define"><name>ATK_COLOR_BLACK</name></member>
@@ -1644,9 +1736,31 @@
     <member refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kind="define"><name>ATK_COLOR_R</name></member>
     <member refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" kind="define"><name>ATK_COLOR_G</name></member>
     <member refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" kind="define"><name>ATK_COLOR_B</name></member>
+    <member refid="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4" kind="define"><name>ATK_RECT_X</name></member>
+    <member refid="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff" kind="define"><name>ATK_RECT_Y</name></member>
+    <member refid="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a" kind="define"><name>ATK_RECT_W</name></member>
+    <member refid="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" kind="define"><name>ATK_RECT_H</name></member>
+    <member refid="atk_8h_1a413bc681fce80267f527fa132c151055" kind="define"><name>ATK_SIZE_W</name></member>
+    <member refid="atk_8h_1aaad1b7972db05defa86a02338218a358" kind="define"><name>ATK_SIZE_H</name></member>
+    <member refid="atk_8h_1a634d569bbadff17b0ea9198d4ce8ce72" kind="define"><name>ATK_POS_X</name></member>
+    <member refid="atk_8h_1a8d5096b073d9f2dff29445b21561d03c" kind="define"><name>ATK_POS_Y</name></member>
+    <member refid="atk_8h_1a07987a4145b21a362b9bfcdc0b8295ec" kind="define"><name>ATK_RECT_EMPTY</name></member>
+    <member refid="atk_8h_1a303de91995819d0e1b5ae6d089bfd620" kind="define"><name>ATK_SIZE_EMPTY</name></member>
+    <member refid="atk_8h_1a62c95cb8fb4edb6582311705964d27dc" kind="define"><name>ATK_POS_EMPTY</name></member>
     <member refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kind="typedef"><name>__attribute__</name></member>
     <member refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kind="typedef"><name>atk_color_t</name></member>
+    <member refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" kind="typedef"><name>atk_rect_t</name></member>
+    <member refid="atk_8h_1a644f976397f323e48685f16b0c4fa802" kind="typedef"><name>atk_size_t</name></member>
+    <member refid="atk_8h_1aee7e807eb9b4bff2e018cf10b0552fc2" kind="typedef"><name>atk_pos_t</name></member>
     <member refid="atk_8h_1a2c8c224ba001105422a0814f71ae5887" kind="typedef"><name>atk_list_t</name></member>
+  </compound>
+  <compound refid="bitmap_8h" kind="file"><name>bitmap.h</name>
+    <member refid="bitmap_8h_1a7d7f7389fcd5d1b409321fa979179ce4" kind="define"><name>ATK_BITMAP_LOCK_RDONLY</name></member>
+    <member refid="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78" kind="define"><name>ATK_BITMAP_LOCK_RDWR</name></member>
+    <member refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kind="typedef"><name>atk_bitmap_t</name></member>
+  </compound>
+  <compound refid="gfx_8h" kind="file"><name>gfx.h</name>
+    <member refid="gfx_8h_1a8c8412155528b364a972c509c5cca18e" kind="typedef"><name>atk_gfx_t</name></member>
   </compound>
   <compound refid="widget_8h" kind="file"><name>widget.h</name>
     <member refid="widget_8h_1ac037e282f60131e69cb1fae7361fa85b" kind="define"><name>ATK_WIDGET_FLAGS_ENABLED</name></member>
@@ -1696,6 +1810,9 @@
   <compound refid="alphasort_8c" kind="file"><name>alphasort.c</name>
     <member refid="alphasort_8c_1a8a52fd9a3ded793b8200ac0a5a1f10d2" kind="function"><name>alphasort</name></member>
   </compound>
+  <compound refid="chdir_8c" kind="file"><name>chdir.c</name>
+    <member refid="chdir_8c_1a03af571dfb595681bfa203c83385c07b" kind="function"><name>chdir</name></member>
+  </compound>
   <compound refid="closedir_8c" kind="file"><name>closedir.c</name>
     <member refid="closedir_8c_1a058e669d865116ec6419ea3a52207830" kind="function"><name>closedir</name></member>
   </compound>
@@ -1741,7 +1858,13 @@
   <compound refid="gid_8c" kind="file"><name>gid.c</name>
     <member refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" kind="function"><name>getgid</name></member>
     <member refid="gid_8c_1a3e7c694d68b4e62c1f275612d30b6d9d" kind="function"><name>getegid</name></member>
+    <member refid="gid_8c_1a48f523c98970793dfc2c5a05f6832006" kind="function"><name>getpgid</name></member>
+    <member refid="gid_8c_1ae5aae5b0275eefe79314a4673195e475" kind="function"><name>setpgid</name></member>
     <member refid="gid_8c_1a5dec302aecbe8f2f9be1528cd5ffeba7" kind="function"><name>getgroups</name></member>
+  </compound>
+  <compound refid="grp_8c" kind="file"><name>grp.c</name>
+    <member refid="grp_8c_1a744446ac24606c182bbd911772a04ca0" kind="function"><name>getpgrp</name></member>
+    <member refid="grp_8c_1a68c3d959a84492b12576f6098ead6154" kind="function"><name>setpgrp</name></member>
   </compound>
   <compound refid="lstat_8c" kind="file"><name>lstat.c</name>
     <member refid="lstat_8c_1adf958baeacaf3d34b582ce8f1318d4c0" kind="function"><name>lstat</name></member>
@@ -1762,6 +1885,16 @@
   <compound refid="seekdir_8c" kind="file"><name>seekdir.c</name>
     <member refid="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" kind="function"><name>seekdir</name></member>
   </compound>
+  <compound refid="sigaction_8c" kind="file"><name>sigaction.c</name>
+    <member refid="sigaction_8c_1aca154d42054802e95c6f8019a8dcf4ac" kind="function"><name>sigaction</name></member>
+  </compound>
+  <compound refid="sigprocmask_8c" kind="file"><name>sigprocmask.c</name>
+    <member refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" kind="variable"><name>__sigset</name></member>
+    <member refid="sigprocmask_8c_1a8828f2feb6a31f0ee3df4948d57616e4" kind="function"><name>sigprocmask</name></member>
+  </compound>
+  <compound refid="sigsuspend_8c" kind="file"><name>sigsuspend.c</name>
+    <member refid="sigsuspend_8c_1a651e913fac32255355993a3d7ca193c8" kind="function"><name>sigsuspend</name></member>
+  </compound>
   <compound refid="sleep_8c" kind="file"><name>sleep.c</name>
     <member refid="sleep_8c_1a1beaecc28fb9396d30c206bde6aa4717" kind="function"><name>nanosleep</name></member>
     <member refid="sleep_8c_1ad4669b3813c3b4a616a738317fdc974f" kind="function"><name>sleep</name></member>
@@ -1772,6 +1905,9 @@
   <compound refid="uid_8c" kind="file"><name>uid.c</name>
     <member refid="uid_8c_1a2f517436c22ef73337d3de4920908c6c" kind="function"><name>getuid</name></member>
     <member refid="uid_8c_1a8b9a6dcf4e1d237f5607256dad93e26a" kind="function"><name>geteuid</name></member>
+  </compound>
+  <compound refid="umask_8c" kind="file"><name>umask.c</name>
+    <member refid="umask_8c_1a8788159ad927954699f80970a1d04462" kind="function"><name>umask</name></member>
   </compound>
   <compound refid="usleep_8c" kind="file"><name>usleep.c</name>
     <member refid="usleep_8c_1a1beaecc28fb9396d30c206bde6aa4717" kind="function"><name>nanosleep</name></member>
@@ -1903,11 +2039,6 @@
   </compound>
   <compound refid="posix_2hooks_8h" kind="file"><name>hooks.h</name>
     <member refid="posix_2hooks_8h_1a369266c24eacffb87046522897a570d5" kind="define"><name>_GNU_SOURCE</name></member>
-    <member refid="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5" kind="define"><name>CLONE_VM</name></member>
-    <member refid="posix_2hooks_8h_1a36c57614f62361d9a91c75d2ef1bf854" kind="define"><name>CLONE_SIGHAND</name></member>
-    <member refid="posix_2hooks_8h_1abf70cffabfa4515feef97f66bae6a5c7" kind="define"><name>CLONE_FS</name></member>
-    <member refid="posix_2hooks_8h_1ab062e8c87b92d645f7f4698a36e5b57a" kind="define"><name>CLONE_FILES</name></member>
-    <member refid="posix_2hooks_8h_1a93d70879b6c53ae3475b3241d09c4741" kind="define"><name>CLONE_PARENT</name></member>
     <member refid="posix_2hooks_8h_1a90a2b2b0249a9fde4ff642490f566e34" kind="define"><name>__os_thread_create</name></member>
     <member refid="posix_2hooks_8h_1ab48a49c5d6297d7b9023b8796a1c996e" kind="define"><name>__os_thread_kill</name></member>
     <member refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" kind="define"><name>__os_gettid</name></member>
@@ -2034,6 +2165,7 @@
     <member refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kind="variable"><name>__current_thread</name></member>
     <member refid="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" kind="variable"><name>__pthread_queue</name></member>
     <member refid="pthread__queue_8c_1a0b13cae1b0e7848f7d9689241f8f93a8" kind="variable"><name>__pthread_counts</name></member>
+    <member refid="pthread__queue_8c_1a137732a2c963fc23b1b66a5bf1087067" kind="function"><name>__pthread_dnit</name></member>
     <member refid="pthread__queue_8c_1a524e53db3985af45990760ed9068c0a9" kind="function"><name>__pthread_init_queue</name></member>
   </compound>
   <compound refid="pthread__rwlock_8c" kind="file"><name>pthread_rwlock.c</name>
@@ -2090,6 +2222,8 @@
   <compound refid="dir_6a9c6543806adfb0a9f993048d7a021b" kind="dir"><name>usr/src/libatk/src/include/atk</name>
   </compound>
   <compound refid="dir_67dd5697b37f207f225bbd7a2e3631fb" kind="dir"><name>src/fs</name>
+  </compound>
+  <compound refid="dir_8aff50d7f950fd8893cfa1673a901c19" kind="dir"><name>src/arch/i386</name>
   </compound>
   <compound refid="dir_39561b3906d9a8cbcf72cf816afeadc0" kind="dir"><name>usr/src/libpthread/include</name>
   </compound>

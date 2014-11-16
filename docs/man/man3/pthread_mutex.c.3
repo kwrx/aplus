@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_mutex.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_mutex.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -53,7 +53,7 @@ References pthread_mutex::lock, pthread_mutex_unlock(), and pthread_mutex::time\
 9                                                  {
 10     if(mutex->time > 0) {
 11         if(time(NULL) < mutex->time)
-12             return 1;
+12             return -1;
 13         else {
 14             pthread_mutex_unlock(mutex);
 15             mutex->time = 0;
@@ -62,7 +62,7 @@ References pthread_mutex::lock, pthread_mutex_unlock(), and pthread_mutex::time\
 18 
 19 
 20     if(mutex->lock == 1)
-21         return 1;
+21         return -1;
 22 
 23     return 0;
 24 }
@@ -78,12 +78,12 @@ References errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock
 46                                                          {
 47     if(!mutex) {
 48         errno = EINVAL;
-49         return 1;
+49         return -1;
 50     }
 51 
 52     if(mutex->lock == 1) {
 53         errno = EBUSY;
-54         return 1;
+54         return -1;
 55     }
 56 
 57     mutex->lock = 0;
@@ -107,7 +107,7 @@ References errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::
 26                                                                                        {
 27     if(!mutex) {
 28         errno = EINVAL;
-29         return 1;
+29         return -1;
 30     }
 31 
 32     mutex->lock = 0;
@@ -134,7 +134,7 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 67                                                       {
 68     if(!mutex) {
 69         errno = EINVAL;
-70         return 1;
+70         return -1;
 71     }
 72 
 73     if(mutex->owner != pthread_self()) {
@@ -146,7 +146,7 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 79         mutex->lock = 1;
 80     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
 81         errno = EDEADLK;
-82         return 1;
+82         return -1;
 83     }
 84 
 85     if(mutex->kind == PTHREAD_MUTEX_RECURSIVE)
@@ -166,13 +166,13 @@ References errno, pthread_mutex_lock(), and pthread_mutex::time\&.
 92                                                                                            {
 93     if(abstime == NULL) {
 94         errno = EINVAL;
-95         return 1;
+95         return -1;
 96     }
 97 
 98     if(pthread_mutex_lock(mutex) == 0)
 99         mutex->time = time(NULL) + abstime->tv_sec;
 100     else
-101         return 1;
+101         return -1;
 102 
 103     return 0;
 104 }
@@ -188,13 +188,13 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 107                                                          {
 108     if(!mutex) {
 109         errno = EINVAL;
-110         return 1;
+110         return -1;
 111     }
 112 
 113     if(mutex->owner != pthread_self()) {
 114         if(__locked_mtx(mutex)) {
 115             errno = EBUSY;
-116             return 1;
+116             return -1;
 117         }
 118 
 119         mutex->owner = pthread_self();
@@ -202,7 +202,7 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 121         mutex->lock = 1;
 122     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
 123         errno = EDEADLK;
-124         return 1;
+124         return -1;
 125     }
 126 
 127     if(mutex->kind == PTHREAD_MUTEX_RECURSIVE)
@@ -222,7 +222,7 @@ References errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner
 133                                                         {
 134     if(!mutex) {
 135         errno = EINVAL;
-136         return 1;
+136         return -1;
 137     }
 138 
 139     if(mutex->owner == pthread_self()) {
@@ -235,7 +235,7 @@ References errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner
 146         mutex->lock = 0;
 147     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
 148         errno = EPERM;
-149         return 1;
+149         return -1;
 150     }
 151 
 152     return 0;

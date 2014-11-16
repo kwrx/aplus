@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structatk__bitmap__lockdata" kind="struct" prot="public">
+    <compoundname>atk_bitmap_lockdata</compoundname>
+    <includes refid="bitmap_8h" local="no">bitmap.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" prot="public" static="no" mutable="no">
+        <type><ref refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" kindref="member">atk_rect_t</ref></type>
+        <definition>atk_rect_t atk_bitmap_lockdata::region</definition>
+        <argsstring></argsstring>
+        <name>region</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int atk_bitmap_lockdata::flags</definition>
+        <argsstring></argsstring>
+        <name>flags</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="10" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* atk_bitmap_lockdata::data</definition>
+        <argsstring></argsstring>
+        <name>data</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="12" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="16">
+        <label>atk_bitmap_lockdata</label>
+        <link refid="structatk__bitmap__lockdata"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="8" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="8" bodyend="13"/>
+    <listofallmembers>
+      <member refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" prot="public" virt="non-virtual"><scope>atk_bitmap_lockdata</scope><name>data</name></member>
+      <member refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" prot="public" virt="non-virtual"><scope>atk_bitmap_lockdata</scope><name>flags</name></member>
+      <member refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" prot="public" virt="non-virtual"><scope>atk_bitmap_lockdata</scope><name>region</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

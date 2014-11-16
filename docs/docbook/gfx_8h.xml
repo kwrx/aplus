@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="gfx_8h">
+    <title>gfx.h File Reference</title>
+    <programlisting>#include &lt;atk.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structatk__gfx">atk_gfx</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structatk__gfx">atk_gfx</link>  <link linkend="gfx_8h_1a8c8412155528b364a972c509c5cca18e">atk_gfx_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h</para>
+    </simplesect>
+</section>

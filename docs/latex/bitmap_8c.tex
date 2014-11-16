@@ -1,0 +1,263 @@
+\hypertarget{bitmap_8c}{\section{usr/src/libatk/src/bitmap.c File Reference}
+\label{bitmap_8c}\index{usr/src/libatk/src/bitmap.\+c@{usr/src/libatk/src/bitmap.\+c}}
+}
+{\ttfamily \#include $<$atk.\+h$>$}\\*
+{\ttfamily \#include $<$atk/bitmap.\+h$>$}\\*
+{\ttfamily \#include $<$atk/gfx.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$stdlib.\+h$>$}\\*
+{\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}clrconv.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{bitmap_8h_a999118ff4462f09cd53380b82e5c0d57}{atk\+\_\+bitmap\+\_\+t} $\ast$ \hyperlink{bitmap_8c_a6131842322871f3dd968097b582f149a}{atk\+\_\+bitmap\+\_\+create\+\_\+for\+\_\+data} (\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} width, \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} height, void $\ast$buffer)
+\item 
+\hyperlink{bitmap_8h_a999118ff4462f09cd53380b82e5c0d57}{atk\+\_\+bitmap\+\_\+t} $\ast$ \hyperlink{bitmap_8c_a39e44147dc16a3a97f5178e455301f3b}{atk\+\_\+bitmap\+\_\+create} (\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} width, \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} height)
+\item 
+int \hyperlink{bitmap_8c_a0ebc106790ae78b673ddeec287f9a8b6}{atk\+\_\+destroy\+\_\+bitmap} (\hyperlink{bitmap_8h_a999118ff4462f09cd53380b82e5c0d57}{atk\+\_\+bitmap\+\_\+t} $\ast$b)
+\item 
+void $\ast$ \hyperlink{bitmap_8c_af2d4d028cb46ed7c8c7e2e34a15cede1}{atk\+\_\+bitmap\+\_\+lockbits} (\hyperlink{bitmap_8h_a999118ff4462f09cd53380b82e5c0d57}{atk\+\_\+bitmap\+\_\+t} $\ast$b, \hyperlink{atk_8h_a943bf72ffba2da2f833e6e995d84e78a}{atk\+\_\+rect\+\_\+t} rectangle, int \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags})
+\item 
+void \hyperlink{bitmap_8c_abbf711383513c744fe96b307880fb3d8}{atk\+\_\+bitmap\+\_\+unlockbits} (\hyperlink{bitmap_8h_a999118ff4462f09cd53380b82e5c0d57}{atk\+\_\+bitmap\+\_\+t} $\ast$b)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{gfx_8h_a8c8412155528b364a972c509c5cca18e}{atk\+\_\+gfx\+\_\+t} $\ast$ \hyperlink{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\+\_\+\+\_\+gfx}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{bitmap_8c_a39e44147dc16a3a97f5178e455301f3b}{\index{bitmap.\+c@{bitmap.\+c}!atk\+\_\+bitmap\+\_\+create@{atk\+\_\+bitmap\+\_\+create}}
+\index{atk\+\_\+bitmap\+\_\+create@{atk\+\_\+bitmap\+\_\+create}!bitmap.\+c@{bitmap.\+c}}
+\subsubsection[{atk\+\_\+bitmap\+\_\+create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf atk\+\_\+bitmap\+\_\+t}$\ast$ atk\+\_\+bitmap\+\_\+create (
+\begin{DoxyParamCaption}
+\item[{{\bf uint16\+\_\+t}}]{width, }
+\item[{{\bf uint16\+\_\+t}}]{height}
+\end{DoxyParamCaption}
+)}}\label{bitmap_8c_a39e44147dc16a3a97f5178e455301f3b}
+
+
+Definition at line 35 of file bitmap.\+c.
+
+
+
+References atk\+\_\+gfx\+::bpp, data, and errno.
+
+
+\begin{DoxyCode}
+35                                                                  \{
+36     \textcolor{keywordflow}{if}(!(width && height)) \{
+37         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+38         \textcolor{keywordflow}{return} NULL;
+39     \}
+40 
+41     \textcolor{keywordtype}{void}* \hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data} = (\textcolor{keywordtype}{void}*) malloc(width * height * (\hyperlink{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} >> 3));
+42     \textcolor{keywordflow}{if}(!data) \{
+43         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOMEM;
+44         \textcolor{keywordflow}{return} NULL;
+45     \}
+46 
+47     \textcolor{keywordflow}{return} atk\_create\_bitmap\_for\_data(width, height, data);
+48 \}
+\end{DoxyCode}
+\hypertarget{bitmap_8c_a6131842322871f3dd968097b582f149a}{\index{bitmap.\+c@{bitmap.\+c}!atk\+\_\+bitmap\+\_\+create\+\_\+for\+\_\+data@{atk\+\_\+bitmap\+\_\+create\+\_\+for\+\_\+data}}
+\index{atk\+\_\+bitmap\+\_\+create\+\_\+for\+\_\+data@{atk\+\_\+bitmap\+\_\+create\+\_\+for\+\_\+data}!bitmap.\+c@{bitmap.\+c}}
+\subsubsection[{atk\+\_\+bitmap\+\_\+create\+\_\+for\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf atk\+\_\+bitmap\+\_\+t}$\ast$ atk\+\_\+bitmap\+\_\+create\+\_\+for\+\_\+data (
+\begin{DoxyParamCaption}
+\item[{{\bf uint16\+\_\+t}}]{width, }
+\item[{{\bf uint16\+\_\+t}}]{height, }
+\item[{void $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{bitmap_8c_a6131842322871f3dd968097b582f149a}
+
+
+Definition at line 13 of file bitmap.\+c.
+
+
+
+References A\+T\+K\+\_\+\+S\+I\+Z\+E\+\_\+\+H, A\+T\+K\+\_\+\+S\+I\+Z\+E\+\_\+\+W, atk\+\_\+gfx\+::bpp, atk\+\_\+bitmap\+::buffer, errno, atk\+\_\+bitmap\+::lock, atk\+\_\+bitmap\+::size, and atk\+\_\+bitmap\+::stride.
+
+
+\begin{DoxyCode}
+13                                                                                         \{
+14     \textcolor{keywordflow}{if}(!(width && height && buffer)) \{
+15         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+16         \textcolor{keywordflow}{return} NULL;
+17     \}
+18 
+19     \hyperlink{structatk__bitmap}{atk\_bitmap\_t}* b = (\hyperlink{structatk__bitmap}{atk\_bitmap\_t}*) malloc(\textcolor{keyword}{sizeof}(
+      \hyperlink{structatk__bitmap}{atk\_bitmap\_t}));
+20     \textcolor{keywordflow}{if}(!b) \{
+21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOMEM;
+22         \textcolor{keywordflow}{return} NULL;
+23     \}
+24 
+25     b->\hyperlink{structatk__bitmap_afd44fc93403d7addaa5142944e3add03}{size}[\hyperlink{atk_8h_a413bc681fce80267f527fa132c151055}{ATK\_SIZE\_W}] = width;
+26     b->\hyperlink{structatk__bitmap_afd44fc93403d7addaa5142944e3add03}{size}[\hyperlink{atk_8h_aaad1b7972db05defa86a02338218a358}{ATK\_SIZE\_H}] = height;
+27 
+28     b->\hyperlink{structatk__bitmap_a9716a316bc05bb6997a9da73ddb0ee3b}{stride} = width * (\hyperlink{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} / 8);
+29     b->\hyperlink{structatk__bitmap_a045e533dfb5e23a575443d389f3dba95}{lock} = 0;
+30     b->\hyperlink{structatk__bitmap_a3bed7ee0d49e89b2a1dd250ee2e58ab6}{buffer} = buffer;
+31 
+32     \textcolor{keywordflow}{return} b;
+33 \}
+\end{DoxyCode}
+\hypertarget{bitmap_8c_af2d4d028cb46ed7c8c7e2e34a15cede1}{\index{bitmap.\+c@{bitmap.\+c}!atk\+\_\+bitmap\+\_\+lockbits@{atk\+\_\+bitmap\+\_\+lockbits}}
+\index{atk\+\_\+bitmap\+\_\+lockbits@{atk\+\_\+bitmap\+\_\+lockbits}!bitmap.\+c@{bitmap.\+c}}
+\subsubsection[{atk\+\_\+bitmap\+\_\+lockbits}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ atk\+\_\+bitmap\+\_\+lockbits (
+\begin{DoxyParamCaption}
+\item[{{\bf atk\+\_\+bitmap\+\_\+t} $\ast$}]{b, }
+\item[{{\bf atk\+\_\+rect\+\_\+t}}]{rectangle, }
+\item[{int}]{flags}
+\end{DoxyParamCaption}
+)}}\label{bitmap_8c_af2d4d028cb46ed7c8c7e2e34a15cede1}
+
+
+Definition at line 68 of file bitmap.\+c.
+
+
+
+References atk\+\_\+bitmap\+::\+\_\+\+\_\+lockdata, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+H, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+W, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+X, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+Y, atk\+\_\+gfx\+::bpp, atk\+\_\+bitmap\+::buffer, atk\+\_\+bitmap\+\_\+lockdata\+::data, data, errno, atk\+\_\+bitmap\+\_\+lockdata\+::flags, flags, atk\+\_\+bitmap\+::lock, atk\+\_\+bitmap\+\_\+lockdata\+::region, size, atk\+\_\+bitmap\+::stride, and uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+68                                                                             \{
+69     \textcolor{keywordflow}{if}(!b) \{
+70         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+71         \textcolor{keywordflow}{return} NULL;
+72     \}
+73 
+74     \textcolor{keywordflow}{if}(b->\hyperlink{structatk__bitmap_a045e533dfb5e23a575443d389f3dba95}{lock}) \{
+75         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBUSY;
+76         \textcolor{keywordflow}{return} NULL;
+77     \}
+78 
+79     b->\hyperlink{structatk__bitmap_a045e533dfb5e23a575443d389f3dba95}{lock} = 1;
+80 
+81     \textcolor{keywordtype}{int} stride = rectangle[\hyperlink{atk_8h_adaf356bd47ddf870a7757b32d65fef2a}{ATK\_RECT\_W}] * (\hyperlink{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} >> 3);
+82     \textcolor{keywordtype}{int} \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} = stride * rectangle[\hyperlink{atk_8h_abfd40a030b3974ce70f3078d626ac7a8}{ATK\_RECT\_H}];
+83 
+84     \textcolor{keywordtype}{void}* \hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data} = (\textcolor{keywordtype}{void}*) malloc(size);
+85     
+86     \textcolor{keywordflow}{for}(\textcolor{keyword}{register} \textcolor{keywordtype}{int} i = 0,
+87                      s = 0, 
+88                      p = (b->\hyperlink{structatk__bitmap_a9716a316bc05bb6997a9da73ddb0ee3b}{stride} * rectangle[\hyperlink{atk_8h_a7f3aa5e83bd01c85e3c1e283eb2892ff}{ATK\_RECT\_Y}]) + (rectangle[
+      \hyperlink{atk_8h_a9f0bc3985905ebd8360a35625f76caa4}{ATK\_RECT\_X}] * (\hyperlink{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} >> 3));
+89             i < rectangle[\hyperlink{atk_8h_abfd40a030b3974ce70f3078d626ac7a8}{ATK\_RECT\_H}];
+90             i++, s += stride, p += b->\hyperlink{structatk__bitmap_a9716a316bc05bb6997a9da73ddb0ee3b}{stride}
+91         )
+92         memcpy(
+93                 (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) data + s), 
+94                 (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) b->\hyperlink{structatk__bitmap_a3bed7ee0d49e89b2a1dd250ee2e58ab6}{buffer} + p),
+95                 stride
+96             );
+97 
+98 
+99     b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region} = rectangle;
+100     b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a08fd0c82f6a26e24d8533cb944d99a83}{data} = \hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data};
+101     b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a14548236493d0379a825530a6f512fcc}{flags} = \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags};
+102 
+103     \textcolor{keywordflow}{return} \hyperlink{iso9660_8h_ae308b441db3cd9ff9e80e01730229e3b}{data};
+104 \}
+\end{DoxyCode}
+\hypertarget{bitmap_8c_abbf711383513c744fe96b307880fb3d8}{\index{bitmap.\+c@{bitmap.\+c}!atk\+\_\+bitmap\+\_\+unlockbits@{atk\+\_\+bitmap\+\_\+unlockbits}}
+\index{atk\+\_\+bitmap\+\_\+unlockbits@{atk\+\_\+bitmap\+\_\+unlockbits}!bitmap.\+c@{bitmap.\+c}}
+\subsubsection[{atk\+\_\+bitmap\+\_\+unlockbits}]{\setlength{\rightskip}{0pt plus 5cm}void atk\+\_\+bitmap\+\_\+unlockbits (
+\begin{DoxyParamCaption}
+\item[{{\bf atk\+\_\+bitmap\+\_\+t} $\ast$}]{b}
+\end{DoxyParamCaption}
+)}}\label{bitmap_8c_abbf711383513c744fe96b307880fb3d8}
+
+
+Definition at line 106 of file bitmap.\+c.
+
+
+
+References atk\+\_\+bitmap\+::\+\_\+\+\_\+lockdata, A\+T\+K\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+L\+O\+C\+K\+\_\+\+R\+D\+W\+R, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+H, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+W, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+X, A\+T\+K\+\_\+\+R\+E\+C\+T\+\_\+\+Y, atk\+\_\+gfx\+::bpp, atk\+\_\+bitmap\+::buffer, atk\+\_\+bitmap\+\_\+lockdata\+::data, errno, atk\+\_\+bitmap\+\_\+lockdata\+::flags, atk\+\_\+bitmap\+::lock, atk\+\_\+bitmap\+\_\+lockdata\+::region, atk\+\_\+bitmap\+::stride, and uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+106                                             \{
+107     \textcolor{keywordflow}{if}(!b) \{
+108         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+109         \textcolor{keywordflow}{return} NULL;
+110     \}
+111 
+112     
+113     \textcolor{keywordflow}{if}(b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a14548236493d0379a825530a6f512fcc}{flags} & \hyperlink{bitmap_8h_a5f29e050242724d3eb790ae6dadcae78}{ATK\_BITMAP\_LOCK\_RDWR}) \{
+114 
+115         \textcolor{keywordtype}{int} stride = b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[\hyperlink{atk_8h_adaf356bd47ddf870a7757b32d65fef2a}{ATK\_RECT\_W}] * (
+      \hyperlink{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} >> 3);
+116 
+117         \textcolor{keywordflow}{for}(\textcolor{keyword}{register} \textcolor{keywordtype}{int} i = 0,
+118                          s = 0, 
+119                          p = (b->\hyperlink{structatk__bitmap_a9716a316bc05bb6997a9da73ddb0ee3b}{stride} * b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[
+      \hyperlink{atk_8h_a7f3aa5e83bd01c85e3c1e283eb2892ff}{ATK\_RECT\_Y}]) + (b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[\hyperlink{atk_8h_a9f0bc3985905ebd8360a35625f76caa4}{ATK\_RECT\_X}] * (
+      \hyperlink{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} >> 3));
+120                 i < b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[\hyperlink{atk_8h_abfd40a030b3974ce70f3078d626ac7a8}{ATK\_RECT\_H}];
+121                 i++, s += stride, p += b->\hyperlink{structatk__bitmap_a9716a316bc05bb6997a9da73ddb0ee3b}{stride}
+122             )
+123             memcpy(
+124                     (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) b->\hyperlink{structatk__bitmap_a3bed7ee0d49e89b2a1dd250ee2e58ab6}{buffer} + p),
+125                     (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a08fd0c82f6a26e24d8533cb944d99a83}{data} + s),
+126                     stride
+127                 );
+128     \}
+129 
+130     b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[0] = b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[1] = b->
+      \hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[2] = b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a75fc9b9740a38278200e4cbe27b15e44}{region}[3] = 0;
+131     b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a14548236493d0379a825530a6f512fcc}{flags} = 0;
+132 
+133     free(b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a08fd0c82f6a26e24d8533cb944d99a83}{data});
+134     b->\hyperlink{structatk__bitmap_a803fa3caa190331e1c3255d6ab19d91c}{\_\_lockdata}.\hyperlink{structatk__bitmap__lockdata_a08fd0c82f6a26e24d8533cb944d99a83}{data} = 0;
+135 
+136     b->\hyperlink{structatk__bitmap_a045e533dfb5e23a575443d389f3dba95}{lock} = 0;
+137 \}
+\end{DoxyCode}
+\hypertarget{bitmap_8c_a0ebc106790ae78b673ddeec287f9a8b6}{\index{bitmap.\+c@{bitmap.\+c}!atk\+\_\+destroy\+\_\+bitmap@{atk\+\_\+destroy\+\_\+bitmap}}
+\index{atk\+\_\+destroy\+\_\+bitmap@{atk\+\_\+destroy\+\_\+bitmap}!bitmap.\+c@{bitmap.\+c}}
+\subsubsection[{atk\+\_\+destroy\+\_\+bitmap}]{\setlength{\rightskip}{0pt plus 5cm}int atk\+\_\+destroy\+\_\+bitmap (
+\begin{DoxyParamCaption}
+\item[{{\bf atk\+\_\+bitmap\+\_\+t} $\ast$}]{b}
+\end{DoxyParamCaption}
+)}}\label{bitmap_8c_a0ebc106790ae78b673ddeec287f9a8b6}
+
+
+Definition at line 50 of file bitmap.\+c.
+
+
+
+References atk\+\_\+bitmap\+::buffer, errno, and atk\+\_\+bitmap\+::lock.
+
+
+\begin{DoxyCode}
+50                                         \{
+51     \textcolor{keywordflow}{if}(!b) \{
+52         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+53         \textcolor{keywordflow}{return} -1;
+54     \}
+55 
+56     \textcolor{keywordflow}{if}(b->\hyperlink{structatk__bitmap_a045e533dfb5e23a575443d389f3dba95}{lock}) \{
+57         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBUSY;
+58         \textcolor{keywordflow}{return} -1;
+59     \}
+60 
+61     free(b->\hyperlink{structatk__bitmap_a3bed7ee0d49e89b2a1dd250ee2e58ab6}{buffer});
+62     free(b);
+63 
+64     \textcolor{keywordflow}{return} 0;   
+65 \}
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\hypertarget{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}{\index{bitmap.\+c@{bitmap.\+c}!\+\_\+\+\_\+gfx@{\+\_\+\+\_\+gfx}}
+\index{\+\_\+\+\_\+gfx@{\+\_\+\+\_\+gfx}!bitmap.\+c@{bitmap.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf atk\+\_\+gfx\+\_\+t}$\ast$ \+\_\+\+\_\+gfx}}\label{bitmap_8c_ad14b67fdaef2472b7a218076ee8a8295}
+
+
+Definition at line 10 of file gfx.\+c.
+

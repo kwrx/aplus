@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="bitmap_8h">
+    <title>bitmap.h File Reference</title>
+    <programlisting>#include &lt;atk.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+        <simplesect>
+            <title> Classes </title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structatk__bitmap__lockdata">atk_bitmap_lockdata</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structatk__bitmap">atk_bitmap</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Defines</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="bitmap_8h_1a7d7f7389fcd5d1b409321fa979179ce4">ATK_BITMAP_LOCK_RDONLY</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78">ATK_BITMAP_LOCK_RDWR</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Typedefs</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structatk__bitmap">atk_bitmap</link>  <link linkend="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57">atk_bitmap_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h</para>
+    </simplesect>
+</section>

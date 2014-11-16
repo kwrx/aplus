@@ -183,6 +183,9 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 : <a class="el" href="desc_8c.html#a7d06701ac073c331c83519e3909b7fce">desc.c</a>
 , <a class="el" href="src_2sched_8c.html#a7d06701ac073c331c83519e3909b7fce">sched.c</a>
 </li>
+<li>schedule_append_fd()
+: <a class="el" href="src_2sched_8c.html#afbffdc5298c98f92960a4fb9ba498063">sched.c</a>
+</li>
 <li>schedule_child()
 : <a class="el" href="src_2sched_8c.html#a96793377662f91213568fe44bf4eccad">sched.c</a>
 </li>
@@ -213,11 +216,17 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 <li>schedule_nextpid()
 : <a class="el" href="src_2sched_8c.html#a986fa43e945f396a2c722a1f766e03c8">sched.c</a>
 </li>
+<li>schedule_release()
+: <a class="el" href="src_2sched_8c.html#a4a8ae190cf5ce5a162ec5ddd69ddacc6">sched.c</a>
+</li>
 <li>schedule_sbrk()
 : <a class="el" href="src_2sched_8c.html#a5af6764b80e6b9a24df59f7bb636f3d4">sched.c</a>
 </li>
 <li>schedule_setpriority()
 : <a class="el" href="src_2sched_8c.html#a878aa3454133f7c01a4ba15ef68b9be2">sched.c</a>
+</li>
+<li>schedule_signal()
+: <a class="el" href="src_2sched_8c.html#ab51c47cc2ab19d79bf891f03e7912f87">sched.c</a>
 </li>
 <li>schedule_wait()
 : <a class="el" href="src_2sched_8c.html#a74e91e3418aedd28c8ddf5d150859a70">sched.c</a>
@@ -237,6 +246,21 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 </li>
 <li>serial_send()
 : <a class="el" href="serial_8c.html#a554c0b79338d298c39a06027b790edb5">serial.c</a>
+</li>
+<li>setpgid()
+: <a class="el" href="gid_8c.html#ae5aae5b0275eefe79314a4673195e475">gid.c</a>
+</li>
+<li>setpgrp()
+: <a class="el" href="grp_8c.html#a68c3d959a84492b12576f6098ead6154">grp.c</a>
+</li>
+<li>sigaction()
+: <a class="el" href="sigaction_8c.html#aca154d42054802e95c6f8019a8dcf4ac">sigaction.c</a>
+</li>
+<li>sigprocmask()
+: <a class="el" href="sigprocmask_8c.html#a8828f2feb6a31f0ee3df4948d57616e4">sigprocmask.c</a>
+</li>
+<li>sigsuspend()
+: <a class="el" href="sigsuspend_8c.html#a651e913fac32255355993a3d7ca193c8">sigsuspend.c</a>
 </li>
 <li>sleep()
 : <a class="el" href="sleep_8c.html#ad4669b3813c3b4a616a738317fdc974f">sleep.c</a>
@@ -295,6 +319,9 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 <li>sys_exit()
 : <a class="el" href="__exit_8c.html#a1c0b6529c2b4ef268480a55f1314a400">_exit.c</a>
 </li>
+<li>sys_fchdir()
+: <a class="el" href="fchdir_8c.html#a58569b5c13bd9e4300954e28b138473a">fchdir.c</a>
+</li>
 <li>sys_fcntl()
 : <a class="el" href="fcntl_8c.html#a7d46f514aa7d9664ebd2baa4d61c4a37">fcntl.c</a>
 </li>
@@ -309,6 +336,9 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 </li>
 <li>sys_getpid()
 : <a class="el" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">getpid.c</a>
+</li>
+<li>sys_getppid()
+: <a class="el" href="getpid_8c.html#a3f9a9a94f33dc16eac796ae714736d07">getpid.c</a>
 </li>
 <li>sys_gettimeofday()
 : <a class="el" href="gettimeofday_8c.html#a0aa843ff444635c69c76f13b2f6b6ec6">gettimeofday.c</a>
@@ -336,6 +366,9 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 </li>
 <li>sys_openpty()
 : <a class="el" href="openpty_8c.html#ae7a2feb8c532924511fcdda51eac004e">openpty.c</a>
+</li>
+<li>sys_pipe()
+: <a class="el" href="syscall_2pipe_8c.html#a73d217d7e665e552f8511f5f4d44a06d">pipe.c</a>
 </li>
 <li>sys_read()
 : <a class="el" href="read_8c.html#a508cbee9c162869815810e15a3d0e1b0">read.c</a>
@@ -371,7 +404,10 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 : <a class="el" href="unlink_8c.html#a1f6398df52f7ff1425ea46d566e6d406">unlink.c</a>
 </li>
 <li>sys_wait()
-: <a class="el" href="wait_8c.html#a71b3c0272e1d256262db857a794e3899">wait.c</a>
+: <a class="el" href="src_2syscall_2wait_8c.html#a71b3c0272e1d256262db857a794e3899">wait.c</a>
+</li>
+<li>sys_waitpid()
+: <a class="el" href="waitpid_8c.html#a6b16504dd1c74be11c75e5739f9906f1">waitpid.c</a>
 </li>
 <li>sys_write()
 : <a class="el" href="write_8c.html#a0d770d346dc0c93e695fcb8a0a0f5295">write.c</a>
@@ -380,45 +416,48 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 : <a class="el" href="yield_8c.html#a1b3e74d65228b4578f1021261a5f858b">yield.c</a>
 </li>
 <li>SYSCALL()
-: <a class="el" href="open_8c.html#acad57ec13a2846f9bbbf7c99b66a773b">open.c</a>
+: <a class="el" href="times_8c.html#a8ecba6a43b15155c404aef0b811ca805">times.c</a>
 , <a class="el" href="__exit_8c.html#ac6f9574edcf881d9f332eb02f79f40e6">_exit.c</a>
-, <a class="el" href="lseek_8c.html#adf9807ac9976dd75922da3de250cf9b1">lseek.c</a>
-, <a class="el" href="stat_8c.html#ab45af51509d61db3d12d130a3dbc84b2">stat.c</a>
+, <a class="el" href="isatty_8c.html#ac111a88c909250bbdf1ec8f925622f42">isatty.c</a>
+, <a class="el" href="kill_8c.html#af36650f7b47e85ac1873a0ba3644e1a6">kill.c</a>
+, <a class="el" href="sighandler_8c.html#a35314b503840bda636b115cf4f8614ae">sighandler.c</a>
+, <a class="el" href="openpty_8c.html#a773637204237eb29e9c39c0dcd5a06f4">openpty.c</a>
+, <a class="el" href="getpid_8c.html#a93b6153d2f6727c9a54dd537cde1f6f5">getpid.c</a>
+, <a class="el" href="fork_8c.html#a75b0dcad79dadff9db48eee8500bab91">fork.c</a>
+, <a class="el" href="getgroups_8c.html#ab7992f4bd1543b490f49298451a680e3">getgroups.c</a>
+, <a class="el" href="getpid_8c.html#a74381482f24d171c9ad80f0c85fe2b3b">getpid.c</a>
+, <a class="el" href="symlink_8c.html#ab054efed13f519c688c08dd61c876a32">symlink.c</a>
 , <a class="el" href="src_2syscall_2test_8c.html#ae565d7d4913e52eff3d614648de40a22">test.c</a>
 , <a class="el" href="unlink_8c.html#ad98c9664626206607298e17936a4421e">unlink.c</a>
-, <a class="el" href="umount_8c.html#a58e6ca15fd18d508f7182e2cd68eba21">umount.c</a>
-, <a class="el" href="write_8c.html#ac98021d255ccf030a8cbe505a788031f">write.c</a>
-, <a class="el" href="fork_8c.html#a75b0dcad79dadff9db48eee8500bab91">fork.c</a>
-, <a class="el" href="umount_8c.html#a3576e97b06555aee2a1ccdc01d28a5ed">umount.c</a>
-, <a class="el" href="chown_8c.html#a72db0d5fe4733e59ef6b0dd96495a4d1">chown.c</a>
-, <a class="el" href="times_8c.html#a8ecba6a43b15155c404aef0b811ca805">times.c</a>
-, <a class="el" href="mount_8c.html#ad1f2426abc49e3a353545a7f6fd465eb">mount.c</a>
-, <a class="el" href="symlink_8c.html#ab054efed13f519c688c08dd61c876a32">symlink.c</a>
-, <a class="el" href="sighandler_8c.html#a35314b503840bda636b115cf4f8614ae">sighandler.c</a>
+, <a class="el" href="stat_8c.html#ab45af51509d61db3d12d130a3dbc84b2">stat.c</a>
+, <a class="el" href="lseek_8c.html#adf9807ac9976dd75922da3de250cf9b1">lseek.c</a>
 , <a class="el" href="close_8c.html#af50bb9113581b84b91cad26990c7caa4">close.c</a>
 , <a class="el" href="execve_8c.html#ad7d0c3131e92bac14e1e9ac6b73f6ec8">execve.c</a>
-, <a class="el" href="ioctl_8c.html#a88be2ec84300ac3760f30a5858ff7e86">ioctl.c</a>
-, <a class="el" href="src_2syscall_2readdir_8c.html#a33e160890354903b1195af9f4aa74f19">readdir.c</a>
-, <a class="el" href="args_8c.html#a02df3ac1abd0794e1ff35df04311a8fa">args.c</a>
-, <a class="el" href="openpty_8c.html#a773637204237eb29e9c39c0dcd5a06f4">openpty.c</a>
-, <a class="el" href="gettimeofday_8c.html#ad590b1e420aff1c14b09d65c16c08d62">gettimeofday.c</a>
-, <a class="el" href="isatty_8c.html#ac111a88c909250bbdf1ec8f925622f42">isatty.c</a>
-, <a class="el" href="clone_8c.html#adeb0bff3f02079d3e65a1229d6161490">clone.c</a>
 , <a class="el" href="link_8c.html#a2a5ed27d231d89b18ac7541c742b3d18">link.c</a>
-, <a class="el" href="args_8c.html#a6d18aae0595a8306aa274d697d4eadac">args.c</a>
-, <a class="el" href="fstat_8c.html#a4d257934d85058e9d4821db299a6544d">fstat.c</a>
-, <a class="el" href="getpid_8c.html#a74381482f24d171c9ad80f0c85fe2b3b">getpid.c</a>
-, <a class="el" href="fcntl_8c.html#a5f500fa48a3ec03f7c9627bc1abda1aa">fcntl.c</a>
-, <a class="el" href="getgroups_8c.html#ab7992f4bd1543b490f49298451a680e3">getgroups.c</a>
-, <a class="el" href="wait_8c.html#a4a7121092029355dc4b74d1515420c88">wait.c</a>
 , <a class="el" href="read_8c.html#a8e781c261440d55684d8aed16e399270">read.c</a>
-, <a class="el" href="yield_8c.html#ac015462b27f6721140f30824adc6ba73">yield.c</a>
-, <a class="el" href="kill_8c.html#af36650f7b47e85ac1873a0ba3644e1a6">kill.c</a>
+, <a class="el" href="args_8c.html#a02df3ac1abd0794e1ff35df04311a8fa">args.c</a>
+, <a class="el" href="fstat_8c.html#a4d257934d85058e9d4821db299a6544d">fstat.c</a>
+, <a class="el" href="mount_8c.html#ad1f2426abc49e3a353545a7f6fd465eb">mount.c</a>
+, <a class="el" href="waitpid_8c.html#a202384fbf44c4383fb36d9fe3c746b00">waitpid.c</a>
+, <a class="el" href="umount_8c.html#a58e6ca15fd18d508f7182e2cd68eba21">umount.c</a>
+, <a class="el" href="syscall_2pipe_8c.html#a0bd500744bcdc8b9d447a0d5bfefa9a1">pipe.c</a>
+, <a class="el" href="fchdir_8c.html#a271d2184f43cc5ec6f69b0d305cf87ab">fchdir.c</a>
+, <a class="el" href="fcntl_8c.html#a5f500fa48a3ec03f7c9627bc1abda1aa">fcntl.c</a>
+, <a class="el" href="write_8c.html#ac98021d255ccf030a8cbe505a788031f">write.c</a>
+, <a class="el" href="umount_8c.html#a3576e97b06555aee2a1ccdc01d28a5ed">umount.c</a>
 , <a class="el" href="sbrk_8c.html#a181c1f01f7967b89792ddeed15e4b935">sbrk.c</a>
+, <a class="el" href="gettimeofday_8c.html#ad590b1e420aff1c14b09d65c16c08d62">gettimeofday.c</a>
+, <a class="el" href="chown_8c.html#a72db0d5fe4733e59ef6b0dd96495a4d1">chown.c</a>
+, <a class="el" href="yield_8c.html#ac015462b27f6721140f30824adc6ba73">yield.c</a>
+, <a class="el" href="src_2syscall_2wait_8c.html#a4a7121092029355dc4b74d1515420c88">wait.c</a>
+, <a class="el" href="clone_8c.html#adeb0bff3f02079d3e65a1229d6161490">clone.c</a>
+, <a class="el" href="src_2syscall_2readdir_8c.html#a33e160890354903b1195af9f4aa74f19">readdir.c</a>
+, <a class="el" href="open_8c.html#acad57ec13a2846f9bbbf7c99b66a773b">open.c</a>
+, <a class="el" href="ioctl_8c.html#a88be2ec84300ac3760f30a5858ff7e86">ioctl.c</a>
 </li>
 <li>syscall_handler()
-: <a class="el" href="desc_8c.html#ab36b30e25787b3f4887160064ba2f43a">desc.c</a>
-, <a class="el" href="syscall_8c.html#a7325ddfa6207debff955f3bcefc0bf93">syscall.c</a>
+: <a class="el" href="syscall_8c.html#a7325ddfa6207debff955f3bcefc0bf93">syscall.c</a>
+, <a class="el" href="desc_8c.html#ab36b30e25787b3f4887160064ba2f43a">desc.c</a>
 </li>
 <li>syscall_init()
 : <a class="el" href="syscall_8c.html#a15662fc3572d9f3abd72a439727767c3">syscall.c</a>
@@ -435,7 +474,7 @@ $(document).ready(function(){initNavTree('globals_func_s.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:43 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:01 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

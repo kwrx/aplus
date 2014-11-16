@@ -6,56 +6,56 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2496">
+      <node id="2702">
         <label>usr/src/libpthread/src/pthread_spin.c</label>
         <link refid="pthread_spin.c"/>
-        <childnode refid="2497" relation="include">
+        <childnode refid="2703" relation="include">
         </childnode>
-        <childnode refid="2498" relation="include">
+        <childnode refid="2704" relation="include">
         </childnode>
-        <childnode refid="2503" relation="include">
+        <childnode refid="2709" relation="include">
         </childnode>
       </node>
-      <node id="2497">
+      <node id="2703">
         <label>stdint.h</label>
       </node>
-      <node id="2504">
+      <node id="2710">
         <label>errno.h</label>
       </node>
-      <node id="2503">
+      <node id="2709">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2504" relation="include">
+        <childnode refid="2710" relation="include">
         </childnode>
-        <childnode refid="2497" relation="include">
+        <childnode refid="2703" relation="include">
         </childnode>
-        <childnode refid="2498" relation="include">
+        <childnode refid="2704" relation="include">
         </childnode>
       </node>
-      <node id="2498">
+      <node id="2704">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2497" relation="include">
+        <childnode refid="2703" relation="include">
         </childnode>
-        <childnode refid="2499" relation="include">
+        <childnode refid="2705" relation="include">
         </childnode>
-        <childnode refid="2500" relation="include">
+        <childnode refid="2706" relation="include">
         </childnode>
-        <childnode refid="2501" relation="include">
+        <childnode refid="2707" relation="include">
         </childnode>
-        <childnode refid="2502" relation="include">
+        <childnode refid="2708" relation="include">
         </childnode>
       </node>
-      <node id="2499">
+      <node id="2705">
         <label>sys/types.h</label>
       </node>
-      <node id="2502">
+      <node id="2708">
         <label>unistd.h</label>
       </node>
-      <node id="2500">
+      <node id="2706">
         <label>sys/time.h</label>
       </node>
-      <node id="2501">
+      <node id="2707">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -81,8 +81,8 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" line="7" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" bodystart="7" bodyend="17"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="150">pthread_spinlock::interlock</references>
-        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="151">pthread_spinlock::mutex</references>
+        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="151">pthread_spinlock::interlock</references>
+        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="152">pthread_spinlock::mutex</references>
         <references refid="pthread_8h_1a7454d249ed94ad5d5e57ba1529d7a7f2" compoundref="pthread__mutex_8c" startline="26" endline="43">pthread_mutex_init</references>
       </memberdef>
       <memberdef kind="function" id="pthread__spin_8c_1a7b6102c55f484c1f57b34294d16b13d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -102,8 +102,8 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" line="19" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" bodystart="19" bodyend="29"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="150">pthread_spinlock::interlock</references>
-        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="151">pthread_spinlock::mutex</references>
+        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="151">pthread_spinlock::interlock</references>
+        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="152">pthread_spinlock::mutex</references>
         <references refid="pthread_8h_1a3cf620ff3a40af11d79cf28901dc55e2" compoundref="pthread__mutex_8c" startline="46" endline="65">pthread_mutex_destroy</references>
       </memberdef>
       <memberdef kind="function" id="pthread__spin_8c_1a11a36f5063d9ec9958c59fd5712a297c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -123,8 +123,8 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" line="31" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" bodystart="31" bodyend="43"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="150">pthread_spinlock::interlock</references>
-        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="151">pthread_spinlock::mutex</references>
+        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="151">pthread_spinlock::interlock</references>
+        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="152">pthread_spinlock::mutex</references>
         <references refid="pthread_8h_1a12809c44718c21544ceb280dc1a53573" compoundref="pthread__mutex_8c" startline="67" endline="89">pthread_mutex_lock</references>
       </memberdef>
       <memberdef kind="function" id="pthread__spin_8c_1aa4ee5217fd415283c75e390c76c53c5f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -144,8 +144,8 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" line="45" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" bodystart="45" bodyend="57"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="150">pthread_spinlock::interlock</references>
-        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="151">pthread_spinlock::mutex</references>
+        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="151">pthread_spinlock::interlock</references>
+        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="152">pthread_spinlock::mutex</references>
         <references refid="pthread_8h_1a27da386211db1a7e9a3b2a0db4d22144" compoundref="pthread__mutex_8c" startline="107" endline="131">pthread_mutex_trylock</references>
       </memberdef>
       <memberdef kind="function" id="pthread__spin_8c_1a923365fbde5bb89fcb333d057e9d33e5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -165,8 +165,8 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" line="59" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_spin.c" bodystart="59" bodyend="71"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="150">pthread_spinlock::interlock</references>
-        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="151">pthread_spinlock::mutex</references>
+        <references refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" compoundref="pthread_8h" startline="151">pthread_spinlock::interlock</references>
+        <references refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" compoundref="pthread_8h" startline="152">pthread_spinlock::mutex</references>
         <references refid="pthread_8h_1a96184290ffb60e04c53a52869cf960a2" compoundref="pthread__mutex_8c" startline="133" endline="153">pthread_mutex_unlock</references>
       </memberdef>
       </sectiondef>
@@ -184,7 +184,7 @@
 <codeline lineno="7" refid="pthread__spin_8c_1adeb2a567e6ea725a201a151747315072" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__spin_8c_1adeb2a567e6ea725a201a151747315072" kindref="member">pthread_spin_init</ref>(<ref refid="structpthread__spinlock" kindref="compound">pthread_spinlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pshared)<sp/>{</highlight></codeline>
 <codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!lock)<sp/>{</highlight></codeline>
 <codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" kindref="member">interlock</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -196,7 +196,7 @@
 <codeline lineno="19" refid="pthread__spin_8c_1a7b6102c55f484c1f57b34294d16b13d1" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__spin_8c_1a7b6102c55f484c1f57b34294d16b13d1" kindref="member">pthread_spin_destroy</ref>(<ref refid="structpthread__spinlock" kindref="compound">pthread_spinlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!lock)<sp/>{</highlight></codeline>
 <codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="24"><highlight class="normal"></highlight></codeline>
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" kindref="member">interlock</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -208,13 +208,13 @@
 <codeline lineno="31" refid="pthread__spin_8c_1a11a36f5063d9ec9958c59fd5712a297c" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__spin_8c_1a11a36f5063d9ec9958c59fd5712a297c" kindref="member">pthread_spin_lock</ref>(<ref refid="structpthread__spinlock" kindref="compound">pthread_spinlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!lock)<sp/>{</highlight></codeline>
 <codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="36"><highlight class="normal"></highlight></codeline>
 <codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread_8h_1a12809c44718c21544ceb280dc1a53573" kindref="member">pthread_mutex_lock</ref>(&amp;lock-&gt;<ref refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" kindref="member">mutex</ref>)<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" kindref="member">interlock</ref><sp/>=<sp/>1;</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;<sp/></highlight><highlight class="comment">/*<sp/>errno<sp/>already<sp/>setted<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;<sp/></highlight><highlight class="comment">/*<sp/>errno<sp/>already<sp/>setted<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="41"><highlight class="normal"></highlight></codeline>
 <codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="43"><highlight class="normal">}</highlight></codeline>
@@ -222,13 +222,13 @@
 <codeline lineno="45" refid="pthread__spin_8c_1aa4ee5217fd415283c75e390c76c53c5f" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__spin_8c_1aa4ee5217fd415283c75e390c76c53c5f" kindref="member">pthread_spin_trylock</ref>(<ref refid="structpthread__spinlock" kindref="compound">pthread_spinlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!lock)<sp/>{</highlight></codeline>
 <codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="50"><highlight class="normal"></highlight></codeline>
 <codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread_8h_1a27da386211db1a7e9a3b2a0db4d22144" kindref="member">pthread_mutex_trylock</ref>(&amp;lock-&gt;<ref refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" kindref="member">mutex</ref>)<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" kindref="member">interlock</ref><sp/>=<sp/>1;</highlight></codeline>
 <codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;<sp/></highlight><highlight class="comment">/*<sp/>errno<sp/>already<sp/>setted<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;<sp/></highlight><highlight class="comment">/*<sp/>errno<sp/>already<sp/>setted<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="55"><highlight class="normal"></highlight></codeline>
 <codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="57"><highlight class="normal">}</highlight></codeline>
@@ -236,13 +236,13 @@
 <codeline lineno="59" refid="pthread__spin_8c_1a923365fbde5bb89fcb333d057e9d33e5" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__spin_8c_1a923365fbde5bb89fcb333d057e9d33e5" kindref="member">pthread_spin_unlock</ref>(<ref refid="structpthread__spinlock" kindref="compound">pthread_spinlock_t</ref><sp/>*<ref refid="spinlock_8h_1aea28b4c44db4f0f1d0f222d6382c04c0" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!lock)<sp/>{</highlight></codeline>
 <codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="64"><highlight class="normal"></highlight></codeline>
 <codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread_8h_1a96184290ffb60e04c53a52869cf960a2" kindref="member">pthread_mutex_unlock</ref>(&amp;lock-&gt;<ref refid="structpthread__spinlock_1aebd79085a40b0d251d747a24f77746f5" kindref="member">mutex</ref>)<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>lock-&gt;<ref refid="structpthread__spinlock_1a7b8aa3d5e657c6e399aa7a94c8c6d4fe" kindref="member">interlock</ref><sp/>=<sp/>0;</highlight></codeline>
 <codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;<sp/></highlight><highlight class="comment">/*<sp/>errno<sp/>already<sp/>setted<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;<sp/></highlight><highlight class="comment">/*<sp/>errno<sp/>already<sp/>setted<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="71"><highlight class="normal">}</highlight></codeline>

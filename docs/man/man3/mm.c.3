@@ -1,4 +1,4 @@
-.TH "src/mm/mm.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/mm/mm.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -14,9 +14,13 @@ src/mm/mm.c \-
 .br
 \fC#include <string\&.h>\fP
 .br
+\fC#include <aplus\&.h>\fP
+.br
 \fC#include <aplus/mm\&.h>\fP
 .br
 \fC#include <aplus/list\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
 .br
 \fC#include <grub\&.h>\fP
 .br
@@ -34,7 +38,9 @@ src/mm/mm.c \-
 .ti -1c
 .RI "struct \fBblock\fP \fB__attribute__\fP ((packed))"
 .br
-.RI "\fIAlloc memory from Kernel Heap\&. \fP"
+.ti -1c
+.RI "void * \fBkvmalloc\fP (size_t \fBsize\fP)"
+.br
 .ti -1c
 .RI "void \fBkfree\fP (void *ptr)"
 .br
@@ -48,7 +54,7 @@ src/mm/mm.c \-
 .br
 .RI "\fISet current heap for memory operations\&. \fP"
 .ti -1c
-.RI "volatile \fBheap_t\fP * \fBmm_getheap\fP ()"
+.RI "\fBheap_t\fP * \fBmm_getheap\fP ()"
 .br
 .RI "\fIGet current heap for memory operations\&. \fP"
 .ti -1c
@@ -63,7 +69,7 @@ src/mm/mm.c \-
 .RI "\fBuint32_t\fP \fBmemsize\fP"
 .br
 .ti -1c
-.RI "volatile \fBheap_t\fP * \fBcurrent_heap\fP"
+.RI "\fBheap_t\fP * \fBcurrent_heap\fP"
 .br
 .ti -1c
 .RI "\fBuint32_t\fP * \fBcurrent_vmm\fP"
@@ -71,6 +77,14 @@ src/mm/mm.c \-
 .ti -1c
 .RI "\fBuint32_t\fP * \fBkernel_vmm\fP"
 .br
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.RI "\fICurrent task address\&. \fP"
+.ti -1c
+.RI "\fBtask_t\fP * \fBkernel_task\fP"
+.br
+.RI "\fIKernel task address\&. \fP"
 .ti -1c
 .RI "\fBlist_t\fP * \fBvmm_queue\fP"
 .br
@@ -86,37 +100,74 @@ src/mm/mm.c \-
 .SS "struct \fBblock\fP __attribute__ ((packed))"
 
 .PP
-Alloc memory from Kernel Heap\&. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIsize\fP Size of data to alloc\&. 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-Virtual Address of data\&. 
-.RE
-.PP
-
-.PP
-Definition at line 47 of file mm\&.c\&.
+Definition at line 64 of file mm\&.c\&.
 .PP
 .nf
-59                            {
-60     void* addr = (void*) halloc(current_heap, size);
-61     if(!addr)
-62         panic("halloc(): failed!");
-63 
-64 
-65     addr = mm_vaddr(addr);
-66 
-67     block_t* block = (block_t*) addr;
-68     block->magic = BLKMAGIC;
-69     block->size = size;
-70 
-71     return (void*) ((uint32_t) block + sizeof(block_t));
-72 }
+70                                           {
+71     if(current_task != kernel_task)
+72         return;
+73 
+74     schedule_disable();
+75     vmm_disable();
+76     
+77     int e = 0;
+78     for(uint32_t frame = 0; frame < current_heap->size; frame += 0x1000) {
+79         block_t* block = (block_t*) frame;
+80         if(block->magic != BLKMAGIC)
+81             continue;
+82 
+83 
+84         if(*(uint32_t*) (frame + block->size + sizeof(block_t)) != CHUNK_MAGIC) {
+85             kprintf("mm: chunk overflow at 0x%x (%x) allocated from %s (%d)\n", frame, block->size, block->file, block->line);
+86             e++;
+87 
+88             *(uint32_t*) (frame + block->size + sizeof(block_t)) = CHUNK_MAGIC;
+89         }
+90 
+91         frame += block->size & ~0xFFF;
+92     }
+93     
+94     if(e)
+95         kprintf("There was %d chunks overflow\n", e);
+96 
+97     vmm_enable();
+98     schedule_enable();
+99 }
+100 #endif
+101 
+102 
+103 
+104 #ifdef CHUNKS_CHECKING
+105 void* __kmalloc(size_t size, char* file, int line)
+106 #else
+107 void* kmalloc(size_t size) 
+108 #endif
+109 {
+110 
+111     size += sizeof(block_t);
+112 
+113     void* addr = (void*) halloc(current_heap, size);
+114     if(!addr)
+115         panic("halloc(): failed!");
+116 
+117 
+118     addr = mm_vaddr(addr);
+119 
+120     block_t* block = (block_t*) addr;
+121     block->magic = BLKMAGIC;
+122     block->size = size;
+123 
+124 #ifdef CHUNKS_CHECKING
+125     block->file = file;
+126     block->line = line;
+127 
+128     *(uint32_t*) ((uint32_t) block + size + sizeof(block_t)) = CHUNK_MAGIC;
+129 
+130     __check_all_chunks_overflow();
+131 #endif
+132 
+133     return (void*) ((uint32_t) block + sizeof(block_t));
+134 }
 .fi
 .SS "void kfree (void *ptr)"
 
@@ -130,27 +181,34 @@ Free memory from Kernel Heap\&.
 .PP
 
 .PP
-Definition at line 79 of file mm\&.c\&.
+Definition at line 151 of file mm\&.c\&.
 .PP
-References BLKMAGIC, hfree(), mm_align(), mm_paddr(), and size\&.
+References BLKMAGIC, hfree(), mm_align(), and mm_paddr()\&.
 .PP
 .nf
-79                       {
-80     if(!ptr)
-81         return;
-82         
-83     
-84     block_t* block = (block_t*) ptr;
-85     if(block->magic != BLKMAGIC)
-86         return;
-87         
-88     size_t size = block->size;
-89     block->size = 0;
-90     block->magic = 0;
-91     
-92     
-93     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
-94 }
+151                       {
+152     if(!ptr)
+153         return;
+154         
+155     
+156     block_t* block = (block_t*) ptr;
+157     block--;
+158 
+159     if(block->magic != BLKMAGIC)
+160         return;
+161 
+162 
+163     size_t size = block->size;
+164     block->size = 0;
+165     block->magic = 0;
+166     
+167 #ifdef CHUNKS_CHECKING
+168     block->file = 0;
+169     block->line = 0;
+170 #endif
+171     
+172     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+173 }
 .fi
 .SS "void* krealloc (void *ptr, size_tsize)"
 
@@ -171,96 +229,128 @@ Virtual Address of data\&.
 .PP
 
 .PP
-Definition at line 103 of file mm\&.c\&.
+Definition at line 182 of file mm\&.c\&.
 .PP
 References BLKMAGIC, kfree(), and kmalloc()\&.
 .PP
 .nf
-103                                        {
-104     if(ptr == NULL)
-105         return kmalloc(size);
-106         
-107     if(size == 0) {
-108         kfree(ptr);
-109         return NULL;
-110     }   
-111 
-112     block_t* block = (block_t*) ptr;
-113     if(block->magic != BLKMAGIC)
-114         return NULL;
-115         
-116     void* newptr = kmalloc(size);
-117     if(!newptr)
-118         return NULL;
-119         
-120     if(size > block->size)
-121         size = block->size;
-122         
-123     memcpy(newptr, ptr, size);
-124     kfree(ptr);
-125     
-126     return newptr;
-127 }
+182                                        {
+183     if(ptr == NULL)
+184         return kmalloc(size);
+185         
+186     if(size == 0) {
+187         kfree(ptr);
+188         return NULL;
+189     }   
+190 
+191     block_t* block = (block_t*) ptr;
+192     block--;
+193 
+194     if(block->magic != BLKMAGIC)
+195         return NULL;
+196         
+197     void* newptr = kmalloc(size);
+198     if(!newptr)
+199         return NULL;
+200         
+201     if(size > block->size)
+202         size = block->size;
+203         
+204     memcpy(newptr, ptr, size);
+205     kfree(ptr);
+206     
+207     return newptr;
+208 }
 .fi
-.SS "volatile \fBheap_t\fP* mm_getheap ()"
+.SS "void* kvmalloc (size_tsize)"
+
+.PP
+Definition at line 137 of file mm\&.c\&.
+.PP
+References halloc(), mm_vaddr(), and panic()\&.
+.PP
+.nf
+137                             {
+138     void* addr = (void*) halloc(current_heap, size);
+139     if(!addr)
+140         panic("halloc(): failed!");
+141 
+142 
+143     addr = mm_vaddr(addr);
+144     return addr;
+145 }
+.fi
+.SS "\fBheap_t\fP* mm_getheap ()"
 
 .PP
 Get current heap for memory operations\&. 
 .PP
-Definition at line 141 of file mm\&.c\&.
+Definition at line 222 of file mm\&.c\&.
 .PP
 References current_heap\&.
 .PP
 .nf
-141                               {
-142     return current_heap;
-143 }
+222                      {
+223     return current_heap;
+224 }
 .fi
 .SS "int mm_init ()"
 
 .PP
 Initialize MMU\&. 
 .PP
-Definition at line 149 of file mm\&.c\&.
+Definition at line 230 of file mm\&.c\&.
 .PP
 References kheap_init(), mbd, BootInfo_t::mem_lower, BootInfo_t::mem_upper, memsize, vmm_init(), and VMM_MAX_MEMORY\&.
 .PP
 .nf
-149               {
-150 
-151     memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
-152     if(memsize > VMM_MAX_MEMORY)
-153         memsize = VMM_MAX_MEMORY;
-154 
-155 
-156     kheap_init();
-157     vmm_init();
-158 
-159     return 0;
-160 }
+230               {
+231 
+232     memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
+233     if(memsize > VMM_MAX_MEMORY)
+234         memsize = VMM_MAX_MEMORY;
+235 
+236 
+237     kheap_init();
+238     vmm_init();
+239 
+240     return 0;
+241 }
 .fi
 .SS "void mm_setheap (\fBheap_t\fP *heap)"
 
 .PP
 Set current heap for memory operations\&. 
 .PP
-Definition at line 134 of file mm\&.c\&.
+Definition at line 215 of file mm\&.c\&.
 .PP
 .nf
-134                               {
-135     current_heap = heap;
-136 }
+215                               {
+216     current_heap = heap;
+217 }
 .fi
 .SH "Variable Documentation"
 .PP 
-.SS "volatile \fBheap_t\fP* current_heap"
+.SS "\fBheap_t\fP* current_heap"
 
 .PP
-Definition at line 36 of file mm\&.c\&.
+Definition at line 45 of file mm\&.c\&.
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Current task address\&. 
+.PP
+Definition at line 37 of file sched\&.c\&.
 .SS "\fBuint32_t\fP* current_vmm"
 
 .PP
 Definition at line 46 of file paging\&.c\&.
+.SS "\fBtask_t\fP* kernel_task"
+
+.PP
+Kernel task address\&. 
+.PP
+Definition at line 42 of file sched\&.c\&.
 .SS "\fBuint32_t\fP* kernel_vmm"
 
 .PP
@@ -268,15 +358,22 @@ Definition at line 47 of file paging\&.c\&.
 .SS "\fBuint16_t\fP magic"
 
 .PP
-Definition at line 42 of file mm\&.c\&.
+Definition at line 54 of file mm\&.c\&.
 .SS "\fBuint32_t\fP memsize"
 
 .PP
-Definition at line 35 of file mm\&.c\&.
+\fBSee also:\fP
+.RS 4
+\fBaplus/mm\&.h\fP 
+.RE
+.PP
+
+.PP
+Definition at line 44 of file mm\&.c\&.
 .SS "size_t size"
 
 .PP
-Definition at line 43 of file mm\&.c\&.
+Definition at line 55 of file mm\&.c\&.
 .SS "\fBlist_t\fP* vmm_queue"
 
 .PP

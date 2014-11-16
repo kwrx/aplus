@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('pthread__join_8c_source.html','');});
 <div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="pthread__join_8c.html#a3a07eea4fe20b2d6457494decbae0232">    8</a></span>&#160;<a class="code" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> <span class="keywordtype">int</span> <a class="code" href="pthread__join_8c.html#a3a07eea4fe20b2d6457494decbae0232">pthread_join</a>(<a class="code" href="pthread_8h.html#a6766c2345d5c6fe6407d9f6b844e584a">pthread_t</a> thread, <span class="keywordtype">void</span> **value_ptr) {</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordflow">if</span>(!thread) {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    }</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <a class="code" href="structpthread__context.html">pthread_context_t</a>* ctx = (<a class="code" href="structpthread__context.html">pthread_context_t</a>*) thread;</div>
@@ -147,7 +147,7 @@ $(document).ready(function(){initNavTree('pthread__join_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_c23ec9db109baf02f825a52e3d8bd742.html">libpthread</a></li><li class="navelem"><a class="el" href="dir_93ec8f7d0ab70c6b2c55924b01761aab.html">src</a></li><li class="navelem"><a class="el" href="pthread__join_8c.html">pthread_join.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

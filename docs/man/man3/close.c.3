@@ -1,4 +1,4 @@
-.TH "src/syscall/close.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/close.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -73,21 +73,26 @@ Upon successful completion, 0 shall be returned; otherwise, -1 shall be returned
 .PP
 Definition at line 26 of file close\&.c\&.
 .PP
-References errno, and task::fd\&.
+References errno, task::fd, and TASK_MAX_FD\&.
 .PP
 .nf
 26                       {
 27     if(!current_task)
 28         return -1;
-29         
-30     if(current_task->fd[fd] == 0) {     
+29 
+30     if(fd > TASK_MAX_FD || fd < 0) {
 31         errno = EBADF;
 32         return -1;
 33     }
-34     
-35     current_task->fd[fd] = 0;
-36     return 0;
-37 }
+34         
+35     if(current_task->fd[fd] == 0) {     
+36         errno = EBADF;
+37         return -1;
+38     }
+39     
+40     current_task->fd[fd] = 0;
+41     return 0;
+42 }
 .fi
 .SS "SYSCALL (\fBsys_close\fP, 1)"
 
@@ -98,7 +103,7 @@ References errno, and task::fd\&.
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

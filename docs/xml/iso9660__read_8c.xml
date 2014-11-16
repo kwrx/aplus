@@ -6,6 +6,7 @@
     <includes refid="fs_8h" local="no">aplus/fs.h</includes>
     <includes refid="task_8h" local="no">aplus/task.h</includes>
     <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
     <includes local="no">stdint.h</includes>
     <includes local="no">string.h</includes>
     <includes local="no">unistd.h</includes>
@@ -14,117 +15,127 @@
     <includes local="no">sys/types.h</includes>
     <includes refid="iso9660_8h" local="yes">iso9660.h</includes>
     <incdepgraph>
-      <node id="244">
+      <node id="252">
         <label>sys/stat.h</label>
       </node>
-      <node id="239">
+      <node id="247">
         <label>stdarg.h</label>
       </node>
-      <node id="241">
+      <node id="249">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="238" relation="include">
-        </childnode>
-        <childnode refid="242" relation="include">
-        </childnode>
-        <childnode refid="243" relation="include">
-        </childnode>
-        <childnode refid="244" relation="include">
-        </childnode>
-        <childnode refid="245" relation="include">
-        </childnode>
-      </node>
-      <node id="238">
-        <label>stdint.h</label>
-      </node>
-      <node id="249">
-        <label>setjmp.h</label>
-      </node>
-      <node id="247">
-        <label>aplus/task.h</label>
-        <link refid="task_8h"/>
-        <childnode refid="238" relation="include">
-        </childnode>
-        <childnode refid="237" relation="include">
-        </childnode>
-        <childnode refid="241" relation="include">
-        </childnode>
-        <childnode refid="248" relation="include">
-        </childnode>
-        <childnode refid="243" relation="include">
-        </childnode>
-        <childnode refid="249" relation="include">
-        </childnode>
-      </node>
-      <node id="251">
-        <label>fcntl.h</label>
-      </node>
-      <node id="242">
-        <label>stddef.h</label>
-      </node>
-      <node id="237">
-        <label>aplus.h</label>
-        <link refid="aplus_8h"/>
-        <childnode refid="238" relation="include">
-        </childnode>
-        <childnode refid="239" relation="include">
-        </childnode>
-        <childnode refid="240" relation="include">
-        </childnode>
-      </node>
-      <node id="243">
-        <label>sys/types.h</label>
-      </node>
-      <node id="240">
-        <label>string.h</label>
-      </node>
-      <node id="236">
-        <label>src/fs/iso9660/iso9660_read.c</label>
-        <link refid="iso9660_read.c"/>
-        <childnode refid="237" relation="include">
-        </childnode>
-        <childnode refid="241" relation="include">
-        </childnode>
-        <childnode refid="247" relation="include">
+        <childnode refid="246" relation="include">
         </childnode>
         <childnode refid="250" relation="include">
         </childnode>
-        <childnode refid="238" relation="include">
+        <childnode refid="251" relation="include">
         </childnode>
-        <childnode refid="240" relation="include">
+        <childnode refid="252" relation="include">
         </childnode>
+        <childnode refid="253" relation="include">
+        </childnode>
+      </node>
+      <node id="246">
+        <label>stdint.h</label>
+      </node>
+      <node id="257">
+        <label>setjmp.h</label>
+      </node>
+      <node id="255">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
         <childnode refid="246" relation="include">
         </childnode>
         <childnode refid="245" relation="include">
         </childnode>
+        <childnode refid="249" relation="include">
+        </childnode>
+        <childnode refid="256" relation="include">
+        </childnode>
         <childnode refid="251" relation="include">
         </childnode>
-        <childnode refid="243" relation="include">
-        </childnode>
-        <childnode refid="252" relation="include">
+        <childnode refid="257" relation="include">
         </childnode>
       </node>
-      <node id="246">
-        <label>unistd.h</label>
-      </node>
-      <node id="248">
-        <label>signal.h</label>
-      </node>
-      <node id="252">
-        <label>iso9660.h</label>
-        <link refid="iso9660_8h"/>
-        <childnode refid="238" relation="include">
-        </childnode>
-      </node>
-      <node id="245">
-        <label>sys/dirent.h</label>
-        <link refid="dirent_8h"/>
-        <childnode refid="246" relation="include">
-        </childnode>
-        <childnode refid="243" relation="include">
-        </childnode>
+      <node id="260">
+        <label>fcntl.h</label>
       </node>
       <node id="250">
+        <label>stddef.h</label>
+      </node>
+      <node id="245">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="247" relation="include">
+        </childnode>
+        <childnode refid="248" relation="include">
+        </childnode>
+      </node>
+      <node id="251">
+        <label>sys/types.h</label>
+      </node>
+      <node id="248">
+        <label>string.h</label>
+      </node>
+      <node id="244">
+        <label>src/fs/iso9660/iso9660_read.c</label>
+        <link refid="iso9660_read.c"/>
+        <childnode refid="245" relation="include">
+        </childnode>
+        <childnode refid="249" relation="include">
+        </childnode>
+        <childnode refid="255" relation="include">
+        </childnode>
+        <childnode refid="258" relation="include">
+        </childnode>
+        <childnode refid="259" relation="include">
+        </childnode>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="248" relation="include">
+        </childnode>
+        <childnode refid="254" relation="include">
+        </childnode>
+        <childnode refid="253" relation="include">
+        </childnode>
+        <childnode refid="260" relation="include">
+        </childnode>
+        <childnode refid="251" relation="include">
+        </childnode>
+        <childnode refid="261" relation="include">
+        </childnode>
+      </node>
+      <node id="254">
+        <label>unistd.h</label>
+      </node>
+      <node id="256">
+        <label>signal.h</label>
+      </node>
+      <node id="259">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="246" relation="include">
+        </childnode>
+        <childnode refid="255" relation="include">
+        </childnode>
+      </node>
+      <node id="261">
+        <label>iso9660.h</label>
+        <link refid="iso9660_8h"/>
+        <childnode refid="246" relation="include">
+        </childnode>
+      </node>
+      <node id="253">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="254" relation="include">
+        </childnode>
+        <childnode refid="251" relation="include">
+        </childnode>
+      </node>
+      <node id="258">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -153,17 +164,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660_read.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660_read.c" bodystart="16" bodyend="48"/>
+        <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660_read.c" line="17" column="1" bodyfile="/opt/prj/aPlus/src/fs/iso9660/iso9660_read.c" bodystart="17" bodyend="45"/>
         <references refid="structinode_1a127a2eb030df332fa64a81188731ad6b" compoundref="fs_8h" startline="40">inode::dev</references>
         <references refid="devfs_8c_1a226c953aff43f9b1e9736908bb6802f3" compoundref="devfs_8c" startline="23" endline="32">devfs_getdevice</references>
-        <references refid="fs_8c_1a8e53a98b93e6b136196b2ebd99e43dcd" compoundref="fs_8c" startline="16" endline="22">fs_read</references>
-        <references refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" compoundref="iso9660_8h" startline="7">ISO9660_SECTOR_SIZE</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
-        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="fs_8c_1a8e53a98b93e6b136196b2ebd99e43dcd" compoundref="fs_8c" startline="17" endline="23">fs_read</references>
         <references refid="structinode_1a5756f61233e40d01652094d29b5daf6c" compoundref="fs_8h" startline="48">inode::position</references>
         <references refid="structinode_1a53722b1b60b7136ce0204b66527bb400" compoundref="fs_8h" startline="47">inode::size</references>
-        <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="74">size</references>
-        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="73">size</references>
         <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
       </memberdef>
       </sectiondef>
@@ -176,50 +183,47 @@
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fs_8h" kindref="compound">aplus/fs.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="12"><highlight class="normal"></highlight></codeline>
-<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="iso9660_8h" kindref="compound">iso9660.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="iso9660_8h" kindref="compound">iso9660.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight></codeline>
-<codeline lineno="16" refid="iso9660__read_8c_1a83af7e892cfc4648261471ecabb77e7b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660__read_8c_1a83af7e892cfc4648261471ecabb77e7b" kindref="member">iso9660_read</ref>(<ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)</highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!buf)</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>&gt;<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>)</highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>;</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>&gt;<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>)</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>;</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>+<sp/>size<sp/>&gt;<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>)</highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref><sp/>-<sp/>ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref>;</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!size)</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>dev<sp/>=<sp/>(<ref refid="structinode" kindref="compound">inode_t</ref>*)<sp/><ref refid="devfs_8c_1a226c953aff43f9b1e9736908bb6802f3" kindref="member">devfs_getdevice</ref>(ino-&gt;<ref refid="structinode_1a127a2eb030df332fa64a81188731ad6b" kindref="member">dev</ref>);</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!dev)</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"></highlight></codeline>
-<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>tbuf<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(((size<sp/>/<sp/><ref refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" kindref="member">ISO9660_SECTOR_SIZE</ref>)<sp/>+<sp/>1)<sp/>*<sp/><ref refid="iso9660_8h_1a00bbe26a634a966bc30429348a713ede" kindref="member">ISO9660_SECTOR_SIZE</ref>);</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="iso9660__read_8c_1a83af7e892cfc4648261471ecabb77e7b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660__read_8c_1a83af7e892cfc4648261471ecabb77e7b" kindref="member">iso9660_read</ref>(<ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>buf,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!buf)</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size<sp/>&gt;<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>)</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>&gt;<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>)</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>+<sp/>size<sp/>&gt;<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref>)</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>size<sp/>=<sp/>ino-&gt;<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref><sp/>-<sp/>ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref>;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!size)</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>dev<sp/>=<sp/>(<ref refid="structinode" kindref="compound">inode_t</ref>*)<sp/><ref refid="devfs_8c_1a226c953aff43f9b1e9736908bb6802f3" kindref="member">devfs_getdevice</ref>(ino-&gt;<ref refid="structinode_1a127a2eb030df332fa64a81188731ad6b" kindref="member">dev</ref>);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!dev)</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
 <codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>dev-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>=<sp/>(off_t)<sp/>ino-&gt;<ref refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" kindref="member">userdata</ref><sp/>+<sp/>(ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>/<sp/>ISO9660_SECTOR_SIZE);</highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="fs_8c_1a8e53a98b93e6b136196b2ebd99e43dcd" kindref="member">fs_read</ref>(dev,<sp/>tbuf,<sp/>((size<sp/>/<sp/>ISO9660_SECTOR_SIZE)<sp/>+<sp/>1)<sp/>*<sp/>ISO9660_SECTOR_SIZE);</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>dev-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>=<sp/>(off_t)<sp/>ino-&gt;<ref refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" kindref="member">userdata</ref><sp/>+<sp/>ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref>;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="fs_8c_1a8e53a98b93e6b136196b2ebd99e43dcd" kindref="member">fs_read</ref>(dev,<sp/>buf,<sp/>size);</highlight></codeline>
 <codeline lineno="43"><highlight class="normal"></highlight></codeline>
-<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(buf,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>tbuf<sp/>+<sp/>(ino-&gt;<ref refid="structinode_1a5756f61233e40d01652094d29b5daf6c" kindref="member">position</ref><sp/>%<sp/>ISO9660_SECTOR_SIZE)),<sp/>size);</highlight></codeline>
-<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(tbuf);</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"></highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;</highlight></codeline>
-<codeline lineno="48"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/fs/iso9660/iso9660_read.c"/>
   </compounddef>

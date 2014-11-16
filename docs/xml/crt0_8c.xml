@@ -6,29 +6,29 @@
     <includes local="no">stdlib.h</includes>
     <includes local="no">signal.h</includes>
     <incdepgraph>
-      <node id="1965">
+      <node id="2133">
         <label>stdlib.h</label>
       </node>
-      <node id="1964">
+      <node id="2132">
         <label>errno.h</label>
       </node>
-      <node id="1963">
+      <node id="2131">
         <label>syscalls.c</label>
         <link refid="syscalls_8c"/>
-        <childnode refid="1964" relation="include">
+        <childnode refid="2132" relation="include">
         </childnode>
       </node>
-      <node id="1966">
+      <node id="2134">
         <label>signal.h</label>
       </node>
-      <node id="1962">
+      <node id="2130">
         <label>usr/src/libcrt0/src/crt0.c</label>
         <link refid="crt0.c"/>
-        <childnode refid="1963" relation="include">
+        <childnode refid="2131" relation="include">
         </childnode>
-        <childnode refid="1965" relation="include">
+        <childnode refid="2133" relation="include">
         </childnode>
-        <childnode refid="1966" relation="include">
+        <childnode refid="2134" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -190,7 +190,7 @@
 <codeline lineno="16"><highlight class="normal"></highlight></codeline>
 <codeline lineno="17" refid="crt0_8c_1aa7ab5703ee773f395bff8dc7abf214af" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="crt0_8c_1aa7ab5703ee773f395bff8dc7abf214af" kindref="member">__default_sighandler__</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sig)<sp/>{</highlight></codeline>
 <codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>signal(sig,<sp/><ref refid="crt0_8c_1aa7ab5703ee773f395bff8dc7abf214af" kindref="member">__default_sighandler__</ref>);</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>exit(sig);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>_exit(sig);</highlight></codeline>
 <codeline lineno="20"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="21"><highlight class="normal"></highlight></codeline>
 <codeline lineno="22"><highlight class="normal"></highlight></codeline>

@@ -112,56 +112,23 @@ $(document).ready(function(){initNavTree('usr_2src_2libatk_2test_2main_8c_source
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;signal.h&gt;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;assert.h&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="usr_2src_2libatk_2test_2main_8c.html#afd4f7f3e83f5ccc17a12c629a407c900">    6</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="usr_2src_2libatk_2test_2main_8c.html#afd4f7f3e83f5ccc17a12c629a407c900">__test_signals__</a>(<span class="keywordtype">int</span> sig) {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    printf(<span class="stringliteral">&quot;received signal %d\n&quot;</span>, sig);</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="atk_8h.html">atk.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="widget_8h.html">atk/widget.h</a>&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;}</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="usr_2src_2libatk_2test_2main_8c.html#afe4dfd5e49215955311250c669123180">   12</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="usr_2src_2libatk_2test_2main_8c.html#afe4dfd5e49215955311250c669123180">test_stdio</a>() {</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordflow">return</span> printf(<span class="stringliteral">&quot;Bla bla bla\n&quot;</span>);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="usr_2src_2libatk_2test_2main_8c.html#a72b40b42ede33a5df17620eb3ebfbcb7">   16</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="usr_2src_2libatk_2test_2main_8c.html#a72b40b42ede33a5df17620eb3ebfbcb7">test_args</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv) {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(argc == 0)</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">int</span> i;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">for</span>(i = 0; i &lt; argc; i++)</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        printf(<span class="stringliteral">&quot;argv[%d] =&gt; \&quot;%s\&quot;\n&quot;</span>, i, argv[i]);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="usr_2src_2libatk_2test_2main_8c.html#a1bc601ec27d4ef9c2b6ee94175fe3439">   28</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="usr_2src_2libatk_2test_2main_8c.html#a1bc601ec27d4ef9c2b6ee94175fe3439">test_signals</a>() {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    assert(signal(SIGUSR1, <a class="code" href="usr_2src_2libatk_2test_2main_8c.html#afd4f7f3e83f5ccc17a12c629a407c900">__test_signals__</a>) != SIG_ERR);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">raise</span>(SIGUSR1);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="usr_2src_2libatk_2test_2main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">   34</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="src_2main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>** argv) {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    assert(<a class="code" href="usr_2src_2libatk_2test_2main_8c.html#afe4dfd5e49215955311250c669123180">test_stdio</a>() &amp;&amp; <span class="stringliteral">&quot;Test stdio failed&quot;</span>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    assert(<a class="code" href="usr_2src_2libatk_2test_2main_8c.html#a72b40b42ede33a5df17620eb3ebfbcb7">test_args</a>(argc, argv) &amp;&amp; <span class="stringliteral">&quot;Test arguments failed&quot;</span>);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    assert(<a class="code" href="usr_2src_2libatk_2test_2main_8c.html#a1bc601ec27d4ef9c2b6ee94175fe3439">test_signals</a>() &gt;= 0 &amp;&amp; <span class="stringliteral">&quot;Test signals failed&quot;</span>);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    printf(<span class="stringliteral">&quot;Test OK\n&quot;</span>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_a1bc601ec27d4ef9c2b6ee94175fe3439"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#a1bc601ec27d4ef9c2b6ee94175fe3439">test_signals</a></div><div class="ttdeci">static int test_signals()</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00028">main.c:28</a></div></div>
-<div class="ttc" id="src_2main_8c_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="src_2main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdoc">Entry point for kernel. </div><div class="ttdef"><b>Definition:</b> <a href="src_2main_8c_source.html#l00063">main.c:63</a></div></div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_a72b40b42ede33a5df17620eb3ebfbcb7"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#a72b40b42ede33a5df17620eb3ebfbcb7">test_args</a></div><div class="ttdeci">static int test_args(int argc, char **argv)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00016">main.c:16</a></div></div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_afe4dfd5e49215955311250c669123180"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#afe4dfd5e49215955311250c669123180">test_stdio</a></div><div class="ttdeci">static int test_stdio()</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00012">main.c:12</a></div></div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_afd4f7f3e83f5ccc17a12c629a407c900"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#afd4f7f3e83f5ccc17a12c629a407c900">__test_signals__</a></div><div class="ttdeci">static int __test_signals__(int sig)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00006">main.c:6</a></div></div>
+<div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="usr_2src_2libatk_2test_2main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">    9</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="src_2main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
+<div class="ttc" id="atk_8h_html"><div class="ttname"><a href="atk_8h.html">atk.h</a></div></div>
+<div class="ttc" id="src_2main_8c_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="src_2main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdoc">Entry point for kernel. </div><div class="ttdef"><b>Definition:</b> <a href="src_2main_8c_source.html#l00081">main.c:81</a></div></div>
+<div class="ttc" id="widget_8h_html"><div class="ttname"><a href="widget_8h.html">widget.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_425f1d86d53c9d3e80d2d726a823d2ee.html">libatk</a></li><li class="navelem"><a class="el" href="dir_05c02e0122f5694a1a7f4b0c5bdc5982.html">test</a></li><li class="navelem"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html">main.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

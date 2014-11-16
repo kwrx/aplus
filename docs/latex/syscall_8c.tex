@@ -1,5 +1,5 @@
-\hypertarget{syscall_8c}{\section{src/arch/syscall.c File Reference}
-\label{syscall_8c}\index{src/arch/syscall.\+c@{src/arch/syscall.\+c}}
+\hypertarget{syscall_8c}{\section{src/arch/i386/syscall.c File Reference}
+\label{syscall_8c}\index{src/arch/i386/syscall.\+c@{src/arch/i386/syscall.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
@@ -9,7 +9,7 @@
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\#define \hyperlink{syscall_8c_a7cee1b8da707d135695bc11acee66b63}{S\+Y\+S\+C\+A\+L\+L\+\_\+\+D\+E\+B\+U\+G}
+\#define \hyperlink{syscall_8c_aae19ed96e8d4fe9da0d4bb8c5d0a9d6e}{N\+S\+Y\+S\+C\+A\+L\+L\+S}~1024
 \end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -28,12 +28,12 @@ static void $\ast$$\ast$ \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91
 
 
 \subsection{Macro Definition Documentation}
-\hypertarget{syscall_8c_a7cee1b8da707d135695bc11acee66b63}{\index{syscall.\+c@{syscall.\+c}!S\+Y\+S\+C\+A\+L\+L\+\_\+\+D\+E\+B\+U\+G@{S\+Y\+S\+C\+A\+L\+L\+\_\+\+D\+E\+B\+U\+G}}
-\index{S\+Y\+S\+C\+A\+L\+L\+\_\+\+D\+E\+B\+U\+G@{S\+Y\+S\+C\+A\+L\+L\+\_\+\+D\+E\+B\+U\+G}!syscall.\+c@{syscall.\+c}}
-\subsubsection[{S\+Y\+S\+C\+A\+L\+L\+\_\+\+D\+E\+B\+U\+G}]{\setlength{\rightskip}{0pt plus 5cm}\#define S\+Y\+S\+C\+A\+L\+L\+\_\+\+D\+E\+B\+U\+G}}\label{syscall_8c_a7cee1b8da707d135695bc11acee66b63}
+\hypertarget{syscall_8c_aae19ed96e8d4fe9da0d4bb8c5d0a9d6e}{\index{syscall.\+c@{syscall.\+c}!N\+S\+Y\+S\+C\+A\+L\+L\+S@{N\+S\+Y\+S\+C\+A\+L\+L\+S}}
+\index{N\+S\+Y\+S\+C\+A\+L\+L\+S@{N\+S\+Y\+S\+C\+A\+L\+L\+S}!syscall.\+c@{syscall.\+c}}
+\subsubsection[{N\+S\+Y\+S\+C\+A\+L\+L\+S}]{\setlength{\rightskip}{0pt plus 5cm}\#define N\+S\+Y\+S\+C\+A\+L\+L\+S~1024}}\label{syscall_8c_aae19ed96e8d4fe9da0d4bb8c5d0a9d6e}
 
 
-Definition at line 9 of file syscall.\+c.
+Definition at line 12 of file syscall.\+c.
 
 
 
@@ -47,29 +47,17 @@ Definition at line 9 of file syscall.\+c.
 )}}\label{syscall_8c_a7325ddfa6207debff955f3bcefc0bf93}
 
 
-Definition at line 81 of file syscall.\+c.
+Definition at line 95 of file syscall.\+c.
 
 
 
-References kprintf(), and syscall\+\_\+invoke().
+References syscall\+\_\+invoke().
 
 
 \begin{DoxyCode}
-81                                \{
-82 
-83 \textcolor{preprocessor}{#ifdef SYSCALL\_DEBUG}
-84     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: called %d (%x, %x, %x, %x, %x);"}, r->eax, r->ebx, r->ecx, r->edx, r->esi, r->
-      edi);
-85 \textcolor{preprocessor}{#endif}
-86 
-87     \textcolor{keywordtype}{int} ret = \hyperlink{syscall_8c_a468aa05f3eb6adc7330d73e9bb5c6951}{syscall\_invoke}(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
-88 
-89 \textcolor{preprocessor}{#ifdef SYSCALL\_DEBUG}
-90     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{" returned %x\(\backslash\)n"}, ret);
-91 \textcolor{preprocessor}{#endif}
-92 
-93     \textcolor{keywordflow}{return} ret;
-94 \}
+95                                \{
+96     \textcolor{keywordflow}{return} \hyperlink{syscall_8c_a468aa05f3eb6adc7330d73e9bb5c6951}{syscall\_invoke}(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+97 \}
 \end{DoxyCode}
 \hypertarget{syscall_8c_a15662fc3572d9f3abd72a439727767c3}{\index{syscall.\+c@{syscall.\+c}!syscall\+\_\+init@{syscall\+\_\+init}}
 \index{syscall\+\_\+init@{syscall\+\_\+init}!syscall.\+c@{syscall.\+c}}
@@ -80,55 +68,55 @@ References kprintf(), and syscall\+\_\+invoke().
 )}}\label{syscall_8c_a15662fc3572d9f3abd72a439727767c3}
 
 
-Definition at line 14 of file syscall.\+c.
+Definition at line 16 of file syscall.\+c.
 
 
 
-References attribute(), \+\_\+\+\_\+syscall\+::handler, kmalloc(), kprintf(), list\+\_\+destroy, list\+\_\+foreach, \+\_\+\+\_\+syscall\+::number, list\+::size, syscall\+\_\+handlers, and value.
+References attribute(), \+\_\+\+\_\+syscall\+::handler, kmalloc(), kprintf(), list\+\_\+destroy, list\+\_\+foreach, N\+S\+Y\+S\+C\+A\+L\+L\+S, \+\_\+\+\_\+syscall\+::number, list\+::size, syscall\+\_\+handlers, and value.
 
 
 \begin{DoxyCode}
-14                    \{
-15     \hyperlink{structlist}{list\_t}* syslist = \hyperlink{attribute_8h_ab96abe3fdf944e75a2316807105c1b6e}{attribute}(\textcolor{stringliteral}{"syscall"});
-16 
-17     \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers} = (\textcolor{keywordtype}{void}**) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{void}*) * syslist->
-      \hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
-18     memset(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}, 0, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{void}*) * syslist->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
-19 
-20     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, syslist) \{
-21         \hyperlink{struct____syscall}{syscall\_t}* sys = (\hyperlink{struct____syscall}{syscall\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
-22 
-23         \textcolor{keywordflow}{if}(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[sys->\hyperlink{struct____syscall_a7f020a41ed9bf3daff3dfc46ee673eef}{number}])
-24             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: duplicate number of %d handler\(\backslash\)n"});
-25 
-26         \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[sys->\hyperlink{struct____syscall_a7f020a41ed9bf3daff3dfc46ee673eef}{number}] = sys->\hyperlink{struct____syscall_af1d75ee98d8568f74e8421654a1081d3}{handler};
-27     \}
-28 
-29     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: loaded %d handlers\(\backslash\)n"}, syslist->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
-30     \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\_destroy}(syslist);
-31 
-32 
-33 \textcolor{preprocessor}{#ifdef DEBUG}
-34 \textcolor{preprocessor}{    #define NSYSCALLS       1024}
-35 
-36     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0, s = 0; i < NSYSCALLS; i++) \{
-37         \textcolor{keywordflow}{if}(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[i] == NULL) \{
-38             \textcolor{keywordflow}{if}(!s)
-39                 \textcolor{keywordflow}{continue};
-40 
-41             \textcolor{keywordflow}{if}(s > 1)
-42                 \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)t%d..%d\(\backslash\)n"}, i - s, i - 1);
-43             \textcolor{keywordflow}{else}
-44                 \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)t%d\(\backslash\)n"}, i - s);
-45 
-46             s = 0;
-47         \} \textcolor{keywordflow}{else}
-48             s++;
-49     \}
-50 \textcolor{preprocessor}{#endif}
-51 
-52     \textcolor{keywordflow}{return} 0;
-53 \}
+16                    \{
+17     \hyperlink{structlist}{list\_t}* syslist = \hyperlink{attribute_8h_ab96abe3fdf944e75a2316807105c1b6e}{attribute}(\textcolor{stringliteral}{"syscall"});
+18 
+19     \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers} = (\textcolor{keywordtype}{void}**) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{void}*) * 
+      \hyperlink{syscall_8c_aae19ed96e8d4fe9da0d4bb8c5d0a9d6e}{NSYSCALLS});
+20     memset(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}, 0, \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{void}*) * \hyperlink{syscall_8c_aae19ed96e8d4fe9da0d4bb8c5d0a9d6e}{NSYSCALLS});
+21 
+22     \hyperlink{list_8h_a1f44c976d2c698407a17fef984a5b232}{list\_foreach}(\hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value}, syslist) \{
+23         \hyperlink{struct____syscall}{syscall\_t}* sys = (\hyperlink{struct____syscall}{syscall\_t}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};
+24 
+25         \textcolor{keywordflow}{if}(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[sys->\hyperlink{struct____syscall_a7f020a41ed9bf3daff3dfc46ee673eef}{number}])
+26             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: duplicate number of %d handler\(\backslash\)n"});
+27 
+28         \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[sys->\hyperlink{struct____syscall_a7f020a41ed9bf3daff3dfc46ee673eef}{number}] = sys->\hyperlink{struct____syscall_af1d75ee98d8568f74e8421654a1081d3}{handler};
+29     \}
+30 
+31     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: loaded %d handlers\(\backslash\)n"}, syslist->\hyperlink{structlist_ae581be90bd8eb7051528b61ad216de88}{size});
+32     \hyperlink{list_8h_a9c676c5a77ee9c18ccaadcb4f99fc990}{list\_destroy}(syslist);
+33 
+34 
+35 \textcolor{preprocessor}{#ifdef DEBUG}
+36     
+37 
+38     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0, s = 0; i < \hyperlink{syscall_8c_aae19ed96e8d4fe9da0d4bb8c5d0a9d6e}{NSYSCALLS}; i++) \{
+39         \textcolor{keywordflow}{if}(\hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[i] == NULL) \{
+40             \textcolor{keywordflow}{if}(!s)
+41                 \textcolor{keywordflow}{continue};
+42 
+43             \textcolor{keywordflow}{if}(s > 1)
+44                 \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)t%d..%d\(\backslash\)n"}, i - s, i - 1);
+45             \textcolor{keywordflow}{else}
+46                 \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)t%d\(\backslash\)n"}, i - s);
+47 
+48             s = 0;
+49         \} \textcolor{keywordflow}{else}
+50             s++;
+51     \}
+52 \textcolor{preprocessor}{#endif}
+53 
+54     \textcolor{keywordflow}{return} 0;
+55 \}
 \end{DoxyCode}
 \hypertarget{syscall_8c_a468aa05f3eb6adc7330d73e9bb5c6951}{\index{syscall.\+c@{syscall.\+c}!syscall\+\_\+invoke@{syscall\+\_\+invoke}}
 \index{syscall\+\_\+invoke@{syscall\+\_\+invoke}!syscall.\+c@{syscall.\+c}}
@@ -144,38 +132,51 @@ References attribute(), \+\_\+\+\_\+syscall\+::handler, kmalloc(), kprintf(), li
 )}}\label{syscall_8c_a468aa05f3eb6adc7330d73e9bb5c6951}
 
 
-Definition at line 55 of file syscall.\+c.
+Definition at line 57 of file syscall.\+c.
 
 
 
-References \+\_\+\+\_\+asm\+\_\+\+\_\+(), errno, and syscall\+\_\+handlers.
+References \+\_\+\+\_\+asm\+\_\+\+\_\+(), elf\+\_\+kernel\+\_\+lookup(), errno, kprintf(), sys\+\_\+getpid(), and syscall\+\_\+handlers.
 
 
 \begin{DoxyCode}
-55                                                                     \{
-56     \textcolor{keywordtype}{void}* handler = \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[idx];  
-57 
-58     \textcolor{keywordflow}{if}(handler == NULL) \{
-59         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
-60         \textcolor{keywordflow}{return} -1;
-61     \}
-62 
-63     \textcolor{keywordtype}{int} r = 0;
+57                                                                     \{
+58     \textcolor{keywordtype}{void}* handler = \hyperlink{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}{syscall\_handlers}[idx];  
+59 
+60     \textcolor{keywordflow}{if}(handler == NULL) \{
+61         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+62         \textcolor{keywordflow}{return} -1;
+63     \}
 64 
-65     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (
-66         \textcolor{stringliteral}{"push ebx           \(\backslash\)n"}
-67         \textcolor{stringliteral}{"push ecx           \(\backslash\)n"}
-68         \textcolor{stringliteral}{"push edx           \(\backslash\)n"}
-69         \textcolor{stringliteral}{"push esi           \(\backslash\)n"}
-70         \textcolor{stringliteral}{"push edi           \(\backslash\)n"}
-71         \textcolor{stringliteral}{"call eax           \(\backslash\)n"}
-72         \textcolor{stringliteral}{"add esp, 20        \(\backslash\)n"}
-73         : \textcolor{stringliteral}{"=a"}(r) 
-74         : \textcolor{stringliteral}{"a"}(handler), \textcolor{stringliteral}{"b"}(p4), \textcolor{stringliteral}{"c"}(p3), \textcolor{stringliteral}{"d"}(p2), \textcolor{stringliteral}{"S"}(p1), \textcolor{stringliteral}{"D"}(p0)
-75     );
-76 
-77     \textcolor{keywordflow}{return} r;
-78 \}
+65 
+66 \textcolor{preprocessor}{#ifdef SYSCALL\_DEBUG}
+67     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: %d call %s [%d] (%x, %x, %x, %x, %x);\(\backslash\)n"}, 
+      \hyperlink{getpid_8c_a81186ae980bd7a8c58c8a4d838f5decb}{sys\_getpid}(), \hyperlink{exec_8c_ac79bb43069a3d3c097c8d95dcf0c2784}{elf\_kernel\_lookup}(handler), idx, p0, p1, p2, p3, p4);
+68 \textcolor{preprocessor}{#endif}
+69 
+70 
+71 
+72     \textcolor{keywordtype}{int} r = 0;
+73 
+74     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (
+75         \textcolor{stringliteral}{"push ebx           \(\backslash\)n"}
+76         \textcolor{stringliteral}{"push ecx           \(\backslash\)n"}
+77         \textcolor{stringliteral}{"push edx           \(\backslash\)n"}
+78         \textcolor{stringliteral}{"push esi           \(\backslash\)n"}
+79         \textcolor{stringliteral}{"push edi           \(\backslash\)n"}
+80         \textcolor{stringliteral}{"call eax           \(\backslash\)n"}
+81         \textcolor{stringliteral}{"add esp, 20        \(\backslash\)n"}
+82         : \textcolor{stringliteral}{"=a"}(r) 
+83         : \textcolor{stringliteral}{"a"}(handler), \textcolor{stringliteral}{"b"}(p4), \textcolor{stringliteral}{"c"}(p3), \textcolor{stringliteral}{"d"}(p2), \textcolor{stringliteral}{"S"}(p1), \textcolor{stringliteral}{"D"}(p0)
+84     );
+85 
+86 
+87 \textcolor{preprocessor}{#ifdef SYSCALL\_DEBUG}
+88     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"% returned %x\(\backslash\)n"}, r);
+89 \textcolor{preprocessor}{#endif}
+90 
+91     \textcolor{keywordflow}{return} r;
+92 \}
 \end{DoxyCode}
 
 
@@ -185,5 +186,5 @@ References \+\_\+\+\_\+asm\+\_\+\+\_\+(), errno, and syscall\+\_\+handlers.
 \subsubsection[{syscall\+\_\+handlers}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$$\ast$ syscall\+\_\+handlers = N\+U\+L\+L\hspace{0.3cm}{\ttfamily [static]}}}\label{syscall_8c_afb85e77f03c9acf2f02687360c17dd91}
 
 
-Definition at line 12 of file syscall.\+c.
+Definition at line 14 of file syscall.\+c.
 

@@ -54,22 +54,6 @@
       <node id="57">
         <label>errno.h</label>
       </node>
-      <node id="41">
-        <label>src/arch/pci.c</label>
-        <link refid="pci.c"/>
-        <childnode refid="42" relation="include">
-        </childnode>
-        <childnode refid="46" relation="include">
-        </childnode>
-        <childnode refid="47" relation="include">
-        </childnode>
-        <childnode refid="43" relation="include">
-        </childnode>
-        <childnode refid="45" relation="include">
-        </childnode>
-        <childnode refid="57" relation="include">
-        </childnode>
-      </node>
       <node id="46">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
@@ -103,6 +87,22 @@
       <node id="55">
         <label>signal.h</label>
       </node>
+      <node id="41">
+        <label>src/arch/i386/pci.c</label>
+        <link refid="pci.c"/>
+        <childnode refid="42" relation="include">
+        </childnode>
+        <childnode refid="46" relation="include">
+        </childnode>
+        <childnode refid="47" relation="include">
+        </childnode>
+        <childnode refid="43" relation="include">
+        </childnode>
+        <childnode refid="45" relation="include">
+        </childnode>
+        <childnode refid="57" relation="include">
+        </childnode>
+      </node>
       <node id="47">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
@@ -130,7 +130,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="11" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="11" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="11" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="11" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="pci_8c_1ad1fedcf5fe37518ccc1ddfcb880d1b01" prot="public" static="no">
         <name>PCI_CONFIG_DATA</name>
@@ -141,7 +141,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="12" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="12" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="12" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="12" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" prot="public" static="no">
         <name>PCI_MAX_DEVICES</name>
@@ -152,7 +152,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="13" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="13" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="13" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="13" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="pci_8c_1acbd6d3799929b7d4f20ba7ca9c7a273b" prot="public" static="no">
         <name>PCI_MAX_BUS</name>
@@ -163,7 +163,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="14" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="14" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="14" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="14" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="pci_8c_1ab4541880e38c018ddbf49bb81e3b01f2" prot="public" static="no">
         <name>PCI_MAX_DEV</name>
@@ -174,7 +174,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="15" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="15" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="15" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="15" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="pci_8c_1a2bce7569c5c260ac10180736ab9b682e" prot="public" static="no">
         <name>PCI_MAX_FUNC</name>
@@ -185,7 +185,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="16" column="9" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="16" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="16" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="16" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="var">
@@ -201,7 +201,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="19" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="19" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -232,7 +232,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="22" bodyend="24"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="22" bodyend="24"/>
       </memberdef>
       <memberdef kind="function" id="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -261,7 +261,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="26" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="26" bodyend="33"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="26" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="26" bodyend="33"/>
         <references refid="pci_8c_1aaa58db8af2d00af66c78624104e1016b" compoundref="pci_8c" startline="11">PCI_CONFIG_ADDRESS</references>
         <references refid="pci_8c_1ad1fedcf5fe37518ccc1ddfcb880d1b01" compoundref="pci_8c" startline="12">PCI_CONFIG_DATA</references>
         <references refid="pci_8c_1a1f15494ac7091ae892b6fc408c999699" compoundref="pci_8c" startline="22" endline="24">pci_get_address</references>
@@ -281,7 +281,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="36" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="36" bodyend="38"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="36" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="36" bodyend="38"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -302,7 +302,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="40" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="40" bodyend="42"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="40" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="40" bodyend="42"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -323,7 +323,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="44" bodyend="46"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="44" bodyend="46"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -344,7 +344,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="48" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="48" bodyend="50"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="48" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="48" bodyend="50"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -365,7 +365,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="52" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="52" bodyend="54"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="52" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="52" bodyend="54"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -386,7 +386,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="56" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="56" bodyend="58"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="56" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="56" bodyend="58"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -407,7 +407,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="60" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="60" bodyend="62"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="60" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="60" bodyend="62"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -432,7 +432,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="65" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="65" bodyend="75"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="65" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="65" bodyend="75"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1ac292358b1097064cb388125a45740aff" compoundref="pci_8h" startline="29">pci_device::func</references>
@@ -455,7 +455,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="77" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="77" bodyend="88"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="77" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="77" bodyend="88"/>
         <references refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" compoundref="pci_8c" startline="65" endline="75">pci_get_bar</references>
         <references refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" compoundref="pci_8c" startline="60" endline="62">pci_get_header_type</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
@@ -476,7 +476,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="90" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="90" bodyend="101"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="90" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="90" bodyend="101"/>
         <references refid="pci_8c_1a92f6eec12aecf89f39763ac81d228baa" compoundref="pci_8c" startline="65" endline="75">pci_get_bar</references>
         <references refid="pci_8c_1aa37c8495a1905ebd6ffcc66b84954cb0" compoundref="pci_8c" startline="60" endline="62">pci_get_header_type</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
@@ -509,7 +509,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="103" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="103" bodyend="117"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="103" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="103" bodyend="117"/>
         <references refid="structpci__device_1a832940e219d52a08725a39fc97663d07" compoundref="pci_8h" startline="27">pci_device::bus</references>
         <references refid="structpci__device_1ae456e0d5fb85c5d367b1a4e27f996b96" compoundref="pci_8h" startline="28">pci_device::dev</references>
         <references refid="structpci__device_1a86ce8ddd306b0395037ec7eee789a929" compoundref="pci_8h" startline="25">pci_device::deviceID</references>
@@ -551,7 +551,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="120" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="120" bodyend="129"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="120" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="120" bodyend="129"/>
         <references refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" compoundref="pci_8c" startline="13">PCI_MAX_DEVICES</references>
       </memberdef>
       <memberdef kind="function" id="pci_8c_1a127a79107e9fe2fee41f36dd3d88afca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -577,8 +577,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="131" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="131" bodyend="141"/>
-        <references refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" compoundref="iso9660_8h" startline="77">length</references>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="131" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="131" bodyend="141"/>
+        <references refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" compoundref="iso9660_8h" startline="76">length</references>
         <references refid="pci_8c_1ac92b961e4ae0fbfdb814592b74fa3229" compoundref="pci_8c" startline="13">PCI_MAX_DEVICES</references>
       </memberdef>
       <memberdef kind="function" id="pci_8c_1a5c450b9e2534226b162a16de0ef6b434" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -592,7 +592,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/pci.c" line="144" column="1" bodyfile="/opt/prj/aPlus/src/arch/pci.c" bodystart="144" bodyend="184"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/pci.c" line="144" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/pci.c" bodystart="144" bodyend="184"/>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
         <references refid="pci_8c_1af20e26337824fd3df0f10cf0230fa35d" compoundref="pci_8c" startline="26" endline="33">pci_config_read</references>
@@ -794,6 +794,6 @@
 <codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="184"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/opt/prj/aPlus/src/arch/pci.c"/>
+    <location file="/opt/prj/aPlus/src/arch/i386/pci.c"/>
   </compounddef>
 </doxygen>

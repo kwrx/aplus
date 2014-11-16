@@ -1,0 +1,36 @@
+\hypertarget{sigsuspend_8c}{\section{usr/src/libposix/src/sigsuspend.c File Reference}
+\label{sigsuspend_8c}\index{usr/src/libposix/src/sigsuspend.\+c@{usr/src/libposix/src/sigsuspend.\+c}}
+}
+{\ttfamily \#include $<$signal.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{sigsuspend_8c_a651e913fac32255355993a3d7ca193c8}{sigsuspend} (const sigset\+\_\+t $\ast$set)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{sigsuspend_8c_a651e913fac32255355993a3d7ca193c8}{\index{sigsuspend.\+c@{sigsuspend.\+c}!sigsuspend@{sigsuspend}}
+\index{sigsuspend@{sigsuspend}!sigsuspend.\+c@{sigsuspend.\+c}}
+\subsubsection[{sigsuspend}]{\setlength{\rightskip}{0pt plus 5cm}int sigsuspend (
+\begin{DoxyParamCaption}
+\item[{const sigset\+\_\+t $\ast$}]{set}
+\end{DoxyParamCaption}
+)}}\label{sigsuspend_8c_a651e913fac32255355993a3d7ca193c8}
+
+
+Definition at line 5 of file sigsuspend.\+c.
+
+
+
+References errno.
+
+
+\begin{DoxyCode}
+5                                     \{
+6     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+7     \textcolor{keywordflow}{return} -1;
+8 \}
+\end{DoxyCode}

@@ -10,51 +10,51 @@
     <includes local="no">string.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="2178">
+      <node id="2363">
         <label>stdlib.h</label>
       </node>
-      <node id="2180">
+      <node id="2365">
         <label>errno.h</label>
       </node>
-      <node id="2176">
+      <node id="2361">
         <label>fcntl.h</label>
       </node>
-      <node id="2172">
+      <node id="2357">
         <label>usr/src/libposix/src/scandir.c</label>
         <link refid="scandir.c"/>
-        <childnode refid="2173" relation="include">
+        <childnode refid="2358" relation="include">
         </childnode>
-        <childnode refid="2174" relation="include">
+        <childnode refid="2359" relation="include">
         </childnode>
-        <childnode refid="2176" relation="include">
+        <childnode refid="2361" relation="include">
         </childnode>
-        <childnode refid="2177" relation="include">
+        <childnode refid="2362" relation="include">
         </childnode>
-        <childnode refid="2178" relation="include">
+        <childnode refid="2363" relation="include">
         </childnode>
-        <childnode refid="2179" relation="include">
+        <childnode refid="2364" relation="include">
         </childnode>
-        <childnode refid="2180" relation="include">
+        <childnode refid="2365" relation="include">
         </childnode>
       </node>
-      <node id="2175">
+      <node id="2360">
         <label>sys/types.h</label>
       </node>
-      <node id="2179">
+      <node id="2364">
         <label>string.h</label>
       </node>
-      <node id="2174">
+      <node id="2359">
         <label>unistd.h</label>
       </node>
-      <node id="2173">
+      <node id="2358">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2174" relation="include">
+        <childnode refid="2359" relation="include">
         </childnode>
-        <childnode refid="2175" relation="include">
+        <childnode refid="2360" relation="include">
         </childnode>
       </node>
-      <node id="2177">
+      <node id="2362">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -87,7 +87,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libposix/src/scandir.c" line="11" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/scandir.c" bodystart="11" bodyend="45"/>
-        <references refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="dirent_8h_1afa648ff43ec9eba592716a334f243111" compoundref="opendir_8c" startline="13" endline="25">opendir</references>
         <references refid="dirent_8h_1aa7687571d2af8efd5153874ae6e678d9" compoundref="usr_2src_2libposix_2src_2readdir_8c" startline="15" endline="22">readdir</references>
@@ -109,7 +108,7 @@
 <codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>
 <codeline lineno="11" refid="scandir_8c_1a53d80292d58567db0826c243ab29166b" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="scandir_8c_1a53d80292d58567db0826c243ab29166b" kindref="member">scandir</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*pathname,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structdirent" kindref="compound">dirent</ref><sp/>***namelist,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>(*select)(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structdirent" kindref="compound">dirent</ref><sp/>*),<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>(*compar)(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structdirent" kindref="compound">dirent</ref><sp/>**,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structdirent" kindref="compound">dirent</ref><sp/>**))<sp/>{</highlight></codeline>
-<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref><sp/>=<sp/><ref refid="dirent_8h_1afa648ff43ec9eba592716a334f243111" kindref="member">opendir</ref>(pathname);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/>d<sp/>=<sp/><ref refid="dirent_8h_1afa648ff43ec9eba592716a334f243111" kindref="member">opendir</ref>(pathname);</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOENT;</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>

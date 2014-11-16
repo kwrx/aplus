@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="usr_2src_2libposix_2src_2wait_8c">
+    <title>wait.c File Reference</title>
+    <programlisting>#include &lt;sys/wait.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/time.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>pid_t <link linkend="usr_2src_2libposix_2src_2wait_8c_1accbd09491ae2dc67211eefe5afee6b87">wait3</link> (
+int * status, int options, void * rusage)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>pid_t <link linkend="usr_2src_2libposix_2src_2wait_8c_1ae7553f48d10483d6ab00010d8b4030da">wait4</link> (
+pid_t pid, int * status, int options, void * rusage)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libposix/src/wait.c</para>
+    </simplesect>
+</section>

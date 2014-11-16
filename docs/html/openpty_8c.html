@@ -169,18 +169,18 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="openpty_8c_source.html#l00008">8</a> of file <a class="el" href="openpty_8c_source.html">openpty.c</a>.</p>
 
-<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="tty_8c_source.html#l00233">tty_open()</a>.</p>
+<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="src_2fs_2tty_8c_source.html#l00233">tty_open()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;                                                                                                           {</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordflow">if</span>(!master || !slave) {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    }</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="tty_8c.html#a73bb587a850df0de01eab91fa87e40d0">tty_open</a>(master, slave, <a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>, ios, win);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="src_2fs_2tty_8c.html#a73bb587a850df0de01eab91fa87e40d0">tty_open</a>(master, slave, <a class="code" href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a>, ios, win);</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;}</div>
-<div class="ttc" id="tty_8c_html_a73bb587a850df0de01eab91fa87e40d0"><div class="ttname"><a href="tty_8c.html#a73bb587a850df0de01eab91fa87e40d0">tty_open</a></div><div class="ttdeci">int tty_open(int *master, int *slave, char *name, struct termios *ios, struct winsize *win)</div><div class="ttdef"><b>Definition:</b> <a href="tty_8c_source.html#l00233">tty.c:233</a></div></div>
 <div class="ttc" id="attribute_8h_html_aae08e5b919f01beb6c69d2859e0dfc27"><div class="ttname"><a href="attribute_8h.html#aae08e5b919f01beb6c69d2859e0dfc27">name</a></div><div class="ttdeci">char name[0x80]</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00082">attribute.h:82</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="src_2fs_2tty_8c_html_a73bb587a850df0de01eab91fa87e40d0"><div class="ttname"><a href="src_2fs_2tty_8c.html#a73bb587a850df0de01eab91fa87e40d0">tty_open</a></div><div class="ttdeci">int tty_open(int *master, int *slave, char *name, struct termios *ios, struct winsize *win)</div><div class="ttdef"><b>Definition:</b> <a href="src_2fs_2tty_8c_source.html#l00233">tty.c:233</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -216,7 +216,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="openpty_8c.html">openpty.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="fchdir_8c" kind="file">
+    <compoundname>fchdir.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="fs_8h" local="no">aplus/fs.h</includes>
+    <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">fcntl.h</includes>
+    <includes refid="dirent_8h" local="no">dirent.h</includes>
+    <includes local="no">errno.h</includes>
+    <incdepgraph>
+      <node id="1486">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1481">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1490">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1479" relation="include">
+        </childnode>
+        <childnode refid="1491" relation="include">
+        </childnode>
+        <childnode refid="1480" relation="include">
+        </childnode>
+        <childnode refid="1482" relation="include">
+        </childnode>
+        <childnode refid="1485" relation="include">
+        </childnode>
+      </node>
+      <node id="1483">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1480" relation="include">
+        </childnode>
+        <childnode refid="1484" relation="include">
+        </childnode>
+        <childnode refid="1485" relation="include">
+        </childnode>
+        <childnode refid="1486" relation="include">
+        </childnode>
+        <childnode refid="1487" relation="include">
+        </childnode>
+      </node>
+      <node id="1478">
+        <label>src/syscall/fchdir.c</label>
+        <link refid="fchdir.c"/>
+        <childnode refid="1479" relation="include">
+        </childnode>
+        <childnode refid="1483" relation="include">
+        </childnode>
+        <childnode refid="1489" relation="include">
+        </childnode>
+        <childnode refid="1492" relation="include">
+        </childnode>
+        <childnode refid="1488" relation="include">
+        </childnode>
+        <childnode refid="1495" relation="include">
+        </childnode>
+        <childnode refid="1487" relation="include">
+        </childnode>
+        <childnode refid="1496" relation="include">
+        </childnode>
+      </node>
+      <node id="1480">
+        <label>stdint.h</label>
+      </node>
+      <node id="1489">
+        <label>aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="1479" relation="include">
+        </childnode>
+        <childnode refid="1490" relation="include">
+        </childnode>
+        <childnode refid="1480" relation="include">
+        </childnode>
+      </node>
+      <node id="1494">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1492">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1480" relation="include">
+        </childnode>
+        <childnode refid="1479" relation="include">
+        </childnode>
+        <childnode refid="1483" relation="include">
+        </childnode>
+        <childnode refid="1493" relation="include">
+        </childnode>
+        <childnode refid="1485" relation="include">
+        </childnode>
+        <childnode refid="1494" relation="include">
+        </childnode>
+      </node>
+      <node id="1496">
+        <label>errno.h</label>
+      </node>
+      <node id="1495">
+        <label>fcntl.h</label>
+      </node>
+      <node id="1484">
+        <label>stddef.h</label>
+      </node>
+      <node id="1491">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1484" relation="include">
+        </childnode>
+        <childnode refid="1480" relation="include">
+        </childnode>
+        <childnode refid="1485" relation="include">
+        </childnode>
+      </node>
+      <node id="1479">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1480" relation="include">
+        </childnode>
+        <childnode refid="1481" relation="include">
+        </childnode>
+        <childnode refid="1482" relation="include">
+        </childnode>
+      </node>
+      <node id="1485">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1482">
+        <label>string.h</label>
+      </node>
+      <node id="1488">
+        <label>unistd.h</label>
+      </node>
+      <node id="1493">
+        <label>signal.h</label>
+      </node>
+      <node id="1487">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1488" relation="include">
+        </childnode>
+        <childnode refid="1485" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="fchdir_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" prot="public" static="no" mutable="no">
+        <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+        <definition>task_t* current_task</definition>
+        <argsstring></argsstring>
+        <name>current_task</name>
+        <briefdescription>
+<para>Current task address. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/fchdir.c" line="12" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="fchdir_8c_1a58569b5c13bd9e4300954e28b138473a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sys_fchdir</definition>
+        <argsstring>(int fd)</argsstring>
+        <name>sys_fchdir</name>
+        <param>
+          <type>int</type>
+          <declname>fd</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/fchdir.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/syscall/fchdir.c" bodystart="15" bodyend="30"/>
+        <references refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" compoundref="task_8h" startline="105">task::cwd</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="107">task::fd</references>
+        <references refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" compoundref="task_8h" startline="35">TASK_MAX_FD</references>
+      </memberdef>
+      <memberdef kind="function" id="fchdir_8c_1a271d2184f43cc5ec6f69b0d305cf87ab" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SYSCALL</definition>
+        <argsstring>(sys_fchdir, 29)</argsstring>
+        <name>SYSCALL</name>
+        <param>
+          <type><ref refid="fchdir_8c_1a58569b5c13bd9e4300954e28b138473a" kindref="member">sys_fchdir</ref></type>
+        </param>
+        <param>
+          <type>29</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/fchdir.c" line="33" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fs_8h" kindref="compound">aplus/fs.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="syscall_8h" kindref="compound">aplus/syscall.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="fchdir_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="fchdir_8c_1a58569b5c13bd9e4300954e28b138473a" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fchdir_8c_1a58569b5c13bd9e4300954e28b138473a" kindref="member">sys_fchdir</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd)<sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fd<sp/>&lt;<sp/>0<sp/>||<sp/>fd<sp/>&gt;<sp/><ref refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" kindref="member">TASK_MAX_FD</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd]<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a7099e7ba6a4c94559edfb4d396803b15" kindref="member">cwd</ref><sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><ref refid="fchdir_8c_1a271d2184f43cc5ec6f69b0d305cf87ab" kindref="member">SYSCALL</ref>(<ref refid="fchdir_8c_1a58569b5c13bd9e4300954e28b138473a" kindref="member">sys_fchdir</ref>,<sp/>29);</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/syscall/fchdir.c"/>
+  </compounddef>
+</doxygen>

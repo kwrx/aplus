@@ -9,6 +9,7 @@
     <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;sys/types.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
         <simplesect>
             <title>Variables</title>
             <para>
@@ -93,6 +94,14 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para>void <link linkend="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87">schedule_signal</link> (
+<link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * task, int sig)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para>void <link linkend="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce">schedule</link> (
 )</para>
                     </listitem>
@@ -133,6 +142,14 @@ int priority)</para>
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para>void <link linkend="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6">schedule_release</link> (
+<link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * task)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para>void <link linkend="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612">schedule_exit2</link> (
 <link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * task, int status)</para>
                     </listitem>
@@ -167,6 +184,14 @@ pid_t pid)</para>
                     <listitem>
                         <para>void * <link linkend="src_2sched_8c_1a5af6764b80e6b9a24df59f7bb636f3d4">schedule_sbrk</link> (
 ptrdiff_t increment)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="src_2sched_8c_1afbffdc5298c98f92960a4fb9ba498063">schedule_append_fd</link> (
+<link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * t, <link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * ino)</para>
                     </listitem>
                 </itemizedlist>
             </para>

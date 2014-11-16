@@ -7,58 +7,58 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2392">
+      <node id="2597">
         <label>usr/src/libpthread/src/pthread_join.c</label>
         <link refid="pthread_join.c"/>
-        <childnode refid="2393" relation="include">
+        <childnode refid="2598" relation="include">
         </childnode>
-        <childnode refid="2394" relation="include">
+        <childnode refid="2599" relation="include">
         </childnode>
-        <childnode refid="2395" relation="include">
+        <childnode refid="2600" relation="include">
         </childnode>
-        <childnode refid="2399" relation="include">
+        <childnode refid="2604" relation="include">
         </childnode>
       </node>
-      <node id="2393">
+      <node id="2598">
         <label>stdint.h</label>
       </node>
-      <node id="2400">
+      <node id="2605">
         <label>errno.h</label>
       </node>
-      <node id="2399">
+      <node id="2604">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2400" relation="include">
+        <childnode refid="2605" relation="include">
         </childnode>
-        <childnode refid="2393" relation="include">
+        <childnode refid="2598" relation="include">
         </childnode>
-        <childnode refid="2395" relation="include">
+        <childnode refid="2600" relation="include">
         </childnode>
       </node>
-      <node id="2395">
+      <node id="2600">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2393" relation="include">
+        <childnode refid="2598" relation="include">
         </childnode>
-        <childnode refid="2396" relation="include">
+        <childnode refid="2601" relation="include">
         </childnode>
-        <childnode refid="2397" relation="include">
+        <childnode refid="2602" relation="include">
         </childnode>
-        <childnode refid="2394" relation="include">
+        <childnode refid="2599" relation="include">
         </childnode>
-        <childnode refid="2398" relation="include">
+        <childnode refid="2603" relation="include">
         </childnode>
       </node>
-      <node id="2396">
+      <node id="2601">
         <label>sys/types.h</label>
       </node>
-      <node id="2398">
+      <node id="2603">
         <label>unistd.h</label>
       </node>
-      <node id="2397">
+      <node id="2602">
         <label>sys/time.h</label>
       </node>
-      <node id="2394">
+      <node id="2599">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -105,7 +105,7 @@
 <codeline lineno="8" refid="pthread__join_8c_1a3a07eea4fe20b2d6457494decbae0232" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__join_8c_1a3a07eea4fe20b2d6457494decbae0232" kindref="member">pthread_join</ref>(<ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/>thread,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>**value_ptr)<sp/>{</highlight></codeline>
 <codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!thread)<sp/>{</highlight></codeline>
 <codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*<sp/>ctx<sp/>=<sp/>(<ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*)<sp/>thread;</highlight></codeline>

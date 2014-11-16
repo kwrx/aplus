@@ -8,11 +8,11 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43">V4F_TO_ARGB</link> (										\
-		((int32_t)(c[3] * 0xFF) &lt;&lt; 24) 	|	\
-		((int32_t)(c[2] * 0xFF) &lt;&lt; 16) 	|	\
-		((int32_t)(c[1] * 0xFF) &lt;&lt; 8) 	|	\
-		((int32_t)(c[0] * 0xFF)) 		|	\
+                            <para>#define <link linkend="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43">V4F_TO_ARGB</link> (														\
+		((int32_t)(c[<link linkend="atk_8h_1a170621735809dd7efded8c8517347596">ATK_COLOR_A</link>] * 0xFF) &lt;&lt; 24) 	|		\
+		((int32_t)(c[ATK_COLOR_R] * 0xFF) &lt;&lt; 16) 	|		\
+		((int32_t)(c[ATK_COLOR_G] * 0xFF) &lt;&lt; 8) 	|		\
+		((int32_t)(c[ATK_COLOR_B] * 0xFF)) 					\
 	)</para>
                     </listitem>
                 </itemizedlist>
@@ -20,10 +20,10 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4">V4F_TO_RGB</link> (										\
-		((int32_t)(c[2] * 0xFF) &lt;&lt; 16) 	|	\
-		((int32_t)(c[1] * 0xFF) &lt;&lt; 8) 	|	\
-		((int32_t)(c[0] * 0xFF)) 		|	\
+                            <para>#define <link linkend="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4">V4F_TO_RGB</link> (														\
+		((int32_t)(c[<link linkend="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</link>] * 0xFF) &lt;&lt; 16) 	|		\
+		((int32_t)(c[ATK_COLOR_G] * 0xFF) &lt;&lt; 8) 	|		\
+		((int32_t)(c[ATK_COLOR_B] * 0xFF)) 					\
 	)</para>
                     </listitem>
                 </itemizedlist>
@@ -31,11 +31,58 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac">V4F_TO_R5G6B5</link> (										\
-		((int16_t)(c[2] * 0x1F) &lt;&lt; 11)	|	\
-		((int16_t)(c[1] * 0x3F)	&lt;&lt; 5)	|	\
-		((int16_t)(c[0] * 0x1F))		|	\
+                            <para>#define <link linkend="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac">V4F_TO_R5G6B5</link> (														\
+		((int16_t)(c[<link linkend="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c">ATK_COLOR_R</link>] * 0x1F) &lt;&lt; 11)	|		\
+		((int16_t)(c[ATK_COLOR_R] * 0x3F) &lt;&lt; 5)		|		\
+		((int16_t)(c[ATK_COLOR_R] * 0x1F))					\
 	)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="clrconv_8h_1accad078885c0425eb1861291a1769717">ARGB_TO_V4F</link> {											\
+		((float) ((c &gt;&gt; 24) &amp; 0xFF)) / 0xFF, 	\
+		((float) ((c &gt;&gt; 16) &amp; 0xFF)) / 0xFF,	\
+		((float) ((c &gt;&gt; 8) &amp; 0xFF)) / 0xFF,		\
+		((float) (c &amp; 0xFF)) / 0xFF				\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8">RGB_TO_V4F</link> {											\
+		1.0, 									\
+		((float) ((c &gt;&gt; 16) &amp; 0xFF)) / 0xFF,	\
+		((float) ((c &gt;&gt; 8) &amp; 0xFF)) / 0xFF,		\
+		((float) (c &amp; 0xFF)) / 0xFF				\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909">R5G6B5_TO_V4F</link> {											\
+		1.0, 									\
+		((float) ((c &gt;&gt; 11) &amp; 0x1F)) / 0x1F,	\
+		((float) ((c &gt;&gt; 5) &amp; 0x3F)) / 0x3F,		\
+		((float) (c &amp; 0x1F)) / 0x1F				\
+	}</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="clrconv_8h_1a9abc90ae1044063128acfb1505666e49">__SWAP</link> {						\
+		x ^= y;				\
+		y ^= x;				\
+		x ^= y;				\
+	}</para>
                     </listitem>
                 </itemizedlist>
             </para>

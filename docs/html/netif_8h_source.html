@@ -135,10 +135,10 @@ $(document).ready(function(){initNavTree('netif_8h_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
 <div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="netif_8h.html#a10eb923b0cb08f2b992345dd1a1bf98b">   26</a></span>&#160;<span class="preprocessor">#define NETIF_FLAGS_ENABLE          1</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="netif_8h.html#a7fa8be0d28d77b4ab4f44d924d4d69e2">   29</a></span>&#160;<span class="preprocessor">#define ARP_DEBUG</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="netif_8h.html#afb47e3cd6431190b167127036fd827eb">   30</a></span>&#160;<span class="preprocessor">#define RTL8139_DEBUG</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define ARP_DEBUG</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define RTL8139_DEBUG</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="structnetif.html">   33</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structnetif.html">netif</a> {</div>
 <div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structnetif.html#ad113ca0a458623939eec5ce7fe2b6eef">   34</a></span>&#160;    <span class="keywordtype">char</span> <a class="code" href="structnetif.html#ad113ca0a458623939eec5ce7fe2b6eef">name</a>[32];</div>
@@ -253,7 +253,7 @@ $(document).ready(function(){initNavTree('netif_8h_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="dir_cfd1fb2b98030f4f81570490591de86f.html">aplus</a></li><li class="navelem"><a class="el" href="netif_8h.html">netif.h</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

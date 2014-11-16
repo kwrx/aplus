@@ -1,4 +1,4 @@
-.TH "src/syscall/link.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/link.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -42,16 +42,12 @@ src/syscall/link.c \-
 .PP
 Definition at line 14 of file link\&.c\&.
 .PP
-References errno, and kprintf()\&.
+References sys_symlink()\&.
 .PP
 .nf
 14                                          {
-15     /* TODO */
-16     kprintf("sys_link: TODO");
-17 
-18     errno = ENOSYS;
-19     return -1;
-20 }
+15     return sys_symlink(filename, link);
+16 }
 .fi
 .SS "SYSCALL (\fBsys_link\fP, 8)"
 

@@ -7,61 +7,61 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2413">
+      <node id="2618">
         <label>stdint.h</label>
       </node>
-      <node id="2421">
+      <node id="2626">
         <label>errno.h</label>
       </node>
-      <node id="2420">
+      <node id="2625">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2421" relation="include">
+        <childnode refid="2626" relation="include">
         </childnode>
-        <childnode refid="2413" relation="include">
+        <childnode refid="2618" relation="include">
         </childnode>
-        <childnode refid="2415" relation="include">
+        <childnode refid="2620" relation="include">
         </childnode>
       </node>
-      <node id="2412">
+      <node id="2617">
         <label>usr/src/libpthread/src/pthread_mutex.c</label>
         <link refid="pthread_mutex.c"/>
-        <childnode refid="2413" relation="include">
+        <childnode refid="2618" relation="include">
         </childnode>
-        <childnode refid="2414" relation="include">
+        <childnode refid="2619" relation="include">
         </childnode>
-        <childnode refid="2415" relation="include">
+        <childnode refid="2620" relation="include">
         </childnode>
-        <childnode refid="2420" relation="include">
+        <childnode refid="2625" relation="include">
         </childnode>
       </node>
-      <node id="2415">
+      <node id="2620">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2413" relation="include">
+        <childnode refid="2618" relation="include">
         </childnode>
-        <childnode refid="2416" relation="include">
+        <childnode refid="2621" relation="include">
         </childnode>
-        <childnode refid="2417" relation="include">
+        <childnode refid="2622" relation="include">
         </childnode>
-        <childnode refid="2418" relation="include">
+        <childnode refid="2623" relation="include">
         </childnode>
-        <childnode refid="2419" relation="include">
+        <childnode refid="2624" relation="include">
         </childnode>
       </node>
-      <node id="2416">
+      <node id="2621">
         <label>sys/types.h</label>
       </node>
-      <node id="2419">
+      <node id="2624">
         <label>unistd.h</label>
       </node>
-      <node id="2414">
+      <node id="2619">
         <label>time.h</label>
       </node>
-      <node id="2417">
+      <node id="2622">
         <label>sys/time.h</label>
       </node>
-      <node id="2418">
+      <node id="2623">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -259,7 +259,7 @@
 <codeline lineno="9" refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" kindref="member">__locked_mtx</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref>*<sp/>mutex)<sp/>{</highlight></codeline>
 <codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>&gt;<sp/>0)<sp/>{</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(time(NULL)<sp/>&lt;<sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref>)</highlight></codeline>
-<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/>{</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" kindref="member">pthread_mutex_unlock</ref>(mutex);</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -268,7 +268,7 @@
 <codeline lineno="18"><highlight class="normal"></highlight></codeline>
 <codeline lineno="19"><highlight class="normal"></highlight></codeline>
 <codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>==<sp/>1)</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="22"><highlight class="normal"></highlight></codeline>
 <codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="24"><highlight class="normal">}</highlight></codeline>
@@ -276,7 +276,7 @@
 <codeline lineno="26" refid="pthread__mutex_8c_1a8033a9fb4c16036471e20a33cb7361bd" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a8033a9fb4c16036471e20a33cb7361bd" kindref="member">pthread_mutex_init</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__mutexattr" kindref="compound">pthread_mutexattr_t</ref><sp/>*<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
 <codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="31"><highlight class="normal"></highlight></codeline>
 <codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -296,12 +296,12 @@
 <codeline lineno="46" refid="pthread__mutex_8c_1a1de946179f5a8b0d08dd8a14c19775fe" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a1de946179f5a8b0d08dd8a14c19775fe" kindref="member">pthread_mutex_destroy</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
 <codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
 <codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="51"><highlight class="normal"></highlight></codeline>
 <codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>==<sp/>1)<sp/>{</highlight></codeline>
 <codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBUSY;</highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="56"><highlight class="normal"></highlight></codeline>
 <codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -317,7 +317,7 @@
 <codeline lineno="67" refid="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" kindref="member">pthread_mutex_lock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
 <codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
 <codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="72"><highlight class="normal"></highlight></codeline>
 <codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>!=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>())<sp/>{</highlight></codeline>
@@ -329,7 +329,7 @@
 <codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>1;</highlight></codeline>
 <codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" kindref="member">PTHREAD_MUTEX_ERRORCHECK</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EDEADLK;</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="84"><highlight class="normal"></highlight></codeline>
 <codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" kindref="member">PTHREAD_MUTEX_RECURSIVE</ref>)</highlight></codeline>
@@ -342,13 +342,13 @@
 <codeline lineno="92" refid="pthread__mutex_8c_1a2e14cfabd118a24af57bea058285e7b1" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a2e14cfabd118a24af57bea058285e7b1" kindref="member">pthread_mutex_timedlock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>timespec<sp/>*abstime)<sp/>{</highlight></codeline>
 <codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(abstime<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="97"><highlight class="normal"></highlight></codeline>
 <codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__mutex_8c_1a9d5a00f9e6e279cce1e875a48cb9188d" kindref="member">pthread_mutex_lock</ref>(mutex)<sp/>==<sp/>0)</highlight></codeline>
 <codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1abd1e1875e0231a5dd6146adb8d6380c0" kindref="member">time</ref><sp/>=<sp/>time(NULL)<sp/>+<sp/>abstime-&gt;tv_sec;</highlight></codeline>
 <codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="102"><highlight class="normal"></highlight></codeline>
 <codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="104"><highlight class="normal">}</highlight></codeline>
@@ -357,13 +357,13 @@
 <codeline lineno="107" refid="pthread__mutex_8c_1a53c032e9b0fe998bcded3c3c381b4418" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a53c032e9b0fe998bcded3c3c381b4418" kindref="member">pthread_mutex_trylock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
 <codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
 <codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="112"><highlight class="normal"></highlight></codeline>
 <codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>!=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>())<sp/>{</highlight></codeline>
 <codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__mutex_8c_1a09a80d595723a7cb36229098892878f0" kindref="member">__locked_mtx</ref>(mutex))<sp/>{</highlight></codeline>
 <codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBUSY;</highlight></codeline>
-<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="118"><highlight class="normal"></highlight></codeline>
 <codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>();</highlight></codeline>
@@ -371,7 +371,7 @@
 <codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>1;</highlight></codeline>
 <codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" kindref="member">PTHREAD_MUTEX_ERRORCHECK</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EDEADLK;</highlight></codeline>
-<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="126"><highlight class="normal"></highlight></codeline>
 <codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1a715e9644a7183d98cb2c9dd41cb89645" kindref="member">PTHREAD_MUTEX_RECURSIVE</ref>)</highlight></codeline>
@@ -383,7 +383,7 @@
 <codeline lineno="133" refid="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__mutex_8c_1a98a732043af58199cdf7f663dbf4d805" kindref="member">pthread_mutex_unlock</ref>(<ref refid="structpthread__mutex" kindref="compound">pthread_mutex_t</ref><sp/>*mutex)<sp/>{</highlight></codeline>
 <codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!mutex)<sp/>{</highlight></codeline>
 <codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="138"><highlight class="normal"></highlight></codeline>
 <codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a3d3ee80fcc9a148717677554d05d9d4a" kindref="member">owner</ref><sp/>==<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>())<sp/>{</highlight></codeline>
@@ -396,7 +396,7 @@
 <codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>mutex-&gt;<ref refid="structpthread__mutex_1a039843af2bfee5ac32a1c4452108b833" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
 <codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(mutex-&gt;<ref refid="structpthread__mutex_1a0a817c827021f648ceba78fb34b61f62" kindref="member">kind</ref><sp/>==<sp/><ref refid="pthread_8h_1aaf502496651f95b06be861af7902cb23" kindref="member">PTHREAD_MUTEX_ERRORCHECK</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EPERM;</highlight></codeline>
-<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="151"><highlight class="normal"></highlight></codeline>
 <codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>

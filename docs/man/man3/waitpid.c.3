@@ -1,0 +1,99 @@
+.TH "src/syscall/waitpid.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+src/syscall/waitpid.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <aplus\&.h>\fP
+.br
+\fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <sys/wait\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBsys_waitpid\fP (pid_t pid, int *status, int options)"
+.br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_waitpid\fP, 31)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.RI "\fICurrent task address\&. \fP"
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int sys_waitpid (pid_tpid, int *status, intoptions)"
+
+.PP
+Definition at line 15 of file waitpid\&.c\&.
+.PP
+References errno, task::pid, schedule_child(), schedule_getbypid(), and schedule_wait()\&.
+.PP
+.nf
+15                                                      {
+16     if(current_task == NULL) {
+17         errno = EFAULT;
+18         return -1;
+19     }
+20 
+21 
+22     task_t* child = NULL;
+23 
+24     if(pid == -1)
+25         child = (task_t*) schedule_child();
+26     else
+27         child = (task_t*) schedule_getbypid(pid);
+28 
+29 
+30     if(child == NULL) {
+31         errno = ECHILD;
+32         return -1;
+33     }
+34 
+35     if(options == WNOHANG)
+36         return child->pid;
+37 
+38     int exitcode = schedule_wait(child);
+39 
+40     if(status)
+41         *status = exitcode;
+42 
+43     return child->pid;
+44 }
+.fi
+.SS "SYSCALL (\fBsys_waitpid\fP, 31)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Current task address\&. 
+.PP
+Definition at line 37 of file sched\&.c\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

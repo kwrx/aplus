@@ -1,4 +1,4 @@
-.TH "src/bufio.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/bufio.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -122,7 +122,7 @@ References buffers_length, current_task, kmalloc(), list_add(), lock, bufio::off
 69     buffers_length += size;
 70 
 71 
-72     bufio_t* buf = (bufio_t*) kmalloc(size);
+72     bufio_t* buf = (bufio_t*) kmalloc(sizeof(bufio_t));
 73     buf->raw = addr;
 74     buf->size = size;
 75     buf->type = 0;
@@ -168,7 +168,7 @@ References buffers_length, current_task, kmalloc(), list_add(), lock, bufio::off
 97 
 98     buffers_length += size;
 99 
-100     bufio_t* buf = (bufio_t*) kmalloc(size);
+100     bufio_t* buf = (bufio_t*) kmalloc(sizeof(bufio_t));
 101     buf->raw = raw;
 102     buf->size = size;
 103     buf->type = 0;
@@ -471,7 +471,7 @@ Definition at line 23 of file bufio\&.c\&.
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SS "\fBlist_t\fP* list_buffers\fC [static]\fP"
 
 .PP

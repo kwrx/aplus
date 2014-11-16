@@ -146,17 +146,17 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="pthread__rwlockattr_8c_source.html#l00019">19</a> of file <a class="el" href="pthread__rwlockattr_8c_source.html">pthread_rwlockattr.c</a>.</p>
 
-<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00128">pthread_rwlockattr::pshared</a>.</p>
+<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00129">pthread_rwlockattr::pshared</a>.</p>
 <div class="fragment"><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                                                                  {</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a> = 0;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
-<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00128">pthread.h:128</a></div></div>
+<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00129">pthread.h:129</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -187,22 +187,22 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="pthread__rwlockattr_8c_source.html#l00029">29</a> of file <a class="el" href="pthread__rwlockattr_8c_source.html">pthread_rwlockattr.c</a>.</p>
 
-<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00128">pthread_rwlockattr::pshared</a>.</p>
+<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00129">pthread_rwlockattr::pshared</a>.</p>
 <div class="fragment"><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                                                                                         {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">if</span>(pshared == NULL) {</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    *pshared = attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a>;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00128">pthread.h:128</a></div></div>
+<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00129">pthread.h:129</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -223,17 +223,17 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="pthread__rwlockattr_8c_source.html#l00009">9</a> of file <a class="el" href="pthread__rwlockattr_8c_source.html">pthread_rwlockattr.c</a>.</p>
 
-<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00128">pthread_rwlockattr::pshared</a>.</p>
+<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00129">pthread_rwlockattr::pshared</a>.</p>
 <div class="fragment"><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;                                                               {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    }</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a> = 0;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
-<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00128">pthread.h:128</a></div></div>
+<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00129">pthread.h:129</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -264,17 +264,17 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="pthread__rwlockattr_8c_source.html#l00044">44</a> of file <a class="el" href="pthread__rwlockattr_8c_source.html">pthread_rwlockattr.c</a>.</p>
 
-<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00128">pthread_rwlockattr::pshared</a>.</p>
+<p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00129">pthread_rwlockattr::pshared</a>.</p>
 <div class="fragment"><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                                                                                  {</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a> = pshared;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
-<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00128">pthread.h:128</a></div></div>
+<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00129">pthread.h:129</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -285,7 +285,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_c23ec9db109baf02f825a52e3d8bd742.html">libpthread</a></li><li class="navelem"><a class="el" href="dir_93ec8f7d0ab70c6b2c55924b01761aab.html">src</a></li><li class="navelem"><a class="el" href="pthread__rwlockattr_8c.html">pthread_rwlockattr.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

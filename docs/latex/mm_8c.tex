@@ -5,8 +5,10 @@
 {\ttfamily \#include $<$stddef.\+h$>$}\\*
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$string.\+h$>$}\\*
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/list.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
 {\ttfamily \#include $<$grub.\+h$>$}\\*
 \subsection*{Data Structures}
 \begin{DoxyCompactItemize}
@@ -17,14 +19,16 @@ struct \hyperlink{structblock}{block}
 \begin{DoxyCompactItemize}
 \item 
 struct \hyperlink{structblock}{block} \hyperlink{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((packed))
-\begin{DoxyCompactList}\small\item\em Alloc memory from Kernel Heap. \end{DoxyCompactList}\item 
+\item 
+void $\ast$ \hyperlink{mm_8c_a0fa5db9ef345269ef8fb232a31c0b5cc}{kvmalloc} (size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+\item 
 void \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree} (void $\ast$ptr)
 \begin{DoxyCompactList}\small\item\em Free memory from Kernel Heap. \end{DoxyCompactList}\item 
 void $\ast$ \hyperlink{mm_8c_a0a2a93dff1df0b626cb5ff6d85d0553e}{krealloc} (void $\ast$ptr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
 \begin{DoxyCompactList}\small\item\em Realloc memory from Kernel Heap. \end{DoxyCompactList}\item 
 void \hyperlink{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}{mm\+\_\+setheap} (\hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$\hyperlink{structheap}{heap})
 \begin{DoxyCompactList}\small\item\em Set current heap for memory operations. \end{DoxyCompactList}\item 
-volatile \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$ \hyperlink{mm_8c_a4e692b1c1f4e04a8b231f1493babb82f}{mm\+\_\+getheap} ()
+\hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$ \hyperlink{mm_8c_accbfbfd24536b985a875baf4e16a98f9}{mm\+\_\+getheap} ()
 \begin{DoxyCompactList}\small\item\em Get current heap for memory operations. \end{DoxyCompactList}\item 
 int \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\+\_\+init} ()
 \begin{DoxyCompactList}\small\item\em Initialize M\+M\+U. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -33,12 +37,16 @@ int \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\+\_\+init} ()
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize}
 \item 
-volatile \hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$ \hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\+\_\+heap}
+\hyperlink{mm_8h_ae3e9e8008e406505a3c57e4b7f17d300}{heap\+\_\+t} $\ast$ \hyperlink{mm_8c_a24421f8f89c962d802b391886447543b}{current\+\_\+heap}
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{mm_8c_a9bed7071511863f81c2de43b3c3f7db9}{current\+\_\+vmm}
 \item 
 \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$ \hyperlink{mm_8c_afac53891df03c313fc0b5b24e0acc8a9}{kernel\+\_\+vmm}
 \item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{mm_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{mm_8c_ac08620610e2419aca3878305400a96b7}{kernel\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Kernel task address. \end{DoxyCompactList}\item 
 \hyperlink{list_8h_af629e6a6713d7de11eab50cbe6449b06}{list\+\_\+t} $\ast$ \hyperlink{mm_8c_a3744f58bc6d40534a3e026b2f242ab25}{vmm\+\_\+queue}
 \item 
 \hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\+\_\+t} \hyperlink{mm_8c_a8c61e64b8675498cee79c59d3f8131e2}{magic}
@@ -57,36 +65,76 @@ size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}
 )}}\label{mm_8c_a2cdc9850cc059eb848b6843d5327e37a}
 
 
-Alloc memory from Kernel Heap. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em size} & Size of data to alloc. \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Virtual Address of data. 
-\end{DoxyReturn}
-
-
-Definition at line 47 of file mm.\+c.
+Definition at line 64 of file mm.\+c.
 
 
 \begin{DoxyCode}
-59                            \{
-60     \textcolor{keywordtype}{void}* addr = (\textcolor{keywordtype}{void}*) \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc}(\hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-61     \textcolor{keywordflow}{if}(!addr)
-62         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"halloc(): failed!"});
-63 
-64 
-65     addr = \hyperlink{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}{mm\_vaddr}(addr);
-66 
-67     block\_t* \hyperlink{structblock}{block} = (block\_t*) addr;
-68     block->\hyperlink{structblock_a0dc8afecb033f59b42e0d8502a7f8ff0}{magic} = \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC};
-69     block->size = \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
-70 
-71     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) block + \textcolor{keyword}{sizeof}(block\_t));
-72 \}
+70                                           \{
+71     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task} != \hyperlink{mm_8c_ac08620610e2419aca3878305400a96b7}{kernel\_task})
+72         \textcolor{keywordflow}{return};
+73 
+74     \hyperlink{src_2sched_8c_a5018bd63e4a7d4dd926e06faf1b7513d}{schedule\_disable}();
+75     \hyperlink{paging_8c_ae6c3d7080850f24c974dc0c53b653110}{vmm\_disable}();
+76     
+77     \textcolor{keywordtype}{int} e = 0;
+78     \textcolor{keywordflow}{for}(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} frame = 0; frame < \hyperlink{mm_8c_a24421f8f89c962d802b391886447543b}{current\_heap}->\hyperlink{structheap_a486fb531d24b9ee5f17b7ffe96689705}{size}; frame += 0x1000) \{
+79         block\_t* \hyperlink{structblock}{block} = (block\_t*) frame;
+80         \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+81             \textcolor{keywordflow}{continue};
+82 
+83 
+84         \textcolor{keywordflow}{if}(*(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) (frame + block->size + \textcolor{keyword}{sizeof}(block\_t)) != CHUNK\_MAGIC) \{
+85             \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"mm: chunk overflow at 0x%x (%x) allocated from %s (%d)\(\backslash\)n"}, frame, block->size, 
+      block->file, block->line);
+86             e++;
+87 
+88             *(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) (frame + block->size + \textcolor{keyword}{sizeof}(block\_t)) = CHUNK\_MAGIC;
+89         \}
+90 
+91         frame += block->size & ~0xFFF;
+92     \}
+93     
+94     \textcolor{keywordflow}{if}(e)
+95         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"There was %d chunks overflow\(\backslash\)n"}, e);
+96 
+97     \hyperlink{paging_8c_aa760eb29c4563f9ab05cc3d9331944ac}{vmm\_enable}();
+98     \hyperlink{src_2sched_8c_a736a4d44542e7f4d0e231002cb7ddb8d}{schedule\_enable}();
+99 \}
+100 \textcolor{preprocessor}{#endif}
+101 
+102 
+103 
+104 \textcolor{preprocessor}{#ifdef CHUNKS\_CHECKING}
+105 \textcolor{keywordtype}{void}* \_\_kmalloc(\textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}, \textcolor{keywordtype}{char}* file, \textcolor{keywordtype}{int} line)
+106 \textcolor{preprocessor}{#else}
+107 \textcolor{keywordtype}{void}* \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keywordtype}{size\_t} size) 
+108 \textcolor{preprocessor}{#endif}
+109 \{
+110 
+111     size += \textcolor{keyword}{sizeof}(block\_t);
+112 
+113     \textcolor{keywordtype}{void}* addr = (\textcolor{keywordtype}{void}*) \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc}(\hyperlink{mm_8c_a24421f8f89c962d802b391886447543b}{current\_heap}, size);
+114     \textcolor{keywordflow}{if}(!addr)
+115         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"halloc(): failed!"});
+116 
+117 
+118     addr = \hyperlink{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}{mm\_vaddr}(addr);
+119 
+120     block\_t* block = (block\_t*) addr;
+121     block->magic = \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC};
+122     block->size = \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size};
+123 
+124 \textcolor{preprocessor}{#ifdef CHUNKS\_CHECKING}
+125     block->file = file;
+126     block->line = line;
+127 
+128     *(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) block + size + \textcolor{keyword}{sizeof}(block\_t)) = CHUNK\_MAGIC;
+129 
+130     \_\_check\_all\_chunks\_overflow();
+131 \textcolor{preprocessor}{#endif}
+132 
+133     \textcolor{keywordflow}{return} (\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) block + \textcolor{keyword}{sizeof}(block\_t));
+134 \}
 \end{DoxyCode}
 \hypertarget{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{\index{mm.\+c@{mm.\+c}!kfree@{kfree}}
 \index{kfree@{kfree}!mm.\+c@{mm.\+c}}
@@ -106,30 +154,37 @@ Free memory from Kernel Heap.
 \end{DoxyParams}
 
 
-Definition at line 79 of file mm.\+c.
+Definition at line 151 of file mm.\+c.
 
 
 
-References B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), mm\+\_\+paddr(), and size.
+References B\+L\+K\+M\+A\+G\+I\+C, hfree(), mm\+\_\+align(), and mm\+\_\+paddr().
 
 
 \begin{DoxyCode}
-79                       \{
-80     \textcolor{keywordflow}{if}(!ptr)
-81         \textcolor{keywordflow}{return};
-82         
-83     
-84     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
-85     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
-86         \textcolor{keywordflow}{return};
-87         
-88     \textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
-89     block->size = 0;
-90     block->magic = 0;
-91     
-92     
-93     \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree}(\hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(\hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(ptr)), size);
-94 \}
+151                       \{
+152     \textcolor{keywordflow}{if}(!ptr)
+153         \textcolor{keywordflow}{return};
+154         
+155     
+156     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+157     block--;
+158 
+159     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+160         \textcolor{keywordflow}{return};
+161 
+162 
+163     \textcolor{keywordtype}{size\_t} \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+164     block->size = 0;
+165     block->magic = 0;
+166     
+167 \textcolor{preprocessor}{#ifdef CHUNKS\_CHECKING}
+168     block->file = 0;
+169     block->line = 0;
+170 \textcolor{preprocessor}{#endif}
+171     
+172     \hyperlink{heap_8c_ad3d08e75d8a9f8e12e405536dccdd851}{hfree}(\hyperlink{mm_8c_a24421f8f89c962d802b391886447543b}{current\_heap}, \hyperlink{mm_8h_a3fbcc6a4fcc3452357e636f90b925554}{mm\_paddr}(\hyperlink{mm_8h_acb964323e95c799eb3896dce8c61d329}{mm\_align}(ptr)), size);
+173 \}
 \end{DoxyCode}
 \hypertarget{mm_8c_a0a2a93dff1df0b626cb5ff6d85d0553e}{\index{mm.\+c@{mm.\+c}!krealloc@{krealloc}}
 \index{krealloc@{krealloc}!mm.\+c@{mm.\+c}}
@@ -155,7 +210,7 @@ Virtual Address of data.
 \end{DoxyReturn}
 
 
-Definition at line 103 of file mm.\+c.
+Definition at line 182 of file mm.\+c.
 
 
 
@@ -163,46 +218,75 @@ References B\+L\+K\+M\+A\+G\+I\+C, kfree(), and kmalloc().
 
 
 \begin{DoxyCode}
-103                                        \{
-104     \textcolor{keywordflow}{if}(ptr == NULL)
-105         \textcolor{keywordflow}{return} \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-106         
-107     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} == 0) \{
-108         \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
-109         \textcolor{keywordflow}{return} NULL;
-110     \}   
-111 
-112     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
-113     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
-114         \textcolor{keywordflow}{return} NULL;
-115         
-116     \textcolor{keywordtype}{void}* newptr = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-117     \textcolor{keywordflow}{if}(!newptr)
-118         \textcolor{keywordflow}{return} NULL;
-119         
-120     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > block->size)
-121         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
-122         
-123     memcpy(newptr, ptr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
-124     \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
-125     
-126     \textcolor{keywordflow}{return} newptr;
-127 \}
+182                                        \{
+183     \textcolor{keywordflow}{if}(ptr == NULL)
+184         \textcolor{keywordflow}{return} \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+185         
+186     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} == 0) \{
+187         \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+188         \textcolor{keywordflow}{return} NULL;
+189     \}   
+190 
+191     block\_t* \hyperlink{structblock}{block} = (block\_t*) ptr;
+192     block--;
+193 
+194     \textcolor{keywordflow}{if}(block->magic != \hyperlink{mm_8h_a24ee1b93dcb4a2d30a151491245967ec}{BLKMAGIC})
+195         \textcolor{keywordflow}{return} NULL;
+196         
+197     \textcolor{keywordtype}{void}* newptr = \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+198     \textcolor{keywordflow}{if}(!newptr)
+199         \textcolor{keywordflow}{return} NULL;
+200         
+201     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} > block->size)
+202         \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size} = block->size;
+203         
+204     memcpy(newptr, ptr, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+205     \hyperlink{mm_8c_a069f85a5001d71bc44d8be6532a4e432}{kfree}(ptr);
+206     
+207     \textcolor{keywordflow}{return} newptr;
+208 \}
 \end{DoxyCode}
-\hypertarget{mm_8c_a4e692b1c1f4e04a8b231f1493babb82f}{\index{mm.\+c@{mm.\+c}!mm\+\_\+getheap@{mm\+\_\+getheap}}
+\hypertarget{mm_8c_a0fa5db9ef345269ef8fb232a31c0b5cc}{\index{mm.\+c@{mm.\+c}!kvmalloc@{kvmalloc}}
+\index{kvmalloc@{kvmalloc}!mm.\+c@{mm.\+c}}
+\subsubsection[{kvmalloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ kvmalloc (
+\begin{DoxyParamCaption}
+\item[{size\+\_\+t}]{size}
+\end{DoxyParamCaption}
+)}}\label{mm_8c_a0fa5db9ef345269ef8fb232a31c0b5cc}
+
+
+Definition at line 137 of file mm.\+c.
+
+
+
+References halloc(), mm\+\_\+vaddr(), and panic().
+
+
+\begin{DoxyCode}
+137                             \{
+138     \textcolor{keywordtype}{void}* addr = (\textcolor{keywordtype}{void}*) \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc}(\hyperlink{mm_8c_a24421f8f89c962d802b391886447543b}{current\_heap}, \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size});
+139     \textcolor{keywordflow}{if}(!addr)
+140         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"halloc(): failed!"});
+141 
+142 
+143     addr = \hyperlink{mm_8h_a5e7e52cb995fbefca3ca2a7bab8556e6}{mm\_vaddr}(addr);
+144     \textcolor{keywordflow}{return} addr;
+145 \}
+\end{DoxyCode}
+\hypertarget{mm_8c_accbfbfd24536b985a875baf4e16a98f9}{\index{mm.\+c@{mm.\+c}!mm\+\_\+getheap@{mm\+\_\+getheap}}
 \index{mm\+\_\+getheap@{mm\+\_\+getheap}!mm.\+c@{mm.\+c}}
-\subsubsection[{mm\+\_\+getheap}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf heap\+\_\+t}$\ast$ mm\+\_\+getheap (
+\subsubsection[{mm\+\_\+getheap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf heap\+\_\+t}$\ast$ mm\+\_\+getheap (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{mm_8c_a4e692b1c1f4e04a8b231f1493babb82f}
+)}}\label{mm_8c_accbfbfd24536b985a875baf4e16a98f9}
 
 
 Get current heap for memory operations. 
 
 
 
-Definition at line 141 of file mm.\+c.
+Definition at line 222 of file mm.\+c.
 
 
 
@@ -210,9 +294,9 @@ References current\+\_\+heap.
 
 
 \begin{DoxyCode}
-141                               \{
-142     \textcolor{keywordflow}{return} \hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap};
-143 \}
+222                      \{
+223     \textcolor{keywordflow}{return} \hyperlink{mm_8c_a24421f8f89c962d802b391886447543b}{current\_heap};
+224 \}
 \end{DoxyCode}
 \hypertarget{mm_8c_a25db4b3982d49366c88b6be8331b9215}{\index{mm.\+c@{mm.\+c}!mm\+\_\+init@{mm\+\_\+init}}
 \index{mm\+\_\+init@{mm\+\_\+init}!mm.\+c@{mm.\+c}}
@@ -227,7 +311,7 @@ Initialize M\+M\+U.
 
 
 
-Definition at line 149 of file mm.\+c.
+Definition at line 230 of file mm.\+c.
 
 
 
@@ -235,18 +319,18 @@ References kheap\+\_\+init(), mbd, Boot\+Info\+\_\+t\+::mem\+\_\+lower, Boot\+In
 
 
 \begin{DoxyCode}
-149               \{
-150 
-151     \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} = (\hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_ab20281f521d626a49714e06b62291be9}{mem\_upper} + \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a4b144c9db5fe2c5a9d72522068d65138}{mem\_lower}) * 1024;
-152     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} > \hyperlink{mm_8h_a17f8a27ab3548000488ca27d70785240}{VMM\_MAX\_MEMORY})
-153         \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} = \hyperlink{mm_8h_a17f8a27ab3548000488ca27d70785240}{VMM\_MAX\_MEMORY};
-154 
-155 
-156     \hyperlink{kheap_8c_ab761c0c9768623b035f3fd5c98f77b08}{kheap\_init}();
-157     \hyperlink{paging_8c_aac183f585641487a954ca46c0d7bde31}{vmm\_init}();
-158 
-159     \textcolor{keywordflow}{return} 0;
-160 \}
+230               \{
+231 
+232     \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} = (\hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_ab20281f521d626a49714e06b62291be9}{mem\_upper} + \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a4b144c9db5fe2c5a9d72522068d65138}{mem\_lower}) * 1024;
+233     \textcolor{keywordflow}{if}(\hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} > \hyperlink{mm_8h_a17f8a27ab3548000488ca27d70785240}{VMM\_MAX\_MEMORY})
+234         \hyperlink{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{memsize} = \hyperlink{mm_8h_a17f8a27ab3548000488ca27d70785240}{VMM\_MAX\_MEMORY};
+235 
+236 
+237     \hyperlink{kheap_8c_ab761c0c9768623b035f3fd5c98f77b08}{kheap\_init}();
+238     \hyperlink{paging_8c_aac183f585641487a954ca46c0d7bde31}{vmm\_init}();
+239 
+240     \textcolor{keywordflow}{return} 0;
+241 \}
 \end{DoxyCode}
 \hypertarget{mm_8c_a6f69e1474f69d9286294cfa23cdcc414}{\index{mm.\+c@{mm.\+c}!mm\+\_\+setheap@{mm\+\_\+setheap}}
 \index{mm\+\_\+setheap@{mm\+\_\+setheap}!mm.\+c@{mm.\+c}}
@@ -261,23 +345,34 @@ Set current heap for memory operations.
 
 
 
-Definition at line 134 of file mm.\+c.
+Definition at line 215 of file mm.\+c.
 
 
 \begin{DoxyCode}
-134                               \{
-135     \hyperlink{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap} = heap;
-136 \}
+215                               \{
+216     \hyperlink{mm_8c_a24421f8f89c962d802b391886447543b}{current\_heap} = heap;
+217 \}
 \end{DoxyCode}
 
 
 \subsection{Variable Documentation}
-\hypertarget{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}{\index{mm.\+c@{mm.\+c}!current\+\_\+heap@{current\+\_\+heap}}
+\hypertarget{mm_8c_a24421f8f89c962d802b391886447543b}{\index{mm.\+c@{mm.\+c}!current\+\_\+heap@{current\+\_\+heap}}
 \index{current\+\_\+heap@{current\+\_\+heap}!mm.\+c@{mm.\+c}}
-\subsubsection[{current\+\_\+heap}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf heap\+\_\+t}$\ast$ current\+\_\+heap}}\label{mm_8c_a3068f9054a832aa72e12ab9ad210dd99}
+\subsubsection[{current\+\_\+heap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf heap\+\_\+t}$\ast$ current\+\_\+heap}}\label{mm_8c_a24421f8f89c962d802b391886447543b}
 
 
-Definition at line 36 of file mm.\+c.
+Definition at line 45 of file mm.\+c.
+
+\hypertarget{mm_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{mm.\+c@{mm.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!mm.\+c@{mm.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{mm_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 37 of file sched.\+c.
 
 \hypertarget{mm_8c_a9bed7071511863f81c2de43b3c3f7db9}{\index{mm.\+c@{mm.\+c}!current\+\_\+vmm@{current\+\_\+vmm}}
 \index{current\+\_\+vmm@{current\+\_\+vmm}!mm.\+c@{mm.\+c}}
@@ -285,6 +380,17 @@ Definition at line 36 of file mm.\+c.
 
 
 Definition at line 46 of file paging.\+c.
+
+\hypertarget{mm_8c_ac08620610e2419aca3878305400a96b7}{\index{mm.\+c@{mm.\+c}!kernel\+\_\+task@{kernel\+\_\+task}}
+\index{kernel\+\_\+task@{kernel\+\_\+task}!mm.\+c@{mm.\+c}}
+\subsubsection[{kernel\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ kernel\+\_\+task}}\label{mm_8c_ac08620610e2419aca3878305400a96b7}
+
+
+Kernel task address. 
+
+
+
+Definition at line 42 of file sched.\+c.
 
 \hypertarget{mm_8c_afac53891df03c313fc0b5b24e0acc8a9}{\index{mm.\+c@{mm.\+c}!kernel\+\_\+vmm@{kernel\+\_\+vmm}}
 \index{kernel\+\_\+vmm@{kernel\+\_\+vmm}!mm.\+c@{mm.\+c}}
@@ -298,21 +404,24 @@ Definition at line 47 of file paging.\+c.
 \subsubsection[{magic}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint16\+\_\+t} magic}}\label{mm_8c_a8c61e64b8675498cee79c59d3f8131e2}
 
 
-Definition at line 42 of file mm.\+c.
+Definition at line 54 of file mm.\+c.
 
 \hypertarget{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}{\index{mm.\+c@{mm.\+c}!memsize@{memsize}}
 \index{memsize@{memsize}!mm.\+c@{mm.\+c}}
 \subsubsection[{memsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} memsize}}\label{mm_8c_a8ffb348d372acd38099f16b08bdaf4b5}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{mm_8h}{aplus/mm.\+h} 
+\end{DoxySeeAlso}
 
 
-Definition at line 35 of file mm.\+c.
+Definition at line 44 of file mm.\+c.
 
 \hypertarget{mm_8c_a854352f53b148adc24983a58a1866d66}{\index{mm.\+c@{mm.\+c}!size@{size}}
 \index{size@{size}!mm.\+c@{mm.\+c}}
 \subsubsection[{size}]{\setlength{\rightskip}{0pt plus 5cm}size\+\_\+t size}}\label{mm_8c_a854352f53b148adc24983a58a1866d66}
 
 
-Definition at line 43 of file mm.\+c.
+Definition at line 55 of file mm.\+c.
 
 \hypertarget{mm_8c_a3744f58bc6d40534a3e026b2f242ab25}{\index{mm.\+c@{mm.\+c}!vmm\+\_\+queue@{vmm\+\_\+queue}}
 \index{vmm\+\_\+queue@{vmm\+\_\+queue}!mm.\+c@{mm.\+c}}

@@ -1,4 +1,4 @@
-.TH "src/syscall/chown.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/chown.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -78,14 +78,13 @@ References errno, task::fd, fs_chown(), im_superuser(), kprintf(), and sys_open(
 28     
 29     
 30     int fd = sys_open(filename, O_RDONLY, 0644);
-31     if(fd < 0) {
-32         kprintf("sys_chown: %s\&.", strerror(errno));
-33         return -1;
-34     }
-35     
-36     inode_t* ino = current_task->fd[fd];
-37     return fs_chown(ino, owner, group);
-38 }
+31     if(fd < 0)
+32         return -1;
+33     
+34     
+35     inode_t* ino = current_task->fd[fd];
+36     return fs_chown(ino, owner, group);
+37 }
 .fi
 .SS "SYSCALL (\fBsys_chown\fP, 21)"
 
@@ -96,7 +95,7 @@ References errno, task::fd, fs_chown(), im_superuser(), kprintf(), and sys_open(
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

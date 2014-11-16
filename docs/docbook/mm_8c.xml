@@ -5,8 +5,10 @@
     <programlisting>#include &lt;stddef.h&gt;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
     <programlisting>#include &lt;grub.h&gt;</programlisting>
         <simplesect>
             <title> Classes </title>
@@ -30,7 +32,7 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>volatile <link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link> * <link linkend="mm_8c_1a3068f9054a832aa72e12ab9ad210dd99">current_heap</link></para>
+                        <para><link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link> * <link linkend="mm_8c_1a24421f8f89c962d802b391886447543b">current_heap</link></para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -45,6 +47,20 @@
                 <itemizedlist>
                     <listitem>
                         <para><link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> * <link linkend="mm_8c_1afac53891df03c313fc0b5b24e0acc8a9">kernel_vmm</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="mm_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="mm_8c_1ac08620610e2419aca3878305400a96b7">kernel_task</link></para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -83,6 +99,14 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para>void * <link linkend="mm_8c_1a0fa5db9ef345269ef8fb232a31c0b5cc">kvmalloc</link> (
+size_t size)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para>void <link linkend="mm_8c_1a069f85a5001d71bc44d8be6532a4e432">kfree</link> (
 void * ptr)</para>
                     </listitem>
@@ -107,7 +131,7 @@ void * ptr, size_t size)</para>
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>volatile <link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link> * <link linkend="mm_8c_1a4e692b1c1f4e04a8b231f1493babb82f">mm_getheap</link> (
+                        <para><link linkend="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300">heap_t</link> * <link linkend="mm_8c_1accbfbfd24536b985a875baf4e16a98f9">mm_getheap</link> (
 )</para>
                     </listitem>
                 </itemizedlist>

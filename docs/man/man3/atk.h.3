@@ -1,4 +1,4 @@
-.TH "usr/src/libatk/src/include/atk.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libatk/src/include/atk.h" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -33,6 +33,39 @@ usr/src/libatk/src/include/atk.h \-
 .ti -1c
 .RI "#define \fBATK_COLOR_B\fP   0"
 .br
+.ti -1c
+.RI "#define \fBATK_RECT_X\fP   0"
+.br
+.ti -1c
+.RI "#define \fBATK_RECT_Y\fP   1"
+.br
+.ti -1c
+.RI "#define \fBATK_RECT_W\fP   2"
+.br
+.ti -1c
+.RI "#define \fBATK_RECT_H\fP   3"
+.br
+.ti -1c
+.RI "#define \fBATK_SIZE_W\fP   0"
+.br
+.ti -1c
+.RI "#define \fBATK_SIZE_H\fP   1"
+.br
+.ti -1c
+.RI "#define \fBATK_POS_X\fP   0"
+.br
+.ti -1c
+.RI "#define \fBATK_POS_Y\fP   1"
+.br
+.ti -1c
+.RI "#define \fBATK_RECT_EMPTY\fP   { 0, 0, 0, 0 }"
+.br
+.ti -1c
+.RI "#define \fBATK_SIZE_EMPTY\fP   { 0, 0 }"
+.br
+.ti -1c
+.RI "#define \fBATK_POS_EMPTY\fP   { 0, 0 }"
+.br
 .in -1c
 .SS "Typedefs"
 
@@ -44,6 +77,15 @@ usr/src/libatk/src/include/atk.h \-
 .RI "typedef atk_v4f \fBatk_color_t\fP"
 .br
 .ti -1c
+.RI "typedef atk_v4si \fBatk_rect_t\fP"
+.br
+.ti -1c
+.RI "typedef atk_v2si \fBatk_size_t\fP"
+.br
+.ti -1c
+.RI "typedef atk_v2si \fBatk_pos_t\fP"
+.br
+.ti -1c
 .RI "typedef void \fBatk_list_t\fP"
 .br
 .in -1c
@@ -52,31 +94,75 @@ usr/src/libatk/src/include/atk.h \-
 .SS "#define ATK_COLOR_A   3"
 
 .PP
-Definition at line 26 of file atk\&.h\&.
+Definition at line 29 of file atk\&.h\&.
 .SS "#define ATK_COLOR_B   0"
 
 .PP
-Definition at line 29 of file atk\&.h\&.
+Definition at line 32 of file atk\&.h\&.
 .SS "#define ATK_COLOR_BLACK   { 1\&.0f, 0\&.0f, 0\&.0f, 0\&.0f }"
 
 .PP
-Definition at line 22 of file atk\&.h\&.
+Definition at line 25 of file atk\&.h\&.
 .SS "#define ATK_COLOR_G   1"
 
 .PP
-Definition at line 28 of file atk\&.h\&.
+Definition at line 31 of file atk\&.h\&.
 .SS "#define ATK_COLOR_R   2"
 
 .PP
-Definition at line 27 of file atk\&.h\&.
+Definition at line 30 of file atk\&.h\&.
 .SS "#define ATK_COLOR_TRANSPARENT   { 0\&.0f, 0\&.0f, 0\&.0f, 0\&.0f }"
 
 .PP
-Definition at line 24 of file atk\&.h\&.
+Definition at line 27 of file atk\&.h\&.
 .SS "#define ATK_COLOR_WHITE   { 1\&.0f, 1\&.0f, 1\&.0f, 1\&.0f }"
 
 .PP
-Definition at line 23 of file atk\&.h\&.
+Definition at line 26 of file atk\&.h\&.
+.SS "#define ATK_POS_EMPTY   { 0, 0 }"
+
+.PP
+Definition at line 48 of file atk\&.h\&.
+.SS "#define ATK_POS_X   0"
+
+.PP
+Definition at line 42 of file atk\&.h\&.
+.SS "#define ATK_POS_Y   1"
+
+.PP
+Definition at line 43 of file atk\&.h\&.
+.SS "#define ATK_RECT_EMPTY   { 0, 0, 0, 0 }"
+
+.PP
+Definition at line 46 of file atk\&.h\&.
+.SS "#define ATK_RECT_H   3"
+
+.PP
+Definition at line 37 of file atk\&.h\&.
+.SS "#define ATK_RECT_W   2"
+
+.PP
+Definition at line 36 of file atk\&.h\&.
+.SS "#define ATK_RECT_X   0"
+
+.PP
+Definition at line 34 of file atk\&.h\&.
+.SS "#define ATK_RECT_Y   1"
+
+.PP
+Definition at line 35 of file atk\&.h\&.
+.SS "#define ATK_SIZE_EMPTY   { 0, 0 }"
+
+.PP
+Definition at line 47 of file atk\&.h\&.
+.SS "#define ATK_SIZE_H   1"
+
+.PP
+Definition at line 40 of file atk\&.h\&.
+.SS "#define ATK_SIZE_W   0"
+
+.PP
+Definition at line 39 of file atk\&.h\&.
 .SH "Typedef Documentation"
 .PP 
 .SS "__attribute__"
@@ -90,7 +176,19 @@ Definition at line 17 of file atk\&.h\&.
 .SS "typedef void \fBatk_list_t\fP"
 
 .PP
+Definition at line 21 of file atk\&.h\&.
+.SS "typedef atk_v2si \fBatk_pos_t\fP"
+
+.PP
+Definition at line 20 of file atk\&.h\&.
+.SS "typedef atk_v4si \fBatk_rect_t\fP"
+
+.PP
 Definition at line 18 of file atk\&.h\&.
+.SS "typedef atk_v2si \fBatk_size_t\fP"
+
+.PP
+Definition at line 19 of file atk\&.h\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

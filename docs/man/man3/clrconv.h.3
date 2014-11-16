@@ -1,4 +1,4 @@
-.TH "usr/src/libatk/src/clrconv.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libatk/src/clrconv.h" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -23,25 +23,88 @@ usr/src/libatk/src/clrconv.h \-
 .ti -1c
 .RI "#define \fBV4F_TO_R5G6B5\fP(c)"
 .br
+.ti -1c
+.RI "#define \fBARGB_TO_V4F\fP(c)"
+.br
+.ti -1c
+.RI "#define \fBRGB_TO_V4F\fP(c)"
+.br
+.ti -1c
+.RI "#define \fBR5G6B5_TO_V4F\fP(c)"
+.br
+.ti -1c
+.RI "#define \fB__SWAP\fP(x, y)"
+.br
 .in -1c
 .SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "static \fBatk_color_t\fP \fB__alphablend\fP (\fBatk_color_t\fP \fBd\fP, \fBatk_color_t\fP s, float a)"
+.RI "static \fBatk_color_t\fP \fB__alphablend\fP (\fBatk_color_t\fP d, \fBatk_color_t\fP s, float a)"
 .br
 .in -1c
 .SH "Macro Definition Documentation"
 .PP 
+.SS "#define __SWAP(x, y)"
+\fBValue:\fP
+.PP
+.nf
+{                       \
+        x ^= y;             \
+        y ^= x;             \
+        x ^= y;             \
+    }
+.fi
+.PP
+Definition at line 83 of file clrconv\&.h\&.
+.SS "#define ARGB_TO_V4F(c)"
+\fBValue:\fP
+.PP
+.nf
+{                                           \
+        ((float) ((c >> 24) & 0xFF)) / 0xFF,    \
+        ((float) ((c >> 16) & 0xFF)) / 0xFF,    \
+        ((float) ((c >> 8) & 0xFF)) / 0xFF,     \
+        ((float) (c & 0xFF)) / 0xFF             \
+    }
+.fi
+.PP
+Definition at line 37 of file clrconv\&.h\&.
+.SS "#define R5G6B5_TO_V4F(c)"
+\fBValue:\fP
+.PP
+.nf
+{                                         \
+        1\&.0,                                     \
+        ((float) ((c >> 11) & 0x1F)) / 0x1F,    \
+        ((float) ((c >> 5) & 0x3F)) / 0x3F,     \
+        ((float) (c & 0x1F)) / 0x1F             \
+    }
+.fi
+.PP
+Definition at line 53 of file clrconv\&.h\&.
+.SS "#define RGB_TO_V4F(c)"
+\fBValue:\fP
+.PP
+.nf
+{                                            \
+        1\&.0,                                     \
+        ((float) ((c >> 16) & 0xFF)) / 0xFF,    \
+        ((float) ((c >> 8) & 0xFF)) / 0xFF,     \
+        ((float) (c & 0xFF)) / 0xFF             \
+    }
+.fi
+.PP
+Definition at line 45 of file clrconv\&.h\&.
 .SS "#define V4F_TO_ARGB(c)"
 \fBValue:\fP
 .PP
 .nf
-(                                       \
-        ((int32_t)(c[3] * 0xFF) << 24)  |   \
-        ((int32_t)(c[2] * 0xFF) << 16)  |   \
-        ((int32_t)(c[1] * 0xFF) << 8)   |   \
-        ((int32_t)(c[0] * 0xFF))        |   \
+(                                                       \
+        ((int32_t)(c[ATK_COLOR_A] * 0xFF) << 24)    |       \
+        ((int32_t)(c[ATK_COLOR_R] * 0xFF) << 16)    |       \
+        ((int32_t)(c[ATK_COLOR_G] * 0xFF) << 8)     |       \
+        ((int32_t)(c[ATK_COLOR_B] * 0xFF))                  \
     )
 .fi
 .PP
@@ -50,10 +113,10 @@ Definition at line 14 of file clrconv\&.h\&.
 \fBValue:\fP
 .PP
 .nf
-(                                     \
-        ((int16_t)(c[2] * 0x1F) << 11)  |   \
-        ((int16_t)(c[1] * 0x3F) << 5)   |   \
-        ((int16_t)(c[0] * 0x1F))        |   \
+(                                                     \
+        ((int16_t)(c[ATK_COLOR_R] * 0x1F) << 11)    |       \
+        ((int16_t)(c[ATK_COLOR_R] * 0x3F) << 5)     |       \
+        ((int16_t)(c[ATK_COLOR_R] * 0x1F))                  \
     )
 .fi
 .PP
@@ -62,10 +125,10 @@ Definition at line 29 of file clrconv\&.h\&.
 \fBValue:\fP
 .PP
 .nf
-(                                        \
-        ((int32_t)(c[2] * 0xFF) << 16)  |   \
-        ((int32_t)(c[1] * 0xFF) << 8)   |   \
-        ((int32_t)(c[0] * 0xFF))        |   \
+(                                                        \
+        ((int32_t)(c[ATK_COLOR_R] * 0xFF) << 16)    |       \
+        ((int32_t)(c[ATK_COLOR_G] * 0xFF) << 8)     |       \
+        ((int32_t)(c[ATK_COLOR_B] * 0xFF))                  \
     )
 .fi
 .PP
@@ -75,28 +138,28 @@ Definition at line 22 of file clrconv\&.h\&.
 .SS "static \fBatk_color_t\fP __alphablend (\fBatk_color_t\fPd, \fBatk_color_t\fPs, floata)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 38 of file clrconv\&.h\&.
+Definition at line 64 of file clrconv\&.h\&.
 .PP
-References ATK_COLOR_A, ATK_COLOR_B, ATK_COLOR_BLACK, ATK_COLOR_G, ATK_COLOR_R, and d\&.
+References ATK_COLOR_A, ATK_COLOR_B, ATK_COLOR_BLACK, ATK_COLOR_G, and ATK_COLOR_R\&.
 .PP
 .nf
-38                                                                               {
-39     if(a == 0\&.0f)
-40         return d;
-41 
-42     if(a == 1\&.0f)
-43         return s;
-44 
-45     float ia = 1\&.0f - a;
-46     
-47     atk_color_t r = ATK_COLOR_BLACK;
-48     r[ATK_COLOR_A] = 1\&.0f;
-49     r[ATK_COLOR_R] = (s[ATK_COLOR_R] * a + d[ATK_COLOR_R] * ia);
-50     r[ATK_COLOR_G] = (s[ATK_COLOR_G] * a + d[ATK_COLOR_G] * ia);
-51     r[ATK_COLOR_B] = (s[ATK_COLOR_B] * a + d[ATK_COLOR_B] * ia);
-52 
-53     return r;
-54 }
+64                                                                               {
+65     if(a == 0\&.0f)
+66         return d;
+67 
+68     if(a == 1\&.0f)
+69         return s;
+70 
+71     float ia = 1\&.0f - a;
+72     
+73     atk_color_t r = ATK_COLOR_BLACK;
+74     r[ATK_COLOR_A] = 1\&.0f;
+75     r[ATK_COLOR_R] = (s[ATK_COLOR_R] * a + d[ATK_COLOR_R] * ia);
+76     r[ATK_COLOR_G] = (s[ATK_COLOR_G] * a + d[ATK_COLOR_G] * ia);
+77     r[ATK_COLOR_B] = (s[ATK_COLOR_B] * a + d[ATK_COLOR_B] * ia);
+78 
+79     return r;
+80 }
 .fi
 .SH "Author"
 .PP 

@@ -4,141 +4,124 @@
     <compoundname>panic.c</compoundname>
     <includes refid="aplus_8h" local="no">aplus.h</includes>
     <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
     <includes refid="fs_8h" local="no">aplus/fs.h</includes>
     <includes refid="list_8h" local="no">aplus/list.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="1250">
+      <node id="1317">
         <label>sys/stat.h</label>
       </node>
-      <node id="1244">
+      <node id="1311">
         <label>stdarg.h</label>
       </node>
-      <node id="1247">
+      <node id="1314">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1243" relation="include">
+        <childnode refid="1310" relation="include">
         </childnode>
-        <childnode refid="1248" relation="include">
+        <childnode refid="1315" relation="include">
         </childnode>
-        <childnode refid="1249" relation="include">
+        <childnode refid="1316" relation="include">
         </childnode>
-        <childnode refid="1250" relation="include">
+        <childnode refid="1317" relation="include">
         </childnode>
-        <childnode refid="1251" relation="include">
+        <childnode refid="1318" relation="include">
         </childnode>
       </node>
-      <node id="1243">
+      <node id="1310">
         <label>stdint.h</label>
       </node>
-      <node id="1254">
+      <node id="1321">
         <label>setjmp.h</label>
       </node>
-      <node id="1246">
+      <node id="1313">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1243" relation="include">
+        <childnode refid="1310" relation="include">
         </childnode>
-        <childnode refid="1242" relation="include">
+        <childnode refid="1309" relation="include">
         </childnode>
-        <childnode refid="1247" relation="include">
+        <childnode refid="1314" relation="include">
         </childnode>
-        <childnode refid="1253" relation="include">
+        <childnode refid="1320" relation="include">
         </childnode>
-        <childnode refid="1249" relation="include">
+        <childnode refid="1316" relation="include">
         </childnode>
-        <childnode refid="1254" relation="include">
+        <childnode refid="1321" relation="include">
         </childnode>
       </node>
-      <node id="1256">
+      <node id="1324">
         <label>errno.h</label>
       </node>
-      <node id="1248">
+      <node id="1315">
         <label>stddef.h</label>
       </node>
-      <node id="1255">
+      <node id="1323">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1248" relation="include">
+        <childnode refid="1315" relation="include">
         </childnode>
-        <childnode refid="1243" relation="include">
+        <childnode refid="1310" relation="include">
         </childnode>
-        <childnode refid="1249" relation="include">
+        <childnode refid="1316" relation="include">
         </childnode>
       </node>
-      <node id="1241">
+      <node id="1308">
         <label>src/panic.c</label>
         <link refid="panic.c"/>
-        <childnode refid="1242" relation="include">
+        <childnode refid="1309" relation="include">
         </childnode>
-        <childnode refid="1246" relation="include">
+        <childnode refid="1313" relation="include">
         </childnode>
-        <childnode refid="1247" relation="include">
+        <childnode refid="1322" relation="include">
         </childnode>
-        <childnode refid="1255" relation="include">
+        <childnode refid="1314" relation="include">
         </childnode>
-        <childnode refid="1256" relation="include">
+        <childnode refid="1323" relation="include">
+        </childnode>
+        <childnode refid="1324" relation="include">
         </childnode>
       </node>
-      <node id="1242">
+      <node id="1309">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1243" relation="include">
+        <childnode refid="1310" relation="include">
         </childnode>
-        <childnode refid="1244" relation="include">
+        <childnode refid="1311" relation="include">
         </childnode>
-        <childnode refid="1245" relation="include">
+        <childnode refid="1312" relation="include">
         </childnode>
       </node>
-      <node id="1249">
+      <node id="1316">
         <label>sys/types.h</label>
       </node>
-      <node id="1245">
+      <node id="1312">
         <label>string.h</label>
       </node>
-      <node id="1252">
+      <node id="1319">
         <label>unistd.h</label>
       </node>
-      <node id="1253">
+      <node id="1320">
         <label>signal.h</label>
       </node>
-      <node id="1251">
+      <node id="1322">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="1310" relation="include">
+        </childnode>
+        <childnode refid="1313" relation="include">
+        </childnode>
+      </node>
+      <node id="1318">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1252" relation="include">
+        <childnode refid="1319" relation="include">
         </childnode>
-        <childnode refid="1249" relation="include">
+        <childnode refid="1316" relation="include">
         </childnode>
       </node>
     </incdepgraph>
-      <sectiondef kind="define">
-      <memberdef kind="define" id="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" prot="public" static="no">
-        <name>d</name>
-        <param><defname>reg</defname></param>
-        <initializer>;								\
-		<ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(#reg &quot;: 0x%x\t\t&quot;, read_##reg());</initializer>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="28" column="10"/>
-      </memberdef>
-      <memberdef kind="define" id="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724" prot="public" static="no">
-        <name>_d</name>
-        <param></param>
-        <initializer>;								\
-		<ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(&quot;\n&quot;);</initializer>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="31" column="10"/>
-      </memberdef>
-      </sectiondef>
       <sectiondef kind="var">
       <memberdef kind="variable" id="panic_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" prot="public" static="no" mutable="no">
         <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
@@ -151,7 +134,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="8" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="46" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/panic.c" line="9" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="panic_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" prot="public" static="no" mutable="no">
         <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
@@ -164,7 +147,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="9" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/panic.c" line="10" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="panic_8c_1ac08620610e2419aca3878305400a96b7" prot="public" static="no" mutable="no">
         <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
@@ -177,7 +160,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="10" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="40" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/panic.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="42" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -192,40 +175,28 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="16" bodyend="18"/>
+        <location file="/opt/prj/aPlus/src/panic.c" line="17" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="17" bodyend="19"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
       </memberdef>
-      <memberdef kind="function" id="panic_8c_1ad829ba2d1c19b556fd15c8eda84f06fa" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="panic_8c_1a20563f9e0fecc6db792f5b9308309272" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
-        <definition>static void dump_registers</definition>
-        <argsstring>()</argsstring>
-        <name>dump_registers</name>
+        <definition>static void dump_cpu</definition>
+        <argsstring>(regs_t *r)</argsstring>
+        <name>dump_cpu</name>
+        <param>
+          <type>regs_t *</type>
+          <declname>r</declname>
+        </param>
         <briefdescription>
-<para>Print current registers. </para>        </briefdescription>
+<para>Print current registers &amp; cpu status. </para>        </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="24" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="24" bodyend="61"/>
-        <references refid="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724">_d</references>
-        <references refid="aplus_8h_1a8519dc239502dfcbac171b3128dc7054" compoundref="aplus_8h" startline="139">cs</references>
-        <references refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</references>
-        <references refid="aplus_8h_1a6fe20edd854a1a653ae71ccf541a6b8b" compoundref="aplus_8h" startline="139">ds</references>
-        <references refid="task_8h_1a93d929ad1fc57af9d4f1793c361fb4f2" compoundref="task_8h" startline="16">eax</references>
-        <references refid="task_8h_1aaba2ad0ff8ba480934feabfdab02b1e7" compoundref="task_8h" startline="19">ebp</references>
-        <references refid="task_8h_1ae7c1e3339e4dead200cab41010e9127c" compoundref="task_8h" startline="14">ebx</references>
-        <references refid="task_8h_1af2b16bef95c844028dd145264d1d3875" compoundref="task_8h" startline="15">ecx</references>
-        <references refid="task_8h_1a36ffab8d34c6c411a7e5205ddb95eaf9" compoundref="task_8h" startline="12">edi</references>
-        <references refid="task_8h_1ae6db045cebe7b4cf979120dccdee0d01" compoundref="task_8h" startline="17">edx</references>
-        <references refid="task_8h_1aeedfc39703ec8e0a1f052a832e74acd3" compoundref="task_8h" startline="18">eflags</references>
-        <references refid="task_8h_1a1588906901fc3015e0865574669a56a6" compoundref="task_8h" startline="20">eip</references>
-        <references refid="aplus_8h_1a0dacdc927bbcc6457b629ad88119cdc2" compoundref="aplus_8h" startline="139">es</references>
-        <references refid="task_8h_1ada78e3124de6adf5a5d212f9ebc4bbe0" compoundref="task_8h" startline="13">esi</references>
-        <references refid="aplus_8h_1a7534a179bc9cc0ef26f0468e0959ee5c" compoundref="aplus_8h" startline="139">esp</references>
-        <references refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" compoundref="aplus_8h" startline="139">fs</references>
-        <references refid="aplus_8h_1a85904ecbf7b717abe738645b4ff2f4ff" compoundref="aplus_8h" startline="139">gs</references>
+        <location file="/opt/prj/aPlus/src/panic.c" line="25" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="25" bodyend="39"/>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <references refid="desc_8c_1affef3cc40072321b8d54e4c00aa4de85" compoundref="desc_8c" startline="393" endline="395">pit_getticks</references>
       </memberdef>
       <memberdef kind="function" id="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -242,8 +213,13 @@
 <para>Print a stacktrace. </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="67" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="67" bodyend="70"/>
+        <location file="/opt/prj/aPlus/src/panic.c" line="45" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="45" bodyend="63"/>
+        <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
+        <references refid="task_8h_1a1588906901fc3015e0865574669a56a6" compoundref="task_8h" startline="20">eip</references>
+        <references refid="exec_8c_1ac79bb43069a3d3c097c8d95dcf0c2784" compoundref="exec_8c" startline="291" endline="326">elf_kernel_lookup</references>
+        <references refid="aplus_8h_1a7534a179bc9cc0ef26f0468e0959ee5c" compoundref="aplus_8h" startline="139">esp</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       <memberdef kind="function" id="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -256,13 +232,58 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="76" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="76" bodyend="96"/>
-        <references refid="structtask_1a22a59fcfc18d5f671340669f96571768" compoundref="task_8h" startline="104">task::exe</references>
+        <location file="/opt/prj/aPlus/src/panic.c" line="69" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="69" bodyend="89"/>
+        <references refid="structtask_1a22a59fcfc18d5f671340669f96571768" compoundref="task_8h" startline="106">task::exe</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
         <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" compoundref="fs_8h" startline="38">inode::name</references>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="panic_8c_1a9e0d1c1bd35fd6b517160ba5abcf6681" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void dump_mmu</definition>
+        <argsstring>()</argsstring>
+        <name>dump_mmu</name>
+        <briefdescription>
+<para>Print MMU State. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/panic.c" line="95" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="95" bodyend="104"/>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <references refid="mm_8c_1accbfbfd24536b985a875baf4e16a98f9" compoundref="mm_8c" startline="222" endline="224">mm_getheap</references>
+        <references refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" compoundref="mm_8h" startline="67">heap::size</references>
+        <references refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" compoundref="mm_8h" startline="68">heap::used</references>
+      </memberdef>
+      <memberdef kind="function" id="panic_8c_1a0becae034664f94c1553072830270ecb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void panic_r</definition>
+        <argsstring>(char *msg, regs_t *r)</argsstring>
+        <name>panic_r</name>
+        <param>
+          <type>char *</type>
+          <declname>msg</declname>
+        </param>
+        <param>
+          <type>regs_t *</type>
+          <declname>r</declname>
+        </param>
+        <briefdescription>
+<para>Go in Kernel Panic, dump exception registers, halt system. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/panic.c" line="111" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="111" bodyend="125"/>
+        <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
+        <references refid="panic_8c_1a20563f9e0fecc6db792f5b9308309272" compoundref="panic_8c" startline="25" endline="39">dump_cpu</references>
+        <references refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" compoundref="panic_8c" startline="17" endline="19">dump_errno</references>
+        <references refid="panic_8c_1a9e0d1c1bd35fd6b517160ba5abcf6681" compoundref="panic_8c" startline="95" endline="104">dump_mmu</references>
+        <references refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" compoundref="panic_8c" startline="45" endline="63">dump_stacktrace</references>
+        <references refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" compoundref="panic_8c" startline="69" endline="89">dump_task</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
       </memberdef>
       <memberdef kind="function" id="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -279,13 +300,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/panic.c" line="102" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="102" bodyend="113"/>
-        <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
-        <references refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" compoundref="panic_8c" startline="16" endline="18">dump_errno</references>
-        <references refid="panic_8c_1ad829ba2d1c19b556fd15c8eda84f06fa" compoundref="panic_8c" startline="24" endline="61">dump_registers</references>
-        <references refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" compoundref="panic_8c" startline="67" endline="70">dump_stacktrace</references>
-        <references refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" compoundref="panic_8c" startline="76" endline="96">dump_task</references>
-        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <location file="/opt/prj/aPlus/src/panic.c" line="130" column="1" bodyfile="/opt/prj/aPlus/src/panic.c" bodystart="130" bodyend="132"/>
+        <references refid="panic_8c_1a0becae034664f94c1553072830270ecb" compoundref="panic_8c" startline="111" endline="125">panic_r</references>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -295,102 +311,117 @@
     <programlisting>
 <codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fs_8h" kindref="compound">aplus/fs.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fs_8h" kindref="compound">aplus/fs.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="list_8h" kindref="compound">aplus/list.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="7"><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="panic_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" kindref="member">task_queue</ref>;</highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="panic_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="panic_8c_1ac08620610e2419aca3878305400a96b7" kindref="member">kernel_task</ref>;</highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="panic_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" kindref="member">task_queue</ref>;</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="panic_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="panic_8c_1ac08620610e2419aca3878305400a96b7" kindref="member">kernel_task</ref>;</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
-<codeline lineno="16" refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" kindref="member">dump_errno</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;errno:<sp/>%d<sp/>-<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>,<sp/>strerror(<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>));</highlight></codeline>
-<codeline lineno="18"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17" refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" kindref="member">dump_errno</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;errno:<sp/>%d<sp/>-<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>,<sp/>strerror(<ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref>));</highlight></codeline>
+<codeline lineno="19"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="20"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24" refid="panic_8c_1ad829ba2d1c19b556fd15c8eda84f06fa" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1ad829ba2d1c19b556fd15c8eda84f06fa" kindref="member">dump_registers</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"></highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Registers:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="panic_8c_1a20563f9e0fecc6db792f5b9308309272" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a20563f9e0fecc6db792f5b9308309272" kindref="member">dump_cpu</ref>(regs_t*<sp/>r)<sp/>{</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;CPU:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>d(reg);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="29"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>kprintf(#reg<sp/>&quot;:<sp/>0x%x\t\t&quot;,<sp/>read_##reg());</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>_d();<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="32"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>kprintf(&quot;\n&quot;);<sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1a93d929ad1fc57af9d4f1793c361fb4f2" kindref="member">eax</ref>);</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1ae7c1e3339e4dead200cab41010e9127c" kindref="member">ebx</ref>);</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1af2b16bef95c844028dd145264d1d3875" kindref="member">ecx</ref>);</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1ae6db045cebe7b4cf979120dccdee0d01" kindref="member">edx</ref>);</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1ada78e3124de6adf5a5d212f9ebc4bbe0" kindref="member">esi</ref>);</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1a36ffab8d34c6c411a7e5205ddb95eaf9" kindref="member">edi</ref>);</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724" kindref="member">_d</ref>();</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1a1588906901fc3015e0865574669a56a6" kindref="member">eip</ref>);</highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1aeedfc39703ec8e0a1f052a832e74acd3" kindref="member">eflags</ref>);</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="aplus_8h_1a7534a179bc9cc0ef26f0468e0959ee5c" kindref="member">esp</ref>);</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="task_8h_1aaba2ad0ff8ba480934feabfdab02b1e7" kindref="member">ebp</ref>);</highlight></codeline>
-<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724" kindref="member">_d</ref>();</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="aplus_8h_1a8519dc239502dfcbac171b3128dc7054" kindref="member">cs</ref>);</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="aplus_8h_1a6fe20edd854a1a653ae71ccf541a6b8b" kindref="member">ds</ref>);</highlight></codeline>
-<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="aplus_8h_1a0dacdc927bbcc6457b629ad88119cdc2" kindref="member">es</ref>);</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="aplus_8h_1a2ffb5cf275c124e8f8ff30e1d4449f80" kindref="member">fs</ref>);</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(<ref refid="aplus_8h_1a85904ecbf7b717abe738645b4ff2f4ff" kindref="member">gs</ref>);</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724" kindref="member">_d</ref>();</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(cr0);</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(cr2);</highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(cr3);</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>(cr4);</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724" kindref="member">_d</ref>();</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724" kindref="member">_d</ref>();</highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#undef<sp/>d</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#undef<sp/>_d</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="61"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"></highlight></codeline>
-<codeline lineno="63"><highlight class="normal"></highlight></codeline>
-<codeline lineno="67" refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" kindref="member">dump_stacktrace</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>count)<sp/>{</highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Stack<sp/>trace:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;TODO\n\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="70"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="71"><highlight class="normal"></highlight></codeline>
-<codeline lineno="72"><highlight class="normal"></highlight></codeline>
-<codeline lineno="76" refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" kindref="member">dump_task</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Task:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>task_queue)<sp/>{</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structtask" kindref="compound">task</ref><sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
-<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;<sp/>#<sp/>%d:<sp/>&quot;</highlight><highlight class="normal">,<sp/>task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>);</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task-&gt;<ref refid="structtask_1a22a59fcfc18d5f671340669f96571768" kindref="member">exe</ref>)</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;%s<sp/>&quot;</highlight><highlight class="normal">,<sp/>task-&gt;<ref refid="structtask_1a22a59fcfc18d5f671340669f96571768" kindref="member">exe</ref>-&gt;<ref refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" kindref="member">name</ref>);</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;unknown<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task<sp/>==<sp/>current_task)</highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;(current)<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task<sp/>==<sp/>kernel_task)</highlight></codeline>
-<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;(kernel)<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\n\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="96"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(r)<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;eip:<sp/>0x%8x\n&quot;</highlight><highlight class="normal">,<sp/>r-&gt;eip);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;err:<sp/>0x%8x\n&quot;</highlight><highlight class="normal">,<sp/>r-&gt;err_code);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;int:<sp/>0x%8x\n&quot;</highlight><highlight class="normal">,<sp/>r-&gt;int_no);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;esp:<sp/>0x%8x\n&quot;</highlight><highlight class="normal">,<sp/>r-&gt;esp);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;usp:<sp/>0x%8x\n&quot;</highlight><highlight class="normal">,<sp/>r-&gt;useresp);</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;pit:<sp/>%dms\n&quot;</highlight><highlight class="normal">,<sp/><ref refid="desc_8c_1affef3cc40072321b8d54e4c00aa4de85" kindref="member">pit_getticks</ref>());</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\n\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" kindref="member">dump_stacktrace</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>count)<sp/>{</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Stack<sp/>trace:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/><ref refid="aplus_8h_1a7534a179bc9cc0ef26f0468e0959ee5c" kindref="member">esp</ref><sp/>=<sp/>NULL;<sp/></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref>(</highlight><highlight class="stringliteral">&quot;mov<sp/>eax,<sp/>ebp&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;=a&quot;</highlight><highlight class="normal">(esp));</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>count;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="task_8h_1a1588906901fc3015e0865574669a56a6" kindref="member">eip</ref><sp/>=<sp/>*(++<ref refid="aplus_8h_1a7534a179bc9cc0ef26f0468e0959ee5c" kindref="member">esp</ref>);</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;[%d]<sp/>0x%x<sp/>-<sp/>%s\n&quot;</highlight><highlight class="normal">,<sp/>i,<sp/>eip,<sp/><ref refid="exec_8c_1ac79bb43069a3d3c097c8d95dcf0c2784" kindref="member">elf_kernel_lookup</ref>(eip));</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>esp<sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/>*(--esp);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!esp)</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\n\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69" refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" kindref="member">dump_task</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Task:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>task_queue)<sp/>{</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structtask" kindref="compound">task</ref><sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;<sp/>#<sp/>%d:<sp/>&quot;</highlight><highlight class="normal">,<sp/>task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task-&gt;<ref refid="structtask_1a22a59fcfc18d5f671340669f96571768" kindref="member">exe</ref>)</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;%s<sp/>&quot;</highlight><highlight class="normal">,<sp/>task-&gt;<ref refid="structtask_1a22a59fcfc18d5f671340669f96571768" kindref="member">exe</ref>-&gt;<ref refid="structinode_1ad64802d9d4ebdd1c56af5ab6e302faf0" kindref="member">name</ref>);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;unknown<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task<sp/>==<sp/>current_task)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;(current)<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task<sp/>==<sp/>kernel_task)</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;(kernel)<sp/>&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\n\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95" refid="panic_8c_1a9e0d1c1bd35fd6b517160ba5abcf6681" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a9e0d1c1bd35fd6b517160ba5abcf6681" kindref="member">dump_mmu</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Memory:\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="97"><highlight class="normal"></highlight></codeline>
-<codeline lineno="98"><highlight class="normal"></highlight></codeline>
-<codeline lineno="102" refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>msg)<sp/>{</highlight></codeline>
-<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>(</highlight><highlight class="stringliteral">&quot;cli&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;panic:<sp/>\&quot;%s\&quot;\n&quot;</highlight><highlight class="normal">,<sp/>msg);</highlight></codeline>
-<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1ad829ba2d1c19b556fd15c8eda84f06fa" kindref="member">dump_registers</ref>();</highlight></codeline>
-<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" kindref="member">dump_stacktrace</ref>(6);</highlight></codeline>
-<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" kindref="member">dump_task</ref>();</highlight></codeline>
-<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" kindref="member">dump_errno</ref>();</highlight></codeline>
-<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;);</highlight></codeline>
-<codeline lineno="113"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structheap" kindref="compound">heap_t</ref>*<sp/>h<sp/>=<sp/>(<ref refid="structheap" kindref="compound">heap_t</ref>*)<sp/><ref refid="mm_8c_1accbfbfd24536b985a875baf4e16a98f9" kindref="member">mm_getheap</ref>();</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\tUsed:<sp/>%d<sp/>MB<sp/>(%d<sp/>Bytes)\n&quot;</highlight><highlight class="normal">,<sp/>(h-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref><sp/>/<sp/>1024<sp/>/<sp/>1024),<sp/>h-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref>);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\tSize:<sp/>%d<sp/>MB<sp/>(%d<sp/>Bytes)\n&quot;</highlight><highlight class="normal">,<sp/>(h-&gt;<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref><sp/>/<sp/>1024<sp/>/<sp/>1024),<sp/>h-&gt;<ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;\n\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111" refid="panic_8c_1a0becae034664f94c1553072830270ecb" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a0becae034664f94c1553072830270ecb" kindref="member">panic_r</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>msg,<sp/>regs_t*<sp/>r)<sp/>{</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>(</highlight><highlight class="stringliteral">&quot;cli&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;panic:<sp/>\&quot;%s\&quot;\n&quot;</highlight><highlight class="normal">,<sp/>msg);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a20563f9e0fecc6db792f5b9308309272" kindref="member">dump_cpu</ref>(r);</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1aa5d4017b67388f3d72b18d307dae1627" kindref="member">dump_stacktrace</ref>(6);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20" kindref="member">dump_task</ref>();</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1afe580dc91d724ef0ff6f71f122933170" kindref="member">dump_errno</ref>();</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a9e0d1c1bd35fd6b517160ba5abcf6681" kindref="member">dump_mmu</ref>();<sp/></highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;);</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130" refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>msg)<sp/>{</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a0becae034664f94c1553072830270ecb" kindref="member">panic_r</ref>(msg,<sp/>NULL);</highlight></codeline>
+<codeline lineno="132"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight></codeline>
+<codeline lineno="134"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/panic.c"/>
   </compounddef>

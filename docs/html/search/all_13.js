@@ -11,6 +11,8 @@ var searchData=
   ['uint16_5ft',['uint16_t',['../aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505',1,'aplus.h']]],
   ['uint32_5ft',['uint32_t',['../aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82',1,'aplus.h']]],
   ['uint8_5ft',['uint8_t',['../aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03',1,'aplus.h']]],
+  ['umask',['umask',['../umask_8c.html#a8788159ad927954699f80970a1d04462',1,'umask.c']]],
+  ['umask_2ec',['umask.c',['../umask_8c.html',1,'']]],
   ['umount_2ec',['umount.c',['../umount_8c.html',1,'']]],
   ['unitsize',['unitsize',['../structiso9660__dir.html#a526e37b4f96c65db4c2ab5853155ee31',1,'iso9660_dir::unitsize()'],['../iso9660_8h.html#ac752f796c7827cddfc93b945c67bb54b',1,'unitsize():&#160;iso9660.h']]],
   ['unlink',['unlink',['../structinode.html#adf65bac80736631b8000d3d34e953aaa',1,'inode']]],

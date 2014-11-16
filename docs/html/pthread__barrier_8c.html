@@ -142,21 +142,21 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="pthread__barrier_8c_source.html#l00028">28</a> of file <a class="el" href="pthread__barrier_8c_source.html">pthread_barrier.c</a>.</p>
+<p>Definition at line <a class="el" href="pthread__barrier_8c_source.html#l00029">29</a> of file <a class="el" href="pthread__barrier_8c_source.html">pthread_barrier.c</a>.</p>
 
 <p>References <a class="el" href="pthread_8h_source.html#l00122">pthread_barrier::curr_height</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00123">pthread_barrier::init_height</a>.</p>
-<div class="fragment"><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                                               {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">if</span>(barrier == NULL) {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    }</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">curr_height</a> = 0;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">init_height</a> = 0;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="fragment"><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                                                               {</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">if</span>(barrier == NULL) {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">curr_height</a> = 0;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">init_height</a> = 0;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
 <div class="ttc" id="structpthread__barrier_html_a71938bf4346ecc8a2f997f18df267ae0"><div class="ttname"><a href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">pthread_barrier::init_height</a></div><div class="ttdeci">uint32_t init_height</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00123">pthread.h:123</a></div></div>
 <div class="ttc" id="structpthread__barrier_html_a3b8e6f276f11a62fb77525fe5d11b18c"><div class="ttname"><a href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">pthread_barrier::curr_height</a></div><div class="ttdeci">uint32_t curr_height</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00122">pthread.h:122</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
@@ -195,27 +195,30 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="pthread__barrier_8c_source.html#l00009">9</a> of file <a class="el" href="pthread__barrier_8c_source.html">pthread_barrier.c</a>.</p>
 
-<p>References <a class="el" href="pthread_8h_source.html#l00122">pthread_barrier::curr_height</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="pthread_8h_source.html#l00123">pthread_barrier::init_height</a>.</p>
+<p>References <a class="el" href="pthread_8h_source.html#l00122">pthread_barrier::curr_height</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread_8h_source.html#l00123">pthread_barrier::init_height</a>, <a class="el" href="pthread_8h_source.html#l00124">pthread_barrier::owner</a>, and <a class="el" href="pthread__self_8c_source.html#l00010">pthread_self()</a>.</p>
 <div class="fragment"><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;                                                                                                                   {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordflow">if</span>(barrier == NULL) {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    }</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">if</span>(count == 0) {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    }</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">curr_height</a> = 0;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">init_height</a> = count;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a8ec820115bfcd6be50432579aac440fa">owner</a> = <a class="code" href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a>();</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
 <div class="ttc" id="structpthread__barrier_html_a71938bf4346ecc8a2f997f18df267ae0"><div class="ttname"><a href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">pthread_barrier::init_height</a></div><div class="ttdeci">uint32_t init_height</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00123">pthread.h:123</a></div></div>
 <div class="ttc" id="structpthread__barrier_html_a3b8e6f276f11a62fb77525fe5d11b18c"><div class="ttname"><a href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">pthread_barrier::curr_height</a></div><div class="ttdeci">uint32_t curr_height</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00122">pthread.h:122</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="structpthread__barrier_html_a8ec820115bfcd6be50432579aac440fa"><div class="ttname"><a href="structpthread__barrier.html#a8ec820115bfcd6be50432579aac440fa">pthread_barrier::owner</a></div><div class="ttdeci">pthread_t owner</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00124">pthread.h:124</a></div></div>
+<div class="ttc" id="pthread_8h_html_a4c4f5f3b4f8f45d9d897847d53b11aaa"><div class="ttname"><a href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a></div><div class="ttdeci">pthread_t pthread_self(void)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__self_8c_source.html#l00010">pthread_self.c:10</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -233,26 +236,32 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="pthread__barrier_8c_source.html#l00042">42</a> of file <a class="el" href="pthread__barrier_8c_source.html">pthread_barrier.c</a>.</p>
+<p>Definition at line <a class="el" href="pthread__barrier_8c_source.html#l00043">43</a> of file <a class="el" href="pthread__barrier_8c_source.html">pthread_barrier.c</a>.</p>
 
-<p>References <a class="el" href="pthread_8h_source.html#l00122">pthread_barrier::curr_height</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread_8h_source.html#l00123">pthread_barrier::init_height</a>, and <a class="el" href="nanosleep_8c.html#a357cd4b34c13011749dfffb42b489f09">sched_yield()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                                                            {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">if</span>(barrier == NULL) {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">curr_height</a> += 1;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordflow">while</span>(barrier-&gt;<a class="code" href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">curr_height</a> &lt; barrier-&gt;<a class="code" href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">init_height</a>)</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="nanosleep_8c.html#a357cd4b34c13011749dfffb42b489f09">sched_yield</a>();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
+<p>References <a class="el" href="pthread_8h_source.html#l00122">pthread_barrier::curr_height</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="pthread_8h_source.html#l00123">pthread_barrier::init_height</a>, <a class="el" href="pthread_8h_source.html#l00124">pthread_barrier::owner</a>, <a class="el" href="pthread_8h_source.html#l00114">PTHREAD_BARRIER_SERIAL_THREAD</a>, <a class="el" href="pthread__self_8c_source.html#l00010">pthread_self()</a>, and <a class="el" href="nanosleep_8c.html#a357cd4b34c13011749dfffb42b489f09">sched_yield()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                                                            {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">if</span>(barrier == NULL) {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    barrier-&gt;<a class="code" href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">curr_height</a> += 1;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">while</span>(barrier-&gt;<a class="code" href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">curr_height</a> &lt; barrier-&gt;<a class="code" href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">init_height</a>)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="nanosleep_8c.html#a357cd4b34c13011749dfffb42b489f09">sched_yield</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span>(<a class="code" href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a>() == barrier-&gt;<a class="code" href="structpthread__barrier.html#a8ec820115bfcd6be50432579aac440fa">owner</a>)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="pthread_8h.html#a822c63bc662ad86cfb2dcec50edbb42b">PTHREAD_BARRIER_SERIAL_THREAD</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
 <div class="ttc" id="structpthread__barrier_html_a71938bf4346ecc8a2f997f18df267ae0"><div class="ttname"><a href="structpthread__barrier.html#a71938bf4346ecc8a2f997f18df267ae0">pthread_barrier::init_height</a></div><div class="ttdeci">uint32_t init_height</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00123">pthread.h:123</a></div></div>
 <div class="ttc" id="structpthread__barrier_html_a3b8e6f276f11a62fb77525fe5d11b18c"><div class="ttname"><a href="structpthread__barrier.html#a3b8e6f276f11a62fb77525fe5d11b18c">pthread_barrier::curr_height</a></div><div class="ttdeci">uint32_t curr_height</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00122">pthread.h:122</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 <div class="ttc" id="nanosleep_8c_html_a357cd4b34c13011749dfffb42b489f09"><div class="ttname"><a href="nanosleep_8c.html#a357cd4b34c13011749dfffb42b489f09">sched_yield</a></div><div class="ttdeci">int sched_yield(void)</div></div>
+<div class="ttc" id="structpthread__barrier_html_a8ec820115bfcd6be50432579aac440fa"><div class="ttname"><a href="structpthread__barrier.html#a8ec820115bfcd6be50432579aac440fa">pthread_barrier::owner</a></div><div class="ttdeci">pthread_t owner</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00124">pthread.h:124</a></div></div>
+<div class="ttc" id="pthread_8h_html_a822c63bc662ad86cfb2dcec50edbb42b"><div class="ttname"><a href="pthread_8h.html#a822c63bc662ad86cfb2dcec50edbb42b">PTHREAD_BARRIER_SERIAL_THREAD</a></div><div class="ttdeci">#define PTHREAD_BARRIER_SERIAL_THREAD</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00114">pthread.h:114</a></div></div>
+<div class="ttc" id="pthread_8h_html_a4c4f5f3b4f8f45d9d897847d53b11aaa"><div class="ttname"><a href="pthread_8h.html#a4c4f5f3b4f8f45d9d897847d53b11aaa">pthread_self</a></div><div class="ttdeci">pthread_t pthread_self(void)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__self_8c_source.html#l00010">pthread_self.c:10</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -262,7 +271,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_c23ec9db109baf02f825a52e3d8bd742.html">libpthread</a></li><li class="navelem"><a class="el" href="dir_93ec8f7d0ab70c6b2c55924b01761aab.html">src</a></li><li class="navelem"><a class="el" href="pthread__barrier_8c.html">pthread_barrier.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

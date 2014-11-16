@@ -1,0 +1,231 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="src_2syscall_2wait_8c" kind="file">
+    <compoundname>wait.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
+    <includes refid="fs_8h" local="no">aplus/fs.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">fcntl.h</includes>
+    <includes local="no">errno.h</includes>
+    <incdepgraph>
+      <node id="1993">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="1985">
+        <label>stdarg.h</label>
+      </node>
+      <node id="1988">
+        <label>aplus/attribute.h</label>
+        <link refid="attribute_8h"/>
+        <childnode refid="1983" relation="include">
+        </childnode>
+        <childnode refid="1989" relation="include">
+        </childnode>
+        <childnode refid="1984" relation="include">
+        </childnode>
+        <childnode refid="1986" relation="include">
+        </childnode>
+        <childnode refid="1991" relation="include">
+        </childnode>
+      </node>
+      <node id="1992">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1984" relation="include">
+        </childnode>
+        <childnode refid="1990" relation="include">
+        </childnode>
+        <childnode refid="1991" relation="include">
+        </childnode>
+        <childnode refid="1993" relation="include">
+        </childnode>
+        <childnode refid="1994" relation="include">
+        </childnode>
+      </node>
+      <node id="1984">
+        <label>stdint.h</label>
+      </node>
+      <node id="1987">
+        <label>aplus/syscall.h</label>
+        <link refid="syscall_8h"/>
+        <childnode refid="1983" relation="include">
+        </childnode>
+        <childnode refid="1988" relation="include">
+        </childnode>
+        <childnode refid="1984" relation="include">
+        </childnode>
+      </node>
+      <node id="1998">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1996">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1984" relation="include">
+        </childnode>
+        <childnode refid="1983" relation="include">
+        </childnode>
+        <childnode refid="1992" relation="include">
+        </childnode>
+        <childnode refid="1997" relation="include">
+        </childnode>
+        <childnode refid="1991" relation="include">
+        </childnode>
+        <childnode refid="1998" relation="include">
+        </childnode>
+      </node>
+      <node id="2000">
+        <label>errno.h</label>
+      </node>
+      <node id="1999">
+        <label>fcntl.h</label>
+      </node>
+      <node id="1990">
+        <label>stddef.h</label>
+      </node>
+      <node id="1989">
+        <label>aplus/list.h</label>
+        <link refid="list_8h"/>
+        <childnode refid="1990" relation="include">
+        </childnode>
+        <childnode refid="1984" relation="include">
+        </childnode>
+        <childnode refid="1991" relation="include">
+        </childnode>
+      </node>
+      <node id="1983">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="1984" relation="include">
+        </childnode>
+        <childnode refid="1985" relation="include">
+        </childnode>
+        <childnode refid="1986" relation="include">
+        </childnode>
+      </node>
+      <node id="1991">
+        <label>sys/types.h</label>
+      </node>
+      <node id="1986">
+        <label>string.h</label>
+      </node>
+      <node id="1995">
+        <label>unistd.h</label>
+      </node>
+      <node id="1997">
+        <label>signal.h</label>
+      </node>
+      <node id="1994">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="1995" relation="include">
+        </childnode>
+        <childnode refid="1991" relation="include">
+        </childnode>
+      </node>
+      <node id="1982">
+        <label>src/syscall/wait.c</label>
+        <link refid="src/syscall/wait.c"/>
+        <childnode refid="1983" relation="include">
+        </childnode>
+        <childnode refid="1987" relation="include">
+        </childnode>
+        <childnode refid="1992" relation="include">
+        </childnode>
+        <childnode refid="1996" relation="include">
+        </childnode>
+        <childnode refid="1995" relation="include">
+        </childnode>
+        <childnode refid="1999" relation="include">
+        </childnode>
+        <childnode refid="2000" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="src_2syscall_2wait_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" prot="public" static="no" mutable="no">
+        <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+        <definition>task_t* current_task</definition>
+        <argsstring></argsstring>
+        <name>current_task</name>
+        <briefdescription>
+<para>Current task address. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/wait.c" line="10" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sys_wait</definition>
+        <argsstring>(int *status)</argsstring>
+        <name>sys_wait</name>
+        <param>
+          <type>int *</type>
+          <declname>status</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/wait.c" line="12" column="1" bodyfile="/opt/prj/aPlus/src/syscall/wait.c" bodystart="12" bodyend="19"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="waitpid_8c_1a6b16504dd1c74be11c75e5739f9906f1" compoundref="waitpid_8c" startline="15" endline="44">sys_waitpid</references>
+      </memberdef>
+      <memberdef kind="function" id="src_2syscall_2wait_8c_1a4a7121092029355dc4b74d1515420c88" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SYSCALL</definition>
+        <argsstring>(sys_wait, 16)</argsstring>
+        <name>SYSCALL</name>
+        <param>
+          <type><ref refid="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899" kindref="member">sys_wait</ref></type>
+        </param>
+        <param>
+          <type>16</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/wait.c" line="21" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="syscall_8h" kindref="compound">aplus/syscall.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fs_8h" kindref="compound">aplus/fs.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2syscall_2wait_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899" kindref="member">sys_wait</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>status)<sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EFAULT;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="waitpid_8c_1a6b16504dd1c74be11c75e5739f9906f1" kindref="member">sys_waitpid</ref>(-1,<sp/>status,<sp/>0);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><ref refid="src_2syscall_2wait_8c_1a4a7121092029355dc4b74d1515420c88" kindref="member">SYSCALL</ref>(<ref refid="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899" kindref="member">sys_wait</ref>,<sp/>16);</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/syscall/wait.c"/>
+  </compounddef>
+</doxygen>

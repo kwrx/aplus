@@ -8,66 +8,66 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2253">
+      <node id="2458">
         <label>stdint.h</label>
       </node>
-      <node id="2254">
+      <node id="2459">
         <label>stdlib.h</label>
       </node>
-      <node id="2262">
+      <node id="2467">
         <label>errno.h</label>
       </node>
-      <node id="2261">
+      <node id="2466">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2262" relation="include">
+        <childnode refid="2467" relation="include">
         </childnode>
-        <childnode refid="2253" relation="include">
+        <childnode refid="2458" relation="include">
         </childnode>
-        <childnode refid="2256" relation="include">
+        <childnode refid="2461" relation="include">
         </childnode>
       </node>
-      <node id="2256">
+      <node id="2461">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2253" relation="include">
+        <childnode refid="2458" relation="include">
         </childnode>
-        <childnode refid="2257" relation="include">
+        <childnode refid="2462" relation="include">
         </childnode>
-        <childnode refid="2258" relation="include">
+        <childnode refid="2463" relation="include">
         </childnode>
-        <childnode refid="2259" relation="include">
+        <childnode refid="2464" relation="include">
         </childnode>
-        <childnode refid="2260" relation="include">
+        <childnode refid="2465" relation="include">
         </childnode>
       </node>
-      <node id="2257">
+      <node id="2462">
         <label>sys/types.h</label>
       </node>
-      <node id="2255">
+      <node id="2460">
         <label>string.h</label>
       </node>
-      <node id="2252">
+      <node id="2457">
         <label>usr/src/libpthread/src/pthread_attr.c</label>
         <link refid="pthread_attr.c"/>
-        <childnode refid="2253" relation="include">
+        <childnode refid="2458" relation="include">
         </childnode>
-        <childnode refid="2254" relation="include">
+        <childnode refid="2459" relation="include">
         </childnode>
-        <childnode refid="2255" relation="include">
+        <childnode refid="2460" relation="include">
         </childnode>
-        <childnode refid="2256" relation="include">
+        <childnode refid="2461" relation="include">
         </childnode>
-        <childnode refid="2261" relation="include">
+        <childnode refid="2466" relation="include">
         </childnode>
       </node>
-      <node id="2260">
+      <node id="2465">
         <label>unistd.h</label>
       </node>
-      <node id="2258">
+      <node id="2463">
         <label>sys/time.h</label>
       </node>
-      <node id="2259">
+      <node id="2464">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -468,7 +468,7 @@
 <codeline lineno="12" refid="pthread__attr_8c_1af03ef0e46750b54105e8ed916bb70155" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1af03ef0e46750b54105e8ed916bb70155" kindref="member">pthread_attr_init</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref>*<sp/>attr)<sp/>{</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="17"><highlight class="normal"></highlight></codeline>
 <codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__attr_1a004b9c2b7c75177f4de0262277f48333" kindref="member">stackaddr</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -484,7 +484,7 @@
 <codeline lineno="28" refid="pthread__attr_8c_1aaccee3f8e8dbb83b8e1d18b4405c728c" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1aaccee3f8e8dbb83b8e1d18b4405c728c" kindref="member">pthread_attr_destroy</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref>*<sp/>attr)<sp/>{</highlight></codeline>
 <codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="33"><highlight class="normal"></highlight></codeline>
 <codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(attr,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref>));</highlight></codeline>
@@ -494,7 +494,7 @@
 <codeline lineno="38" refid="pthread__attr_8c_1a385e4dce7a25168d155d4bdab3fa269b" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a385e4dce7a25168d155d4bdab3fa269b" kindref="member">pthread_attr_getdetachstate</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref>*<sp/>attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>detachstate)<sp/>{</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="43"><highlight class="normal"></highlight></codeline>
 <codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>*detachstate<sp/>=<sp/>attr-&gt;<ref refid="structpthread__attr_1a2ac0f3f9d4513024bbafc7db17c25a46" kindref="member">detachstate</ref>;</highlight></codeline>
@@ -504,7 +504,7 @@
 <codeline lineno="48" refid="pthread__attr_8c_1a94a485fc9d97f9f5e47c9c1ac994376c" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a94a485fc9d97f9f5e47c9c1ac994376c" kindref="member">pthread_attr_setdetachstate</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>detachstate)<sp/>{</highlight></codeline>
 <codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="53"><highlight class="normal"></highlight></codeline>
 <codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__attr_1a2ac0f3f9d4513024bbafc7db17c25a46" kindref="member">detachstate</ref><sp/>=<sp/>detachstate;</highlight></codeline>
@@ -514,7 +514,7 @@
 <codeline lineno="58" refid="pthread__attr_8c_1a45442f9eeecd4a5039494fd873ddfc58" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a45442f9eeecd4a5039494fd873ddfc58" kindref="member">pthread_attr_getstackaddr</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>**stackaddr)<sp/>{</highlight></codeline>
 <codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="63"><highlight class="normal"></highlight></codeline>
 <codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>*stackaddr<sp/>=<sp/>attr-&gt;<ref refid="structpthread__attr_1a004b9c2b7c75177f4de0262277f48333" kindref="member">stackaddr</ref>;</highlight></codeline>
@@ -524,7 +524,7 @@
 <codeline lineno="68" refid="pthread__attr_8c_1af3eca20d0a4629dff6321451c7b2f917" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1af3eca20d0a4629dff6321451c7b2f917" kindref="member">pthread_attr_setstackaddr</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*stackaddr)<sp/>{</highlight></codeline>
 <codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="73"><highlight class="normal"></highlight></codeline>
 <codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__attr_1a004b9c2b7c75177f4de0262277f48333" kindref="member">stackaddr</ref><sp/>=<sp/>stackaddr;</highlight></codeline>
@@ -535,7 +535,7 @@
 <codeline lineno="79" refid="pthread__attr_8c_1a368a4252fc0d17110db0de3397a2f403" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a368a4252fc0d17110db0de3397a2f403" kindref="member">pthread_attr_getstacksize</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>*stacksize)<sp/>{</highlight></codeline>
 <codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="84"><highlight class="normal"></highlight></codeline>
 <codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>*stacksize<sp/>=<sp/>attr-&gt;<ref refid="structpthread__attr_1a8b8eaabf2bc9b4cec33d7764bbb115d9" kindref="member">stacksize</ref>;</highlight></codeline>
@@ -545,7 +545,7 @@
 <codeline lineno="89" refid="pthread__attr_8c_1ab7121cb17b007178c7e771502cf4c532" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1ab7121cb17b007178c7e771502cf4c532" kindref="member">pthread_attr_setstacksize</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>stacksize)<sp/>{</highlight></codeline>
 <codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="94"><highlight class="normal"></highlight></codeline>
 <codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__attr_1a8b8eaabf2bc9b4cec33d7764bbb115d9" kindref="member">stacksize</ref><sp/>=<sp/>stacksize;</highlight></codeline>
@@ -556,7 +556,7 @@
 <codeline lineno="100" refid="pthread__attr_8c_1a8cff04eb377101c2c4575b80abc8f267" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a8cff04eb377101c2c4575b80abc8f267" kindref="member">pthread_attr_getschedparam</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>sched_param<sp/>*param)<sp/>{</highlight></codeline>
 <codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="105"><highlight class="normal"></highlight></codeline>
 <codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(param,<sp/>&amp;attr-&gt;<ref refid="structpthread__attr_1a371c70c9e51a2444860395f7045bbd3e" kindref="member">param</ref>,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>sched_param));</highlight></codeline>
@@ -568,7 +568,7 @@
 <codeline lineno="112" refid="pthread__attr_8c_1abc92c074e629b699bd9c89e8b67e9da9" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1abc92c074e629b699bd9c89e8b67e9da9" kindref="member">pthread_attr_setschedparam</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>sched_param<sp/>*param)<sp/>{</highlight></codeline>
 <codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="117"><highlight class="normal"></highlight></codeline>
 <codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/>memcpy(&amp;attr-&gt;<ref refid="structpthread__attr_1a371c70c9e51a2444860395f7045bbd3e" kindref="member">param</ref>,<sp/>param,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>sched_param));</highlight></codeline>
@@ -578,18 +578,18 @@
 <codeline lineno="122"><highlight class="normal"></highlight></codeline>
 <codeline lineno="123" refid="pthread__attr_8c_1a4da85194679065e47445ae1461797574" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a4da85194679065e47445ae1461797574" kindref="member">pthread_attr_getschedpolicy</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*policy)<sp/>{</highlight></codeline>
 <codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
-<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="126"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="127"><highlight class="normal"></highlight></codeline>
 <codeline lineno="128" refid="pthread__attr_8c_1a5f9da295a78b61a6f1b0a76860558f91" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a5f9da295a78b61a6f1b0a76860558f91" kindref="member">pthread_attr_setschedpolicy</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>policy)<sp/>{</highlight></codeline>
 <codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
-<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="131"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="132"><highlight class="normal"></highlight></codeline>
 <codeline lineno="133" refid="pthread__attr_8c_1a595dae2ff76e400f791025affc3295cb" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a595dae2ff76e400f791025affc3295cb" kindref="member">pthread_attr_getinheritsched</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*inheritsched)<sp/>{</highlight></codeline>
 <codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="138"><highlight class="normal"></highlight></codeline>
 <codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/>*inheritsched<sp/>=<sp/>attr-&gt;<ref refid="structpthread__attr_1ab6bef83bc858c0ffb3c8d0b461ba4396" kindref="member">inheritsched</ref>;</highlight></codeline>
@@ -599,7 +599,7 @@
 <codeline lineno="143" refid="pthread__attr_8c_1a60d0fdc89742cedc8b5ac4cdbc9a1eed" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a60d0fdc89742cedc8b5ac4cdbc9a1eed" kindref="member">pthread_attr_setinheritsched</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>inheritsched)<sp/>{</highlight></codeline>
 <codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="148"><highlight class="normal"></highlight></codeline>
 <codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__attr_1ab6bef83bc858c0ffb3c8d0b461ba4396" kindref="member">inheritsched</ref><sp/>=<sp/>inheritsched;</highlight></codeline>
@@ -609,7 +609,7 @@
 <codeline lineno="153" refid="pthread__attr_8c_1af45a1519538d33ebe6440688ddd2dfbb" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1af45a1519538d33ebe6440688ddd2dfbb" kindref="member">pthread_attr_getscope</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*contentionscope)<sp/>{</highlight></codeline>
 <codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="158"><highlight class="normal"></highlight></codeline>
 <codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/>*contentionscope<sp/>=<sp/>attr-&gt;<ref refid="structpthread__attr_1a1d5ca4923f6814d754208080896a360a" kindref="member">contentionscope</ref>;</highlight></codeline>
@@ -619,7 +619,7 @@
 <codeline lineno="163" refid="pthread__attr_8c_1a9d33b3c0846822f99a8b62e72612702b" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__attr_8c_1a9d33b3c0846822f99a8b62e72612702b" kindref="member">pthread_attr_setscope</ref>(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>contentionscope)<sp/>{</highlight></codeline>
 <codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!attr)<sp/>{</highlight></codeline>
 <codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="168"><highlight class="normal"></highlight></codeline>
 <codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__attr_1a1d5ca4923f6814d754208080896a360a" kindref="member">contentionscope</ref><sp/>=<sp/>contentionscope;</highlight></codeline>

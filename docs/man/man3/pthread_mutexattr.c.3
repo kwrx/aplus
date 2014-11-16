@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_mutexattr.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_mutexattr.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -48,7 +48,7 @@ References errno, pthread_mutexattr::kind, and pthread_mutexattr::pshared\&.
 20                                                                 {
 21     if(!attr) {
 22         errno = EINVAL;
-23         return 1;
+23         return -1;
 24     }
 25 
 26     attr->pshared = 0;
@@ -68,7 +68,7 @@ References errno, and pthread_mutexattr::pshared\&.
 32                                                                                        {
 33     if(!attr) {
 34         errno = EINVAL;
-35         return 1;
+35         return -1;
 36     }
 37 
 38     *pshared = attr->pshared;
@@ -86,7 +86,7 @@ References errno, and pthread_mutexattr::kind\&.
 52                                                                            {
 53     if(!attr) {
 54         errno = EINVAL;
-55         return 1;
+55         return -1;
 56     }
 57 
 58     *kind = attr->kind;
@@ -104,7 +104,7 @@ References errno, pthread_mutexattr::kind, pthread_mutexattr::pshared, and PTHRE
 8                                                              {
 9     if(!attr) {
 10         errno = EINVAL;
-11         return 1;
+11         return -1;
 12     }
 13 
 14     attr->pshared = 0;
@@ -124,7 +124,7 @@ References errno, and pthread_mutexattr::pshared\&.
 42                                                                                 {
 43     if(!attr) {
 44         errno = EINVAL;
-45         return 1;
+45         return -1;
 46     }
 47 
 48     attr->pshared = pshared;
@@ -142,7 +142,7 @@ References errno, and pthread_mutexattr::kind\&.
 62                                                                           {
 63     if(!attr) {
 64         errno = EINVAL;
-65         return 1;
+65         return -1;
 66     }
 67 
 68     attr->kind = kind;

@@ -12,123 +12,123 @@
     <includes refid="list_8h" local="no">aplus/list.h</includes>
     <includes refid="grub_8h" local="no">grub.h</includes>
     <incdepgraph>
-      <node id="1068">
+      <node id="1135">
         <label>sys/stat.h</label>
       </node>
-      <node id="1064">
+      <node id="1131">
         <label>stdarg.h</label>
       </node>
-      <node id="1058">
+      <node id="1125">
         <label>src/mm/paging.c</label>
         <link refid="paging.c"/>
-        <childnode refid="1059" relation="include">
+        <childnode refid="1126" relation="include">
         </childnode>
-        <childnode refid="1060" relation="include">
+        <childnode refid="1127" relation="include">
         </childnode>
-        <childnode refid="1061" relation="include">
+        <childnode refid="1128" relation="include">
         </childnode>
-        <childnode refid="1062" relation="include">
+        <childnode refid="1129" relation="include">
         </childnode>
-        <childnode refid="1063" relation="include">
+        <childnode refid="1130" relation="include">
         </childnode>
-        <childnode refid="1065" relation="include">
+        <childnode refid="1132" relation="include">
         </childnode>
-        <childnode refid="1066" relation="include">
+        <childnode refid="1133" relation="include">
         </childnode>
-        <childnode refid="1073" relation="include">
+        <childnode refid="1140" relation="include">
         </childnode>
-        <childnode refid="1074" relation="include">
+        <childnode refid="1141" relation="include">
         </childnode>
       </node>
-      <node id="1067">
+      <node id="1134">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1059" relation="include">
+        <childnode refid="1126" relation="include">
         </childnode>
-        <childnode refid="1060" relation="include">
+        <childnode refid="1127" relation="include">
         </childnode>
-        <childnode refid="1062" relation="include">
+        <childnode refid="1129" relation="include">
         </childnode>
-        <childnode refid="1068" relation="include">
+        <childnode refid="1135" relation="include">
         </childnode>
-        <childnode refid="1069" relation="include">
+        <childnode refid="1136" relation="include">
         </childnode>
       </node>
-      <node id="1059">
+      <node id="1126">
         <label>stdint.h</label>
       </node>
-      <node id="1072">
+      <node id="1139">
         <label>setjmp.h</label>
       </node>
-      <node id="1066">
+      <node id="1133">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1059" relation="include">
+        <childnode refid="1126" relation="include">
         </childnode>
-        <childnode refid="1063" relation="include">
+        <childnode refid="1130" relation="include">
         </childnode>
-        <childnode refid="1067" relation="include">
+        <childnode refid="1134" relation="include">
         </childnode>
-        <childnode refid="1071" relation="include">
+        <childnode refid="1138" relation="include">
         </childnode>
-        <childnode refid="1062" relation="include">
+        <childnode refid="1129" relation="include">
         </childnode>
-        <childnode refid="1072" relation="include">
+        <childnode refid="1139" relation="include">
         </childnode>
       </node>
-      <node id="1074">
+      <node id="1141">
         <label>grub.h</label>
         <link refid="grub_8h"/>
       </node>
-      <node id="1060">
+      <node id="1127">
         <label>stddef.h</label>
       </node>
-      <node id="1073">
+      <node id="1140">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1060" relation="include">
+        <childnode refid="1127" relation="include">
         </childnode>
-        <childnode refid="1059" relation="include">
+        <childnode refid="1126" relation="include">
         </childnode>
-        <childnode refid="1062" relation="include">
+        <childnode refid="1129" relation="include">
         </childnode>
       </node>
-      <node id="1063">
+      <node id="1130">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1059" relation="include">
+        <childnode refid="1126" relation="include">
         </childnode>
-        <childnode refid="1064" relation="include">
+        <childnode refid="1131" relation="include">
         </childnode>
-        <childnode refid="1061" relation="include">
+        <childnode refid="1128" relation="include">
         </childnode>
       </node>
-      <node id="1062">
+      <node id="1129">
         <label>sys/types.h</label>
       </node>
-      <node id="1061">
+      <node id="1128">
         <label>string.h</label>
       </node>
-      <node id="1070">
+      <node id="1137">
         <label>unistd.h</label>
       </node>
-      <node id="1071">
+      <node id="1138">
         <label>signal.h</label>
       </node>
-      <node id="1065">
+      <node id="1132">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1059" relation="include">
+        <childnode refid="1126" relation="include">
         </childnode>
-        <childnode refid="1066" relation="include">
+        <childnode refid="1133" relation="include">
         </childnode>
       </node>
-      <node id="1069">
+      <node id="1136">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1070" relation="include">
+        <childnode refid="1137" relation="include">
         </childnode>
-        <childnode refid="1062" relation="include">
+        <childnode refid="1129" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -214,7 +214,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/paging.c" line="43" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="36" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/mm/paging.c" line="43" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="45" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="paging_8c_1a8ffb348d372acd38099f16b08bdaf4b5" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -224,10 +224,11 @@
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-        </detaileddescription>
+<para><simplesect kind="see"><para><ref refid="mm_8h" kindref="compound">aplus/mm.h</ref> </para></simplesect>
+</para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/mm/paging.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/mm/paging.c" line="44" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="44" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref> *</type>
@@ -287,7 +288,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/mm/paging.c" line="54" column="1" bodyfile="/opt/prj/aPlus/src/mm/paging.c" bodystart="54" bodyend="58"/>
         <references refid="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9" compoundref="paging_8c" startline="46">current_vmm</references>
-        <references refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" compoundref="mm_8h" startline="71" endline="76">mm_paddr</references>
+        <references refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" compoundref="mm_8h" startline="74" endline="79">mm_paddr</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       <memberdef kind="function" id="paging_8c_1aa760eb29c4563f9ab05cc3d9331944ac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -349,16 +350,16 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/mm/paging.c" line="72" column="1" bodyfile="/opt/prj/aPlus/src/mm/paging.c" bodystart="72" bodyend="106"/>
         <references refid="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9" compoundref="paging_8c" startline="46">current_vmm</references>
-        <references refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" compoundref="iso9660_8h" startline="79">flags</references>
+        <references refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" compoundref="iso9660_8h" startline="78">flags</references>
         <references refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" compoundref="heap_8c" startline="28" endline="34">halloc</references>
-        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="85" endline="87">mm_align</references>
-        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="102" endline="113">panic</references>
+        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="88" endline="90">mm_align</references>
+        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="130" endline="132">panic</references>
         <references refid="paging_8c_1a99467af8296ea3e135297cacd1e5526f" compoundref="paging_8c" startline="38">PDENTRY</references>
         <references refid="paging_8c_1a5f96cb6ae6670e023c407cc2f77e1704" compoundref="paging_8c" startline="34">PGSIZE</references>
         <references refid="paging_8c_1a3af3f6fb4b2f4d2c0c89ab2af3c87cbf" compoundref="paging_8c" startline="41">PTENTRY</references>
         <references refid="paging_8c_1a28c1229acf69809be474fd0cda5c2bfa" compoundref="paging_8c" startline="40">PTSIZE</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
-        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="52">VMM_FLAGS_DEFAULT</references>
+        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="55">VMM_FLAGS_DEFAULT</references>
       </memberdef>
       <memberdef kind="function" id="paging_8c_1ab6841aac2bf44152a7c0c12293a97440" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -384,17 +385,21 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/mm/paging.c" line="109" column="1" bodyfile="/opt/prj/aPlus/src/mm/paging.c" bodystart="109" bodyend="127"/>
-        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="85" endline="87">mm_align</references>
+        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="88" endline="90">mm_align</references>
         <references refid="paging_8c_1a99467af8296ea3e135297cacd1e5526f" compoundref="paging_8c" startline="38">PDENTRY</references>
         <references refid="paging_8c_1a5f96cb6ae6670e023c407cc2f77e1704" compoundref="paging_8c" startline="34">PGSIZE</references>
         <references refid="paging_8c_1a3af3f6fb4b2f4d2c0c89ab2af3c87cbf" compoundref="paging_8c" startline="41">PTENTRY</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
-      <memberdef kind="function" id="paging_8c_1aebed4a90dd887506ed125f9efb953c93" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void *</type>
         <definition>void* vmm_alloc</definition>
-        <argsstring>(void *vaddr, size_t size, int flags)</argsstring>
+        <argsstring>(uint32_t *vmm, void *vaddr, size_t size, int flags)</argsstring>
         <name>vmm_alloc</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref> *</type>
+          <declname>vmm</declname>
+        </param>
         <param>
           <type>void *</type>
           <declname>vaddr</declname>
@@ -414,15 +419,18 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/mm/paging.c" line="130" column="1" bodyfile="/opt/prj/aPlus/src/mm/paging.c" bodystart="130" bodyend="136"/>
-        <references refid="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9" compoundref="paging_8c" startline="46">current_vmm</references>
         <references refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" compoundref="heap_8c" startline="28" endline="34">halloc</references>
         <references refid="paging_8c_1ae969f54f1646d5d8a871bef828a24239" compoundref="paging_8c" startline="72" endline="106">vmm_map</references>
       </memberdef>
-      <memberdef kind="function" id="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="paging_8c_1a355e6cafe37d994830abeebcb69e390d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void vmm_free</definition>
-        <argsstring>(void *vaddr, size_t size)</argsstring>
+        <argsstring>(uint32_t *vmm, void *vaddr, size_t size)</argsstring>
         <name>vmm_free</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref> *</type>
+          <declname>vmm</declname>
+        </param>
         <param>
           <type>void *</type>
           <declname>vaddr</declname>
@@ -443,7 +451,6 @@
         <references refid="paging_8c_1a99467af8296ea3e135297cacd1e5526f" compoundref="paging_8c" startline="38">PDENTRY</references>
         <references refid="paging_8c_1a5f96cb6ae6670e023c407cc2f77e1704" compoundref="paging_8c" startline="34">PGSIZE</references>
         <references refid="paging_8c_1a3af3f6fb4b2f4d2c0c89ab2af3c87cbf" compoundref="paging_8c" startline="41">PTENTRY</references>
-        <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="74">size</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
         <references refid="paging_8c_1ab6841aac2bf44152a7c0c12293a97440" compoundref="paging_8c" startline="109" endline="127">vmm_umap</references>
       </memberdef>
@@ -463,12 +470,12 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/mm/paging.c" line="157" column="1" bodyfile="/opt/prj/aPlus/src/mm/paging.c" bodystart="157" bodyend="166"/>
-        <references refid="paging_8c_1a8ffb348d372acd38099f16b08bdaf4b5" compoundref="mm_8c" startline="35">memsize</references>
-        <references refid="mm_8h_1a1b54983be7272f850a1eef88a78db6f8" compoundref="mm_8h" startline="41">MM_LBASE</references>
-        <references refid="mm_8h_1a4b54a4ab7755c6c4dfebb91b75d9d956" compoundref="mm_8h" startline="42">MM_LSIZE</references>
-        <references refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" compoundref="mm_8h" startline="78" endline="83">mm_vaddr</references>
-        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="52">VMM_FLAGS_DEFAULT</references>
-        <references refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" compoundref="mm_8h" startline="51">VMM_FLAGS_USER</references>
+        <references refid="paging_8c_1a8ffb348d372acd38099f16b08bdaf4b5" compoundref="mm_8c" startline="44">memsize</references>
+        <references refid="mm_8h_1a1b54983be7272f850a1eef88a78db6f8" compoundref="mm_8h" startline="44">MM_LBASE</references>
+        <references refid="mm_8h_1a4b54a4ab7755c6c4dfebb91b75d9d956" compoundref="mm_8h" startline="45">MM_LSIZE</references>
+        <references refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" compoundref="mm_8h" startline="81" endline="86">mm_vaddr</references>
+        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="55">VMM_FLAGS_DEFAULT</references>
+        <references refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" compoundref="mm_8h" startline="54">VMM_FLAGS_USER</references>
         <references refid="paging_8c_1ae969f54f1646d5d8a871bef828a24239" compoundref="paging_8c" startline="72" endline="106">vmm_map</references>
       </memberdef>
       <memberdef kind="function" id="paging_8c_1a200ca682c57c6acaa05f2f56c9f6f6de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -484,7 +491,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/mm/paging.c" line="170" column="1" bodyfile="/opt/prj/aPlus/src/mm/paging.c" bodystart="170" bodyend="178"/>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
-        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="85" endline="87">mm_align</references>
+        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="88" endline="90">mm_align</references>
         <references refid="paging_8c_1ad1e1979b244e7f89d86e1bcb9500e177" compoundref="paging_8c" startline="37">PDSIZE</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
@@ -522,7 +529,7 @@
         <references refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" compoundref="heap_8c" startline="28" endline="34">halloc</references>
         <references refid="paging_8c_1afac53891df03c313fc0b5b24e0acc8a9" compoundref="paging_8c" startline="47">kernel_vmm</references>
         <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="282">list_init</references>
-        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="102" endline="113">panic</references>
+        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="130" endline="132">panic</references>
         <references refid="paging_8c_1ad1e1979b244e7f89d86e1bcb9500e177" compoundref="paging_8c" startline="37">PDSIZE</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
         <references refid="paging_8c_1aa760eb29c4563f9ab05cc3d9331944ac" compoundref="paging_8c" startline="60" endline="63">vmm_enable</references>
@@ -664,21 +671,21 @@
 <codeline lineno="127"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="128"><highlight class="normal"></highlight></codeline>
 <codeline lineno="129"><highlight class="normal"></highlight></codeline>
-<codeline lineno="130" refid="paging_8c_1aebed4a90dd887506ed125f9efb953c93" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="paging_8c_1aebed4a90dd887506ed125f9efb953c93" kindref="member">vmm_alloc</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" kindref="member">flags</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="130" refid="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" kindref="member">vmm_alloc</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*<sp/>vmm,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" kindref="member">flags</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>paddr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/><ref refid="heap_8c_1ace4a8a1fe937911a1a107c92e6d40339" kindref="member">halloc</ref>(current_heap,<sp/>size);</highlight></codeline>
 <codeline lineno="132"><highlight class="normal"></highlight></codeline>
-<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1ae969f54f1646d5d8a871bef828a24239" kindref="member">vmm_map</ref>(<ref refid="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9" kindref="member">current_vmm</ref>,<sp/>paddr,<sp/>vaddr,<sp/>size,<sp/>flags);</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1ae969f54f1646d5d8a871bef828a24239" kindref="member">vmm_map</ref>(vmm,<sp/>paddr,<sp/>vaddr,<sp/>size,<sp/>flags);</highlight></codeline>
 <codeline lineno="134"><highlight class="normal"></highlight></codeline>
 <codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>paddr;</highlight></codeline>
 <codeline lineno="136"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="137"><highlight class="normal"></highlight></codeline>
-<codeline lineno="138" refid="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" kindref="member">vmm_free</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="138" refid="paging_8c_1a355e6cafe37d994830abeebcb69e390d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="paging_8c_1a355e6cafe37d994830abeebcb69e390d" kindref="member">vmm_free</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*<sp/>vmm,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="139"><highlight class="normal"></highlight></codeline>
 <codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pages<sp/>=<sp/>(size<sp/>/<sp/><ref refid="paging_8c_1a5f96cb6ae6670e023c407cc2f77e1704" kindref="member">PGSIZE</ref>)<sp/>+<sp/>1;</highlight></codeline>
 <codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>frame<sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>vaddr;</highlight></codeline>
 <codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*<sp/>pd<sp/>=<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/><ref refid="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9" kindref="member">current_vmm</ref>;</highlight></codeline>
 <codeline lineno="143"><highlight class="normal"></highlight></codeline>
-<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>pages;<sp/>i++)<sp/>{</highlight></codeline>
 <codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*<sp/>e<sp/>=<sp/>&amp;pd[<ref refid="paging_8c_1a99467af8296ea3e135297cacd1e5526f" kindref="member">PDENTRY</ref>(frame)];</highlight></codeline>
 <codeline lineno="146"><highlight class="normal"></highlight></codeline>
 <codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((*e<sp/>&amp;<sp/>1)<sp/>!=<sp/>1)</highlight></codeline>
@@ -688,7 +695,7 @@
 <codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" kindref="member">hfree</ref>(current_heap,<sp/>table[<ref refid="paging_8c_1a3af3f6fb4b2f4d2c0c89ab2af3c87cbf" kindref="member">PTENTRY</ref>(frame)]<sp/>&amp;<sp/>~0xFFF,<sp/><ref refid="paging_8c_1a5f96cb6ae6670e023c407cc2f77e1704" kindref="member">PGSIZE</ref>);</highlight></codeline>
 <codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="153"><highlight class="normal"></highlight></codeline>
-<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1ab6841aac2bf44152a7c0c12293a97440" kindref="member">vmm_umap</ref>(<ref refid="paging_8c_1a9bed7071511863f81c2de43b3c3f7db9" kindref="member">current_vmm</ref>,<sp/>vaddr,<sp/>size);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1ab6841aac2bf44152a7c0c12293a97440" kindref="member">vmm_umap</ref>(vmm,<sp/>vaddr,<sp/>size);</highlight></codeline>
 <codeline lineno="155"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="156"><highlight class="normal"></highlight></codeline>
 <codeline lineno="157" refid="paging_8c_1a8828597ede1b2c5bcc5ea1a4ca7919a9" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="paging_8c_1a8828597ede1b2c5bcc5ea1a4ca7919a9" kindref="member">vmm_mapkernel</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*<sp/><ref refid="eth_8h_1a15f677ba1a36e16b06f2b91f545be2f4" kindref="member">dest</ref>)<sp/>{</highlight></codeline>

@@ -1,473 +1,54 @@
-.TH "src/fs/tty.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libposix/src/tty.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-src/fs/tty.c \- 
+usr/src/libposix/src/tty.c \- 
 .SH SYNOPSIS
 .br
 .PP
-\fC#include <aplus\&.h>\fP
-.br
-\fC#include <aplus/fs\&.h>\fP
-.br
-\fC#include <aplus/task\&.h>\fP
-.br
-\fC#include <aplus/spinlock\&.h>\fP
-.br
-\fC#include <aplus/list\&.h>\fP
-.br
-\fC#include <aplus/tty\&.h>\fP
-.br
-\fC#include <stdio\&.h>\fP
-.br
-\fC#include <string\&.h>\fP
-.br
-\fC#include <stdint\&.h>\fP
-.br
-\fC#include <unistd\&.h>\fP
+\fC#include <termios\&.h>\fP
 .br
 \fC#include <sys/ioctl\&.h>\fP
 .br
-\fC#include <sys/termios\&.h>\fP
-.br
-\fC#include <errno\&.h>\fP
-.br
-\fC#include <fcntl\&.h>\fP
-.br
-\fC#include <sys/stat\&.h>\fP
+\fC#include <unistd\&.h>\fP
 .br
 
 .SS "Functions"
 
 .in +1c
 .ti -1c
-.RI "static void \fB__default_tty_output\fP (\fBtty_t\fP *\fBtty\fP, void *ptr, size_t \fBsize\fP)"
+.RI "pid_t \fBtcgetpgrp\fP (int fd)"
 .br
 .ti -1c
-.RI "int \fBtty_ioctl\fP (\fBinode_t\fP *ino, int cmd, void *buf)"
-.br
-.ti -1c
-.RI "int \fBtty_write\fP (\fBinode_t\fP *ino, char *ptr, int \fBsize\fP)"
-.br
-.ti -1c
-.RI "int \fBtty_read\fP (\fBinode_t\fP *ino, char *ptr, int \fBsize\fP)"
-.br
-.ti -1c
-.RI "void \fBtty_flush\fP (\fBinode_t\fP *ino)"
-.br
-.ti -1c
-.RI "int \fBtty_open\fP (int *master, int *slave, char *\fBname\fP, struct termios *ios, struct \fBwinsize\fP *win)"
-.br
-.ti -1c
-.RI "int \fBtty_init\fP ()"
-.br
-.in -1c
-.SS "Variables"
-
-.in +1c
-.ti -1c
-.RI "\fBtask_t\fP * \fBcurrent_task\fP"
-.br
-.RI "\fICurrent task address\&. \fP"
-.ti -1c
-.RI "\fBtask_t\fP * \fBkernel_task\fP"
-.br
-.RI "\fIKernel task address\&. \fP"
-.ti -1c
-.RI "\fBlist_t\fP * \fBttydevs\fP = NULL"
-.br
-.ti -1c
-.RI "cc_t \fBttydefchars\fP [NCCS]"
+.RI "int \fBtcsetpgrp\fP (int fd, pid_t pgrp)"
 .br
 .in -1c
 .SH "Function Documentation"
 .PP 
-.SS "static void __default_tty_output (\fBtty_t\fP *tty, void *ptr, size_tsize)\fC [static]\fP"
+.SS "pid_t tcgetpgrp (intfd)"
 
 .PP
-Definition at line 32 of file tty\&.c\&.
-.PP
-References kprintf(), and size\&.
+Definition at line 6 of file tty\&.c\&.
 .PP
 .nf
-32                                                                      {
-33     char* ctr = (char*) ptr;
-34     
-35     for(int i = 0; i < size; i++)
-36         kprintf("%c", ctr[i]);
-37 }
+6                         {
+7     pid_t pgrp;
+8     if(ioctl(fd, TIOCGPGRP, &pgrp) != 0)
+9         return -1;
+10 
+11     return pgrp;
+12 }
 .fi
-.SS "void tty_flush (\fBinode_t\fP *ino)"
+.SS "int tcsetpgrp (intfd, pid_tpgrp)"
 
 .PP
-Definition at line 221 of file tty\&.c\&.
-.PP
-References kfree(), list_remove(), and inode::userdata\&.
+Definition at line 14 of file tty\&.c\&.
 .PP
 .nf
-221                              {
-222     if(!ino)
-223         return;
-224 
-225     if(!ino->userdata)
-226         return;
-227 
-228     list_remove(ttydevs, (listval_t) ino->userdata);
-229     kfree(ino->userdata);
-230 }
+14                                   {
+15     return ioctl(fd, TIOCSPGRP, &pgrp);
+16 }
 .fi
-.SS "int tty_init ()"
-
-.PP
-Definition at line 307 of file tty\&.c\&.
-.PP
-References errno, task::fd, kprintf(), name, sys_close(), sys_symlink(), and tty_open()\&.
-.PP
-.nf
-307                {
-308     int master, slave;
-309     char name[32];
-310 
-311     if(tty_open(&master, &slave, name, NULL, NULL) != 0) {
-312         kprintf("tty_open: failed with %d (%s)\n", errno, strerror(errno));
-313         return -1;
-314     }
-315 
-316     kprintf("tty: created device at %s\n", name);
-317 
-318     sys_symlink(name, "/dev/stdin");
-319     sys_symlink(name, "/dev/stdout");
-320     sys_symlink(name, "/dev/stderr");
-321 
-322 
-323     inode_t* ino = current_task->fd[master];
-324 
-325     sys_close(master);
-326     sys_close(slave);
-327 
-328     
-329     kernel_task->fd[STDIN_FILENO] = ino;
-330     kernel_task->fd[STDOUT_FILENO] = ino;
-331     kernel_task->fd[STDERR_FILENO] = ino;
-332 
-333     return 0;   
-334 }
-.fi
-.SS "int tty_ioctl (\fBinode_t\fP *ino, intcmd, void *buf)"
-
-.PP
-Definition at line 39 of file tty\&.c\&.
-.PP
-References errno, tty::exclmode, tty::fg, tty::ibuffer, tty::id, im_superuser(), tty::ios, tty::isize, tty::lock, tty::osize, spinlock_lock(), spinlock_unlock(), inode::userdata, tty::win, and winsize\&.
-.PP
-.nf
-39                                                 {
-40     if(!ino) {
-41         errno = EINVAL;
-42         return -1;
-43     }
-44 
-45     tty_t* tty = ino->userdata;
-46     if(!tty) {
-47         errno = ENOTTY;
-48         return -1;
-49     }
-50 
-51 
-52     spinlock_lock(&tty->lock);
-53 
-54     errno = 0;
-55 
-56     switch(cmd) {
-57         case TCGETS:
-58             memcpy(buf, &tty->ios, sizeof(struct termios));
-59             break;
-60         case TCSETS:
-61         case TCSETSW:
-62         case TCSETSF:
-63             memcpy(&tty->ios, buf, sizeof(struct termios));
-64             break;
-65         case TCGETA:
-66         case TCSETA:
-67         case TCSETAW:
-68         case TCSETAF:
-69             errno = ENOSYS;
-70             break;
-71         case TIOCGLCKTRMIOS:
-72         case TIOCSLCKTRMIOS:
-73             if(!im_superuser())
-74                 errno = EPERM;
-75             else
-76                 errno = ENOSYS;
-77             break;
-78         case TIOCGWINSZ:
-79             memcpy(buf, &tty->win, sizeof(struct winsize));
-80             break;
-81         case TIOCSWINSZ:
-82             memcpy(&tty->win, buf, sizeof(struct winsize));
-83             break;
-84         case TCSBRK:
-85         case TCSBRKP:
-86             break;
-87         case TIOCSBRK:
-88         case TIOCCBRK:
-89             break;
-90         case TCXONC:
-91             errno = ENOSYS;
-92             break;
-93         case FIONREAD:
-94             *(int*) buf = tty->isize;
-95             break;
-96         case TIOCOUTQ:
-97             *(int*) buf = tty->osize;
-98             break;
-99         case TCFLSH:
-100             switch(*(int*) buf) {
-101                 case TCIFLUSH:
-102                     tty->isize = 0;
-103                     break;
-104                 case TCOFLUSH:
-105                     tty->osize = 0;
-106                     break;
-107                 case TCIOFLUSH:
-108                     tty->isize = tty->osize = 0;
-109                     break;
-110                 default:
-111                     errno = EINVAL;
-112             }
-113             break;
-114         case TIOCSTI:
-115             while(*(char*) buf)
-116                 tty->ibuffer[tty->isize++] = *(char*) buf++;
-117             break;
-118         case TIOCCONS:
-119         case TIOCSCTTY:
-120             if(!im_superuser())
-121                 errno = EPERM;
-122             else
-123                 errno = ENOSYS;
-124             break;
-125         case TIOCGPGRP:
-126             *(pid_t*) buf = tty->fg;
-127             break;
-128         case TIOCSPGRP:
-129             tty->fg = *(pid_t*) buf;
-130             break;
-131         case TIOCGSID:
-132             *(pid_t*) buf = tty->id;
-133             break;
-134         case TIOCEXCL:
-135             tty->exclmode = 1;
-136             break;
-137         case TIOCNXCL:
-138             tty->exclmode = 0;
-139             break;
-140         case TIOCGETD:
-141         case TIOCSETD:
-142             errno = ENOSYS;
-143             break;
-144         default:
-145 #ifdef ENOIOCTLCMD
-146             errno = ENOIOCTLCMD;
-147 #else
-148             errno = ENOSYS;
-149 #endif
-150             break;
-151     }
-152 
-153     spinlock_unlock(&tty->lock);
-154 
-155     if(errno == 0)
-156         return 0;
-157     
-158     return -1;
-159 }
-.fi
-.SS "int tty_open (int *master, int *slave, char *name, struct termios *ios, struct \fBwinsize\fP *win)"
-
-.PP
-Definition at line 233 of file tty\&.c\&.
-.PP
-References __default_tty_output(), tty::bg, errno, tty::exclmode, task::fd, tty::fg, inode::flush, tty::id, inode::ioctl, tty::ios, tty::isize, kmalloc(), ksprintf(), list_add(), list_init, list_size, tty::lock, tty::osize, tty::output, task::pid, inode::read, sys_open(), tty_flush(), tty_ioctl(), tty_read(), tty_write(), TTYDEF_IOS_CFLAG, TTYDEF_IOS_IFLAG, TTYDEF_IOS_LFLAG, TTYDEF_IOS_OFLAG, TTYDEF_WIN_COLS, TTYDEF_WIN_ROWS, ttydefchars, inode::userdata, tty::win, winsize, and inode::write\&.
-.PP
-.nf
-233                                                                                             {
-234     if(ttydevs == NULL) {
-235         list_init(ttydevs);
-236     }
-237 
-238     if(!master || !slave) {
-239         errno = EINVAL;
-240         return -1;
-241     }
-242 
-243     char fname[32];
-244     memset(fname, 0, 32);
-245 
-246     ksprintf(fname, "/dev/tty%d", (int) list_size(ttydevs));
-247 
-248     int fd = sys_open(fname, O_CREAT | O_EXCL | O_RDWR, S_IFCHR);
-249     if(fd < 0) {
-250         errno = ENOENT;
-251         return -1;
-252     }
-253 
-254 
-255     inode_t* ino = current_task->fd[fd];
-256     tty_t* tty = kmalloc(sizeof(tty_t));
-257 
-258 
-259     ino->read = tty_read;
-260     ino->write = tty_write;
-261     ino->ioctl = tty_ioctl;
-262     ino->flush = tty_flush;
-263 
-264     ino->userdata = tty;
-265 
-266     tty->ios\&.c_iflag = TTYDEF_IOS_IFLAG;
-267     tty->ios\&.c_oflag = TTYDEF_IOS_OFLAG;
-268     tty->ios\&.c_cflag = TTYDEF_IOS_CFLAG;
-269     tty->ios\&.c_lflag = TTYDEF_IOS_LFLAG;
-270     
-271     memcpy(tty->ios\&.c_cc, ttydefchars, sizeof(cc_t) * NCCS);
-272 
-273     tty->win\&.ws_row = TTYDEF_WIN_ROWS;
-274     tty->win\&.ws_col = TTYDEF_WIN_COLS;
-275     tty->win\&.ws_xpixel = 0; /* unused */
-276     tty->win\&.ws_ypixel = 0; /* unused */
-277 
-278     tty->lock = 0;
-279     tty->isize = 0;
-280     tty->osize = 0;
-281     tty->exclmode = 0;
-282 
-283     tty->fg = current_task->pid;
-284     tty->bg = -1;
-285 
-286     tty->id = list_size(ttydevs);
-287 
-288     tty->output = __default_tty_output;
-289 
-290     list_add(ttydevs, (listval_t) tty);
-291 
-292     if(name)
-293         strcpy(name, fname);
-294 
-295     if(ios)
-296         memcpy(ios, &tty->ios, sizeof(struct termios));
-297 
-298     if(win)
-299         memcpy(win, &tty->win, sizeof(struct winsize)); 
-300         
-301     *master = fd;
-302     *slave = fd;
-303 
-304     return 0;
-305 }
-.fi
-.SS "int tty_read (\fBinode_t\fP *ino, char *ptr, intsize)"
-
-.PP
-Definition at line 190 of file tty\&.c\&.
-.PP
-References errno, tty::ibuffer, tty::isize, tty::lock, tty::output, size, spinlock_lock(), spinlock_unlock(), spinlock_waiton, and inode::userdata\&.
-.PP
-.nf
-190                                                 {
-191     if(!ino)
-192         return 0;
-193 
-194     if(!ptr)
-195         return 0;
-196     
-197     if(!size)
-198         return 0;
-199 
-200     tty_t* tty = ino->userdata;
-201     if(!tty) {
-202         errno = ENOTTY;
-203         return -1;
-204     }
-205 
-206     spinlock_lock(&tty->lock);
-207     spinlock_waiton(size > tty->isize);
-208 
-209     memcpy(ptr, tty->ibuffer, tty->isize);
-210     tty->isize -= size;
-211 
-212     if(tty->output)
-213         tty->output(tty, ptr, size);
-214 
-215     spinlock_unlock(&tty->lock);
-216 
-217     return size;
-218 }
-.fi
-.SS "int tty_write (\fBinode_t\fP *ino, char *ptr, intsize)"
-
-.PP
-Definition at line 162 of file tty\&.c\&.
-.PP
-References errno, tty::lock, tty::obuffer, tty::output, size, spinlock_lock(), spinlock_unlock(), and inode::userdata\&.
-.PP
-.nf
-162                                                  {
-163     if(!ino)
-164         return 0;
-165     
-166     if(!ptr)
-167         return 0;
-168 
-169     if(!size)
-170         return 0;
-171 
-172     tty_t* tty = ino->userdata;
-173     if(!tty) {
-174         errno = ENOTTY;
-175         return -1;
-176     }
-177 
-178     spinlock_lock(&tty->lock);
-179     memcpy(tty->obuffer, ptr, size);
-180 
-181     if(tty->output)
-182         tty->output(tty, ptr, size);
-183 
-184     spinlock_unlock(&tty->lock);
-185 
-186     return size;
-187 }
-.fi
-.SH "Variable Documentation"
-.PP 
-.SS "\fBtask_t\fP* current_task"
-
-.PP
-Current task address\&. 
-.PP
-Definition at line 35 of file sched\&.c\&.
-.SS "\fBtask_t\fP* kernel_task"
-
-.PP
-Kernel task address\&. 
-.PP
-Definition at line 40 of file sched\&.c\&.
-.SS "cc_t ttydefchars[NCCS]"
-\fBInitial value:\fP
-.PP
-.nf
-= {
-    
-    
-    
-}
-.fi
-.PP
-Definition at line 25 of file tty\&.c\&.
-.SS "\fBlist_t\fP* ttydevs = NULL"
-
-.PP
-Definition at line 23 of file tty\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

@@ -5,28 +5,34 @@
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \hyperlink{initrd_2test_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
+int \hyperlink{initrd_2test_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main} (int argc, char $\ast$$\ast$argv)
 \end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
-\hypertarget{initrd_2test_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{\index{initrd/test.\+c@{initrd/test.\+c}!main@{main}}
+\hypertarget{initrd_2test_8c_a3c04138a5bfe5d72780bb7e82a18e627}{\index{initrd/test.\+c@{initrd/test.\+c}!main@{main}}
 \index{main@{main}!initrd/test.\+c@{initrd/test.\+c}}
 \subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
 \begin{DoxyParamCaption}
-{}
+\item[{int}]{argc, }
+\item[{char $\ast$$\ast$}]{argv}
 \end{DoxyParamCaption}
-)}}\label{initrd_2test_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}
+)}}\label{initrd_2test_8c_a3c04138a5bfe5d72780bb7e82a18e627}
 
 
 Definition at line 4 of file test.\+c.
 
 
 \begin{DoxyCode}
-4            \{
+4                                 \{
 5     printf(\textcolor{stringliteral}{"Hello World\(\backslash\)n"});
 6 
-7     \textcolor{keywordflow}{for}(;;);
-8     \textcolor{keywordflow}{return} 0;
-9 \}
+7     printf(\textcolor{stringliteral}{"argc: %d\(\backslash\)n"}, argc);
+8 
+9     \textcolor{keywordtype}{int} i;
+10     \textcolor{keywordflow}{for}(i = 0; i < 1; i++)
+11         printf(\textcolor{stringliteral}{"\{%d\} = \(\backslash\)"%s\(\backslash\)";\(\backslash\)n"}, i, argv[i]);
+12 
+13     \textcolor{keywordflow}{return} 0;
+14 \}
 \end{DoxyCode}

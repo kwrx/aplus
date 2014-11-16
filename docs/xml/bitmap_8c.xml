@@ -1,0 +1,396 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="bitmap_8c" kind="file">
+    <compoundname>bitmap.c</compoundname>
+    <includes refid="atk_8h" local="no">atk.h</includes>
+    <includes refid="bitmap_8h" local="no">atk/bitmap.h</includes>
+    <includes refid="gfx_8h" local="no">atk/gfx.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">stdlib.h</includes>
+    <includes local="no">string.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes refid="clrconv_8h" local="yes">clrconv.h</includes>
+    <incdepgraph>
+      <node id="2072">
+        <label>stdint.h</label>
+      </node>
+      <node id="2074">
+        <label>stdlib.h</label>
+      </node>
+      <node id="2070">
+        <label>atk/widget.h</label>
+        <link refid="widget_8h"/>
+        <childnode refid="2069" relation="include">
+        </childnode>
+      </node>
+      <node id="2076">
+        <label>errno.h</label>
+      </node>
+      <node id="2071">
+        <label>atk/bitmap.h</label>
+        <link refid="bitmap_8h"/>
+        <childnode refid="2069" relation="include">
+        </childnode>
+        <childnode refid="2072" relation="include">
+        </childnode>
+      </node>
+      <node id="2068">
+        <label>usr/src/libatk/src/bitmap.c</label>
+        <link refid="bitmap.c"/>
+        <childnode refid="2069" relation="include">
+        </childnode>
+        <childnode refid="2071" relation="include">
+        </childnode>
+        <childnode refid="2073" relation="include">
+        </childnode>
+        <childnode refid="2072" relation="include">
+        </childnode>
+        <childnode refid="2074" relation="include">
+        </childnode>
+        <childnode refid="2075" relation="include">
+        </childnode>
+        <childnode refid="2076" relation="include">
+        </childnode>
+        <childnode refid="2077" relation="include">
+        </childnode>
+      </node>
+      <node id="2073">
+        <label>atk/gfx.h</label>
+        <link refid="gfx_8h"/>
+        <childnode refid="2069" relation="include">
+        </childnode>
+        <childnode refid="2072" relation="include">
+        </childnode>
+      </node>
+      <node id="2075">
+        <label>string.h</label>
+      </node>
+      <node id="2069">
+        <label>atk.h</label>
+        <link refid="atk_8h"/>
+        <childnode refid="2070" relation="include">
+        </childnode>
+      </node>
+      <node id="2077">
+        <label>clrconv.h</label>
+        <link refid="clrconv_8h"/>
+        <childnode refid="2069" relation="include">
+        </childnode>
+        <childnode refid="2072" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="bitmap_8c_1ad14b67fdaef2472b7a218076ee8a8295" prot="public" static="no" mutable="no">
+        <type><ref refid="gfx_8h_1a8c8412155528b364a972c509c5cca18e" kindref="member">atk_gfx_t</ref> *</type>
+        <definition>atk_gfx_t* __gfx</definition>
+        <argsstring></argsstring>
+        <name>__gfx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" line="11" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="bitmap_8c_1a6131842322871f3dd968097b582f149a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kindref="member">atk_bitmap_t</ref> *</type>
+        <definition>atk_bitmap_t* atk_bitmap_create_for_data</definition>
+        <argsstring>(uint16_t width, uint16_t height, void *buffer)</argsstring>
+        <name>atk_bitmap_create_for_data</name>
+        <param>
+          <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+          <declname>width</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+          <declname>height</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buffer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" bodystart="13" bodyend="33"/>
+        <references refid="atk_8h_1aaad1b7972db05defa86a02338218a358" compoundref="atk_8h" startline="40">ATK_SIZE_H</references>
+        <references refid="atk_8h_1a413bc681fce80267f527fa132c151055" compoundref="atk_8h" startline="39">ATK_SIZE_W</references>
+        <references refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" compoundref="gfx_8h" startline="11">atk_gfx::bpp</references>
+        <references refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" compoundref="bitmap_8h" startline="19">atk_bitmap::buffer</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" compoundref="bitmap_8h" startline="20">atk_bitmap::lock</references>
+        <references refid="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" compoundref="bitmap_8h" startline="16">atk_bitmap::size</references>
+        <references refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" compoundref="bitmap_8h" startline="17">atk_bitmap::stride</references>
+      </memberdef>
+      <memberdef kind="function" id="bitmap_8c_1a39e44147dc16a3a97f5178e455301f3b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kindref="member">atk_bitmap_t</ref> *</type>
+        <definition>atk_bitmap_t* atk_bitmap_create</definition>
+        <argsstring>(uint16_t width, uint16_t height)</argsstring>
+        <name>atk_bitmap_create</name>
+        <param>
+          <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+          <declname>width</declname>
+        </param>
+        <param>
+          <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+          <declname>height</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" line="35" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" bodystart="35" bodyend="48"/>
+        <references refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" compoundref="gfx_8h" startline="11">atk_gfx::bpp</references>
+        <references refid="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" compoundref="iso9660_8h" startline="76">data</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+      </memberdef>
+      <memberdef kind="function" id="bitmap_8c_1a0ebc106790ae78b673ddeec287f9a8b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int atk_destroy_bitmap</definition>
+        <argsstring>(atk_bitmap_t *b)</argsstring>
+        <name>atk_destroy_bitmap</name>
+        <param>
+          <type><ref refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kindref="member">atk_bitmap_t</ref> *</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" line="50" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" bodystart="50" bodyend="65"/>
+        <references refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" compoundref="bitmap_8h" startline="19">atk_bitmap::buffer</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" compoundref="bitmap_8h" startline="20">atk_bitmap::lock</references>
+      </memberdef>
+      <memberdef kind="function" id="bitmap_8c_1af2d4d028cb46ed7c8c7e2e34a15cede1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void* atk_bitmap_lockbits</definition>
+        <argsstring>(atk_bitmap_t *b, atk_rect_t rectangle, int flags)</argsstring>
+        <name>atk_bitmap_lockbits</name>
+        <param>
+          <type><ref refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kindref="member">atk_bitmap_t</ref> *</type>
+          <declname>b</declname>
+        </param>
+        <param>
+          <type><ref refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" kindref="member">atk_rect_t</ref></type>
+          <declname>rectangle</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>flags</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" line="68" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" bodystart="68" bodyend="104"/>
+        <references refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" compoundref="bitmap_8h" startline="22">atk_bitmap::__lockdata</references>
+        <references refid="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" compoundref="atk_8h" startline="37">ATK_RECT_H</references>
+        <references refid="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a" compoundref="atk_8h" startline="36">ATK_RECT_W</references>
+        <references refid="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4" compoundref="atk_8h" startline="34">ATK_RECT_X</references>
+        <references refid="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff" compoundref="atk_8h" startline="35">ATK_RECT_Y</references>
+        <references refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" compoundref="gfx_8h" startline="11">atk_gfx::bpp</references>
+        <references refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" compoundref="bitmap_8h" startline="19">atk_bitmap::buffer</references>
+        <references refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" compoundref="bitmap_8h" startline="12">atk_bitmap_lockdata::data</references>
+        <references refid="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" compoundref="iso9660_8h" startline="76">data</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" compoundref="bitmap_8h" startline="10">atk_bitmap_lockdata::flags</references>
+        <references refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" compoundref="iso9660_8h" startline="78">flags</references>
+        <references refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" compoundref="bitmap_8h" startline="20">atk_bitmap::lock</references>
+        <references refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" compoundref="bitmap_8h" startline="9">atk_bitmap_lockdata::region</references>
+        <references refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" compoundref="iso9660_8h" startline="73">size</references>
+        <references refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" compoundref="bitmap_8h" startline="17">atk_bitmap::stride</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      <memberdef kind="function" id="bitmap_8c_1abbf711383513c744fe96b307880fb3d8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void atk_bitmap_unlockbits</definition>
+        <argsstring>(atk_bitmap_t *b)</argsstring>
+        <name>atk_bitmap_unlockbits</name>
+        <param>
+          <type><ref refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kindref="member">atk_bitmap_t</ref> *</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" line="106" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c" bodystart="106" bodyend="137"/>
+        <references refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" compoundref="bitmap_8h" startline="22">atk_bitmap::__lockdata</references>
+        <references refid="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78" compoundref="bitmap_8h" startline="28">ATK_BITMAP_LOCK_RDWR</references>
+        <references refid="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" compoundref="atk_8h" startline="37">ATK_RECT_H</references>
+        <references refid="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a" compoundref="atk_8h" startline="36">ATK_RECT_W</references>
+        <references refid="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4" compoundref="atk_8h" startline="34">ATK_RECT_X</references>
+        <references refid="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff" compoundref="atk_8h" startline="35">ATK_RECT_Y</references>
+        <references refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" compoundref="gfx_8h" startline="11">atk_gfx::bpp</references>
+        <references refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" compoundref="bitmap_8h" startline="19">atk_bitmap::buffer</references>
+        <references refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" compoundref="bitmap_8h" startline="12">atk_bitmap_lockdata::data</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" compoundref="bitmap_8h" startline="10">atk_bitmap_lockdata::flags</references>
+        <references refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" compoundref="bitmap_8h" startline="20">atk_bitmap::lock</references>
+        <references refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" compoundref="bitmap_8h" startline="9">atk_bitmap_lockdata::region</references>
+        <references refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" compoundref="bitmap_8h" startline="17">atk_bitmap::stride</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="atk_8h" kindref="compound">atk.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="bitmap_8h" kindref="compound">atk/bitmap.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="gfx_8h" kindref="compound">atk/gfx.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="clrconv_8h" kindref="compound">clrconv.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structatk__gfx" kindref="compound">atk_gfx_t</ref>*<sp/><ref refid="bitmap_8c_1ad14b67fdaef2472b7a218076ee8a8295" kindref="member">__gfx</ref>;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="bitmap_8c_1a6131842322871f3dd968097b582f149a" refkind="member"><highlight class="normal"><ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*<sp/><ref refid="bitmap_8c_1a6131842322871f3dd968097b582f149a" kindref="member">atk_bitmap_create_for_data</ref>(<ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>width,<sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>height,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buffer)<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!(width<sp/>&amp;&amp;<sp/>height<sp/>&amp;&amp;<sp/>buffer))<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*<sp/>b<sp/>=<sp/>(<ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*)<sp/>malloc(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>));</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!b)<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOMEM;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" kindref="member">size</ref>[<ref refid="atk_8h_1a413bc681fce80267f527fa132c151055" kindref="member">ATK_SIZE_W</ref>]<sp/>=<sp/>width;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" kindref="member">size</ref>[<ref refid="atk_8h_1aaad1b7972db05defa86a02338218a358" kindref="member">ATK_SIZE_H</ref>]<sp/>=<sp/>height;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" kindref="member">stride</ref><sp/>=<sp/>width<sp/>*<sp/>(__gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>/<sp/>8);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" kindref="member">buffer</ref><sp/>=<sp/>buffer;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>b;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35" refid="bitmap_8c_1a39e44147dc16a3a97f5178e455301f3b" refkind="member"><highlight class="normal"><ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*<sp/><ref refid="bitmap_8c_1a39e44147dc16a3a97f5178e455301f3b" kindref="member">atk_bitmap_create</ref>(<ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>width,<sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/>height)<sp/>{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!(width<sp/>&amp;&amp;<sp/>height))<sp/>{</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" kindref="member">data</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>malloc(width<sp/>*<sp/>height<sp/>*<sp/>(__gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>&gt;&gt;<sp/>3));</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!data)<sp/>{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOMEM;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>atk_create_bitmap_for_data(width,<sp/>height,<sp/>data);</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="bitmap_8c_1a0ebc106790ae78b673ddeec287f9a8b6" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="bitmap_8c_1a0ebc106790ae78b673ddeec287f9a8b6" kindref="member">atk_destroy_bitmap</ref>(<ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*<sp/>b)<sp/>{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!b)<sp/>{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(b-&gt;<ref refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBUSY;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>free(b-&gt;<ref refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" kindref="member">buffer</ref>);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>free(b);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68" refid="bitmap_8c_1af2d4d028cb46ed7c8c7e2e34a15cede1" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="bitmap_8c_1af2d4d028cb46ed7c8c7e2e34a15cede1" kindref="member">atk_bitmap_lockbits</ref>(<ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*<sp/>b,<sp/><ref refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" kindref="member">atk_rect_t</ref><sp/>rectangle,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" kindref="member">flags</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!b)<sp/>{</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(b-&gt;<ref refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" kindref="member">lock</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBUSY;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" kindref="member">lock</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>stride<sp/>=<sp/>rectangle[<ref refid="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a" kindref="member">ATK_RECT_W</ref>]<sp/>*<sp/>(__gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>&gt;&gt;<sp/>3);</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref><sp/>=<sp/>stride<sp/>*<sp/>rectangle[<ref refid="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" kindref="member">ATK_RECT_H</ref>];</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" kindref="member">data</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>malloc(size);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keyword">register</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>=<sp/>0,<sp/></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>p<sp/>=<sp/>(b-&gt;<ref refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" kindref="member">stride</ref><sp/>*<sp/>rectangle[<ref refid="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff" kindref="member">ATK_RECT_Y</ref>])<sp/>+<sp/>(rectangle[<ref refid="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4" kindref="member">ATK_RECT_X</ref>]<sp/>*<sp/>(__gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>&gt;&gt;<sp/>3));</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i<sp/>&lt;<sp/>rectangle[<ref refid="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" kindref="member">ATK_RECT_H</ref>];</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i++,<sp/>s<sp/>+=<sp/>stride,<sp/>p<sp/>+=<sp/>b-&gt;<ref refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" kindref="member">stride</ref></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy(</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>data<sp/>+<sp/>s),<sp/></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>b-&gt;<ref refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" kindref="member">buffer</ref><sp/>+<sp/>p),</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>stride</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref><sp/>=<sp/>rectangle;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" kindref="member">data</ref><sp/>=<sp/><ref refid="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" kindref="member">flags</ref><sp/>=<sp/><ref refid="iso9660_8h_1aa2585d779da0ab21273a8d92de9a0ebe" kindref="member">flags</ref>;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1ae308b441db3cd9ff9e80e01730229e3b" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106" refid="bitmap_8c_1abbf711383513c744fe96b307880fb3d8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="bitmap_8c_1abbf711383513c744fe96b307880fb3d8" kindref="member">atk_bitmap_unlockbits</ref>(<ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*<sp/>b)<sp/>{</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!b)<sp/>{</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" kindref="member">flags</ref><sp/>&amp;<sp/><ref refid="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78" kindref="member">ATK_BITMAP_LOCK_RDWR</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>stride<sp/>=<sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[<ref refid="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a" kindref="member">ATK_RECT_W</ref>]<sp/>*<sp/>(__gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>&gt;&gt;<sp/>3);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keyword">register</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>=<sp/>0,<sp/></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>p<sp/>=<sp/>(b-&gt;<ref refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" kindref="member">stride</ref><sp/>*<sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[<ref refid="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff" kindref="member">ATK_RECT_Y</ref>])<sp/>+<sp/>(b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[<ref refid="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4" kindref="member">ATK_RECT_X</ref>]<sp/>*<sp/>(__gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>&gt;&gt;<sp/>3));</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i<sp/>&lt;<sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[<ref refid="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" kindref="member">ATK_RECT_H</ref>];</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>i++,<sp/>s<sp/>+=<sp/>stride,<sp/>p<sp/>+=<sp/>b-&gt;<ref refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" kindref="member">stride</ref></highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy(</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>b-&gt;<ref refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" kindref="member">buffer</ref><sp/>+<sp/>p),</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" kindref="member">data</ref><sp/>+<sp/>s),</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>stride</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>);</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[0]<sp/>=<sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[1]<sp/>=<sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[2]<sp/>=<sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>[3]<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" kindref="member">flags</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/>free(b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" kindref="member">data</ref>);</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>.<ref refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" kindref="member">data</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>b-&gt;<ref refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" kindref="member">lock</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/bitmap.c"/>
+  </compounddef>
+</doxygen>

@@ -4,13 +4,13 @@
     <compoundname>dup2.c</compoundname>
     <includes local="no">fcntl.h</includes>
     <incdepgraph>
-      <node id="2089">
+      <node id="2268">
         <label>fcntl.h</label>
       </node>
-      <node id="2088">
+      <node id="2267">
         <label>usr/src/libposix/src/dup2.c</label>
         <link refid="dup2.c"/>
-        <childnode refid="2089" relation="include">
+        <childnode refid="2268" relation="include">
         </childnode>
       </node>
     </incdepgraph>

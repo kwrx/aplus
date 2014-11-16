@@ -4,8 +4,10 @@
     <compoundname>exec.c</compoundname>
     <includes refid="aplus_8h" local="no">aplus.h</includes>
     <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
     <includes local="no">stdint.h</includes>
     <includes local="no">errno.h</includes>
+    <includes refid="grub_8h" local="no">grub.h</includes>
     <incdepgraph>
       <node id="134">
         <label>sys/stat.h</label>
@@ -52,6 +54,10 @@
       <node id="139">
         <label>errno.h</label>
       </node>
+      <node id="140">
+        <label>grub.h</label>
+        <link refid="grub_8h"/>
+      </node>
       <node id="132">
         <label>stddef.h</label>
       </node>
@@ -78,9 +84,13 @@
         </childnode>
         <childnode refid="129" relation="include">
         </childnode>
+        <childnode refid="130" relation="include">
+        </childnode>
         <childnode refid="126" relation="include">
         </childnode>
         <childnode refid="139" relation="include">
+        </childnode>
+        <childnode refid="140" relation="include">
         </childnode>
       </node>
       <node id="136">
@@ -109,6 +119,7 @@
     <innerclass refid="structelf32__hdr" prot="public">elf32_hdr</innerclass>
     <innerclass refid="structelf32__shdr" prot="public">elf32_shdr</innerclass>
     <innerclass refid="structelf32__phdr" prot="public">elf32_phdr</innerclass>
+    <innerclass refid="structelf32__sym__t" prot="public">elf32_sym_t</innerclass>
       <sectiondef kind="define">
       <memberdef kind="define" id="exec_8c_1ac12ef0a698cec32392148178e777a3a4" prot="public" static="no">
         <name>ELF32_ADDRSPACE_MIN_LENGTH</name>
@@ -119,7 +130,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="7" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="7" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="13" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="13" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1ae407130db14180c6737390604ba7c1fe" prot="public" static="no">
         <name>EI_NIDENT</name>
@@ -130,7 +141,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="17" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="17" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="23" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="23" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f" prot="public" static="no">
         <name>EI_MAG0</name>
@@ -141,7 +152,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="18" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="18" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="24" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="24" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a2cae3878d982911632b418680718d53b" prot="public" static="no">
         <name>EI_MAG1</name>
@@ -152,7 +163,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="19" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="19" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="25" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="25" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739" prot="public" static="no">
         <name>EI_MAG2</name>
@@ -163,7 +174,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="20" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="20" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="26" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="26" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1ace03d4c5e8952e27b8505581432c3b84" prot="public" static="no">
         <name>EI_MAG3</name>
@@ -174,7 +185,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="21" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="21" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="27" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="27" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636" prot="public" static="no">
         <name>EI_CLASS</name>
@@ -185,7 +196,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="22" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="22" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="28" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="28" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a79c714b4bf89638ff576e163d7d2144f" prot="public" static="no">
         <name>EI_DATA</name>
@@ -196,7 +207,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="23" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="23" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="29" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="29" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1aac8694b14e6500d9dc5047ef62518845" prot="public" static="no">
         <name>EI_VERSION</name>
@@ -207,7 +218,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="24" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="24" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="30" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="30" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1aed24a379d553d0e36853949dd6ddd6c1" prot="public" static="no">
         <name>EI_PAD</name>
@@ -218,7 +229,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="25" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="25" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="31" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="31" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a8d944947af59b67d47a445ae2bef32e3" prot="public" static="no">
         <name>ELF_MAG0</name>
@@ -229,7 +240,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="27" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="27" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="33" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="33" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9" prot="public" static="no">
         <name>ELF_MAG1</name>
@@ -240,7 +251,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="28" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="28" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="34" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="34" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a60668f0dfd2613d5ccccac355f147726" prot="public" static="no">
         <name>ELF_MAG2</name>
@@ -251,7 +262,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="29" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="29" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="35" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="35" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a40443fcac019afd6b173b8890fd25e6c" prot="public" static="no">
         <name>ELF_MAG3</name>
@@ -262,7 +273,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="30" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="30" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="36" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="36" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69" prot="public" static="no">
         <name>ELF_CLASS_32</name>
@@ -273,7 +284,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="32" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="32" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="38" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="38" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a24ed2e132c3545d8d8d680f2ca2cd7fb" prot="public" static="no">
         <name>ELF_CLASS_64</name>
@@ -284,7 +295,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="33" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="33" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="39" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="39" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a2746b48aac96a65735bed83598d5d68a" prot="public" static="no">
         <name>ELF_DATA_LSB</name>
@@ -295,7 +306,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="35" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="41" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="41" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a716af0ca966a3f918b82c4a4a8a73f9e" prot="public" static="no">
         <name>ELF_DATA_MSB</name>
@@ -306,7 +317,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="36" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="36" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="42" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a1566f4c14cff9f4b539b00af54d62dbb" prot="public" static="no">
         <name>SHT_NULL</name>
@@ -317,7 +328,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="39" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="39" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="45" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="45" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a4bff22edbae51353ba9b3572d424b91a" prot="public" static="no">
         <name>SHT_PROGBITS</name>
@@ -328,7 +339,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="40" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="40" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="46" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="46" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a4add7784e43ec3d3b9c09d3ffc476a81" prot="public" static="no">
         <name>SHT_SYMTAB</name>
@@ -339,7 +350,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="41" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="41" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="47" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="47" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1af4b916dc4ca5016fb5c374068002a532" prot="public" static="no">
         <name>SHT_STRTAB</name>
@@ -350,7 +361,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="42" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="42" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="48" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1abf2fc2781a2869352c2ffa0555f34118" prot="public" static="no">
         <name>SHT_RELA</name>
@@ -361,7 +372,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="43" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="43" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="49" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="49" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a446fd322326bea21373453c80c3f7925" prot="public" static="no">
         <name>SHT_HASH</name>
@@ -372,7 +383,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="44" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="44" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="50" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="50" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a3a9278d12cf2c9e7eaca87688d0a6e37" prot="public" static="no">
         <name>SHT_DYNAMIC</name>
@@ -383,7 +394,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="45" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="45" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="51" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="51" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a65506a79f0e972c851851af7b1008d94" prot="public" static="no">
         <name>SHT_NOTE</name>
@@ -394,7 +405,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="46" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="46" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="52" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="52" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a820ff00317949be2ea1fd634a17dc13e" prot="public" static="no">
         <name>SHT_NOBITS</name>
@@ -405,7 +416,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="47" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="47" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="53" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="53" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a2aea2ed985f81f13a157fe2da02a621a" prot="public" static="no">
         <name>SHT_REL</name>
@@ -416,7 +427,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="48" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="48" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="54" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="54" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1ace0ce008ff50406077a9450174fe55a5" prot="public" static="no">
         <name>SHT_SHLIB</name>
@@ -427,7 +438,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="49" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="49" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="55" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="55" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1aa9949aedf49107f6a07e618d5d791d40" prot="public" static="no">
         <name>SHT_DYNSYM</name>
@@ -438,7 +449,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="50" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="50" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="56" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="56" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a025c79223b0fee4676337d660f76b59b" prot="public" static="no">
         <name>SHF_WRITE</name>
@@ -449,7 +460,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="52" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="52" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="58" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="58" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a38476fe4ed88ac83ba86a4e103199a86" prot="public" static="no">
         <name>SHF_ALLOC</name>
@@ -460,7 +471,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="53" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="53" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="59" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="59" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1ab3780594e35fbbc6e5028bcb921d0a76" prot="public" static="no">
         <name>SHF_EXECINSTR</name>
@@ -471,7 +482,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="54" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="54" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="60" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="60" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1acf36e75ca9c55c229039ee298abb5bb0" prot="public" static="no">
         <name>SHF_MASK</name>
@@ -482,7 +493,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="55" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="55" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="61" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="61" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a854729c1dc4623abeaeb765a1b745012" prot="public" static="no">
         <name>PT_NULL</name>
@@ -493,7 +504,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="59" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="59" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="65" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="65" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a84d7768fd6c6ece599d297090900cf92" prot="public" static="no">
         <name>PT_LOAD</name>
@@ -504,7 +515,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="60" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="60" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="66" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="66" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a2121a2f01c51e8462bfd4d47725649d8" prot="public" static="no">
         <name>PT_DYNAMIC</name>
@@ -515,7 +526,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="61" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="61" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="67" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="67" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1abcd3aa15bc567949c1ab6b1abc137710" prot="public" static="no">
         <name>PT_INTERP</name>
@@ -526,7 +537,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="62" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="62" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="68" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="68" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a72baf87d62607c7fdccd3b8010d4ce30" prot="public" static="no">
         <name>PT_NOTE</name>
@@ -537,7 +548,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="63" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="63" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="69" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="69" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1abff9f38fd394e09e60f5640550a23e46" prot="public" static="no">
         <name>PT_SHLIB</name>
@@ -548,7 +559,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="64" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="64" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="70" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="70" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a58ff00be749ca4000074f9b9066a1056" prot="public" static="no">
         <name>PT_PHDR</name>
@@ -559,7 +570,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="65" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="65" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="71" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="71" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1acaa6971207ea507ed02f22ba574b8534" prot="public" static="no">
         <name>PT_LOPROC</name>
@@ -570,7 +581,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="66" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="66" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="72" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="72" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a74427c5909fdced36b41134c11650249" prot="public" static="no">
         <name>PT_HIPROC</name>
@@ -581,7 +592,31 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="67" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="67" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="73" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="exec_8c_1a3b84f3e0e035d1264115f5c76227c5eb" prot="public" static="no">
+        <name>ELF32_ST_BIND</name>
+        <param><defname>i</defname></param>
+        <initializer>((i &gt;&gt; 4))</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="76" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="exec_8c_1a54dd2783f11c5f926d8db9250e1baa35" prot="public" static="no">
+        <name>ELF32_ST_TYPE</name>
+        <param><defname>i</defname></param>
+        <initializer>((i) &amp; 0x0F)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="77" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="77" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1aa3ea57d3d539b6618daaaaf7af4bec80" prot="public" static="no">
         <name>ELF_DEBUG</name>
@@ -591,7 +626,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="72" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="72" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="82" column="9" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="82" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" prot="public" static="no">
         <name>check</name>
@@ -606,7 +641,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="139" column="10"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="161" column="10"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="typedef">
@@ -621,7 +656,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="10" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="10" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="16" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" prot="public" static="no">
         <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
@@ -634,7 +669,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="11" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="17" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="17" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="exec_8c_1a655751f9b317369b93c581ea8ed84516" prot="public" static="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -647,7 +682,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="12" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="12" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="18" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="18" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="exec_8c_1a30ce6352cf03c667272698ada477da95" prot="public" static="no">
         <type>int32_t</type>
@@ -660,7 +695,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="13" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="19" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="exec_8c_1af5924ece606c732e86f8263a19408e45" prot="public" static="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -673,7 +708,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="14" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="14" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="20" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="20" bodyend="-1"/>
       </memberdef>
       <memberdef kind="typedef" id="exec_8c_1a34edb44226509e467315e3bd81c3d7dc" prot="public" static="no">
         <type>struct <ref refid="structelf32__hdr" kindref="compound">elf32_hdr</ref></type>
@@ -686,7 +721,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="93" column="1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="103" column="1"/>
       </memberdef>
       <memberdef kind="typedef" id="exec_8c_1ad7b97ddfcb82a63cd28a9cb88f21984a" prot="public" static="no">
         <type>struct <ref refid="structelf32__shdr" kindref="compound">elf32_shdr</ref></type>
@@ -699,7 +734,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="109" column="1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="119" column="1"/>
       </memberdef>
       <memberdef kind="typedef" id="exec_8c_1a6c037736a997fdd28ed9f6b734261b23" prot="public" static="no">
         <type>struct <ref refid="structelf32__phdr" kindref="compound">elf32_phdr</ref></type>
@@ -712,7 +747,35 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="124" column="1"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="134" column="1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="exec_8c_1a0a07204ebf864bb143d95b4525e80938" prot="public" static="no">
+        <type>struct <ref refid="structelf32__sym__t" kindref="compound">elf32_sym_t</ref></type>
+        <definition>typedef struct elf32_sym_t  elf32_sym_t</definition>
+        <argsstring></argsstring>
+        <name>elf32_sym_t</name>
+        <briefdescription>
+<para>ELF32 Symbol. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="147" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="exec_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" prot="public" static="no" mutable="no">
+        <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+        <definition>task_t* current_task</definition>
+        <argsstring></argsstring>
+        <name>current_task</name>
+        <briefdescription>
+<para>Current task address. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -740,21 +803,21 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="132" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="132" bodyend="156"/>
+        <location file="/opt/prj/aPlus/src/exec.c" line="154" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="154" bodyend="178"/>
         <references refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9">check</references>
-        <references refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" compoundref="exec_8c" startline="79">elf32_hdr::e_ident</references>
-        <references refid="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636" compoundref="exec_8c" startline="22">EI_CLASS</references>
-        <references refid="exec_8c_1a79c714b4bf89638ff576e163d7d2144f" compoundref="exec_8c" startline="23">EI_DATA</references>
-        <references refid="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f" compoundref="exec_8c" startline="18">EI_MAG0</references>
-        <references refid="exec_8c_1a2cae3878d982911632b418680718d53b" compoundref="exec_8c" startline="19">EI_MAG1</references>
-        <references refid="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739" compoundref="exec_8c" startline="20">EI_MAG2</references>
-        <references refid="exec_8c_1ace03d4c5e8952e27b8505581432c3b84" compoundref="exec_8c" startline="21">EI_MAG3</references>
-        <references refid="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69" compoundref="exec_8c" startline="32">ELF_CLASS_32</references>
-        <references refid="exec_8c_1a2746b48aac96a65735bed83598d5d68a" compoundref="exec_8c" startline="35">ELF_DATA_LSB</references>
-        <references refid="exec_8c_1a8d944947af59b67d47a445ae2bef32e3" compoundref="exec_8c" startline="27">ELF_MAG0</references>
-        <references refid="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9" compoundref="exec_8c" startline="28">ELF_MAG1</references>
-        <references refid="exec_8c_1a60668f0dfd2613d5ccccac355f147726" compoundref="exec_8c" startline="29">ELF_MAG2</references>
-        <references refid="exec_8c_1a40443fcac019afd6b173b8890fd25e6c" compoundref="exec_8c" startline="30">ELF_MAG3</references>
+        <references refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" compoundref="exec_8c" startline="89">elf32_hdr::e_ident</references>
+        <references refid="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636" compoundref="exec_8c" startline="28">EI_CLASS</references>
+        <references refid="exec_8c_1a79c714b4bf89638ff576e163d7d2144f" compoundref="exec_8c" startline="29">EI_DATA</references>
+        <references refid="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f" compoundref="exec_8c" startline="24">EI_MAG0</references>
+        <references refid="exec_8c_1a2cae3878d982911632b418680718d53b" compoundref="exec_8c" startline="25">EI_MAG1</references>
+        <references refid="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739" compoundref="exec_8c" startline="26">EI_MAG2</references>
+        <references refid="exec_8c_1ace03d4c5e8952e27b8505581432c3b84" compoundref="exec_8c" startline="27">EI_MAG3</references>
+        <references refid="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69" compoundref="exec_8c" startline="38">ELF_CLASS_32</references>
+        <references refid="exec_8c_1a2746b48aac96a65735bed83598d5d68a" compoundref="exec_8c" startline="41">ELF_DATA_LSB</references>
+        <references refid="exec_8c_1a8d944947af59b67d47a445ae2bef32e3" compoundref="exec_8c" startline="33">ELF_MAG0</references>
+        <references refid="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9" compoundref="exec_8c" startline="34">ELF_MAG1</references>
+        <references refid="exec_8c_1a60668f0dfd2613d5ccccac355f147726" compoundref="exec_8c" startline="35">ELF_MAG2</references>
+        <references refid="exec_8c_1a40443fcac019afd6b173b8890fd25e6c" compoundref="exec_8c" startline="36">ELF_MAG3</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
       </memberdef>
       <memberdef kind="function" id="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -803,13 +866,13 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="166" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="166" bodyend="200"/>
-        <references refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" compoundref="exec_8c" startline="84">elf32_hdr::e_phoff</references>
-        <references refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" compoundref="exec_8c" startline="7">ELF32_ADDRSPACE_MIN_LENGTH</references>
-        <references refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" compoundref="exec_8c" startline="132" endline="156">elf32_check</references>
+        <location file="/opt/prj/aPlus/src/exec.c" line="188" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="188" bodyend="222"/>
+        <references refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" compoundref="exec_8c" startline="94">elf32_hdr::e_phoff</references>
+        <references refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" compoundref="exec_8c" startline="13">ELF32_ADDRSPACE_MIN_LENGTH</references>
+        <references refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" compoundref="exec_8c" startline="154" endline="178">elf32_check</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
-        <references refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" compoundref="exec_8c" startline="121">elf32_phdr::p_memsz</references>
-        <references refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" compoundref="exec_8c" startline="118">elf32_phdr::p_vaddr</references>
+        <references refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" compoundref="exec_8c" startline="131">elf32_phdr::p_memsz</references>
+        <references refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" compoundref="exec_8c" startline="128">elf32_phdr::p_vaddr</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       <memberdef kind="function" id="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -858,22 +921,52 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/exec.c" line="210" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="210" bodyend="262"/>
-        <references refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" compoundref="exec_8c" startline="85">elf32_hdr::e_shoff</references>
-        <references refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" compoundref="exec_8c" startline="132" endline="156">elf32_check</references>
-        <references refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" compoundref="exec_8c" startline="166" endline="200">elf32_getspace</references>
+        <location file="/opt/prj/aPlus/src/exec.c" line="232" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="232" bodyend="287"/>
+        <references refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1">task::context</references>
+        <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="97">task::cr3</references>
+        <references refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" compoundref="exec_8c" startline="95">elf32_hdr::e_shoff</references>
+        <references refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" compoundref="exec_8c" startline="154" endline="178">elf32_check</references>
+        <references refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" compoundref="exec_8c" startline="188" endline="222">elf32_getspace</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
-        <references refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" compoundref="mm_8h" startline="44">MM_UBASE</references>
-        <references refid="mm_8h_1a600b21bbb74401132349a1325dadfdbe" compoundref="mm_8h" startline="45">MM_USIZE</references>
-        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="102" endline="113">panic</references>
-        <references refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" compoundref="exec_8c" startline="102">elf32_shdr::sh_addr</references>
-        <references refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" compoundref="exec_8c" startline="103">elf32_shdr::sh_offset</references>
-        <references refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" compoundref="exec_8c" startline="104">elf32_shdr::sh_size</references>
+        <references refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" compoundref="mm_8h" startline="47">MM_UBASE</references>
+        <references refid="mm_8h_1a600b21bbb74401132349a1325dadfdbe" compoundref="mm_8h" startline="48">MM_USIZE</references>
+        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="130" endline="132">panic</references>
+        <references refid="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" compoundref="src_2sched_8c" startline="237" endline="271">schedule_release</references>
+        <references refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" compoundref="exec_8c" startline="112">elf32_shdr::sh_addr</references>
+        <references refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" compoundref="exec_8c" startline="113">elf32_shdr::sh_offset</references>
+        <references refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" compoundref="exec_8c" startline="114">elf32_shdr::sh_size</references>
+        <references refid="structelf32__shdr_1ab82e07582eb07fc53eec4dca36dddc83" compoundref="exec_8c" startline="110">elf32_shdr::sh_type</references>
+        <references refid="exec_8c_1a820ff00317949be2ea1fd634a17dc13e" compoundref="exec_8c" startline="53">SHT_NOBITS</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
-        <references refid="paging_8c_1aebed4a90dd887506ed125f9efb953c93" compoundref="paging_8c" startline="130" endline="136">vmm_alloc</references>
-        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="52">VMM_FLAGS_DEFAULT</references>
-        <references refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" compoundref="mm_8h" startline="51">VMM_FLAGS_USER</references>
+        <references refid="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" compoundref="paging_8c" startline="130" endline="136">vmm_alloc</references>
+        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="55">VMM_FLAGS_DEFAULT</references>
+        <references refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" compoundref="mm_8h" startline="54">VMM_FLAGS_USER</references>
+      </memberdef>
+      <memberdef kind="function" id="exec_8c_1ac79bb43069a3d3c097c8d95dcf0c2784" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>char *</type>
+        <definition>char* elf_kernel_lookup</definition>
+        <argsstring>(uint32_t symaddr)</argsstring>
+        <name>elf_kernel_lookup</name>
+        <param>
+          <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+          <declname>symaddr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="291" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="291" bodyend="326"/>
+        <references refid="structBootInfo__t_1ac0a248c150ec1bceaafc488988174a1d" compoundref="grub_8h" startline="74">BootInfo_t::addr</references>
+        <references refid="exec_8c_1a54dd2783f11c5f926d8db9250e1baa35" compoundref="exec_8c" startline="77">ELF32_ST_TYPE</references>
+        <references refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962">mbd</references>
+        <references refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" compoundref="attribute_8h" startline="82">name</references>
+        <references refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" compoundref="exec_8c" startline="112">elf32_shdr::sh_addr</references>
+        <references refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" compoundref="exec_8c" startline="114">elf32_shdr::sh_size</references>
+        <references refid="structBootInfo__t_1ab2c8b3b8778032a87c0c2fe73245e9e8" compoundref="grub_8h" startline="75">BootInfo_t::shndx</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -883,238 +976,299 @@
     <programlisting>
 <codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="3"><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight></codeline>
-<codeline lineno="7" refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF32_ADDRSPACE_MIN_LENGTH<sp/><sp/><sp/><sp/><sp/><sp/>0x100000</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="grub_8h" kindref="compound">grub.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="9"><highlight class="normal"></highlight></codeline>
-<codeline lineno="10" refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref>;</highlight></codeline>
-<codeline lineno="11" refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref>;</highlight></codeline>
-<codeline lineno="12" refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref>;</highlight></codeline>
-<codeline lineno="13" refid="exec_8c_1a30ce6352cf03c667272698ada477da95" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>int32_t<sp/><ref refid="exec_8c_1a30ce6352cf03c667272698ada477da95" kindref="member">Elf32_Sword</ref>;</highlight></codeline>
-<codeline lineno="14" refid="exec_8c_1af5924ece606c732e86f8263a19408e45" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref>;</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="exec_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF32_ADDRSPACE_MIN_LENGTH<sp/><sp/><sp/><sp/><sp/><sp/>0x100000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight></codeline>
-<codeline lineno="16"><highlight class="normal"></highlight></codeline>
-<codeline lineno="17" refid="exec_8c_1ae407130db14180c6737390604ba7c1fe" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_NIDENT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>16</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="18" refid="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG0<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="19" refid="exec_8c_1a2cae3878d982911632b418680718d53b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG1<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="20" refid="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="21" refid="exec_8c_1ace03d4c5e8952e27b8505581432c3b84" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG3<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="22" refid="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_CLASS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="23" refid="exec_8c_1a79c714b4bf89638ff576e163d7d2144f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_DATA<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>5</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="24" refid="exec_8c_1aac8694b14e6500d9dc5047ef62518845" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_VERSION<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>6</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="25" refid="exec_8c_1aed24a379d553d0e36853949dd6ddd6c1" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_PAD<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>7</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="26"><highlight class="normal"></highlight></codeline>
-<codeline lineno="27" refid="exec_8c_1a8d944947af59b67d47a445ae2bef32e3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG0<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x7F</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="28" refid="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG1<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;E&apos;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="29" refid="exec_8c_1a60668f0dfd2613d5ccccac355f147726" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;L&apos;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="30" refid="exec_8c_1a40443fcac019afd6b173b8890fd25e6c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG3<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;F&apos;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight></codeline>
-<codeline lineno="32" refid="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_CLASS_32<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="33" refid="exec_8c_1a24ed2e132c3545d8d8d680f2ca2cd7fb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_CLASS_64<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35" refid="exec_8c_1a2746b48aac96a65735bed83598d5d68a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_DATA_LSB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="36" refid="exec_8c_1a716af0ca966a3f918b82c4a4a8a73f9e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_DATA_MSB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref>;</highlight></codeline>
+<codeline lineno="17" refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref>;</highlight></codeline>
+<codeline lineno="18" refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref>;</highlight></codeline>
+<codeline lineno="19" refid="exec_8c_1a30ce6352cf03c667272698ada477da95" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>int32_t<sp/><ref refid="exec_8c_1a30ce6352cf03c667272698ada477da95" kindref="member">Elf32_Sword</ref>;</highlight></codeline>
+<codeline lineno="20" refid="exec_8c_1af5924ece606c732e86f8263a19408e45" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="exec_8c_1ae407130db14180c6737390604ba7c1fe" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_NIDENT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>16</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG0<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="exec_8c_1a2cae3878d982911632b418680718d53b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG1<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="exec_8c_1ace03d4c5e8952e27b8505581432c3b84" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_MAG3<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_CLASS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="exec_8c_1a79c714b4bf89638ff576e163d7d2144f" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_DATA<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>5</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="exec_8c_1aac8694b14e6500d9dc5047ef62518845" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_VERSION<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="exec_8c_1aed24a379d553d0e36853949dd6ddd6c1" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>EI_PAD<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>7</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="exec_8c_1a8d944947af59b67d47a445ae2bef32e3" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG0<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x7F</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34" refid="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG1<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;E&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35" refid="exec_8c_1a60668f0dfd2613d5ccccac355f147726" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;L&apos;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="exec_8c_1a40443fcac019afd6b173b8890fd25e6c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_MAG3<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>&apos;F&apos;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="37"><highlight class="normal"></highlight></codeline>
-<codeline lineno="38"><highlight class="normal"></highlight></codeline>
-<codeline lineno="39" refid="exec_8c_1a1566f4c14cff9f4b539b00af54d62dbb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_NULL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="40" refid="exec_8c_1a4bff22edbae51353ba9b3572d424b91a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_PROGBITS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="41" refid="exec_8c_1a4add7784e43ec3d3b9c09d3ffc476a81" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_SYMTAB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="42" refid="exec_8c_1af4b916dc4ca5016fb5c374068002a532" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_STRTAB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="43" refid="exec_8c_1abf2fc2781a2869352c2ffa0555f34118" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_RELA<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="44" refid="exec_8c_1a446fd322326bea21373453c80c3f7925" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_HASH<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>5</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="45" refid="exec_8c_1a3a9278d12cf2c9e7eaca87688d0a6e37" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_DYNAMIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>6</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="46" refid="exec_8c_1a65506a79f0e972c851851af7b1008d94" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_NOTE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>7</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="47" refid="exec_8c_1a820ff00317949be2ea1fd634a17dc13e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_NOBITS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>8</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="48" refid="exec_8c_1a2aea2ed985f81f13a157fe2da02a621a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_REL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="49" refid="exec_8c_1ace0ce008ff50406077a9450174fe55a5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_SHLIB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>10</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="50" refid="exec_8c_1aa9949aedf49107f6a07e618d5d791d40" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_DYNSYM<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>11</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="51"><highlight class="normal"></highlight></codeline>
-<codeline lineno="52" refid="exec_8c_1a025c79223b0fee4676337d660f76b59b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_WRITE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="53" refid="exec_8c_1a38476fe4ed88ac83ba86a4e103199a86" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_ALLOC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="54" refid="exec_8c_1ab3780594e35fbbc6e5028bcb921d0a76" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_EXECINSTR<sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="55" refid="exec_8c_1acf36e75ca9c55c229039ee298abb5bb0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_MASK<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0xF0000000</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38" refid="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_CLASS_32<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="exec_8c_1a24ed2e132c3545d8d8d680f2ca2cd7fb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_CLASS_64<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="exec_8c_1a2746b48aac96a65735bed83598d5d68a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_DATA_LSB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="exec_8c_1a716af0ca966a3f918b82c4a4a8a73f9e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF_DATA_MSB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="exec_8c_1a1566f4c14cff9f4b539b00af54d62dbb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_NULL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="exec_8c_1a4bff22edbae51353ba9b3572d424b91a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_PROGBITS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="exec_8c_1a4add7784e43ec3d3b9c09d3ffc476a81" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_SYMTAB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="exec_8c_1af4b916dc4ca5016fb5c374068002a532" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_STRTAB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49" refid="exec_8c_1abf2fc2781a2869352c2ffa0555f34118" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_RELA<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="50" refid="exec_8c_1a446fd322326bea21373453c80c3f7925" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_HASH<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>5</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51" refid="exec_8c_1a3a9278d12cf2c9e7eaca87688d0a6e37" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_DYNAMIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="exec_8c_1a65506a79f0e972c851851af7b1008d94" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_NOTE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>7</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53" refid="exec_8c_1a820ff00317949be2ea1fd634a17dc13e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_NOBITS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="exec_8c_1a2aea2ed985f81f13a157fe2da02a621a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_REL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>9</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="exec_8c_1ace0ce008ff50406077a9450174fe55a5" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_SHLIB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>10</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56" refid="exec_8c_1aa9949aedf49107f6a07e618d5d791d40" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHT_DYNSYM<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>11</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="57"><highlight class="normal"></highlight></codeline>
-<codeline lineno="58"><highlight class="normal"></highlight></codeline>
-<codeline lineno="59" refid="exec_8c_1a854729c1dc4623abeaeb765a1b745012" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_NULL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="60" refid="exec_8c_1a84d7768fd6c6ece599d297090900cf92" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_LOAD<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="61" refid="exec_8c_1a2121a2f01c51e8462bfd4d47725649d8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_DYNAMIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="62" refid="exec_8c_1abcd3aa15bc567949c1ab6b1abc137710" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_INTERP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="63" refid="exec_8c_1a72baf87d62607c7fdccd3b8010d4ce30" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_NOTE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="64" refid="exec_8c_1abff9f38fd394e09e60f5640550a23e46" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_SHLIB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>5</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="65" refid="exec_8c_1a58ff00be749ca4000074f9b9066a1056" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_PHDR<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>6</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="66" refid="exec_8c_1acaa6971207ea507ed02f22ba574b8534" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_LOPROC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x70000000</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="67" refid="exec_8c_1a74427c5909fdced36b41134c11650249" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_HIPROC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x7FFFFFFF</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"></highlight></codeline>
-<codeline lineno="72" refid="exec_8c_1aa3ea57d3d539b6618daaaaf7af4bec80" refkind="member"><highlight class="preprocessor">#define<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58" refid="exec_8c_1a025c79223b0fee4676337d660f76b59b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_WRITE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59" refid="exec_8c_1a38476fe4ed88ac83ba86a4e103199a86" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_ALLOC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="exec_8c_1ab3780594e35fbbc6e5028bcb921d0a76" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_EXECINSTR<sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61" refid="exec_8c_1acf36e75ca9c55c229039ee298abb5bb0" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHF_MASK<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0xF0000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="exec_8c_1a854729c1dc4623abeaeb765a1b745012" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_NULL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66" refid="exec_8c_1a84d7768fd6c6ece599d297090900cf92" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_LOAD<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="exec_8c_1a2121a2f01c51e8462bfd4d47725649d8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_DYNAMIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68" refid="exec_8c_1abcd3aa15bc567949c1ab6b1abc137710" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_INTERP<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69" refid="exec_8c_1a72baf87d62607c7fdccd3b8010d4ce30" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_NOTE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="exec_8c_1abff9f38fd394e09e60f5640550a23e46" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_SHLIB<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>5</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71" refid="exec_8c_1a58ff00be749ca4000074f9b9066a1056" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_PHDR<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72" refid="exec_8c_1acaa6971207ea507ed02f22ba574b8534" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_LOPROC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x70000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73" refid="exec_8c_1a74427c5909fdced36b41134c11650249" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PT_HIPROC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x7FFFFFFF</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="74"><highlight class="normal"></highlight></codeline>
-<codeline lineno="78" refid="structelf32__hdr" refkind="compound"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structelf32__hdr" kindref="compound">elf32_hdr</ref><sp/>{</highlight></codeline>
-<codeline lineno="79" refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1ae407130db14180c6737390604ba7c1fe" kindref="member">EI_NIDENT</ref>];</highlight></codeline>
-<codeline lineno="80" refid="structelf32__hdr_1a01aab87d9a8f658d41a1162158c07878" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a01aab87d9a8f658d41a1162158c07878" kindref="member">e_type</ref>;</highlight></codeline>
-<codeline lineno="81" refid="structelf32__hdr_1ac683164e0380f6babe3f46a3a1ffdfe9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1ac683164e0380f6babe3f46a3a1ffdfe9" kindref="member">e_machine</ref>;</highlight></codeline>
-<codeline lineno="82" refid="structelf32__hdr_1a4324ae029dfd1967979b984a2f3e14e4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__hdr_1a4324ae029dfd1967979b984a2f3e14e4" kindref="member">e_version</ref>;</highlight></codeline>
-<codeline lineno="83" refid="structelf32__hdr_1aebf266c7454956ac9aca091c837f6c14" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__hdr_1aebf266c7454956ac9aca091c837f6c14" kindref="member">e_entry</ref>;</highlight></codeline>
-<codeline lineno="84" refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" kindref="member">e_phoff</ref>;</highlight></codeline>
-<codeline lineno="85" refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" kindref="member">e_shoff</ref>;</highlight></codeline>
-<codeline lineno="86" refid="structelf32__hdr_1a8695845266a8825d6cc9c04205c783f5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__hdr_1a8695845266a8825d6cc9c04205c783f5" kindref="member">e_flags</ref>;</highlight></codeline>
-<codeline lineno="87" refid="structelf32__hdr_1a3d3364b74b882c7383f11a17ddda34b2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a3d3364b74b882c7383f11a17ddda34b2" kindref="member">e_ehsize</ref>;</highlight></codeline>
-<codeline lineno="88" refid="structelf32__hdr_1a7c8f7ea4bb2789905be6dc875c1e502d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a7c8f7ea4bb2789905be6dc875c1e502d" kindref="member">e_phentsize</ref>;</highlight></codeline>
-<codeline lineno="89" refid="structelf32__hdr_1ae97c82a1bab1e0bf6de2d4ad0f6eef79" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1ae97c82a1bab1e0bf6de2d4ad0f6eef79" kindref="member">e_phnum</ref>;</highlight></codeline>
-<codeline lineno="90" refid="structelf32__hdr_1a8ca2eaada4cff245f41faa852a4a248e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a8ca2eaada4cff245f41faa852a4a248e" kindref="member">e_shentsize</ref>;</highlight></codeline>
-<codeline lineno="91" refid="structelf32__hdr_1ab7d153e79bf2dca73049268f1fcd79c6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1ab7d153e79bf2dca73049268f1fcd79c6" kindref="member">e_shnum</ref>;</highlight></codeline>
-<codeline lineno="92" refid="structelf32__hdr_1afd7ed18333923147918975fdfa4ee99a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1afd7ed18333923147918975fdfa4ee99a" kindref="member">e_shstrndx</ref>;</highlight></codeline>
-<codeline lineno="93"><highlight class="normal">}<sp/><ref refid="exec_8c_1a34edb44226509e467315e3bd81c3d7dc" kindref="member">elf32_hdr_t</ref>;</highlight></codeline>
-<codeline lineno="94"><highlight class="normal"></highlight></codeline>
-<codeline lineno="98" refid="structelf32__shdr" refkind="compound"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structelf32__shdr" kindref="compound">elf32_shdr</ref><sp/>{</highlight></codeline>
-<codeline lineno="99" refid="structelf32__shdr_1aed9d0aea452a9da6af712011a65bdc2f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1aed9d0aea452a9da6af712011a65bdc2f" kindref="member">sh_name</ref>;</highlight></codeline>
-<codeline lineno="100" refid="structelf32__shdr_1ab82e07582eb07fc53eec4dca36dddc83" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1ab82e07582eb07fc53eec4dca36dddc83" kindref="member">sh_type</ref>;</highlight></codeline>
-<codeline lineno="101" refid="structelf32__shdr_1a16f22e73ee4f9a4e8dbab7f44eaaa878" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a16f22e73ee4f9a4e8dbab7f44eaaa878" kindref="member">sh_flags</ref>;</highlight></codeline>
-<codeline lineno="102" refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>;</highlight></codeline>
-<codeline lineno="103" refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" kindref="member">sh_offset</ref>;</highlight></codeline>
-<codeline lineno="104" refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>;</highlight></codeline>
-<codeline lineno="105" refid="structelf32__shdr_1a8e1564e04f3834397b394190934f7cee" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a8e1564e04f3834397b394190934f7cee" kindref="member">sh_link</ref>;</highlight></codeline>
-<codeline lineno="106" refid="structelf32__shdr_1a7063aa23af4d41832485d03b54f01626" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a7063aa23af4d41832485d03b54f01626" kindref="member">sh_info</ref>;</highlight></codeline>
-<codeline lineno="107" refid="structelf32__shdr_1a74275f49dbae08127832dc1061ed24ab" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a74275f49dbae08127832dc1061ed24ab" kindref="member">sh_addralign</ref>;</highlight></codeline>
-<codeline lineno="108" refid="structelf32__shdr_1a0360b455d1586deda50df0adaa7a87e0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a0360b455d1586deda50df0adaa7a87e0" kindref="member">sh_entsize</ref>;</highlight></codeline>
-<codeline lineno="109"><highlight class="normal">}<sp/><ref refid="exec_8c_1ad7b97ddfcb82a63cd28a9cb88f21984a" kindref="member">elf32_shdr_t</ref>;</highlight></codeline>
-<codeline lineno="110"><highlight class="normal"></highlight></codeline>
-<codeline lineno="111"><highlight class="normal"></highlight></codeline>
-<codeline lineno="115" refid="structelf32__phdr" refkind="compound"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structelf32__phdr" kindref="compound">elf32_phdr</ref><sp/>{</highlight></codeline>
-<codeline lineno="116" refid="structelf32__phdr_1ac875c2371d8cf5e6e2084050ae6ccf73" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1ac875c2371d8cf5e6e2084050ae6ccf73" kindref="member">p_type</ref>;</highlight></codeline>
-<codeline lineno="117" refid="structelf32__phdr_1af88bab5054a39a619ff2f8a5424c3316" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__phdr_1af88bab5054a39a619ff2f8a5424c3316" kindref="member">p_offset</ref>;</highlight></codeline>
-<codeline lineno="118" refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" kindref="member">p_vaddr</ref>;</highlight></codeline>
-<codeline lineno="119" refid="structelf32__phdr_1a7a76a0d640bab3bfdbf48ffd14d40fe9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__phdr_1a7a76a0d640bab3bfdbf48ffd14d40fe9" kindref="member">p_paddr</ref>;</highlight></codeline>
-<codeline lineno="120" refid="structelf32__phdr_1a4b9173c35966a1ad03681a72ceabe291" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1a4b9173c35966a1ad03681a72ceabe291" kindref="member">p_filesz</ref>;</highlight></codeline>
-<codeline lineno="121" refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" kindref="member">p_memsz</ref>;</highlight></codeline>
-<codeline lineno="122" refid="structelf32__phdr_1a988c9108c42fa294891b5f94d60cb06e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1a988c9108c42fa294891b5f94d60cb06e" kindref="member">p_flags</ref>;</highlight></codeline>
-<codeline lineno="123" refid="structelf32__phdr_1a36b59708697a8e025409ec1a2614acdf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1a36b59708697a8e025409ec1a2614acdf" kindref="member">p_align</ref>;</highlight></codeline>
-<codeline lineno="124"><highlight class="normal">}<sp/><ref refid="exec_8c_1a6c037736a997fdd28ed9f6b734261b23" kindref="member">elf32_phdr_t</ref>;</highlight></codeline>
-<codeline lineno="125"><highlight class="normal"></highlight></codeline>
-<codeline lineno="126"><highlight class="normal"></highlight></codeline>
-<codeline lineno="132" refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" kindref="member">elf32_check</ref>(<ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*<sp/>hdr)<sp/>{</highlight></codeline>
-<codeline lineno="133"><highlight class="normal"></highlight></codeline>
-<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!hdr)<sp/>{</highlight></codeline>
-<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;<sp/></highlight></codeline>
-<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="138"><highlight class="normal"></highlight></codeline>
-<codeline lineno="139"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>check(cond)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="140"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if(cond)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="141"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>ENOEXEC;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="142"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>-1;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="143"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="144"><highlight class="normal"></highlight></codeline>
-<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" kindref="member">check</ref>(</highlight></codeline>
-<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f" kindref="member">EI_MAG0</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a8d944947af59b67d47a445ae2bef32e3" kindref="member">ELF_MAG0</ref>)<sp/>||</highlight></codeline>
-<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a2cae3878d982911632b418680718d53b" kindref="member">EI_MAG1</ref>]<sp/>!=<sp/><ref refid="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9" kindref="member">ELF_MAG1</ref>)<sp/>||</highlight></codeline>
-<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739" kindref="member">EI_MAG2</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a60668f0dfd2613d5ccccac355f147726" kindref="member">ELF_MAG2</ref>)<sp/>||</highlight></codeline>
-<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1ace03d4c5e8952e27b8505581432c3b84" kindref="member">EI_MAG3</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a40443fcac019afd6b173b8890fd25e6c" kindref="member">ELF_MAG3</ref>)</highlight></codeline>
-<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>)</highlight></codeline>
-<codeline lineno="151"><highlight class="normal"></highlight></codeline>
-<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" kindref="member">check</ref>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636" kindref="member">EI_CLASS</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69" kindref="member">ELF_CLASS_32</ref>)</highlight></codeline>
-<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" kindref="member">check</ref>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a79c714b4bf89638ff576e163d7d2144f" kindref="member">EI_DATA</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a2746b48aac96a65735bed83598d5d68a" kindref="member">ELF_DATA_LSB</ref>)</highlight></codeline>
-<codeline lineno="154"><highlight class="normal"></highlight></codeline>
-<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="156"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="157"><highlight class="normal"></highlight></codeline>
-<codeline lineno="158"><highlight class="normal"></highlight></codeline>
-<codeline lineno="166" refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" kindref="member">elf32_getspace</ref>(<ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*<sp/>hdr,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">**<sp/>ptr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">*<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" kindref="member">elf32_check</ref>(hdr)<sp/>&lt;<sp/>0)</highlight></codeline>
-<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="169"><highlight class="normal"></highlight></codeline>
-<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__phdr" kindref="compound">elf32_phdr_t</ref>*<sp/>phdr<sp/>=<sp/>(<ref refid="structelf32__phdr" kindref="compound">elf32_phdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr-&gt;<ref refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" kindref="member">e_phoff</ref><sp/>+<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr);</highlight></codeline>
-<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pn<sp/>=<sp/>hdr-&gt;e_phnum;</highlight></codeline>
-<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ps<sp/>=<sp/>hdr-&gt;e_phentsize;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76" refid="exec_8c_1a3b84f3e0e035d1264115f5c76227c5eb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF32_ST_BIND(i)<sp/><sp/><sp/><sp/>((i<sp/>&gt;&gt;<sp/>4))</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="exec_8c_1a54dd2783f11c5f926d8db9250e1baa35" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ELF32_ST_TYPE(i)<sp/><sp/><sp/><sp/>((i)<sp/>&amp;<sp/>0x0F)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82" refid="exec_8c_1aa3ea57d3d539b6618daaaaf7af4bec80" refkind="member"><highlight class="preprocessor">#define<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88" refid="structelf32__hdr" refkind="compound"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structelf32__hdr" kindref="compound">elf32_hdr</ref><sp/>{</highlight></codeline>
+<codeline lineno="89" refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1ae407130db14180c6737390604ba7c1fe" kindref="member">EI_NIDENT</ref>];</highlight></codeline>
+<codeline lineno="90" refid="structelf32__hdr_1a01aab87d9a8f658d41a1162158c07878" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a01aab87d9a8f658d41a1162158c07878" kindref="member">e_type</ref>;</highlight></codeline>
+<codeline lineno="91" refid="structelf32__hdr_1ac683164e0380f6babe3f46a3a1ffdfe9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1ac683164e0380f6babe3f46a3a1ffdfe9" kindref="member">e_machine</ref>;</highlight></codeline>
+<codeline lineno="92" refid="structelf32__hdr_1a4324ae029dfd1967979b984a2f3e14e4" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__hdr_1a4324ae029dfd1967979b984a2f3e14e4" kindref="member">e_version</ref>;</highlight></codeline>
+<codeline lineno="93" refid="structelf32__hdr_1aebf266c7454956ac9aca091c837f6c14" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__hdr_1aebf266c7454956ac9aca091c837f6c14" kindref="member">e_entry</ref>;</highlight></codeline>
+<codeline lineno="94" refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" kindref="member">e_phoff</ref>;</highlight></codeline>
+<codeline lineno="95" refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" kindref="member">e_shoff</ref>;</highlight></codeline>
+<codeline lineno="96" refid="structelf32__hdr_1a8695845266a8825d6cc9c04205c783f5" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__hdr_1a8695845266a8825d6cc9c04205c783f5" kindref="member">e_flags</ref>;</highlight></codeline>
+<codeline lineno="97" refid="structelf32__hdr_1a3d3364b74b882c7383f11a17ddda34b2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a3d3364b74b882c7383f11a17ddda34b2" kindref="member">e_ehsize</ref>;</highlight></codeline>
+<codeline lineno="98" refid="structelf32__hdr_1a7c8f7ea4bb2789905be6dc875c1e502d" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a7c8f7ea4bb2789905be6dc875c1e502d" kindref="member">e_phentsize</ref>;</highlight></codeline>
+<codeline lineno="99" refid="structelf32__hdr_1ae97c82a1bab1e0bf6de2d4ad0f6eef79" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1ae97c82a1bab1e0bf6de2d4ad0f6eef79" kindref="member">e_phnum</ref>;</highlight></codeline>
+<codeline lineno="100" refid="structelf32__hdr_1a8ca2eaada4cff245f41faa852a4a248e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1a8ca2eaada4cff245f41faa852a4a248e" kindref="member">e_shentsize</ref>;</highlight></codeline>
+<codeline lineno="101" refid="structelf32__hdr_1ab7d153e79bf2dca73049268f1fcd79c6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1ab7d153e79bf2dca73049268f1fcd79c6" kindref="member">e_shnum</ref>;</highlight></codeline>
+<codeline lineno="102" refid="structelf32__hdr_1afd7ed18333923147918975fdfa4ee99a" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__hdr_1afd7ed18333923147918975fdfa4ee99a" kindref="member">e_shstrndx</ref>;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal">}<sp/><ref refid="exec_8c_1a34edb44226509e467315e3bd81c3d7dc" kindref="member">elf32_hdr_t</ref>;</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108" refid="structelf32__shdr" refkind="compound"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structelf32__shdr" kindref="compound">elf32_shdr</ref><sp/>{</highlight></codeline>
+<codeline lineno="109" refid="structelf32__shdr_1aed9d0aea452a9da6af712011a65bdc2f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1aed9d0aea452a9da6af712011a65bdc2f" kindref="member">sh_name</ref>;</highlight></codeline>
+<codeline lineno="110" refid="structelf32__shdr_1ab82e07582eb07fc53eec4dca36dddc83" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1ab82e07582eb07fc53eec4dca36dddc83" kindref="member">sh_type</ref>;</highlight></codeline>
+<codeline lineno="111" refid="structelf32__shdr_1a16f22e73ee4f9a4e8dbab7f44eaaa878" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a16f22e73ee4f9a4e8dbab7f44eaaa878" kindref="member">sh_flags</ref>;</highlight></codeline>
+<codeline lineno="112" refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>;</highlight></codeline>
+<codeline lineno="113" refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" kindref="member">sh_offset</ref>;</highlight></codeline>
+<codeline lineno="114" refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>;</highlight></codeline>
+<codeline lineno="115" refid="structelf32__shdr_1a8e1564e04f3834397b394190934f7cee" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a8e1564e04f3834397b394190934f7cee" kindref="member">sh_link</ref>;</highlight></codeline>
+<codeline lineno="116" refid="structelf32__shdr_1a7063aa23af4d41832485d03b54f01626" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a7063aa23af4d41832485d03b54f01626" kindref="member">sh_info</ref>;</highlight></codeline>
+<codeline lineno="117" refid="structelf32__shdr_1a74275f49dbae08127832dc1061ed24ab" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a74275f49dbae08127832dc1061ed24ab" kindref="member">sh_addralign</ref>;</highlight></codeline>
+<codeline lineno="118" refid="structelf32__shdr_1a0360b455d1586deda50df0adaa7a87e0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__shdr_1a0360b455d1586deda50df0adaa7a87e0" kindref="member">sh_entsize</ref>;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal">}<sp/><ref refid="exec_8c_1ad7b97ddfcb82a63cd28a9cb88f21984a" kindref="member">elf32_shdr_t</ref>;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125" refid="structelf32__phdr" refkind="compound"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structelf32__phdr" kindref="compound">elf32_phdr</ref><sp/>{</highlight></codeline>
+<codeline lineno="126" refid="structelf32__phdr_1ac875c2371d8cf5e6e2084050ae6ccf73" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1ac875c2371d8cf5e6e2084050ae6ccf73" kindref="member">p_type</ref>;</highlight></codeline>
+<codeline lineno="127" refid="structelf32__phdr_1af88bab5054a39a619ff2f8a5424c3316" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a655751f9b317369b93c581ea8ed84516" kindref="member">Elf32_Off</ref><sp/><ref refid="structelf32__phdr_1af88bab5054a39a619ff2f8a5424c3316" kindref="member">p_offset</ref>;</highlight></codeline>
+<codeline lineno="128" refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" kindref="member">p_vaddr</ref>;</highlight></codeline>
+<codeline lineno="129" refid="structelf32__phdr_1a7a76a0d640bab3bfdbf48ffd14d40fe9" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__phdr_1a7a76a0d640bab3bfdbf48ffd14d40fe9" kindref="member">p_paddr</ref>;</highlight></codeline>
+<codeline lineno="130" refid="structelf32__phdr_1a4b9173c35966a1ad03681a72ceabe291" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1a4b9173c35966a1ad03681a72ceabe291" kindref="member">p_filesz</ref>;</highlight></codeline>
+<codeline lineno="131" refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" kindref="member">p_memsz</ref>;</highlight></codeline>
+<codeline lineno="132" refid="structelf32__phdr_1a988c9108c42fa294891b5f94d60cb06e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1a988c9108c42fa294891b5f94d60cb06e" kindref="member">p_flags</ref>;</highlight></codeline>
+<codeline lineno="133" refid="structelf32__phdr_1a36b59708697a8e025409ec1a2614acdf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__phdr_1a36b59708697a8e025409ec1a2614acdf" kindref="member">p_align</ref>;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal">}<sp/><ref refid="exec_8c_1a6c037736a997fdd28ed9f6b734261b23" kindref="member">elf32_phdr_t</ref>;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140" refid="structelf32__sym__t" refkind="compound"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structelf32__sym__t" kindref="compound">elf32_sym_t</ref><sp/>{</highlight></codeline>
+<codeline lineno="141" refid="structelf32__sym__t_1a232decf1719e5b3c2710f36527196ee0" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__sym__t_1a232decf1719e5b3c2710f36527196ee0" kindref="member">st_name</ref>;</highlight></codeline>
+<codeline lineno="142" refid="structelf32__sym__t_1ae0b3ec7941f44c78c2328c7071144062" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref><sp/><ref refid="structelf32__sym__t_1ae0b3ec7941f44c78c2328c7071144062" kindref="member">st_value</ref>;</highlight></codeline>
+<codeline lineno="143" refid="structelf32__sym__t_1a2ab0bc42b4be7785283d7a9c8529c6fd" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref><sp/><ref refid="structelf32__sym__t_1a2ab0bc42b4be7785283d7a9c8529c6fd" kindref="member">st_size</ref>;</highlight></codeline>
+<codeline lineno="144" refid="structelf32__sym__t_1a6d8d3d0c4c824b83847583591b9a13e2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structelf32__sym__t_1a6d8d3d0c4c824b83847583591b9a13e2" kindref="member">st_info</ref>;</highlight></codeline>
+<codeline lineno="145" refid="structelf32__sym__t_1a7e4c7a5bc8b91ec5cdabbde350b5623e" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structelf32__sym__t_1a7e4c7a5bc8b91ec5cdabbde350b5623e" kindref="member">st_other</ref>;</highlight></codeline>
+<codeline lineno="146" refid="structelf32__sym__t_1a4c80a4806fb05b61db91827dc13f0666" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref><sp/><ref refid="structelf32__sym__t_1a4c80a4806fb05b61db91827dc13f0666" kindref="member">st_shndx</ref>;</highlight></codeline>
+<codeline lineno="147"><highlight class="normal">}<sp/><ref refid="exec_8c_1a0a07204ebf864bb143d95b4525e80938" kindref="member">elf32_sym_t</ref>;</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"></highlight></codeline>
+<codeline lineno="154" refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" kindref="member">elf32_check</ref>(<ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*<sp/>hdr)<sp/>{</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!hdr)<sp/>{</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;<sp/></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"></highlight><highlight class="preprocessor"><sp/><sp/><sp/><sp/>#define<sp/>check(cond)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="162"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>if(cond)<sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="163"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>errno<sp/>=<sp/>ENOEXEC;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="164"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>return<sp/>-1;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="165"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" kindref="member">check</ref>(</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1aba717f40a418b0d99c2efd4cdab4f54f" kindref="member">EI_MAG0</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a8d944947af59b67d47a445ae2bef32e3" kindref="member">ELF_MAG0</ref>)<sp/>||</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a2cae3878d982911632b418680718d53b" kindref="member">EI_MAG1</ref>]<sp/>!=<sp/><ref refid="exec_8c_1abdd5eae694123f4e5e0a5449b3591cc9" kindref="member">ELF_MAG1</ref>)<sp/>||</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a2884a339ef7aefee59d160ed3fbb1739" kindref="member">EI_MAG2</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a60668f0dfd2613d5ccccac355f147726" kindref="member">ELF_MAG2</ref>)<sp/>||</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1ace03d4c5e8952e27b8505581432c3b84" kindref="member">EI_MAG3</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a40443fcac019afd6b173b8890fd25e6c" kindref="member">ELF_MAG3</ref>)</highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/>)</highlight></codeline>
 <codeline lineno="173"><highlight class="normal"></highlight></codeline>
-<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>s<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" kindref="member">check</ref>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a5b508cacf6662e4bc0e98ffe1eb61636" kindref="member">EI_CLASS</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a49574a2fb2e62bcff73812b26da8fe69" kindref="member">ELF_CLASS_32</ref>)</highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="exec_8c_1a9b7ee5bbb263671ca310a70e0d1526e9" kindref="member">check</ref>(hdr-&gt;<ref refid="structelf32__hdr_1a47cad02c87b35eab4d8fda5f3f0fefd4" kindref="member">e_ident</ref>[<ref refid="exec_8c_1a79c714b4bf89638ff576e163d7d2144f" kindref="member">EI_DATA</ref>]<sp/>!=<sp/><ref refid="exec_8c_1a2746b48aac96a65735bed83598d5d68a" kindref="member">ELF_DATA_LSB</ref>)</highlight></codeline>
 <codeline lineno="176"><highlight class="normal"></highlight></codeline>
-<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>pn;<sp/>i++)<sp/>{</highlight></codeline>
-<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!p<sp/>||<sp/>p<sp/>&gt;<sp/>phdr-&gt;<ref refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" kindref="member">p_vaddr</ref>)</highlight></codeline>
-<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>p<sp/>=<sp/>phdr-&gt;<ref refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" kindref="member">p_vaddr</ref>;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"></highlight></codeline>
 <codeline lineno="180"><highlight class="normal"></highlight></codeline>
-<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>+=<sp/>phdr-&gt;<ref refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" kindref="member">p_memsz</ref>;</highlight></codeline>
-<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>phdr<sp/>=<sp/>(<ref refid="structelf32__phdr" kindref="compound">elf32_phdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>phdr<sp/>+<sp/>ps);</highlight></codeline>
-<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="184"><highlight class="normal"></highlight></codeline>
-<codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(s<sp/>&lt;<sp/><ref refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" kindref="member">ELF32_ADDRSPACE_MIN_LENGTH</ref>)</highlight></codeline>
-<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>=<sp/><ref refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" kindref="member">ELF32_ADDRSPACE_MIN_LENGTH</ref>;</highlight></codeline>
-<codeline lineno="187"><highlight class="normal"></highlight></codeline>
-<codeline lineno="188"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>address<sp/>space<sp/>at<sp/>0x%x<sp/>(%d<sp/>Bytes)\n&quot;</highlight><highlight class="normal">,<sp/>p,<sp/>s);</highlight></codeline>
-<codeline lineno="190"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="188" refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" kindref="member">elf32_getspace</ref>(<ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*<sp/>hdr,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">**<sp/>ptr,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">*<sp/><ref refid="iso9660_8h_1ae5dc6ffcd9b7605c7787791e40cc6bb0" kindref="member">size</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" kindref="member">elf32_check</ref>(hdr)<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="191"><highlight class="normal"></highlight></codeline>
-<codeline lineno="192"><highlight class="normal"></highlight></codeline>
-<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ptr)</highlight></codeline>
-<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*ptr<sp/>=<sp/>p;</highlight></codeline>
+<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__phdr" kindref="compound">elf32_phdr_t</ref>*<sp/>phdr<sp/>=<sp/>(<ref refid="structelf32__phdr" kindref="compound">elf32_phdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr-&gt;<ref refid="structelf32__hdr_1a88337612d820200d75185c304124ad24" kindref="member">e_phoff</ref><sp/>+<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr);</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pn<sp/>=<sp/>hdr-&gt;e_phnum;</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ps<sp/>=<sp/>hdr-&gt;e_phentsize;</highlight></codeline>
 <codeline lineno="195"><highlight class="normal"></highlight></codeline>
-<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size)</highlight></codeline>
-<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*size<sp/>=<sp/>s;</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>p<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>s<sp/>=<sp/>0;</highlight></codeline>
 <codeline lineno="198"><highlight class="normal"></highlight></codeline>
-<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="200"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="201"><highlight class="normal"></highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>pn;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!p<sp/>||<sp/>p<sp/>&gt;<sp/>phdr-&gt;<ref refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" kindref="member">p_vaddr</ref>)</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>p<sp/>=<sp/>phdr-&gt;<ref refid="structelf32__phdr_1a4ce34fb0d117afd27046b923756faa11" kindref="member">p_vaddr</ref>;</highlight></codeline>
 <codeline lineno="202"><highlight class="normal"></highlight></codeline>
-<codeline lineno="210" refid="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" kindref="member">elf32_load</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>image,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>vaddr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>vsize)<sp/>{</highlight></codeline>
-<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(image<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
-<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="215"><highlight class="normal"></highlight></codeline>
-<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" kindref="member">elf32_check</ref>(image)<sp/>&lt;<sp/>0)</highlight></codeline>
-<codeline lineno="217"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="218"><highlight class="normal"></highlight></codeline>
-<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*<sp/>hdr<sp/>=<sp/>(<ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*)<sp/>image;</highlight></codeline>
+<codeline lineno="203"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>+=<sp/>phdr-&gt;<ref refid="structelf32__phdr_1af44d75db8b3ebcfa04742e55b49e7eb6" kindref="member">p_memsz</ref>;</highlight></codeline>
+<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>phdr<sp/>=<sp/>(<ref refid="structelf32__phdr" kindref="compound">elf32_phdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>phdr<sp/>+<sp/>ps);</highlight></codeline>
+<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"></highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(s<sp/>&lt;<sp/><ref refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" kindref="member">ELF32_ADDRSPACE_MIN_LENGTH</ref>)</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>s<sp/>=<sp/><ref refid="exec_8c_1ac12ef0a698cec32392148178e777a3a4" kindref="member">ELF32_ADDRSPACE_MIN_LENGTH</ref>;</highlight></codeline>
+<codeline lineno="209"><highlight class="normal"></highlight></codeline>
+<codeline lineno="210"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>address<sp/>space<sp/>at<sp/>0x%x<sp/>(%d<sp/>Bytes)\n&quot;</highlight><highlight class="normal">,<sp/>p,<sp/>s);</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="213"><highlight class="normal"></highlight></codeline>
+<codeline lineno="214"><highlight class="normal"></highlight></codeline>
+<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ptr)</highlight></codeline>
+<codeline lineno="216"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*ptr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>p;</highlight></codeline>
+<codeline lineno="217"><highlight class="normal"></highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(size)</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*size<sp/>=<sp/>s;</highlight></codeline>
 <codeline lineno="220"><highlight class="normal"></highlight></codeline>
-<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>iptr,<sp/>isiz;</highlight></codeline>
-<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" kindref="member">elf32_getspace</ref>(hdr,<sp/>&amp;iptr,<sp/>&amp;isiz)<sp/>!=<sp/>0)</highlight></codeline>
-<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>cannot<sp/>found<sp/>a<sp/>valid<sp/>address<sp/>space&quot;</highlight><highlight class="normal">);<sp/></highlight></codeline>
-<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1aebed4a90dd887506ed125f9efb953c93" kindref="member">vmm_alloc</ref>(iptr,<sp/>isiz,<sp/><ref refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" kindref="member">VMM_FLAGS_DEFAULT</ref><sp/>|<sp/><ref refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" kindref="member">VMM_FLAGS_USER</ref>);</highlight></codeline>
-<codeline lineno="225"><highlight class="normal"></highlight></codeline>
-<codeline lineno="226"><highlight class="normal"></highlight></codeline>
-<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(vaddr)</highlight></codeline>
-<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*vaddr<sp/>=<sp/>iptr;</highlight></codeline>
-<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(vsize)</highlight></codeline>
-<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*vsize<sp/>=<sp/>isiz;</highlight></codeline>
-<codeline lineno="231"><highlight class="normal"></highlight></codeline>
-<codeline lineno="232"><highlight class="normal"></highlight></codeline>
-<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*<sp/>sec<sp/>=<sp/>(<ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr-&gt;<ref refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" kindref="member">e_shoff</ref><sp/>+<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr);</highlight></codeline>
-<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sn<sp/>=<sp/>hdr-&gt;e_shnum;</highlight></codeline>
-<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ss<sp/>=<sp/>hdr-&gt;e_shentsize;</highlight></codeline>
+<codeline lineno="221"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="222"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"></highlight></codeline>
+<codeline lineno="224"><highlight class="normal"></highlight></codeline>
+<codeline lineno="232" refid="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926" kindref="member">elf32_load</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>image,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>vaddr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">*<sp/>vsize)<sp/>{</highlight></codeline>
+<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(image<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="234"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="236"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="237"><highlight class="normal"></highlight></codeline>
-<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>sn;<sp/>i++)<sp/>{</highlight></codeline>
-<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="240"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref><sp/>&amp;&amp;<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" kindref="member">sh_offset</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="241"><highlight class="normal"></highlight></codeline>
-<codeline lineno="242"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>copy<sp/>section<sp/>to<sp/>0x%8x<sp/>(%d<sp/>Bytes)\n&quot;</highlight><highlight class="normal">,<sp/>sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>,<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>);</highlight></codeline>
-<codeline lineno="244"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="exec_8c_1a2dc58db2f806ea913fdcb272f8ca618a" kindref="member">elf32_check</ref>(image)<sp/>&lt;<sp/>0)</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"></highlight></codeline>
+<codeline lineno="241"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*<sp/>hdr<sp/>=<sp/>(<ref refid="structelf32__hdr" kindref="compound">elf32_hdr_t</ref>*)<sp/>image;</highlight></codeline>
+<codeline lineno="242"><highlight class="normal"></highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>iptr,<sp/>isiz;</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="exec_8c_1acfcbb641f4d43807d78c5f37bff2e9bc" kindref="member">elf32_getspace</ref>(hdr,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">**)<sp/>&amp;iptr,<sp/>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">*)<sp/>&amp;isiz)<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>cannot<sp/>found<sp/>a<sp/>valid<sp/>address<sp/>space&quot;</highlight><highlight class="normal">);<sp/></highlight></codeline>
 <codeline lineno="246"><highlight class="normal"></highlight></codeline>
-<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref><sp/>+<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>)<sp/>&lt;<sp/><ref refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" kindref="member">MM_UBASE</ref><sp/>||<sp/>(sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref><sp/>+<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>)<sp/>&gt;<sp/>(<ref refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" kindref="member">MM_UBASE</ref><sp/>+<sp/><ref refid="mm_8h_1a600b21bbb74401132349a1325dadfdbe" kindref="member">MM_USIZE</ref>))</highlight></codeline>
-<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>section<sp/>overflow&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr<sp/>+<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" kindref="member">sh_offset</ref>),<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>);</highlight></codeline>
-<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="253"><highlight class="normal"></highlight></codeline>
-<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sec<sp/>=<sp/>(<ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>sec<sp/>+<sp/>ss);</highlight></codeline>
-<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" kindref="member">schedule_release</ref>(current_task);</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" kindref="member">vmm_alloc</ref>(current_task-&gt;<ref refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1" kindref="member">context</ref>.<ref refid="structtask_1a5f4968459d4640f19c7e802ae7057179" kindref="member">cr3</ref>,<sp/>iptr,<sp/>isiz,<sp/><ref refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" kindref="member">VMM_FLAGS_DEFAULT</ref><sp/>|<sp/><ref refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" kindref="member">VMM_FLAGS_USER</ref>);</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"></highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(vaddr)</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*vaddr<sp/>=<sp/>iptr;</highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(vsize)</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*vsize<sp/>=<sp/>isiz;</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"></highlight></codeline>
 <codeline lineno="256"><highlight class="normal"></highlight></codeline>
-<codeline lineno="257"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>entrypoint<sp/>at<sp/>0x%8x\n&quot;</highlight><highlight class="normal">,<sp/>hdr-&gt;e_entry);</highlight></codeline>
-<codeline lineno="259"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="260"><highlight class="normal"></highlight></codeline>
-<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>hdr-&gt;e_entry;</highlight></codeline>
-<codeline lineno="262"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="263"><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*<sp/>sec<sp/>=<sp/>(<ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr-&gt;<ref refid="structelf32__hdr_1afd8ce4ec0f05960b2306f98625be6db0" kindref="member">e_shoff</ref><sp/>+<sp/>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr);</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="259"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sn<sp/>=<sp/>hdr-&gt;e_shnum;</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ss<sp/>=<sp/>hdr-&gt;e_shentsize;</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"></highlight></codeline>
+<codeline lineno="262"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>sn;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref><sp/>&amp;&amp;<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" kindref="member">sh_offset</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="264"><highlight class="normal"></highlight></codeline>
-<codeline lineno="265"><highlight class="normal"></highlight></codeline>
+<codeline lineno="265"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>copy<sp/>section<sp/>to<sp/>0x%8x<sp/>[%d]<sp/>(%d<sp/>Bytes)\n&quot;</highlight><highlight class="normal">,<sp/>sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>,<sp/>sec-&gt;<ref refid="structelf32__shdr_1ab82e07582eb07fc53eec4dca36dddc83" kindref="member">sh_type</ref>,<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>);</highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"></highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref><sp/>+<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>)<sp/>&lt;<sp/><ref refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" kindref="member">MM_UBASE</ref><sp/>||<sp/>(sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref><sp/>+<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>)<sp/>&gt;<sp/>(<ref refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" kindref="member">MM_UBASE</ref><sp/>+<sp/><ref refid="mm_8h_1a600b21bbb74401132349a1325dadfdbe" kindref="member">MM_USIZE</ref>))</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>section<sp/>overflow&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memcpy((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>hdr<sp/>+<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4dea3a6fbd3a62a649d327b515c70cd6" kindref="member">sh_offset</ref>),<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>);</highlight></codeline>
+<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(sec-&gt;<ref refid="structelf32__shdr_1ab82e07582eb07fc53eec4dca36dddc83" kindref="member">sh_type</ref><sp/>==<sp/><ref refid="exec_8c_1a820ff00317949be2ea1fd634a17dc13e" kindref="member">SHT_NOBITS</ref>)</highlight></codeline>
+<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memset((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>sec-&gt;<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>,<sp/>0,<sp/>sec-&gt;<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>);</highlight></codeline>
+<codeline lineno="277"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="278"><highlight class="normal"></highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>sec<sp/>=<sp/>(<ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>sec<sp/>+<sp/>ss);</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"></highlight></codeline>
+<codeline lineno="282"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>ELF_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;elf:<sp/>entrypoint<sp/>at<sp/>0x%8x\n&quot;</highlight><highlight class="normal">,<sp/>hdr-&gt;e_entry);</highlight></codeline>
+<codeline lineno="284"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="285"><highlight class="normal"></highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>hdr-&gt;e_entry;</highlight></codeline>
+<codeline lineno="287"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"></highlight></codeline>
+<codeline lineno="289"><highlight class="normal"></highlight></codeline>
+<codeline lineno="290"><highlight class="normal"></highlight></codeline>
+<codeline lineno="291" refid="exec_8c_1ac79bb43069a3d3c097c8d95dcf0c2784" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="exec_8c_1ac79bb43069a3d3c097c8d95dcf0c2784" kindref="member">elf_kernel_lookup</ref>(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>symaddr)<sp/>{</highlight></codeline>
+<codeline lineno="292"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*<sp/>shdr<sp/>=<sp/>(<ref refid="structelf32__shdr" kindref="compound">elf32_shdr_t</ref>*)<sp/><ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1ac0a248c150ec1bceaafc488988174a1d" kindref="member">addr</ref>;</highlight></codeline>
+<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>shstrtab<sp/>=<sp/>shdr[<ref refid="grub_8h_1abac514a5a8c938a1de6fb08f542f5962" kindref="member">mbd</ref>-&gt;<ref refid="structBootInfo__t_1ab2c8b3b8778032a87c0c2fe73245e9e8" kindref="member">shndx</ref>].<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>;</highlight></codeline>
+<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="296"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>strtab<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="297"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structelf32__sym__t" kindref="compound">elf32_sym_t</ref>*<sp/>symtab<sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"></highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/>symtabsz<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"></highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>mbd-&gt;num;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref><sp/>=<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>(shstrtab<sp/>+<sp/>shdr[i].sh_name);</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"></highlight></codeline>
+<codeline lineno="304"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;.strtab&quot;</highlight><highlight class="normal">)<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>strtab<sp/>=<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>shdr[i].<ref refid="structelf32__shdr_1a7054ce2ce815d205d451bfe7ce2e145e" kindref="member">sh_addr</ref>;</highlight></codeline>
+<codeline lineno="306"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="307"><highlight class="normal"></highlight></codeline>
+<codeline lineno="308"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(strcmp(name,<sp/></highlight><highlight class="stringliteral">&quot;.symtab&quot;</highlight><highlight class="normal">)<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="309"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>symtab<sp/>=<sp/>(<ref refid="structelf32__sym__t" kindref="compound">elf32_sym_t</ref>*)<sp/>shdr[i].sh_addr;</highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>symtabsz<sp/>=<sp/>shdr[i].<ref refid="structelf32__shdr_1a4addb97e16e7303912fc84daa6f3ac77" kindref="member">sh_size</ref>;</highlight></codeline>
+<codeline lineno="311"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="312"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="313"><highlight class="normal"></highlight></codeline>
+<codeline lineno="314"><highlight class="normal"></highlight></codeline>
+<codeline lineno="315"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>(symtabsz<sp/>/<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="exec_8c_1a0a07204ebf864bb143d95b4525e80938" kindref="member">elf32_sym_t</ref>));<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="316"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="exec_8c_1a54dd2783f11c5f926d8db9250e1baa35" kindref="member">ELF32_ST_TYPE</ref>(symtab[i].st_info)<sp/>!=<sp/>0x02)</highlight></codeline>
+<codeline lineno="317"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="318"><highlight class="normal"></highlight></codeline>
+<codeline lineno="319"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((symaddr<sp/>&gt;=<sp/>symtab[i].st_value)<sp/>&amp;&amp;<sp/>(symaddr<sp/>&lt;<sp/>(symtab[i].st_value<sp/>+<sp/>symtab[i].st_size)))<sp/>{</highlight></codeline>
+<codeline lineno="320"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/><ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref><sp/>=<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>strtab<sp/>+<sp/>symtab[i].st_name);</highlight></codeline>
+<codeline lineno="321"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*)<sp/><ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref>;</highlight></codeline>
+<codeline lineno="322"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="324"><highlight class="normal"></highlight></codeline>
+<codeline lineno="325"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="326"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="327"><highlight class="normal"></highlight></codeline>
+<codeline lineno="328"><highlight class="normal"></highlight></codeline>
+<codeline lineno="329"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/exec.c"/>
   </compounddef>

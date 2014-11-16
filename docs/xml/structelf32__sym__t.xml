@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structelf32__sym__t" kind="struct" prot="public">
+    <compoundname>elf32_sym_t</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structelf32__sym__t_1a232decf1719e5b3c2710f36527196ee0" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_sym_t::st_name</definition>
+        <argsstring></argsstring>
+        <name>st_name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="141" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__sym__t_1ae0b3ec7941f44c78c2328c7071144062" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a40c6d4571e6001f443cc6a6474620158" kindref="member">Elf32_Addr</ref></type>
+        <definition>Elf32_Addr elf32_sym_t::st_value</definition>
+        <argsstring></argsstring>
+        <name>st_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="142" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__sym__t_1a2ab0bc42b4be7785283d7a9c8529c6fd" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1af5924ece606c732e86f8263a19408e45" kindref="member">Elf32_Word</ref></type>
+        <definition>Elf32_Word elf32_sym_t::st_size</definition>
+        <argsstring></argsstring>
+        <name>st_size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="143" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__sym__t_1a6d8d3d0c4c824b83847583591b9a13e2" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t elf32_sym_t::st_info</definition>
+        <argsstring></argsstring>
+        <name>st_info</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="144" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__sym__t_1a7e4c7a5bc8b91ec5cdabbde350b5623e" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t elf32_sym_t::st_other</definition>
+        <argsstring></argsstring>
+        <name>st_other</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="145" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="145" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structelf32__sym__t_1a4c80a4806fb05b61db91827dc13f0666" prot="public" static="no" mutable="no">
+        <type><ref refid="exec_8c_1a2ff0787d7d1bae0f251192806a2974ca" kindref="member">Elf32_Half</ref></type>
+        <definition>Elf32_Half elf32_sym_t::st_shndx</definition>
+        <argsstring></argsstring>
+        <name>st_shndx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/exec.c" line="146" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="146" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>ELF32 Symbol. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="47">
+        <label>elf32_sym_t</label>
+        <link refid="structelf32__sym__t"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/src/exec.c" line="140" column="1" bodyfile="/opt/prj/aPlus/src/exec.c" bodystart="140" bodyend="147"/>
+    <listofallmembers>
+      <member refid="structelf32__sym__t_1a6d8d3d0c4c824b83847583591b9a13e2" prot="public" virt="non-virtual"><scope>elf32_sym_t</scope><name>st_info</name></member>
+      <member refid="structelf32__sym__t_1a232decf1719e5b3c2710f36527196ee0" prot="public" virt="non-virtual"><scope>elf32_sym_t</scope><name>st_name</name></member>
+      <member refid="structelf32__sym__t_1a7e4c7a5bc8b91ec5cdabbde350b5623e" prot="public" virt="non-virtual"><scope>elf32_sym_t</scope><name>st_other</name></member>
+      <member refid="structelf32__sym__t_1a4c80a4806fb05b61db91827dc13f0666" prot="public" virt="non-virtual"><scope>elf32_sym_t</scope><name>st_shndx</name></member>
+      <member refid="structelf32__sym__t_1a2ab0bc42b4be7785283d7a9c8529c6fd" prot="public" virt="non-virtual"><scope>elf32_sym_t</scope><name>st_size</name></member>
+      <member refid="structelf32__sym__t_1ae0b3ec7941f44c78c2328c7071144062" prot="public" virt="non-virtual"><scope>elf32_sym_t</scope><name>st_value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

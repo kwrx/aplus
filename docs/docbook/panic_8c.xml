@@ -3,28 +3,10 @@
     <title>panic.c File Reference</title>
     <programlisting>#include &lt;aplus.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/list.h&gt;</programlisting>
     <programlisting>#include &lt;errno.h&gt;</programlisting>
-        <simplesect>
-            <title>Defines</title>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                            <para>#define <link linkend="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</link> ;								\
-		<link linkend="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a">kprintf</link>(#reg &quot;: 0x%x\t\t&quot;, read_##reg());</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                            <para>#define <link linkend="panic_8c_1ab3c4239b206cb78bc5b3daeafbc15724">_d</link> ;								\
-		<link linkend="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a">kprintf</link>(&quot;\n&quot;);</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-        </simplesect>
         <simplesect>
             <title>Variables</title>
             <para>
@@ -62,8 +44,8 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>static void <link linkend="panic_8c_1ad829ba2d1c19b556fd15c8eda84f06fa">dump_registers</link> (
-)</para>
+                        <para>static void <link linkend="panic_8c_1a20563f9e0fecc6db792f5b9308309272">dump_cpu</link> (
+regs_t * r)</para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -80,6 +62,22 @@ int count)</para>
                     <listitem>
                         <para>static void <link linkend="panic_8c_1a47abc582d3a8eb4889d5dafb009bdc20">dump_task</link> (
 )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void <link linkend="panic_8c_1a9e0d1c1bd35fd6b517160ba5abcf6681">dump_mmu</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="panic_8c_1a0becae034664f94c1553072830270ecb">panic_r</link> (
+char * msg, regs_t * r)</para>
                     </listitem>
                 </itemizedlist>
             </para>

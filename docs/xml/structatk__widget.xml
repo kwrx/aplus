@@ -153,17 +153,17 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="14">
+      <node id="21">
         <label>__atk_widget_private</label>
         <link refid="struct____atk__widget__private"/>
       </node>
-      <node id="13">
+      <node id="20">
         <label>atk_widget</label>
         <link refid="structatk__widget"/>
-        <childnode refid="14" relation="usage">
+        <childnode refid="21" relation="usage">
           <edgelabel>+__data</edgelabel>
         </childnode>
-        <childnode refid="13" relation="usage">
+        <childnode refid="20" relation="usage">
           <edgelabel>+parent</edgelabel>
         </childnode>
       </node>

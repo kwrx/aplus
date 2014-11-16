@@ -63,29 +63,34 @@ References pthread\+\_\+context\+::entry, pthread\+\_\+context\+::param, and pth
 )}}\label{pthread__create_8c_acbbda48de9905dc1d40c073a89b66e62}
 
 
-Definition at line 12 of file pthread\+\_\+queue.\+c.
+Definition at line 24 of file pthread\+\_\+queue.\+c.
 
 
 
-References \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, pthread\+\_\+context\+::attr, pthread\+\_\+context\+::cond, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+once\+::started, and pthread\+\_\+context\+::tid.
+References \+\_\+\+\_\+current\+\_\+thread, \+\_\+\+\_\+os\+\_\+gettid, \+\_\+\+\_\+pthread\+\_\+dnit(), pthread\+\_\+context\+::attr, pthread\+\_\+context\+::cond, pthread\+\_\+once\+::done, pthread\+\_\+context\+::entry, pthread\+\_\+context\+::exitval, pthread\+\_\+context\+::next, pthread\+\_\+context\+::once, pthread\+\_\+context\+::param, pthread\+\_\+once\+::started, and pthread\+\_\+context\+::tid.
 
 
 \begin{DoxyCode}
-12                                    \{
-13     \textcolor{keywordflow}{if}(\hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a5b7aa396dbf3c140b1a54f09568c8253}{tid})
-14         \textcolor{keywordflow}{return};
-15 
-16     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a5b7aa396dbf3c140b1a54f09568c8253}{tid} = \hyperlink{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\_\_os\_gettid}();
-17     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a688eabe4cd81d34bed6c73abd442f54a}{entry} = NULL;
-18     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_afb0244aa84b0403cc0df2cd6ebdb94b4}{param} = NULL;
-19     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_ab2848ec5b075681f217e57545f986c1b}{exitval} = NULL;
-20     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a33f7f059b1d0cda2a8675d13600b6dd2}{once}.\hyperlink{structpthread__once_acffdc3852414e4eeece3c8e7cf80ffc1}{done} = 0;
-21     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a33f7f059b1d0cda2a8675d13600b6dd2}{once}.\hyperlink{structpthread__once_a2bebfebb49a5c75d10119824d5bba93c}{started} = -1;
-22     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_ace03687a8a5dc35db9e23fdc96bf0667}{cond} = NULL;
-23     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a876fe0d5cfa5b9886c90e5936b98f992}{next} = NULL;
-24 
-25     memset(&\hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a63e797747884670222fc0ea6fdf801fd}{attr}, 0, \textcolor{keyword}{sizeof}(\hyperlink{structpthread__attr}{pthread\_attr\_t}));
-26 \}
+24                                    \{
+25     \textcolor{keyword}{static} \textcolor{keywordtype}{int} init = 0;
+26     \textcolor{keywordflow}{if}(init)
+27         \textcolor{keywordflow}{return};
+28 
+29     init++;
+30 
+31     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a5b7aa396dbf3c140b1a54f09568c8253}{tid} = \hyperlink{posix_2hooks_8h_a20babf330fa9904ff336e8b41720991d}{\_\_os\_gettid}();
+32     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a688eabe4cd81d34bed6c73abd442f54a}{entry} = NULL;
+33     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_afb0244aa84b0403cc0df2cd6ebdb94b4}{param} = NULL;
+34     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_ab2848ec5b075681f217e57545f986c1b}{exitval} = NULL;
+35     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a33f7f059b1d0cda2a8675d13600b6dd2}{once}.\hyperlink{structpthread__once_acffdc3852414e4eeece3c8e7cf80ffc1}{done} = 0;
+36     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a33f7f059b1d0cda2a8675d13600b6dd2}{once}.\hyperlink{structpthread__once_a2bebfebb49a5c75d10119824d5bba93c}{started} = -1;
+37     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_ace03687a8a5dc35db9e23fdc96bf0667}{cond} = NULL;
+38     \hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a876fe0d5cfa5b9886c90e5936b98f992}{next} = NULL;
+39 
+40     memset(&\hyperlink{pthread__queue_8c_a96a17a802de12eb8e0ab0700ce2d2c13}{\_\_current\_thread}.\hyperlink{structpthread__context_a63e797747884670222fc0ea6fdf801fd}{attr}, 0, \textcolor{keyword}{sizeof}(\hyperlink{structpthread__attr}{pthread\_attr\_t}));
+41 
+42     atexit(\hyperlink{pthread__queue_8c_a137732a2c963fc23b1b66a5bf1087067}{\_\_pthread\_dnit});
+43 \}
 \end{DoxyCode}
 \hypertarget{pthread__create_8c_a5b3939ca5fcdea47fb64229f75a00470}{\index{pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}!pthread\+\_\+create@{pthread\+\_\+create}}
 \index{pthread\+\_\+create@{pthread\+\_\+create}!pthread\+\_\+create.\+c@{pthread\+\_\+create.\+c}}
@@ -114,12 +119,12 @@ References \+\_\+\+\_\+os\+\_\+thread\+\_\+create, \+\_\+\+\_\+pthread\+\_\+coun
 40 
 41     \textcolor{keywordflow}{if}(!thread) \{
 42         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-43         \textcolor{keywordflow}{return} 1;
+43         \textcolor{keywordflow}{return} -1;
 44     \}
 45 
 46     \textcolor{keywordflow}{if}(\hyperlink{pthread__create_8c_ac693b080a510247dfaf444249c2e78b2}{\_\_pthread\_counts} > \hyperlink{pthread__internal_8h_ab8f25dec585d6255fcf40b67db66c1c5}{PTHREAD\_THREADS\_MAX}) \{
 47         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EAGAIN;
-48         \textcolor{keywordflow}{return} 1;
+48         \textcolor{keywordflow}{return} -1;
 49     \}
 50 
 51     \hyperlink{structpthread__context}{pthread\_context\_t}* ctx = malloc(\textcolor{keyword}{sizeof}(\hyperlink{structpthread__context}{pthread\_context\_t}));

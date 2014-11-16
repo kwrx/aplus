@@ -1,0 +1,55 @@
+\hypertarget{usr_2src_2libposix_2src_2tty_8c}{\section{usr/src/libposix/src/tty.c File Reference}
+\label{usr_2src_2libposix_2src_2tty_8c}\index{usr/src/libposix/src/tty.\+c@{usr/src/libposix/src/tty.\+c}}
+}
+{\ttfamily \#include $<$termios.\+h$>$}\\*
+{\ttfamily \#include $<$sys/ioctl.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+pid\+\_\+t \hyperlink{usr_2src_2libposix_2src_2tty_8c_a30c3edb2b02399d64b5e8eaaf7fe40e6}{tcgetpgrp} (int fd)
+\item 
+int \hyperlink{usr_2src_2libposix_2src_2tty_8c_affb89581103fbd19d7ce7e89d1a39c90}{tcsetpgrp} (int fd, pid\+\_\+t pgrp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{usr_2src_2libposix_2src_2tty_8c_a30c3edb2b02399d64b5e8eaaf7fe40e6}{\index{usr/src/libposix/src/tty.\+c@{usr/src/libposix/src/tty.\+c}!tcgetpgrp@{tcgetpgrp}}
+\index{tcgetpgrp@{tcgetpgrp}!usr/src/libposix/src/tty.\+c@{usr/src/libposix/src/tty.\+c}}
+\subsubsection[{tcgetpgrp}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t tcgetpgrp (
+\begin{DoxyParamCaption}
+\item[{int}]{fd}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2tty_8c_a30c3edb2b02399d64b5e8eaaf7fe40e6}
+
+
+Definition at line 6 of file tty.\+c.
+
+
+\begin{DoxyCode}
+6                         \{
+7     pid\_t pgrp;
+8     \textcolor{keywordflow}{if}(ioctl(fd, TIOCGPGRP, &pgrp) != 0)
+9         \textcolor{keywordflow}{return} -1;
+10 
+11     \textcolor{keywordflow}{return} pgrp;
+12 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2tty_8c_affb89581103fbd19d7ce7e89d1a39c90}{\index{usr/src/libposix/src/tty.\+c@{usr/src/libposix/src/tty.\+c}!tcsetpgrp@{tcsetpgrp}}
+\index{tcsetpgrp@{tcsetpgrp}!usr/src/libposix/src/tty.\+c@{usr/src/libposix/src/tty.\+c}}
+\subsubsection[{tcsetpgrp}]{\setlength{\rightskip}{0pt plus 5cm}int tcsetpgrp (
+\begin{DoxyParamCaption}
+\item[{int}]{fd, }
+\item[{pid\+\_\+t}]{pgrp}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2tty_8c_affb89581103fbd19d7ce7e89d1a39c90}
+
+
+Definition at line 14 of file tty.\+c.
+
+
+\begin{DoxyCode}
+14                                   \{
+15     \textcolor{keywordflow}{return} ioctl(fd, TIOCSPGRP, &pgrp);
+16 \}
+\end{DoxyCode}

@@ -36,7 +36,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="32">
+      <node id="39">
         <label>dirent</label>
         <link refid="structdirent"/>
       </node>

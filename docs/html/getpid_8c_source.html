@@ -111,34 +111,56 @@ $(document).ready(function(){initNavTree('getpid_8c_source.html','');});
 <a href="getpid_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="aplus_8h.html">aplus.h</a>&gt;</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="syscall_8h.html">aplus/syscall.h</a>&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fcntl.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;sys/stat.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="dirent_8h.html">dirent.h</a>&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="task_8h.html">aplus/task.h</a>&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;fcntl.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;sys/stat.h&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="dirent_8h.html">dirent.h</a>&gt;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">   13</a></span>&#160;pid_t <a class="code" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a>() {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="src_2sched_8c.html#abfd87543f692b5543a89246bd8fbe456">schedule_getpid</a>();</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;}</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<a class="code" href="getpid_8c.html#a74381482f24d171c9ad80f0c85fe2b3b">SYSCALL</a>(<a class="code" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a>, 5);</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">extern</span> <a class="code" href="structtask.html">task_t</a>* <a class="code" href="getpid_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">   16</a></span>&#160;pid_t <a class="code" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a>() {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="src_2sched_8c.html#abfd87543f692b5543a89246bd8fbe456">schedule_getpid</a>();</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;}</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="getpid_8c.html#a3f9a9a94f33dc16eac796ae714736d07">   20</a></span>&#160;pid_t <a class="code" href="getpid_8c.html#a3f9a9a94f33dc16eac796ae714736d07">sys_getppid</a>() {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">if</span>(!current_task)</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">if</span>(current_task-&gt;<a class="code" href="structtask.html#a34c6613744820a1e8127756fb6a5392c">parent</a>)</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordflow">return</span> current_task-&gt;<a class="code" href="structtask.html#a34c6613744820a1e8127756fb6a5392c">parent</a>-&gt;<a class="code" href="structtask.html#ab56448ae42a75825ea923bd86648f3ae">pid</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ESRCH;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="getpid_8c.html#a74381482f24d171c9ad80f0c85fe2b3b">SYSCALL</a>(<a class="code" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a>, 5);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="getpid_8c.html#a74381482f24d171c9ad80f0c85fe2b3b">SYSCALL</a>(<a class="code" href="getpid_8c.html#a3f9a9a94f33dc16eac796ae714736d07">sys_getppid</a>, 32);</div>
 <div class="ttc" id="dirent_8h_html"><div class="ttname"><a href="dirent_8h.html">dirent.h</a></div></div>
+<div class="ttc" id="structtask_html_a34c6613744820a1e8127756fb6a5392c"><div class="ttname"><a href="structtask.html#a34c6613744820a1e8127756fb6a5392c">task::parent</a></div><div class="ttdeci">struct task * parent</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00128">task.h:128</a></div></div>
 <div class="ttc" id="getpid_8c_html_a74381482f24d171c9ad80f0c85fe2b3b"><div class="ttname"><a href="getpid_8c.html#a74381482f24d171c9ad80f0c85fe2b3b">SYSCALL</a></div><div class="ttdeci">SYSCALL(sys_getpid, 5)</div></div>
-<div class="ttc" id="getpid_8c_html_a81186ae980bd7a8c58c8a4d838f5decb"><div class="ttname"><a href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a></div><div class="ttdeci">pid_t sys_getpid()</div><div class="ttdef"><b>Definition:</b> <a href="getpid_8c_source.html#l00013">getpid.c:13</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="getpid_8c_html_a81186ae980bd7a8c58c8a4d838f5decb"><div class="ttname"><a href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a></div><div class="ttdeci">pid_t sys_getpid()</div><div class="ttdef"><b>Definition:</b> <a href="getpid_8c_source.html#l00016">getpid.c:16</a></div></div>
 <div class="ttc" id="aplus_8h_html"><div class="ttname"><a href="aplus_8h.html">aplus.h</a></div></div>
 <div class="ttc" id="syscall_8h_html"><div class="ttname"><a href="syscall_8h.html">syscall.h</a></div></div>
-<div class="ttc" id="src_2sched_8c_html_abfd87543f692b5543a89246bd8fbe456"><div class="ttname"><a href="src_2sched_8c.html#abfd87543f692b5543a89246bd8fbe456">schedule_getpid</a></div><div class="ttdeci">pid_t schedule_getpid()</div><div class="ttdoc">Get Process ID of current task. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00253">sched.c:253</a></div></div>
+<div class="ttc" id="src_2sched_8c_html_abfd87543f692b5543a89246bd8fbe456"><div class="ttname"><a href="src_2sched_8c.html#abfd87543f692b5543a89246bd8fbe456">schedule_getpid</a></div><div class="ttdeci">pid_t schedule_getpid()</div><div class="ttdoc">Get Process ID of current task. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00309">sched.c:309</a></div></div>
+<div class="ttc" id="task_8h_html"><div class="ttname"><a href="task_8h.html">task.h</a></div></div>
+<div class="ttc" id="structtask_html"><div class="ttname"><a href="structtask.html">task</a></div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00090">task.h:90</a></div></div>
+<div class="ttc" id="getpid_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="getpid_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00037">sched.c:37</a></div></div>
+<div class="ttc" id="structtask_html_ab56448ae42a75825ea923bd86648f3ae"><div class="ttname"><a href="structtask.html#ab56448ae42a75825ea923bd86648f3ae">task::pid</a></div><div class="ttdeci">pid_t pid</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00091">task.h:91</a></div></div>
+<div class="ttc" id="getpid_8c_html_a3f9a9a94f33dc16eac796ae714736d07"><div class="ttname"><a href="getpid_8c.html#a3f9a9a94f33dc16eac796ae714736d07">sys_getppid</a></div><div class="ttdeci">pid_t sys_getppid()</div><div class="ttdef"><b>Definition:</b> <a href="getpid_8c_source.html#l00020">getpid.c:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="getpid_8c.html">getpid.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

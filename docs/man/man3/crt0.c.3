@@ -1,4 +1,4 @@
-.TH "usr/src/libcrt0/src/crt0.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libcrt0/src/crt0.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -98,7 +98,7 @@ Definition at line 17 of file crt0\&.c\&.
 .nf
 17                                            {
 18     signal(sig, __default_sighandler__);
-19     exit(sig);
+19     _exit(sig);
 20 }
 .fi
 .SS "static void __init_traps ()\fC [static]\fP"

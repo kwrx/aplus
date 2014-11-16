@@ -75,7 +75,7 @@ References \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, 
 9                                                                               \{
 10     \textcolor{keywordflow}{if}(!key) \{
 11         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-12         \textcolor{keywordflow}{return} 1;
+12         \textcolor{keywordflow}{return} -1;
 13     \}
 14 
 15     \textcolor{keywordtype}{int} i;
@@ -91,7 +91,7 @@ References \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, 
 25     \}
 26 
 27     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EAGAIN;
-28     \textcolor{keywordflow}{return} 1;
+28     \textcolor{keywordflow}{return} -1;
 29 \}
 \end{DoxyCode}
 \hypertarget{pthread__key_8c_ab28319aea4b1565728829629b0467fa6}{\index{pthread\+\_\+key.\+c@{pthread\+\_\+key.\+c}!pthread\+\_\+key\+\_\+delete@{pthread\+\_\+key\+\_\+delete}}
@@ -114,7 +114,7 @@ References \+\_\+\+\_\+pthread\+\_\+keys, \+\_\+\+\_\+pthread\+\_\+key\+::dtor, 
 32                                                  \{
 33     \textcolor{keywordflow}{if}(key > \hyperlink{pthread__internal_8h_a0a23e66e087bcf5c253b9b2746f19a64}{PTHREAD\_KEYS\_MAX}) \{
 34         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-35         \textcolor{keywordflow}{return} 1;
+35         \textcolor{keywordflow}{return} -1;
 36     \}
 37 
 38     \textcolor{keywordflow}{if}(\hyperlink{pthread__key_8c_afac43b0444afef8a4a8a6409728a2703}{\_\_pthread\_keys}[key].dtor)
@@ -149,12 +149,12 @@ References \+\_\+\+\_\+pthread\+\_\+keys, errno, P\+T\+H\+R\+E\+A\+D\+\_\+\+K\+E
 49                                                                      \{
 50     \textcolor{keywordflow}{if}(key > \hyperlink{pthread__internal_8h_a0a23e66e087bcf5c253b9b2746f19a64}{PTHREAD\_KEYS\_MAX}) \{
 51         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-52         \textcolor{keywordflow}{return} 1;
+52         \textcolor{keywordflow}{return} -1;
 53     \}
 54 
 55     \textcolor{keywordflow}{if}(\hyperlink{pthread__key_8c_afac43b0444afef8a4a8a6409728a2703}{\_\_pthread\_keys}[key].used == 0) \{
 56         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-57         \textcolor{keywordflow}{return} 1;
+57         \textcolor{keywordflow}{return} -1;
 58     \}
 59 
 60     \hyperlink{pthread__key_8c_afac43b0444afef8a4a8a6409728a2703}{\_\_pthread\_keys}[key].\hyperlink{struct____pthread__key_a35d38627e4a0de2e247671f0b5b6322a}{value} = (\textcolor{keywordtype}{void}*) \hyperlink{attribute_8h_ae7f66047e6e39ba2bb6af8b95f00d1dd}{value};

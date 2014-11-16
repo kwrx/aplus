@@ -3,40 +3,89 @@
   <compounddef id="atk_8h" kind="file">
     <compoundname>atk.h</compoundname>
     <includes refid="widget_8h" local="no">atk/widget.h</includes>
+    <includedby refid="bitmap_8c" local="no">usr/src/libatk/src/bitmap.c</includedby>
     <includedby refid="clrconv_8h" local="no">usr/src/libatk/src/clrconv.h</includedby>
+    <includedby refid="gfx_8c" local="no">usr/src/libatk/src/gfx.c</includedby>
+    <includedby refid="bitmap_8h" local="no">usr/src/libatk/src/include/atk/bitmap.h</includedby>
+    <includedby refid="gfx_8h" local="no">usr/src/libatk/src/include/atk/gfx.h</includedby>
     <includedby refid="widget_8h" local="no">usr/src/libatk/src/include/atk/widget.h</includedby>
+    <includedby refid="usr_2src_2libatk_2test_2main_8c" local="no">usr/src/libatk/test/main.c</includedby>
     <incdepgraph>
-      <node id="1953">
+      <node id="2097">
         <label>atk/widget.h</label>
         <link refid="widget_8h"/>
-        <childnode refid="1952" relation="include">
+        <childnode refid="2096" relation="include">
         </childnode>
       </node>
-      <node id="1952">
+      <node id="2096">
         <label>usr/src/libatk/src/include/atk.h</label>
         <link refid="atk.h"/>
-        <childnode refid="1953" relation="include">
+        <childnode refid="2097" relation="include">
         </childnode>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="1956">
+      <node id="2105">
+        <label>usr/src/libatk/test/main.c</label>
+        <link refid="usr_2src_2libatk_2test_2main_8c"/>
+      </node>
+      <node id="2104">
         <label>usr/src/libatk/src/include/atk/widget.h</label>
         <link refid="widget_8h"/>
-        <childnode refid="1954" relation="include">
+        <childnode refid="2098" relation="include">
+        </childnode>
+        <childnode refid="2105" relation="include">
         </childnode>
       </node>
-      <node id="1954">
+      <node id="2102">
+        <label>usr/src/libatk/src/include/atk/bitmap.h</label>
+        <link refid="bitmap_8h"/>
+        <childnode refid="2099" relation="include">
+        </childnode>
+        <childnode refid="2101" relation="include">
+        </childnode>
+      </node>
+      <node id="2099">
+        <label>usr/src/libatk/src/bitmap.c</label>
+        <link refid="bitmap_8c"/>
+      </node>
+      <node id="2103">
+        <label>usr/src/libatk/src/include/atk/gfx.h</label>
+        <link refid="gfx_8h"/>
+        <childnode refid="2099" relation="include">
+        </childnode>
+        <childnode refid="2101" relation="include">
+        </childnode>
+      </node>
+      <node id="2098">
         <label>usr/src/libatk/src/include/atk.h</label>
         <link refid="atk.h"/>
-        <childnode refid="1955" relation="include">
+        <childnode refid="2099" relation="include">
         </childnode>
-        <childnode refid="1956" relation="include">
+        <childnode refid="2100" relation="include">
+        </childnode>
+        <childnode refid="2101" relation="include">
+        </childnode>
+        <childnode refid="2102" relation="include">
+        </childnode>
+        <childnode refid="2103" relation="include">
+        </childnode>
+        <childnode refid="2104" relation="include">
+        </childnode>
+        <childnode refid="2105" relation="include">
         </childnode>
       </node>
-      <node id="1955">
+      <node id="2101">
+        <label>usr/src/libatk/src/gfx.c</label>
+        <link refid="gfx_8c"/>
+      </node>
+      <node id="2100">
         <label>usr/src/libatk/src/clrconv.h</label>
         <link refid="clrconv_8h"/>
+        <childnode refid="2099" relation="include">
+        </childnode>
+        <childnode refid="2101" relation="include">
+        </childnode>
       </node>
     </invincdepgraph>
       <sectiondef kind="define">
@@ -49,7 +98,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="22" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="22" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="25" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="25" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="atk_8h_1a8bd5836e5294a7a657fefd618925937d" prot="public" static="no">
         <name>ATK_COLOR_WHITE</name>
@@ -60,7 +109,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="23" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="23" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="26" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="26" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="atk_8h_1ae65816298e7a25c2ea3d12df5e0c8b28" prot="public" static="no">
         <name>ATK_COLOR_TRANSPARENT</name>
@@ -71,7 +120,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="24" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="24" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="27" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="27" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="atk_8h_1a170621735809dd7efded8c8517347596" prot="public" static="no">
         <name>ATK_COLOR_A</name>
@@ -82,7 +131,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="26" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="26" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="29" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="29" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" prot="public" static="no">
         <name>ATK_COLOR_R</name>
@@ -93,7 +142,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="27" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="27" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="30" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="30" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" prot="public" static="no">
         <name>ATK_COLOR_G</name>
@@ -104,7 +153,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="28" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="28" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="31" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="31" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" prot="public" static="no">
         <name>ATK_COLOR_B</name>
@@ -115,7 +164,128 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="29" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="29" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="32" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4" prot="public" static="no">
+        <name>ATK_RECT_X</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="34" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff" prot="public" static="no">
+        <name>ATK_RECT_Y</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="35" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a" prot="public" static="no">
+        <name>ATK_RECT_W</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="36" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" prot="public" static="no">
+        <name>ATK_RECT_H</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="37" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a413bc681fce80267f527fa132c151055" prot="public" static="no">
+        <name>ATK_SIZE_W</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="39" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1aaad1b7972db05defa86a02338218a358" prot="public" static="no">
+        <name>ATK_SIZE_H</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="40" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a634d569bbadff17b0ea9198d4ce8ce72" prot="public" static="no">
+        <name>ATK_POS_X</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="42" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a8d5096b073d9f2dff29445b21561d03c" prot="public" static="no">
+        <name>ATK_POS_Y</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="43" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a07987a4145b21a362b9bfcdc0b8295ec" prot="public" static="no">
+        <name>ATK_RECT_EMPTY</name>
+        <initializer>{ 0, 0, 0, 0 }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="46" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a303de91995819d0e1b5ae6d089bfd620" prot="public" static="no">
+        <name>ATK_SIZE_EMPTY</name>
+        <initializer>{ 0, 0 }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="47" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="atk_8h_1a62c95cb8fb4edb6582311705964d27dc" prot="public" static="no">
+        <name>ATK_POS_EMPTY</name>
+        <initializer>{ 0, 0 }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="48" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="48" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="typedef">
@@ -145,6 +315,45 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="17" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="17" bodyend="-1"/>
       </memberdef>
+      <memberdef kind="typedef" id="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" prot="public" static="no">
+        <type>atk_v4si</type>
+        <definition>typedef atk_v4si atk_rect_t</definition>
+        <argsstring></argsstring>
+        <name>atk_rect_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="18" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="atk_8h_1a644f976397f323e48685f16b0c4fa802" prot="public" static="no">
+        <type>atk_v2si</type>
+        <definition>typedef atk_v2si atk_size_t</definition>
+        <argsstring></argsstring>
+        <name>atk_size_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="19" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="atk_8h_1aee7e807eb9b4bff2e018cf10b0552fc2" prot="public" static="no">
+        <type>atk_v2si</type>
+        <definition>typedef atk_v2si atk_pos_t</definition>
+        <argsstring></argsstring>
+        <name>atk_pos_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="20" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
       <memberdef kind="typedef" id="atk_8h_1a2c8c224ba001105422a0814f71ae5887" prot="public" static="no">
         <type>void</type>
         <definition>typedef void atk_list_t</definition>
@@ -156,7 +365,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="18" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="18" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" line="21" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h" bodystart="21" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -173,31 +382,50 @@
 <codeline lineno="7"><highlight class="normal"></highlight></codeline>
 <codeline lineno="8"><highlight class="normal"></highlight></codeline>
 <codeline lineno="9" refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>atk_v2si<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>*<sp/>2)));</highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>atk_v3si<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>*<sp/>3)));</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>atk_v3si<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>*<sp/>4)));</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>atk_v4si<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>*<sp/>4)));</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>atk_v2f<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)<sp/>*<sp/>2)));</highlight></codeline>
-<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>atk_v3f<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)<sp/>*<sp/>3)));</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>atk_v3f<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)<sp/>*<sp/>4)));</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>atk_v4f<sp/><ref refid="atk_8h_1ad4bf5e6d1454a189b8f26893b0cf6f97" kindref="member">__attribute__</ref><sp/>((vector_size(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)<sp/>*<sp/>4)));</highlight></codeline>
 <codeline lineno="16"><highlight class="normal"></highlight></codeline>
 <codeline lineno="17" refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>atk_v4f<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref>;</highlight></codeline>
-<codeline lineno="18" refid="atk_8h_1a2c8c224ba001105422a0814f71ae5887" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="atk_8h_1a2c8c224ba001105422a0814f71ae5887" kindref="member">atk_list_t</ref>;</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"></highlight></codeline>
-<codeline lineno="20"><highlight class="normal"></highlight></codeline>
-<codeline lineno="21"><highlight class="normal"></highlight></codeline>
-<codeline lineno="22" refid="atk_8h_1a29a69073b13d8b13b9732b4fdabae599" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_BLACK<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>1.0f,<sp/>0.0f,<sp/>0.0f,<sp/>0.0f<sp/>}</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="23" refid="atk_8h_1a8bd5836e5294a7a657fefd618925937d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_WHITE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>1.0f,<sp/>1.0f,<sp/>1.0f,<sp/>1.0f<sp/>}</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="24" refid="atk_8h_1ae65816298e7a25c2ea3d12df5e0c8b28" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_TRANSPARENT<sp/><sp/><sp/>{<sp/>0.0f,<sp/>0.0f,<sp/>0.0f,<sp/>0.0f<sp/>}</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="25"><highlight class="normal"></highlight></codeline>
-<codeline lineno="26" refid="atk_8h_1a170621735809dd7efded8c8517347596" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_A<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="27" refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_R<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="28" refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_G<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="29" refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_B<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="widget_8h" kindref="compound">atk/widget.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18" refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>atk_v4si<sp/><ref refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" kindref="member">atk_rect_t</ref>;</highlight></codeline>
+<codeline lineno="19" refid="atk_8h_1a644f976397f323e48685f16b0c4fa802" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>atk_v2si<sp/><ref refid="atk_8h_1a644f976397f323e48685f16b0c4fa802" kindref="member">atk_size_t</ref>;</highlight></codeline>
+<codeline lineno="20" refid="atk_8h_1aee7e807eb9b4bff2e018cf10b0552fc2" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>atk_v2si<sp/><ref refid="atk_8h_1aee7e807eb9b4bff2e018cf10b0552fc2" kindref="member">atk_pos_t</ref>;</highlight></codeline>
+<codeline lineno="21" refid="atk_8h_1a2c8c224ba001105422a0814f71ae5887" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="atk_8h_1a2c8c224ba001105422a0814f71ae5887" kindref="member">atk_list_t</ref>;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25" refid="atk_8h_1a29a69073b13d8b13b9732b4fdabae599" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_BLACK<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>1.0f,<sp/>0.0f,<sp/>0.0f,<sp/>0.0f<sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="atk_8h_1a8bd5836e5294a7a657fefd618925937d" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_WHITE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>1.0f,<sp/>1.0f,<sp/>1.0f,<sp/>1.0f<sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="atk_8h_1ae65816298e7a25c2ea3d12df5e0c8b28" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_TRANSPARENT<sp/><sp/><sp/>{<sp/>0.0f,<sp/>0.0f,<sp/>0.0f,<sp/>0.0f<sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="atk_8h_1a170621735809dd7efded8c8517347596" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_A<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30" refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_R<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31" refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_G<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32" refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_COLOR_B<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="33"><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="34" refid="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_RECT_X<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35" refid="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_RECT_Y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36" refid="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_RECT_W<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_RECT_H<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="atk_8h_1a413bc681fce80267f527fa132c151055" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_SIZE_W<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40" refid="atk_8h_1aaad1b7972db05defa86a02338218a358" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_SIZE_H<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="atk_8h_1a634d569bbadff17b0ea9198d4ce8ce72" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_POS_X<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="atk_8h_1a8d5096b073d9f2dff29445b21561d03c" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_POS_Y<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46" refid="atk_8h_1a07987a4145b21a362b9bfcdc0b8295ec" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_RECT_EMPTY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>0,<sp/>0,<sp/>0,<sp/>0<sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="atk_8h_1a303de91995819d0e1b5ae6d089bfd620" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_SIZE_EMPTY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>0,<sp/>0<sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="atk_8h_1a62c95cb8fb4edb6582311705964d27dc" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_POS_EMPTY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<sp/>0,<sp/>0<sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="widget_8h" kindref="compound">atk/widget.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk.h"/>
   </compounddef>

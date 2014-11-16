@@ -17,6 +17,7 @@
     <programlisting>#include &lt;aplus/net/eth.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/net/ipv4.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/net/ipv6.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
         <simplesect>
             <title>Variables</title>
             <para>

@@ -16,6 +16,7 @@ struct \{\\
 \>task\_env\_t $\ast$ \hyperlink{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{env}\\
 \>\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} \hyperlink{structtask_a71232ebd31259f41c057b3e789b44587}{stack}\\
 \>\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} \hyperlink{structtask_a5f4968459d4640f19c7e802ae7057179}{cr3}\\
+\>pid\_t \hyperlink{structtask_a34a5abdae35b067ec6cde7fc81a43598}{owner}\\
 \} \hyperlink{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{context}\\
 
 \end{tabbing}\item 
@@ -71,14 +72,14 @@ Definition at line 90 of file task.\+h.
 \subsubsection[{argv}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$ task\+::argv}}\label{structtask_a91e7540d20695c7439f7d0755a7a0545}
 
 
-Definition at line 117 of file task.\+h.
+Definition at line 119 of file task.\+h.
 
 \hypertarget{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{\index{task@{task}!clock@{clock}}
 \index{clock@{clock}!task@{task}}
 \subsubsection[{clock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} task\+::clock}}\label{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}
 
 
-Definition at line 122 of file task.\+h.
+Definition at line 124 of file task.\+h.
 
 \hypertarget{structtask_a7e47fc3627188eeefc77f78e8d36ddd1}{\index{task@{task}!context@{context}}
 \index{context@{context}!task@{task}}
@@ -88,14 +89,14 @@ Definition at line 122 of file task.\+h.
 \subsubsection[{cr3}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} task\+::cr3}}\label{structtask_a5f4968459d4640f19c7e802ae7057179}
 
 
-Definition at line 96 of file task.\+h.
+Definition at line 97 of file task.\+h.
 
 \hypertarget{structtask_a7099e7ba6a4c94559edfb4d396803b15}{\index{task@{task}!cwd@{cwd}}
 \index{cwd@{cwd}!task@{task}}
 \subsubsection[{cwd}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ task\+::cwd}}\label{structtask_a7099e7ba6a4c94559edfb4d396803b15}
 
 
-Definition at line 103 of file task.\+h.
+Definition at line 105 of file task.\+h.
 
 \hypertarget{structtask_a8dbbb79f7c29771d36f1d98ec84cbbdf}{\index{task@{task}!env@{env}}
 \index{env@{env}!task@{task}}
@@ -109,35 +110,35 @@ Definition at line 94 of file task.\+h.
 \subsubsection[{envp}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$$\ast$ task\+::envp}}\label{structtask_a09fbc78d666a0b49e2e2064121d28364}
 
 
-Definition at line 118 of file task.\+h.
+Definition at line 120 of file task.\+h.
 
 \hypertarget{structtask_a22a59fcfc18d5f671340669f96571768}{\index{task@{task}!exe@{exe}}
 \index{exe@{exe}!task@{task}}
 \subsubsection[{exe}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ task\+::exe}}\label{structtask_a22a59fcfc18d5f671340669f96571768}
 
 
-Definition at line 104 of file task.\+h.
+Definition at line 106 of file task.\+h.
 
 \hypertarget{structtask_a9bd7bbd83fe1f4744c76ff240b6da5db}{\index{task@{task}!exitcode@{exitcode}}
 \index{exitcode@{exitcode}!task@{task}}
 \subsubsection[{exitcode}]{\setlength{\rightskip}{0pt plus 5cm}int task\+::exitcode}}\label{structtask_a9bd7bbd83fe1f4744c76ff240b6da5db}
 
 
-Definition at line 123 of file task.\+h.
+Definition at line 125 of file task.\+h.
 
 \hypertarget{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{\index{task@{task}!fd@{fd}}
 \index{fd@{fd}!task@{task}}
 \subsubsection[{fd}]{\setlength{\rightskip}{0pt plus 5cm}{\bf inode\+\_\+t}$\ast$ task\+::fd\mbox{[}{\bf T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D}\mbox{]}}}\label{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}
 
 
-Definition at line 105 of file task.\+h.
+Definition at line 107 of file task.\+h.
 
 \hypertarget{structtask_aaf3b6e15445e766a5c4823b815bca630}{\index{task@{task}!gid@{gid}}
 \index{gid@{gid}!task@{task}}
 \subsubsection[{gid}]{\setlength{\rightskip}{0pt plus 5cm}gid\+\_\+t task\+::gid}}\label{structtask_aaf3b6e15445e766a5c4823b815bca630}
 
 
-Definition at line 101 of file task.\+h.
+Definition at line 103 of file task.\+h.
 
 \hypertarget{structtask_a3eac6c8a544ff49a836c5eed9ec48107}{\index{task@{task}!image@{image}}
 \index{image@{image}!task@{task}}
@@ -147,14 +148,21 @@ Definition at line 101 of file task.\+h.
 \subsubsection[{length}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} task\+::length}}\label{structtask_aa90dc3e7e232d6ba3f04700b3197b366}
 
 
-Definition at line 110 of file task.\+h.
+Definition at line 112 of file task.\+h.
+
+\hypertarget{structtask_a34a5abdae35b067ec6cde7fc81a43598}{\index{task@{task}!owner@{owner}}
+\index{owner@{owner}!task@{task}}
+\subsubsection[{owner}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t task\+::owner}}\label{structtask_a34a5abdae35b067ec6cde7fc81a43598}
+
+
+Definition at line 98 of file task.\+h.
 
 \hypertarget{structtask_a34c6613744820a1e8127756fb6a5392c}{\index{task@{task}!parent@{parent}}
 \index{parent@{parent}!task@{task}}
 \subsubsection[{parent}]{\setlength{\rightskip}{0pt plus 5cm}struct {\bf task}$\ast$ task\+::parent}}\label{structtask_a34c6613744820a1e8127756fb6a5392c}
 
 
-Definition at line 126 of file task.\+h.
+Definition at line 128 of file task.\+h.
 
 \hypertarget{structtask_ab56448ae42a75825ea923bd86648f3ae}{\index{task@{task}!pid@{pid}}
 \index{pid@{pid}!task@{task}}
@@ -168,28 +176,28 @@ Definition at line 91 of file task.\+h.
 \subsubsection[{priority}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} task\+::priority}}\label{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}
 
 
-Definition at line 121 of file task.\+h.
+Definition at line 123 of file task.\+h.
 
 \hypertarget{structtask_afbc0623ab058e402e92ea084dc37ab6a}{\index{task@{task}!ptr@{ptr}}
 \index{ptr@{ptr}!task@{task}}
 \subsubsection[{ptr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} task\+::ptr}}\label{structtask_afbc0623ab058e402e92ea084dc37ab6a}
 
 
-Definition at line 109 of file task.\+h.
+Definition at line 111 of file task.\+h.
 
 \hypertarget{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{\index{task@{task}!signal\+\_\+handler@{signal\+\_\+handler}}
 \index{signal\+\_\+handler@{signal\+\_\+handler}!task@{task}}
 \subsubsection[{signal\+\_\+handler}]{\setlength{\rightskip}{0pt plus 5cm}void($\ast$ task\+::signal\+\_\+handler)(int)}}\label{structtask_aea4c9382e5f4f148a0a74c0680729cf0}
 
 
-Definition at line 113 of file task.\+h.
+Definition at line 115 of file task.\+h.
 
 \hypertarget{structtask_a3d6991558f05258094bbef5c47073928}{\index{task@{task}!signal\+\_\+sig@{signal\+\_\+sig}}
 \index{signal\+\_\+sig@{signal\+\_\+sig}!task@{task}}
 \subsubsection[{signal\+\_\+sig}]{\setlength{\rightskip}{0pt plus 5cm}int task\+::signal\+\_\+sig}}\label{structtask_a3d6991558f05258094bbef5c47073928}
 
 
-Definition at line 114 of file task.\+h.
+Definition at line 116 of file task.\+h.
 
 \hypertarget{structtask_a71232ebd31259f41c057b3e789b44587}{\index{task@{task}!stack@{stack}}
 \index{stack@{stack}!task@{task}}
@@ -203,21 +211,21 @@ Definition at line 95 of file task.\+h.
 \subsubsection[{state}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} task\+::state}}\label{structtask_a09ebd490ccb87f169fd7c3d8d95b4f39}
 
 
-Definition at line 120 of file task.\+h.
+Definition at line 122 of file task.\+h.
 
 \hypertarget{structtask_ade8fc4c414bce856dacf9efee3031be8}{\index{task@{task}!uid@{uid}}
 \index{uid@{uid}!task@{task}}
 \subsubsection[{uid}]{\setlength{\rightskip}{0pt plus 5cm}uid\+\_\+t task\+::uid}}\label{structtask_ade8fc4c414bce856dacf9efee3031be8}
 
 
-Definition at line 100 of file task.\+h.
+Definition at line 102 of file task.\+h.
 
 \hypertarget{structtask_a340cbedbdc4b542793e7677dd4966ade}{\index{task@{task}!vaddr@{vaddr}}
 \index{vaddr@{vaddr}!task@{task}}
 \subsubsection[{vaddr}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} task\+::vaddr}}\label{structtask_a340cbedbdc4b542793e7677dd4966ade}
 
 
-Definition at line 108 of file task.\+h.
+Definition at line 110 of file task.\+h.
 
 
 

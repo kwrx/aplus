@@ -1,0 +1,73 @@
+\hypertarget{src_2syscall_2wait_8c}{\section{src/syscall/wait.c File Reference}
+\label{src_2syscall_2wait_8c}\index{src/syscall/wait.\+c@{src/syscall/wait.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{src_2syscall_2wait_8c_a71b3c0272e1d256262db857a794e3899}{sys\+\_\+wait} (int $\ast$status)
+\item 
+\hyperlink{src_2syscall_2wait_8c_a4a7121092029355dc4b74d1515420c88}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{src_2syscall_2wait_8c_a71b3c0272e1d256262db857a794e3899}{sys\+\_\+wait}, 16)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{src_2syscall_2wait_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{src_2syscall_2wait_8c_a71b3c0272e1d256262db857a794e3899}{\index{src/syscall/wait.\+c@{src/syscall/wait.\+c}!sys\+\_\+wait@{sys\+\_\+wait}}
+\index{sys\+\_\+wait@{sys\+\_\+wait}!src/syscall/wait.\+c@{src/syscall/wait.\+c}}
+\subsubsection[{sys\+\_\+wait}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+wait (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{status}
+\end{DoxyParamCaption}
+)}}\label{src_2syscall_2wait_8c_a71b3c0272e1d256262db857a794e3899}
+
+
+Definition at line 12 of file wait.\+c.
+
+
+
+References errno, and sys\+\_\+waitpid().
+
+
+\begin{DoxyCode}
+12                           \{
+13     \textcolor{keywordflow}{if}(\hyperlink{src_2syscall_2wait_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task} == NULL) \{
+14         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EFAULT;
+15         \textcolor{keywordflow}{return} -1;
+16     \}
+17 
+18     \textcolor{keywordflow}{return} \hyperlink{waitpid_8c_a6b16504dd1c74be11c75e5739f9906f1}{sys\_waitpid}(-1, status, 0);
+19 \}
+\end{DoxyCode}
+\hypertarget{src_2syscall_2wait_8c_a4a7121092029355dc4b74d1515420c88}{\index{src/syscall/wait.\+c@{src/syscall/wait.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!src/syscall/wait.\+c@{src/syscall/wait.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+wait}}]{, }
+\item[{16}]{}
+\end{DoxyParamCaption}
+)}}\label{src_2syscall_2wait_8c_a4a7121092029355dc4b74d1515420c88}
+
+
+\subsection{Variable Documentation}
+\hypertarget{src_2syscall_2wait_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{src/syscall/wait.\+c@{src/syscall/wait.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!src/syscall/wait.\+c@{src/syscall/wait.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{src_2syscall_2wait_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 37 of file sched.\+c.
+

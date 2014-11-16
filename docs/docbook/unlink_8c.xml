@@ -10,8 +10,34 @@
     <programlisting>#include &lt;errno.h&gt;</programlisting>
     <programlisting>#include &lt;sys/stat.h&gt;</programlisting>
     <programlisting>#include &lt;dirent.h&gt;</programlisting>
+    <programlisting>#include &lt;stdio.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="unlink_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6">inode_t</link> * <link linkend="unlink_8c_1a9af8258c3554800f6613f8147544225f">vfs_root</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
         <simplesect>
             <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static char * <link linkend="unlink_8c_1a6fae53653306206ed481c3589c7aa51b">dupstr</link> (
+char * s)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
             <para>
                 <itemizedlist>
                     <listitem>

@@ -150,7 +150,7 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="heap_8c_source.html#l00028">28</a> of file <a class="el" href="heap_8c_source.html">heap.c</a>.</p>
 
-<p>References <a class="el" href="mm_8h_source.html#l00067">heap::alloc</a>.</p>
+<p>References <a class="el" href="mm_8h_source.html#l00070">heap::alloc</a>.</p>
 <div class="fragment"><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                        {</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">if</span>(heap)</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">if</span>(heap-&gt;<a class="code" href="structheap.html#a8b4bc8c3f0ed79efd52d61a27a62a130">alloc</a>)</div>
@@ -158,8 +158,8 @@ Functions</h2></td></tr>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
-<div class="ttc" id="iso9660_8h_html_ae5dc6ffcd9b7605c7787791e40cc6bb0"><div class="ttname"><a href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a></div><div class="ttdeci">uint8_t size</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00074">iso9660.h:74</a></div></div>
-<div class="ttc" id="structheap_html_a8b4bc8c3f0ed79efd52d61a27a62a130"><div class="ttname"><a href="structheap.html#a8b4bc8c3f0ed79efd52d61a27a62a130">heap::alloc</a></div><div class="ttdeci">void *(* alloc)(struct heap *, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00067">mm.h:67</a></div></div>
+<div class="ttc" id="iso9660_8h_html_ae5dc6ffcd9b7605c7787791e40cc6bb0"><div class="ttname"><a href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a></div><div class="ttdeci">uint8_t size</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00073">iso9660.h:73</a></div></div>
+<div class="ttc" id="structheap_html_a8b4bc8c3f0ed79efd52d61a27a62a130"><div class="ttname"><a href="structheap.html#a8b4bc8c3f0ed79efd52d61a27a62a130">heap::alloc</a></div><div class="ttdeci">void *(* alloc)(struct heap *, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00070">mm.h:70</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -195,14 +195,14 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="heap_8c_source.html#l00036">36</a> of file <a class="el" href="heap_8c_source.html">heap.c</a>.</p>
 
-<p>References <a class="el" href="mm_8h_source.html#l00068">heap::free</a>.</p>
+<p>References <a class="el" href="mm_8h_source.html#l00071">heap::free</a>.</p>
 <div class="fragment"><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                                  {</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">if</span>(heap)</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">if</span>(heap-&gt;<a class="code" href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">free</a>)</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            heap-&gt;<a class="code" href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">free</a>(heap, addr, <a class="code" href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a>);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
-<div class="ttc" id="iso9660_8h_html_ae5dc6ffcd9b7605c7787791e40cc6bb0"><div class="ttname"><a href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a></div><div class="ttdeci">uint8_t size</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00074">iso9660.h:74</a></div></div>
-<div class="ttc" id="structheap_html_ae53b14c50bbb9daab4346cd0873bda02"><div class="ttname"><a href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">heap::free</a></div><div class="ttdeci">void(* free)(struct heap *, void *, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00068">mm.h:68</a></div></div>
+<div class="ttc" id="iso9660_8h_html_ae5dc6ffcd9b7605c7787791e40cc6bb0"><div class="ttname"><a href="iso9660_8h.html#ae5dc6ffcd9b7605c7787791e40cc6bb0">size</a></div><div class="ttdeci">uint8_t size</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00073">iso9660.h:73</a></div></div>
+<div class="ttc" id="structheap_html_ae53b14c50bbb9daab4346cd0873bda02"><div class="ttname"><a href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">heap::free</a></div><div class="ttdeci">void(* free)(struct heap *, void *, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00071">mm.h:71</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -212,7 +212,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_e07adefefc5da1d7540fd182d8c11934.html">mm</a></li><li class="navelem"><a class="el" href="heap_8c.html">heap.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

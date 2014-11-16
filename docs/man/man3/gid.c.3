@@ -1,4 +1,4 @@
-.TH "usr/src/libposix/src/gid.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libposix/src/gid.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,6 +9,8 @@ usr/src/libposix/src/gid.c \-
 \fC#include <unistd\&.h>\fP
 .br
 \fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
 .br
 \fC#include 'config\&.h'\fP
 .br
@@ -23,6 +25,12 @@ usr/src/libposix/src/gid.c \-
 .RI "gid_t \fBgetegid\fP (void)"
 .br
 .ti -1c
+.RI "pid_t \fBgetpgid\fP (pid_t pid)"
+.br
+.ti -1c
+.RI "int \fBsetpgid\fP (pid_t pid, pid_t pgid)"
+.br
+.ti -1c
 .RI "int \fBgetgroups\fP (int len, gid_t *\fBlist\fP)"
 .br
 .in -1c
@@ -31,38 +39,61 @@ usr/src/libposix/src/gid.c \-
 .SS "gid_t getegid (void)"
 
 .PP
-Definition at line 14 of file gid\&.c\&.
+Definition at line 15 of file gid\&.c\&.
 .PP
 References getgid()\&.
 .PP
 .nf
-14                     {
-15     return getgid();
-16 }
+15                     {
+16     return getgid();
+17 }
 .fi
 .SS "gid_t getgid (void)"
 
 .PP
-Definition at line 6 of file gid\&.c\&.
+Definition at line 7 of file gid\&.c\&.
 .PP
 .nf
-6                    {
-7     struct stat st;
-8     if(fstat(STDIN_FILENO, &st) != 0)
-9         return -1;
-10 
-11     return st\&.st_gid;
-12 }
+7                    {
+8     struct stat st;
+9     if(fstat(STDIN_FILENO, &st) != 0)
+10         return -1;
+11 
+12     return st\&.st_gid;
+13 }
 .fi
 .SS "int getgroups (intlen, gid_t *list)"
 
 .PP
-Definition at line 18 of file gid\&.c\&.
+Definition at line 28 of file gid\&.c\&.
 .PP
 .nf
-18                                     {
-19     return __os_getgroups(len, list);
-20 }
+28                                     {
+29     return __os_getgroups(len, list);
+30 }
+.fi
+.SS "pid_t getpgid (pid_tpid)"
+
+.PP
+Definition at line 19 of file gid\&.c\&.
+.PP
+.nf
+19                          {
+20     return pid;
+21 }
+.fi
+.SS "int setpgid (pid_tpid, pid_tpgid)"
+
+.PP
+Definition at line 23 of file gid\&.c\&.
+.PP
+References errno\&.
+.PP
+.nf
+23                                    {
+24     errno = ENOSYS;
+25     return -1;
+26 }
 .fi
 .SH "Author"
 .PP 

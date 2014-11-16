@@ -3,6 +3,7 @@
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/mm.\+h$>$}\\*
 {\ttfamily \#include $<$stdint.\+h$>$}\\*
 {\ttfamily \#include $<$stddef.\+h$>$}\\*
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
@@ -48,7 +49,7 @@ int \hyperlink{fs_8c_afb548bce2f916933a7c7d95a48b57cdb}{fs\+\_\+ioctl} (struct \
 )}}\label{fs_8c_a2928203c42eba392963b57bfed7b65c4}
 
 
-Definition at line 93 of file fs.\+c.
+Definition at line 94 of file fs.\+c.
 
 
 
@@ -56,13 +57,13 @@ References inode\+::chown, and errno.
 
 
 \begin{DoxyCode}
-93                                                              \{
-94     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown})
-95         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown}(inode, owner, group);
-96         
-97     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
-98     \textcolor{keywordflow}{return} -1;
-99 \}
+94                                                              \{
+95     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown})
+96         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a8221183a697c9f2b4e0e295f5a9d8afd}{chown}(inode, owner, group);
+97         
+98     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
+99     \textcolor{keywordflow}{return} -1;
+100 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_a8973117250569528548e2c2ff3f6e44e}{\index{fs.\+c@{fs.\+c}!fs\+\_\+creat@{fs\+\_\+creat}}
 \index{fs\+\_\+creat@{fs\+\_\+creat}!fs.\+c@{fs.\+c}}
@@ -75,7 +76,7 @@ References inode\+::chown, and errno.
 )}}\label{fs_8c_a8973117250569528548e2c2ff3f6e44e}
 
 
-Definition at line 69 of file fs.\+c.
+Definition at line 70 of file fs.\+c.
 
 
 
@@ -83,13 +84,13 @@ References inode\+::creat, and errno.
 
 
 \begin{DoxyCode}
-69                                                                       \{
-70     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat})
-71         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, mode);
-72     
-73     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;        
-74     \textcolor{keywordflow}{return} NULL;
-75 \}
+70                                                                       \{
+71     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat})
+72         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_ad622a049b34780786d9ba4311b06b3b4}{creat}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, mode);
+73     
+74     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;        
+75     \textcolor{keywordflow}{return} NULL;
+76 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_ad8edcff785980ccbc26c887c19ac8989}{\index{fs.\+c@{fs.\+c}!fs\+\_\+finddir@{fs\+\_\+finddir}}
 \index{fs\+\_\+finddir@{fs\+\_\+finddir}!fs.\+c@{fs.\+c}}
@@ -101,7 +102,7 @@ References inode\+::creat, and errno.
 )}}\label{fs_8c_ad8edcff785980ccbc26c887c19ac8989}
 
 
-Definition at line 50 of file fs.\+c.
+Definition at line 51 of file fs.\+c.
 
 
 
@@ -109,24 +110,24 @@ References errno, inode\+::finddir, inode\+::parent, and vfs\+\_\+mapped().
 
 
 \begin{DoxyCode}
-50                                                            \{
-51 
-52     \textcolor{keywordflow}{if}(strcmp(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, \textcolor{stringliteral}{"."}) == 0)
-53         \textcolor{keywordflow}{return} inode;
-54 
-55     \textcolor{keywordflow}{if}(strcmp(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, \textcolor{stringliteral}{".."}) == 0)
-56         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}{parent};
-57 
-58     \hyperlink{structinode}{inode\_t}* map = NULL;
-59     \textcolor{keywordflow}{if}((map = (\hyperlink{structinode}{inode\_t}*) \hyperlink{vfs_8c_a99334446cfc1dfc32088d838b4f2895c}{vfs\_mapped}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name})) != NULL)
-60         \textcolor{keywordflow}{return} map;
-61 
-62     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir})
-63         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name});
-64         
-65     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
-66     \textcolor{keywordflow}{return} NULL;
-67 \}
+51                                                            \{
+52 
+53     \textcolor{keywordflow}{if}(strcmp(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, \textcolor{stringliteral}{"."}) == 0)
+54         \textcolor{keywordflow}{return} inode;
+55 
+56     \textcolor{keywordflow}{if}(strcmp(\hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name}, \textcolor{stringliteral}{".."}) == 0)
+57         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a2d4fac4ae14332628e6fa2bd55dd3121}{parent};
+58 
+59     \hyperlink{structinode}{inode\_t}* map = NULL;
+60     \textcolor{keywordflow}{if}((map = (\hyperlink{structinode}{inode\_t}*) \hyperlink{vfs_8c_a99334446cfc1dfc32088d838b4f2895c}{vfs\_mapped}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name})) != NULL)
+61         \textcolor{keywordflow}{return} map;
+62 
+63     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir})
+64         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_ab6c5e2d912fdbd506086e53185cd370d}{finddir}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name});
+65         
+66     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
+67     \textcolor{keywordflow}{return} NULL;
+68 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_a37ebdb2a9963f0f89d938fa2cc5d78df}{\index{fs.\+c@{fs.\+c}!fs\+\_\+flush@{fs\+\_\+flush}}
 \index{fs\+\_\+flush@{fs\+\_\+flush}!fs.\+c@{fs.\+c}}
@@ -137,7 +138,7 @@ References errno, inode\+::finddir, inode\+::parent, and vfs\+\_\+mapped().
 )}}\label{fs_8c_a37ebdb2a9963f0f89d938fa2cc5d78df}
 
 
-Definition at line 101 of file fs.\+c.
+Definition at line 102 of file fs.\+c.
 
 
 
@@ -145,13 +146,13 @@ References errno, and inode\+::flush.
 
 
 \begin{DoxyCode}
-101                                    \{
-102     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush})
-103         inode->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush}(inode);
-104         
-105     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
-106     \textcolor{keywordflow}{return};
-107 \}
+102                                    \{
+103     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush})
+104         inode->\hyperlink{structinode_ae2972ef183f5c39aac7cb83b9f8a04a8}{flush}(inode);
+105         
+106     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
+107     \textcolor{keywordflow}{return};
+108 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_afb548bce2f916933a7c7d95a48b57cdb}{\index{fs.\+c@{fs.\+c}!fs\+\_\+ioctl@{fs\+\_\+ioctl}}
 \index{fs\+\_\+ioctl@{fs\+\_\+ioctl}!fs.\+c@{fs.\+c}}
@@ -164,7 +165,7 @@ References errno, and inode\+::flush.
 )}}\label{fs_8c_afb548bce2f916933a7c7d95a48b57cdb}
 
 
-Definition at line 109 of file fs.\+c.
+Definition at line 110 of file fs.\+c.
 
 
 
@@ -172,13 +173,13 @@ References errno, and inode\+::ioctl.
 
 
 \begin{DoxyCode}
-109                                                       \{
-110     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl})
-111         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl}(inode, req, buf);
-112     
-113     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
-114     \textcolor{keywordflow}{return} -1;
-115 \}
+110                                                       \{
+111     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl})
+112         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a636843da203574bc338b016758bf8c7e}{ioctl}(inode, req, buf);
+113     
+114     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
+115     \textcolor{keywordflow}{return} -1;
+116 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_a8e53a98b93e6b136196b2ebd99e43dcd}{\index{fs.\+c@{fs.\+c}!fs\+\_\+read@{fs\+\_\+read}}
 \index{fs\+\_\+read@{fs\+\_\+read}!fs.\+c@{fs.\+c}}
@@ -191,7 +192,7 @@ References errno, and inode\+::ioctl.
 )}}\label{fs_8c_a8e53a98b93e6b136196b2ebd99e43dcd}
 
 
-Definition at line 16 of file fs.\+c.
+Definition at line 17 of file fs.\+c.
 
 
 
@@ -199,13 +200,13 @@ References errno, and inode\+::read.
 
 
 \begin{DoxyCode}
-16                                                       \{
-17     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read})
-18         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read}(inode, ptr, len);
-19     
-20     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;        
-21     \textcolor{keywordflow}{return} 0;
-22 \}
+17                                                       \{
+18     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read})
+19         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_ae2c5e8a0a372334b97024fbd9ef694c1}{read}(inode, ptr, len);
+20     
+21     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;        
+22     \textcolor{keywordflow}{return} 0;
+23 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_af6320f9253c5bd1f298876fdbe41b9de}{\index{fs.\+c@{fs.\+c}!fs\+\_\+readdir@{fs\+\_\+readdir}}
 \index{fs\+\_\+readdir@{fs\+\_\+readdir}!fs.\+c@{fs.\+c}}
@@ -217,7 +218,7 @@ References errno, and inode\+::read.
 )}}\label{fs_8c_af6320f9253c5bd1f298876fdbe41b9de}
 
 
-Definition at line 32 of file fs.\+c.
+Definition at line 33 of file fs.\+c.
 
 
 
@@ -225,24 +226,24 @@ References dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, errno, inode\+::ino, kma
 
 
 \begin{DoxyCode}
-32                                                            \{
-33 
-34     \hyperlink{structinode}{inode\_t}* map = NULL;
-35     \textcolor{keywordflow}{if}((map = (\hyperlink{structinode}{inode\_t}*) \hyperlink{vfs_8c_a4f7b5f17ac7c4b3a0a574d9620e0512d}{vfs\_mapped\_at\_index}(inode, index)) != NULL) \{
-36         \textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}* ent = (\textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} 
+33                                                            \{
+34 
+35     \hyperlink{structinode}{inode\_t}* map = NULL;
+36     \textcolor{keywordflow}{if}((map = (\hyperlink{structinode}{inode\_t}*) \hyperlink{vfs_8c_a4f7b5f17ac7c4b3a0a574d9620e0512d}{vfs\_mapped\_at\_index}(inode, index)) != NULL) \{
+37         \textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}* ent = (\textcolor{keyword}{struct }\hyperlink{structdirent}{dirent}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} 
       \hyperlink{structdirent}{dirent}));
-37         strcpy(ent->\hyperlink{structdirent_a39a9af609c1808f0bdf90155bd3f55ed}{d\_name}, map->\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name});
-38         ent->\hyperlink{structdirent_aef01e92a29cba347e6e6a5f22d4908a2}{d\_ino} = map->\hyperlink{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{ino};
-39         
-40         \textcolor{keywordflow}{return} ent;
-41     \}
-42 
-43     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir})
-44         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir}(inode, index - \hyperlink{vfs_8c_a829e1c063db610c46554db0e28cb2bcb}{vfs\_mapped\_count}(inode));
-45         
-46     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
-47     \textcolor{keywordflow}{return} NULL;
-48 \}
+38         strcpy(ent->\hyperlink{structdirent_a39a9af609c1808f0bdf90155bd3f55ed}{d\_name}, map->\hyperlink{structinode_ad64802d9d4ebdd1c56af5ab6e302faf0}{name});
+39         ent->\hyperlink{structdirent_aef01e92a29cba347e6e6a5f22d4908a2}{d\_ino} = map->\hyperlink{structinode_a1a77be0f24a6c9a18bbdbcecfb75df7c}{ino};
+40         
+41         \textcolor{keywordflow}{return} ent;
+42     \}
+43 
+44     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir})
+45         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a0a54c11571f19f23322f3e6ad3ecb113}{readdir}(inode, index - \hyperlink{vfs_8c_a829e1c063db610c46554db0e28cb2bcb}{vfs\_mapped\_count}(inode));
+46         
+47     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
+48     \textcolor{keywordflow}{return} NULL;
+49 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_a23db0b0dd4f66cd2cc34a9116164cfc4}{\index{fs.\+c@{fs.\+c}!fs\+\_\+rename@{fs\+\_\+rename}}
 \index{fs\+\_\+rename@{fs\+\_\+rename}!fs.\+c@{fs.\+c}}
@@ -255,7 +256,7 @@ References dirent\+::d\+\_\+ino, dirent\+::d\+\_\+name, errno, inode\+::ino, kma
 )}}\label{fs_8c_a23db0b0dd4f66cd2cc34a9116164cfc4}
 
 
-Definition at line 77 of file fs.\+c.
+Definition at line 78 of file fs.\+c.
 
 
 
@@ -263,13 +264,13 @@ References errno, and inode\+::rename.
 
 
 \begin{DoxyCode}
-77                                                                   \{
-78     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a5a309a9c4ada7e4d062162b06125a929}{rename})
-79         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a5a309a9c4ada7e4d062162b06125a929}{rename}(inode, oldname, newname);
-80     
-81     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;        
-82     \textcolor{keywordflow}{return} -1;
-83 \}
+78                                                                   \{
+79     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a5a309a9c4ada7e4d062162b06125a929}{rename})
+80         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a5a309a9c4ada7e4d062162b06125a929}{rename}(inode, oldname, newname);
+81     
+82     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;        
+83     \textcolor{keywordflow}{return} -1;
+84 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_ab0e4dd01b14f5ba2495318b840acdfff}{\index{fs.\+c@{fs.\+c}!fs\+\_\+unlink@{fs\+\_\+unlink}}
 \index{fs\+\_\+unlink@{fs\+\_\+unlink}!fs.\+c@{fs.\+c}}
@@ -281,7 +282,7 @@ References errno, and inode\+::rename.
 )}}\label{fs_8c_ab0e4dd01b14f5ba2495318b840acdfff}
 
 
-Definition at line 85 of file fs.\+c.
+Definition at line 86 of file fs.\+c.
 
 
 
@@ -289,13 +290,13 @@ References errno, and inode\+::unlink.
 
 
 \begin{DoxyCode}
-85                                                 \{
-86     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink})
-87         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name});
-88         
-89     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
-90     \textcolor{keywordflow}{return} -1;
-91 \}
+86                                                 \{
+87     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink})
+88         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_adf65bac80736631b8000d3d34e953aaa}{unlink}(inode, \hyperlink{attribute_8h_aae08e5b919f01beb6c69d2859e0dfc27}{name});
+89         
+90     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
+91     \textcolor{keywordflow}{return} -1;
+92 \}
 \end{DoxyCode}
 \hypertarget{fs_8c_a7d87cba454ac1212bfc2277b5792bf95}{\index{fs.\+c@{fs.\+c}!fs\+\_\+write@{fs\+\_\+write}}
 \index{fs\+\_\+write@{fs\+\_\+write}!fs.\+c@{fs.\+c}}
@@ -308,7 +309,7 @@ References errno, and inode\+::unlink.
 )}}\label{fs_8c_a7d87cba454ac1212bfc2277b5792bf95}
 
 
-Definition at line 24 of file fs.\+c.
+Definition at line 25 of file fs.\+c.
 
 
 
@@ -316,11 +317,11 @@ References errno, and inode\+::write.
 
 
 \begin{DoxyCode}
-24                                                        \{
-25     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write})
-26         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write}(inode, ptr, len);
-27         
-28     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
-29     \textcolor{keywordflow}{return} 0;
-30 \}
+25                                                        \{
+26     \textcolor{keywordflow}{if}(inode->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write})
+27         \textcolor{keywordflow}{return} inode->\hyperlink{structinode_a53a123d38834fa17e7ef5c1e5f47bba2}{write}(inode, ptr, len);
+28         
+29     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;    
+30     \textcolor{keywordflow}{return} 0;
+31 \}
 \end{DoxyCode}

@@ -4,110 +4,164 @@
     <compoundname>getpid.c</compoundname>
     <includes refid="aplus_8h" local="no">aplus.h</includes>
     <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
     <includes local="no">unistd.h</includes>
     <includes local="no">fcntl.h</includes>
     <includes local="no">errno.h</includes>
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1503">
+      <node id="1591">
         <label>sys/stat.h</label>
       </node>
-      <node id="1493">
+      <node id="1582">
         <label>stdarg.h</label>
       </node>
-      <node id="1496">
+      <node id="1585">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1491" relation="include">
+        <childnode refid="1580" relation="include">
         </childnode>
-        <childnode refid="1497" relation="include">
+        <childnode refid="1586" relation="include">
         </childnode>
-        <childnode refid="1492" relation="include">
+        <childnode refid="1581" relation="include">
         </childnode>
-        <childnode refid="1494" relation="include">
+        <childnode refid="1583" relation="include">
         </childnode>
-        <childnode refid="1499" relation="include">
+        <childnode refid="1588" relation="include">
         </childnode>
       </node>
-      <node id="1492">
+      <node id="1590">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="1581" relation="include">
+        </childnode>
+        <childnode refid="1587" relation="include">
+        </childnode>
+        <childnode refid="1588" relation="include">
+        </childnode>
+        <childnode refid="1591" relation="include">
+        </childnode>
+        <childnode refid="1592" relation="include">
+        </childnode>
+      </node>
+      <node id="1581">
         <label>stdint.h</label>
       </node>
-      <node id="1495">
+      <node id="1584">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1491" relation="include">
+        <childnode refid="1580" relation="include">
         </childnode>
-        <childnode refid="1496" relation="include">
+        <childnode refid="1585" relation="include">
         </childnode>
-        <childnode refid="1492" relation="include">
+        <childnode refid="1581" relation="include">
         </childnode>
       </node>
-      <node id="1502">
+      <node id="1595">
+        <label>setjmp.h</label>
+      </node>
+      <node id="1589">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="1581" relation="include">
+        </childnode>
+        <childnode refid="1580" relation="include">
+        </childnode>
+        <childnode refid="1590" relation="include">
+        </childnode>
+        <childnode refid="1594" relation="include">
+        </childnode>
+        <childnode refid="1588" relation="include">
+        </childnode>
+        <childnode refid="1595" relation="include">
+        </childnode>
+      </node>
+      <node id="1597">
         <label>errno.h</label>
       </node>
-      <node id="1501">
+      <node id="1596">
         <label>fcntl.h</label>
       </node>
-      <node id="1498">
+      <node id="1587">
         <label>stddef.h</label>
       </node>
-      <node id="1497">
+      <node id="1586">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1498" relation="include">
+        <childnode refid="1587" relation="include">
         </childnode>
-        <childnode refid="1492" relation="include">
+        <childnode refid="1581" relation="include">
         </childnode>
-        <childnode refid="1499" relation="include">
+        <childnode refid="1588" relation="include">
         </childnode>
       </node>
-      <node id="1491">
+      <node id="1580">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1492" relation="include">
+        <childnode refid="1581" relation="include">
         </childnode>
-        <childnode refid="1493" relation="include">
+        <childnode refid="1582" relation="include">
         </childnode>
-        <childnode refid="1494" relation="include">
+        <childnode refid="1583" relation="include">
         </childnode>
       </node>
-      <node id="1490">
+      <node id="1579">
         <label>src/syscall/getpid.c</label>
         <link refid="getpid.c"/>
-        <childnode refid="1491" relation="include">
+        <childnode refid="1580" relation="include">
         </childnode>
-        <childnode refid="1495" relation="include">
+        <childnode refid="1584" relation="include">
         </childnode>
-        <childnode refid="1500" relation="include">
+        <childnode refid="1589" relation="include">
         </childnode>
-        <childnode refid="1501" relation="include">
+        <childnode refid="1593" relation="include">
         </childnode>
-        <childnode refid="1502" relation="include">
+        <childnode refid="1596" relation="include">
         </childnode>
-        <childnode refid="1503" relation="include">
+        <childnode refid="1597" relation="include">
         </childnode>
-        <childnode refid="1504" relation="include">
+        <childnode refid="1591" relation="include">
+        </childnode>
+        <childnode refid="1592" relation="include">
         </childnode>
       </node>
-      <node id="1499">
+      <node id="1588">
         <label>sys/types.h</label>
       </node>
-      <node id="1494">
+      <node id="1583">
         <label>string.h</label>
       </node>
-      <node id="1500">
+      <node id="1593">
         <label>unistd.h</label>
       </node>
-      <node id="1504">
-        <label>dirent.h</label>
+      <node id="1594">
+        <label>signal.h</label>
+      </node>
+      <node id="1592">
+        <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1500" relation="include">
+        <childnode refid="1593" relation="include">
         </childnode>
-        <childnode refid="1499" relation="include">
+        <childnode refid="1588" relation="include">
         </childnode>
       </node>
     </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="getpid_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" prot="public" static="no" mutable="no">
+        <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+        <definition>task_t* current_task</definition>
+        <argsstring></argsstring>
+        <name>current_task</name>
+        <briefdescription>
+<para>Current task address. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/getpid.c" line="14" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
       <sectiondef kind="func">
       <memberdef kind="function" id="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>pid_t</type>
@@ -120,8 +174,24 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/getpid.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/syscall/getpid.c" bodystart="13" bodyend="15"/>
-        <references refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" compoundref="src_2sched_8c" startline="253" endline="258">schedule_getpid</references>
+        <location file="/opt/prj/aPlus/src/syscall/getpid.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/syscall/getpid.c" bodystart="16" bodyend="18"/>
+        <references refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" compoundref="src_2sched_8c" startline="309" endline="314">schedule_getpid</references>
+      </memberdef>
+      <memberdef kind="function" id="getpid_8c_1a3f9a9a94f33dc16eac796ae714736d07" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>pid_t</type>
+        <definition>pid_t sys_getppid</definition>
+        <argsstring>()</argsstring>
+        <name>sys_getppid</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/getpid.c" line="20" column="1" bodyfile="/opt/prj/aPlus/src/syscall/getpid.c" bodystart="20" bodyend="29"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structtask_1a34c6613744820a1e8127756fb6a5392c" compoundref="task_8h" startline="128">task::parent</references>
+        <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
       </memberdef>
       <memberdef kind="function" id="getpid_8c_1a74381482f24d171c9ad80f0c85fe2b3b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -140,7 +210,26 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/getpid.c" line="18" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/getpid.c" line="32" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="getpid_8c_1a93b6153d2f6727c9a54dd537cde1f6f5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>SYSCALL</definition>
+        <argsstring>(sys_getppid, 32)</argsstring>
+        <name>SYSCALL</name>
+        <param>
+          <type><ref refid="getpid_8c_1a3f9a9a94f33dc16eac796ae714736d07" kindref="member">sys_getppid</ref></type>
+        </param>
+        <param>
+          <type>32</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/syscall/getpid.c" line="33" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -151,21 +240,36 @@
 <codeline lineno="1"><highlight class="normal"></highlight></codeline>
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="syscall_8h" kindref="compound">aplus/syscall.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/stat.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/stat.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="dirent_8h" kindref="compound">dirent.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
-<codeline lineno="13" refid="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" kindref="member">sys_getpid</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" kindref="member">schedule_getpid</ref>();</highlight></codeline>
-<codeline lineno="15"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="16"><highlight class="normal"></highlight></codeline>
-<codeline lineno="17"><highlight class="normal"></highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><ref refid="getpid_8c_1a74381482f24d171c9ad80f0c85fe2b3b" kindref="member">SYSCALL</ref>(<ref refid="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" kindref="member">sys_getpid</ref>,<sp/>5);</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="getpid_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" kindref="member">sys_getpid</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" kindref="member">schedule_getpid</ref>();</highlight></codeline>
+<codeline lineno="18"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="getpid_8c_1a3f9a9a94f33dc16eac796ae714736d07" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="getpid_8c_1a3f9a9a94f33dc16eac796ae714736d07" kindref="member">sys_getppid</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1a34c6613744820a1e8127756fb6a5392c" kindref="member">parent</ref>)</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>current_task-&gt;<ref refid="structtask_1a34c6613744820a1e8127756fb6a5392c" kindref="member">parent</ref>-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ESRCH;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><ref refid="getpid_8c_1a74381482f24d171c9ad80f0c85fe2b3b" kindref="member">SYSCALL</ref>(<ref refid="getpid_8c_1a81186ae980bd7a8c58c8a4d838f5decb" kindref="member">sys_getpid</ref>,<sp/>5);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><ref refid="getpid_8c_1a74381482f24d171c9ad80f0c85fe2b3b" kindref="member">SYSCALL</ref>(<ref refid="getpid_8c_1a3f9a9a94f33dc16eac796ae714736d07" kindref="member">sys_getppid</ref>,<sp/>32);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/getpid.c"/>
   </compounddef>

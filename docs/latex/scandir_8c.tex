@@ -32,13 +32,13 @@ Definition at line 11 of file scandir.\+c.
 
 
 
-References d, errno, opendir(), and readdir().
+References errno, opendir(), and readdir().
 
 
 \begin{DoxyCode}
 11                                                                                                            
                                                              \{
-12     \hyperlink{struct____DIR}{DIR}* \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d} = \hyperlink{dirent_8h_afa648ff43ec9eba592716a334f243111}{opendir}(pathname);
+12     \hyperlink{struct____DIR}{DIR}* d = \hyperlink{dirent_8h_afa648ff43ec9eba592716a334f243111}{opendir}(pathname);
 13     \textcolor{keywordflow}{if}(d == NULL) \{
 14         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOENT;
 15         \textcolor{keywordflow}{return} -1;

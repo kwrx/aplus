@@ -25,12 +25,8 @@
       <node id="63">
         <label>string.h</label>
       </node>
-      <node id="64">
-        <label>aplus/spinlock.h</label>
-        <link refid="spinlock_8h"/>
-      </node>
       <node id="59">
-        <label>src/arch/serial.c</label>
+        <label>src/arch/i386/serial.c</label>
         <link refid="serial.c"/>
         <childnode refid="60" relation="include">
         </childnode>
@@ -38,6 +34,10 @@
         </childnode>
         <childnode refid="61" relation="include">
         </childnode>
+      </node>
+      <node id="64">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
       </node>
     </incdepgraph>
       <sectiondef kind="var">
@@ -55,7 +55,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/serial.c" line="7" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="7" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/serial.c" line="7" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/serial.c" bodystart="7" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -78,7 +78,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/serial.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="11" bodyend="14"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/serial.c" line="11" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/serial.c" bodystart="11" bodyend="14"/>
         <references refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" compoundref="spinlock_8h" startline="51">fastlock_waiton</references>
         <references refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" compoundref="serial_8c" startline="7">serial</references>
       </memberdef>
@@ -97,7 +97,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/serial.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="16" bodyend="20"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/serial.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/serial.c" bodystart="16" bodyend="20"/>
         <references refid="spinlock_8h_1a34b538b8c053bec1d149f9a4258aca89" compoundref="spinlock_8h" startline="51">fastlock_waiton</references>
         <references refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" compoundref="serial_8c" startline="7">serial</references>
       </memberdef>
@@ -112,7 +112,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/serial.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/arch/serial.c" bodystart="22" bodyend="34"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/serial.c" line="22" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/serial.c" bodystart="22" bodyend="34"/>
         <references refid="serial_8c_1aaad9ee4d2adfe35b53820a6ac8b5636d" compoundref="serial_8c" startline="7">serial</references>
       </memberdef>
       </sectiondef>
@@ -156,6 +156,6 @@
 <codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline lineno="34"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/opt/prj/aPlus/src/arch/serial.c"/>
+    <location file="/opt/prj/aPlus/src/arch/i386/serial.c"/>
   </compounddef>
 </doxygen>

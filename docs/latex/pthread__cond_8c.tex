@@ -88,12 +88,12 @@ References errno, pthread\+\_\+cond\+::semaphore, and pthread\+\_\+cond\+::waiti
 25                                                       \{
 26     \textcolor{keywordflow}{if}(!cond) \{
 27         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-28         \textcolor{keywordflow}{return} 1;
+28         \textcolor{keywordflow}{return} -1;
 29     \}
 30 
 31     \textcolor{keywordflow}{if}(cond->\hyperlink{structpthread__cond_a37ab813587afbb6cfc356963c7960776}{waiting}) \{
 32         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBUSY;
-33         \textcolor{keywordflow}{return} 1;
+33         \textcolor{keywordflow}{return} -1;
 34     \}
 35 
 36 
@@ -124,7 +124,7 @@ References errno, pthread\+\_\+cond\+::semaphore, and pthread\+\_\+cond\+::waiti
 13                                                                                    \{
 14     \textcolor{keywordflow}{if}(!cond) \{
 15         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-16         \textcolor{keywordflow}{return} 1;
+16         \textcolor{keywordflow}{return} -1;
 17     \}
 18 
 19     cond->\hyperlink{structpthread__cond_a37ab813587afbb6cfc356963c7960776}{waiting} = 0;
@@ -196,17 +196,17 @@ References pthread\+\_\+context\+::cond, errno, pthread\+\_\+mutex\+::owner, pth
            \{
 45         \textcolor{keywordflow}{if}(!cond) \{
 46         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-47         \textcolor{keywordflow}{return} 1;
+47         \textcolor{keywordflow}{return} -1;
 48     \}
 49 
 50     \textcolor{keywordflow}{if}(!mutex) \{
 51         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-52         \textcolor{keywordflow}{return} 1;
+52         \textcolor{keywordflow}{return} -1;
 53     \}
 54 
 55     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} != \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}()) \{
 56         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-57         \textcolor{keywordflow}{return} 1;
+57         \textcolor{keywordflow}{return} -1;
 58     \}
 59 
 60     \hyperlink{structpthread__context}{pthread\_context\_t}* ctx = (\hyperlink{structpthread__context}{pthread\_context\_t}*) 

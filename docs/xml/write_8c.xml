@@ -13,146 +13,146 @@
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <includes local="no">stdio.h</includes>
     <incdepgraph>
-      <node id="1916">
+      <node id="2037">
         <label>sys/stat.h</label>
       </node>
-      <node id="1911">
+      <node id="2032">
         <label>stdarg.h</label>
       </node>
-      <node id="1920">
+      <node id="2041">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1909" relation="include">
+        <childnode refid="2030" relation="include">
         </childnode>
-        <childnode refid="1921" relation="include">
+        <childnode refid="2042" relation="include">
         </childnode>
-        <childnode refid="1910" relation="include">
+        <childnode refid="2031" relation="include">
         </childnode>
-        <childnode refid="1912" relation="include">
+        <childnode refid="2033" relation="include">
         </childnode>
-        <childnode refid="1915" relation="include">
+        <childnode refid="2036" relation="include">
         </childnode>
       </node>
-      <node id="1913">
+      <node id="2034">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1910" relation="include">
+        <childnode refid="2031" relation="include">
         </childnode>
-        <childnode refid="1914" relation="include">
+        <childnode refid="2035" relation="include">
         </childnode>
-        <childnode refid="1915" relation="include">
+        <childnode refid="2036" relation="include">
         </childnode>
-        <childnode refid="1916" relation="include">
+        <childnode refid="2037" relation="include">
         </childnode>
-        <childnode refid="1917" relation="include">
+        <childnode refid="2038" relation="include">
         </childnode>
       </node>
-      <node id="1910">
+      <node id="2031">
         <label>stdint.h</label>
       </node>
-      <node id="1919">
+      <node id="2040">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1909" relation="include">
+        <childnode refid="2030" relation="include">
         </childnode>
-        <childnode refid="1920" relation="include">
+        <childnode refid="2041" relation="include">
         </childnode>
-        <childnode refid="1910" relation="include">
+        <childnode refid="2031" relation="include">
         </childnode>
       </node>
-      <node id="1924">
+      <node id="2045">
         <label>setjmp.h</label>
       </node>
-      <node id="1908">
+      <node id="2029">
         <label>src/syscall/write.c</label>
         <link refid="write.c"/>
-        <childnode refid="1909" relation="include">
+        <childnode refid="2030" relation="include">
         </childnode>
-        <childnode refid="1913" relation="include">
+        <childnode refid="2034" relation="include">
         </childnode>
-        <childnode refid="1919" relation="include">
+        <childnode refid="2040" relation="include">
         </childnode>
-        <childnode refid="1922" relation="include">
+        <childnode refid="2043" relation="include">
         </childnode>
-        <childnode refid="1918" relation="include">
+        <childnode refid="2039" relation="include">
         </childnode>
-        <childnode refid="1925" relation="include">
+        <childnode refid="2046" relation="include">
         </childnode>
-        <childnode refid="1926" relation="include">
+        <childnode refid="2047" relation="include">
         </childnode>
-        <childnode refid="1916" relation="include">
+        <childnode refid="2037" relation="include">
         </childnode>
-        <childnode refid="1917" relation="include">
+        <childnode refid="2038" relation="include">
         </childnode>
-        <childnode refid="1927" relation="include">
+        <childnode refid="2048" relation="include">
         </childnode>
       </node>
-      <node id="1922">
+      <node id="2043">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1910" relation="include">
+        <childnode refid="2031" relation="include">
         </childnode>
-        <childnode refid="1909" relation="include">
+        <childnode refid="2030" relation="include">
         </childnode>
-        <childnode refid="1913" relation="include">
+        <childnode refid="2034" relation="include">
         </childnode>
-        <childnode refid="1923" relation="include">
+        <childnode refid="2044" relation="include">
         </childnode>
-        <childnode refid="1915" relation="include">
+        <childnode refid="2036" relation="include">
         </childnode>
-        <childnode refid="1924" relation="include">
+        <childnode refid="2045" relation="include">
         </childnode>
       </node>
-      <node id="1926">
+      <node id="2047">
         <label>errno.h</label>
       </node>
-      <node id="1925">
+      <node id="2046">
         <label>fcntl.h</label>
       </node>
-      <node id="1914">
+      <node id="2035">
         <label>stddef.h</label>
       </node>
-      <node id="1921">
+      <node id="2042">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1914" relation="include">
+        <childnode refid="2035" relation="include">
         </childnode>
-        <childnode refid="1910" relation="include">
+        <childnode refid="2031" relation="include">
         </childnode>
-        <childnode refid="1915" relation="include">
+        <childnode refid="2036" relation="include">
         </childnode>
       </node>
-      <node id="1909">
+      <node id="2030">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1910" relation="include">
+        <childnode refid="2031" relation="include">
         </childnode>
-        <childnode refid="1911" relation="include">
+        <childnode refid="2032" relation="include">
         </childnode>
-        <childnode refid="1912" relation="include">
+        <childnode refid="2033" relation="include">
         </childnode>
       </node>
-      <node id="1915">
+      <node id="2036">
         <label>sys/types.h</label>
       </node>
-      <node id="1912">
+      <node id="2033">
         <label>string.h</label>
       </node>
-      <node id="1918">
+      <node id="2039">
         <label>unistd.h</label>
       </node>
-      <node id="1923">
+      <node id="2044">
         <label>signal.h</label>
       </node>
-      <node id="1917">
+      <node id="2038">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1918" relation="include">
+        <childnode refid="2039" relation="include">
         </childnode>
-        <childnode refid="1915" relation="include">
+        <childnode refid="2036" relation="include">
         </childnode>
       </node>
-      <node id="1927">
+      <node id="2048">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -168,7 +168,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/write.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/write.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="write_8c_1a9af8258c3554800f6613f8147544225f" prot="public" static="no" mutable="no">
         <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
@@ -208,10 +208,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/write.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/syscall/write.c" bodystart="19" bodyend="32"/>
+        <location file="/opt/prj/aPlus/src/syscall/write.c" line="19" column="1" bodyfile="/opt/prj/aPlus/src/syscall/write.c" bodystart="19" bodyend="37"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="105">task::fd</references>
-        <references refid="fs_8c_1a7d87cba454ac1212bfc2277b5792bf95" compoundref="fs_8c" startline="24" endline="30">fs_write</references>
+        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="107">task::fd</references>
+        <references refid="fs_8c_1a7d87cba454ac1212bfc2277b5792bf95" compoundref="fs_8c" startline="25" endline="31">fs_write</references>
+        <references refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" compoundref="task_8h" startline="35">TASK_MAX_FD</references>
       </memberdef>
       <memberdef kind="function" id="write_8c_1ac98021d255ccf030a8cbe505a788031f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -230,7 +231,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/write.c" line="34" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/write.c" line="39" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -260,18 +261,23 @@
 <codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
 <codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
-<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="fs_8c_1a7d87cba454ac1212bfc2277b5792bf95" kindref="member">fs_write</ref>(ino,<sp/>ptr,<sp/>size);</highlight></codeline>
-<codeline lineno="32"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><ref refid="write_8c_1ac98021d255ccf030a8cbe505a788031f" kindref="member">SYSCALL</ref>(<ref refid="write_8c_1a0d770d346dc0c93e695fcb8a0a0f5295" kindref="member">sys_write</ref>,<sp/>17);</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fd<sp/>&lt;<sp/>0<sp/>||<sp/>fd<sp/>&gt;<sp/><ref refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" kindref="member">TASK_MAX_FD</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="fs_8c_1a7d87cba454ac1212bfc2277b5792bf95" kindref="member">fs_write</ref>(ino,<sp/>ptr,<sp/>size);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><ref refid="write_8c_1ac98021d255ccf030a8cbe505a788031f" kindref="member">SYSCALL</ref>(<ref refid="write_8c_1a0d770d346dc0c93e695fcb8a0a0f5295" kindref="member">sys_write</ref>,<sp/>17);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/write.c"/>
   </compounddef>

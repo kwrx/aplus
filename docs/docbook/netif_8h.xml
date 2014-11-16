@@ -101,20 +101,6 @@
                     </listitem>
                 </itemizedlist>
             </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                            <para>#define <link linkend="netif_8h_1a7fa8be0d28d77b4ab4f44d924d4d69e2">ARP_DEBUG</link></para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                            <para>#define <link linkend="netif_8h_1afb47e3cd6431190b167127036fd827eb">RTL8139_DEBUG</link></para>
-                    </listitem>
-                </itemizedlist>
-            </para>
         </simplesect>
         <simplesect>
             <title>Typedefs</title>

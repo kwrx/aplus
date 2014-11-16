@@ -3,6 +3,7 @@ var dir_f434c0cea4b0f002ce018129171d40a3 =
     [ "_execve.c", "__execve_8c.html", "__execve_8c" ],
     [ "alarm.c", "alarm_8c.html", "alarm_8c" ],
     [ "alphasort.c", "alphasort_8c.html", "alphasort_8c" ],
+    [ "chdir.c", "chdir_8c.html", "chdir_8c" ],
     [ "closedir.c", "closedir_8c.html", "closedir_8c" ],
     [ "config.h", "config_8h.html", null ],
     [ "dup2.c", "dup2_8c.html", "dup2_8c" ],
@@ -15,6 +16,7 @@ var dir_f434c0cea4b0f002ce018129171d40a3 =
     [ "execvp.c", "execvp_8c.html", "execvp_8c" ],
     [ "getcwd.c", "getcwd_8c.html", "getcwd_8c" ],
     [ "gid.c", "gid_8c.html", "gid_8c" ],
+    [ "grp.c", "grp_8c.html", "grp_8c" ],
     [ "lstat.c", "lstat_8c.html", "lstat_8c" ],
     [ "nanosleep.c", "nanosleep_8c.html", "nanosleep_8c" ],
     [ "opendir.c", "opendir_8c.html", "opendir_8c" ],
@@ -23,8 +25,14 @@ var dir_f434c0cea4b0f002ce018129171d40a3 =
     [ "scandir.c", "scandir_8c.html", "scandir_8c" ],
     [ "sched.c", "usr_2src_2libposix_2src_2sched_8c.html", "usr_2src_2libposix_2src_2sched_8c" ],
     [ "seekdir.c", "seekdir_8c.html", "seekdir_8c" ],
+    [ "sigaction.c", "sigaction_8c.html", "sigaction_8c" ],
+    [ "sigprocmask.c", "sigprocmask_8c.html", "sigprocmask_8c" ],
+    [ "sigsuspend.c", "sigsuspend_8c.html", "sigsuspend_8c" ],
     [ "sleep.c", "sleep_8c.html", "sleep_8c" ],
     [ "telldir.c", "telldir_8c.html", "telldir_8c" ],
+    [ "tty.c", "usr_2src_2libposix_2src_2tty_8c.html", "usr_2src_2libposix_2src_2tty_8c" ],
     [ "uid.c", "uid_8c.html", "uid_8c" ],
-    [ "usleep.c", "usleep_8c.html", "usleep_8c" ]
+    [ "umask.c", "umask_8c.html", "umask_8c" ],
+    [ "usleep.c", "usleep_8c.html", "usleep_8c" ],
+    [ "wait.c", "usr_2src_2libposix_2src_2wait_8c.html", "usr_2src_2libposix_2src_2wait_8c" ]
 ];

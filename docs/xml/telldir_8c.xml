@@ -10,51 +10,51 @@
     <includes local="no">string.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="2203">
+      <node id="2403">
         <label>stdlib.h</label>
       </node>
-      <node id="2205">
+      <node id="2405">
         <label>errno.h</label>
       </node>
-      <node id="2201">
+      <node id="2401">
         <label>fcntl.h</label>
       </node>
-      <node id="2197">
+      <node id="2397">
         <label>usr/src/libposix/src/telldir.c</label>
         <link refid="telldir.c"/>
-        <childnode refid="2198" relation="include">
+        <childnode refid="2398" relation="include">
         </childnode>
-        <childnode refid="2199" relation="include">
+        <childnode refid="2399" relation="include">
         </childnode>
-        <childnode refid="2201" relation="include">
+        <childnode refid="2401" relation="include">
         </childnode>
-        <childnode refid="2202" relation="include">
+        <childnode refid="2402" relation="include">
         </childnode>
-        <childnode refid="2203" relation="include">
+        <childnode refid="2403" relation="include">
         </childnode>
-        <childnode refid="2204" relation="include">
+        <childnode refid="2404" relation="include">
         </childnode>
-        <childnode refid="2205" relation="include">
+        <childnode refid="2405" relation="include">
         </childnode>
       </node>
-      <node id="2200">
+      <node id="2400">
         <label>sys/types.h</label>
       </node>
-      <node id="2204">
+      <node id="2404">
         <label>string.h</label>
       </node>
-      <node id="2199">
+      <node id="2399">
         <label>unistd.h</label>
       </node>
-      <node id="2198">
+      <node id="2398">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2199" relation="include">
+        <childnode refid="2399" relation="include">
         </childnode>
-        <childnode refid="2200" relation="include">
+        <childnode refid="2400" relation="include">
         </childnode>
       </node>
-      <node id="2202">
+      <node id="2402">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -94,7 +94,7 @@
 <codeline lineno="8"><highlight class="normal"></highlight></codeline>
 <codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>
-<codeline lineno="11" refid="telldir_8c_1a8460dc201f4c651f8d6b84b4316e4180" refkind="member"><highlight class="normal">off_t<sp/><ref refid="telldir_8c_1a8460dc201f4c651f8d6b84b4316e4180" kindref="member">telldir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="11" refid="telldir_8c_1a8460dc201f4c651f8d6b84b4316e4180" refkind="member"><highlight class="normal">off_t<sp/><ref refid="telldir_8c_1a8460dc201f4c651f8d6b84b4316e4180" kindref="member">telldir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/>d)<sp/>{</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>

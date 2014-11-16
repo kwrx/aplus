@@ -29,7 +29,7 @@ Definition at line 13 of file opendir.\+c.
 
 
 
-References d, errno, \+\_\+\+\_\+\+D\+I\+R\+::fd, O\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y, and \+\_\+\+\_\+\+D\+I\+R\+::position.
+References errno, \+\_\+\+\_\+\+D\+I\+R\+::fd, O\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y, and \+\_\+\+\_\+\+D\+I\+R\+::position.
 
 
 \begin{DoxyCode}
@@ -40,10 +40,10 @@ References d, errno, \+\_\+\+\_\+\+D\+I\+R\+::fd, O\+\_\+\+D\+I\+R\+E\+C\+T\+O\+
 17         \textcolor{keywordflow}{return} NULL;
 18     \}
 19 
-20     \hyperlink{struct____DIR}{DIR}* \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d} = (\hyperlink{struct____DIR}{DIR}*) malloc(\textcolor{keyword}{sizeof}(\hyperlink{struct____DIR}{DIR}));
+20     \hyperlink{struct____DIR}{DIR}* d = (\hyperlink{struct____DIR}{DIR}*) malloc(\textcolor{keyword}{sizeof}(\hyperlink{struct____DIR}{DIR}));
 21     d->\hyperlink{struct____DIR_ae243fc79067063164eb8ec212e6a9e80}{fd} = fd;
 22     d->\hyperlink{struct____DIR_adcec35c0ea0ed4342c5425c494554397}{position} = 0;
 23 
-24     \textcolor{keywordflow}{return} \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d};
+24     \textcolor{keywordflow}{return} d;
 25 \}
 \end{DoxyCode}

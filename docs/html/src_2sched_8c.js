@@ -2,6 +2,7 @@ var src_2sched_8c =
 [
     [ "im_superuser", "src_2sched_8c.html#a11eb67cd27beaf272f76796f65d1ca1c", null ],
     [ "schedule", "src_2sched_8c.html#a7d06701ac073c331c83519e3909b7fce", null ],
+    [ "schedule_append_fd", "src_2sched_8c.html#afbffdc5298c98f92960a4fb9ba498063", null ],
     [ "schedule_child", "src_2sched_8c.html#a96793377662f91213568fe44bf4eccad", null ],
     [ "schedule_disable", "src_2sched_8c.html#a5018bd63e4a7d4dd926e06faf1b7513d", null ],
     [ "schedule_enable", "src_2sched_8c.html#a736a4d44542e7f4d0e231002cb7ddb8d", null ],
@@ -12,8 +13,10 @@ var src_2sched_8c =
     [ "schedule_init", "src_2sched_8c.html#a9f6f16348da2348d320d255437e6ac02", null ],
     [ "schedule_next", "src_2sched_8c.html#a94a683ba0ad510a6d51f369bb4496147", null ],
     [ "schedule_nextpid", "src_2sched_8c.html#a986fa43e945f396a2c722a1f766e03c8", null ],
+    [ "schedule_release", "src_2sched_8c.html#a4a8ae190cf5ce5a162ec5ddd69ddacc6", null ],
     [ "schedule_sbrk", "src_2sched_8c.html#a5af6764b80e6b9a24df59f7bb636f3d4", null ],
     [ "schedule_setpriority", "src_2sched_8c.html#a878aa3454133f7c01a4ba15ef68b9be2", null ],
+    [ "schedule_signal", "src_2sched_8c.html#ab51c47cc2ab19d79bf891f03e7912f87", null ],
     [ "schedule_wait", "src_2sched_8c.html#a74e91e3418aedd28c8ddf5d150859a70", null ],
     [ "schedule_yield", "src_2sched_8c.html#a4002881c26790c4390e314ce0e1ef1e8", null ],
     [ "current_task", "src_2sched_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5", null ],

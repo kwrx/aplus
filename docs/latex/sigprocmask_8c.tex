@@ -1,0 +1,71 @@
+\hypertarget{sigprocmask_8c}{\section{usr/src/libposix/src/sigprocmask.c File Reference}
+\label{sigprocmask_8c}\index{usr/src/libposix/src/sigprocmask.\+c@{usr/src/libposix/src/sigprocmask.\+c}}
+}
+{\ttfamily \#include $<$signal.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{sigprocmask_8c_a8828f2feb6a31f0ee3df4948d57616e4}{sigprocmask} (int how, const sigset\+\_\+t $\ast$set, sigset\+\_\+t $\ast$oset)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+static sigset\+\_\+t \hyperlink{sigprocmask_8c_a08b91a8e0cd0f47fe2d07a158a1d32df}{\+\_\+\+\_\+sigset} = 0
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{sigprocmask_8c_a8828f2feb6a31f0ee3df4948d57616e4}{\index{sigprocmask.\+c@{sigprocmask.\+c}!sigprocmask@{sigprocmask}}
+\index{sigprocmask@{sigprocmask}!sigprocmask.\+c@{sigprocmask.\+c}}
+\subsubsection[{sigprocmask}]{\setlength{\rightskip}{0pt plus 5cm}int sigprocmask (
+\begin{DoxyParamCaption}
+\item[{int}]{how, }
+\item[{const sigset\+\_\+t $\ast$}]{set, }
+\item[{sigset\+\_\+t $\ast$}]{oset}
+\end{DoxyParamCaption}
+)}}\label{sigprocmask_8c_a8828f2feb6a31f0ee3df4948d57616e4}
+
+
+Definition at line 8 of file sigprocmask.\+c.
+
+
+
+References \+\_\+\+\_\+sigset.
+
+
+\begin{DoxyCode}
+8                                                               \{
+9 
+10     \textcolor{keywordflow}{if}(oset)
+11         *oset = \hyperlink{sigprocmask_8c_a08b91a8e0cd0f47fe2d07a158a1d32df}{\_\_sigset};   
+12 
+13     \textcolor{keywordflow}{if}(set == NULL)
+14         \textcolor{keywordflow}{return} 0;
+15 
+16     \textcolor{keywordflow}{switch}(how) \{
+17         \textcolor{keywordflow}{case} SIG\_BLOCK:
+18             \hyperlink{sigprocmask_8c_a08b91a8e0cd0f47fe2d07a158a1d32df}{\_\_sigset} |= *set;
+19             \textcolor{keywordflow}{break};
+20         \textcolor{keywordflow}{case} SIG\_SETMASK:
+21             \hyperlink{sigprocmask_8c_a08b91a8e0cd0f47fe2d07a158a1d32df}{\_\_sigset} = *set;
+22             \textcolor{keywordflow}{break};
+23         \textcolor{keywordflow}{case} SIG\_UNBLOCK:
+24             \hyperlink{sigprocmask_8c_a08b91a8e0cd0f47fe2d07a158a1d32df}{\_\_sigset} &= ~(*set);
+25             \textcolor{keywordflow}{break};
+26     \}
+27 
+28     \textcolor{keywordflow}{return} 0;
+29 \}
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\hypertarget{sigprocmask_8c_a08b91a8e0cd0f47fe2d07a158a1d32df}{\index{sigprocmask.\+c@{sigprocmask.\+c}!\+\_\+\+\_\+sigset@{\+\_\+\+\_\+sigset}}
+\index{\+\_\+\+\_\+sigset@{\+\_\+\+\_\+sigset}!sigprocmask.\+c@{sigprocmask.\+c}}
+\subsubsection[{\+\_\+\+\_\+sigset}]{\setlength{\rightskip}{0pt plus 5cm}sigset\+\_\+t \+\_\+\+\_\+sigset = 0\hspace{0.3cm}{\ttfamily [static]}}}\label{sigprocmask_8c_a08b91a8e0cd0f47fe2d07a158a1d32df}
+
+
+Definition at line 6 of file sigprocmask.\+c.
+

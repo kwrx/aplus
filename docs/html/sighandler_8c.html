@@ -153,7 +153,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="sighandler_8c_source.html#l00016">16</a> of file <a class="el" href="sighandler_8c_source.html">sighandler.c</a>.</p>
 
-<p>References <a class="el" href="task_8h_source.html#l00113">task::signal_handler</a>.</p>
+<p>References <a class="el" href="task_8h_source.html#l00115">task::signal_handler</a>.</p>
 <div class="fragment"><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                                           {</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(!<a class="code" href="sighandler_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>)</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> -1;</div>
@@ -161,8 +161,8 @@ Variables</h2></td></tr>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="sighandler_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>-&gt;<a class="code" href="structtask.html#aea4c9382e5f4f148a0a74c0680729cf0">signal_handler</a> = (void (*)(int)) handler;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
-<div class="ttc" id="sighandler_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="sighandler_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
-<div class="ttc" id="structtask_html_aea4c9382e5f4f148a0a74c0680729cf0"><div class="ttname"><a href="structtask.html#aea4c9382e5f4f148a0a74c0680729cf0">task::signal_handler</a></div><div class="ttdeci">void(* signal_handler)(int)</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00113">task.h:113</a></div></div>
+<div class="ttc" id="sighandler_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="sighandler_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00037">sched.c:37</a></div></div>
+<div class="ttc" id="structtask_html_aea4c9382e5f4f148a0a74c0680729cf0"><div class="ttname"><a href="structtask.html#aea4c9382e5f4f148a0a74c0680729cf0">task::signal_handler</a></div><div class="ttdeci">void(* signal_handler)(int)</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00115">task.h:115</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -205,7 +205,7 @@ Variables</h2></td></tr>
 
 <p>Current task address. </p>
 
-<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00035">35</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00037">37</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
 
 </div>
 </div>
@@ -215,7 +215,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="sighandler_8c.html">sighandler.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

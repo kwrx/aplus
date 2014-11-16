@@ -10,121 +10,127 @@
     <includes refid="list_8h" local="no">aplus/list.h</includes>
     <includes local="no">stdint.h</includes>
     <includes local="no">sys/types.h</includes>
+    <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="1267">
+      <node id="1335">
         <label>sys/stat.h</label>
       </node>
-      <node id="1261">
+      <node id="1329">
         <label>stdarg.h</label>
       </node>
-      <node id="1264">
+      <node id="1332">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1260" relation="include">
+        <childnode refid="1328" relation="include">
         </childnode>
-        <childnode refid="1265" relation="include">
+        <childnode refid="1333" relation="include">
         </childnode>
-        <childnode refid="1266" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
-        <childnode refid="1267" relation="include">
+        <childnode refid="1335" relation="include">
         </childnode>
-        <childnode refid="1268" relation="include">
+        <childnode refid="1336" relation="include">
         </childnode>
       </node>
-      <node id="1260">
+      <node id="1328">
         <label>stdint.h</label>
       </node>
-      <node id="1271">
+      <node id="1339">
         <label>setjmp.h</label>
       </node>
-      <node id="1263">
+      <node id="1331">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1260" relation="include">
+        <childnode refid="1328" relation="include">
         </childnode>
-        <childnode refid="1259" relation="include">
+        <childnode refid="1327" relation="include">
         </childnode>
-        <childnode refid="1264" relation="include">
+        <childnode refid="1332" relation="include">
         </childnode>
-        <childnode refid="1270" relation="include">
+        <childnode refid="1338" relation="include">
         </childnode>
-        <childnode refid="1266" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
-        <childnode refid="1271" relation="include">
+        <childnode refid="1339" relation="include">
         </childnode>
       </node>
-      <node id="1265">
+      <node id="1343">
+        <label>errno.h</label>
+      </node>
+      <node id="1333">
         <label>stddef.h</label>
       </node>
-      <node id="1274">
+      <node id="1342">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1265" relation="include">
+        <childnode refid="1333" relation="include">
         </childnode>
-        <childnode refid="1260" relation="include">
+        <childnode refid="1328" relation="include">
         </childnode>
-        <childnode refid="1266" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
       </node>
-      <node id="1259">
+      <node id="1327">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1260" relation="include">
+        <childnode refid="1328" relation="include">
         </childnode>
-        <childnode refid="1261" relation="include">
+        <childnode refid="1329" relation="include">
         </childnode>
-        <childnode refid="1262" relation="include">
+        <childnode refid="1330" relation="include">
         </childnode>
       </node>
-      <node id="1266">
+      <node id="1334">
         <label>sys/types.h</label>
       </node>
-      <node id="1262">
+      <node id="1330">
         <label>string.h</label>
       </node>
-      <node id="1269">
+      <node id="1337">
         <label>unistd.h</label>
       </node>
-      <node id="1270">
+      <node id="1338">
         <label>signal.h</label>
       </node>
-      <node id="1273">
+      <node id="1341">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1260" relation="include">
+        <childnode refid="1328" relation="include">
         </childnode>
-        <childnode refid="1263" relation="include">
+        <childnode refid="1331" relation="include">
         </childnode>
       </node>
-      <node id="1258">
+      <node id="1326">
         <label>src/sched.c</label>
         <link refid="src/sched.c"/>
-        <childnode refid="1259" relation="include">
+        <childnode refid="1327" relation="include">
         </childnode>
-        <childnode refid="1263" relation="include">
+        <childnode refid="1331" relation="include">
         </childnode>
-        <childnode refid="1264" relation="include">
+        <childnode refid="1332" relation="include">
         </childnode>
-        <childnode refid="1272" relation="include">
+        <childnode refid="1340" relation="include">
         </childnode>
-        <childnode refid="1273" relation="include">
+        <childnode refid="1341" relation="include">
         </childnode>
-        <childnode refid="1274" relation="include">
+        <childnode refid="1342" relation="include">
         </childnode>
-        <childnode refid="1260" relation="include">
+        <childnode refid="1328" relation="include">
         </childnode>
-        <childnode refid="1266" relation="include">
+        <childnode refid="1334" relation="include">
+        </childnode>
+        <childnode refid="1343" relation="include">
         </childnode>
       </node>
-      <node id="1268">
+      <node id="1336">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1269" relation="include">
+        <childnode refid="1337" relation="include">
         </childnode>
-        <childnode refid="1266" relation="include">
+        <childnode refid="1334" relation="include">
         </childnode>
       </node>
-      <node id="1272">
+      <node id="1340">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -141,7 +147,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="35" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="37" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="src_2sched_8c_1ac08620610e2419aca3878305400a96b7" prot="public" static="no" mutable="no">
         <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
@@ -154,7 +160,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="40" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="40" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="42" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="src_2sched_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" prot="public" static="no" mutable="no">
         <type><ref refid="list_8h_1af629e6a6713d7de11eab50cbe6449b06" kindref="member">list_t</ref> *</type>
@@ -167,7 +173,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="46" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="46" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="48" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" prot="public" static="yes" mutable="no">
         <type>int</type>
@@ -181,7 +187,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="52" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="52" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="54" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="54" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -197,10 +203,10 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="58" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="58" bodyend="69"/>
-        <references refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" compoundref="task_8h" startline="101">task::gid</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="60" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="60" bodyend="71"/>
+        <references refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" compoundref="task_8h" startline="103">task::gid</references>
         <references refid="task_8h_1a6120fde6185466f2810fd0457009aaf0" compoundref="task_8h" startline="52">GID_SUPERUSER</references>
-        <references refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" compoundref="task_8h" startline="100">task::uid</references>
+        <references refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" compoundref="task_8h" startline="102">task::uid</references>
         <references refid="task_8h_1a14338e391bef80aa10d476348d085c5c" compoundref="task_8h" startline="51">UID_SUPERUSER</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -214,8 +220,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="75" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="75" bodyend="77"/>
-        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="77" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="77" bodyend="79"/>
+        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="54">sched_enabled</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a5018bd63e4a7d4dd926e06faf1b7513d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -228,8 +234,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="82" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="82" bodyend="84"/>
-        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="84" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="84" bodyend="86"/>
+        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="54">sched_enabled</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>pid_t</type>
@@ -242,7 +248,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="89" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="89" bodyend="92"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="91" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="91" bodyend="94"/>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
@@ -256,10 +262,10 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="100" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="100" bodyend="107"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="102" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="102" bodyend="109"/>
         <references refid="list_8h_1aa288c0785df071ed8643763202928c82" compoundref="list_8h" startline="282">list_init</references>
-        <references refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" compoundref="src_2sched_8c" startline="75" endline="77">schedule_enable</references>
-        <references refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" compoundref="task_8c" startline="184" endline="212">task_init</references>
+        <references refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" compoundref="src_2sched_8c" startline="77" endline="79">schedule_enable</references>
+        <references refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" compoundref="task_8c" startline="187" endline="215">task_init</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
@@ -273,12 +279,51 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="114" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="114" bodyend="127"/>
-        <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="116" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="116" bodyend="129"/>
+        <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="37">current_task</references>
         <references refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" compoundref="list_8h" startline="220" endline="230">list_head</references>
         <references refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" compoundref="list_8h" startline="193" endline="201">list_next</references>
-        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="120">task::state</references>
+        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="122">task::state</references>
         <references refid="task_8h_1a447252ba92918fc13f5b6fd120b2656f" compoundref="task_8h" startline="40">TASK_STATE_ALIVE</references>
+      </memberdef>
+      <memberdef kind="function" id="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void schedule_signal</definition>
+        <argsstring>(task_t *task, int sig)</argsstring>
+        <name>schedule_signal</name>
+        <param>
+          <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+          <declname>task</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sig</declname>
+        </param>
+        <briefdescription>
+<para>Send a signal to task. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>task</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer of Task. </para></parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sig</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Signal to send. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/sched.c" line="137" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="137" bodyend="147"/>
+        <references refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" compoundref="task_8h" startline="115">task::signal_handler</references>
+        <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="116">task::signal_sig</references>
+        <references refid="task_8c_1a95af5e989199ecb9dd3cd23c264c6944" compoundref="task_8c" startline="50" endline="52">task_switch_ack</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -291,15 +336,15 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="133" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="133" bodyend="157"/>
-        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="122">task::clock</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="153" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="153" bodyend="171"/>
+        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="124">task::clock</references>
         <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="64" endline="69">list_empty</references>
-        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="121">task::priority</references>
-        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
-        <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="114" endline="127">schedule_next</references>
-        <references refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" compoundref="task_8h" startline="113">task::signal_handler</references>
-        <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="114">task::signal_sig</references>
-        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="133" endline="142">task_switch</references>
+        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="123">task::priority</references>
+        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="54">sched_enabled</references>
+        <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="116" endline="129">schedule_next</references>
+        <references refid="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87" compoundref="src_2sched_8c" startline="137" endline="147">schedule_signal</references>
+        <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="116">task::signal_sig</references>
+        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="136" endline="146">task_switch</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -312,11 +357,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="163" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="163" bodyend="171"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="177" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="177" bodyend="185"/>
         <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="64" endline="69">list_empty</references>
-        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
-        <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="114" endline="127">schedule_next</references>
-        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="133" endline="142">task_switch</references>
+        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="54">sched_enabled</references>
+        <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="116" endline="129">schedule_next</references>
+        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="136" endline="146">task_switch</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -341,8 +386,8 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="178" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="178" bodyend="183"/>
-        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="121">task::priority</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="192" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="192" bodyend="197"/>
+        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="123">task::priority</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a74e91e3418aedd28c8ddf5d150859a70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
@@ -368,10 +413,10 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="191" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="191" bodyend="197"/>
-        <references refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" compoundref="task_8h" startline="123">task::exitcode</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="205" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="205" bodyend="211"/>
+        <references refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" compoundref="task_8h" startline="125">task::exitcode</references>
         <references refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" compoundref="spinlock_8h" startline="47">spinlock_waiton</references>
-        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="120">task::state</references>
+        <references refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" compoundref="task_8h" startline="122">task::state</references>
         <references refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" compoundref="task_8h" startline="42">TASK_STATE_DEAD</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -386,10 +431,50 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="203" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="203" bodyend="216"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="217" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="217" bodyend="230"/>
         <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
-        <references refid="structtask_1a34c6613744820a1e8127756fb6a5392c" compoundref="task_8h" startline="126">task::parent</references>
+        <references refid="structtask_1a34c6613744820a1e8127756fb6a5392c" compoundref="task_8h" startline="128">task::parent</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
+      </memberdef>
+      <memberdef kind="function" id="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void schedule_release</definition>
+        <argsstring>(task_t *task)</argsstring>
+        <name>schedule_release</name>
+        <param>
+          <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+          <declname>task</declname>
+        </param>
+        <briefdescription>
+<para>Release allocated resources from task. </para>        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>task</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to task structure. </para></parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/sched.c" line="237" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="237" bodyend="271"/>
+        <references refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" compoundref="task_8h" startline="119">task::argv</references>
+        <references refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1">task::context</references>
+        <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="97">task::cr3</references>
+        <references refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" compoundref="task_8h" startline="120">task::envp</references>
+        <references refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107">task::image</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="151" endline="173">kfree</references>
+        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
+        <references refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" compoundref="task_8h" startline="112">task::length</references>
+        <references refid="mm_8c_1accbfbfd24536b985a875baf4e16a98f9" compoundref="mm_8c" startline="222" endline="224">mm_getheap</references>
+        <references refid="structtask_1a34a5abdae35b067ec6cde7fc81a43598" compoundref="task_8h" startline="98">task::owner</references>
+        <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
+        <references refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" compoundref="task_8h" startline="111">task::ptr</references>
+        <references refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" compoundref="mm_8h" startline="68">heap::used</references>
+        <references refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" compoundref="task_8h" startline="110">task::vaddr</references>
+        <references refid="paging_8c_1a355e6cafe37d994830abeebcb69e390d" compoundref="paging_8c" startline="138" endline="155">vmm_free</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -425,12 +510,10 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="223" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="223" bodyend="236"/>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="278" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="278" bodyend="289"/>
         <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
-        <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="163" endline="171">schedule_yield</references>
+        <references refid="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" compoundref="src_2sched_8c" startline="237" endline="271">schedule_release</references>
         <references refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" compoundref="task_8h" startline="42">TASK_STATE_DEAD</references>
-        <references refid="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" compoundref="paging_8c" startline="138" endline="155">vmm_free</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -456,8 +539,9 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="244" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="244" bodyend="246"/>
-        <references refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" compoundref="src_2sched_8c" startline="223" endline="236">schedule_exit2</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="297" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="297" bodyend="302"/>
+        <references refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" compoundref="src_2sched_8c" startline="278" endline="289">schedule_exit2</references>
+        <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="177" endline="185">schedule_yield</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>pid_t</type>
@@ -471,7 +555,7 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="253" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="253" bodyend="258"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="309" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="309" bodyend="314"/>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
       </memberdef>
       <memberdef kind="function" id="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -490,8 +574,8 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="265" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="265" bodyend="277"/>
-        <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="35">current_task</references>
+        <location file="/opt/prj/aPlus/src/sched.c" line="321" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="321" bodyend="333"/>
+        <references refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" compoundref="src_2sched_8c" startline="37">current_task</references>
         <references refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" compoundref="list_8h" startline="253">list_foreach</references>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
         <references refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" compoundref="attribute_8h" startline="83">value</references>
@@ -520,15 +604,41 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/sched.c" line="284" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="284" bodyend="308"/>
+        <location file="/opt/prj/aPlus/src/sched.c" line="340" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="340" bodyend="364"/>
+        <references refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1">task::context</references>
+        <references refid="structtask_1a5f4968459d4640f19c7e802ae7057179" compoundref="task_8h" startline="97">task::cr3</references>
         <references refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107">task::image</references>
-        <references refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" compoundref="task_8h" startline="110">task::length</references>
+        <references refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" compoundref="task_8h" startline="112">task::length</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
-        <references refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" compoundref="task_8h" startline="108">task::vaddr</references>
-        <references refid="paging_8c_1aebed4a90dd887506ed125f9efb953c93" compoundref="paging_8c" startline="130" endline="136">vmm_alloc</references>
-        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="52">VMM_FLAGS_DEFAULT</references>
-        <references refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" compoundref="mm_8h" startline="51">VMM_FLAGS_USER</references>
-        <references refid="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" compoundref="paging_8c" startline="138" endline="155">vmm_free</references>
+        <references refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" compoundref="task_8h" startline="110">task::vaddr</references>
+        <references refid="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" compoundref="paging_8c" startline="130" endline="136">vmm_alloc</references>
+        <references refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" compoundref="mm_8h" startline="55">VMM_FLAGS_DEFAULT</references>
+        <references refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" compoundref="mm_8h" startline="54">VMM_FLAGS_USER</references>
+        <references refid="paging_8c_1a355e6cafe37d994830abeebcb69e390d" compoundref="paging_8c" startline="138" endline="155">vmm_free</references>
+      </memberdef>
+      <memberdef kind="function" id="src_2sched_8c_1afbffdc5298c98f92960a4fb9ba498063" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int schedule_append_fd</definition>
+        <argsstring>(task_t *t, inode_t *ino)</argsstring>
+        <name>schedule_append_fd</name>
+        <param>
+          <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
+          <declname>ino</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/sched.c" line="367" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="367" bodyend="384"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="107">task::fd</references>
+        <references refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" compoundref="task_8h" startline="35">TASK_MAX_FD</references>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -567,209 +677,276 @@
 <codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="31"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35" refid="write_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"></highlight></codeline>
-<codeline lineno="40" refid="src_2sched_8c_1ac08620610e2419aca3878305400a96b7" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1ac08620610e2419aca3878305400a96b7" kindref="member">kernel_task</ref>;</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"></highlight></codeline>
-<codeline lineno="42"><highlight class="normal"></highlight></codeline>
-<codeline lineno="46" refid="src_2sched_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" refkind="member"><highlight class="normal"><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="src_2sched_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" kindref="member">task_queue</ref>;</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"></highlight></codeline>
-<codeline lineno="48"><highlight class="normal"></highlight></codeline>
-<codeline lineno="52" refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"></highlight></codeline>
-<codeline lineno="58" refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" kindref="member">im_superuser</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"></highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task<sp/>==<sp/>kernel_task)</highlight></codeline>
-<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" kindref="member">uid</ref><sp/>==<sp/><ref refid="task_8h_1a14338e391bef80aa10d476348d085c5c" kindref="member">UID_SUPERUSER</ref><sp/>&amp;&amp;<sp/>current_task-&gt;<ref refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" kindref="member">gid</ref><sp/>==<sp/><ref refid="task_8h_1a6120fde6185466f2810fd0457009aaf0" kindref="member">GID_SUPERUSER</ref>)</highlight></codeline>
-<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
-<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="69"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="70"><highlight class="normal"></highlight></codeline>
-<codeline lineno="71"><highlight class="normal"></highlight></codeline>
-<codeline lineno="75" refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" kindref="member">schedule_enable</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>=<sp/>1;</highlight></codeline>
-<codeline lineno="77"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"></highlight></codeline>
-<codeline lineno="82" refid="src_2sched_8c_1a5018bd63e4a7d4dd926e06faf1b7513d" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a5018bd63e4a7d4dd926e06faf1b7513d" kindref="member">schedule_disable</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="84"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"></highlight></codeline>
-<codeline lineno="89" refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" kindref="member">schedule_nextpid</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>pid_t<sp/>nextpid<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>nextpid++;</highlight></codeline>
-<codeline lineno="92"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="93"><highlight class="normal"></highlight></codeline>
-<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37" refid="write_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="src_2sched_8c_1ac08620610e2419aca3878305400a96b7" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1ac08620610e2419aca3878305400a96b7" kindref="member">kernel_task</ref>;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="src_2sched_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" refkind="member"><highlight class="normal"><ref refid="structlist" kindref="compound">list_t</ref>*<sp/><ref refid="src_2sched_8c_1acb74842176b48d2ab29b1a74b0ca4ef1" kindref="member">task_queue</ref>;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a11eb67cd27beaf272f76796f65d1ca1c" kindref="member">im_superuser</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task<sp/>==<sp/>kernel_task)</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" kindref="member">uid</ref><sp/>==<sp/><ref refid="task_8h_1a14338e391bef80aa10d476348d085c5c" kindref="member">UID_SUPERUSER</ref><sp/>&amp;&amp;<sp/>current_task-&gt;<ref refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" kindref="member">gid</ref><sp/>==<sp/><ref refid="task_8h_1a6120fde6185466f2810fd0457009aaf0" kindref="member">GID_SUPERUSER</ref>)</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="77" refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" kindref="member">schedule_enable</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="84" refid="src_2sched_8c_1a5018bd63e4a7d4dd926e06faf1b7513d" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a5018bd63e4a7d4dd926e06faf1b7513d" kindref="member">schedule_disable</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91" refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="src_2sched_8c_1a986fa43e945f396a2c722a1f766e03c8" kindref="member">schedule_nextpid</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>pid_t<sp/>nextpid<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>nextpid++;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="95"><highlight class="normal"></highlight></codeline>
-<codeline lineno="100" refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" kindref="member">schedule_init</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(task_queue);</highlight></codeline>
-<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" kindref="member">task_init</ref>();</highlight></codeline>
-<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" kindref="member">schedule_enable</ref>();</highlight></codeline>
-<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="107"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="108"><highlight class="normal"></highlight></codeline>
-<codeline lineno="109"><highlight class="normal"></highlight></codeline>
-<codeline lineno="114" refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" kindref="member">schedule_next</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/>newtask<sp/>=<sp/><ref refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102" refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a9f6f16348da2348d320d255437e6ac02" kindref="member">schedule_init</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1aa288c0785df071ed8643763202928c82" kindref="member">list_init</ref>(task_queue);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1a30500c422833c90d6f42e44e2efb04a7" kindref="member">task_init</ref>();</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a736a4d44542e7f4d0e231002cb7ddb8d" kindref="member">schedule_enable</ref>();</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="116" refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" refkind="member"><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" kindref="member">schedule_next</ref>()<sp/>{</highlight></codeline>
 <codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">do</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newtask<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" kindref="member">list_next</ref>(task_queue,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>newtask);</highlight></codeline>
-<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!newtask)</highlight></codeline>
-<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newtask<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" kindref="member">list_head</ref>(task_queue);</highlight></codeline>
-<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(newtask-&gt;<ref refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" kindref="member">state</ref><sp/>!=<sp/><ref refid="task_8h_1a447252ba92918fc13f5b6fd120b2656f" kindref="member">TASK_STATE_ALIVE</ref>);</highlight></codeline>
-<codeline lineno="124"><highlight class="normal"></highlight></codeline>
-<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>newtask;</highlight></codeline>
-<codeline lineno="127"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="128"><highlight class="normal"></highlight></codeline>
-<codeline lineno="129"><highlight class="normal"></highlight></codeline>
-<codeline lineno="133" refid="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce" kindref="member">schedule</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(task_queue))</highlight></codeline>
-<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/>newtask<sp/>=<sp/><ref refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">do</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newtask<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="list_8h_1abcd4418be12b04265c44dd69a1cfee1f" kindref="member">list_next</ref>(task_queue,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>newtask);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!newtask)</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>newtask<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="list_8h_1a0c1ce6a6a566dc1db394540f5bf65149" kindref="member">list_head</ref>(task_queue);</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(newtask-&gt;<ref refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" kindref="member">state</ref><sp/>!=<sp/><ref refid="task_8h_1a447252ba92918fc13f5b6fd120b2656f" kindref="member">TASK_STATE_ALIVE</ref>);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>newtask;</highlight></codeline>
+<codeline lineno="129"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"></highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="137" refid="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87" kindref="member">schedule_signal</ref>(<ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structtask" kindref="compound">task</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sig)<sp/>{</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!task)</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="140"><highlight class="normal"></highlight></codeline>
-<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" kindref="member">signal_handler</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" kindref="member">signal_handler</ref>(current_task-&gt;<ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref>);</highlight></codeline>
-<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref><sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="147"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/>task-&gt;<ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!task-&gt;<ref refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" kindref="member">signal_handler</ref>)</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"></highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1a95af5e989199ecb9dd3cd23c264c6944" kindref="member">task_switch_ack</ref>();</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/>task-&gt;<ref refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" kindref="member">signal_handler</ref>(sig);</highlight></codeline>
+<codeline lineno="147"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="148"><highlight class="normal"></highlight></codeline>
 <codeline lineno="149"><highlight class="normal"></highlight></codeline>
-<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" kindref="member">clock</ref><sp/>+=<sp/>1;</highlight></codeline>
-<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" kindref="member">clock</ref><sp/>%<sp/>current_task-&gt;<ref refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" kindref="member">priority</ref>)</highlight></codeline>
-<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="154"><highlight class="normal"></highlight></codeline>
-<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" kindref="member">task_switch</ref>(<ref refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" kindref="member">schedule_next</ref>());</highlight></codeline>
-<codeline lineno="157"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="158"><highlight class="normal"></highlight></codeline>
+<codeline lineno="153" refid="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a7d06701ac073c331c83519e3909b7fce" kindref="member">schedule</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(task_queue))</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="159"><highlight class="normal"></highlight></codeline>
-<codeline lineno="163" refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" kindref="member">schedule_yield</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(task_queue))</highlight></codeline>
-<codeline lineno="168"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref>)</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87" kindref="member">schedule_signal</ref>(current_task,<sp/>current_task-&gt;<ref refid="structtask_1a3d6991558f05258094bbef5c47073928" kindref="member">signal_sig</ref>);</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" kindref="member">clock</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" kindref="member">clock</ref><sp/>%<sp/>current_task-&gt;<ref refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" kindref="member">priority</ref>)</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="170"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" kindref="member">task_switch</ref>(<ref refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" kindref="member">schedule_next</ref>());</highlight></codeline>
 <codeline lineno="171"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="172"><highlight class="normal"></highlight></codeline>
 <codeline lineno="173"><highlight class="normal"></highlight></codeline>
-<codeline lineno="178" refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" kindref="member">schedule_setpriority</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>priority)<sp/>{</highlight></codeline>
-<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
-<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" kindref="member">priority</ref><sp/>=<sp/>priority;</highlight></codeline>
-<codeline lineno="183"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="184"><highlight class="normal"></highlight></codeline>
-<codeline lineno="185"><highlight class="normal"></highlight></codeline>
-<codeline lineno="191" refid="src_2sched_8c_1a74e91e3418aedd28c8ddf5d150859a70" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a74e91e3418aedd28c8ddf5d150859a70" kindref="member">schedule_wait</ref>(<ref refid="structtask" kindref="compound">task_t</ref>*<sp/>child)<sp/>{</highlight></codeline>
-<codeline lineno="192"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!child)</highlight></codeline>
-<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" kindref="member">spinlock_waiton</ref>(child-&gt;<ref refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" kindref="member">state</ref><sp/>!=<sp/><ref refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" kindref="member">TASK_STATE_DEAD</ref>);</highlight></codeline>
-<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>child-&gt;<ref refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" kindref="member">exitcode</ref>;</highlight></codeline>
+<codeline lineno="177" refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" kindref="member">schedule_yield</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" kindref="member">sched_enabled</ref><sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="181"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" kindref="member">list_empty</ref>(task_queue))</highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" kindref="member">task_switch</ref>(<ref refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" kindref="member">schedule_next</ref>());</highlight></codeline>
+<codeline lineno="185"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"></highlight></codeline>
+<codeline lineno="187"><highlight class="normal"></highlight></codeline>
+<codeline lineno="192" refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a878aa3454133f7c01a4ba15ef68b9be2" kindref="member">schedule_setpriority</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>priority)<sp/>{</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="194"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="196"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" kindref="member">priority</ref><sp/>=<sp/>priority;</highlight></codeline>
 <codeline lineno="197"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="198"><highlight class="normal"></highlight></codeline>
-<codeline lineno="203" refid="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" kindref="member">schedule_child</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="204"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
-<codeline lineno="205"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="207"><highlight class="normal"></highlight></codeline>
-<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>task_queue)<sp/>{</highlight></codeline>
-<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/>child<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
-<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="211"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(child-&gt;<ref refid="structtask_1a34c6613744820a1e8127756fb6a5392c" kindref="member">parent</ref><sp/>==<sp/>current_task)</highlight></codeline>
-<codeline lineno="212"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>child;</highlight></codeline>
-<codeline lineno="213"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="214"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="215"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="216"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="217"><highlight class="normal"></highlight></codeline>
-<codeline lineno="223" refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" kindref="member">schedule_exit2</ref>(<ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structtask" kindref="compound">task</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>status)<sp/>{</highlight></codeline>
-<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!task)</highlight></codeline>
-<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a4470c240b622941415ae5250067699b5" kindref="member">list_remove</ref>(task_queue,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>task);</highlight></codeline>
-<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/>task-&gt;state<sp/>=<sp/><ref refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" kindref="member">TASK_STATE_DEAD</ref>;</highlight></codeline>
-<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/>task-&gt;exitcode<sp/>=<sp/>status;</highlight></codeline>
-<codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="232"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>task-&gt;image.ptr);</highlight></codeline>
-<codeline lineno="233"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" kindref="member">vmm_free</ref>(task-&gt;image.vaddr,<sp/>task-&gt;image.length);</highlight></codeline>
-<codeline lineno="234"><highlight class="normal"></highlight></codeline>
-<codeline lineno="235"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" kindref="member">schedule_yield</ref>();</highlight></codeline>
-<codeline lineno="236"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="237"><highlight class="normal"></highlight></codeline>
-<codeline lineno="238"><highlight class="normal"></highlight></codeline>
-<codeline lineno="244" refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" kindref="member">schedule_exit</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>status)<sp/>{</highlight></codeline>
-<codeline lineno="245"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" kindref="member">schedule_exit2</ref>(current_task,<sp/>status);</highlight></codeline>
-<codeline lineno="246"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="247"><highlight class="normal"></highlight></codeline>
-<codeline lineno="248"><highlight class="normal"></highlight></codeline>
-<codeline lineno="253" refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" kindref="member">schedule_getpid</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
-<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="256"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>current_task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>;</highlight></codeline>
-<codeline lineno="258"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"></highlight></codeline>
+<codeline lineno="205" refid="src_2sched_8c_1a74e91e3418aedd28c8ddf5d150859a70" refkind="member"><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a74e91e3418aedd28c8ddf5d150859a70" kindref="member">schedule_wait</ref>(<ref refid="structtask" kindref="compound">task_t</ref>*<sp/>child)<sp/>{</highlight></codeline>
+<codeline lineno="206"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!child)</highlight></codeline>
+<codeline lineno="207"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="208"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="209"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" kindref="member">spinlock_waiton</ref>(child-&gt;<ref refid="structtask_1a09ebd490ccb87f169fd7c3d8d95b4f39" kindref="member">state</ref><sp/>!=<sp/><ref refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" kindref="member">TASK_STATE_DEAD</ref>);</highlight></codeline>
+<codeline lineno="210"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>child-&gt;<ref refid="structtask_1a9bd7bbd83fe1f4744c76ff240b6da5db" kindref="member">exitcode</ref>;</highlight></codeline>
+<codeline lineno="211"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="212"><highlight class="normal"></highlight></codeline>
+<codeline lineno="217" refid="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1a96793377662f91213568fe44bf4eccad" kindref="member">schedule_child</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="218"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="219"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="220"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="221"><highlight class="normal"></highlight></codeline>
+<codeline lineno="222"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>task_queue)<sp/>{</highlight></codeline>
+<codeline lineno="223"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/>child<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="224"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="225"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(child-&gt;<ref refid="structtask_1a34c6613744820a1e8127756fb6a5392c" kindref="member">parent</ref><sp/>==<sp/>current_task)</highlight></codeline>
+<codeline lineno="226"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>child;</highlight></codeline>
+<codeline lineno="227"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="228"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="229"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="230"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="231"><highlight class="normal"></highlight></codeline>
+<codeline lineno="232"><highlight class="normal"></highlight></codeline>
+<codeline lineno="237" refid="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" kindref="member">schedule_release</ref>(<ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structtask" kindref="compound">task</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="238"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!task)</highlight></codeline>
+<codeline lineno="239"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="240"><highlight class="normal"></highlight></codeline>
+<codeline lineno="241"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="242"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structheap" kindref="compound">heap_t</ref>*<sp/>h<sp/>=<sp/>(<ref refid="structheap" kindref="compound">heap_t</ref>*)<sp/><ref refid="mm_8c_1accbfbfd24536b985a875baf4e16a98f9" kindref="member">mm_getheap</ref>();</highlight></codeline>
+<codeline lineno="243"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>prevmm<sp/>=<sp/>h-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref>;</highlight></codeline>
+<codeline lineno="244"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="245"><highlight class="normal"></highlight></codeline>
+<codeline lineno="246"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task-&gt;<ref refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" kindref="member">argv</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="247"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>task-&gt;<ref refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" kindref="member">argv</ref>[i];<sp/>i++)</highlight></codeline>
+<codeline lineno="248"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(task-&gt;<ref refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" kindref="member">argv</ref>[i]);</highlight></codeline>
+<codeline lineno="249"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="250"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(task-&gt;<ref refid="structtask_1a91e7540d20695c7439f7d0755a7a0545" kindref="member">argv</ref>);</highlight></codeline>
+<codeline lineno="251"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="252"><highlight class="normal"></highlight></codeline>
+<codeline lineno="253"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task-&gt;<ref refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" kindref="member">envp</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="254"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>task-&gt;<ref refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" kindref="member">envp</ref>[i];<sp/>i++)</highlight></codeline>
+<codeline lineno="255"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(task-&gt;<ref refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" kindref="member">envp</ref>[i]);</highlight></codeline>
+<codeline lineno="256"><highlight class="normal"></highlight></codeline>
+<codeline lineno="257"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(task-&gt;<ref refid="structtask_1a09fbc78d666a0b49e2e2064121d28364" kindref="member">envp</ref>);</highlight></codeline>
+<codeline lineno="258"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="259"><highlight class="normal"></highlight></codeline>
-<codeline lineno="260"><highlight class="normal"></highlight></codeline>
-<codeline lineno="265" refid="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" kindref="member">schedule_getbypid</ref>(pid_t<sp/>pid)<sp/>{</highlight></codeline>
-<codeline lineno="266"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref><sp/>==<sp/>pid)</highlight></codeline>
-<codeline lineno="267"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
-<codeline lineno="268"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>task_queue)<sp/>{</highlight></codeline>
-<codeline lineno="270"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/>t<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
-<codeline lineno="271"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="272"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(t-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref><sp/>==<sp/>pid)</highlight></codeline>
-<codeline lineno="273"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>t;</highlight></codeline>
-<codeline lineno="274"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="275"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="276"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
-<codeline lineno="277"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="278"><highlight class="normal"></highlight></codeline>
-<codeline lineno="284" refid="src_2sched_8c_1a5af6764b80e6b9a24df59f7bb636f3d4" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="src_2sched_8c_1a5af6764b80e6b9a24df59f7bb636f3d4" kindref="member">schedule_sbrk</ref>(ptrdiff_t<sp/>increment)<sp/>{</highlight></codeline>
-<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
-<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="260"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" kindref="member">ptr</ref><sp/>&amp;&amp;<sp/>task-&gt;<ref refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1" kindref="member">context</ref>.<ref refid="structtask_1a34a5abdae35b067ec6cde7fc81a43598" kindref="member">owner</ref><sp/>==<sp/>task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>)</highlight></codeline>
+<codeline lineno="261"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1afbc0623ab058e402e92ea084dc37ab6a" kindref="member">ptr</ref>);</highlight></codeline>
+<codeline lineno="262"><highlight class="normal"></highlight></codeline>
+<codeline lineno="263"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>&amp;&amp;<sp/>task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref><sp/>&amp;&amp;<sp/>task-&gt;<ref refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1" kindref="member">context</ref>.<ref refid="structtask_1a34a5abdae35b067ec6cde7fc81a43598" kindref="member">owner</ref><sp/>==<sp/>task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>)</highlight></codeline>
+<codeline lineno="264"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="paging_8c_1a355e6cafe37d994830abeebcb69e390d" kindref="member">vmm_free</ref>(task-&gt;<ref refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1" kindref="member">context</ref>.<ref refid="structtask_1a5f4968459d4640f19c7e802ae7057179" kindref="member">cr3</ref>,<sp/>task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref>,<sp/>task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>);</highlight></codeline>
+<codeline lineno="265"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="266"><highlight class="normal"></highlight></codeline>
+<codeline lineno="267"><highlight class="normal"></highlight></codeline>
+<codeline lineno="268"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="269"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;task:<sp/>released<sp/>memory<sp/>for<sp/>%d<sp/>Bytes\n&quot;</highlight><highlight class="normal">,<sp/>prevmm<sp/>-<sp/>h-&gt;<ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref>);</highlight></codeline>
+<codeline lineno="270"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="271"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="272"><highlight class="normal"></highlight></codeline>
+<codeline lineno="278" refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" kindref="member">schedule_exit2</ref>(<ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="structtask" kindref="compound">task</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>status)<sp/>{</highlight></codeline>
+<codeline lineno="279"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!task)</highlight></codeline>
+<codeline lineno="280"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="281"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="282"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a4470c240b622941415ae5250067699b5" kindref="member">list_remove</ref>(task_queue,<sp/>(<ref refid="list_8h_1a83bc1af7566502e08756b8d8c425972e" kindref="member">listval_t</ref>)<sp/>task);</highlight></codeline>
+<codeline lineno="283"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="284"><highlight class="normal"><sp/><sp/><sp/><sp/>task-&gt;state<sp/>=<sp/><ref refid="task_8h_1aea18b04c3c7d46195bab375efc1f61b6" kindref="member">TASK_STATE_DEAD</ref>;</highlight></codeline>
+<codeline lineno="285"><highlight class="normal"><sp/><sp/><sp/><sp/>task-&gt;exitcode<sp/>=<sp/>status;</highlight></codeline>
+<codeline lineno="286"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="287"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="289"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="288"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a4a8ae190cf5ce5a162ec5ddd69ddacc6" kindref="member">schedule_release</ref>(task);</highlight></codeline>
+<codeline lineno="289"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="290"><highlight class="normal"></highlight></codeline>
 <codeline lineno="291"><highlight class="normal"></highlight></codeline>
-<codeline lineno="292"><highlight class="normal"></highlight></codeline>
-<codeline lineno="293"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>brk<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>+<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="294"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(increment<sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="295"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>brk;</highlight></codeline>
-<codeline lineno="296"><highlight class="normal"></highlight></codeline>
-<codeline lineno="297"><highlight class="normal"></highlight></codeline>
-<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/>increment<sp/>=<sp/>(increment<sp/>&amp;<sp/>~0xFFF)<sp/>+<sp/>0x1000;</highlight></codeline>
-<codeline lineno="299"><highlight class="normal"></highlight></codeline>
-<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(increment<sp/>&gt;<sp/>0)</highlight></codeline>
-<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="paging_8c_1aebed4a90dd887506ed125f9efb953c93" kindref="member">vmm_alloc</ref>(current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>+<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>,<sp/>increment,<sp/><ref refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" kindref="member">VMM_FLAGS_DEFAULT</ref><sp/>|<sp/><ref refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" kindref="member">VMM_FLAGS_USER</ref>);</highlight></codeline>
-<codeline lineno="302"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="303"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="paging_8c_1a2840d14db66d94b76ebcf3adf3e971e0" kindref="member">vmm_free</ref>(current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>+<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>,<sp/>increment);<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="297" refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" kindref="member">schedule_exit</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>status)<sp/>{</highlight></codeline>
+<codeline lineno="298"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a5a770047741113d76251f4d75c4e5612" kindref="member">schedule_exit2</ref>(current_task,<sp/>status);</highlight></codeline>
+<codeline lineno="299"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" kindref="member">schedule_yield</ref>();</highlight></codeline>
+<codeline lineno="300"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="301"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;);</highlight></codeline>
+<codeline lineno="302"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="303"><highlight class="normal"></highlight></codeline>
 <codeline lineno="304"><highlight class="normal"></highlight></codeline>
-<codeline lineno="305"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref><sp/>+=<sp/>increment;</highlight></codeline>
-<codeline lineno="306"><highlight class="normal"></highlight></codeline>
-<codeline lineno="307"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>brk;</highlight></codeline>
-<codeline lineno="308"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="309"><highlight class="normal"></highlight></codeline>
+<codeline lineno="309" refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="src_2sched_8c_1abfd87543f692b5543a89246bd8fbe456" kindref="member">schedule_getpid</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="310"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="311"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="312"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="313"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>current_task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref>;</highlight></codeline>
+<codeline lineno="314"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="315"><highlight class="normal"></highlight></codeline>
+<codeline lineno="316"><highlight class="normal"></highlight></codeline>
+<codeline lineno="321" refid="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" refkind="member"><highlight class="normal"><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="src_2sched_8c_1afcc9c5ea77b2a3aaafc7bdf896d9d633" kindref="member">schedule_getbypid</ref>(pid_t<sp/>pid)<sp/>{</highlight></codeline>
+<codeline lineno="322"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref><sp/>==<sp/>pid)</highlight></codeline>
+<codeline lineno="323"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="324"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="325"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="list_8h_1a1f44c976d2c698407a17fef984a5b232" kindref="member">list_foreach</ref>(<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>,<sp/>task_queue)<sp/>{</highlight></codeline>
+<codeline lineno="326"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/>t<sp/>=<sp/>(<ref refid="structtask" kindref="compound">task_t</ref>*)<sp/><ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>;</highlight></codeline>
+<codeline lineno="327"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="328"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(t-&gt;<ref refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" kindref="member">pid</ref><sp/>==<sp/>pid)</highlight></codeline>
+<codeline lineno="329"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>t;</highlight></codeline>
+<codeline lineno="330"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="331"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="332"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="333"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="334"><highlight class="normal"></highlight></codeline>
+<codeline lineno="340" refid="src_2sched_8c_1a5af6764b80e6b9a24df59f7bb636f3d4" refkind="member"><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="src_2sched_8c_1a5af6764b80e6b9a24df59f7bb636f3d4" kindref="member">schedule_sbrk</ref>(ptrdiff_t<sp/>increment)<sp/>{</highlight></codeline>
+<codeline lineno="341"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!current_task)</highlight></codeline>
+<codeline lineno="342"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="343"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="344"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="345"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="346"><highlight class="normal"></highlight></codeline>
+<codeline lineno="347"><highlight class="normal"></highlight></codeline>
+<codeline lineno="348"><highlight class="normal"></highlight></codeline>
+<codeline lineno="349"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>brk<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>+<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>);<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="350"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(increment<sp/>==<sp/>0)</highlight></codeline>
+<codeline lineno="351"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>brk;</highlight></codeline>
+<codeline lineno="352"><highlight class="normal"></highlight></codeline>
+<codeline lineno="353"><highlight class="normal"></highlight></codeline>
+<codeline lineno="354"><highlight class="normal"><sp/><sp/><sp/><sp/>increment<sp/>=<sp/>(increment<sp/>&amp;<sp/>~0xFFF)<sp/>+<sp/>0x1000;</highlight></codeline>
+<codeline lineno="355"><highlight class="normal"></highlight></codeline>
+<codeline lineno="356"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(increment<sp/>&gt;<sp/>0)</highlight></codeline>
+<codeline lineno="357"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="paging_8c_1a735dd8c8592f9924e2a5ee226929f117" kindref="member">vmm_alloc</ref>(current_task-&gt;<ref refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1" kindref="member">context</ref>.<ref refid="structtask_1a5f4968459d4640f19c7e802ae7057179" kindref="member">cr3</ref>,<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>+<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>,<sp/>increment,<sp/><ref refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" kindref="member">VMM_FLAGS_DEFAULT</ref><sp/>|<sp/><ref refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" kindref="member">VMM_FLAGS_USER</ref>);</highlight></codeline>
+<codeline lineno="358"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="359"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="paging_8c_1a355e6cafe37d994830abeebcb69e390d" kindref="member">vmm_free</ref>(current_task-&gt;<ref refid="structtask_1a7e47fc3627188eeefc77f78e8d36ddd1" kindref="member">context</ref>.<ref refid="structtask_1a5f4968459d4640f19c7e802ae7057179" kindref="member">cr3</ref>,<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1a340cbedbdc4b542793e7677dd4966ade" kindref="member">vaddr</ref><sp/>+<sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref>,<sp/>increment);<sp/></highlight></codeline>
+<codeline lineno="360"><highlight class="normal"></highlight></codeline>
+<codeline lineno="361"><highlight class="normal"><sp/><sp/><sp/><sp/>current_task-&gt;<ref refid="structtask_1a3eac6c8a544ff49a836c5eed9ec48107" kindref="member">image</ref>.<ref refid="structtask_1aa90dc3e7e232d6ba3f04700b3197b366" kindref="member">length</ref><sp/>+=<sp/>increment;</highlight></codeline>
+<codeline lineno="362"><highlight class="normal"></highlight></codeline>
+<codeline lineno="363"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>brk;</highlight></codeline>
+<codeline lineno="364"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="365"><highlight class="normal"></highlight></codeline>
+<codeline lineno="366"><highlight class="normal"></highlight></codeline>
+<codeline lineno="367" refid="src_2sched_8c_1afbffdc5298c98f92960a4fb9ba498063" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2sched_8c_1afbffdc5298c98f92960a4fb9ba498063" kindref="member">schedule_append_fd</ref>(<ref refid="structtask" kindref="compound">task_t</ref>*<sp/>t,<sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino)<sp/>{</highlight></codeline>
+<codeline lineno="368"><highlight class="normal"></highlight></codeline>
+<codeline lineno="369"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!(t<sp/>&amp;&amp;<sp/>ino))<sp/>{</highlight></codeline>
+<codeline lineno="370"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="371"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="372"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="373"><highlight class="normal"></highlight></codeline>
+<codeline lineno="374"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/><ref refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" kindref="member">TASK_MAX_FD</ref>;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="375"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(t-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[i]<sp/>==<sp/>0)<sp/>{</highlight></codeline>
+<codeline lineno="376"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>t-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[i]<sp/>=<sp/>ino;</highlight></codeline>
+<codeline lineno="377"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="378"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>i;</highlight></codeline>
+<codeline lineno="379"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="380"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="381"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="382"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EMFILE;</highlight></codeline>
+<codeline lineno="383"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="384"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="385"><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/sched.c"/>
   </compounddef>

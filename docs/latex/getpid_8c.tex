@@ -3,6 +3,7 @@
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
 {\ttfamily \#include $<$fcntl.\+h$>$}\\*
 {\ttfamily \#include $<$errno.\+h$>$}\\*
@@ -13,8 +14,17 @@
 \item 
 pid\+\_\+t \hyperlink{getpid_8c_a81186ae980bd7a8c58c8a4d838f5decb}{sys\+\_\+getpid} ()
 \item 
+pid\+\_\+t \hyperlink{getpid_8c_a3f9a9a94f33dc16eac796ae714736d07}{sys\+\_\+getppid} ()
+\item 
 \hyperlink{getpid_8c_a74381482f24d171c9ad80f0c85fe2b3b}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{getpid_8c_a81186ae980bd7a8c58c8a4d838f5decb}{sys\+\_\+getpid}, 5)
+\item 
+\hyperlink{getpid_8c_a93b6153d2f6727c9a54dd537cde1f6f5}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{getpid_8c_a3f9a9a94f33dc16eac796ae714736d07}{sys\+\_\+getppid}, 32)
 \end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{getpid_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
@@ -27,7 +37,7 @@ pid\+\_\+t \hyperlink{getpid_8c_a81186ae980bd7a8c58c8a4d838f5decb}{sys\+\_\+getp
 )}}\label{getpid_8c_a81186ae980bd7a8c58c8a4d838f5decb}
 
 
-Definition at line 13 of file getpid.\+c.
+Definition at line 16 of file getpid.\+c.
 
 
 
@@ -35,9 +45,37 @@ References schedule\+\_\+getpid().
 
 
 \begin{DoxyCode}
-13                    \{
-14     \textcolor{keywordflow}{return} \hyperlink{src_2sched_8c_abfd87543f692b5543a89246bd8fbe456}{schedule\_getpid}();
-15 \}
+16                    \{
+17     \textcolor{keywordflow}{return} \hyperlink{src_2sched_8c_abfd87543f692b5543a89246bd8fbe456}{schedule\_getpid}();
+18 \}
+\end{DoxyCode}
+\hypertarget{getpid_8c_a3f9a9a94f33dc16eac796ae714736d07}{\index{getpid.\+c@{getpid.\+c}!sys\+\_\+getppid@{sys\+\_\+getppid}}
+\index{sys\+\_\+getppid@{sys\+\_\+getppid}!getpid.\+c@{getpid.\+c}}
+\subsubsection[{sys\+\_\+getppid}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t sys\+\_\+getppid (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{getpid_8c_a3f9a9a94f33dc16eac796ae714736d07}
+
+
+Definition at line 20 of file getpid.\+c.
+
+
+
+References errno, task\+::parent, and task\+::pid.
+
+
+\begin{DoxyCode}
+20                     \{
+21     \textcolor{keywordflow}{if}(!\hyperlink{getpid_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
+22         \textcolor{keywordflow}{return} -1;
+23 
+24     \textcolor{keywordflow}{if}(\hyperlink{getpid_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a34c6613744820a1e8127756fb6a5392c}{parent})
+25         \textcolor{keywordflow}{return} \hyperlink{getpid_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a34c6613744820a1e8127756fb6a5392c}{parent}->\hyperlink{structtask_ab56448ae42a75825ea923bd86648f3ae}{pid};
+26 
+27     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ESRCH;
+28     \textcolor{keywordflow}{return} -1;
+29 \}
 \end{DoxyCode}
 \hypertarget{getpid_8c_a74381482f24d171c9ad80f0c85fe2b3b}{\index{getpid.\+c@{getpid.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!getpid.\+c@{getpid.\+c}}
@@ -47,3 +85,25 @@ References schedule\+\_\+getpid().
 \item[{5}]{}
 \end{DoxyParamCaption}
 )}}\label{getpid_8c_a74381482f24d171c9ad80f0c85fe2b3b}
+\hypertarget{getpid_8c_a93b6153d2f6727c9a54dd537cde1f6f5}{\index{getpid.\+c@{getpid.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!getpid.\+c@{getpid.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+getppid}}]{, }
+\item[{32}]{}
+\end{DoxyParamCaption}
+)}}\label{getpid_8c_a93b6153d2f6727c9a54dd537cde1f6f5}
+
+
+\subsection{Variable Documentation}
+\hypertarget{getpid_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{getpid.\+c@{getpid.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!getpid.\+c@{getpid.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{getpid_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 37 of file sched.\+c.
+

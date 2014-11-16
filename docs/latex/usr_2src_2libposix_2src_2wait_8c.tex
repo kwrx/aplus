@@ -1,0 +1,56 @@
+\hypertarget{usr_2src_2libposix_2src_2wait_8c}{\section{usr/src/libposix/src/wait.c File Reference}
+\label{usr_2src_2libposix_2src_2wait_8c}\index{usr/src/libposix/src/wait.\+c@{usr/src/libposix/src/wait.\+c}}
+}
+{\ttfamily \#include $<$sys/wait.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/time.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+pid\+\_\+t \hyperlink{usr_2src_2libposix_2src_2wait_8c_accbd09491ae2dc67211eefe5afee6b87}{wait3} (int $\ast$status, int options, void $\ast$rusage)
+\item 
+pid\+\_\+t \hyperlink{usr_2src_2libposix_2src_2wait_8c_ae7553f48d10483d6ab00010d8b4030da}{wait4} (pid\+\_\+t pid, int $\ast$status, int options, void $\ast$rusage)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{usr_2src_2libposix_2src_2wait_8c_accbd09491ae2dc67211eefe5afee6b87}{\index{usr/src/libposix/src/wait.\+c@{usr/src/libposix/src/wait.\+c}!wait3@{wait3}}
+\index{wait3@{wait3}!usr/src/libposix/src/wait.\+c@{usr/src/libposix/src/wait.\+c}}
+\subsubsection[{wait3}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t wait3 (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{status, }
+\item[{int}]{options, }
+\item[{void $\ast$}]{rusage}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2wait_8c_accbd09491ae2dc67211eefe5afee6b87}
+
+
+Definition at line 7 of file wait.\+c.
+
+
+\begin{DoxyCode}
+7                                                     \{
+8     \textcolor{keywordflow}{return} waitpid(-1, status, options);
+9 \}
+\end{DoxyCode}
+\hypertarget{usr_2src_2libposix_2src_2wait_8c_ae7553f48d10483d6ab00010d8b4030da}{\index{usr/src/libposix/src/wait.\+c@{usr/src/libposix/src/wait.\+c}!wait4@{wait4}}
+\index{wait4@{wait4}!usr/src/libposix/src/wait.\+c@{usr/src/libposix/src/wait.\+c}}
+\subsubsection[{wait4}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t wait4 (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{int $\ast$}]{status, }
+\item[{int}]{options, }
+\item[{void $\ast$}]{rusage}
+\end{DoxyParamCaption}
+)}}\label{usr_2src_2libposix_2src_2wait_8c_ae7553f48d10483d6ab00010d8b4030da}
+
+
+Definition at line 11 of file wait.\+c.
+
+
+\begin{DoxyCode}
+11                                                                \{
+12     \textcolor{keywordflow}{return} waitpid(pid, status, options);   
+13 \}
+\end{DoxyCode}

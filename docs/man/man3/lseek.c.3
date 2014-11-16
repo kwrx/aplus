@@ -1,4 +1,4 @@
-.TH "src/syscall/lseek.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/lseek.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -52,37 +52,44 @@ src/syscall/lseek.c \-
 .PP
 Definition at line 18 of file lseek\&.c\&.
 .PP
-References errno, task::fd, inode::position, and inode::size\&.
+References errno, task::fd, inode::position, inode::size, and TASK_MAX_FD\&.
 .PP
 .nf
 18                                         {
-19     inode_t* ino = current_task->fd[fd];
-20     if(!ino) {
+19 
+20     if(fd < 0 || fd > TASK_MAX_FD) {
 21         errno = EBADF;
 22         return -1;
 23     }
 24     
-25     
-26     if(pos > ino->size)
-27         pos = ino->size;
-28     
-29     switch(dir) {
-30         case SEEK_SET:
-31             ino->position = pos;
-32             break;
-33         case SEEK_END:
-34             ino->position = ino->size - pos;
-35             break;
-36         case SEEK_CUR:
-37             ino->position = (ino->position + pos > ino->size ? ino->size : ino->position + pos);
-38             break;
-39         default:
-40             errno = EINVAL;
-41             return -1;
-42     }
-43     
-44     return ino->position;
-45 }
+25 
+26     inode_t* ino = current_task->fd[fd];
+27     if(!ino) {
+28         errno = EBADF;
+29         return -1;
+30     }
+31     
+32     
+33     if(pos > ino->size)
+34         pos = ino->size;
+35     
+36     switch(dir) {
+37         case SEEK_SET:
+38             ino->position = pos;
+39             break;
+40         case SEEK_END:
+41             ino->position = ino->size - pos;
+42             break;
+43         case SEEK_CUR:
+44             ino->position = (ino->position + pos > ino->size ? ino->size : ino->position + pos);
+45             break;
+46         default:
+47             errno = EINVAL;
+48             return -1;
+49     }
+50     
+51     return ino->position;
+52 }
 .fi
 .SS "SYSCALL (\fBsys_lseek\fP, 9)"
 
@@ -93,7 +100,7 @@ References errno, task::fd, inode::position, and inode::size\&.
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

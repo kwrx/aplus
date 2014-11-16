@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_create.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_create.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -65,26 +65,31 @@ References pthread_context::entry, pthread_context::param, and pthread_exit()\&.
 .SS "\fBEXTERN\fP void __pthread_init_queue (void)"
 
 .PP
-Definition at line 12 of file pthread_queue\&.c\&.
+Definition at line 24 of file pthread_queue\&.c\&.
 .PP
-References __current_thread, __os_gettid, pthread_context::attr, pthread_context::cond, pthread_once::done, pthread_context::entry, pthread_context::exitval, pthread_context::next, pthread_context::once, pthread_context::param, pthread_once::started, and pthread_context::tid\&.
+References __current_thread, __os_gettid, __pthread_dnit(), pthread_context::attr, pthread_context::cond, pthread_once::done, pthread_context::entry, pthread_context::exitval, pthread_context::next, pthread_context::once, pthread_context::param, pthread_once::started, and pthread_context::tid\&.
 .PP
 .nf
-12                                    {
-13     if(__current_thread\&.tid)
-14         return;
-15 
-16     __current_thread\&.tid = __os_gettid();
-17     __current_thread\&.entry = NULL;
-18     __current_thread\&.param = NULL;
-19     __current_thread\&.exitval = NULL;
-20     __current_thread\&.once\&.done = 0;
-21     __current_thread\&.once\&.started = -1;
-22     __current_thread\&.cond = NULL;
-23     __current_thread\&.next = NULL;
-24 
-25     memset(&__current_thread\&.attr, 0, sizeof(pthread_attr_t));
-26 }
+24                                    {
+25     static int init = 0;
+26     if(init)
+27         return;
+28 
+29     init++;
+30 
+31     __current_thread\&.tid = __os_gettid();
+32     __current_thread\&.entry = NULL;
+33     __current_thread\&.param = NULL;
+34     __current_thread\&.exitval = NULL;
+35     __current_thread\&.once\&.done = 0;
+36     __current_thread\&.once\&.started = -1;
+37     __current_thread\&.cond = NULL;
+38     __current_thread\&.next = NULL;
+39 
+40     memset(&__current_thread\&.attr, 0, sizeof(pthread_attr_t));
+41 
+42     atexit(__pthread_dnit);
+43 }
 .fi
 .SS "\fBPUBLIC\fP int pthread_create (\fBpthread_t\fP *thread, const \fBpthread_attr_t\fP *attr, void *(*)(void *)start, void *arg)"
 
@@ -100,12 +105,12 @@ References __os_thread_create, __pthread_counts, __pthread_handler__(), __pthrea
 40 
 41     if(!thread) {
 42         errno = EINVAL;
-43         return 1;
+43         return -1;
 44     }
 45 
 46     if(__pthread_counts > PTHREAD_THREADS_MAX) {
 47         errno = EAGAIN;
-48         return 1;
+48         return -1;
 49     }
 50 
 51     pthread_context_t* ctx = malloc(sizeof(pthread_context_t));

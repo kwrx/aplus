@@ -10,51 +10,51 @@
     <includes local="no">string.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="2076">
+      <node id="2255">
         <label>stdlib.h</label>
       </node>
-      <node id="2078">
+      <node id="2257">
         <label>errno.h</label>
       </node>
-      <node id="2074">
+      <node id="2253">
         <label>fcntl.h</label>
       </node>
-      <node id="2073">
+      <node id="2252">
         <label>sys/types.h</label>
       </node>
-      <node id="2077">
+      <node id="2256">
         <label>string.h</label>
       </node>
-      <node id="2070">
+      <node id="2249">
         <label>usr/src/libposix/src/closedir.c</label>
         <link refid="closedir.c"/>
-        <childnode refid="2071" relation="include">
+        <childnode refid="2250" relation="include">
         </childnode>
-        <childnode refid="2072" relation="include">
+        <childnode refid="2251" relation="include">
         </childnode>
-        <childnode refid="2074" relation="include">
+        <childnode refid="2253" relation="include">
         </childnode>
-        <childnode refid="2075" relation="include">
+        <childnode refid="2254" relation="include">
         </childnode>
-        <childnode refid="2076" relation="include">
+        <childnode refid="2255" relation="include">
         </childnode>
-        <childnode refid="2077" relation="include">
+        <childnode refid="2256" relation="include">
         </childnode>
-        <childnode refid="2078" relation="include">
+        <childnode refid="2257" relation="include">
         </childnode>
       </node>
-      <node id="2072">
+      <node id="2251">
         <label>unistd.h</label>
       </node>
-      <node id="2071">
+      <node id="2250">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2072" relation="include">
+        <childnode refid="2251" relation="include">
         </childnode>
-        <childnode refid="2073" relation="include">
+        <childnode refid="2252" relation="include">
         </childnode>
       </node>
-      <node id="2075">
+      <node id="2254">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -95,7 +95,7 @@
 <codeline lineno="8"><highlight class="normal"></highlight></codeline>
 <codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>
-<codeline lineno="11" refid="closedir_8c_1a058e669d865116ec6419ea3a52207830" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="closedir_8c_1a058e669d865116ec6419ea3a52207830" kindref="member">closedir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="11" refid="closedir_8c_1a058e669d865116ec6419ea3a52207830" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="closedir_8c_1a058e669d865116ec6419ea3a52207830" kindref="member">closedir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/>d)<sp/>{</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>

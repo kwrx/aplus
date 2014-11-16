@@ -40,7 +40,7 @@ References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 19                                                           \{
 20     \textcolor{keywordflow}{if}(!lock) \{
 21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-22         \textcolor{keywordflow}{return} 1;
+22         \textcolor{keywordflow}{return} -1;
 23     \}
 24 
 25     lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 0;
@@ -70,7 +70,7 @@ References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 7                                                                     \{
 8     \textcolor{keywordflow}{if}(!lock) \{
 9         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-10         \textcolor{keywordflow}{return} 1;
+10         \textcolor{keywordflow}{return} -1;
 11     \}
 12 
 13     lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 0;
@@ -99,13 +99,13 @@ References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 31                                                        \{
 32     \textcolor{keywordflow}{if}(!lock) \{
 33         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-34         \textcolor{keywordflow}{return} 1;
+34         \textcolor{keywordflow}{return} -1;
 35     \}
 36 
 37     \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a12809c44718c21544ceb280dc1a53573}{pthread\_mutex\_lock}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex}) == 0)
 38         lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 1;
 39     \textcolor{keywordflow}{else}
-40         \textcolor{keywordflow}{return} 1; \textcolor{comment}{/* errno already setted */}
+40         \textcolor{keywordflow}{return} -1; \textcolor{comment}{/* errno already setted */}
 41 
 42     \textcolor{keywordflow}{return} 0;
 43 \}
@@ -130,13 +130,13 @@ References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 45                                                           \{
 46     \textcolor{keywordflow}{if}(!lock) \{
 47         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-48         \textcolor{keywordflow}{return} 1;
+48         \textcolor{keywordflow}{return} -1;
 49     \}
 50 
 51     \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a27da386211db1a7e9a3b2a0db4d22144}{pthread\_mutex\_trylock}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex}) == 0)
 52         lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 1;
 53     \textcolor{keywordflow}{else}
-54         \textcolor{keywordflow}{return} 1; \textcolor{comment}{/* errno already setted */}
+54         \textcolor{keywordflow}{return} -1; \textcolor{comment}{/* errno already setted */}
 55 
 56     \textcolor{keywordflow}{return} 0;
 57 \}
@@ -161,13 +161,13 @@ References errno, pthread\+\_\+spinlock\+::interlock, pthread\+\_\+spinlock\+::m
 59                                                          \{
 60     \textcolor{keywordflow}{if}(!lock) \{
 61         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-62         \textcolor{keywordflow}{return} 1;
+62         \textcolor{keywordflow}{return} -1;
 63     \}
 64 
 65     \textcolor{keywordflow}{if}(\hyperlink{pthread_8h_a96184290ffb60e04c53a52869cf960a2}{pthread\_mutex\_unlock}(&lock->\hyperlink{structpthread__spinlock_aebd79085a40b0d251d747a24f77746f5}{mutex}) == 0)
 66         lock->\hyperlink{structpthread__spinlock_a7b8aa3d5e657c6e399aa7a94c8c6d4fe}{interlock} = 0;
 67     \textcolor{keywordflow}{else}
-68         \textcolor{keywordflow}{return} 1; \textcolor{comment}{/* errno already setted */}
+68         \textcolor{keywordflow}{return} -1; \textcolor{comment}{/* errno already setted */}
 69     
 70     \textcolor{keywordflow}{return} 0;
 71 \}

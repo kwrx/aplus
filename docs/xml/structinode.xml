@@ -348,20 +348,20 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="48">
+      <node id="57">
         <label>inode</label>
         <link refid="structinode"/>
-        <childnode refid="48" relation="usage">
+        <childnode refid="57" relation="usage">
           <edgelabel>+finddir</edgelabel>
           <edgelabel>+link</edgelabel>
           <edgelabel>+parent</edgelabel>
           <edgelabel>+creat</edgelabel>
         </childnode>
-        <childnode refid="49" relation="usage">
+        <childnode refid="58" relation="usage">
           <edgelabel>+readdir</edgelabel>
         </childnode>
       </node>
-      <node id="49">
+      <node id="58">
         <label>dirent</label>
         <link refid="structdirent"/>
       </node>

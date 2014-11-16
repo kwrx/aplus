@@ -6,56 +6,56 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2487">
+      <node id="2693">
         <label>stdint.h</label>
       </node>
-      <node id="2494">
+      <node id="2700">
         <label>errno.h</label>
       </node>
-      <node id="2486">
+      <node id="2692">
         <label>usr/src/libpthread/src/pthread_self.c</label>
         <link refid="pthread_self.c"/>
-        <childnode refid="2487" relation="include">
+        <childnode refid="2693" relation="include">
         </childnode>
-        <childnode refid="2488" relation="include">
+        <childnode refid="2694" relation="include">
         </childnode>
-        <childnode refid="2493" relation="include">
+        <childnode refid="2699" relation="include">
         </childnode>
       </node>
-      <node id="2493">
+      <node id="2699">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2494" relation="include">
+        <childnode refid="2700" relation="include">
         </childnode>
-        <childnode refid="2487" relation="include">
+        <childnode refid="2693" relation="include">
         </childnode>
-        <childnode refid="2488" relation="include">
+        <childnode refid="2694" relation="include">
         </childnode>
       </node>
-      <node id="2488">
+      <node id="2694">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2487" relation="include">
+        <childnode refid="2693" relation="include">
         </childnode>
-        <childnode refid="2489" relation="include">
+        <childnode refid="2695" relation="include">
         </childnode>
-        <childnode refid="2490" relation="include">
+        <childnode refid="2696" relation="include">
         </childnode>
-        <childnode refid="2491" relation="include">
+        <childnode refid="2697" relation="include">
         </childnode>
-        <childnode refid="2492" relation="include">
+        <childnode refid="2698" relation="include">
         </childnode>
       </node>
-      <node id="2489">
+      <node id="2695">
         <label>sys/types.h</label>
       </node>
-      <node id="2492">
+      <node id="2698">
         <label>unistd.h</label>
       </node>
-      <node id="2490">
+      <node id="2696">
         <label>sys/time.h</label>
       </node>
-      <node id="2491">
+      <node id="2697">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -90,7 +90,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_self.c" line="10" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_self.c" bodystart="10" bodyend="27"/>
-        <references refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" compoundref="posix_2hooks_8h" startline="34">__os_gettid</references>
+        <references refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" compoundref="posix_2hooks_8h" startline="44">__os_gettid</references>
         <references refid="pthread__self_8c_1a9ed893dd8f37e017f207c1c6ccdb41ec" compoundref="pthread__self_8c" startline="8">__pthread_queue</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structpthread__context_1a876fe0d5cfa5b9886c90e5936b98f992" compoundref="pthread__internal_8h" startline="47">pthread_context::next</references>
@@ -114,7 +114,7 @@
 <codeline lineno="10" refid="pthread__self_8c_1a9c6edadf970f4bdebbed416f892f30d4" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref><sp/><ref refid="pthread__self_8c_1a9c6edadf970f4bdebbed416f892f30d4" kindref="member">pthread_self</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!<ref refid="pthread__self_8c_1a9ed893dd8f37e017f207c1c6ccdb41ec" kindref="member">__pthread_queue</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ESRCH;</highlight></codeline>
-<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight></codeline>
 <codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structpthread__context_1a5b7aa396dbf3c140b1a54f09568c8253" kindref="member">tid</ref><sp/>=<sp/><ref refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" kindref="member">__os_gettid</ref>();</highlight></codeline>
@@ -127,7 +127,7 @@
 <codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="24"><highlight class="normal"></highlight></codeline>
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ESRCH;</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="27"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_self.c"/>

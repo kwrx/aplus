@@ -1,5 +1,5 @@
-\hypertarget{desc_8c}{\section{src/arch/desc.c File Reference}
-\label{desc_8c}\index{src/arch/desc.\+c@{src/arch/desc.\+c}}
+\hypertarget{desc_8c}{\section{src/arch/i386/desc.c File Reference}
+\label{desc_8c}\index{src/arch/i386/desc.\+c@{src/arch/i386/desc.\+c}}
 }
 {\ttfamily \#include $<$aplus.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/spinlock.\+h$>$}\\*
@@ -523,12 +523,12 @@ Definition at line 151 of file desc.\+c.
 
 
 
-References panic().
+References panic\+\_\+r().
 
 
 \begin{DoxyCode}
 151                             \{
-152     \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(exception\_messages[r->int\_no]);
+152     \hyperlink{panic_8c_a0becae034664f94c1553072830270ecb}{panic\_r}(exception\_messages[r->int\_no], r);
 153 \}
 \end{DoxyCode}
 \hypertarget{desc_8c_a4f2dd94350b058e8e8ba473a2822cf7a}{\index{desc.\+c@{desc.\+c}!pagefault\+\_\+handler@{pagefault\+\_\+handler}}
@@ -544,7 +544,7 @@ Definition at line 183 of file desc.\+c.
 
 
 
-References \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf(), panic(), and uint32\+\_\+t.
+References \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf(), panic\+\_\+r(), and uint32\+\_\+t.
 
 
 \begin{DoxyCode}
@@ -553,7 +553,7 @@ References \+\_\+\+\_\+asm\+\_\+\+\_\+(), kprintf(), panic(), and uint32\+\_\+t.
 185     \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} \_\_volatile\_\_(\textcolor{stringliteral}{"mov eax, cr2"} : \textcolor{stringliteral}{"=a"}(faultaddr));
 186 
 187     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"Page fault at address: 0x%x\(\backslash\)n"}, faultaddr);
-188     \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"Page Fault"});
+188     \hyperlink{panic_8c_a0becae034664f94c1553072830270ecb}{panic\_r}(\textcolor{stringliteral}{"Page Fault"}, r);
 189 \}
 \end{DoxyCode}
 \hypertarget{desc_8c_affef3cc40072321b8d54e4c00aa4de85}{\index{desc.\+c@{desc.\+c}!pit\+\_\+getticks@{pit\+\_\+getticks}}
@@ -682,40 +682,34 @@ Perform a scheduling and check T\+T\+L (Time To Live) for current task.
 
 
 
-Definition at line 133 of file sched.\+c.
+Definition at line 153 of file sched.\+c.
 
 
 
-References task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enabled, schedule\+\_\+next(), task\+::signal\+\_\+handler, task\+::signal\+\_\+sig, and task\+\_\+switch().
+References task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enabled, schedule\+\_\+next(), schedule\+\_\+signal(), task\+::signal\+\_\+sig, and task\+\_\+switch().
 
 
 \begin{DoxyCode}
-133                 \{
-134     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
-135         \textcolor{keywordflow}{return};
-136         
-137     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
-138         \textcolor{keywordflow}{return};
-139 
-140 
-141     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig}) \{
-142         \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{signal\_handler}) \{
-143             \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_aea4c9382e5f4f148a0a74c0680729cf0}{signal\_handler}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->
+153                 \{
+154     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_aeb00dca46bca400ba3512e70f9a1c55c}{sched\_enabled} == 0)
+155         \textcolor{keywordflow}{return};
+156         
+157     \textcolor{keywordflow}{if}(\hyperlink{list_8h_a89e0fc8ca134e1dceb33c75b756e6754}{list\_empty}(\hyperlink{src_2sched_8c_acb74842176b48d2ab29b1a74b0ca4ef1}{task\_queue}))
+158         \textcolor{keywordflow}{return};
+159 
+160 
+161     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig})
+162         \hyperlink{src_2sched_8c_ab51c47cc2ab19d79bf891f03e7912f87}{schedule\_signal}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}, \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->
       \hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig});
-144             \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a3d6991558f05258094bbef5c47073928}{signal\_sig} = 0;
-145         \}
-146     \}
-147         
-148 
-149 
-150     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} += 1;
-151     
-152     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} % \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority})
-153         \textcolor{keywordflow}{return};
-154 
-155     
-156     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
-157 \}
+163 
+164     \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} += 1;
+165     
+166     \textcolor{keywordflow}{if}(\hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a8a31c6648c1b1869bfa069f4a969b0ad}{clock} % \hyperlink{src_2sched_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_a9ab46b5a6e7c471f1fe32db13e6636a2}{priority})
+167         \textcolor{keywordflow}{return};
+168 
+169     
+170     \hyperlink{task_8c_a1b2086f34fd20264fae9ed90c4bc2645}{task\_switch}(\hyperlink{src_2sched_8c_a94a683ba0ad510a6d51f369bb4496147}{schedule\_next}());
+171 \}
 \end{DoxyCode}
 \hypertarget{desc_8c_ab36b30e25787b3f4887160064ba2f43a}{\index{desc.\+c@{desc.\+c}!syscall\+\_\+handler@{syscall\+\_\+handler}}
 \index{syscall\+\_\+handler@{syscall\+\_\+handler}!desc.\+c@{desc.\+c}}
@@ -726,29 +720,17 @@ References task\+::clock, list\+\_\+empty(), task\+::priority, sched\+\_\+enable
 )}}\label{desc_8c_ab36b30e25787b3f4887160064ba2f43a}
 
 
-Definition at line 81 of file syscall.\+c.
+Definition at line 95 of file syscall.\+c.
 
 
 
-References kprintf(), and syscall\+\_\+invoke().
+References syscall\+\_\+invoke().
 
 
 \begin{DoxyCode}
-81                                \{
-82 
-83 \textcolor{preprocessor}{#ifdef SYSCALL\_DEBUG}
-84     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"syscall: called %d (%x, %x, %x, %x, %x);"}, r->eax, r->ebx, r->ecx, r->edx, r->esi, r->
-      edi);
-85 \textcolor{preprocessor}{#endif}
-86 
-87     \textcolor{keywordtype}{int} ret = \hyperlink{syscall_8c_a468aa05f3eb6adc7330d73e9bb5c6951}{syscall\_invoke}(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
-88 
-89 \textcolor{preprocessor}{#ifdef SYSCALL\_DEBUG}
-90     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{" returned %x\(\backslash\)n"}, ret);
-91 \textcolor{preprocessor}{#endif}
-92 
-93     \textcolor{keywordflow}{return} ret;
-94 \}
+95                                \{
+96     \textcolor{keywordflow}{return} \hyperlink{syscall_8c_a468aa05f3eb6adc7330d73e9bb5c6951}{syscall\_invoke}(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
+97 \}
 \end{DoxyCode}
 
 

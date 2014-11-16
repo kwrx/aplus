@@ -20,26 +20,6 @@
       <node id="39">
         <label>sys/times.h</label>
       </node>
-      <node id="20">
-        <label>src/arch/desc.c</label>
-        <link refid="desc.c"/>
-        <childnode refid="21" relation="include">
-        </childnode>
-        <childnode refid="25" relation="include">
-        </childnode>
-        <childnode refid="26" relation="include">
-        </childnode>
-        <childnode refid="36" relation="include">
-        </childnode>
-        <childnode refid="22" relation="include">
-        </childnode>
-        <childnode refid="37" relation="include">
-        </childnode>
-        <childnode refid="38" relation="include">
-        </childnode>
-        <childnode refid="39" relation="include">
-        </childnode>
-      </node>
       <node id="28">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
@@ -85,6 +65,26 @@
       </node>
       <node id="29">
         <label>stddef.h</label>
+      </node>
+      <node id="20">
+        <label>src/arch/i386/desc.c</label>
+        <link refid="desc.c"/>
+        <childnode refid="21" relation="include">
+        </childnode>
+        <childnode refid="25" relation="include">
+        </childnode>
+        <childnode refid="26" relation="include">
+        </childnode>
+        <childnode refid="36" relation="include">
+        </childnode>
+        <childnode refid="22" relation="include">
+        </childnode>
+        <childnode refid="37" relation="include">
+        </childnode>
+        <childnode refid="38" relation="include">
+        </childnode>
+        <childnode refid="39" relation="include">
+        </childnode>
       </node>
       <node id="21">
         <label>aplus.h</label>
@@ -143,7 +143,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="37" column="9" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="37" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="37" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" prot="public" static="no">
         <name>PIT_FREQ</name>
@@ -154,7 +154,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="38" column="9" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="38" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="38" column="9" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="38" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2" prot="public" static="no">
         <name>gdt_set</name>
@@ -176,7 +176,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="200" column="10"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="200" column="10"/>
       </memberdef>
       <memberdef kind="define" id="desc_8c_1a57d9d99abdf93e1b7d838f47efc6af1c" prot="public" static="no">
         <name>idt_set</name>
@@ -195,7 +195,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="232" column="10"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="232" column="10"/>
       </memberdef>
       <memberdef kind="define" id="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" prot="public" static="no">
         <name>_i</name>
@@ -208,7 +208,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="240" column="10"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="240" column="10"/>
       </memberdef>
       <memberdef kind="define" id="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296" prot="public" static="no">
         <name>_i</name>
@@ -221,7 +221,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="286" column="10"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="286" column="10"/>
       </memberdef>
       <memberdef kind="define" id="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a" prot="public" static="no">
         <name>BCD2BIN</name>
@@ -233,7 +233,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="375" column="10"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="375" column="10"/>
       </memberdef>
       <memberdef kind="define" id="desc_8c_1a33200b25f91bf4cf6a4ec73ef292b207" prot="public" static="no">
         <name>BCD2BIN2</name>
@@ -245,7 +245,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="376" column="10"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="376" column="10"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="var">
@@ -260,7 +260,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="5" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="5" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="5" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="5" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1af2ca1e64dc7ef22ee1082a58403166ec" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
@@ -273,7 +273,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="5" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="5" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="5" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="5" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1a98fb2af33fad804398328d56ccf01ec2" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
@@ -286,7 +286,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="6" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="6" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1a8b0d6200bc639dd37ff68847a0adde5f" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
@@ -299,7 +299,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="6" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="6" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1acfea365f69e71368a2db03333d4afd6f" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
@@ -312,7 +312,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="6" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="6" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1a8fef9c987f038778feaf85edfcc9c060" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
@@ -325,7 +325,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="6" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="6" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1a8e2066f75678ef3cb314db1e33fe5e4d" prot="public" static="yes" mutable="no">
         <type>void *</type>
@@ -339,7 +339,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="102" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="102" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="102" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="102" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1a243b9f88d2a68b2d2daff1dd77773e08" prot="public" static="yes" mutable="no">
         <type>gdt_entry_t</type>
@@ -352,7 +352,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="104" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="104" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="104" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="104" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1af67a6154264e775ccf3c976fefe43618" prot="public" static="yes" mutable="no">
         <type>gdt_ptr_t</type>
@@ -365,7 +365,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="105" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="105" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="105" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="105" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1a248e57c601e50474a60c9d42c6ac8fb3" prot="public" static="yes" mutable="no">
         <type>idt_entry_t</type>
@@ -378,7 +378,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="107" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="107" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="107" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="107" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1acd81c3f56ebae00c0f2af978d2b48d42" prot="public" static="yes" mutable="no">
         <type>idt_ptr_t</type>
@@ -391,7 +391,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="108" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="108" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="108" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="108" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1a41bc65b4bc7d5a5211de47d1f5c2758a" prot="public" static="yes" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -404,7 +404,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="111" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="111" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="111" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="111" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1aa40e578d683608caf3c7cd5c43ed9499" prot="public" static="yes" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -417,7 +417,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="112" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="112" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="112" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="112" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1adbf6021113d80f4e06464449823d18ca" prot="public" static="yes" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -430,7 +430,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="113" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="113" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="113" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="113" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="desc_8c_1ab391065c3b916fa1704b6bfb7b099d04" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
@@ -444,7 +444,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="115" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="115" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="115" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="115" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -462,7 +462,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="4" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="4" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="44" bodyend="49"/>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a7d06701ac073c331c83519e3909b7fce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -475,15 +475,15 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="118" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="133" bodyend="157"/>
-        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="122">task::clock</references>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="118" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="153" bodyend="171"/>
+        <references refid="structtask_1a8a31c6648c1b1869bfa069f4a969b0ad" compoundref="task_8h" startline="124">task::clock</references>
         <references refid="list_8h_1a89e0fc8ca134e1dceb33c75b756e6754" compoundref="list_8h" startline="64" endline="69">list_empty</references>
-        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="121">task::priority</references>
-        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="52">sched_enabled</references>
-        <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="114" endline="127">schedule_next</references>
-        <references refid="structtask_1aea4c9382e5f4f148a0a74c0680729cf0" compoundref="task_8h" startline="113">task::signal_handler</references>
-        <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="114">task::signal_sig</references>
-        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="133" endline="142">task_switch</references>
+        <references refid="structtask_1a9ab46b5a6e7c471f1fe32db13e6636a2" compoundref="task_8h" startline="123">task::priority</references>
+        <references refid="src_2sched_8c_1aeb00dca46bca400ba3512e70f9a1c55c" compoundref="src_2sched_8c" startline="54">sched_enabled</references>
+        <references refid="src_2sched_8c_1a94a683ba0ad510a6d51f369bb4496147" compoundref="src_2sched_8c" startline="116" endline="129">schedule_next</references>
+        <references refid="src_2sched_8c_1ab51c47cc2ab19d79bf891f03e7912f87" compoundref="src_2sched_8c" startline="137" endline="147">schedule_signal</references>
+        <references refid="structtask_1a3d6991558f05258094bbef5c47073928" compoundref="task_8h" startline="116">task::signal_sig</references>
+        <references refid="task_8c_1a1b2086f34fd20264fae9ed90c4bc2645" compoundref="task_8c" startline="136" endline="146">task_switch</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1ab36b30e25787b3f4887160064ba2f43a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -499,9 +499,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="119" column="1" bodyfile="/opt/prj/aPlus/src/arch/syscall.c" bodystart="81" bodyend="94"/>
-        <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
-        <references refid="syscall_8c_1a468aa05f3eb6adc7330d73e9bb5c6951" compoundref="syscall_8c" startline="55" endline="78">syscall_invoke</references>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="119" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/syscall.c" bodystart="95" bodyend="97"/>
+        <references refid="syscall_8c_1a468aa05f3eb6adc7330d73e9bb5c6951" compoundref="syscall_8c" startline="57" endline="92">syscall_invoke</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -567,7 +566,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="122" column="1"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="122" column="1"/>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a5ec693d5682a18cbeb87ae5c5ea25c03" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -584,8 +583,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="151" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="151" bodyend="153"/>
-        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="102" endline="113">panic</references>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="151" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="151" bodyend="153"/>
+        <references refid="panic_8c_1a0becae034664f94c1553072830270ecb" compoundref="panic_8c" startline="111" endline="125">panic_r</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a16eb17da95d62143431a37e9381af3ee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -602,7 +601,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="155" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="155" bodyend="164"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="155" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="155" bodyend="164"/>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a28c9747160a8526a5272ea44e68f45b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -619,9 +618,9 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="166" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="166" bodyend="180"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="166" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="166" bodyend="180"/>
         <references refid="desc_8c_1aaad9208d1f30cc40267fdeb44f593a35" compoundref="desc_8c" startline="38">PIT_FREQ</references>
-        <references refid="desc_8c_1a7d06701ac073c331c83519e3909b7fce" compoundref="src_2sched_8c" startline="133" endline="157">schedule</references>
+        <references refid="desc_8c_1a7d06701ac073c331c83519e3909b7fce" compoundref="src_2sched_8c" startline="153" endline="171">schedule</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a4f2dd94350b058e8e8ba473a2822cf7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -638,10 +637,10 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="183" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="183" bodyend="189"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="183" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="183" bodyend="189"/>
         <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
-        <references refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" compoundref="panic_8c" startline="102" endline="113">panic</references>
+        <references refid="panic_8c_1a0becae034664f94c1553072830270ecb" compoundref="panic_8c" startline="111" endline="125">panic_r</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a6a369f578313199f231869f97e16802d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -655,7 +654,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="195" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="195" bodyend="330"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="195" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="195" bodyend="330"/>
         <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
         <references refid="desc_8c_1a7baf6caa9795e4df7fb416e88b75c296">_i</references>
         <references refid="desc_8c_1ac84b9fa6258a307e74ee3e6b8019d6c2">gdt_set</references>
@@ -684,7 +683,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="334" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="334" bodyend="342"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="334" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="334" bodyend="342"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a4992b098d3d233475016a0288e6cc918" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -702,7 +701,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="344" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="344" bodyend="352"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="344" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="344" bodyend="352"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1ae5e75d23e9ca091bdf2f1c5007481202" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -720,7 +719,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="354" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="354" bodyend="361"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="354" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="354" bodyend="361"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
       </memberdef>
       <memberdef kind="function" id="desc_8c_1a1d44575d1f90766872fc87b63171102b" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -738,7 +737,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="365" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="365" bodyend="371"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="365" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="365" bodyend="371"/>
         <references refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b">__asm__</references>
         <references refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" compoundref="aplus_8h" startline="113">uint8_t</references>
       </memberdef>
@@ -753,7 +752,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="373" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="373" bodyend="391"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="373" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="373" bodyend="391"/>
         <references refid="desc_8c_1ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</references>
         <references refid="desc_8c_1a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</references>
         <references refid="desc_8c_1a1d44575d1f90766872fc87b63171102b" compoundref="desc_8c" startline="365" endline="371">rtc</references>
@@ -770,7 +769,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/arch/desc.c" line="393" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="393" bodyend="395"/>
+        <location file="/opt/prj/aPlus/src/arch/i386/desc.c" line="393" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="393" bodyend="395"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -929,7 +928,7 @@
 <codeline lineno="149"><highlight class="normal"></highlight></codeline>
 <codeline lineno="150"><highlight class="normal"></highlight></codeline>
 <codeline lineno="151" refid="desc_8c_1a5ec693d5682a18cbeb87ae5c5ea25c03" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a5ec693d5682a18cbeb87ae5c5ea25c03" kindref="member">isr_handler</ref>(regs_t*<sp/>r)<sp/>{</highlight></codeline>
-<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(exception_messages[r-&gt;int_no]);</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a0becae034664f94c1553072830270ecb" kindref="member">panic_r</ref>(exception_messages[r-&gt;int_no],<sp/>r);</highlight></codeline>
 <codeline lineno="153"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="154"><highlight class="normal"></highlight></codeline>
 <codeline lineno="155" refid="desc_8c_1a16eb17da95d62143431a37e9381af3ee" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="desc_8c_1a16eb17da95d62143431a37e9381af3ee" kindref="member">irq_handler</ref>(regs_t*<sp/>r)<sp/>{</highlight></codeline>
@@ -965,7 +964,7 @@
 <codeline lineno="185"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="desc_8c_1ad365b1ba0a341f9a84551327fe0dac7b" kindref="member">__asm__</ref><sp/>__volatile__(</highlight><highlight class="stringliteral">&quot;mov<sp/>eax,<sp/>cr2&quot;</highlight><highlight class="normal"><sp/>:<sp/></highlight><highlight class="stringliteral">&quot;=a&quot;</highlight><highlight class="normal">(faultaddr));</highlight></codeline>
 <codeline lineno="186"><highlight class="normal"></highlight></codeline>
 <codeline lineno="187"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;Page<sp/>fault<sp/>at<sp/>address:<sp/>0x%x\n&quot;</highlight><highlight class="normal">,<sp/>faultaddr);</highlight></codeline>
-<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a92ad17d19a46880dd5e6c99143666b4a" kindref="member">panic</ref>(</highlight><highlight class="stringliteral">&quot;Page<sp/>Fault&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="panic_8c_1a0becae034664f94c1553072830270ecb" kindref="member">panic_r</ref>(</highlight><highlight class="stringliteral">&quot;Page<sp/>Fault&quot;</highlight><highlight class="normal">,<sp/>r);</highlight></codeline>
 <codeline lineno="189"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="190"><highlight class="normal"></highlight></codeline>
 <codeline lineno="191"><highlight class="normal"></highlight></codeline>
@@ -1174,6 +1173,6 @@
 <codeline lineno="394"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>((pit_days<sp/>*<sp/>86400)<sp/>*<sp/>1000)<sp/>+<sp/>(pit_seconds<sp/>*<sp/>1000)<sp/>+<sp/>pit_ticks;</highlight></codeline>
 <codeline lineno="395"><highlight class="normal">}</highlight></codeline>
     </programlisting>
-    <location file="/opt/prj/aPlus/src/arch/desc.c"/>
+    <location file="/opt/prj/aPlus/src/arch/i386/desc.c"/>
   </compounddef>
 </doxygen>

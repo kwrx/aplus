@@ -13,7 +13,7 @@ var indexSectionsWithContent =
   3: "_abcdefghiklmnoprstuvw",
   4: "_abcdefghiklmnoprstuvwxy",
   5: "_abcdefhilmnpstv",
-  6: "_abcdefgiklmnoprstuvw",
+  6: "_abcefgiklmnoprstuvw",
   7: "cpr"
 };
 

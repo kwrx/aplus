@@ -117,42 +117,64 @@ $(document).ready(function(){initNavTree('atk_8h_source.html','');});
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">    9</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">int</span> atk_v2si <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * 2)));</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">int</span> atk_v3si <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * 3)));</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">int</span> atk_v3si <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * 4)));</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">int</span> atk_v4si <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">int</span>) * 4)));</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">float</span> atk_v2f <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>) * 2)));</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">float</span> atk_v3f <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>) * 3)));</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">float</span> atk_v3f <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>) * 4)));</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">float</span> atk_v4f <a class="code" href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a> ((vector_size(<span class="keyword">sizeof</span>(<span class="keywordtype">float</span>) * 4)));</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">   17</a></span>&#160;<span class="keyword">typedef</span> atk_v4f <a class="code" href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="atk_8h.html#a2c8c224ba001105422a0814f71ae5887">   18</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">void</span> <a class="code" href="atk_8h.html#a2c8c224ba001105422a0814f71ae5887">atk_list_t</a>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="atk_8h.html#a29a69073b13d8b13b9732b4fdabae599">   22</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_BLACK         { 1.0f, 0.0f, 0.0f, 0.0f }</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="atk_8h.html#a8bd5836e5294a7a657fefd618925937d">   23</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_WHITE         { 1.0f, 1.0f, 1.0f, 1.0f }</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="atk_8h.html#ae65816298e7a25c2ea3d12df5e0c8b28">   24</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_TRANSPARENT   { 0.0f, 0.0f, 0.0f, 0.0f }</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="atk_8h.html#a170621735809dd7efded8c8517347596">   26</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_A             3</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">   27</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_R             2</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">   28</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_G             1</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">   29</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_B             0</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="widget_8h.html">atk/widget.h</a>&gt;</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="atk_8h.html#a943bf72ffba2da2f833e6e995d84e78a">   18</a></span>&#160;<span class="keyword">typedef</span> atk_v4si <a class="code" href="atk_8h.html#a943bf72ffba2da2f833e6e995d84e78a">atk_rect_t</a>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="atk_8h.html#a644f976397f323e48685f16b0c4fa802">   19</a></span>&#160;<span class="keyword">typedef</span> atk_v2si <a class="code" href="atk_8h.html#a644f976397f323e48685f16b0c4fa802">atk_size_t</a>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="atk_8h.html#aee7e807eb9b4bff2e018cf10b0552fc2">   20</a></span>&#160;<span class="keyword">typedef</span> atk_v2si <a class="code" href="atk_8h.html#aee7e807eb9b4bff2e018cf10b0552fc2">atk_pos_t</a>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="atk_8h.html#a2c8c224ba001105422a0814f71ae5887">   21</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">void</span> <a class="code" href="atk_8h.html#a2c8c224ba001105422a0814f71ae5887">atk_list_t</a>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="atk_8h.html#a29a69073b13d8b13b9732b4fdabae599">   25</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_BLACK         { 1.0f, 0.0f, 0.0f, 0.0f }</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="atk_8h.html#a8bd5836e5294a7a657fefd618925937d">   26</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_WHITE         { 1.0f, 1.0f, 1.0f, 1.0f }</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="atk_8h.html#ae65816298e7a25c2ea3d12df5e0c8b28">   27</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_TRANSPARENT   { 0.0f, 0.0f, 0.0f, 0.0f }</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="atk_8h.html#a170621735809dd7efded8c8517347596">   29</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_A             3</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c">   30</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_R             2</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="atk_8h.html#a4c5c8f9331ebcd8142b22cee6075d2ac">   31</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_G             1</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="atk_8h.html#ac9a57bbb2de01caedab3ca03602144bd">   32</a></span>&#160;<span class="preprocessor">#define ATK_COLOR_B             0</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="atk_8h.html#a9f0bc3985905ebd8360a35625f76caa4">   34</a></span>&#160;<span class="preprocessor">#define ATK_RECT_X              0</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="atk_8h.html#a7f3aa5e83bd01c85e3c1e283eb2892ff">   35</a></span>&#160;<span class="preprocessor">#define ATK_RECT_Y              1</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="atk_8h.html#adaf356bd47ddf870a7757b32d65fef2a">   36</a></span>&#160;<span class="preprocessor">#define ATK_RECT_W              2</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="atk_8h.html#abfd40a030b3974ce70f3078d626ac7a8">   37</a></span>&#160;<span class="preprocessor">#define ATK_RECT_H              3</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="atk_8h.html#a413bc681fce80267f527fa132c151055">   39</a></span>&#160;<span class="preprocessor">#define ATK_SIZE_W              0</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="atk_8h.html#aaad1b7972db05defa86a02338218a358">   40</a></span>&#160;<span class="preprocessor">#define ATK_SIZE_H              1</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="atk_8h.html#a634d569bbadff17b0ea9198d4ce8ce72">   42</a></span>&#160;<span class="preprocessor">#define ATK_POS_X               0</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="atk_8h.html#a8d5096b073d9f2dff29445b21561d03c">   43</a></span>&#160;<span class="preprocessor">#define ATK_POS_Y               1</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="atk_8h.html#a07987a4145b21a362b9bfcdc0b8295ec">   46</a></span>&#160;<span class="preprocessor">#define ATK_RECT_EMPTY          { 0, 0, 0, 0 }</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="atk_8h.html#a303de91995819d0e1b5ae6d089bfd620">   47</a></span>&#160;<span class="preprocessor">#define ATK_SIZE_EMPTY          { 0, 0 }</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="atk_8h.html#a62c95cb8fb4edb6582311705964d27dc">   48</a></span>&#160;<span class="preprocessor">#define ATK_POS_EMPTY           { 0, 0 }</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="widget_8h.html">atk/widget.h</a>&gt;</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="atk_8h_html_a644f976397f323e48685f16b0c4fa802"><div class="ttname"><a href="atk_8h.html#a644f976397f323e48685f16b0c4fa802">atk_size_t</a></div><div class="ttdeci">atk_v2si atk_size_t</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00019">atk.h:19</a></div></div>
+<div class="ttc" id="atk_8h_html_aee7e807eb9b4bff2e018cf10b0552fc2"><div class="ttname"><a href="atk_8h.html#aee7e807eb9b4bff2e018cf10b0552fc2">atk_pos_t</a></div><div class="ttdeci">atk_v2si atk_pos_t</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00020">atk.h:20</a></div></div>
 <div class="ttc" id="atk_8h_html_ad4bf5e6d1454a189b8f26893b0cf6f97"><div class="ttname"><a href="atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97">__attribute__</a></div><div class="ttdeci">int atk_v2si __attribute__((vector_size(sizeof(int)*2)))</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00009">atk.h:9</a></div></div>
+<div class="ttc" id="atk_8h_html_a943bf72ffba2da2f833e6e995d84e78a"><div class="ttname"><a href="atk_8h.html#a943bf72ffba2da2f833e6e995d84e78a">atk_rect_t</a></div><div class="ttdeci">atk_v4si atk_rect_t</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00018">atk.h:18</a></div></div>
 <div class="ttc" id="widget_8h_html"><div class="ttname"><a href="widget_8h.html">widget.h</a></div></div>
 <div class="ttc" id="atk_8h_html_a85e5d8dafaa1bf57b05a1cd0dd9d3b82"><div class="ttname"><a href="atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</a></div><div class="ttdeci">atk_v4f atk_color_t</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00017">atk.h:17</a></div></div>
-<div class="ttc" id="atk_8h_html_a2c8c224ba001105422a0814f71ae5887"><div class="ttname"><a href="atk_8h.html#a2c8c224ba001105422a0814f71ae5887">atk_list_t</a></div><div class="ttdeci">void atk_list_t</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00018">atk.h:18</a></div></div>
+<div class="ttc" id="atk_8h_html_a2c8c224ba001105422a0814f71ae5887"><div class="ttname"><a href="atk_8h.html#a2c8c224ba001105422a0814f71ae5887">atk_list_t</a></div><div class="ttdeci">void atk_list_t</div><div class="ttdef"><b>Definition:</b> <a href="atk_8h_source.html#l00021">atk.h:21</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_425f1d86d53c9d3e80d2d726a823d2ee.html">libatk</a></li><li class="navelem"><a class="el" href="dir_dcca76c011e832220d29d17b7840bb01.html">src</a></li><li class="navelem"><a class="el" href="dir_c65e0577240411f065fa8e7d1489e787.html">include</a></li><li class="navelem"><a class="el" href="atk_8h.html">atk.h</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

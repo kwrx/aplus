@@ -7,5 +7,6 @@ var searchData=
   ['elf32_5fphdr_5ft',['elf32_phdr_t',['../exec_8c.html#a6c037736a997fdd28ed9f6b734261b23',1,'exec.c']]],
   ['elf32_5fshdr_5ft',['elf32_shdr_t',['../exec_8c.html#ad7b97ddfcb82a63cd28a9cb88f21984a',1,'exec.c']]],
   ['elf32_5fsword',['Elf32_Sword',['../exec_8c.html#a30ce6352cf03c667272698ada477da95',1,'exec.c']]],
+  ['elf32_5fsym_5ft',['elf32_sym_t',['../exec_8c.html#a0a07204ebf864bb143d95b4525e80938',1,'exec.c']]],
   ['elf32_5fword',['Elf32_Word',['../exec_8c.html#af5924ece606c732e86f8263a19408e45',1,'exec.c']]]
 ];

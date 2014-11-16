@@ -1,4 +1,4 @@
-.TH "src/mm/paging.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/mm/paging.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -66,10 +66,10 @@ src/mm/paging.c \-
 .RI "void \fBvmm_umap\fP (\fBuint32_t\fP *pd, void *addr, size_t len)"
 .br
 .ti -1c
-.RI "void * \fBvmm_alloc\fP (void *vaddr, size_t \fBsize\fP, int \fBflags\fP)"
+.RI "void * \fBvmm_alloc\fP (\fBuint32_t\fP *vmm, void *vaddr, size_t \fBsize\fP, int \fBflags\fP)"
 .br
 .ti -1c
-.RI "void \fBvmm_free\fP (void *vaddr, size_t \fBsize\fP)"
+.RI "void \fBvmm_free\fP (\fBuint32_t\fP *vmm, void *vaddr, size_t \fBsize\fP)"
 .br
 .ti -1c
 .RI "void \fBvmm_mapkernel\fP (\fBuint32_t\fP *\fBdest\fP)"
@@ -131,18 +131,18 @@ Definition at line 41 of file paging\&.c\&.
 Definition at line 40 of file paging\&.c\&.
 .SH "Function Documentation"
 .PP 
-.SS "void* vmm_alloc (void *vaddr, size_tsize, intflags)"
+.SS "void* vmm_alloc (\fBuint32_t\fP *vmm, void *vaddr, size_tsize, intflags)"
 
 .PP
 Definition at line 130 of file paging\&.c\&.
 .PP
-References current_vmm, halloc(), and vmm_map()\&.
+References halloc(), and vmm_map()\&.
 .PP
 .nf
-130                                                      {
+130                                                                     {
 131     void* paddr = (void*) halloc(current_heap, size);
 132 
-133     vmm_map(current_vmm, paddr, vaddr, size, flags);
+133     vmm_map(vmm, paddr, vaddr, size, flags);
 134 
 135     return paddr;
 136 }
@@ -198,21 +198,21 @@ Definition at line 60 of file paging\&.c\&.
 62     write_cr0(read_cr0() | 0x80000000);
 63 }
 .fi
-.SS "void vmm_free (void *vaddr, size_tsize)"
+.SS "void vmm_free (\fBuint32_t\fP *vmm, void *vaddr, size_tsize)"
 
 .PP
 Definition at line 138 of file paging\&.c\&.
 .PP
-References current_vmm, hfree(), PDENTRY, PGSIZE, PTENTRY, size, uint32_t, and vmm_umap()\&.
+References current_vmm, hfree(), PDENTRY, PGSIZE, PTENTRY, uint32_t, and vmm_umap()\&.
 .PP
 .nf
-138                                         {
+138                                                        {
 139 
 140     int pages = (size / PGSIZE) + 1;
 141     uint32_t frame = (uint32_t) vaddr;
 142     uint32_t* pd = (uint32_t*) current_vmm;
 143 
-144     for(int i = 0; i < size; i++) {
+144     for(int i = 0; i < pages; i++) {
 145         uint32_t* e = &pd[PDENTRY(frame)];
 146 
 147         if((*e & 1) != 1)
@@ -222,7 +222,7 @@ References current_vmm, hfree(), PDENTRY, PGSIZE, PTENTRY, size, uint32_t, and v
 151         hfree(current_heap, table[PTENTRY(frame)] & ~0xFFF, PGSIZE);
 152     }
 153 
-154     vmm_umap(current_vmm, vaddr, size);
+154     vmm_umap(vmm, vaddr, size);
 155 }
 .fi
 .SS "int vmm_init ()"
@@ -360,7 +360,7 @@ References mm_align(), PDENTRY, PGSIZE, PTENTRY, and uint32_t\&.
 .SS "volatile \fBheap_t\fP* current_heap"
 
 .PP
-Definition at line 36 of file mm\&.c\&.
+Definition at line 45 of file mm\&.c\&.
 .SS "\fBuint32_t\fP* current_vmm"
 
 .PP
@@ -372,7 +372,14 @@ Definition at line 47 of file paging\&.c\&.
 .SS "\fBuint32_t\fP memsize"
 
 .PP
-Definition at line 35 of file mm\&.c\&.
+\fBSee also:\fP
+.RS 4
+\fBaplus/mm\&.h\fP 
+.RE
+.PP
+
+.PP
+Definition at line 44 of file mm\&.c\&.
 .SS "\fBlist_t\fP* vmm_queue"
 
 .PP

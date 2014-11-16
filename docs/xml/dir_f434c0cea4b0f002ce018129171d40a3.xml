@@ -5,6 +5,7 @@
     <innerfile refid="__execve_8c">_execve.c</innerfile>
     <innerfile refid="alarm_8c">alarm.c</innerfile>
     <innerfile refid="alphasort_8c">alphasort.c</innerfile>
+    <innerfile refid="chdir_8c">chdir.c</innerfile>
     <innerfile refid="closedir_8c">closedir.c</innerfile>
     <innerfile refid="config_8h">config.h</innerfile>
     <innerfile refid="dup2_8c">dup2.c</innerfile>
@@ -17,6 +18,7 @@
     <innerfile refid="execvp_8c">execvp.c</innerfile>
     <innerfile refid="getcwd_8c">getcwd.c</innerfile>
     <innerfile refid="gid_8c">gid.c</innerfile>
+    <innerfile refid="grp_8c">grp.c</innerfile>
     <innerfile refid="lstat_8c">lstat.c</innerfile>
     <innerfile refid="nanosleep_8c">nanosleep.c</innerfile>
     <innerfile refid="opendir_8c">opendir.c</innerfile>
@@ -25,10 +27,16 @@
     <innerfile refid="scandir_8c">scandir.c</innerfile>
     <innerfile refid="usr_2src_2libposix_2src_2sched_8c">sched.c</innerfile>
     <innerfile refid="seekdir_8c">seekdir.c</innerfile>
+    <innerfile refid="sigaction_8c">sigaction.c</innerfile>
+    <innerfile refid="sigprocmask_8c">sigprocmask.c</innerfile>
+    <innerfile refid="sigsuspend_8c">sigsuspend.c</innerfile>
     <innerfile refid="sleep_8c">sleep.c</innerfile>
     <innerfile refid="telldir_8c">telldir.c</innerfile>
+    <innerfile refid="usr_2src_2libposix_2src_2tty_8c">tty.c</innerfile>
     <innerfile refid="uid_8c">uid.c</innerfile>
+    <innerfile refid="umask_8c">umask.c</innerfile>
     <innerfile refid="usleep_8c">usleep.c</innerfile>
+    <innerfile refid="usr_2src_2libposix_2src_2wait_8c">wait.c</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

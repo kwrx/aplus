@@ -10,51 +10,51 @@
     <includes local="no">string.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="2162">
+      <node id="2347">
         <label>usr/src/libposix/src/rewinddir.c</label>
         <link refid="rewinddir.c"/>
-        <childnode refid="2163" relation="include">
+        <childnode refid="2348" relation="include">
         </childnode>
-        <childnode refid="2164" relation="include">
+        <childnode refid="2349" relation="include">
         </childnode>
-        <childnode refid="2166" relation="include">
+        <childnode refid="2351" relation="include">
         </childnode>
-        <childnode refid="2167" relation="include">
+        <childnode refid="2352" relation="include">
         </childnode>
-        <childnode refid="2168" relation="include">
+        <childnode refid="2353" relation="include">
         </childnode>
-        <childnode refid="2169" relation="include">
+        <childnode refid="2354" relation="include">
         </childnode>
-        <childnode refid="2170" relation="include">
+        <childnode refid="2355" relation="include">
         </childnode>
       </node>
-      <node id="2168">
+      <node id="2353">
         <label>stdlib.h</label>
       </node>
-      <node id="2170">
+      <node id="2355">
         <label>errno.h</label>
       </node>
-      <node id="2166">
+      <node id="2351">
         <label>fcntl.h</label>
       </node>
-      <node id="2165">
+      <node id="2350">
         <label>sys/types.h</label>
       </node>
-      <node id="2169">
+      <node id="2354">
         <label>string.h</label>
       </node>
-      <node id="2164">
+      <node id="2349">
         <label>unistd.h</label>
       </node>
-      <node id="2163">
+      <node id="2348">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2164" relation="include">
+        <childnode refid="2349" relation="include">
         </childnode>
-        <childnode refid="2165" relation="include">
+        <childnode refid="2350" relation="include">
         </childnode>
       </node>
-      <node id="2167">
+      <node id="2352">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -93,7 +93,7 @@
 <codeline lineno="8"><highlight class="normal"></highlight></codeline>
 <codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>
-<codeline lineno="11" refid="rewinddir_8c_1a08e6a89050229d246d07d9e17d57cb29" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rewinddir_8c_1a08e6a89050229d246d07d9e17d57cb29" kindref="member">rewinddir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="11" refid="rewinddir_8c_1a08e6a89050229d246d07d9e17d57cb29" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="rewinddir_8c_1a08e6a89050229d246d07d9e17d57cb29" kindref="member">rewinddir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/>d)<sp/>{</highlight></codeline>
 <codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d)</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d-&gt;<ref refid="struct____DIR_1adcec35c0ea0ed4342c5425c494554397" kindref="member">position</ref><sp/>=<sp/>0;</highlight></codeline>
 <codeline lineno="14"><highlight class="normal">}</highlight></codeline>

@@ -85,7 +85,7 @@ References buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), l
 69     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} += \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
 70 
 71 
-72     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+72     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structbufio}{bufio\_t}));
 73     buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} = addr;
 74     buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} = \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
 75     buf->\hyperlink{structbufio_ad5542b6d1da521611e9d5790a4a9e651}{type} = 0;
@@ -139,7 +139,7 @@ References buffers\+\_\+length, current\+\_\+task, kmalloc(), list\+\_\+add(), l
 97 
 98     \hyperlink{bufio_8c_ae7827a32f1a587623ae8c9ac72981bd1}{buffers\_length} += \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
 99 
-100     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+100     \hyperlink{structbufio}{bufio\_t}* buf = (\hyperlink{structbufio}{bufio\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structbufio}{bufio\_t}));
 101     buf->\hyperlink{structbufio_a7d5a293fbae342f7f9da0390aa04d74a}{raw} = raw;
 102     buf->\hyperlink{structbufio_a233f5f8090a3f39d9471333db439e2bb}{size} = \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size};
 103     buf->\hyperlink{structbufio_ad5542b6d1da521611e9d5790a4a9e651}{type} = 0;
@@ -519,7 +519,7 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 
 \hypertarget{bufio_8c_a5e9324428544e1da920f5be30824d350}{\index{bufio.\+c@{bufio.\+c}!list\+\_\+buffers@{list\+\_\+buffers}}
 \index{list\+\_\+buffers@{list\+\_\+buffers}!bufio.\+c@{bufio.\+c}}

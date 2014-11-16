@@ -12,141 +12,141 @@
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1536">
+      <node id="1629">
         <label>sys/stat.h</label>
       </node>
-      <node id="1527">
+      <node id="1620">
         <label>stdarg.h</label>
       </node>
-      <node id="1530">
+      <node id="1623">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1525" relation="include">
+        <childnode refid="1618" relation="include">
         </childnode>
-        <childnode refid="1531" relation="include">
+        <childnode refid="1624" relation="include">
         </childnode>
-        <childnode refid="1526" relation="include">
+        <childnode refid="1619" relation="include">
         </childnode>
-        <childnode refid="1528" relation="include">
+        <childnode refid="1621" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1626" relation="include">
         </childnode>
       </node>
-      <node id="1535">
+      <node id="1628">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1526" relation="include">
+        <childnode refid="1619" relation="include">
         </childnode>
-        <childnode refid="1532" relation="include">
+        <childnode refid="1625" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1626" relation="include">
         </childnode>
-        <childnode refid="1536" relation="include">
+        <childnode refid="1629" relation="include">
         </childnode>
-        <childnode refid="1537" relation="include">
+        <childnode refid="1630" relation="include">
         </childnode>
       </node>
-      <node id="1524">
+      <node id="1617">
         <label>src/syscall/ioctl.c</label>
         <link refid="ioctl.c"/>
-        <childnode refid="1525" relation="include">
+        <childnode refid="1618" relation="include">
         </childnode>
-        <childnode refid="1529" relation="include">
+        <childnode refid="1622" relation="include">
         </childnode>
-        <childnode refid="1534" relation="include">
+        <childnode refid="1627" relation="include">
         </childnode>
-        <childnode refid="1535" relation="include">
+        <childnode refid="1628" relation="include">
         </childnode>
-        <childnode refid="1538" relation="include">
+        <childnode refid="1631" relation="include">
         </childnode>
-        <childnode refid="1541" relation="include">
+        <childnode refid="1634" relation="include">
         </childnode>
-        <childnode refid="1542" relation="include">
+        <childnode refid="1635" relation="include">
         </childnode>
-        <childnode refid="1536" relation="include">
+        <childnode refid="1629" relation="include">
         </childnode>
-        <childnode refid="1537" relation="include">
+        <childnode refid="1630" relation="include">
         </childnode>
       </node>
-      <node id="1526">
+      <node id="1619">
         <label>stdint.h</label>
       </node>
-      <node id="1529">
+      <node id="1622">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1525" relation="include">
+        <childnode refid="1618" relation="include">
         </childnode>
-        <childnode refid="1530" relation="include">
+        <childnode refid="1623" relation="include">
         </childnode>
-        <childnode refid="1526" relation="include">
+        <childnode refid="1619" relation="include">
         </childnode>
       </node>
-      <node id="1540">
+      <node id="1633">
         <label>setjmp.h</label>
       </node>
-      <node id="1534">
+      <node id="1627">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1526" relation="include">
+        <childnode refid="1619" relation="include">
         </childnode>
-        <childnode refid="1525" relation="include">
+        <childnode refid="1618" relation="include">
         </childnode>
-        <childnode refid="1535" relation="include">
+        <childnode refid="1628" relation="include">
         </childnode>
-        <childnode refid="1539" relation="include">
+        <childnode refid="1632" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1626" relation="include">
         </childnode>
-        <childnode refid="1540" relation="include">
+        <childnode refid="1633" relation="include">
         </childnode>
       </node>
-      <node id="1542">
+      <node id="1635">
         <label>errno.h</label>
       </node>
-      <node id="1541">
+      <node id="1634">
         <label>fcntl.h</label>
       </node>
-      <node id="1532">
+      <node id="1625">
         <label>stddef.h</label>
       </node>
-      <node id="1531">
+      <node id="1624">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1532" relation="include">
+        <childnode refid="1625" relation="include">
         </childnode>
-        <childnode refid="1526" relation="include">
+        <childnode refid="1619" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1626" relation="include">
         </childnode>
       </node>
-      <node id="1525">
+      <node id="1618">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1526" relation="include">
+        <childnode refid="1619" relation="include">
         </childnode>
-        <childnode refid="1527" relation="include">
+        <childnode refid="1620" relation="include">
         </childnode>
-        <childnode refid="1528" relation="include">
+        <childnode refid="1621" relation="include">
         </childnode>
       </node>
-      <node id="1533">
+      <node id="1626">
         <label>sys/types.h</label>
       </node>
-      <node id="1528">
+      <node id="1621">
         <label>string.h</label>
       </node>
-      <node id="1538">
+      <node id="1631">
         <label>unistd.h</label>
       </node>
-      <node id="1539">
+      <node id="1632">
         <label>signal.h</label>
       </node>
-      <node id="1537">
+      <node id="1630">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1538" relation="include">
+        <childnode refid="1631" relation="include">
         </childnode>
-        <childnode refid="1533" relation="include">
+        <childnode refid="1626" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -162,7 +162,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/ioctl.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/ioctl.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -189,10 +189,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/ioctl.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/syscall/ioctl.c" bodystart="15" bodyend="25"/>
+        <location file="/opt/prj/aPlus/src/syscall/ioctl.c" line="15" column="1" bodyfile="/opt/prj/aPlus/src/syscall/ioctl.c" bodystart="15" bodyend="31"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="105">task::fd</references>
-        <references refid="fs_8c_1afb548bce2f916933a7c7d95a48b57cdb" compoundref="fs_8c" startline="109" endline="115">fs_ioctl</references>
+        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="107">task::fd</references>
+        <references refid="fs_8c_1afb548bce2f916933a7c7d95a48b57cdb" compoundref="fs_8c" startline="110" endline="116">fs_ioctl</references>
+        <references refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" compoundref="task_8h" startline="35">TASK_MAX_FD</references>
       </memberdef>
       <memberdef kind="function" id="ioctl_8c_1a88be2ec84300ac3760f30a5858ff7e86" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -211,7 +212,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/ioctl.c" line="28" column="1"/>
+        <location file="/opt/prj/aPlus/src/syscall/ioctl.c" line="34" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -235,18 +236,24 @@
 <codeline lineno="14"><highlight class="normal"></highlight></codeline>
 <codeline lineno="15" refid="ioctl_8c_1a76eeda26d1c9360d2d11b28c4f1be283" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="ioctl_8c_1a76eeda26d1c9360d2d11b28c4f1be283" kindref="member">sys_ioctl</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>req,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buf)<sp/>{</highlight></codeline>
 <codeline lineno="16"><highlight class="normal"></highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="fs_8c_1afb548bce2f916933a7c7d95a48b57cdb" kindref="member">fs_ioctl</ref>(ino,<sp/>req,<sp/>buf);</highlight></codeline>
-<codeline lineno="25"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"></highlight></codeline>
-<codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><ref refid="ioctl_8c_1a88be2ec84300ac3760f30a5858ff7e86" kindref="member">SYSCALL</ref>(<ref refid="ioctl_8c_1a76eeda26d1c9360d2d11b28c4f1be283" kindref="member">sys_ioctl</ref>,<sp/>20);</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fd<sp/>&lt;<sp/>0<sp/>||<sp/>fd<sp/>&gt;<sp/><ref refid="task_8h_1aa0beab24d02a2ccd5d273dea188af93d" kindref="member">TASK_MAX_FD</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structinode" kindref="compound">inode_t</ref>*<sp/>ino<sp/>=<sp/>current_task-&gt;<ref refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" kindref="member">fd</ref>[fd];</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!ino)<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EBADF;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="fs_8c_1afb548bce2f916933a7c7d95a48b57cdb" kindref="member">fs_ioctl</ref>(ino,<sp/>req,<sp/>buf);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><ref refid="ioctl_8c_1a88be2ec84300ac3760f30a5858ff7e86" kindref="member">SYSCALL</ref>(<ref refid="ioctl_8c_1a76eeda26d1c9360d2d11b28c4f1be283" kindref="member">sys_ioctl</ref>,<sp/>20);</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/syscall/ioctl.c"/>
   </compounddef>

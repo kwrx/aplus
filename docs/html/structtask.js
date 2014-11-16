@@ -13,6 +13,7 @@ var structtask =
     [ "gid", "structtask.html#aaf3b6e15445e766a5c4823b815bca630", null ],
     [ "image", "structtask.html#a3eac6c8a544ff49a836c5eed9ec48107", null ],
     [ "length", "structtask.html#aa90dc3e7e232d6ba3f04700b3197b366", null ],
+    [ "owner", "structtask.html#a34a5abdae35b067ec6cde7fc81a43598", null ],
     [ "parent", "structtask.html#a34c6613744820a1e8127756fb6a5392c", null ],
     [ "pid", "structtask.html#ab56448ae42a75825ea923bd86648f3ae", null ],
     [ "priority", "structtask.html#a9ab46b5a6e7c471f1fe32db13e6636a2", null ],

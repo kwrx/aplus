@@ -1,0 +1,387 @@
+\hypertarget{gfx_8c}{\section{usr/src/libatk/src/gfx.c File Reference}
+\label{gfx_8c}\index{usr/src/libatk/src/gfx.\+c@{usr/src/libatk/src/gfx.\+c}}
+}
+{\ttfamily \#include $<$atk.\+h$>$}\\*
+{\ttfamily \#include $<$atk/gfx.\+h$>$}\\*
+{\ttfamily \#include $<$atk/bitmap.\+h$>$}\\*
+{\ttfamily \#include $<$stdint.\+h$>$}\\*
+{\ttfamily \#include $<$math.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include \char`\"{}clrconv.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{gfx_8c_a9b2502bd0ce8f0310181c6e5f942971a}{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32} (void $\ast$d, \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} color)
+\item 
+static void \hyperlink{gfx_8c_a03463c4b1cb7f47ad907238ade0253b9}{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24} (void $\ast$d, \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} color)
+\item 
+static void \hyperlink{gfx_8c_a7aaa9f57c899dd3abbc89f333cf033cd}{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16} (void $\ast$d, \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} color)
+\item 
+static \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} \hyperlink{gfx_8c_a6fb53066ae07aa5d373749f3cd604667}{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32} (void $\ast$d)
+\item 
+static \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} \hyperlink{gfx_8c_ae7c30dc3d12e86efeeac3d10e2402ecc}{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24} (void $\ast$d)
+\item 
+static \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} \hyperlink{gfx_8c_acf0e69d2f398da36b549cd8700e8ed7a}{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16} (void $\ast$d)
+\item 
+\hyperlink{gfx_8h_a8c8412155528b364a972c509c5cca18e}{atk\+\_\+gfx\+\_\+t} $\ast$ \hyperlink{gfx_8c_ac05b6147f547ac7cf1a6600226eaff0b}{atk\+\_\+gfx\+\_\+create} (short width, short height, short \hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp}, void $\ast$buffer)
+\item 
+void \hyperlink{gfx_8c_a0f767522ab60d278c9c47033b8b73ddb}{atk\+\_\+gfx\+\_\+set} (\hyperlink{gfx_8h_a8c8412155528b364a972c509c5cca18e}{atk\+\_\+gfx\+\_\+t} $\ast$gfx)
+\item 
+\hyperlink{gfx_8h_a8c8412155528b364a972c509c5cca18e}{atk\+\_\+gfx\+\_\+t} $\ast$ \hyperlink{gfx_8c_ab7e9db411a46b785c93e3a729737c894}{atk\+\_\+gfx\+\_\+get} ()
+\item 
+int \hyperlink{gfx_8c_a553c125db6cad5a8f0176b48a2f66f1d}{atk\+\_\+gfx\+\_\+line} (\hyperlink{bitmap_8h_a999118ff4462f09cd53380b82e5c0d57}{atk\+\_\+bitmap\+\_\+t} $\ast$b, int x0, int y0, int x1, int y1, \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\+\_\+color\+\_\+t} color)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{gfx_8h_a8c8412155528b364a972c509c5cca18e}{atk\+\_\+gfx\+\_\+t} $\ast$ \hyperlink{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\+\_\+\+\_\+gfx}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{gfx_8c_a7aaa9f57c899dd3abbc89f333cf033cd}{\index{gfx.\+c@{gfx.\+c}!\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16@{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16}}
+\index{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16@{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16}]{\setlength{\rightskip}{0pt plus 5cm}static void \+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16 (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{d, }
+\item[{{\bf atk\+\_\+color\+\_\+t}}]{color}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{gfx_8c_a7aaa9f57c899dd3abbc89f333cf033cd}
+
+
+Definition at line 26 of file gfx.\+c.
+
+
+
+References \+\_\+\+\_\+alphablend(), A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+A, R5\+G6\+B5\+\_\+\+T\+O\+\_\+\+V4\+F, uint16\+\_\+t, and V4\+F\+\_\+\+T\+O\+\_\+\+R5\+G6\+B5.
+
+
+\begin{DoxyCode}
+26                                                             \{
+27     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} dc = \hyperlink{clrconv_8h_af7d04bfd25b3866ae4592547dc8a7909}{R5G6B5\_TO\_V4F}((*(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t}*) d));
+28     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} df = \hyperlink{clrconv_8h_ab7d4dfdb7e512b070be9ba847e71547f}{\_\_alphablend}(dc, color, color[
+      \hyperlink{atk_8h_a170621735809dd7efded8c8517347596}{ATK\_COLOR\_A}]);
+29 
+30     *(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t}*) d = \hyperlink{clrconv_8h_a37a361b71cb30457e00beba77d3ccfac}{V4F\_TO\_R5G6B5}(df);
+31 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_a03463c4b1cb7f47ad907238ade0253b9}{\index{gfx.\+c@{gfx.\+c}!\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24@{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24}}
+\index{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24@{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24}]{\setlength{\rightskip}{0pt plus 5cm}static void \+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24 (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{d, }
+\item[{{\bf atk\+\_\+color\+\_\+t}}]{color}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{gfx_8c_a03463c4b1cb7f47ad907238ade0253b9}
+
+
+Definition at line 19 of file gfx.\+c.
+
+
+
+References \+\_\+\+\_\+alphablend(), A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+A, R\+G\+B\+\_\+\+T\+O\+\_\+\+V4\+F, uint32\+\_\+t, and V4\+F\+\_\+\+T\+O\+\_\+\+R\+G\+B.
+
+
+\begin{DoxyCode}
+19                                                             \{
+20     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} dc = \hyperlink{clrconv_8h_a19e916ae304100c410afd14f3afaa3a8}{RGB\_TO\_V4F}((*(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) d));
+21     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} df = \hyperlink{clrconv_8h_ab7d4dfdb7e512b070be9ba847e71547f}{\_\_alphablend}(dc, color, color[
+      \hyperlink{atk_8h_a170621735809dd7efded8c8517347596}{ATK\_COLOR\_A}]);
+22 
+23     *(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) d = \hyperlink{clrconv_8h_aa375c3354e6d58c2f6a15e61fc5b95d4}{V4F\_TO\_RGB}(df);
+24 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_a9b2502bd0ce8f0310181c6e5f942971a}{\index{gfx.\+c@{gfx.\+c}!\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32@{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32}}
+\index{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32@{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32}]{\setlength{\rightskip}{0pt plus 5cm}static void \+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32 (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{d, }
+\item[{{\bf atk\+\_\+color\+\_\+t}}]{color}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{gfx_8c_a9b2502bd0ce8f0310181c6e5f942971a}
+
+
+Definition at line 12 of file gfx.\+c.
+
+
+
+References \+\_\+\+\_\+alphablend(), A\+R\+G\+B\+\_\+\+T\+O\+\_\+\+V4\+F, A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+A, uint32\+\_\+t, and V4\+F\+\_\+\+T\+O\+\_\+\+A\+R\+G\+B.
+
+
+\begin{DoxyCode}
+12                                                             \{
+13     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} dc = \hyperlink{clrconv_8h_accad078885c0425eb1861291a1769717}{ARGB\_TO\_V4F}((*(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) d));
+14     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} df = \hyperlink{clrconv_8h_ab7d4dfdb7e512b070be9ba847e71547f}{\_\_alphablend}(dc, color, color[
+      \hyperlink{atk_8h_a170621735809dd7efded8c8517347596}{ATK\_COLOR\_A}]);
+15 
+16     *(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) d = \hyperlink{clrconv_8h_ae1e5d1080f853c20f27978351f278d43}{V4F\_TO\_ARGB}(df);
+17 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_acf0e69d2f398da36b549cd8700e8ed7a}{\index{gfx.\+c@{gfx.\+c}!\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16@{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16}}
+\index{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16@{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf atk\+\_\+color\+\_\+t} \+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16 (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{d}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{gfx_8c_acf0e69d2f398da36b549cd8700e8ed7a}
+
+
+Definition at line 45 of file gfx.\+c.
+
+
+
+References R5\+G6\+B5\+\_\+\+T\+O\+\_\+\+V4\+F, and uint16\+\_\+t.
+
+
+\begin{DoxyCode}
+45                                                 \{
+46     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} dc = \hyperlink{clrconv_8h_af7d04bfd25b3866ae4592547dc8a7909}{R5G6B5\_TO\_V4F}((*(\hyperlink{aplus_8h_a5a8b2dc9e45a9ee81a94ef304fb62505}{uint16\_t}*) d));
+47 
+48     \textcolor{keywordflow}{return} dc;
+49 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_ae7c30dc3d12e86efeeac3d10e2402ecc}{\index{gfx.\+c@{gfx.\+c}!\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24@{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24}}
+\index{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24@{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf atk\+\_\+color\+\_\+t} \+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24 (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{d}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{gfx_8c_ae7c30dc3d12e86efeeac3d10e2402ecc}
+
+
+Definition at line 39 of file gfx.\+c.
+
+
+
+References R\+G\+B\+\_\+\+T\+O\+\_\+\+V4\+F, and uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+39                                                 \{
+40     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} dc = \hyperlink{clrconv_8h_a19e916ae304100c410afd14f3afaa3a8}{RGB\_TO\_V4F}((*(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) d));
+41 
+42     \textcolor{keywordflow}{return} dc;
+43 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_a6fb53066ae07aa5d373749f3cd604667}{\index{gfx.\+c@{gfx.\+c}!\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32@{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32}}
+\index{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32@{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32}]{\setlength{\rightskip}{0pt plus 5cm}static {\bf atk\+\_\+color\+\_\+t} \+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32 (
+\begin{DoxyParamCaption}
+\item[{void $\ast$}]{d}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{gfx_8c_a6fb53066ae07aa5d373749f3cd604667}
+
+
+Definition at line 33 of file gfx.\+c.
+
+
+
+References A\+R\+G\+B\+\_\+\+T\+O\+\_\+\+V4\+F, and uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+33                                                 \{
+34     \hyperlink{atk_8h_a85e5d8dafaa1bf57b05a1cd0dd9d3b82}{atk\_color\_t} dc = \hyperlink{clrconv_8h_accad078885c0425eb1861291a1769717}{ARGB\_TO\_V4F}((*(\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) d));
+35 
+36     \textcolor{keywordflow}{return} dc;
+37 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_ac05b6147f547ac7cf1a6600226eaff0b}{\index{gfx.\+c@{gfx.\+c}!atk\+\_\+gfx\+\_\+create@{atk\+\_\+gfx\+\_\+create}}
+\index{atk\+\_\+gfx\+\_\+create@{atk\+\_\+gfx\+\_\+create}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{atk\+\_\+gfx\+\_\+create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf atk\+\_\+gfx\+\_\+t}$\ast$ atk\+\_\+gfx\+\_\+create (
+\begin{DoxyParamCaption}
+\item[{short}]{width, }
+\item[{short}]{height, }
+\item[{short}]{bpp, }
+\item[{void $\ast$}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{gfx_8c_ac05b6147f547ac7cf1a6600226eaff0b}
+
+
+Definition at line 53 of file gfx.\+c.
+
+
+
+References atk\+\_\+gfx\+::\+\_\+\+\_\+get, \+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+16(), \+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+24(), \+\_\+\+\_\+gfx\+\_\+plot\+\_\+pixel\+\_\+32(), \+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+16(), \+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+24(), \+\_\+\+\_\+gfx\+\_\+read\+\_\+pixel\+\_\+32(), atk\+\_\+gfx\+::\+\_\+\+\_\+plot, atk\+\_\+gfx\+::bpp, bpp, errno, atk\+\_\+gfx\+::framebuffer, atk\+\_\+gfx\+::height, atk\+\_\+gfx\+::stride, and atk\+\_\+gfx\+::width.
+
+
+\begin{DoxyCode}
+53                                                                               \{
+54     \textcolor{keywordflow}{if}(!(width && height && \hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp} && buffer)) \{
+55         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+56         \textcolor{keywordflow}{return} NULL;
+57     \}
+58 
+59     \hyperlink{structatk__gfx}{atk\_gfx\_t}* gfx = (\hyperlink{structatk__gfx}{atk\_gfx\_t}*) malloc(width * height * (\hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp} / 8));
+60     gfx->\hyperlink{structatk__gfx_a8c8d73df98a82572a666824b52b99964}{width} = width;
+61     gfx->\hyperlink{structatk__gfx_a5dcdddc358345ad49f4015253f1acbe6}{height} = height;
+62     gfx->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} = \hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp};
+63     gfx->\hyperlink{structatk__gfx_a7f050db1e3d134473b2077ab5275b727}{stride} = width * (\hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp} / 8);
+64     gfx->\hyperlink{structatk__gfx_a00413765e42e1a347e45401e1a2e95bf}{framebuffer} = buffer;
+65 
+66     \textcolor{keywordflow}{switch}(\hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp}) \{
+67         \textcolor{keywordflow}{case} 16:
+68             gfx->\hyperlink{structatk__gfx_ad0600b98849b356fa7d12a3e4237588b}{\_\_plot} = \hyperlink{gfx_8c_a7aaa9f57c899dd3abbc89f333cf033cd}{\_\_gfx\_plot\_pixel\_16};
+69             gfx->\hyperlink{structatk__gfx_ae36225bc515975b602bde086de71ad24}{\_\_get} = \hyperlink{gfx_8c_acf0e69d2f398da36b549cd8700e8ed7a}{\_\_gfx\_read\_pixel\_16};
+70             \textcolor{keywordflow}{break};
+71         \textcolor{keywordflow}{case} 24:
+72             gfx->\hyperlink{structatk__gfx_ad0600b98849b356fa7d12a3e4237588b}{\_\_plot} = \hyperlink{gfx_8c_a03463c4b1cb7f47ad907238ade0253b9}{\_\_gfx\_plot\_pixel\_24};
+73             gfx->\hyperlink{structatk__gfx_ae36225bc515975b602bde086de71ad24}{\_\_get} = \hyperlink{gfx_8c_ae7c30dc3d12e86efeeac3d10e2402ecc}{\_\_gfx\_read\_pixel\_24};
+74             \textcolor{keywordflow}{break};
+75         \textcolor{keywordflow}{case} 32:
+76             gfx->\hyperlink{structatk__gfx_ad0600b98849b356fa7d12a3e4237588b}{\_\_plot} = \hyperlink{gfx_8c_a9b2502bd0ce8f0310181c6e5f942971a}{\_\_gfx\_plot\_pixel\_32};
+77             gfx->\hyperlink{structatk__gfx_ae36225bc515975b602bde086de71ad24}{\_\_get} = \hyperlink{gfx_8c_a6fb53066ae07aa5d373749f3cd604667}{\_\_gfx\_read\_pixel\_32};
+78             \textcolor{keywordflow}{break};
+79         \textcolor{keywordflow}{default}:
+80             free(gfx);
+81             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+82             \textcolor{keywordflow}{return} NULL;
+83     \}
+84 
+85     \textcolor{keywordflow}{return} gfx;
+86 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_ab7e9db411a46b785c93e3a729737c894}{\index{gfx.\+c@{gfx.\+c}!atk\+\_\+gfx\+\_\+get@{atk\+\_\+gfx\+\_\+get}}
+\index{atk\+\_\+gfx\+\_\+get@{atk\+\_\+gfx\+\_\+get}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{atk\+\_\+gfx\+\_\+get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf atk\+\_\+gfx\+\_\+t}$\ast$ atk\+\_\+gfx\+\_\+get (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{gfx_8c_ab7e9db411a46b785c93e3a729737c894}
+
+
+Definition at line 92 of file gfx.\+c.
+
+
+
+References \+\_\+\+\_\+gfx.
+
+
+\begin{DoxyCode}
+92                          \{
+93     \textcolor{keywordflow}{return} \hyperlink{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx};
+94 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_a553c125db6cad5a8f0176b48a2f66f1d}{\index{gfx.\+c@{gfx.\+c}!atk\+\_\+gfx\+\_\+line@{atk\+\_\+gfx\+\_\+line}}
+\index{atk\+\_\+gfx\+\_\+line@{atk\+\_\+gfx\+\_\+line}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{atk\+\_\+gfx\+\_\+line}]{\setlength{\rightskip}{0pt plus 5cm}int atk\+\_\+gfx\+\_\+line (
+\begin{DoxyParamCaption}
+\item[{{\bf atk\+\_\+bitmap\+\_\+t} $\ast$}]{b, }
+\item[{int}]{x0, }
+\item[{int}]{y0, }
+\item[{int}]{x1, }
+\item[{int}]{y1, }
+\item[{{\bf atk\+\_\+color\+\_\+t}}]{color}
+\end{DoxyParamCaption}
+)}}\label{gfx_8c_a553c125db6cad5a8f0176b48a2f66f1d}
+
+
+Definition at line 98 of file gfx.\+c.
+
+
+
+References atk\+\_\+gfx\+::\+\_\+\+\_\+plot, \+\_\+\+\_\+\+S\+W\+A\+P, A\+T\+K\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+L\+O\+C\+K\+\_\+\+R\+D\+W\+R, atk\+\_\+bitmap\+\_\+lockbits(), atk\+\_\+bitmap\+\_\+unlockbits(), A\+T\+K\+\_\+\+C\+O\+L\+O\+R\+\_\+\+A, atk\+\_\+gfx\+::bpp, bpp, errno, and uint32\+\_\+t.
+
+
+\begin{DoxyCode}
+98                                                                                      \{
+99 
+100     \textcolor{keywordflow}{if}(!b) \{
+101         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+102         \textcolor{keywordflow}{return} -1;
+103     \}
+104 
+105     \textcolor{keywordflow}{if}(x0 > x1)
+106         \hyperlink{clrconv_8h_a9abc90ae1044063128acfb1505666e49}{\_\_SWAP}(x0, x1)
+107 
+108     if(y0 > y1)
+109         \hyperlink{clrconv_8h_a9abc90ae1044063128acfb1505666e49}{\_\_SWAP}(y0, y1)
+110 
+111     \hyperlink{atk_8h_a943bf72ffba2da2f833e6e995d84e78a}{atk\_rect\_t} region = \{ x0, y0, x1, y1 \};
+112     \textcolor{keywordtype}{void}* buffer = \hyperlink{bitmap_8c_af2d4d028cb46ed7c8c7e2e34a15cede1}{atk\_bitmap\_lockbits}(b, region, 
+      \hyperlink{bitmap_8h_a5f29e050242724d3eb790ae6dadcae78}{ATK\_BITMAP\_LOCK\_RDWR});
+113     \textcolor{keywordflow}{if}(!buffer)
+114         \textcolor{keywordflow}{return} -1;
+115     
+116     x1 -= x0;
+117     y1 -= y1;
+118     x0 = 0;
+119     y0 = 0;
+120     
+121     \textcolor{keywordtype}{int} x2 = 0;
+122     \textcolor{keywordtype}{int} sx = 0;
+123     \textcolor{keywordtype}{int} sy = 0;
+124     \textcolor{keywordtype}{int} dx = x1;
+125     \textcolor{keywordtype}{int} dy = y1;
+126     \textcolor{keywordtype}{int} e = dx - dy;
+127     \textcolor{keywordtype}{int} e2 = 0;
+128     \textcolor{keywordtype}{int} ed = dx + dy == 0 ? 1 : sqrt((\textcolor{keywordtype}{float}) (dx * dx) + (\textcolor{keywordtype}{float}) (dy * dy));
+129     \textcolor{keywordtype}{int} \hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp} = \hyperlink{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_a27d24c7a918386527067975cfd8da971}{bpp} >> 3;
+130     \textcolor{keywordtype}{int} stride = x1 * \hyperlink{grub_8h_a29d3773a35b844e2dbb12bb5d895ab50}{bpp};
+131 
+132     \textcolor{keywordflow}{for}(;;) \{
+133         color[\hyperlink{atk_8h_a170621735809dd7efded8c8517347596}{ATK\_COLOR\_A}] = abs(e - dx + dy) / ed;
+134         \hyperlink{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_ad0600b98849b356fa7d12a3e4237588b}{\_\_plot}((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) buffer + (y0 * stride) + (x0 * bpp)), color);
+135         
+136         e2 = e;
+137         x2 = x0;    
+138 
+139         \textcolor{keywordflow}{if}((e2 << 1) >= -dx) \{
+140             \textcolor{keywordflow}{if}(x0 == x1)
+141                 \textcolor{keywordflow}{break};
+142 
+143             \textcolor{keywordflow}{if}(e2 + dy < ed) \{
+144                 color[\hyperlink{atk_8h_a170621735809dd7efded8c8517347596}{ATK\_COLOR\_A}] = abs(e2 - dy) / ed;
+145                 \hyperlink{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_ad0600b98849b356fa7d12a3e4237588b}{\_\_plot}((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) buffer + ((y0 + sy) * stride) + (x0 * 
+      bpp)), color);       
+146             \}
+147 
+148             e -= dy;
+149             x0 += sx;
+150         \}
+151 
+152         \textcolor{keywordflow}{if}((e2 << 1) <= dy) \{
+153             \textcolor{keywordflow}{if}(y0 == y1)
+154                 \textcolor{keywordflow}{break};
+155 
+156             \textcolor{keywordflow}{if}(dx - e2 < ed) \{
+157                 color[\hyperlink{atk_8h_a170621735809dd7efded8c8517347596}{ATK\_COLOR\_A}] = abs(dx - e2) / ed;
+158                 \hyperlink{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx}->\hyperlink{structatk__gfx_ad0600b98849b356fa7d12a3e4237588b}{\_\_plot}((\textcolor{keywordtype}{void}*) ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) buffer + (y0 * stride) + ((x2 + sx) * 
+      bpp)), color);       
+159             \}
+160 
+161             e += dx;
+162             y0 += sy;
+163         \}
+164     \}
+165     
+166     \hyperlink{bitmap_8c_abbf711383513c744fe96b307880fb3d8}{atk\_bitmap\_unlockbits}(b);
+167 \}
+\end{DoxyCode}
+\hypertarget{gfx_8c_a0f767522ab60d278c9c47033b8b73ddb}{\index{gfx.\+c@{gfx.\+c}!atk\+\_\+gfx\+\_\+set@{atk\+\_\+gfx\+\_\+set}}
+\index{atk\+\_\+gfx\+\_\+set@{atk\+\_\+gfx\+\_\+set}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{atk\+\_\+gfx\+\_\+set}]{\setlength{\rightskip}{0pt plus 5cm}void atk\+\_\+gfx\+\_\+set (
+\begin{DoxyParamCaption}
+\item[{{\bf atk\+\_\+gfx\+\_\+t} $\ast$}]{gfx}
+\end{DoxyParamCaption}
+)}}\label{gfx_8c_a0f767522ab60d278c9c47033b8b73ddb}
+
+
+Definition at line 88 of file gfx.\+c.
+
+
+\begin{DoxyCode}
+88                                  \{
+89     \hyperlink{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\_\_gfx} = gfx;
+90 \}
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\hypertarget{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}{\index{gfx.\+c@{gfx.\+c}!\+\_\+\+\_\+gfx@{\+\_\+\+\_\+gfx}}
+\index{\+\_\+\+\_\+gfx@{\+\_\+\+\_\+gfx}!gfx.\+c@{gfx.\+c}}
+\subsubsection[{\+\_\+\+\_\+gfx}]{\setlength{\rightskip}{0pt plus 5cm}{\bf atk\+\_\+gfx\+\_\+t}$\ast$ \+\_\+\+\_\+gfx}}\label{gfx_8c_ad14b67fdaef2472b7a218076ee8a8295}
+
+
+Definition at line 10 of file gfx.\+c.
+

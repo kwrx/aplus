@@ -6,6 +6,7 @@ var dir_fb5e736bd9710abb23af1a33618053fb =
     [ "clone.c", "clone_8c.html", "clone_8c" ],
     [ "close.c", "close_8c.html", "close_8c" ],
     [ "execve.c", "execve_8c.html", "execve_8c" ],
+    [ "fchdir.c", "fchdir_8c.html", "fchdir_8c" ],
     [ "fcntl.c", "fcntl_8c.html", "fcntl_8c" ],
     [ "fork.c", "fork_8c.html", "fork_8c" ],
     [ "fstat.c", "fstat_8c.html", "fstat_8c" ],
@@ -20,6 +21,7 @@ var dir_fb5e736bd9710abb23af1a33618053fb =
     [ "mount.c", "mount_8c.html", "mount_8c" ],
     [ "open.c", "open_8c.html", "open_8c" ],
     [ "openpty.c", "openpty_8c.html", "openpty_8c" ],
+    [ "pipe.c", "syscall_2pipe_8c.html", "syscall_2pipe_8c" ],
     [ "read.c", "read_8c.html", "read_8c" ],
     [ "readdir.c", "src_2syscall_2readdir_8c.html", "src_2syscall_2readdir_8c" ],
     [ "sbrk.c", "sbrk_8c.html", "sbrk_8c" ],
@@ -31,7 +33,8 @@ var dir_fb5e736bd9710abb23af1a33618053fb =
     [ "times.c", "times_8c.html", "times_8c" ],
     [ "umount.c", "umount_8c.html", "umount_8c" ],
     [ "unlink.c", "unlink_8c.html", "unlink_8c" ],
-    [ "wait.c", "wait_8c.html", "wait_8c" ],
+    [ "wait.c", "src_2syscall_2wait_8c.html", "src_2syscall_2wait_8c" ],
+    [ "waitpid.c", "waitpid_8c.html", "waitpid_8c" ],
     [ "write.c", "write_8c.html", "write_8c" ],
     [ "yield.c", "yield_8c.html", "yield_8c" ]
 ];

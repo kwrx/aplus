@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="usr_2src_2libposix_2src_2tty_8c">
+    <title>tty.c File Reference</title>
+    <programlisting>#include &lt;termios.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/ioctl.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>pid_t <link linkend="usr_2src_2libposix_2src_2tty_8c_1a30c3edb2b02399d64b5e8eaaf7fe40e6">tcgetpgrp</link> (
+int fd)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="usr_2src_2libposix_2src_2tty_8c_1affb89581103fbd19d7ce7e89d1a39c90">tcsetpgrp</link> (
+int fd, pid_t pgrp)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libposix/src/tty.c</para>
+    </simplesect>
+</section>

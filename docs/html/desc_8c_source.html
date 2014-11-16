@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.8"/>
-<title>aPlus: src/arch/desc.c Source File</title>
+<title>aPlus: src/arch/i386/desc.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -259,7 +259,7 @@ $(document).ready(function(){initNavTree('desc_8c_source.html','');});
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
 <div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="desc_8c.html#a5ec693d5682a18cbeb87ae5c5ea25c03">  151</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="desc_8c.html#a5ec693d5682a18cbeb87ae5c5ea25c03">isr_handler</a>(regs_t* r) {</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(exception_messages[r-&gt;int_no]);</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="panic_8c.html#a0becae034664f94c1553072830270ecb">panic_r</a>(exception_messages[r-&gt;int_no], r);</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;}</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
 <div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="desc_8c.html#a16eb17da95d62143431a37e9381af3ee">  155</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="desc_8c.html#a16eb17da95d62143431a37e9381af3ee">irq_handler</a>(regs_t* r) {</div>
@@ -295,7 +295,7 @@ $(document).ready(function(){initNavTree('desc_8c_source.html','');});
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> __volatile__(<span class="stringliteral">&quot;mov eax, cr2&quot;</span> : <span class="stringliteral">&quot;=a&quot;</span>(faultaddr));</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;Page fault at address: 0x%x\n&quot;</span>, faultaddr);</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <a class="code" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a>(<span class="stringliteral">&quot;Page Fault&quot;</span>);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <a class="code" href="panic_8c.html#a0becae034664f94c1553072830270ecb">panic_r</a>(<span class="stringliteral">&quot;Page Fault&quot;</span>, r);</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;}</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
@@ -505,8 +505,8 @@ $(document).ready(function(){initNavTree('desc_8c_source.html','');});
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;}</div>
 <div class="ttc" id="desc_8c_html_a16eb17da95d62143431a37e9381af3ee"><div class="ttname"><a href="desc_8c.html#a16eb17da95d62143431a37e9381af3ee">irq_handler</a></div><div class="ttdeci">void irq_handler(regs_t *r)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00155">desc.c:155</a></div></div>
 <div class="ttc" id="structgdt__entry_html_a9866fb96bce8b51042b75995a9f5ed4f"><div class="ttname"><a href="structgdt__entry.html#a9866fb96bce8b51042b75995a9f5ed4f">gdt_entry::base_m</a></div><div class="ttdeci">uint8_t base_m</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00043">desc.c:43</a></div></div>
-<div class="ttc" id="desc_8c_html_a7d06701ac073c331c83519e3909b7fce"><div class="ttname"><a href="desc_8c.html#a7d06701ac073c331c83519e3909b7fce">schedule</a></div><div class="ttdeci">void schedule()</div><div class="ttdoc">Perform a scheduling and check TTL (Time To Live) for current task. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00133">sched.c:133</a></div></div>
-<div class="ttc" id="iso9660_8h_html_aa2585d779da0ab21273a8d92de9a0ebe"><div class="ttname"><a href="iso9660_8h.html#aa2585d779da0ab21273a8d92de9a0ebe">flags</a></div><div class="ttdeci">uint8_t flags</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00079">iso9660.h:79</a></div></div>
+<div class="ttc" id="desc_8c_html_a7d06701ac073c331c83519e3909b7fce"><div class="ttname"><a href="desc_8c.html#a7d06701ac073c331c83519e3909b7fce">schedule</a></div><div class="ttdeci">void schedule()</div><div class="ttdoc">Perform a scheduling and check TTL (Time To Live) for current task. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00153">sched.c:153</a></div></div>
+<div class="ttc" id="iso9660_8h_html_aa2585d779da0ab21273a8d92de9a0ebe"><div class="ttname"><a href="iso9660_8h.html#aa2585d779da0ab21273a8d92de9a0ebe">flags</a></div><div class="ttdeci">uint8_t flags</div><div class="ttdef"><b>Definition:</b> <a href="iso9660_8h_source.html#l00078">iso9660.h:78</a></div></div>
 <div class="ttc" id="desc_8c_html_a33200b25f91bf4cf6a4ec73ef292b207"><div class="ttname"><a href="desc_8c.html#a33200b25f91bf4cf6a4ec73ef292b207">BCD2BIN2</a></div><div class="ttdeci">#define BCD2BIN2(bcd)</div></div>
 <div class="ttc" id="desc_8c_html_a4f2dd94350b058e8e8ba473a2822cf7a"><div class="ttname"><a href="desc_8c.html#a4f2dd94350b058e8e8ba473a2822cf7a">pagefault_handler</a></div><div class="ttdeci">void pagefault_handler(regs_t *r)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00183">desc.c:183</a></div></div>
 <div class="ttc" id="desc_8c_html_a8fef9c987f038778feaf85edfcc9c060"><div class="ttname"><a href="desc_8c.html#a8fef9c987f038778feaf85edfcc9c060">base_h</a></div><div class="ttdeci">uint8_t base_h</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00006">desc.c:6</a></div></div>
@@ -515,7 +515,6 @@ $(document).ready(function(){initNavTree('desc_8c_source.html','');});
 <div class="ttc" id="desc_8c_html_ae5e75d23e9ca091bdf2f1c5007481202"><div class="ttname"><a href="desc_8c.html#ae5e75d23e9ca091bdf2f1c5007481202">irq_get</a></div><div class="ttdeci">void * irq_get(int n)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00354">desc.c:354</a></div></div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
 <div class="ttc" id="spinlock_8h_html"><div class="ttname"><a href="spinlock_8h.html">spinlock.h</a></div></div>
-<div class="ttc" id="panic_8c_html_a92ad17d19a46880dd5e6c99143666b4a"><div class="ttname"><a href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a></div><div class="ttdeci">void panic(char *msg)</div><div class="ttdoc">Go in Kernel Panic, halt system. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00102">panic.c:102</a></div></div>
 <div class="ttc" id="desc_8c_html_ae21df847b32e33e64ba0912dd628e610"><div class="ttname"><a href="desc_8c.html#ae21df847b32e33e64ba0912dd628e610">__attribute__</a></div><div class="ttdeci">struct gdt_entry __attribute__((packed))</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00044">desc.c:44</a></div></div>
 <div class="ttc" id="structgdt__entry_html_af8f88469b3301c3e777e97b470a97413"><div class="ttname"><a href="structgdt__entry.html#af8f88469b3301c3e777e97b470a97413">gdt_entry::access</a></div><div class="ttdeci">uint8_t access</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00043">desc.c:43</a></div></div>
 <div class="ttc" id="desc_8c_html_a0c9b7a41bf04c15de2b484df54fcb62b"><div class="ttname"><a href="desc_8c.html#a0c9b7a41bf04c15de2b484df54fcb62b">pit_gettime</a></div><div class="ttdeci">uint32_t pit_gettime()</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00373">desc.c:373</a></div></div>
@@ -550,6 +549,7 @@ $(document).ready(function(){initNavTree('desc_8c_source.html','');});
 <div class="ttc" id="structgdt__entry_html_accb2a2ef318b0e4fbe2016eb8097947d"><div class="ttname"><a href="structgdt__entry.html#accb2a2ef318b0e4fbe2016eb8097947d">gdt_entry::granularity</a></div><div class="ttdeci">uint8_t granularity</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00043">desc.c:43</a></div></div>
 <div class="ttc" id="desc_8c_html_a7baf6caa9795e4df7fb416e88b75c296"><div class="ttname"><a href="desc_8c.html#a7baf6caa9795e4df7fb416e88b75c296">_i</a></div><div class="ttdeci">#define _i(n)</div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="panic_8c_html_a0becae034664f94c1553072830270ecb"><div class="ttname"><a href="panic_8c.html#a0becae034664f94c1553072830270ecb">panic_r</a></div><div class="ttdeci">void panic_r(char *msg, regs_t *r)</div><div class="ttdoc">Go in Kernel Panic, dump exception registers, halt system. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00111">panic.c:111</a></div></div>
 <div class="ttc" id="structgdt__entry_html_ae9d195807cdaf9fdfa4d28522b4e6ea6"><div class="ttname"><a href="structgdt__entry.html#ae9d195807cdaf9fdfa4d28522b4e6ea6">gdt_entry::base_l</a></div><div class="ttdeci">uint16_t base_l</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00042">desc.c:42</a></div></div>
 <div class="ttc" id="desc_8c_html_a4992b098d3d233475016a0288e6cc918"><div class="ttname"><a href="desc_8c.html#a4992b098d3d233475016a0288e6cc918">irq_unset</a></div><div class="ttdeci">int irq_unset(int n)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00344">desc.c:344</a></div></div>
 <div class="ttc" id="mm_8h_html"><div class="ttname"><a href="mm_8h.html">mm.h</a></div></div>
@@ -562,7 +562,7 @@ $(document).ready(function(){initNavTree('desc_8c_source.html','');});
 <div class="ttc" id="aplus_8h_html_a5a8b2dc9e45a9ee81a94ef304fb62505"><div class="ttname"><a href="aplus_8h.html#a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</a></div><div class="ttdeci">uint16_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00102">aplus.h:102</a></div></div>
 <div class="ttc" id="aplus_8h_html_ae0430369c5a35dcdbc0bc19dcbb33a03"><div class="ttname"><a href="aplus_8h.html#ae0430369c5a35dcdbc0bc19dcbb33a03">uint8_t</a></div><div class="ttdeci">ax uint8_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00113">aplus.h:113</a></div></div>
 <div class="ttc" id="desc_8c_html_a28c9747160a8526a5272ea44e68f45b6"><div class="ttname"><a href="desc_8c.html#a28c9747160a8526a5272ea44e68f45b6">pit_handler</a></div><div class="ttdeci">void pit_handler(regs_t *r)</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00166">desc.c:166</a></div></div>
-<div class="ttc" id="desc_8c_html_ab36b30e25787b3f4887160064ba2f43a"><div class="ttname"><a href="desc_8c.html#ab36b30e25787b3f4887160064ba2f43a">syscall_handler</a></div><div class="ttdeci">void syscall_handler(regs_t *)</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00081">syscall.c:81</a></div></div>
+<div class="ttc" id="desc_8c_html_ab36b30e25787b3f4887160064ba2f43a"><div class="ttname"><a href="desc_8c.html#ab36b30e25787b3f4887160064ba2f43a">syscall_handler</a></div><div class="ttdeci">void syscall_handler(regs_t *)</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00095">syscall.c:95</a></div></div>
 <div class="ttc" id="desc_8c_html_ac1344dbe0eeb67abcd3640a64a07a91a"><div class="ttname"><a href="desc_8c.html#ac1344dbe0eeb67abcd3640a64a07a91a">BCD2BIN</a></div><div class="ttdeci">#define BCD2BIN(bcd)</div></div>
 <div class="ttc" id="structgdt__entry_html_af64e5321b471da1d5ddf85ff9b0a19d3"><div class="ttname"><a href="structgdt__entry.html#af64e5321b471da1d5ddf85ff9b0a19d3">gdt_entry::base_h</a></div><div class="ttdeci">uint8_t base_h</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00043">desc.c:43</a></div></div>
 <div class="ttc" id="desc_8c_html_acd81c3f56ebae00c0f2af978d2b48d42"><div class="ttname"><a href="desc_8c.html#acd81c3f56ebae00c0f2af978d2b48d42">idt_p</a></div><div class="ttdeci">static idt_ptr_t idt_p</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00108">desc.c:108</a></div></div>
@@ -581,8 +581,8 @@ $(document).ready(function(){initNavTree('desc_8c_source.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_1a2db638ef6877e1d4473af5a81c9a08.html">arch</a></li><li class="navelem"><a class="el" href="desc_8c.html">desc.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:40 for aPlus by
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_1a2db638ef6877e1d4473af5a81c9a08.html">arch</a></li><li class="navelem"><a class="el" href="dir_8aff50d7f950fd8893cfa1673a901c19.html">i386</a></li><li class="navelem"><a class="el" href="desc_8c.html">desc.c</a></li>
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:58 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

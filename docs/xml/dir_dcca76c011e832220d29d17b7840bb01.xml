@@ -3,7 +3,9 @@
   <compounddef id="dir_dcca76c011e832220d29d17b7840bb01" kind="dir">
     <compoundname>usr/src/libatk/src</compoundname>
     <innerdir refid="dir_c65e0577240411f065fa8e7d1489e787">usr/src/libatk/src/include</innerdir>
+    <innerfile refid="bitmap_8c">bitmap.c</innerfile>
     <innerfile refid="clrconv_8h">clrconv.h</innerfile>
+    <innerfile refid="gfx_8c">gfx.c</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

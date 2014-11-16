@@ -1,0 +1,31 @@
+\hypertarget{umask_8c}{\section{usr/src/libposix/src/umask.c File Reference}
+\label{umask_8c}\index{usr/src/libposix/src/umask.\+c@{usr/src/libposix/src/umask.\+c}}
+}
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/types.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+mode\+\_\+t \hyperlink{umask_8c_a8788159ad927954699f80970a1d04462}{umask} (mode\+\_\+t mask)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{umask_8c_a8788159ad927954699f80970a1d04462}{\index{umask.\+c@{umask.\+c}!umask@{umask}}
+\index{umask@{umask}!umask.\+c@{umask.\+c}}
+\subsubsection[{umask}]{\setlength{\rightskip}{0pt plus 5cm}mode\+\_\+t umask (
+\begin{DoxyParamCaption}
+\item[{mode\+\_\+t}]{mask}
+\end{DoxyParamCaption}
+)}}\label{umask_8c_a8788159ad927954699f80970a1d04462}
+
+
+Definition at line 6 of file umask.\+c.
+
+
+\begin{DoxyCode}
+6                           \{
+7     \textcolor{keywordflow}{return} (mask & 0777) & (S\_IWGRP | S\_IWOTH);
+8 \}
+\end{DoxyCode}

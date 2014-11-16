@@ -2,6 +2,8 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
   <compounddef id="dir_6a9c6543806adfb0a9f993048d7a021b" kind="dir">
     <compoundname>usr/src/libatk/src/include/atk</compoundname>
+    <innerfile refid="bitmap_8h">bitmap.h</innerfile>
+    <innerfile refid="gfx_8h">gfx.h</innerfile>
     <innerfile refid="widget_8h">widget.h</innerfile>
     <briefdescription>
     </briefdescription>

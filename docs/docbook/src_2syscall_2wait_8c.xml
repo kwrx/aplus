@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="src_2syscall_2wait_8c">
+    <title>wait.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;fcntl.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="src_2syscall_2wait_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899">sys_wait</link> (
+int * status)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="src_2syscall_2wait_8c_1a4a7121092029355dc4b74d1515420c88">SYSCALL</link> (
+<link linkend="src_2syscall_2wait_8c_1a71b3c0272e1d256262db857a794e3899">sys_wait</link> , 16 )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/syscall/wait.c</para>
+    </simplesect>
+</section>

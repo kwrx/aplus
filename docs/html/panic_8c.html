@@ -105,7 +105,6 @@ $(document).ready(function(){initNavTree('panic_8c.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -114,32 +113,32 @@ $(document).ready(function(){initNavTree('panic_8c.html','');});
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="aplus_8h_source.html">aplus.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="task_8h_source.html">aplus/task.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="mm_8h_source.html">aplus/mm.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="fs_8h_source.html">aplus/fs.h</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="list_8h_source.html">aplus/list.h</a>&gt;</code><br />
 <code>#include &lt;errno.h&gt;</code><br />
 </div>
 <p><a href="panic_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a77b5b9b7c5109d0943ef9f2e5c557fb9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(reg)</td></tr>
-<tr class="separator:a77b5b9b7c5109d0943ef9f2e5c557fb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3c4239b206cb78bc5b3daeafbc15724"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a>()</td></tr>
-<tr class="separator:ab3c4239b206cb78bc5b3daeafbc15724"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:afe580dc91d724ef0ff6f71f122933170"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#afe580dc91d724ef0ff6f71f122933170">dump_errno</a> ()</td></tr>
 <tr class="memdesc:afe580dc91d724ef0ff6f71f122933170"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print last error number.  <a href="#afe580dc91d724ef0ff6f71f122933170">More...</a><br /></td></tr>
 <tr class="separator:afe580dc91d724ef0ff6f71f122933170"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad829ba2d1c19b556fd15c8eda84f06fa"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#ad829ba2d1c19b556fd15c8eda84f06fa">dump_registers</a> ()</td></tr>
-<tr class="memdesc:ad829ba2d1c19b556fd15c8eda84f06fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print current registers.  <a href="#ad829ba2d1c19b556fd15c8eda84f06fa">More...</a><br /></td></tr>
-<tr class="separator:ad829ba2d1c19b556fd15c8eda84f06fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20563f9e0fecc6db792f5b9308309272"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#a20563f9e0fecc6db792f5b9308309272">dump_cpu</a> (regs_t *r)</td></tr>
+<tr class="memdesc:a20563f9e0fecc6db792f5b9308309272"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print current registers &amp; cpu status.  <a href="#a20563f9e0fecc6db792f5b9308309272">More...</a><br /></td></tr>
+<tr class="separator:a20563f9e0fecc6db792f5b9308309272"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5d4017b67388f3d72b18d307dae1627"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#aa5d4017b67388f3d72b18d307dae1627">dump_stacktrace</a> (int count)</td></tr>
 <tr class="separator:aa5d4017b67388f3d72b18d307dae1627"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47abc582d3a8eb4889d5dafb009bdc20"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#a47abc582d3a8eb4889d5dafb009bdc20">dump_task</a> ()</td></tr>
 <tr class="memdesc:a47abc582d3a8eb4889d5dafb009bdc20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print all and current task.  <a href="#a47abc582d3a8eb4889d5dafb009bdc20">More...</a><br /></td></tr>
 <tr class="separator:a47abc582d3a8eb4889d5dafb009bdc20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e0d1c1bd35fd6b517160ba5abcf6681"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#a9e0d1c1bd35fd6b517160ba5abcf6681">dump_mmu</a> ()</td></tr>
+<tr class="memdesc:a9e0d1c1bd35fd6b517160ba5abcf6681"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print MMU State.  <a href="#a9e0d1c1bd35fd6b517160ba5abcf6681">More...</a><br /></td></tr>
+<tr class="separator:a9e0d1c1bd35fd6b517160ba5abcf6681"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0becae034664f94c1553072830270ecb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#a0becae034664f94c1553072830270ecb">panic_r</a> (char *msg, regs_t *r)</td></tr>
+<tr class="memdesc:a0becae034664f94c1553072830270ecb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Go in Kernel Panic, dump exception registers, halt system.  <a href="#a0becae034664f94c1553072830270ecb">More...</a><br /></td></tr>
+<tr class="separator:a0becae034664f94c1553072830270ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92ad17d19a46880dd5e6c99143666b4a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="panic_8c.html#a92ad17d19a46880dd5e6c99143666b4a">panic</a> (char *msg)</td></tr>
 <tr class="memdesc:a92ad17d19a46880dd5e6c99143666b4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Go in Kernel Panic, halt system.  <a href="#a92ad17d19a46880dd5e6c99143666b4a">More...</a><br /></td></tr>
 <tr class="separator:a92ad17d19a46880dd5e6c99143666b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,45 +155,54 @@ Variables</h2></td></tr>
 <tr class="memdesc:ac08620610e2419aca3878305400a96b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kernel task address.  <a href="#ac08620610e2419aca3878305400a96b7">More...</a><br /></td></tr>
 <tr class="separator:ac08620610e2419aca3878305400a96b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="ab3c4239b206cb78bc5b3daeafbc15724"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define _d</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">;                               <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">\</a></div>
-<div class="line"><a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">		kprintf</a>(<span class="stringliteral">&quot;\n&quot;</span>);</div>
-<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a77b5b9b7c5109d0943ef9f2e5c557fb9"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define d</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">reg</td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">;                               <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">\</a></div>
-<div class="line"><a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">		kprintf</a>(#reg <span class="stringliteral">&quot;: 0x%x\t\t&quot;</span>, read_##reg());</div>
-<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a20563f9e0fecc6db792f5b9308309272"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void dump_cpu </td>
+          <td>(</td>
+          <td class="paramtype">regs_t *&#160;</td>
+          <td class="paramname"><em>r</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Print current registers &amp; cpu status. </p>
+
+<p>Definition at line <a class="el" href="panic_8c_source.html#l00025">25</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
+
+<p>References <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, and <a class="el" href="desc_8c_source.html#l00393">pit_getticks()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;                                {</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;CPU:\n&quot;</span>);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">if</span>(r) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;eip: 0x%8x\n&quot;</span>, r-&gt;eip);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;err: 0x%8x\n&quot;</span>, r-&gt;err_code);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;int: 0x%8x\n&quot;</span>, r-&gt;int_no);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;esp: 0x%8x\n&quot;</span>, r-&gt;esp);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;usp: 0x%8x\n&quot;</span>, r-&gt;useresp);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;pit: %dms\n&quot;</span>, <a class="code" href="desc_8c.html#affef3cc40072321b8d54e4c00aa4de85">pit_getticks</a>());</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\n\n&quot;</span>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
+<div class="ttc" id="desc_8c_html_affef3cc40072321b8d54e4c00aa4de85"><div class="ttname"><a href="desc_8c.html#affef3cc40072321b8d54e4c00aa4de85">pit_getticks</a></div><div class="ttdeci">uint32_t pit_getticks()</div><div class="ttdef"><b>Definition:</b> <a href="desc_8c_source.html#l00393">desc.c:393</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a class="anchor" id="afe580dc91d724ef0ff6f71f122933170"></a>
 <div class="memitem">
 <div class="memproto">
@@ -218,18 +226,18 @@ Variables</h2></td></tr>
 
 <p>Print last error number. </p>
 
-<p>Definition at line <a class="el" href="panic_8c_source.html#l00016">16</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
+<p>Definition at line <a class="el" href="panic_8c_source.html#l00017">17</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
 
 <p>References <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                         {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;errno: %d - %s\n&quot;</span>, <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a>, strerror(<a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a>));</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;}</div>
+<div class="fragment"><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                         {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;errno: %d - %s\n&quot;</span>, <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a>, strerror(<a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a>));</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}</div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a class="anchor" id="ad829ba2d1c19b556fd15c8eda84f06fa"></a>
+<a class="anchor" id="a9e0d1c1bd35fd6b517160ba5abcf6681"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -237,7 +245,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void dump_registers </td>
+          <td class="memname">static void dump_mmu </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -250,67 +258,26 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Print current registers. </p>
+<p>Print MMU State. </p>
 
-<p>Definition at line <a class="el" href="panic_8c_source.html#l00024">24</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
+<p>Definition at line <a class="el" href="panic_8c_source.html#l00095">95</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
 
-<p>References <a class="el" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a>, <a class="el" href="aplus_8h_source.html#l00139">cs</a>, <a class="el" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>, <a class="el" href="aplus_8h_source.html#l00139">ds</a>, <a class="el" href="task_8h_source.html#l00016">eax</a>, <a class="el" href="task_8h_source.html#l00019">ebp</a>, <a class="el" href="task_8h_source.html#l00014">ebx</a>, <a class="el" href="task_8h_source.html#l00015">ecx</a>, <a class="el" href="task_8h_source.html#l00012">edi</a>, <a class="el" href="task_8h_source.html#l00017">edx</a>, <a class="el" href="task_8h_source.html#l00018">eflags</a>, <a class="el" href="task_8h_source.html#l00020">eip</a>, <a class="el" href="aplus_8h_source.html#l00139">es</a>, <a class="el" href="task_8h_source.html#l00013">esi</a>, <a class="el" href="aplus_8h_source.html#l00139">esp</a>, <a class="el" href="aplus_8h_source.html#l00139">fs</a>, <a class="el" href="aplus_8h_source.html#l00139">gs</a>, and <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                             {</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;Registers:\n&quot;</span>);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">    #define d(reg);                             \</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">        kprintf(#reg &quot;: 0x%x\t\t&quot;, read_##reg());</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">    #define _d();                               \</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">        kprintf(&quot;\n&quot;);  </span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a>);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#ae7c1e3339e4dead200cab41010e9127c">ebx</a>);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#af2b16bef95c844028dd145264d1d3875">ecx</a>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#ae6db045cebe7b4cf979120dccdee0d01">edx</a>);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#ada78e3124de6adf5a5d212f9ebc4bbe0">esi</a>);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#a36ffab8d34c6c411a7e5205ddb95eaf9">edi</a>);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a>();</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#a1588906901fc3015e0865574669a56a6">eip</a>);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#aeedfc39703ec8e0a1f052a832e74acd3">eflags</a>);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a>);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="task_8h.html#aaba2ad0ff8ba480934feabfdab02b1e7">ebp</a>);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a>();</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="aplus_8h.html#a8519dc239502dfcbac171b3128dc7054">cs</a>);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b">ds</a>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="aplus_8h.html#a0dacdc927bbcc6457b629ad88119cdc2">es</a>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="aplus_8h.html#a2ffb5cf275c124e8f8ff30e1d4449f80">fs</a>);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(<a class="code" href="aplus_8h.html#a85904ecbf7b717abe738645b4ff2f4ff">gs</a>);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a>();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(cr0);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(cr2);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(cr3);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>(cr4);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a>();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="code" href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a>();</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">    #undef d</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">    #undef _d</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
-<div class="ttc" id="aplus_8h_html_a2ffb5cf275c124e8f8ff30e1d4449f80"><div class="ttname"><a href="aplus_8h.html#a2ffb5cf275c124e8f8ff30e1d4449f80">fs</a></div><div class="ttdeci">uint32_t fs</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
-<div class="ttc" id="task_8h_html_a1588906901fc3015e0865574669a56a6"><div class="ttname"><a href="task_8h.html#a1588906901fc3015e0865574669a56a6">eip</a></div><div class="ttdeci">uint32_t eip</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00020">task.h:20</a></div></div>
+<p>References <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="mm_8c_source.html#l00222">mm_getheap()</a>, <a class="el" href="mm_8h_source.html#l00067">heap::size</a>, and <a class="el" href="mm_8h_source.html#l00068">heap::used</a>.</p>
+<div class="fragment"><div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                       {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;Memory:\n&quot;</span>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="structheap.html">heap_t</a>* h = (<a class="code" href="structheap.html">heap_t</a>*) <a class="code" href="mm_8c.html#accbfbfd24536b985a875baf4e16a98f9">mm_getheap</a>();</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\tUsed: %d MB (%d Bytes)\n&quot;</span>, (h-&gt;<a class="code" href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">used</a> / 1024 / 1024), h-&gt;<a class="code" href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">used</a>);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\tSize: %d MB (%d Bytes)\n&quot;</span>, (h-&gt;<a class="code" href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">size</a> / 1024 / 1024), h-&gt;<a class="code" href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">size</a>);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\n\n&quot;</span>);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
+<div class="ttc" id="mm_8c_html_accbfbfd24536b985a875baf4e16a98f9"><div class="ttname"><a href="mm_8c.html#accbfbfd24536b985a875baf4e16a98f9">mm_getheap</a></div><div class="ttdeci">heap_t * mm_getheap()</div><div class="ttdoc">Get current heap for memory operations. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00222">mm.c:222</a></div></div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
-<div class="ttc" id="aplus_8h_html_a7534a179bc9cc0ef26f0468e0959ee5c"><div class="ttname"><a href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a></div><div class="ttdeci">uint32_t esp</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
-<div class="ttc" id="task_8h_html_a36ffab8d34c6c411a7e5205ddb95eaf9"><div class="ttname"><a href="task_8h.html#a36ffab8d34c6c411a7e5205ddb95eaf9">edi</a></div><div class="ttdeci">uint32_t edi</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00012">task.h:12</a></div></div>
-<div class="ttc" id="task_8h_html_ada78e3124de6adf5a5d212f9ebc4bbe0"><div class="ttname"><a href="task_8h.html#ada78e3124de6adf5a5d212f9ebc4bbe0">esi</a></div><div class="ttdeci">uint32_t esi</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00013">task.h:13</a></div></div>
-<div class="ttc" id="task_8h_html_ae6db045cebe7b4cf979120dccdee0d01"><div class="ttname"><a href="task_8h.html#ae6db045cebe7b4cf979120dccdee0d01">edx</a></div><div class="ttdeci">uint32_t edx</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00017">task.h:17</a></div></div>
-<div class="ttc" id="task_8h_html_aeedfc39703ec8e0a1f052a832e74acd3"><div class="ttname"><a href="task_8h.html#aeedfc39703ec8e0a1f052a832e74acd3">eflags</a></div><div class="ttdeci">uint32_t eflags</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00018">task.h:18</a></div></div>
-<div class="ttc" id="task_8h_html_a93d929ad1fc57af9d4f1793c361fb4f2"><div class="ttname"><a href="task_8h.html#a93d929ad1fc57af9d4f1793c361fb4f2">eax</a></div><div class="ttdeci">uint32_t eax</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00016">task.h:16</a></div></div>
-<div class="ttc" id="aplus_8h_html_a8519dc239502dfcbac171b3128dc7054"><div class="ttname"><a href="aplus_8h.html#a8519dc239502dfcbac171b3128dc7054">cs</a></div><div class="ttdeci">uint32_t cs</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
-<div class="ttc" id="task_8h_html_aaba2ad0ff8ba480934feabfdab02b1e7"><div class="ttname"><a href="task_8h.html#aaba2ad0ff8ba480934feabfdab02b1e7">ebp</a></div><div class="ttdeci">uint32_t ebp</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00019">task.h:19</a></div></div>
-<div class="ttc" id="aplus_8h_html_a85904ecbf7b717abe738645b4ff2f4ff"><div class="ttname"><a href="aplus_8h.html#a85904ecbf7b717abe738645b4ff2f4ff">gs</a></div><div class="ttdeci">uint32_t gs</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
-<div class="ttc" id="panic_8c_html_a77b5b9b7c5109d0943ef9f2e5c557fb9"><div class="ttname"><a href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a></div><div class="ttdeci">#define d(reg)</div></div>
-<div class="ttc" id="panic_8c_html_ab3c4239b206cb78bc5b3daeafbc15724"><div class="ttname"><a href="panic_8c.html#ab3c4239b206cb78bc5b3daeafbc15724">_d</a></div><div class="ttdeci">#define _d()</div></div>
-<div class="ttc" id="aplus_8h_html_a6fe20edd854a1a653ae71ccf541a6b8b"><div class="ttname"><a href="aplus_8h.html#a6fe20edd854a1a653ae71ccf541a6b8b">ds</a></div><div class="ttdeci">uint32_t ds</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
-<div class="ttc" id="task_8h_html_ae7c1e3339e4dead200cab41010e9127c"><div class="ttname"><a href="task_8h.html#ae7c1e3339e4dead200cab41010e9127c">ebx</a></div><div class="ttdeci">uint32_t ebx</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00014">task.h:14</a></div></div>
-<div class="ttc" id="task_8h_html_af2b16bef95c844028dd145264d1d3875"><div class="ttname"><a href="task_8h.html#af2b16bef95c844028dd145264d1d3875">ecx</a></div><div class="ttdeci">uint32_t ecx</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00015">task.h:15</a></div></div>
-<div class="ttc" id="aplus_8h_html_a0dacdc927bbcc6457b629ad88119cdc2"><div class="ttname"><a href="aplus_8h.html#a0dacdc927bbcc6457b629ad88119cdc2">es</a></div><div class="ttdeci">uint32_t es</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="structheap_html_a37f3f6d6d39562f3cca452eafebcd7ac"><div class="ttname"><a href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">heap::used</a></div><div class="ttdeci">uint32_t used</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00068">mm.h:68</a></div></div>
+<div class="ttc" id="structheap_html_a486fb531d24b9ee5f17b7ffe96689705"><div class="ttname"><a href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">heap::size</a></div><div class="ttdeci">uint32_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00067">mm.h:67</a></div></div>
+<div class="ttc" id="structheap_html"><div class="ttname"><a href="structheap.html">heap</a></div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00065">mm.h:65</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -337,14 +304,58 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p>Print a stacktrace. </p>
 
-<p>Definition at line <a class="el" href="panic_8c_source.html#l00067">67</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
+<p>Definition at line <a class="el" href="panic_8c_source.html#l00045">45</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
 
-<p>References <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                                       {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;Stack trace:\n&quot;</span>);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;TODO\n\n&quot;</span>);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
+<p>References <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="task_8h_source.html#l00020">eip</a>, <a class="el" href="exec_8c_source.html#l00291">elf_kernel_lookup()</a>, <a class="el" href="aplus_8h_source.html#l00139">esp</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, and <a class="el" href="aplus_8h_source.html#l00115">uint32_t</a>.</p>
+<div class="fragment"><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                       {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;Stack trace:\n&quot;</span>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">int</span>* <a class="code" href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a> = NULL; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a>(<span class="stringliteral">&quot;mov eax, ebp&quot;</span> : <span class="stringliteral">&quot;=a&quot;</span>(esp));</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0; i &lt; count; i++) {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">int</span> <a class="code" href="task_8h.html#a1588906901fc3015e0865574669a56a6">eip</a> = *(++<a class="code" href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a>);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;[%d] 0x%x - %s\n&quot;</span>, i, eip, <a class="code" href="exec_8c.html#ac79bb43069a3d3c097c8d95dcf0c2784">elf_kernel_lookup</a>(eip));</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        esp = (<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>*) *(--esp);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordflow">if</span>(!esp)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\n\n&quot;</span>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
+<div class="ttc" id="task_8h_html_a1588906901fc3015e0865574669a56a6"><div class="ttname"><a href="task_8h.html#a1588906901fc3015e0865574669a56a6">eip</a></div><div class="ttdeci">uint32_t eip</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00020">task.h:20</a></div></div>
+<div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
+<div class="ttc" id="aplus_8h_html_a7534a179bc9cc0ef26f0468e0959ee5c"><div class="ttname"><a href="aplus_8h.html#a7534a179bc9cc0ef26f0468e0959ee5c">esp</a></div><div class="ttdeci">uint32_t esp</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00139">aplus.h:139</a></div></div>
+<div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
+	.global gdt_load	\n\
+	gdt_load:			\n\
+	lgdt [gdt_p]		\n\
+						\n\
+	mov ax, 0x10		\n\
+	mov ds, ax			\n\
+	mov es, ax			\n\
+	mov fs, ax			\n\
+	mov gs, ax			\n\
+	mov ss, ax			\n\
+	jmp 0x08:.done		\n\
+						\n\
+	.done:				\n\
+	ret					\n\
+						\n\
+						\n\
+						\n\
+						\n\
+	.global idt_load	\n\
+	idt_load:			\n\
+	lidt [idt_p]		\n\
+	ret					\n\
+						\n\
+						\n&quot;)</div></div>
+<div class="ttc" id="exec_8c_html_ac79bb43069a3d3c097c8d95dcf0c2784"><div class="ttname"><a href="exec_8c.html#ac79bb43069a3d3c097c8d95dcf0c2784">elf_kernel_lookup</a></div><div class="ttdeci">char * elf_kernel_lookup(uint32_t symaddr)</div><div class="ttdef"><b>Definition:</b> <a href="exec_8c_source.html#l00291">exec.c:291</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -371,39 +382,39 @@ Variables</h2></td></tr>
 
 <p>Print all and current task. </p>
 
-<p>Definition at line <a class="el" href="panic_8c_source.html#l00076">76</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
+<p>Definition at line <a class="el" href="panic_8c_source.html#l00069">69</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
 
-<p>References <a class="el" href="task_8h_source.html#l00104">task::exe</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="list_8h_source.html#l00253">list_foreach</a>, <a class="el" href="fs_8h_source.html#l00038">inode::name</a>, <a class="el" href="task_8h_source.html#l00091">task::pid</a>, and <a class="el" href="attribute_8h_source.html#l00083">value</a>.</p>
-<div class="fragment"><div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                        {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;Task:\n&quot;</span>);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="list_8h.html#a1f44c976d2c698407a17fef984a5b232">list_foreach</a>(<a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>, <a class="code" href="panic_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</a>) {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <a class="code" href="structtask.html">task_t</a>* <a class="code" href="structtask.html">task</a> = (<a class="code" href="structtask.html">task_t</a>*) <a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot; # %d: &quot;</span>, task-&gt;<a class="code" href="structtask.html#ab56448ae42a75825ea923bd86648f3ae">pid</a>);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">if</span>(task-&gt;<a class="code" href="structtask.html#a22a59fcfc18d5f671340669f96571768">exe</a>)</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;%s &quot;</span>, task-&gt;<a class="code" href="structtask.html#a22a59fcfc18d5f671340669f96571768">exe</a>-&gt;<a class="code" href="structinode.html#ad64802d9d4ebdd1c56af5ab6e302faf0">name</a>);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;unknown &quot;</span>);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">if</span>(task == <a class="code" href="panic_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>)</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;(current) &quot;</span>);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">if</span>(task == <a class="code" href="panic_8c.html#ac08620610e2419aca3878305400a96b7">kernel_task</a>)</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;(kernel) &quot;</span>);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\n\n&quot;</span>);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
+<p>References <a class="el" href="task_8h_source.html#l00106">task::exe</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="list_8h_source.html#l00253">list_foreach</a>, <a class="el" href="fs_8h_source.html#l00038">inode::name</a>, <a class="el" href="task_8h_source.html#l00091">task::pid</a>, and <a class="el" href="attribute_8h_source.html#l00083">value</a>.</p>
+<div class="fragment"><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                        {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;Task:\n&quot;</span>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="list_8h.html#a1f44c976d2c698407a17fef984a5b232">list_foreach</a>(<a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>, <a class="code" href="panic_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</a>) {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="structtask.html">task_t</a>* <a class="code" href="structtask.html">task</a> = (<a class="code" href="structtask.html">task_t</a>*) <a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot; # %d: &quot;</span>, task-&gt;<a class="code" href="structtask.html#ab56448ae42a75825ea923bd86648f3ae">pid</a>);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">if</span>(task-&gt;<a class="code" href="structtask.html#a22a59fcfc18d5f671340669f96571768">exe</a>)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;%s &quot;</span>, task-&gt;<a class="code" href="structtask.html#a22a59fcfc18d5f671340669f96571768">exe</a>-&gt;<a class="code" href="structinode.html#ad64802d9d4ebdd1c56af5ab6e302faf0">name</a>);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;unknown &quot;</span>);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordflow">if</span>(task == <a class="code" href="panic_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a>)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;(current) &quot;</span>);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">if</span>(task == <a class="code" href="panic_8c.html#ac08620610e2419aca3878305400a96b7">kernel_task</a>)</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;(kernel) &quot;</span>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\n\n&quot;</span>);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
 <div class="ttc" id="structinode_html_ad64802d9d4ebdd1c56af5ab6e302faf0"><div class="ttname"><a href="structinode.html#ad64802d9d4ebdd1c56af5ab6e302faf0">inode::name</a></div><div class="ttdeci">char name[255]</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00038">fs.h:38</a></div></div>
-<div class="ttc" id="structtask_html_a22a59fcfc18d5f671340669f96571768"><div class="ttname"><a href="structtask.html#a22a59fcfc18d5f671340669f96571768">task::exe</a></div><div class="ttdeci">inode_t * exe</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00104">task.h:104</a></div></div>
-<div class="ttc" id="panic_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="panic_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
+<div class="ttc" id="structtask_html_a22a59fcfc18d5f671340669f96571768"><div class="ttname"><a href="structtask.html#a22a59fcfc18d5f671340669f96571768">task::exe</a></div><div class="ttdeci">inode_t * exe</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00106">task.h:106</a></div></div>
+<div class="ttc" id="panic_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="panic_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00037">sched.c:37</a></div></div>
 <div class="ttc" id="structtask_html"><div class="ttname"><a href="structtask.html">task</a></div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00090">task.h:90</a></div></div>
 <div class="ttc" id="list_8h_html_a1f44c976d2c698407a17fef984a5b232"><div class="ttname"><a href="list_8h.html#a1f44c976d2c698407a17fef984a5b232">list_foreach</a></div><div class="ttdeci">#define list_foreach(value, list)</div><div class="ttdoc">Iterating a list and save each value in "value". </div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00253">list.h:253</a></div></div>
 <div class="ttc" id="structtask_html_ab56448ae42a75825ea923bd86648f3ae"><div class="ttname"><a href="structtask.html#ab56448ae42a75825ea923bd86648f3ae">task::pid</a></div><div class="ttdeci">pid_t pid</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00091">task.h:91</a></div></div>
-<div class="ttc" id="panic_8c_html_acb74842176b48d2ab29b1a74b0ca4ef1"><div class="ttname"><a href="panic_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</a></div><div class="ttdeci">list_t * task_queue</div><div class="ttdoc">List of all Task. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00046">sched.c:46</a></div></div>
-<div class="ttc" id="panic_8c_html_ac08620610e2419aca3878305400a96b7"><div class="ttname"><a href="panic_8c.html#ac08620610e2419aca3878305400a96b7">kernel_task</a></div><div class="ttdeci">task_t * kernel_task</div><div class="ttdoc">Kernel task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00040">sched.c:40</a></div></div>
+<div class="ttc" id="panic_8c_html_acb74842176b48d2ab29b1a74b0ca4ef1"><div class="ttname"><a href="panic_8c.html#acb74842176b48d2ab29b1a74b0ca4ef1">task_queue</a></div><div class="ttdeci">list_t * task_queue</div><div class="ttdoc">List of all Task. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00048">sched.c:48</a></div></div>
+<div class="ttc" id="panic_8c_html_ac08620610e2419aca3878305400a96b7"><div class="ttname"><a href="panic_8c.html#ac08620610e2419aca3878305400a96b7">kernel_task</a></div><div class="ttdeci">task_t * kernel_task</div><div class="ttdoc">Kernel task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00042">sched.c:42</a></div></div>
 <div class="ttc" id="attribute_8h_html_ae7f66047e6e39ba2bb6af8b95f00d1dd"><div class="ttname"><a href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a></div><div class="ttdeci">uint32_t value</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00083">attribute.h:83</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -424,22 +435,63 @@ Variables</h2></td></tr>
 
 <p>Go in Kernel Panic, halt system. </p>
 
-<p>Definition at line <a class="el" href="panic_8c_source.html#l00102">102</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
+<p>Definition at line <a class="el" href="panic_8c_source.html#l00130">130</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
 
-<p>References <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="panic_8c_source.html#l00016">dump_errno()</a>, <a class="el" href="panic_8c_source.html#l00024">dump_registers()</a>, <a class="el" href="panic_8c_source.html#l00067">dump_stacktrace()</a>, <a class="el" href="panic_8c_source.html#l00076">dump_task()</a>, and <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                      {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (<span class="stringliteral">&quot;cli&quot;</span>);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;panic: \&quot;%s\&quot;\n&quot;</span>, msg);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="panic_8c.html#ad829ba2d1c19b556fd15c8eda84f06fa">dump_registers</a>();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="panic_8c.html#aa5d4017b67388f3d72b18d307dae1627">dump_stacktrace</a>(6);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="panic_8c.html#a47abc582d3a8eb4889d5dafb009bdc20">dump_task</a>();</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="panic_8c.html#afe580dc91d724ef0ff6f71f122933170">dump_errno</a>();</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordflow">for</span>(;;);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;}</div>
+<p>References <a class="el" href="panic_8c_source.html#l00111">panic_r()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                      {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <a class="code" href="panic_8c.html#a0becae034664f94c1553072830270ecb">panic_r</a>(msg, NULL);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;}</div>
+<div class="ttc" id="panic_8c_html_a0becae034664f94c1553072830270ecb"><div class="ttname"><a href="panic_8c.html#a0becae034664f94c1553072830270ecb">panic_r</a></div><div class="ttdeci">void panic_r(char *msg, regs_t *r)</div><div class="ttdoc">Go in Kernel Panic, dump exception registers, halt system. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00111">panic.c:111</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a class="anchor" id="a0becae034664f94c1553072830270ecb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void panic_r </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">regs_t *&#160;</td>
+          <td class="paramname"><em>r</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Go in Kernel Panic, dump exception registers, halt system. </p>
+
+<p>Definition at line <a class="el" href="panic_8c_source.html#l00111">111</a> of file <a class="el" href="panic_8c_source.html">panic.c</a>.</p>
+
+<p>References <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="panic_8c_source.html#l00025">dump_cpu()</a>, <a class="el" href="panic_8c_source.html#l00017">dump_errno()</a>, <a class="el" href="panic_8c_source.html#l00095">dump_mmu()</a>, <a class="el" href="panic_8c_source.html#l00045">dump_stacktrace()</a>, <a class="el" href="panic_8c_source.html#l00069">dump_task()</a>, and <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                                   {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (<span class="stringliteral">&quot;cli&quot;</span>);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;panic: \&quot;%s\&quot;\n&quot;</span>, msg);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    </div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="panic_8c.html#a20563f9e0fecc6db792f5b9308309272">dump_cpu</a>(r);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="panic_8c.html#aa5d4017b67388f3d72b18d307dae1627">dump_stacktrace</a>(6);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <a class="code" href="panic_8c.html#a47abc582d3a8eb4889d5dafb009bdc20">dump_task</a>();</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="panic_8c.html#afe580dc91d724ef0ff6f71f122933170">dump_errno</a>();</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <a class="code" href="panic_8c.html#a9e0d1c1bd35fd6b517160ba5abcf6681">dump_mmu</a>(); </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordflow">for</span>(;;);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
+<div class="ttc" id="panic_8c_html_a9e0d1c1bd35fd6b517160ba5abcf6681"><div class="ttname"><a href="panic_8c.html#a9e0d1c1bd35fd6b517160ba5abcf6681">dump_mmu</a></div><div class="ttdeci">static void dump_mmu()</div><div class="ttdoc">Print MMU State. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00095">panic.c:95</a></div></div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
+<div class="ttc" id="panic_8c_html_a20563f9e0fecc6db792f5b9308309272"><div class="ttname"><a href="panic_8c.html#a20563f9e0fecc6db792f5b9308309272">dump_cpu</a></div><div class="ttdeci">static void dump_cpu(regs_t *r)</div><div class="ttdoc">Print current registers & cpu status. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00025">panic.c:25</a></div></div>
 <div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
 	.global gdt_load	\n\
 	gdt_load:			\n\
@@ -465,10 +517,9 @@ Variables</h2></td></tr>
 	ret					\n\
 						\n\
 						\n&quot;)</div></div>
-<div class="ttc" id="panic_8c_html_afe580dc91d724ef0ff6f71f122933170"><div class="ttname"><a href="panic_8c.html#afe580dc91d724ef0ff6f71f122933170">dump_errno</a></div><div class="ttdeci">static void dump_errno()</div><div class="ttdoc">Print last error number. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00016">panic.c:16</a></div></div>
-<div class="ttc" id="panic_8c_html_aa5d4017b67388f3d72b18d307dae1627"><div class="ttname"><a href="panic_8c.html#aa5d4017b67388f3d72b18d307dae1627">dump_stacktrace</a></div><div class="ttdeci">static void dump_stacktrace(int count)</div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00067">panic.c:67</a></div></div>
-<div class="ttc" id="panic_8c_html_ad829ba2d1c19b556fd15c8eda84f06fa"><div class="ttname"><a href="panic_8c.html#ad829ba2d1c19b556fd15c8eda84f06fa">dump_registers</a></div><div class="ttdeci">static void dump_registers()</div><div class="ttdoc">Print current registers. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00024">panic.c:24</a></div></div>
-<div class="ttc" id="panic_8c_html_a47abc582d3a8eb4889d5dafb009bdc20"><div class="ttname"><a href="panic_8c.html#a47abc582d3a8eb4889d5dafb009bdc20">dump_task</a></div><div class="ttdeci">static void dump_task()</div><div class="ttdoc">Print all and current task. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00076">panic.c:76</a></div></div>
+<div class="ttc" id="panic_8c_html_afe580dc91d724ef0ff6f71f122933170"><div class="ttname"><a href="panic_8c.html#afe580dc91d724ef0ff6f71f122933170">dump_errno</a></div><div class="ttdeci">static void dump_errno()</div><div class="ttdoc">Print last error number. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00017">panic.c:17</a></div></div>
+<div class="ttc" id="panic_8c_html_aa5d4017b67388f3d72b18d307dae1627"><div class="ttname"><a href="panic_8c.html#aa5d4017b67388f3d72b18d307dae1627">dump_stacktrace</a></div><div class="ttdeci">static void dump_stacktrace(int count)</div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00045">panic.c:45</a></div></div>
+<div class="ttc" id="panic_8c_html_a47abc582d3a8eb4889d5dafb009bdc20"><div class="ttname"><a href="panic_8c.html#a47abc582d3a8eb4889d5dafb009bdc20">dump_task</a></div><div class="ttdeci">static void dump_task()</div><div class="ttdoc">Print all and current task. </div><div class="ttdef"><b>Definition:</b> <a href="panic_8c_source.html#l00069">panic.c:69</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -485,7 +536,7 @@ Variables</h2></td></tr>
 
 <p>Current task address. </p>
 
-<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00035">35</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00037">37</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
 
 </div>
 </div>
@@ -501,7 +552,7 @@ Variables</h2></td></tr>
 
 <p>Kernel task address. </p>
 
-<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00040">40</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00042">42</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
 
 </div>
 </div>
@@ -517,7 +568,7 @@ Variables</h2></td></tr>
 
 <p>List of all Task. </p>
 
-<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00046">46</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00048">48</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
 
 </div>
 </div>
@@ -527,7 +578,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="panic_8c.html">panic.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

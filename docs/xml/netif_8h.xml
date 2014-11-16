@@ -23,179 +23,179 @@
     <includedby refid="slirp_8c" local="no">src/net/slirp/slirp.c</includedby>
     <includedby refid="udp_8c" local="no">src/net/udp.c</includedby>
     <incdepgraph>
-      <node id="749">
+      <node id="804">
         <label>stdarg.h</label>
       </node>
-      <node id="748">
+      <node id="803">
         <label>stdint.h</label>
       </node>
-      <node id="751">
+      <node id="806">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="747" relation="include">
+        <childnode refid="802" relation="include">
         </childnode>
-        <childnode refid="748" relation="include">
+        <childnode refid="803" relation="include">
         </childnode>
       </node>
-      <node id="752">
+      <node id="807">
         <label>stddef.h</label>
       </node>
-      <node id="747">
+      <node id="802">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="748" relation="include">
+        <childnode refid="803" relation="include">
         </childnode>
-        <childnode refid="749" relation="include">
+        <childnode refid="804" relation="include">
         </childnode>
-        <childnode refid="750" relation="include">
+        <childnode refid="805" relation="include">
         </childnode>
       </node>
-      <node id="750">
+      <node id="805">
         <label>string.h</label>
       </node>
-      <node id="746">
+      <node id="801">
         <label>src/include/aplus/netif.h</label>
         <link refid="netif.h"/>
-        <childnode refid="747" relation="include">
+        <childnode refid="802" relation="include">
         </childnode>
-        <childnode refid="751" relation="include">
+        <childnode refid="806" relation="include">
         </childnode>
-        <childnode refid="748" relation="include">
+        <childnode refid="803" relation="include">
         </childnode>
-        <childnode refid="752" relation="include">
+        <childnode refid="807" relation="include">
         </childnode>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="758">
+      <node id="813">
         <label>src/main.c</label>
         <link refid="src_2main_8c"/>
       </node>
-      <node id="762">
+      <node id="817">
         <label>src/net/rtl8139/rtl8139.c</label>
         <link refid="rtl8139_8c"/>
       </node>
-      <node id="768">
+      <node id="823">
         <label>src/net/rtl8139/rtl8139.h</label>
         <link refid="rtl8139_8h"/>
-        <childnode refid="762" relation="include">
+        <childnode refid="817" relation="include">
         </childnode>
       </node>
-      <node id="769">
+      <node id="824">
         <label>src/net/slirp/slirp.c</label>
         <link refid="slirp_8c"/>
       </node>
-      <node id="756">
+      <node id="811">
         <label>src/net/netif.c</label>
         <link refid="netif_8c"/>
       </node>
-      <node id="765">
+      <node id="820">
         <label>src/include/aplus/net/ipv6.h</label>
         <link refid="ipv6_8h"/>
-        <childnode refid="758" relation="include">
+        <childnode refid="813" relation="include">
         </childnode>
-        <childnode refid="761" relation="include">
+        <childnode refid="816" relation="include">
         </childnode>
       </node>
-      <node id="767">
+      <node id="822">
         <label>src/net/loopback/loopback.c</label>
         <link refid="loopback_8c"/>
       </node>
-      <node id="766">
+      <node id="821">
         <label>src/include/aplus/net/udp.h</label>
         <link refid="udp_8h"/>
-        <childnode refid="763" relation="include">
+        <childnode refid="818" relation="include">
         </childnode>
       </node>
-      <node id="757">
+      <node id="812">
         <label>src/include/aplus/net/eth.h</label>
         <link refid="eth_8h"/>
-        <childnode refid="754" relation="include">
+        <childnode refid="809" relation="include">
         </childnode>
-        <childnode refid="758" relation="include">
+        <childnode refid="813" relation="include">
         </childnode>
-        <childnode refid="755" relation="include">
+        <childnode refid="810" relation="include">
         </childnode>
-        <childnode refid="759" relation="include">
+        <childnode refid="814" relation="include">
         </childnode>
-        <childnode refid="760" relation="include">
+        <childnode refid="815" relation="include">
         </childnode>
-        <childnode refid="761" relation="include">
+        <childnode refid="816" relation="include">
         </childnode>
-        <childnode refid="762" relation="include">
+        <childnode refid="817" relation="include">
         </childnode>
-        <childnode refid="763" relation="include">
+        <childnode refid="818" relation="include">
         </childnode>
       </node>
-      <node id="760">
+      <node id="815">
         <label>src/net/ipv4.c</label>
         <link refid="ipv4_8c"/>
       </node>
-      <node id="754">
+      <node id="809">
         <label>src/include/aplus/net/arp.h</label>
         <link refid="arp_8h"/>
-        <childnode refid="755" relation="include">
+        <childnode refid="810" relation="include">
         </childnode>
-        <childnode refid="756" relation="include">
+        <childnode refid="811" relation="include">
         </childnode>
       </node>
-      <node id="753">
+      <node id="808">
         <label>src/include/aplus/netif.h</label>
         <link refid="netif.h"/>
-        <childnode refid="754" relation="include">
+        <childnode refid="809" relation="include">
         </childnode>
-        <childnode refid="757" relation="include">
+        <childnode refid="812" relation="include">
         </childnode>
-        <childnode refid="764" relation="include">
+        <childnode refid="819" relation="include">
         </childnode>
-        <childnode refid="765" relation="include">
+        <childnode refid="820" relation="include">
         </childnode>
-        <childnode refid="766" relation="include">
+        <childnode refid="821" relation="include">
         </childnode>
-        <childnode refid="758" relation="include">
+        <childnode refid="813" relation="include">
         </childnode>
-        <childnode refid="755" relation="include">
+        <childnode refid="810" relation="include">
         </childnode>
-        <childnode refid="759" relation="include">
+        <childnode refid="814" relation="include">
         </childnode>
-        <childnode refid="760" relation="include">
+        <childnode refid="815" relation="include">
         </childnode>
-        <childnode refid="761" relation="include">
+        <childnode refid="816" relation="include">
         </childnode>
-        <childnode refid="767" relation="include">
+        <childnode refid="822" relation="include">
         </childnode>
-        <childnode refid="756" relation="include">
+        <childnode refid="811" relation="include">
         </childnode>
-        <childnode refid="762" relation="include">
+        <childnode refid="817" relation="include">
         </childnode>
-        <childnode refid="768" relation="include">
+        <childnode refid="823" relation="include">
         </childnode>
-        <childnode refid="769" relation="include">
+        <childnode refid="824" relation="include">
         </childnode>
-        <childnode refid="763" relation="include">
+        <childnode refid="818" relation="include">
         </childnode>
       </node>
-      <node id="759">
+      <node id="814">
         <label>src/net/eth.c</label>
         <link refid="eth_8c"/>
       </node>
-      <node id="764">
+      <node id="819">
         <label>src/include/aplus/net/ipv4.h</label>
         <link refid="ipv4_8h"/>
-        <childnode refid="758" relation="include">
+        <childnode refid="813" relation="include">
         </childnode>
-        <childnode refid="760" relation="include">
+        <childnode refid="815" relation="include">
         </childnode>
       </node>
-      <node id="763">
+      <node id="818">
         <label>src/net/udp.c</label>
         <link refid="udp_8c"/>
       </node>
-      <node id="761">
+      <node id="816">
         <label>src/net/ipv6.c</label>
         <link refid="ipv6_8c"/>
       </node>
-      <node id="755">
+      <node id="810">
         <label>src/net/arp.c</label>
         <link refid="arp_8c"/>
       </node>
@@ -314,26 +314,6 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="26" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="26" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="define" id="netif_8h_1a7fa8be0d28d77b4ab4f44d924d4d69e2" prot="public" static="no">
-        <name>ARP_DEBUG</name>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="29" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="29" bodyend="-1"/>
-      </memberdef>
-      <memberdef kind="define" id="netif_8h_1afb47e3cd6431190b167127036fd827eb" prot="public" static="no">
-        <name>RTL8139_DEBUG</name>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/netif.h" line="30" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/netif.h" bodystart="30" bodyend="-1"/>
-      </memberdef>
       </sectiondef>
       <sectiondef kind="typedef">
       <memberdef kind="typedef" id="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" prot="public" static="no">
@@ -447,10 +427,10 @@
 <codeline lineno="25"><highlight class="normal"></highlight></codeline>
 <codeline lineno="26" refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NETIF_FLAGS_ENABLE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"></highlight></codeline>
-<codeline lineno="29" refid="netif_8h_1a7fa8be0d28d77b4ab4f44d924d4d69e2" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ARP_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="30" refid="netif_8h_1afb47e3cd6431190b167127036fd827eb" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ARP_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RTL8139_DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="32"><highlight class="normal"></highlight></codeline>
 <codeline lineno="33" refid="structnetif" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structnetif" kindref="compound">netif</ref><sp/>{</highlight></codeline>
 <codeline lineno="34" refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><ref refid="structnetif_1ad113ca0a458623939eec5ce7fe2b6eef" kindref="member">name</ref>[32];</highlight></codeline>

@@ -5,9 +5,9 @@
     <innerdir refid="dir_6abfe60f94b658ae213b16cf8cd9748f">src/fs/iso9660</innerdir>
     <innerfile refid="devfs_8c">devfs.c</innerfile>
     <innerfile refid="fs_8c">fs.c</innerfile>
-    <innerfile refid="pipe_8c">pipe.c</innerfile>
+    <innerfile refid="fs_2pipe_8c">pipe.c</innerfile>
     <innerfile refid="ramdev_8c">ramdev.c</innerfile>
-    <innerfile refid="tty_8c">tty.c</innerfile>
+    <innerfile refid="src_2fs_2tty_8c">tty.c</innerfile>
     <innerfile refid="vfs_8c">vfs.c</innerfile>
     <briefdescription>
     </briefdescription>

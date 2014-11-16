@@ -11,6 +11,7 @@
     <programlisting>#include &lt;errno.h&gt;</programlisting>
     <programlisting>#include &lt;aplus.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
         <simplesect>
             <title>Variables</title>
             <para>

@@ -14,99 +14,99 @@
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="341">
+      <node id="376">
         <label>sys/stat.h</label>
       </node>
-      <node id="336">
+      <node id="371">
         <label>stdarg.h</label>
       </node>
-      <node id="338">
+      <node id="373">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="335" relation="include">
+        <childnode refid="370" relation="include">
         </childnode>
-        <childnode refid="339" relation="include">
+        <childnode refid="374" relation="include">
         </childnode>
-        <childnode refid="340" relation="include">
+        <childnode refid="375" relation="include">
         </childnode>
-        <childnode refid="341" relation="include">
+        <childnode refid="376" relation="include">
         </childnode>
-        <childnode refid="342" relation="include">
+        <childnode refid="377" relation="include">
         </childnode>
       </node>
-      <node id="335">
+      <node id="370">
         <label>stdint.h</label>
       </node>
-      <node id="346">
+      <node id="381">
         <label>errno.h</label>
       </node>
-      <node id="345">
+      <node id="380">
         <label>fcntl.h</label>
       </node>
-      <node id="339">
+      <node id="374">
         <label>stddef.h</label>
       </node>
-      <node id="344">
+      <node id="379">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="339" relation="include">
+        <childnode refid="374" relation="include">
         </childnode>
-        <childnode refid="335" relation="include">
+        <childnode refid="370" relation="include">
         </childnode>
-        <childnode refid="340" relation="include">
+        <childnode refid="375" relation="include">
         </childnode>
       </node>
-      <node id="334">
+      <node id="369">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="335" relation="include">
+        <childnode refid="370" relation="include">
         </childnode>
-        <childnode refid="336" relation="include">
+        <childnode refid="371" relation="include">
         </childnode>
-        <childnode refid="337" relation="include">
+        <childnode refid="372" relation="include">
         </childnode>
       </node>
-      <node id="333">
+      <node id="368">
         <label>src/fs/vfs.c</label>
         <link refid="vfs.c"/>
-        <childnode refid="334" relation="include">
+        <childnode refid="369" relation="include">
         </childnode>
-        <childnode refid="338" relation="include">
+        <childnode refid="373" relation="include">
         </childnode>
-        <childnode refid="344" relation="include">
+        <childnode refid="379" relation="include">
         </childnode>
-        <childnode refid="335" relation="include">
+        <childnode refid="370" relation="include">
         </childnode>
-        <childnode refid="339" relation="include">
+        <childnode refid="374" relation="include">
         </childnode>
-        <childnode refid="343" relation="include">
+        <childnode refid="378" relation="include">
         </childnode>
-        <childnode refid="341" relation="include">
+        <childnode refid="376" relation="include">
         </childnode>
-        <childnode refid="340" relation="include">
+        <childnode refid="375" relation="include">
         </childnode>
-        <childnode refid="345" relation="include">
+        <childnode refid="380" relation="include">
         </childnode>
-        <childnode refid="342" relation="include">
+        <childnode refid="377" relation="include">
         </childnode>
-        <childnode refid="346" relation="include">
+        <childnode refid="381" relation="include">
         </childnode>
       </node>
-      <node id="340">
+      <node id="375">
         <label>sys/types.h</label>
       </node>
-      <node id="337">
+      <node id="372">
         <label>string.h</label>
       </node>
-      <node id="343">
+      <node id="378">
         <label>unistd.h</label>
       </node>
-      <node id="342">
+      <node id="377">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="343" relation="include">
+        <childnode refid="378" relation="include">
         </childnode>
-        <childnode refid="340" relation="include">
+        <childnode refid="375" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -190,7 +190,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/fs/vfs.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/fs/vfs.c" bodystart="27" bodyend="30"/>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="151" endline="173">kfree</references>
         <references refid="list_8h_1a4470c240b622941415ae5250067699b5" compoundref="list_8h" startline="102" endline="126">list_remove</references>
       </memberdef>
       <memberdef kind="function" id="vfs_8c_1a99334446cfc1dfc32088d838b4f2895c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">

@@ -124,38 +124,45 @@ $(document).ready(function(){initNavTree('ioctl_8c_source.html','');});
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="ioctl_8c.html#a76eeda26d1c9360d2d11b28c4f1be283">   15</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="ioctl_8c.html#a76eeda26d1c9360d2d11b28c4f1be283">sys_ioctl</a>(<span class="keywordtype">int</span> fd, <span class="keywordtype">int</span> req, <span class="keywordtype">void</span>* buf) {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="structinode.html">inode_t</a>* ino = current_task-&gt;<a class="code" href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">fd</a>[fd];</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">if</span>(!ino) {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EBADF;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    }</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="fs_8c.html#afb548bce2f916933a7c7d95a48b57cdb">fs_ioctl</a>(ino, req, buf);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<a class="code" href="ioctl_8c.html#a88be2ec84300ac3760f30a5858ff7e86">SYSCALL</a>(<a class="code" href="ioctl_8c.html#a76eeda26d1c9360d2d11b28c4f1be283">sys_ioctl</a>, 20);</div>
-<div class="ttc" id="ioctl_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="ioctl_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(fd &lt; 0 || fd &gt; <a class="code" href="task_8h.html#aa0beab24d02a2ccd5d273dea188af93d">TASK_MAX_FD</a>) {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EBADF;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="structinode.html">inode_t</a>* ino = current_task-&gt;<a class="code" href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">fd</a>[fd];</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">if</span>(!ino) {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EBADF;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="fs_8c.html#afb548bce2f916933a7c7d95a48b57cdb">fs_ioctl</a>(ino, req, buf);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<a class="code" href="ioctl_8c.html#a88be2ec84300ac3760f30a5858ff7e86">SYSCALL</a>(<a class="code" href="ioctl_8c.html#a76eeda26d1c9360d2d11b28c4f1be283">sys_ioctl</a>, 20);</div>
+<div class="ttc" id="ioctl_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="ioctl_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00037">sched.c:37</a></div></div>
 <div class="ttc" id="fs_8h_html"><div class="ttname"><a href="fs_8h.html">fs.h</a></div></div>
 <div class="ttc" id="dirent_8h_html"><div class="ttname"><a href="dirent_8h.html">dirent.h</a></div></div>
 <div class="ttc" id="structinode_html"><div class="ttname"><a href="structinode.html">inode</a></div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00037">fs.h:37</a></div></div>
+<div class="ttc" id="task_8h_html_aa0beab24d02a2ccd5d273dea188af93d"><div class="ttname"><a href="task_8h.html#aa0beab24d02a2ccd5d273dea188af93d">TASK_MAX_FD</a></div><div class="ttdeci">#define TASK_MAX_FD</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00035">task.h:35</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
-<div class="ttc" id="fs_8c_html_afb548bce2f916933a7c7d95a48b57cdb"><div class="ttname"><a href="fs_8c.html#afb548bce2f916933a7c7d95a48b57cdb">fs_ioctl</a></div><div class="ttdeci">int fs_ioctl(struct inode *inode, int req, void *buf)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8c_source.html#l00109">fs.c:109</a></div></div>
+<div class="ttc" id="fs_8c_html_afb548bce2f916933a7c7d95a48b57cdb"><div class="ttname"><a href="fs_8c.html#afb548bce2f916933a7c7d95a48b57cdb">fs_ioctl</a></div><div class="ttdeci">int fs_ioctl(struct inode *inode, int req, void *buf)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8c_source.html#l00110">fs.c:110</a></div></div>
 <div class="ttc" id="aplus_8h_html"><div class="ttname"><a href="aplus_8h.html">aplus.h</a></div></div>
 <div class="ttc" id="syscall_8h_html"><div class="ttname"><a href="syscall_8h.html">syscall.h</a></div></div>
 <div class="ttc" id="ioctl_8c_html_a88be2ec84300ac3760f30a5858ff7e86"><div class="ttname"><a href="ioctl_8c.html#a88be2ec84300ac3760f30a5858ff7e86">SYSCALL</a></div><div class="ttdeci">SYSCALL(sys_ioctl, 20)</div></div>
 <div class="ttc" id="task_8h_html"><div class="ttname"><a href="task_8h.html">task.h</a></div></div>
 <div class="ttc" id="structtask_html"><div class="ttname"><a href="structtask.html">task</a></div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00090">task.h:90</a></div></div>
 <div class="ttc" id="ioctl_8c_html_a76eeda26d1c9360d2d11b28c4f1be283"><div class="ttname"><a href="ioctl_8c.html#a76eeda26d1c9360d2d11b28c4f1be283">sys_ioctl</a></div><div class="ttdeci">int sys_ioctl(int fd, int req, void *buf)</div><div class="ttdef"><b>Definition:</b> <a href="ioctl_8c_source.html#l00015">ioctl.c:15</a></div></div>
-<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00105">task.h:105</a></div></div>
+<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00107">task.h:107</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="ioctl_8c.html">ioctl.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -126,7 +126,7 @@ $(document).ready(function(){initNavTree('crt0_8c_source.html','');});
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="crt0_8c.html#aa7ab5703ee773f395bff8dc7abf214af">   17</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="crt0_8c.html#aa7ab5703ee773f395bff8dc7abf214af">__default_sighandler__</a>(<span class="keywordtype">int</span> sig) {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    signal(sig, <a class="code" href="crt0_8c.html#aa7ab5703ee773f395bff8dc7abf214af">__default_sighandler__</a>);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    exit(sig);</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    _exit(sig);</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
@@ -219,7 +219,7 @@ $(document).ready(function(){initNavTree('crt0_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_7eba538d4a0daa44b244b3c2ce5d4eb1.html">libcrt0</a></li><li class="navelem"><a class="el" href="dir_d8973e1d382d4046c5526cf7094d954c.html">src</a></li><li class="navelem"><a class="el" href="crt0_8c.html">crt0.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -1,0 +1,84 @@
+\hypertarget{syscall_2pipe_8c}{\section{src/syscall/pipe.c File Reference}
+\label{syscall_2pipe_8c}\index{src/syscall/pipe.\+c@{src/syscall/pipe.\+c}}
+}
+{\ttfamily \#include $<$aplus.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/syscall.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/fs.\+h$>$}\\*
+{\ttfamily \#include $<$aplus/task.\+h$>$}\\*
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{syscall_2pipe_8c_a73d217d7e665e552f8511f5f4d44a06d}{sys\+\_\+pipe} (int fd\mbox{[}2\mbox{]})
+\item 
+\hyperlink{syscall_2pipe_8c_a0bd500744bcdc8b9d447a0d5bfefa9a1}{S\+Y\+S\+C\+A\+L\+L} (\hyperlink{syscall_2pipe_8c_a73d217d7e665e552f8511f5f4d44a06d}{sys\+\_\+pipe}, 30)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{task_8h_a8aeef2cdb643462b97cd459a8e68cad3}{task\+\_\+t} $\ast$ \hyperlink{syscall_2pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\+\_\+task}
+\begin{DoxyCompactList}\small\item\em Current task address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{syscall_2pipe_8c_a73d217d7e665e552f8511f5f4d44a06d}{\index{syscall/pipe.\+c@{syscall/pipe.\+c}!sys\+\_\+pipe@{sys\+\_\+pipe}}
+\index{sys\+\_\+pipe@{sys\+\_\+pipe}!syscall/pipe.\+c@{syscall/pipe.\+c}}
+\subsubsection[{sys\+\_\+pipe}]{\setlength{\rightskip}{0pt plus 5cm}int sys\+\_\+pipe (
+\begin{DoxyParamCaption}
+\item[{int}]{fd\mbox{[}2\mbox{]}}
+\end{DoxyParamCaption}
+)}}\label{syscall_2pipe_8c_a73d217d7e665e552f8511f5f4d44a06d}
+
+
+Definition at line 15 of file pipe.\+c.
+
+
+
+References errno, kmalloc(), pipe\+\_\+create(), and schedule\+\_\+append\+\_\+fd().
+
+
+\begin{DoxyCode}
+15                         \{
+16     \textcolor{keywordflow}{if}(!fd) \{
+17         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+18         \textcolor{keywordflow}{return} -1;
+19     \}
+20 
+21     \hyperlink{structinode}{inode\_t}* nd = (\hyperlink{structinode}{inode\_t}*) \hyperlink{mm_8h_a1f5d4240b2decc62c0e6eae06c72916c}{kmalloc}(\textcolor{keyword}{sizeof}(\hyperlink{structinode}{inode\_t}) * 2);
+22     memset(nd, 0, \textcolor{keyword}{sizeof}(\hyperlink{structinode}{inode\_t}) * 2);
+23 
+24     \textcolor{keywordflow}{if}(\hyperlink{fs_2pipe_8c_a8d87f2f91d56a198bbf85f4773868765}{pipe\_create}(nd) != 0)
+25         \textcolor{keywordflow}{return} -1;
+26 
+27     fd[0] = \hyperlink{src_2sched_8c_afbffdc5298c98f92960a4fb9ba498063}{schedule\_append\_fd}(\hyperlink{fs_2pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}, &nd[0]);
+28     fd[1] = \hyperlink{src_2sched_8c_afbffdc5298c98f92960a4fb9ba498063}{schedule\_append\_fd}(\hyperlink{fs_2pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}, &nd[1]);
+29 
+30     \textcolor{keywordflow}{return} 0;
+31 \}
+\end{DoxyCode}
+\hypertarget{syscall_2pipe_8c_a0bd500744bcdc8b9d447a0d5bfefa9a1}{\index{syscall/pipe.\+c@{syscall/pipe.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
+\index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!syscall/pipe.\+c@{syscall/pipe.\+c}}
+\subsubsection[{S\+Y\+S\+C\+A\+L\+L}]{\setlength{\rightskip}{0pt plus 5cm}S\+Y\+S\+C\+A\+L\+L (
+\begin{DoxyParamCaption}
+\item[{{\bf sys\+\_\+pipe}}]{, }
+\item[{30}]{}
+\end{DoxyParamCaption}
+)}}\label{syscall_2pipe_8c_a0bd500744bcdc8b9d447a0d5bfefa9a1}
+
+
+\subsection{Variable Documentation}
+\hypertarget{syscall_2pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{\index{syscall/pipe.\+c@{syscall/pipe.\+c}!current\+\_\+task@{current\+\_\+task}}
+\index{current\+\_\+task@{current\+\_\+task}!syscall/pipe.\+c@{syscall/pipe.\+c}}
+\subsubsection[{current\+\_\+task}]{\setlength{\rightskip}{0pt plus 5cm}{\bf task\+\_\+t}$\ast$ current\+\_\+task}}\label{syscall_2pipe_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}
+
+
+Current task address. 
+
+
+
+Definition at line 37 of file sched.\+c.
+

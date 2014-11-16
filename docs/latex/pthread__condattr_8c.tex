@@ -38,7 +38,7 @@ References errno, and pthread\+\_\+condattr\+::pshared.
 18                                                               \{
 19     \textcolor{keywordflow}{if}(!attr) \{
 20         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-21         \textcolor{keywordflow}{return} 1;
+21         \textcolor{keywordflow}{return} -1;
 22     \}
 23 
 24     attr->\hyperlink{structpthread__condattr_a2cf7aea8228b9cee52cc0eccc4492fd7}{pshared} = 0;
@@ -66,7 +66,7 @@ References errno, and pthread\+\_\+condattr\+::pshared.
 29                                                                                      \{
 30     \textcolor{keywordflow}{if}(!attr) \{
 31         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-32         \textcolor{keywordflow}{return} 1;
+32         \textcolor{keywordflow}{return} -1;
 33     \}
 34 
 35     
@@ -94,7 +94,7 @@ References errno, and pthread\+\_\+condattr\+::pshared.
 7                                                            \{
 8     \textcolor{keywordflow}{if}(!attr) \{
 9         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-10         \textcolor{keywordflow}{return} 1;
+10         \textcolor{keywordflow}{return} -1;
 11     \}
 12 
 13     attr->\hyperlink{structpthread__condattr_a2cf7aea8228b9cee52cc0eccc4492fd7}{pshared} = 0;
@@ -122,7 +122,7 @@ References errno, and pthread\+\_\+condattr\+::pshared.
 41                                                                               \{
 42     \textcolor{keywordflow}{if}(!attr) \{
 43         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-44         \textcolor{keywordflow}{return} 1;
+44         \textcolor{keywordflow}{return} -1;
 45     \}
 46 
 47     attr->\hyperlink{structpthread__condattr_a2cf7aea8228b9cee52cc0eccc4492fd7}{pshared} = pshared;

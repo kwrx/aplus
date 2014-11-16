@@ -1,4 +1,4 @@
-.TH "src/fs/ramdev.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/fs/ramdev.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -71,9 +71,8 @@ References bufio_alloc_raw(), task::fd, inode::flush, ramdev_flush(), ramdev_rea
 87     ino->userdata = (void*) bufio_alloc_raw((void*) addr, size);
 88     ino->size = size;
 89 
-90 
-91     return ino;
-92 }
+90     return ino;
+91 }
 .fi
 .SS "void ramdev_flush (\fBinode_t\fP *ino)"
 
@@ -166,7 +165,7 @@ References bufio_seek(), bufio_write(), inode::position, inode::size, size, and 
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

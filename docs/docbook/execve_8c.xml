@@ -22,6 +22,14 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para>static char ** <link linkend="execve_8c_1a1c466d3de8a7f4192d6e9bbfe413dfb0">__args_dup</link> (
+char ** a)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para>int <link linkend="execve_8c_1af44a7e309f4bd49757f52b4178676ea7">sys_execve</link> (
 char * filename, char ** argv, char ** environ)</para>
                     </listitem>

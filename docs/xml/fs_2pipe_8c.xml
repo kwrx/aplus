@@ -1,0 +1,413 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="fs_2pipe_8c" kind="file">
+    <compoundname>pipe.c</compoundname>
+    <includes refid="aplus_8h" local="no">aplus.h</includes>
+    <includes refid="fs_8h" local="no">aplus/fs.h</includes>
+    <includes refid="bufio_8h" local="no">aplus/bufio.h</includes>
+    <includes refid="mm_8h" local="no">aplus/mm.h</includes>
+    <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
+    <includes refid="task_8h" local="no">aplus/task.h</includes>
+    <includes local="no">stdio.h</includes>
+    <includes local="no">stddef.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">fcntl.h</includes>
+    <includes local="no">sys/stat.h</includes>
+    <incdepgraph>
+      <node id="290">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="285">
+        <label>stdarg.h</label>
+      </node>
+      <node id="287">
+        <label>aplus/fs.h</label>
+        <link refid="fs_8h"/>
+        <childnode refid="284" relation="include">
+        </childnode>
+        <childnode refid="288" relation="include">
+        </childnode>
+        <childnode refid="289" relation="include">
+        </childnode>
+        <childnode refid="290" relation="include">
+        </childnode>
+        <childnode refid="291" relation="include">
+        </childnode>
+      </node>
+      <node id="284">
+        <label>stdint.h</label>
+      </node>
+      <node id="297">
+        <label>setjmp.h</label>
+      </node>
+      <node id="295">
+        <label>aplus/task.h</label>
+        <link refid="task_8h"/>
+        <childnode refid="284" relation="include">
+        </childnode>
+        <childnode refid="283" relation="include">
+        </childnode>
+        <childnode refid="287" relation="include">
+        </childnode>
+        <childnode refid="296" relation="include">
+        </childnode>
+        <childnode refid="289" relation="include">
+        </childnode>
+        <childnode refid="297" relation="include">
+        </childnode>
+      </node>
+      <node id="300">
+        <label>fcntl.h</label>
+      </node>
+      <node id="288">
+        <label>stddef.h</label>
+      </node>
+      <node id="283">
+        <label>aplus.h</label>
+        <link refid="aplus_8h"/>
+        <childnode refid="284" relation="include">
+        </childnode>
+        <childnode refid="285" relation="include">
+        </childnode>
+        <childnode refid="286" relation="include">
+        </childnode>
+      </node>
+      <node id="282">
+        <label>src/fs/pipe.c</label>
+        <link refid="fs/pipe.c"/>
+        <childnode refid="283" relation="include">
+        </childnode>
+        <childnode refid="287" relation="include">
+        </childnode>
+        <childnode refid="293" relation="include">
+        </childnode>
+        <childnode refid="298" relation="include">
+        </childnode>
+        <childnode refid="294" relation="include">
+        </childnode>
+        <childnode refid="295" relation="include">
+        </childnode>
+        <childnode refid="299" relation="include">
+        </childnode>
+        <childnode refid="288" relation="include">
+        </childnode>
+        <childnode refid="284" relation="include">
+        </childnode>
+        <childnode refid="292" relation="include">
+        </childnode>
+        <childnode refid="300" relation="include">
+        </childnode>
+        <childnode refid="290" relation="include">
+        </childnode>
+      </node>
+      <node id="289">
+        <label>sys/types.h</label>
+      </node>
+      <node id="286">
+        <label>string.h</label>
+      </node>
+      <node id="292">
+        <label>unistd.h</label>
+      </node>
+      <node id="296">
+        <label>signal.h</label>
+      </node>
+      <node id="298">
+        <label>aplus/mm.h</label>
+        <link refid="mm_8h"/>
+        <childnode refid="284" relation="include">
+        </childnode>
+        <childnode refid="295" relation="include">
+        </childnode>
+      </node>
+      <node id="291">
+        <label>sys/dirent.h</label>
+        <link refid="dirent_8h"/>
+        <childnode refid="292" relation="include">
+        </childnode>
+        <childnode refid="289" relation="include">
+        </childnode>
+      </node>
+      <node id="294">
+        <label>aplus/spinlock.h</label>
+        <link refid="spinlock_8h"/>
+      </node>
+      <node id="293">
+        <label>aplus/bufio.h</label>
+        <link refid="bufio_8h"/>
+        <childnode refid="284" relation="include">
+        </childnode>
+        <childnode refid="288" relation="include">
+        </childnode>
+        <childnode refid="289" relation="include">
+        </childnode>
+        <childnode refid="294" relation="include">
+        </childnode>
+        <childnode refid="295" relation="include">
+        </childnode>
+      </node>
+      <node id="299">
+        <label>stdio.h</label>
+      </node>
+    </incdepgraph>
+    <innerclass refid="structpipeinfo" prot="public">pipeinfo</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="fs_2pipe_8c_1ac26d15f7a161e67a1245925bf9ec0b64" prot="public" static="no">
+        <type>struct <ref refid="structpipeinfo" kindref="compound">pipeinfo</ref></type>
+        <definition>typedef struct pipeinfo  pipeinfo_t</definition>
+        <argsstring></argsstring>
+        <name>pipeinfo_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="24" column="1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="fs_2pipe_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" prot="public" static="no" mutable="no">
+        <type><ref refid="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3" kindref="member">task_t</ref> *</type>
+        <definition>task_t* current_task</definition>
+        <argsstring></argsstring>
+        <name>current_task</name>
+        <briefdescription>
+<para>Current task address. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="17" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="fs_2pipe_8c_1acd58301025c57832d88e9303748a4990" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int pipe_read</definition>
+        <argsstring>(inode_t *inode, char *ptr, int len)</argsstring>
+        <name>pipe_read</name>
+        <param>
+          <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
+          <declname>inode</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="27" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="27" bodyend="40"/>
+        <references refid="bufio_8c_1a75016850df49d95e52a5508d22ff79e8" compoundref="bufio_8c" startline="203" endline="214">bufio_read</references>
+        <references refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" compoundref="bufio_8c" startline="142" endline="168">bufio_seek</references>
+        <references refid="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3" compoundref="bufio_8c" startline="177" endline="179">bufio_tell</references>
+        <references refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" compoundref="fs_2pipe_8c" startline="22">pipeinfo::read_offset</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" compoundref="spinlock_8h" startline="47">spinlock_waiton</references>
+        <references refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" compoundref="fs_2pipe_8c" startline="21">pipeinfo::stream</references>
+        <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
+        <references refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" compoundref="fs_2pipe_8c" startline="23">pipeinfo::write_offset</references>
+      </memberdef>
+      <memberdef kind="function" id="fs_2pipe_8c_1afb255ec0586d3ec2fb72fde723b9f058" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int pipe_write</definition>
+        <argsstring>(inode_t *inode, char *ptr, int len)</argsstring>
+        <name>pipe_write</name>
+        <param>
+          <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
+          <declname>inode</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="42" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="42" bodyend="52"/>
+        <references refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" compoundref="bufio_8c" startline="142" endline="168">bufio_seek</references>
+        <references refid="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3" compoundref="bufio_8c" startline="177" endline="179">bufio_tell</references>
+        <references refid="bufio_8c_1a8db791aa56b168544d7666a723af32de" compoundref="bufio_8c" startline="227" endline="239">bufio_write</references>
+        <references refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" compoundref="bufio_8h" startline="34">bufio::size</references>
+        <references refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" compoundref="fs_2pipe_8c" startline="21">pipeinfo::stream</references>
+        <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
+        <references refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" compoundref="fs_2pipe_8c" startline="23">pipeinfo::write_offset</references>
+      </memberdef>
+      <memberdef kind="function" id="fs_2pipe_8c_1acf87459626267621da125c794e573354" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void pipe_flush</definition>
+        <argsstring>(inode_t *inode)</argsstring>
+        <name>pipe_flush</name>
+        <param>
+          <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref> *</type>
+          <declname>inode</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="54" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="54" bodyend="59"/>
+        <references refid="bufio_8c_1a2a92ff5d9427e2d5d88b4c95247b0f64" compoundref="bufio_8c" startline="118" endline="129">bufio_free</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="151" endline="173">kfree</references>
+        <references refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" compoundref="fs_2pipe_8c" startline="21">pipeinfo::stream</references>
+        <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
+      </memberdef>
+      <memberdef kind="function" id="fs_2pipe_8c_1a8d87f2f91d56a198bbf85f4773868765" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int pipe_create</definition>
+        <argsstring>(inode_t inodes[2])</argsstring>
+        <name>pipe_create</name>
+        <param>
+          <type><ref refid="fs_8h_1a48b686d0c4375b0d1aab2296dc36c7a6" kindref="member">inode_t</ref></type>
+          <declname>inodes</declname>
+          <array>[2]</array>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/src/fs/pipe.c" line="63" column="1" bodyfile="/opt/prj/aPlus/src/fs/pipe.c" bodystart="63" bodyend="90"/>
+        <references refid="structinode_1a7e52661a115f6def97778566f2be0d80" compoundref="fs_8h" startline="50">inode::atime</references>
+        <references refid="bufio_8c_1a788d5286cd4a5a1d4aed02c319aaf030" compoundref="bufio_8c" startline="63" endline="84">bufio_alloc</references>
+        <references refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" compoundref="fs_8h" startline="52">inode::ctime</references>
+        <references refid="structinode_1ae2972ef183f5c39aac7cb83b9f8a04a8" compoundref="fs_8h" startline="66">inode::flush</references>
+        <references refid="structinode_1a8434fb9dd05057d00b37ed713713835d" compoundref="fs_8h" startline="45">inode::gid</references>
+        <references refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" compoundref="task_8h" startline="103">task::gid</references>
+        <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
+        <references refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" compoundref="fs_8h" startline="42">inode::mode</references>
+        <references refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" compoundref="fs_8h" startline="51">inode::mtime</references>
+        <references refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" compoundref="attribute_8h" startline="82">name</references>
+        <references refid="fs_2pipe_8c_1acf87459626267621da125c794e573354" compoundref="fs_2pipe_8c" startline="54" endline="59">pipe_flush</references>
+        <references refid="fs_2pipe_8c_1acd58301025c57832d88e9303748a4990" compoundref="fs_2pipe_8c" startline="27" endline="40">pipe_read</references>
+        <references refid="fs_2pipe_8c_1afb255ec0586d3ec2fb72fde723b9f058" compoundref="fs_2pipe_8c" startline="42" endline="52">pipe_write</references>
+        <references refid="structinode_1ae2c5e8a0a372334b97024fbd9ef694c1" compoundref="fs_8h" startline="56">inode::read</references>
+        <references refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" compoundref="fs_2pipe_8c" startline="22">pipeinfo::read_offset</references>
+        <references refid="structinode_1a53722b1b60b7136ce0204b66527bb400" compoundref="fs_8h" startline="47">inode::size</references>
+        <references refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" compoundref="fs_2pipe_8c" startline="21">pipeinfo::stream</references>
+        <references refid="time_8c_1a4b6eba92722ec1e5446f676e95e4cddf" compoundref="time_8c" startline="12" endline="24">sys_time</references>
+        <references refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" compoundref="fs_8h" startline="44">inode::uid</references>
+        <references refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" compoundref="task_8h" startline="102">task::uid</references>
+        <references refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" compoundref="fs_8h" startline="54">inode::userdata</references>
+        <references refid="structinode_1a53a123d38834fa17e7ef5c1e5f47bba2" compoundref="fs_8h" startline="57">inode::write</references>
+        <references refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" compoundref="fs_2pipe_8c" startline="23">pipeinfo::write_offset</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="aplus_8h" kindref="compound">aplus.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="fs_8h" kindref="compound">aplus/fs.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="bufio_8h" kindref="compound">aplus/bufio.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="mm_8h" kindref="compound">aplus/mm.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="spinlock_8h" kindref="compound">aplus/spinlock.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdio.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stddef.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;fcntl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/stat.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/><ref refid="structtask" kindref="compound">task_t</ref>*<sp/><ref refid="fs_2pipe_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5" kindref="member">current_task</ref>;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20" refid="structpipeinfo" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structpipeinfo" kindref="compound">pipeinfo</ref><sp/>{</highlight></codeline>
+<codeline lineno="21" refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structbufio" kindref="compound">bufio_t</ref>*<sp/><ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>;</highlight></codeline>
+<codeline lineno="22" refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>off_t<sp/><ref refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" kindref="member">read_offset</ref>;</highlight></codeline>
+<codeline lineno="23" refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>off_t<sp/><ref refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" kindref="member">write_offset</ref>;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}<sp/><ref refid="fs_2pipe_8c_1ac26d15f7a161e67a1245925bf9ec0b64" kindref="member">pipeinfo_t</ref>;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="fs_2pipe_8c_1acd58301025c57832d88e9303748a4990" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fs_2pipe_8c_1acd58301025c57832d88e9303748a4990" kindref="member">pipe_read</ref>(<ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="structinode" kindref="compound">inode</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>ptr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>len)<sp/>{</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpipeinfo" kindref="compound">pipeinfo_t</ref>*<sp/>pipe<sp/>=<sp/>inode-&gt;<ref refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" kindref="member">userdata</ref>;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="spinlock_8h_1a9fd2288887ae3bf29520677b29e010a3" kindref="member">spinlock_waiton</ref>(pipe-&gt;<ref refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" kindref="member">read_offset</ref><sp/>+<sp/>len<sp/>&gt;<sp/>pipe-&gt;<ref refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" kindref="member">write_offset</ref>);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" kindref="member">bufio_seek</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>,<sp/>pipe-&gt;<ref refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" kindref="member">read_offset</ref><sp/>%<sp/>pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>,<sp/>SEEK_SET);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>tolen<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">((tolen<sp/>=<sp/><ref refid="bufio_8c_1a75016850df49d95e52a5508d22ff79e8" kindref="member">bufio_read</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((off_t)<sp/>ptr<sp/>+<sp/>(off_t)<sp/>tolen),<sp/>len))<sp/>&lt;<sp/>len)</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" kindref="member">bufio_seek</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>,<sp/>0,<sp/>SEEK_SET);</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>pipe-&gt;<ref refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" kindref="member">write_offset</ref><sp/>=<sp/><ref refid="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3" kindref="member">bufio_tell</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>len;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="fs_2pipe_8c_1afb255ec0586d3ec2fb72fde723b9f058" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fs_2pipe_8c_1afb255ec0586d3ec2fb72fde723b9f058" kindref="member">pipe_write</ref>(<ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="structinode" kindref="compound">inode</ref>,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>ptr,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>len)<sp/>{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpipeinfo" kindref="compound">pipeinfo_t</ref>*<sp/>pipe<sp/>=<sp/>inode-&gt;<ref refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" kindref="member">userdata</ref>;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" kindref="member">bufio_seek</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>,<sp/>pipe-&gt;<ref refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" kindref="member">write_offset</ref><sp/>%<sp/>pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>-&gt;<ref refid="structbufio_1a233f5f8090a3f39d9471333db439e2bb" kindref="member">size</ref>,<sp/>SEEK_SET);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>tolen<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">((tolen<sp/>=<sp/><ref refid="bufio_8c_1a8db791aa56b168544d7666a723af32de" kindref="member">bufio_write</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>,<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((off_t)<sp/>ptr<sp/>+<sp/>(off_t)<sp/>tolen),<sp/>len))<sp/>&lt;<sp/>len)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1a1fa3475774b4a60a2e8a1b10f202d7f8" kindref="member">bufio_seek</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>,<sp/>0,<sp/>SEEK_SET);</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>pipe-&gt;<ref refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" kindref="member">write_offset</ref><sp/>=<sp/><ref refid="bufio_8c_1a9fdd7357844210dfdb4fd10f6868bbf3" kindref="member">bufio_tell</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal">)<sp/>len;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="fs_2pipe_8c_1acf87459626267621da125c794e573354" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="fs_2pipe_8c_1acf87459626267621da125c794e573354" kindref="member">pipe_flush</ref>(<ref refid="structinode" kindref="compound">inode_t</ref>*<sp/><ref refid="structinode" kindref="compound">inode</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpipeinfo" kindref="compound">pipeinfo_t</ref>*<sp/>pipe<sp/>=<sp/>inode-&gt;<ref refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" kindref="member">userdata</ref>;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bufio_8c_1a2a92ff5d9427e2d5d88b4c95247b0f64" kindref="member">bufio_free</ref>(pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref>);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(pipe);</highlight></codeline>
+<codeline lineno="59"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63" refid="fs_2pipe_8c_1a8d87f2f91d56a198bbf85f4773868765" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="fs_2pipe_8c_1a8d87f2f91d56a198bbf85f4773868765" kindref="member">pipe_create</ref>(<ref refid="structinode" kindref="compound">inode_t</ref><sp/>inodes[2])<sp/>{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpipeinfo" kindref="compound">pipeinfo_t</ref>*<sp/>pipe<sp/>=<sp/>(<ref refid="structpipeinfo" kindref="compound">pipeinfo_t</ref>*)<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structpipeinfo" kindref="compound">pipeinfo_t</ref>));</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>pipe-&gt;<ref refid="structpipeinfo_1add2e1b264654f589da8c98cd502c3fbc" kindref="member">stream</ref><sp/>=<sp/>(<ref refid="structbufio" kindref="compound">bufio_t</ref>*)<sp/><ref refid="bufio_8c_1a788d5286cd4a5a1d4aed02c319aaf030" kindref="member">bufio_alloc</ref>(BUFSIZ);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/>pipe-&gt;<ref refid="structpipeinfo_1a88940cfea171abbf28b2b96bc87054ca" kindref="member">read_offset</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>pipe-&gt;<ref refid="structpipeinfo_1abb510c9ed7b4d0bc60432bcc04e3962b" kindref="member">write_offset</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>2;<sp/>i++)<sp/>{</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>memset((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>&amp;inodes[i],<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structinode" kindref="compound">inode_t</ref>));</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1a7e52661a115f6def97778566f2be0d80" kindref="member">atime</ref><sp/>=<sp/>inodes[i].<ref refid="structinode_1a19f0d407fa2962c942e406d3e00c1da4" kindref="member">mtime</ref><sp/>=<sp/>inodes[i].<ref refid="structinode_1a27334a9d3c25fbac1c134ed5b9cbc566" kindref="member">ctime</ref><sp/>=<sp/><ref refid="time_8c_1a4b6eba92722ec1e5446f676e95e4cddf" kindref="member">sys_time</ref>(NULL);</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1ae2c5e8a0a372334b97024fbd9ef694c1" kindref="member">read</ref><sp/>=<sp/><ref refid="fs_2pipe_8c_1acd58301025c57832d88e9303748a4990" kindref="member">pipe_read</ref>;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1a53a123d38834fa17e7ef5c1e5f47bba2" kindref="member">write</ref><sp/>=<sp/><ref refid="fs_2pipe_8c_1afb255ec0586d3ec2fb72fde723b9f058" kindref="member">pipe_write</ref>;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1ae2972ef183f5c39aac7cb83b9f8a04a8" kindref="member">flush</ref><sp/>=<sp/><ref refid="fs_2pipe_8c_1acf87459626267621da125c794e573354" kindref="member">pipe_flush</ref>;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1a0eac94e96ded19029e871d5cce815bcb" kindref="member">uid</ref><sp/>=<sp/>current_task-&gt;<ref refid="structtask_1ade8fc4c414bce856dacf9efee3031be8" kindref="member">uid</ref>;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1a8434fb9dd05057d00b37ed713713835d" kindref="member">gid</ref><sp/>=<sp/>current_task-&gt;<ref refid="structtask_1aaf3b6e15445e766a5c4823b815bca630" kindref="member">gid</ref>;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1a4902d9f6a1d7bd79c6f1bb73d83ce8e3" kindref="member">mode</ref><sp/>=<sp/>S_IFIFO;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1a8ba627a7ebbacc723e8452fbf8dd3670" kindref="member">userdata</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>pipe;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>inodes[i].<ref refid="structinode_1a53722b1b60b7136ce0204b66527bb400" kindref="member">size</ref><sp/>=<sp/>(size_t)<sp/>BUFSIZ;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>strcpy(inodes[0].<ref refid="attribute_8h_1aae08e5b919f01beb6c69d2859e0dfc27" kindref="member">name</ref>,<sp/></highlight><highlight class="stringliteral">&quot;[pipe:read]&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>strcpy(inodes[1].name,<sp/></highlight><highlight class="stringliteral">&quot;[pipe:write]&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/src/fs/pipe.c"/>
+  </compounddef>
+</doxygen>

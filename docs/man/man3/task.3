@@ -1,4 +1,4 @@
-.TH "task" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "task" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,6 +25,9 @@ task \-
 .br
 .ti -1c
 .RI "   \fBuint32_t\fP \fBcr3\fP"
+.br
+.ti -1c
+.RI "   pid_t \fBowner\fP"
 .br
 .ti -1c
 .RI "} \fBcontext\fP"
@@ -95,21 +98,21 @@ Definition at line 90 of file task\&.h\&.
 .SS "char** task::argv"
 
 .PP
-Definition at line 117 of file task\&.h\&.
+Definition at line 119 of file task\&.h\&.
 .SS "\fBuint32_t\fP task::clock"
 
 .PP
-Definition at line 122 of file task\&.h\&.
+Definition at line 124 of file task\&.h\&.
 .SS "struct { \&.\&.\&. }   task::context"
 
 .SS "\fBuint32_t\fP task::cr3"
 
 .PP
-Definition at line 96 of file task\&.h\&.
+Definition at line 97 of file task\&.h\&.
 .SS "\fBinode_t\fP* task::cwd"
 
 .PP
-Definition at line 103 of file task\&.h\&.
+Definition at line 105 of file task\&.h\&.
 .SS "task_env_t* task::env"
 
 .PP
@@ -117,33 +120,37 @@ Definition at line 94 of file task\&.h\&.
 .SS "char** task::envp"
 
 .PP
-Definition at line 118 of file task\&.h\&.
+Definition at line 120 of file task\&.h\&.
 .SS "\fBinode_t\fP* task::exe"
 
 .PP
-Definition at line 104 of file task\&.h\&.
+Definition at line 106 of file task\&.h\&.
 .SS "int task::exitcode"
 
 .PP
-Definition at line 123 of file task\&.h\&.
+Definition at line 125 of file task\&.h\&.
 .SS "\fBinode_t\fP* task::fd[\fBTASK_MAX_FD\fP]"
 
 .PP
-Definition at line 105 of file task\&.h\&.
+Definition at line 107 of file task\&.h\&.
 .SS "gid_t task::gid"
 
 .PP
-Definition at line 101 of file task\&.h\&.
+Definition at line 103 of file task\&.h\&.
 .SS "struct { \&.\&.\&. }   task::image"
 
 .SS "\fBuint32_t\fP task::length"
 
 .PP
-Definition at line 110 of file task\&.h\&.
+Definition at line 112 of file task\&.h\&.
+.SS "pid_t task::owner"
+
+.PP
+Definition at line 98 of file task\&.h\&.
 .SS "struct \fBtask\fP* task::parent"
 
 .PP
-Definition at line 126 of file task\&.h\&.
+Definition at line 128 of file task\&.h\&.
 .SS "pid_t task::pid"
 
 .PP
@@ -151,19 +158,19 @@ Definition at line 91 of file task\&.h\&.
 .SS "\fBuint32_t\fP task::priority"
 
 .PP
-Definition at line 121 of file task\&.h\&.
+Definition at line 123 of file task\&.h\&.
 .SS "\fBuint32_t\fP task::ptr"
 
 .PP
-Definition at line 109 of file task\&.h\&.
+Definition at line 111 of file task\&.h\&.
 .SS "void(* task::signal_handler)(int)"
 
 .PP
-Definition at line 113 of file task\&.h\&.
+Definition at line 115 of file task\&.h\&.
 .SS "int task::signal_sig"
 
 .PP
-Definition at line 114 of file task\&.h\&.
+Definition at line 116 of file task\&.h\&.
 .SS "\fBuint32_t\fP task::stack"
 
 .PP
@@ -171,15 +178,15 @@ Definition at line 95 of file task\&.h\&.
 .SS "\fBuint32_t\fP task::state"
 
 .PP
-Definition at line 120 of file task\&.h\&.
+Definition at line 122 of file task\&.h\&.
 .SS "uid_t task::uid"
 
 .PP
-Definition at line 100 of file task\&.h\&.
+Definition at line 102 of file task\&.h\&.
 .SS "\fBuint32_t\fP task::vaddr"
 
 .PP
-Definition at line 108 of file task\&.h\&.
+Definition at line 110 of file task\&.h\&.
 
 .SH "Author"
 .PP 

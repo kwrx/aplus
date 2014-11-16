@@ -13,5 +13,5 @@ var searchData=
   ['optpath_5flba_5fmsb',['optpath_lba_msb',['../structiso9660__pvd.html#a55faa8733a116936c6360e7ae6f3b20a',1,'iso9660_pvd::optpath_lba_msb()'],['../iso9660_8h.html#ab2a2664b9d342350a49a56ada9321bad',1,'optpath_lba_msb():&#160;iso9660.h']]],
   ['osize',['osize',['../structtty.html#a94aa6d24908c6976459d187842f1428b',1,'tty']]],
   ['output',['output',['../structtty.html#a2a619877d6ee5bb7caa115a931f98e2c',1,'tty']]],
-  ['owner',['owner',['../structpthread__mutex.html#a3d3ee80fcc9a148717677554d05d9d4a',1,'pthread_mutex::owner()'],['../structpthread__rwlock.html#a7918a35d8e929df9c7f1fd9f12e9efcf',1,'pthread_rwlock::owner()']]]
+  ['owner',['owner',['../structtask.html#a34a5abdae35b067ec6cde7fc81a43598',1,'task::owner()'],['../structpthread__mutex.html#a3d3ee80fcc9a148717677554d05d9d4a',1,'pthread_mutex::owner()'],['../structpthread__barrier.html#a8ec820115bfcd6be50432579aac440fa',1,'pthread_barrier::owner()'],['../structpthread__rwlock.html#a7918a35d8e929df9c7f1fd9f12e9efcf',1,'pthread_rwlock::owner()']]]
 ];

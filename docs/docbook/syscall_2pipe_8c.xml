@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="syscall_2pipe_8c">
+    <title>pipe.c File Reference</title>
+    <programlisting>#include &lt;aplus.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/syscall.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;unistd.h&gt;</programlisting>
+    <programlisting>#include &lt;fcntl.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &lt;sys/stat.h&gt;</programlisting>
+    <programlisting>#include &lt;dirent.h&gt;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="syscall_2pipe_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="syscall_2pipe_8c_1a73d217d7e665e552f8511f5f4d44a06d">sys_pipe</link> (
+int fd)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para> <link linkend="syscall_2pipe_8c_1a0bd500744bcdc8b9d447a0d5bfefa9a1">SYSCALL</link> (
+<link linkend="syscall_2pipe_8c_1a73d217d7e665e552f8511f5f4d44a06d">sys_pipe</link> , 30 )</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/src/syscall/pipe.c</para>
+    </simplesect>
+</section>

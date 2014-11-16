@@ -6,56 +6,56 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2288">
+      <node id="2493">
         <label>stdint.h</label>
       </node>
-      <node id="2295">
+      <node id="2500">
         <label>errno.h</label>
       </node>
-      <node id="2294">
+      <node id="2499">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2295" relation="include">
+        <childnode refid="2500" relation="include">
         </childnode>
-        <childnode refid="2288" relation="include">
+        <childnode refid="2493" relation="include">
         </childnode>
-        <childnode refid="2289" relation="include">
+        <childnode refid="2494" relation="include">
         </childnode>
       </node>
-      <node id="2289">
+      <node id="2494">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2288" relation="include">
+        <childnode refid="2493" relation="include">
         </childnode>
-        <childnode refid="2290" relation="include">
+        <childnode refid="2495" relation="include">
         </childnode>
-        <childnode refid="2291" relation="include">
+        <childnode refid="2496" relation="include">
         </childnode>
-        <childnode refid="2292" relation="include">
+        <childnode refid="2497" relation="include">
         </childnode>
-        <childnode refid="2293" relation="include">
+        <childnode refid="2498" relation="include">
         </childnode>
       </node>
-      <node id="2290">
+      <node id="2495">
         <label>sys/types.h</label>
       </node>
-      <node id="2287">
+      <node id="2492">
         <label>usr/src/libpthread/src/pthread_cancel.c</label>
         <link refid="pthread_cancel.c"/>
-        <childnode refid="2288" relation="include">
+        <childnode refid="2493" relation="include">
         </childnode>
-        <childnode refid="2289" relation="include">
+        <childnode refid="2494" relation="include">
         </childnode>
-        <childnode refid="2294" relation="include">
+        <childnode refid="2499" relation="include">
         </childnode>
       </node>
-      <node id="2293">
+      <node id="2498">
         <label>unistd.h</label>
       </node>
-      <node id="2291">
+      <node id="2496">
         <label>sys/time.h</label>
       </node>
-      <node id="2292">
+      <node id="2497">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -157,13 +157,13 @@
 <codeline lineno="11"><highlight class="normal"></highlight></codeline>
 <codeline lineno="12" refid="pthread__cancel_8c_1a2a6fc36ee68f574473a99923d45e9bdd" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__cancel_8c_1a2a6fc36ee68f574473a99923d45e9bdd" kindref="member">pthread_setcancelstate</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>state,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*oldstate)<sp/>{</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
-<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="15"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="16"><highlight class="normal"></highlight></codeline>
 <codeline lineno="17"><highlight class="normal"></highlight></codeline>
 <codeline lineno="18" refid="pthread__cancel_8c_1a440eefe8962f370346a3cbb73f69d5bf" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__cancel_8c_1a440eefe8962f370346a3cbb73f69d5bf" kindref="member">pthread_setcanceltype</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="iso9660_8h_1a6def72cbab7e986d0ac5dc7291e1394a" kindref="member">type</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*oldtype)<sp/>{</highlight></codeline>
 <codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="21"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="22"><highlight class="normal"></highlight></codeline>
 <codeline lineno="23" refid="pthread__cancel_8c_1aaf4677eb9e1341cd553be1c32fd738a9" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pthread__cancel_8c_1aaf4677eb9e1341cd553be1c32fd738a9" kindref="member">pthread_testcancel</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>

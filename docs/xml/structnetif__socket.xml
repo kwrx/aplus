@@ -8,7 +8,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="73">
+      <node id="82">
         <label>netif_socket</label>
         <link refid="structnetif__socket"/>
       </node>

@@ -1,4 +1,4 @@
-.TH "src/include/grub.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/grub.h" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -72,7 +72,6 @@ src/include/grub.h \-
 .ti -1c
 .RI "struct \fBvesaModeInfo_t\fP \fB__attribute__\fP ((packed)) vesaModeInfo"
 .br
-.RI "\fIAlloc memory from Kernel Heap\&. \fP"
 .in -1c
 .SS "Variables"
 
@@ -237,20 +236,6 @@ Definition at line 105 of file grub\&.h\&.
 .SS "struct \fBvesaModeInfo_t\fP __attribute__ ((packed))"
 
 .PP
-Alloc memory from Kernel Heap\&. 
-.PP
-\fBParameters:\fP
-.RS 4
-\fIsize\fP Size of data to alloc\&. 
-.RE
-.PP
-\fBReturns:\fP
-.RS 4
-Virtual Address of data\&. 
-.RE
-.PP
-
-.PP
 Definition at line 44 of file desc\&.c\&.
 .PP
 .nf
@@ -308,7 +293,7 @@ Definition at line 150 of file grub\&.h\&.
 .SS "unsigned int magic"
 
 .PP
-Definition at line 42 of file mm\&.c\&.
+Definition at line 54 of file mm\&.c\&.
 .SS "\fBBootInfo\fP* mbd"
 
 .SS "unsigned char memory_model"

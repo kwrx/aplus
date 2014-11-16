@@ -8,63 +8,63 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2466">
+      <node id="2672">
         <label>stdint.h</label>
       </node>
-      <node id="2474">
+      <node id="2680">
         <label>errno.h</label>
       </node>
-      <node id="2473">
+      <node id="2679">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2474" relation="include">
+        <childnode refid="2680" relation="include">
         </childnode>
-        <childnode refid="2466" relation="include">
+        <childnode refid="2672" relation="include">
         </childnode>
-        <childnode refid="2469" relation="include">
+        <childnode refid="2675" relation="include">
         </childnode>
       </node>
-      <node id="2469">
+      <node id="2675">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2466" relation="include">
+        <childnode refid="2672" relation="include">
         </childnode>
-        <childnode refid="2470" relation="include">
+        <childnode refid="2676" relation="include">
         </childnode>
-        <childnode refid="2471" relation="include">
+        <childnode refid="2677" relation="include">
         </childnode>
-        <childnode refid="2467" relation="include">
+        <childnode refid="2673" relation="include">
         </childnode>
-        <childnode refid="2472" relation="include">
+        <childnode refid="2678" relation="include">
         </childnode>
       </node>
-      <node id="2470">
+      <node id="2676">
         <label>sys/types.h</label>
       </node>
-      <node id="2472">
+      <node id="2678">
         <label>unistd.h</label>
       </node>
-      <node id="2465">
+      <node id="2671">
         <label>usr/src/libpthread/src/pthread_rwlockattr.c</label>
         <link refid="pthread_rwlockattr.c"/>
-        <childnode refid="2466" relation="include">
+        <childnode refid="2672" relation="include">
         </childnode>
-        <childnode refid="2467" relation="include">
+        <childnode refid="2673" relation="include">
         </childnode>
-        <childnode refid="2468" relation="include">
+        <childnode refid="2674" relation="include">
         </childnode>
-        <childnode refid="2469" relation="include">
+        <childnode refid="2675" relation="include">
         </childnode>
-        <childnode refid="2473" relation="include">
+        <childnode refid="2679" relation="include">
         </childnode>
       </node>
-      <node id="2468">
+      <node id="2674">
         <label>time.h</label>
       </node>
-      <node id="2471">
+      <node id="2677">
         <label>sys/time.h</label>
       </node>
-      <node id="2467">
+      <node id="2673">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -86,7 +86,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" bodystart="9" bodyend="17"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="128">pthread_rwlockattr::pshared</references>
+        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="129">pthread_rwlockattr::pshared</references>
       </memberdef>
       <memberdef kind="function" id="pthread__rwlockattr_8c_1a86023a246ada8805f46a78699a0bfedb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
@@ -105,7 +105,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" line="19" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" bodystart="19" bodyend="27"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="128">pthread_rwlockattr::pshared</references>
+        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="129">pthread_rwlockattr::pshared</references>
       </memberdef>
       <memberdef kind="function" id="pthread__rwlockattr_8c_1a1e00480a4c42cfedbe0a03a625bac88c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
@@ -128,7 +128,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" line="29" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" bodystart="29" bodyend="42"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="128">pthread_rwlockattr::pshared</references>
+        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="129">pthread_rwlockattr::pshared</references>
       </memberdef>
       <memberdef kind="function" id="pthread__rwlockattr_8c_1a2500f1bbe3350f7e1492422959c67f70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
@@ -151,7 +151,7 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" line="44" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_rwlockattr.c" bodystart="44" bodyend="52"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="128">pthread_rwlockattr::pshared</references>
+        <references refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" compoundref="pthread_8h" startline="129">pthread_rwlockattr::pshared</references>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -170,7 +170,7 @@
 <codeline lineno="9" refid="pthread__rwlockattr_8c_1a92e0b4a2c51bc98a312dd8173386173b" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlockattr_8c_1a92e0b4a2c51bc98a312dd8173386173b" kindref="member">pthread_rwlockattr_init</ref>(<ref refid="structpthread__rwlockattr" kindref="compound">pthread_rwlockattr_t</ref><sp/>*<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(attr<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"></highlight></codeline>
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" kindref="member">pshared</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -180,7 +180,7 @@
 <codeline lineno="19" refid="pthread__rwlockattr_8c_1a86023a246ada8805f46a78699a0bfedb" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlockattr_8c_1a86023a246ada8805f46a78699a0bfedb" kindref="member">pthread_rwlockattr_destroy</ref>(<ref refid="structpthread__rwlockattr" kindref="compound">pthread_rwlockattr_t</ref><sp/>*<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(attr<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="24"><highlight class="normal"></highlight></codeline>
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" kindref="member">pshared</ref><sp/>=<sp/>0;</highlight></codeline>
@@ -190,12 +190,12 @@
 <codeline lineno="29" refid="pthread__rwlockattr_8c_1a1e00480a4c42cfedbe0a03a625bac88c" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlockattr_8c_1a1e00480a4c42cfedbe0a03a625bac88c" kindref="member">pthread_rwlockattr_getpshared</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__rwlockattr" kindref="compound">pthread_rwlockattr_t</ref><sp/>*<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>*pshared)<sp/>{</highlight></codeline>
 <codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(attr<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="34"><highlight class="normal"></highlight></codeline>
 <codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(pshared<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"></highlight></codeline>
 <codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>*pshared<sp/>=<sp/>attr-&gt;<ref refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" kindref="member">pshared</ref>;</highlight></codeline>
@@ -205,7 +205,7 @@
 <codeline lineno="44" refid="pthread__rwlockattr_8c_1a2500f1bbe3350f7e1492422959c67f70" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__rwlockattr_8c_1a2500f1bbe3350f7e1492422959c67f70" kindref="member">pthread_rwlockattr_setpshared</ref>(<ref refid="structpthread__rwlockattr" kindref="compound">pthread_rwlockattr_t</ref><sp/>*<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pshared)<sp/>{</highlight></codeline>
 <codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(attr<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="49"><highlight class="normal"></highlight></codeline>
 <codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>attr-&gt;<ref refid="structpthread__rwlockattr_1a8a113eba0407c92f6302fada4c4d7419" kindref="member">pshared</ref><sp/>=<sp/>pshared;</highlight></codeline>

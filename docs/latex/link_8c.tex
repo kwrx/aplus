@@ -34,17 +34,13 @@ Definition at line 14 of file link.\+c.
 
 
 
-References errno, and kprintf().
+References sys\+\_\+symlink().
 
 
 \begin{DoxyCode}
 14                                          \{
-15     \textcolor{comment}{/* TODO */}
-16     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_link: TODO"});
-17 
-18     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
-19     \textcolor{keywordflow}{return} -1;
-20 \}
+15     \textcolor{keywordflow}{return} \hyperlink{symlink_8c_aca4e437a3e65d900c99763ccd3032c1f}{sys\_symlink}(filename, link);
+16 \}
 \end{DoxyCode}
 \hypertarget{link_8c_a2a5ed27d231d89b18ac7541c742b3d18}{\index{link.\+c@{link.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!link.\+c@{link.\+c}}

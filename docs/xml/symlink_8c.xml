@@ -12,141 +12,141 @@
     <includes local="no">sys/stat.h</includes>
     <includes refid="dirent_8h" local="no">dirent.h</includes>
     <incdepgraph>
-      <node id="1802">
+      <node id="1895">
         <label>sys/stat.h</label>
       </node>
-      <node id="1794">
+      <node id="1887">
         <label>stdarg.h</label>
       </node>
-      <node id="1797">
+      <node id="1890">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1792" relation="include">
+        <childnode refid="1885" relation="include">
         </childnode>
-        <childnode refid="1798" relation="include">
+        <childnode refid="1891" relation="include">
         </childnode>
-        <childnode refid="1793" relation="include">
+        <childnode refid="1886" relation="include">
         </childnode>
-        <childnode refid="1795" relation="include">
+        <childnode refid="1888" relation="include">
         </childnode>
-        <childnode refid="1800" relation="include">
+        <childnode refid="1893" relation="include">
         </childnode>
       </node>
-      <node id="1801">
+      <node id="1894">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1793" relation="include">
+        <childnode refid="1886" relation="include">
         </childnode>
-        <childnode refid="1799" relation="include">
+        <childnode refid="1892" relation="include">
         </childnode>
-        <childnode refid="1800" relation="include">
+        <childnode refid="1893" relation="include">
         </childnode>
-        <childnode refid="1802" relation="include">
+        <childnode refid="1895" relation="include">
         </childnode>
-        <childnode refid="1803" relation="include">
+        <childnode refid="1896" relation="include">
         </childnode>
       </node>
-      <node id="1793">
+      <node id="1886">
         <label>stdint.h</label>
       </node>
-      <node id="1796">
+      <node id="1889">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1792" relation="include">
+        <childnode refid="1885" relation="include">
         </childnode>
-        <childnode refid="1797" relation="include">
+        <childnode refid="1890" relation="include">
         </childnode>
-        <childnode refid="1793" relation="include">
+        <childnode refid="1886" relation="include">
         </childnode>
       </node>
-      <node id="1807">
+      <node id="1900">
         <label>setjmp.h</label>
       </node>
-      <node id="1791">
+      <node id="1884">
         <label>src/syscall/symlink.c</label>
         <link refid="symlink.c"/>
-        <childnode refid="1792" relation="include">
+        <childnode refid="1885" relation="include">
         </childnode>
-        <childnode refid="1796" relation="include">
+        <childnode refid="1889" relation="include">
         </childnode>
-        <childnode refid="1801" relation="include">
+        <childnode refid="1894" relation="include">
         </childnode>
-        <childnode refid="1805" relation="include">
+        <childnode refid="1898" relation="include">
         </childnode>
-        <childnode refid="1804" relation="include">
+        <childnode refid="1897" relation="include">
         </childnode>
-        <childnode refid="1808" relation="include">
+        <childnode refid="1901" relation="include">
         </childnode>
-        <childnode refid="1809" relation="include">
+        <childnode refid="1902" relation="include">
         </childnode>
-        <childnode refid="1802" relation="include">
+        <childnode refid="1895" relation="include">
         </childnode>
-        <childnode refid="1803" relation="include">
+        <childnode refid="1896" relation="include">
         </childnode>
       </node>
-      <node id="1805">
+      <node id="1898">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1793" relation="include">
+        <childnode refid="1886" relation="include">
         </childnode>
-        <childnode refid="1792" relation="include">
+        <childnode refid="1885" relation="include">
         </childnode>
-        <childnode refid="1801" relation="include">
+        <childnode refid="1894" relation="include">
         </childnode>
-        <childnode refid="1806" relation="include">
+        <childnode refid="1899" relation="include">
         </childnode>
-        <childnode refid="1800" relation="include">
+        <childnode refid="1893" relation="include">
         </childnode>
-        <childnode refid="1807" relation="include">
+        <childnode refid="1900" relation="include">
         </childnode>
       </node>
-      <node id="1809">
+      <node id="1902">
         <label>errno.h</label>
       </node>
-      <node id="1808">
+      <node id="1901">
         <label>fcntl.h</label>
       </node>
-      <node id="1799">
+      <node id="1892">
         <label>stddef.h</label>
       </node>
-      <node id="1798">
+      <node id="1891">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1799" relation="include">
+        <childnode refid="1892" relation="include">
         </childnode>
-        <childnode refid="1793" relation="include">
+        <childnode refid="1886" relation="include">
         </childnode>
-        <childnode refid="1800" relation="include">
+        <childnode refid="1893" relation="include">
         </childnode>
       </node>
-      <node id="1792">
+      <node id="1885">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1793" relation="include">
+        <childnode refid="1886" relation="include">
         </childnode>
-        <childnode refid="1794" relation="include">
+        <childnode refid="1887" relation="include">
         </childnode>
-        <childnode refid="1795" relation="include">
+        <childnode refid="1888" relation="include">
         </childnode>
       </node>
-      <node id="1800">
+      <node id="1893">
         <label>sys/types.h</label>
       </node>
-      <node id="1795">
+      <node id="1888">
         <label>string.h</label>
       </node>
-      <node id="1804">
+      <node id="1897">
         <label>unistd.h</label>
       </node>
-      <node id="1806">
+      <node id="1899">
         <label>signal.h</label>
       </node>
-      <node id="1803">
+      <node id="1896">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1804" relation="include">
+        <childnode refid="1897" relation="include">
         </childnode>
-        <childnode refid="1800" relation="include">
+        <childnode refid="1893" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -162,7 +162,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/symlink.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/symlink.c" line="13" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -187,11 +187,11 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/syscall/symlink.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/syscall/symlink.c" bodystart="16" bodyend="43"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
-        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="105">task::fd</references>
+        <references refid="structtask_1afeeb6bafaefe505e6a730dd4e0be5a1a" compoundref="task_8h" startline="107">task::fd</references>
         <references refid="structinode_1a3533c53c5391601c66b3ae0f389c0843" compoundref="fs_8h" startline="72">inode::link</references>
         <references refid="structinode_1a1daedc820c86b5af32f0a137419f7a8f" compoundref="fs_8h" startline="43">inode::nlink</references>
-        <references refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" compoundref="close_8c" startline="26" endline="37">sys_close</references>
-        <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="127" endline="154">sys_open</references>
+        <references refid="close_8c_1a9d94cbe3ac3c59ac54d9e884a024d9c5" compoundref="close_8c" startline="26" endline="42">sys_close</references>
+        <references refid="open_8c_1ab7835c4352479c7a3d7af78c138e81c1" compoundref="open_8c" startline="127" endline="140">sys_open</references>
       </memberdef>
       <memberdef kind="function" id="symlink_8c_1ab054efed13f519c688c08dd61c876a32" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>

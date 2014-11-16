@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_rwlockattr.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_rwlockattr.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -46,7 +46,7 @@ References errno, and pthread_rwlockattr::pshared\&.
 19                                                                   {
 20     if(attr == NULL) {
 21         errno = EINVAL;
-22         return 1;
+22         return -1;
 23     }
 24 
 25     attr->pshared = 0;
@@ -64,12 +64,12 @@ References errno, and pthread_rwlockattr::pshared\&.
 29                                                                                          {
 30     if(attr == NULL) {
 31         errno = EINVAL;
-32         return 1;
+32         return -1;
 33     }
 34 
 35     if(pshared == NULL) {
 36         errno = EINVAL;
-37         return 1;
+37         return -1;
 38     }
 39 
 40     *pshared = attr->pshared;
@@ -87,7 +87,7 @@ References errno, and pthread_rwlockattr::pshared\&.
 9                                                                {
 10     if(attr == NULL) {
 11         errno = EINVAL;
-12         return 1;
+12         return -1;
 13     }
 14 
 15     attr->pshared = 0;
@@ -105,7 +105,7 @@ References errno, and pthread_rwlockattr::pshared\&.
 44                                                                                   {
 45     if(attr == NULL) {
 46         errno = EINVAL;
-47         return 1;
+47         return -1;
 48     }
 49 
 50     attr->pshared = pshared;

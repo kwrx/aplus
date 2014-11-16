@@ -1,4 +1,4 @@
-.TH "src/syscall/getpid.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/getpid.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,6 +9,8 @@ src/syscall/getpid.c \-
 \fC#include <aplus\&.h>\fP
 .br
 \fC#include <aplus/syscall\&.h>\fP
+.br
+\fC#include <aplus/task\&.h>\fP
 .br
 \fC#include <unistd\&.h>\fP
 .br
@@ -28,25 +30,68 @@ src/syscall/getpid.c \-
 .RI "pid_t \fBsys_getpid\fP ()"
 .br
 .ti -1c
+.RI "pid_t \fBsys_getppid\fP ()"
+.br
+.ti -1c
 .RI "\fBSYSCALL\fP (\fBsys_getpid\fP, 5)"
 .br
+.ti -1c
+.RI "\fBSYSCALL\fP (\fBsys_getppid\fP, 32)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.RI "\fICurrent task address\&. \fP"
 .in -1c
 .SH "Function Documentation"
 .PP 
 .SS "pid_t sys_getpid ()"
 
 .PP
-Definition at line 13 of file getpid\&.c\&.
+Definition at line 16 of file getpid\&.c\&.
 .PP
 References schedule_getpid()\&.
 .PP
 .nf
-13                    {
-14     return schedule_getpid();
-15 }
+16                    {
+17     return schedule_getpid();
+18 }
+.fi
+.SS "pid_t sys_getppid ()"
+
+.PP
+Definition at line 20 of file getpid\&.c\&.
+.PP
+References errno, task::parent, and task::pid\&.
+.PP
+.nf
+20                     {
+21     if(!current_task)
+22         return -1;
+23 
+24     if(current_task->parent)
+25         return current_task->parent->pid;
+26 
+27     errno = ESRCH;
+28     return -1;
+29 }
 .fi
 .SS "SYSCALL (\fBsys_getpid\fP, 5)"
 
+.SS "SYSCALL (\fBsys_getppid\fP, 32)"
+
+.SH "Variable Documentation"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Current task address\&. 
+.PP
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

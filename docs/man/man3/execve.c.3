@@ -1,4 +1,4 @@
-.TH "src/syscall/execve.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/execve.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -23,6 +23,9 @@ src/syscall/execve.c \-
 
 .in +1c
 .ti -1c
+.RI "static char ** \fB__args_dup\fP (char **a)"
+.br
+.ti -1c
 .RI "int \fBsys_execve\fP (char *filename, char **argv, char **\fBenviron\fP)"
 .br
 .RI "\fIExecutes the program pointed to by filename\&.
@@ -44,6 +47,32 @@ src/syscall/execve.c \-
 .in -1c
 .SH "Function Documentation"
 .PP 
+.SS "static char** __args_dup (char **a)\fC [static]\fP"
+
+.PP
+Definition at line 13 of file execve\&.c\&.
+.PP
+References kmalloc()\&.
+.PP
+.nf
+13                                    {
+14     if(!a)
+15         return NULL;
+16 
+17     char** p = (char**) kmalloc(255 * sizeof(char*));
+18     memset(p, 0, 255 * sizeof(char*));
+19 
+20     int i = 0;
+21     while(a[i]) {
+22         p[i] = (char*) kmalloc(strlen(a[i]) + 1);
+23         strcpy(p[i], a[i]);
+24 
+25         i++;
+26     }
+27 
+28     return p;
+29 }
+.fi
 .SS "int sys_execve (char *filename, char **argv, char **environ)"
 
 .PP
@@ -76,62 +105,65 @@ Does not return on success, and the text, data, bss, and stack of the calling pr
 .PP
 
 .PP
-Definition at line 27 of file execve\&.c\&.
+Definition at line 47 of file execve\&.c\&.
 .PP
-References task::argv, elf32_load(), environ, task::envp, errno, task::exe, task::fd, task::image, kfree(), kmalloc(), task::length, task::ptr, size, sys_close(), sys_lseek(), sys_open(), sys_read(), and task::vaddr\&.
+References __args_dup(), task::argv, elf32_load(), environ, task::envp, errno, task::exe, task::fd, task::image, kfree(), kmalloc(), task::length, task::ptr, size, sys_close(), sys_lseek(), sys_open(), sys_read(), and task::vaddr\&.
 .PP
 .nf
-27                                                             {
-28     
-29     int fd = sys_open(filename, O_RDONLY, 0644);
-30     if(fd < 0) {
-31         errno = ENOENT;
-32         return -1;
-33     }
-34 
-35     sys_lseek(fd, 0, SEEK_END);
-36     size_t size = sys_lseek(fd, 0, SEEK_CUR);
-37     sys_lseek(fd, 0, SEEK_SET);
-38 
-39     void* image = kmalloc(size);
-40     if(!image) {
-41         sys_close(fd);
-42 
-43         errno = ENOMEM;
-44         return -1;
-45     }
-46 
-47     if(sys_read(fd, image, size) < size) {
-48         sys_close(fd);
-49         kfree(image);
-50         
-51         errno = EIO;
+47                                                             {
+48     
+49     int fd = sys_open(filename, O_RDONLY, 0644);
+50     if(fd < 0) {
+51         errno = ENOENT;
 52         return -1;
 53     }
 54 
-55     
-56     int vaddr, vsize;
-57     void (*entry) () = (void (*) ()) elf32_load(image, &vaddr, &vsize);
-58     if(entry) {
-59 
-60         current_task->exe = current_task->fd[fd];
-61         current_task->argv = argv;
-62         current_task->envp = environ;
-63 
-64         current_task->image\&.ptr = image;
-65         current_task->image\&.vaddr = vaddr;
-66         current_task->image\&.length = vsize;
-67 
+55     sys_lseek(fd, 0, SEEK_END);
+56     size_t size = sys_lseek(fd, 0, SEEK_CUR);
+57     sys_lseek(fd, 0, SEEK_SET);
+58 
+59     void* image = kmalloc(size);
+60     if(!image) {
+61         sys_close(fd);
+62 
+63         errno = ENOMEM;
+64         return -1;
+65     }
+66 
+67     if(sys_read(fd, image, size) < size) {
 68         sys_close(fd);
-69 
-70 
-71         entry(); /* never return */
-72     }
-73 
-74     sys_close(fd);
-75     kfree(image);
-76     return -1;
-77 }
+69         kfree(image);
+70         
+71         errno = EIO;
+72         return -1;
+73     }
+74 
+75     
+76     int vaddr, vsize;
+77     void (*entry) () = (void (*) ()) elf32_load(image, &vaddr, &vsize);
+78     if(entry) {
+79 
+80         argv = __args_dup(argv);
+81         environ = __args_dup(environ);
+82 
+83         current_task->exe = current_task->fd[fd];
+84         current_task->argv = argv;
+85         current_task->envp = environ;
+86 
+87         current_task->image\&.ptr = (int) image;
+88         current_task->image\&.vaddr = vaddr;
+89         current_task->image\&.length = vsize;
+90 
+91         sys_close(fd);
+92 
+93 
+94         entry(); /* never return */
+95     }
+96 
+97     sys_close(fd);
+98     kfree(image);
+99     return -1;
+100 }
 .fi
 .SS "SYSCALL (\fBsys_execve\fP, 2)"
 
@@ -142,7 +174,7 @@ References task::argv, elf32_load(), environ, task::envp, errno, task::exe, task
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

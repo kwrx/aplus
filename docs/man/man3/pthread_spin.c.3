@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_spin.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_spin.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,7 +45,7 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 19                                                           {
 20     if(!lock) {
 21         errno = EINVAL;
-22         return 1;
+22         return -1;
 23     }
 24 
 25     lock->interlock = 0;
@@ -65,7 +65,7 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 7                                                                     {
 8     if(!lock) {
 9         errno = EINVAL;
-10         return 1;
+10         return -1;
 11     }
 12 
 13     lock->interlock = 0;
@@ -85,13 +85,13 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 31                                                        {
 32     if(!lock) {
 33         errno = EINVAL;
-34         return 1;
+34         return -1;
 35     }
 36 
 37     if(pthread_mutex_lock(&lock->mutex) == 0)
 38         lock->interlock = 1;
 39     else
-40         return 1; /* errno already setted */
+40         return -1; /* errno already setted */
 41 
 42     return 0;
 43 }
@@ -107,13 +107,13 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 45                                                           {
 46     if(!lock) {
 47         errno = EINVAL;
-48         return 1;
+48         return -1;
 49     }
 50 
 51     if(pthread_mutex_trylock(&lock->mutex) == 0)
 52         lock->interlock = 1;
 53     else
-54         return 1; /* errno already setted */
+54         return -1; /* errno already setted */
 55 
 56     return 0;
 57 }
@@ -129,13 +129,13 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 59                                                          {
 60     if(!lock) {
 61         errno = EINVAL;
-62         return 1;
+62         return -1;
 63     }
 64 
 65     if(pthread_mutex_unlock(&lock->mutex) == 0)
 66         lock->interlock = 0;
 67     else
-68         return 1; /* errno already setted */
+68         return -1; /* errno already setted */
 69     
 70     return 0;
 71 }

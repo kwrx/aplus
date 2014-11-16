@@ -439,7 +439,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="57">
+      <node id="66">
         <label>iso9660_pvd</label>
         <link refid="structiso9660__pvd"/>
       </node>

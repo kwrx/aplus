@@ -30,21 +30,35 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="123" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="123" bodyend="-1"/>
       </memberdef>
+      <memberdef kind="variable" id="structpthread__barrier_1a8ec820115bfcd6be50432579aac440fa" prot="public" static="no" mutable="no">
+        <type><ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref></type>
+        <definition>pthread_t pthread_barrier::owner</definition>
+        <argsstring></argsstring>
+        <name>owner</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="124" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="124" bodyend="-1"/>
+      </memberdef>
       </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="85">
+      <node id="94">
         <label>pthread_barrier</label>
         <link refid="structpthread__barrier"/>
       </node>
     </collaborationgraph>
-    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="121" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="121" bodyend="124"/>
+    <location file="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" line="121" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/include/pthread.h" bodystart="121" bodyend="125"/>
     <listofallmembers>
       <member refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" prot="public" virt="non-virtual"><scope>pthread_barrier</scope><name>curr_height</name></member>
       <member refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" prot="public" virt="non-virtual"><scope>pthread_barrier</scope><name>init_height</name></member>
+      <member refid="structpthread__barrier_1a8ec820115bfcd6be50432579aac440fa" prot="public" virt="non-virtual"><scope>pthread_barrier</scope><name>owner</name></member>
     </listofallmembers>
   </compounddef>
 </doxygen>

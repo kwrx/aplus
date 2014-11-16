@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="bitmap_8h" kind="file">
+    <compoundname>bitmap.h</compoundname>
+    <includes refid="atk_8h" local="no">atk.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includedby refid="bitmap_8c" local="no">usr/src/libatk/src/bitmap.c</includedby>
+    <includedby refid="gfx_8c" local="no">usr/src/libatk/src/gfx.c</includedby>
+    <incdepgraph>
+      <node id="2109">
+        <label>stdint.h</label>
+      </node>
+      <node id="2108">
+        <label>atk/widget.h</label>
+        <link refid="widget_8h"/>
+        <childnode refid="2107" relation="include">
+        </childnode>
+      </node>
+      <node id="2106">
+        <label>usr/src/libatk/src/include/atk/bitmap.h</label>
+        <link refid="bitmap.h"/>
+        <childnode refid="2107" relation="include">
+        </childnode>
+        <childnode refid="2109" relation="include">
+        </childnode>
+      </node>
+      <node id="2107">
+        <label>atk.h</label>
+        <link refid="atk_8h"/>
+        <childnode refid="2108" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2110">
+        <label>usr/src/libatk/src/include/atk/bitmap.h</label>
+        <link refid="bitmap.h"/>
+        <childnode refid="2111" relation="include">
+        </childnode>
+        <childnode refid="2112" relation="include">
+        </childnode>
+      </node>
+      <node id="2111">
+        <label>usr/src/libatk/src/bitmap.c</label>
+        <link refid="bitmap_8c"/>
+      </node>
+      <node id="2112">
+        <label>usr/src/libatk/src/gfx.c</label>
+        <link refid="gfx_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structatk__bitmap__lockdata" prot="public">atk_bitmap_lockdata</innerclass>
+    <innerclass refid="structatk__bitmap" prot="public">atk_bitmap</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="bitmap_8h_1a7d7f7389fcd5d1b409321fa979179ce4" prot="public" static="no">
+        <name>ATK_BITMAP_LOCK_RDONLY</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="27" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78" prot="public" static="no">
+        <name>ATK_BITMAP_LOCK_RDWR</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="28" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" prot="public" static="no">
+        <type>struct <ref refid="structatk__bitmap" kindref="compound">atk_bitmap</ref></type>
+        <definition>typedef struct atk_bitmap  atk_bitmap_t</definition>
+        <argsstring></argsstring>
+        <name>atk_bitmap_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="23" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_ATK_BITMAP_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_ATK_BITMAP_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="atk_8h" kindref="compound">atk.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="structatk__bitmap__lockdata" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structatk__bitmap__lockdata" kindref="compound">atk_bitmap_lockdata</ref><sp/>{</highlight></codeline>
+<codeline lineno="9" refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" kindref="member">atk_rect_t</ref><sp/><ref refid="structatk__bitmap__lockdata_1a75fc9b9740a38278200e4cbe27b15e44" kindref="member">region</ref>;</highlight></codeline>
+<codeline lineno="10" refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structatk__bitmap__lockdata_1a14548236493d0379a825530a6f512fcc" kindref="member">flags</ref>;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="structatk__bitmap__lockdata_1a08fd0c82f6a26e24d8533cb944d99a83" kindref="member">data</ref>;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="structatk__bitmap" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structatk__bitmap" kindref="compound">atk_bitmap</ref><sp/>{</highlight></codeline>
+<codeline lineno="16" refid="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a644f976397f323e48685f16b0c4fa802" kindref="member">atk_size_t</ref><sp/><ref refid="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="17" refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" kindref="member">stride</ref>;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" kindref="member">buffer</ref>;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="20" refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" kindref="member">lock</ref>;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22" refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structatk__bitmap__lockdata" kindref="compound">atk_bitmap_lockdata</ref><sp/><ref refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" kindref="member">__lockdata</ref>;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">}<sp/><ref refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kindref="member">atk_bitmap_t</ref>;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27" refid="bitmap_8h_1a7d7f7389fcd5d1b409321fa979179ce4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_BITMAP_LOCK_RDONLY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ATK_BITMAP_LOCK_RDWR<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h"/>
+  </compounddef>
+</doxygen>

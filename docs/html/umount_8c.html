@@ -194,7 +194,7 @@ Variables</h2></td></tr>
 
 <p>Definition at line <a class="el" href="umount_8c_source.html#l00020">20</a> of file <a class="el" href="umount_8c_source.html">umount.c</a>.</p>
 
-<p>References <a class="el" href="fs_8h_source.html#l00065">inode::chown</a>, <a class="el" href="fs_8h_source.html#l00061">inode::creat</a>, <a class="el" href="fs_8h_source.html#l00040">inode::dev</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00105">task::fd</a>, <a class="el" href="fs_8h_source.html#l00060">inode::finddir</a>, <a class="el" href="fs_8h_source.html#l00066">inode::flush</a>, <a class="el" href="fs_8h_source.html#l00042">inode::mode</a>, <a class="el" href="fs_8h_source.html#l00059">inode::readdir</a>, <a class="el" href="close_8c_source.html#l00026">sys_close()</a>, <a class="el" href="open_8c_source.html#l00127">sys_open()</a>, and <a class="el" href="fs_8h_source.html#l00064">inode::unlink</a>.</p>
+<p>References <a class="el" href="fs_8h_source.html#l00065">inode::chown</a>, <a class="el" href="fs_8h_source.html#l00061">inode::creat</a>, <a class="el" href="fs_8h_source.html#l00040">inode::dev</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="task_8h_source.html#l00107">task::fd</a>, <a class="el" href="fs_8h_source.html#l00060">inode::finddir</a>, <a class="el" href="fs_8h_source.html#l00066">inode::flush</a>, <a class="el" href="fs_8h_source.html#l00042">inode::mode</a>, <a class="el" href="fs_8h_source.html#l00059">inode::readdir</a>, <a class="el" href="close_8c_source.html#l00026">sys_close()</a>, <a class="el" href="open_8c_source.html#l00127">sys_open()</a>, and <a class="el" href="fs_8h_source.html#l00064">inode::unlink</a>.</p>
 <div class="fragment"><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                                             {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">if</span>(!file) {</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
@@ -229,13 +229,13 @@ Variables</h2></td></tr>
 <div class="ttc" id="structinode_html_a127a2eb030df332fa64a81188731ad6b"><div class="ttname"><a href="structinode.html#a127a2eb030df332fa64a81188731ad6b">inode::dev</a></div><div class="ttdeci">dev_t dev</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00040">fs.h:40</a></div></div>
 <div class="ttc" id="structinode_html_adf65bac80736631b8000d3d34e953aaa"><div class="ttname"><a href="structinode.html#adf65bac80736631b8000d3d34e953aaa">inode::unlink</a></div><div class="ttdeci">int(* unlink)(struct inode *inode, char *name)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00064">fs.h:64</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
-<div class="ttc" id="umount_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="umount_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00035">sched.c:35</a></div></div>
+<div class="ttc" id="umount_8c_html_a4743b3673a8794b8e7bd0b6c91a63cd5"><div class="ttname"><a href="umount_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</a></div><div class="ttdeci">task_t * current_task</div><div class="ttdoc">Current task address. </div><div class="ttdef"><b>Definition:</b> <a href="src_2sched_8c_source.html#l00037">sched.c:37</a></div></div>
 <div class="ttc" id="structinode_html_a4902d9f6a1d7bd79c6f1bb73d83ce8e3"><div class="ttname"><a href="structinode.html#a4902d9f6a1d7bd79c6f1bb73d83ce8e3">inode::mode</a></div><div class="ttdeci">mode_t mode</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00042">fs.h:42</a></div></div>
 <div class="ttc" id="structinode_html_ab6c5e2d912fdbd506086e53185cd370d"><div class="ttname"><a href="structinode.html#ab6c5e2d912fdbd506086e53185cd370d">inode::finddir</a></div><div class="ttdeci">struct inode *(* finddir)(struct inode *inode, char *name)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00060">fs.h:60</a></div></div>
 <div class="ttc" id="structinode_html_a0a54c11571f19f23322f3e6ad3ecb113"><div class="ttname"><a href="structinode.html#a0a54c11571f19f23322f3e6ad3ecb113">inode::readdir</a></div><div class="ttdeci">struct dirent *(* readdir)(struct inode *inode, int index)</div><div class="ttdef"><b>Definition:</b> <a href="fs_8h_source.html#l00059">fs.h:59</a></div></div>
 <div class="ttc" id="open_8c_html_ab7835c4352479c7a3d7af78c138e81c1"><div class="ttname"><a href="open_8c.html#ab7835c4352479c7a3d7af78c138e81c1">sys_open</a></div><div class="ttdeci">int sys_open(char *filename, int flags, mode_t mode)</div><div class="ttdef"><b>Definition:</b> <a href="open_8c_source.html#l00127">open.c:127</a></div></div>
 <div class="ttc" id="close_8c_html_a9d94cbe3ac3c59ac54d9e884a024d9c5"><div class="ttname"><a href="close_8c.html#a9d94cbe3ac3c59ac54d9e884a024d9c5">sys_close</a></div><div class="ttdeci">int sys_close(int fd)</div><div class="ttdoc">This function shall deallocate the file descriptor indicated by fildes. To deallocate means to make t...</div><div class="ttdef"><b>Definition:</b> <a href="close_8c_source.html#l00026">close.c:26</a></div></div>
-<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00105">task.h:105</a></div></div>
+<div class="ttc" id="structtask_html_afeeb6bafaefe505e6a730dd4e0be5a1a"><div class="ttname"><a href="structtask.html#afeeb6bafaefe505e6a730dd4e0be5a1a">task::fd</a></div><div class="ttdeci">inode_t * fd[TASK_MAX_FD]</div><div class="ttdef"><b>Definition:</b> <a href="task_8h_source.html#l00107">task.h:107</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -304,7 +304,7 @@ Variables</h2></td></tr>
 
 <p>Current task address. </p>
 
-<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00035">35</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
+<p>Definition at line <a class="el" href="src_2sched_8c_source.html#l00037">37</a> of file <a class="el" href="src_2sched_8c_source.html">sched.c</a>.</p>
 
 </div>
 </div>
@@ -314,7 +314,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_fb5e736bd9710abb23af1a33618053fb.html">syscall</a></li><li class="navelem"><a class="el" href="umount_8c.html">umount.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:10:00 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

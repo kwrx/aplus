@@ -4,12 +4,18 @@
     <compoundname>mm.h</compoundname>
     <includes local="no">stdint.h</includes>
     <includes refid="task_8h" local="no">aplus/task.h</includes>
-    <includedby refid="desc_8c" local="no">src/arch/desc.c</includedby>
-    <includedby refid="pci_8c" local="no">src/arch/pci.c</includedby>
-    <includedby refid="task_8c" local="no">src/arch/task.c</includedby>
+    <includedby refid="desc_8c" local="no">src/arch/i386/desc.c</includedby>
+    <includedby refid="pci_8c" local="no">src/arch/i386/pci.c</includedby>
+    <includedby refid="task_8c" local="no">src/arch/i386/task.c</includedby>
     <includedby refid="bufio_8c" local="no">src/bufio.c</includedby>
     <includedby refid="exec_8c" local="no">src/exec.c</includedby>
-    <includedby refid="pipe_8c" local="no">src/fs/pipe.c</includedby>
+    <includedby refid="devfs_8c" local="no">src/fs/devfs.c</includedby>
+    <includedby refid="fs_8c" local="no">src/fs/fs.c</includedby>
+    <includedby refid="iso9660_8c" local="no">src/fs/iso9660/iso9660.c</includedby>
+    <includedby refid="iso9660__finddir_8c" local="no">src/fs/iso9660/iso9660_finddir.c</includedby>
+    <includedby refid="iso9660__read_8c" local="no">src/fs/iso9660/iso9660_read.c</includedby>
+    <includedby refid="iso9660__readdir_8c" local="no">src/fs/iso9660/iso9660_readdir.c</includedby>
+    <includedby refid="fs_2pipe_8c" local="no">src/fs/pipe.c</includedby>
     <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
     <includedby refid="heap_8c" local="no">src/mm/heap.c</includedby>
     <includedby refid="kheap_8c" local="no">src/mm/kheap.c</includedby>
@@ -18,186 +24,229 @@
     <includedby refid="loopback_8c" local="no">src/net/loopback/loopback.c</includedby>
     <includedby refid="rtl8139_8c" local="no">src/net/rtl8139/rtl8139.c</includedby>
     <includedby refid="slirp_8c" local="no">src/net/slirp/slirp.c</includedby>
+    <includedby refid="panic_8c" local="no">src/panic.c</includedby>
     <includedby refid="src_2sched_8c" local="no">src/sched.c</includedby>
     <incdepgraph>
-      <node id="662">
+      <node id="710">
         <label>sys/stat.h</label>
       </node>
-      <node id="657">
+      <node id="705">
         <label>stdarg.h</label>
       </node>
-      <node id="659">
+      <node id="707">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="654" relation="include">
+        <childnode refid="702" relation="include">
         </childnode>
-        <childnode refid="660" relation="include">
+        <childnode refid="708" relation="include">
         </childnode>
-        <childnode refid="661" relation="include">
+        <childnode refid="709" relation="include">
         </childnode>
-        <childnode refid="662" relation="include">
+        <childnode refid="710" relation="include">
         </childnode>
-        <childnode refid="663" relation="include">
+        <childnode refid="711" relation="include">
         </childnode>
       </node>
-      <node id="654">
+      <node id="702">
         <label>stdint.h</label>
       </node>
-      <node id="666">
+      <node id="714">
         <label>setjmp.h</label>
       </node>
-      <node id="655">
+      <node id="703">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="654" relation="include">
+        <childnode refid="702" relation="include">
         </childnode>
-        <childnode refid="656" relation="include">
+        <childnode refid="704" relation="include">
         </childnode>
-        <childnode refid="659" relation="include">
+        <childnode refid="707" relation="include">
         </childnode>
-        <childnode refid="665" relation="include">
+        <childnode refid="713" relation="include">
         </childnode>
-        <childnode refid="661" relation="include">
+        <childnode refid="709" relation="include">
         </childnode>
-        <childnode refid="666" relation="include">
+        <childnode refid="714" relation="include">
         </childnode>
       </node>
-      <node id="660">
+      <node id="708">
         <label>stddef.h</label>
       </node>
-      <node id="656">
+      <node id="704">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="654" relation="include">
+        <childnode refid="702" relation="include">
         </childnode>
-        <childnode refid="657" relation="include">
+        <childnode refid="705" relation="include">
         </childnode>
-        <childnode refid="658" relation="include">
+        <childnode refid="706" relation="include">
         </childnode>
       </node>
-      <node id="661">
+      <node id="709">
         <label>sys/types.h</label>
       </node>
-      <node id="658">
+      <node id="706">
         <label>string.h</label>
       </node>
-      <node id="664">
+      <node id="712">
         <label>unistd.h</label>
       </node>
-      <node id="665">
+      <node id="713">
         <label>signal.h</label>
       </node>
-      <node id="653">
+      <node id="701">
         <label>src/include/aplus/mm.h</label>
         <link refid="mm.h"/>
-        <childnode refid="654" relation="include">
+        <childnode refid="702" relation="include">
         </childnode>
-        <childnode refid="655" relation="include">
+        <childnode refid="703" relation="include">
         </childnode>
       </node>
-      <node id="663">
+      <node id="711">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="664" relation="include">
+        <childnode refid="712" relation="include">
         </childnode>
-        <childnode refid="661" relation="include">
+        <childnode refid="709" relation="include">
         </childnode>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="674">
+      <node id="728">
         <label>src/main.c</label>
         <link refid="src_2main_8c"/>
       </node>
-      <node id="675">
+      <node id="729">
         <label>src/mm/heap.c</label>
         <link refid="heap_8c"/>
       </node>
-      <node id="680">
+      <node id="734">
         <label>src/net/rtl8139/rtl8139.c</label>
         <link refid="rtl8139_8c"/>
       </node>
-      <node id="668">
-        <label>src/arch/desc.c</label>
-        <link refid="desc_8c"/>
-      </node>
-      <node id="678">
+      <node id="732">
         <label>src/mm/paging.c</label>
         <link refid="paging_8c"/>
       </node>
-      <node id="681">
+      <node id="735">
         <label>src/net/slirp/slirp.c</label>
         <link refid="slirp_8c"/>
       </node>
-      <node id="679">
+      <node id="718">
+        <label>src/arch/i386/task.c</label>
+        <link refid="task_8c"/>
+      </node>
+      <node id="733">
         <label>src/net/loopback/loopback.c</label>
         <link refid="loopback_8c"/>
       </node>
-      <node id="669">
-        <label>src/arch/pci.c</label>
-        <link refid="pci_8c"/>
+      <node id="716">
+        <label>src/arch/i386/desc.c</label>
+        <link refid="desc_8c"/>
       </node>
-      <node id="670">
-        <label>src/arch/task.c</label>
-        <link refid="task_8c"/>
+      <node id="736">
+        <label>src/panic.c</label>
+        <link refid="panic_8c"/>
       </node>
-      <node id="673">
+      <node id="727">
         <label>src/fs/pipe.c</label>
-        <link refid="pipe_8c"/>
+        <link refid="fs_2pipe_8c"/>
       </node>
-      <node id="676">
+      <node id="730">
         <label>src/mm/kheap.c</label>
         <link refid="kheap_8c"/>
       </node>
-      <node id="672">
+      <node id="720">
         <label>src/exec.c</label>
         <link refid="exec_8c"/>
       </node>
-      <node id="671">
+      <node id="725">
+        <label>src/fs/iso9660/iso9660_read.c</label>
+        <link refid="iso9660__read_8c"/>
+      </node>
+      <node id="721">
+        <label>src/fs/devfs.c</label>
+        <link refid="devfs_8c"/>
+      </node>
+      <node id="719">
         <label>src/bufio.c</label>
         <link refid="bufio_8c"/>
       </node>
-      <node id="667">
+      <node id="717">
+        <label>src/arch/i386/pci.c</label>
+        <link refid="pci_8c"/>
+      </node>
+      <node id="726">
+        <label>src/fs/iso9660/iso9660_readdir.c</label>
+        <link refid="iso9660__readdir_8c"/>
+      </node>
+      <node id="715">
         <label>src/include/aplus/mm.h</label>
         <link refid="mm.h"/>
-        <childnode refid="668" relation="include">
+        <childnode refid="716" relation="include">
         </childnode>
-        <childnode refid="669" relation="include">
+        <childnode refid="717" relation="include">
         </childnode>
-        <childnode refid="670" relation="include">
+        <childnode refid="718" relation="include">
         </childnode>
-        <childnode refid="671" relation="include">
+        <childnode refid="719" relation="include">
         </childnode>
-        <childnode refid="672" relation="include">
+        <childnode refid="720" relation="include">
         </childnode>
-        <childnode refid="673" relation="include">
+        <childnode refid="721" relation="include">
         </childnode>
-        <childnode refid="674" relation="include">
+        <childnode refid="722" relation="include">
         </childnode>
-        <childnode refid="675" relation="include">
+        <childnode refid="723" relation="include">
         </childnode>
-        <childnode refid="676" relation="include">
+        <childnode refid="724" relation="include">
         </childnode>
-        <childnode refid="677" relation="include">
+        <childnode refid="725" relation="include">
         </childnode>
-        <childnode refid="678" relation="include">
+        <childnode refid="726" relation="include">
         </childnode>
-        <childnode refid="679" relation="include">
+        <childnode refid="727" relation="include">
         </childnode>
-        <childnode refid="680" relation="include">
+        <childnode refid="728" relation="include">
         </childnode>
-        <childnode refid="681" relation="include">
+        <childnode refid="729" relation="include">
         </childnode>
-        <childnode refid="682" relation="include">
+        <childnode refid="730" relation="include">
+        </childnode>
+        <childnode refid="731" relation="include">
+        </childnode>
+        <childnode refid="732" relation="include">
+        </childnode>
+        <childnode refid="733" relation="include">
+        </childnode>
+        <childnode refid="734" relation="include">
+        </childnode>
+        <childnode refid="735" relation="include">
+        </childnode>
+        <childnode refid="736" relation="include">
+        </childnode>
+        <childnode refid="737" relation="include">
         </childnode>
       </node>
-      <node id="682">
+      <node id="723">
+        <label>src/fs/iso9660/iso9660.c</label>
+        <link refid="iso9660_8c"/>
+      </node>
+      <node id="737">
         <label>src/sched.c</label>
         <link refid="src_2sched_8c"/>
       </node>
-      <node id="677">
+      <node id="731">
         <label>src/mm/mm.c</label>
         <link refid="mm_8c"/>
+      </node>
+      <node id="722">
+        <label>src/fs/fs.c</label>
+        <link refid="fs_8c"/>
+      </node>
+      <node id="724">
+        <label>src/fs/iso9660/iso9660_finddir.c</label>
+        <link refid="iso9660__finddir_8c"/>
       </node>
     </invincdepgraph>
     <innerclass refid="structheap" prot="public">heap</innerclass>
@@ -211,7 +260,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="38" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="38" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="41" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="41" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1afbad6879737307d726ae456844b05320" prot="public" static="no">
         <name>MM_VSIZE</name>
@@ -222,7 +271,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="39" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="39" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="42" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a1b54983be7272f850a1eef88a78db6f8" prot="public" static="no">
         <name>MM_LBASE</name>
@@ -233,7 +282,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="41" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="41" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="44" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="44" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a4b54a4ab7755c6c4dfebb91b75d9d956" prot="public" static="no">
         <name>MM_LSIZE</name>
@@ -244,7 +293,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="42" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="42" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="45" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="45" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" prot="public" static="no">
         <name>MM_UBASE</name>
@@ -255,7 +304,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="44" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="44" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="47" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="47" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a600b21bbb74401132349a1325dadfdbe" prot="public" static="no">
         <name>MM_USIZE</name>
@@ -266,7 +315,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="45" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="45" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="48" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a9da196e1c5da9da3454cbcfa6d56c96e" prot="public" static="no">
         <name>VMM_FLAGS_PRESENT</name>
@@ -277,7 +326,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="49" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="49" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="52" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="52" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a39ac3cb44ab9c4695214a59a3d199557" prot="public" static="no">
         <name>VMM_FLAGS_RDWR</name>
@@ -288,7 +337,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="50" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="50" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="53" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="53" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a4f995b267ef97c4638c27370badecb21" prot="public" static="no">
         <name>VMM_FLAGS_USER</name>
@@ -299,7 +348,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="51" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="51" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="54" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="54" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" prot="public" static="no">
         <name>VMM_FLAGS_DEFAULT</name>
@@ -310,7 +359,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="52" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="52" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="55" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="55" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a17f8a27ab3548000488ca27d70785240" prot="public" static="no">
         <name>VMM_MAX_MEMORY</name>
@@ -321,7 +370,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="54" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="54" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="57" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="57" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" prot="public" static="no">
         <name>BLKSIZE</name>
@@ -332,7 +381,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="57" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="57" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="60" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="60" bodyend="-1"/>
       </memberdef>
       <memberdef kind="define" id="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" prot="public" static="no">
         <name>BLKMAGIC</name>
@@ -343,7 +392,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="58" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="58" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="61" column="9" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="61" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="typedef">
@@ -358,7 +407,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="69" column="1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="72" column="1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -377,8 +426,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="71" bodyend="76"/>
-        <references refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" compoundref="mm_8h" startline="38">MM_VBASE</references>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="74" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="74" bodyend="79"/>
+        <references refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" compoundref="mm_8h" startline="41">MM_VBASE</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       <memberdef kind="function" id="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
@@ -396,8 +445,8 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="78" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="78" bodyend="83"/>
-        <references refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" compoundref="mm_8h" startline="38">MM_VBASE</references>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="81" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="81" bodyend="86"/>
+        <references refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" compoundref="mm_8h" startline="41">MM_VBASE</references>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       <memberdef kind="function" id="mm_8h_1acb964323e95c799eb3896dce8c61d329" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
@@ -415,7 +464,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="85" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="85" bodyend="87"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="88" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="88" bodyend="90"/>
         <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
       </memberdef>
       <memberdef kind="function" id="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
@@ -432,7 +481,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="90" column="1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="98" column="1"/>
       </memberdef>
       <memberdef kind="function" id="mm_8h_1acee1960bdb3a19cb495341ec725cafef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -457,12 +506,11 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="91" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="79" bodyend="94"/>
-        <references refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" compoundref="mm_8h" startline="58">BLKMAGIC</references>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="102" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="151" bodyend="173"/>
+        <references refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" compoundref="mm_8h" startline="61">BLKMAGIC</references>
         <references refid="heap_8c_1ad3d08e75d8a9f8e12e405536dccdd851" compoundref="heap_8c" startline="36" endline="40">hfree</references>
-        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="85" endline="87">mm_align</references>
-        <references refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" compoundref="mm_8h" startline="71" endline="76">mm_paddr</references>
-        <references refid="mm_8c_1a854352f53b148adc24983a58a1866d66" compoundref="mm_8c" startline="43">size</references>
+        <references refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" compoundref="mm_8h" startline="88" endline="90">mm_align</references>
+        <references refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" compoundref="mm_8h" startline="74" endline="79">mm_paddr</references>
       </memberdef>
       <memberdef kind="function" id="mm_8h_1a2e2878c4e9b542b6e68d7ceccfdcfc86" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void *</type>
@@ -499,9 +547,9 @@
 </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="92" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="103" bodyend="127"/>
-        <references refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" compoundref="mm_8h" startline="58">BLKMAGIC</references>
-        <references refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" compoundref="mm_8c" startline="79" endline="94">kfree</references>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="103" column="1" bodyfile="/opt/prj/aPlus/src/mm/mm.c" bodystart="182" bodyend="208"/>
+        <references refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" compoundref="mm_8h" startline="61">BLKMAGIC</references>
+        <references refid="mm_8c_1a069f85a5001d71bc44d8be6532a4e432" compoundref="mm_8c" startline="151" endline="173">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
       </memberdef>
       </sectiondef>
@@ -537,73 +585,84 @@
 <codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="task_8h" kindref="compound">aplus/task.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"></highlight></codeline>
-<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
-<codeline lineno="30"><highlight class="comment"><sp/>*<sp/>0x00000000<sp/>-<sp/>0x00800000:<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Reserved</highlight></codeline>
-<codeline lineno="31"><highlight class="comment"><sp/>*<sp/>0x00800000<sp/>-<sp/>0x00A00000:<sp/><sp/><sp/><sp/><sp/>Not<sp/>available</highlight></codeline>
-<codeline lineno="32"><highlight class="comment"><sp/>*<sp/>0x00A00000<sp/>-<sp/>0x40000000:<sp/><sp/><sp/><sp/><sp/>User<sp/>executable</highlight></codeline>
-<codeline lineno="33"><highlight class="comment"><sp/>*<sp/>0x40000000<sp/>-<sp/>0xE0000000:<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Heap</highlight></codeline>
-<codeline lineno="34"><highlight class="comment"><sp/>*<sp/>0xE0000000<sp/>-<sp/>0xF0000000;<sp/><sp/><sp/><sp/><sp/>Linear<sp/>Frame<sp/>Buffer<sp/>(User)</highlight></codeline>
-<codeline lineno="35"><highlight class="comment"><sp/>*<sp/>0xF0000000<sp/>-<sp/>0xFFFFFFFF;<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Heap</highlight></codeline>
-<codeline lineno="36"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="37"><highlight class="normal"></highlight></codeline>
-<codeline lineno="38" refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_VBASE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x40000000</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="39" refid="mm_8h_1afbad6879737307d726ae456844b05320" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_VSIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(0xFFFFFFFF<sp/>-<sp/>MM_VBASE)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>DEBUG</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CHUNKS_CHECKING</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/>*<sp/>0x00000000<sp/>-<sp/>0x00800000:<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Reserved</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/>*<sp/>0x00800000<sp/>-<sp/>0x00A00000:<sp/><sp/><sp/><sp/><sp/>Not<sp/>available</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/>*<sp/>0x00A00000<sp/>-<sp/>0x40000000:<sp/><sp/><sp/><sp/><sp/>User<sp/>executable</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*<sp/>0x40000000<sp/>-<sp/>0xE0000000:<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Heap</highlight></codeline>
+<codeline lineno="37"><highlight class="comment"><sp/>*<sp/>0xE0000000<sp/>-<sp/>0xF0000000;<sp/><sp/><sp/><sp/><sp/>Linear<sp/>Frame<sp/>Buffer<sp/>(User)</highlight></codeline>
+<codeline lineno="38"><highlight class="comment"><sp/>*<sp/>0xF0000000<sp/>-<sp/>0xFFFFFFFF;<sp/><sp/><sp/><sp/><sp/>Kernel<sp/>Heap</highlight></codeline>
+<codeline lineno="39"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="40"><highlight class="normal"></highlight></codeline>
-<codeline lineno="41" refid="mm_8h_1a1b54983be7272f850a1eef88a78db6f8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_LBASE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000000</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="42" refid="mm_8h_1a4b54a4ab7755c6c4dfebb91b75d9d956" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_LSIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00800000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41" refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_VBASE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x40000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42" refid="mm_8h_1afbad6879737307d726ae456844b05320" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_VSIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(0xFFFFFFFF<sp/>-<sp/>MM_VBASE)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="43"><highlight class="normal"></highlight></codeline>
-<codeline lineno="44" refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_UBASE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00A00000</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="45" refid="mm_8h_1a600b21bbb74401132349a1325dadfdbe" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_USIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(MM_VBASE<sp/>-<sp/>MM_UBASE)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44" refid="mm_8h_1a1b54983be7272f850a1eef88a78db6f8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_LBASE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="mm_8h_1a4b54a4ab7755c6c4dfebb91b75d9d956" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_LSIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00800000</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="46"><highlight class="normal"></highlight></codeline>
-<codeline lineno="47"><highlight class="normal"></highlight></codeline>
-<codeline lineno="48"><highlight class="normal"></highlight></codeline>
-<codeline lineno="49" refid="mm_8h_1a9da196e1c5da9da3454cbcfa6d56c96e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_PRESENT<sp/><sp/><sp/>0x01</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="50" refid="mm_8h_1a39ac3cb44ab9c4695214a59a3d199557" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_RDWR<sp/><sp/><sp/><sp/><sp/><sp/>0x02</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="51" refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_USER<sp/><sp/><sp/><sp/><sp/><sp/>0x04</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="52" refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_DEFAULT<sp/><sp/><sp/>(VMM_FLAGS_PRESENT<sp/>|<sp/>VMM_FLAGS_RDWR)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="53"><highlight class="normal"></highlight></codeline>
-<codeline lineno="54" refid="mm_8h_1a17f8a27ab3548000488ca27d70785240" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_MAX_MEMORY<sp/><sp/><sp/><sp/><sp/><sp/>(0xFFFFFFFF<sp/>-<sp/>MM_VBASE)</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="55"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="mm_8h_1a61d9fae3cb95715f92171f153d9ff018" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_UBASE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00A00000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48" refid="mm_8h_1a600b21bbb74401132349a1325dadfdbe" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MM_USIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(MM_VBASE<sp/>-<sp/>MM_UBASE)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52" refid="mm_8h_1a9da196e1c5da9da3454cbcfa6d56c96e" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_PRESENT<sp/><sp/><sp/>0x01</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53" refid="mm_8h_1a39ac3cb44ab9c4695214a59a3d199557" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_RDWR<sp/><sp/><sp/><sp/><sp/><sp/>0x02</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54" refid="mm_8h_1a4f995b267ef97c4638c27370badecb21" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_USER<sp/><sp/><sp/><sp/><sp/><sp/>0x04</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55" refid="mm_8h_1ab630ce3a249eeb08c1242b082f4e50ce" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_FLAGS_DEFAULT<sp/><sp/><sp/>(VMM_FLAGS_PRESENT<sp/>|<sp/>VMM_FLAGS_RDWR)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="56"><highlight class="normal"></highlight></codeline>
-<codeline lineno="57" refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BLKSIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x1000</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="58" refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BLKMAGIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x1234</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57" refid="mm_8h_1a17f8a27ab3548000488ca27d70785240" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VMM_MAX_MEMORY<sp/><sp/><sp/><sp/><sp/><sp/>(0xFFFFFFFF<sp/>-<sp/>MM_VBASE)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
 <codeline lineno="59"><highlight class="normal"></highlight></codeline>
-<codeline lineno="60"><highlight class="normal"></highlight></codeline>
-<codeline lineno="61"><highlight class="normal"></highlight></codeline>
-<codeline lineno="62" refid="structheap" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structheap" kindref="compound">heap</ref><sp/>{</highlight></codeline>
-<codeline lineno="63" refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*<sp/><ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>;</highlight></codeline>
-<codeline lineno="64" refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>;</highlight></codeline>
-<codeline lineno="65" refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref>;</highlight></codeline>
-<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="67" refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>(*alloc)<sp/>(</highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structheap" kindref="compound">heap</ref>*,<sp/>size_t);</highlight></codeline>
-<codeline lineno="68" refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" kindref="member">free</ref>)<sp/>(</highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structheap" kindref="compound">heap</ref>*,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*,<sp/>size_t);</highlight></codeline>
-<codeline lineno="69"><highlight class="normal">}<sp/><ref refid="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300" kindref="member">heap_t</ref>;</highlight></codeline>
-<codeline lineno="70"><highlight class="normal"></highlight></codeline>
-<codeline lineno="71" refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" kindref="member">mm_paddr</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr)<sp/>{</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>vaddr<sp/>&gt;<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>)</highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vaddr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>vaddr<sp/>-<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>);</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>vaddr;</highlight></codeline>
-<codeline lineno="76"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="77"><highlight class="normal"></highlight></codeline>
-<codeline lineno="78" refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" kindref="member">mm_vaddr</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>paddr)<sp/>{</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>paddr<sp/>&lt;<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>)</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>paddr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>paddr<sp/>+<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>);</highlight></codeline>
-<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>paddr;</highlight></codeline>
-<codeline lineno="83"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"></highlight></codeline>
-<codeline lineno="85" refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" kindref="member">mm_align</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr)<sp/>{</highlight></codeline>
-<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>vaddr<sp/>&amp;<sp/>~0xFFF);</highlight></codeline>
-<codeline lineno="87"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="88"><highlight class="normal"></highlight></codeline>
-<codeline lineno="89"><highlight class="normal"></highlight></codeline>
-<codeline lineno="90"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="91"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*);</highlight></codeline>
-<codeline lineno="92"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a2e2878c4e9b542b6e68d7ceccfdcfc86" kindref="member">krealloc</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="60" refid="mm_8h_1ac4551bbc9efabf8378f35498f80b4679" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BLKSIZE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x1000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61" refid="mm_8h_1a24ee1b93dcb4a2d30a151491245967ec" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BLKMAGIC<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x1234</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65" refid="structheap" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structheap" kindref="compound">heap</ref><sp/>{</highlight></codeline>
+<codeline lineno="66" refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*<sp/><ref refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" kindref="member">bitmap</ref>;</highlight></codeline>
+<codeline lineno="67" refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structheap_1a486fb531d24b9ee5f17b7ffe96689705" kindref="member">size</ref>;</highlight></codeline>
+<codeline lineno="68" refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" kindref="member">used</ref>;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="70" refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>(*alloc)<sp/>(</highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structheap" kindref="compound">heap</ref>*,<sp/>size_t);</highlight></codeline>
+<codeline lineno="71" refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structheap_1ae53b14c50bbb9daab4346cd0873bda02" kindref="member">free</ref>)<sp/>(</highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structheap" kindref="compound">heap</ref>*,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*,<sp/>size_t);</highlight></codeline>
+<codeline lineno="72"><highlight class="normal">}<sp/><ref refid="mm_8h_1ae3e9e8008e406505a3c57e4b7f17d300" kindref="member">heap_t</ref>;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74" refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a3fbcc6a4fcc3452357e636f90b925554" kindref="member">mm_paddr</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr)<sp/>{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>vaddr<sp/>&gt;<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>)</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>vaddr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>vaddr<sp/>-<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>vaddr;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81" refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a5e7e52cb995fbefca3ca2a7bab8556e6" kindref="member">mm_vaddr</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>paddr)<sp/>{</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>paddr<sp/>&lt;<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>)</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>paddr<sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>paddr<sp/>+<sp/><ref refid="mm_8h_1ae874c5b00fa6293a175b988b647afcc9" kindref="member">MM_VBASE</ref>);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>paddr;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88" refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1acb964323e95c799eb3896dce8c61d329" kindref="member">mm_align</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>vaddr)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>vaddr<sp/>&amp;<sp/>~0xFFF);</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
 <codeline lineno="93"><highlight class="normal"></highlight></codeline>
-<codeline lineno="94"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>CHUNKS_CHECKING</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>__kmalloc(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>kmalloc(s)<sp/><sp/>__kmalloc(s,<sp/>__FILE__,<sp/>__LINE__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c" kindref="member">kmalloc</ref>(</highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" kindref="member">kfree</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="mm_8h_1a2e2878c4e9b542b6e68d7ceccfdcfc86" kindref="member">krealloc</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/src/include/aplus/mm.h"/>
   </compounddef>

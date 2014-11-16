@@ -11,61 +11,61 @@
     <includes local="no">errno.h</includes>
     <includes refid="config_8h" local="yes">config.h</includes>
     <incdepgraph>
-      <node id="1728">
+      <node id="1821">
         <label>stdlib.h</label>
       </node>
-      <node id="1730">
+      <node id="1823">
         <label>errno.h</label>
       </node>
-      <node id="1731">
+      <node id="1824">
         <label>config.h</label>
         <link refid="config_8h"/>
-        <childnode refid="1725" relation="include">
+        <childnode refid="1818" relation="include">
         </childnode>
-        <childnode refid="1724" relation="include">
+        <childnode refid="1817" relation="include">
         </childnode>
       </node>
-      <node id="1726">
+      <node id="1819">
         <label>fcntl.h</label>
       </node>
-      <node id="1725">
+      <node id="1818">
         <label>sys/types.h</label>
       </node>
-      <node id="1729">
+      <node id="1822">
         <label>string.h</label>
       </node>
-      <node id="1724">
+      <node id="1817">
         <label>unistd.h</label>
       </node>
-      <node id="1722">
+      <node id="1815">
         <label>usr/src/libposix/src/readdir.c</label>
         <link refid="usr/src/libposix/src/readdir.c"/>
-        <childnode refid="1723" relation="include">
+        <childnode refid="1816" relation="include">
         </childnode>
-        <childnode refid="1724" relation="include">
+        <childnode refid="1817" relation="include">
         </childnode>
-        <childnode refid="1726" relation="include">
+        <childnode refid="1819" relation="include">
         </childnode>
-        <childnode refid="1727" relation="include">
+        <childnode refid="1820" relation="include">
         </childnode>
-        <childnode refid="1728" relation="include">
+        <childnode refid="1821" relation="include">
         </childnode>
-        <childnode refid="1729" relation="include">
+        <childnode refid="1822" relation="include">
         </childnode>
-        <childnode refid="1730" relation="include">
+        <childnode refid="1823" relation="include">
         </childnode>
-        <childnode refid="1731" relation="include">
+        <childnode refid="1824" relation="include">
         </childnode>
       </node>
-      <node id="1723">
+      <node id="1816">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1724" relation="include">
+        <childnode refid="1817" relation="include">
         </childnode>
-        <childnode refid="1725" relation="include">
+        <childnode refid="1818" relation="include">
         </childnode>
       </node>
-      <node id="1727">
+      <node id="1820">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -108,7 +108,7 @@
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight></codeline>
 <codeline lineno="14"><highlight class="normal"></highlight></codeline>
-<codeline lineno="15" refid="usr_2src_2libposix_2src_2readdir_8c_1aa7687571d2af8efd5153874ae6e678d9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structdirent" kindref="compound">dirent</ref>*<sp/><ref refid="usr_2src_2libposix_2src_2readdir_8c_1aa7687571d2af8efd5153874ae6e678d9" kindref="member">readdir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="15" refid="usr_2src_2libposix_2src_2readdir_8c_1aa7687571d2af8efd5153874ae6e678d9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structdirent" kindref="compound">dirent</ref>*<sp/><ref refid="usr_2src_2libposix_2src_2readdir_8c_1aa7687571d2af8efd5153874ae6e678d9" kindref="member">readdir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/>d)<sp/>{</highlight></codeline>
 <codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
 <codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>

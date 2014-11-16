@@ -23,7 +23,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="87">
+      <node id="96">
         <label>pthread_barrierattr</label>
         <link refid="structpthread__barrierattr"/>
       </node>

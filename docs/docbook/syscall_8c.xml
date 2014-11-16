@@ -11,7 +11,7 @@
             <para>
                 <itemizedlist>
                     <listitem>
-                            <para>#define <link linkend="syscall_8c_1a7cee1b8da707d135695bc11acee66b63">SYSCALL_DEBUG</link></para>
+                            <para>#define <link linkend="syscall_8c_1aae19ed96e8d4fe9da0d4bb8c5d0a9d6e">NSYSCALLS</link> 1024</para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -55,6 +55,6 @@ regs_t * r)</para>
         </simplesect>
     <simplesect>
         <title>Detailed Description</title>
-    <para>Definition in file /opt/prj/aPlus/src/arch/syscall.c</para>
+    <para>Definition in file /opt/prj/aPlus/src/arch/i386/syscall.c</para>
     </simplesect>
 </section>

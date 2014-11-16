@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="bitmap_8c">
+    <title>bitmap.c File Reference</title>
+    <programlisting>#include &lt;atk.h&gt;</programlisting>
+    <programlisting>#include &lt;atk/bitmap.h&gt;</programlisting>
+    <programlisting>#include &lt;atk/gfx.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;stdlib.h&gt;</programlisting>
+    <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &quot;clrconv.h&quot;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="gfx_8h_1a8c8412155528b364a972c509c5cca18e">atk_gfx_t</link> * <link linkend="bitmap_8c_1ad14b67fdaef2472b7a218076ee8a8295">__gfx</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57">atk_bitmap_t</link> * <link linkend="bitmap_8c_1a6131842322871f3dd968097b582f149a">atk_bitmap_create_for_data</link> (
+<link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> width, <link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> height, void * buffer)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57">atk_bitmap_t</link> * <link linkend="bitmap_8c_1a39e44147dc16a3a97f5178e455301f3b">atk_bitmap_create</link> (
+<link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> width, <link linkend="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505">uint16_t</link> height)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="bitmap_8c_1a0ebc106790ae78b673ddeec287f9a8b6">atk_destroy_bitmap</link> (
+<link linkend="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57">atk_bitmap_t</link> * b)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void * <link linkend="bitmap_8c_1af2d4d028cb46ed7c8c7e2e34a15cede1">atk_bitmap_lockbits</link> (
+<link linkend="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57">atk_bitmap_t</link> * b, <link linkend="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a">atk_rect_t</link> rectangle, int flags)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="bitmap_8c_1abbf711383513c744fe96b307880fb3d8">atk_bitmap_unlockbits</link> (
+<link linkend="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57">atk_bitmap_t</link> * b)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libatk/src/bitmap.c</para>
+    </simplesect>
+</section>

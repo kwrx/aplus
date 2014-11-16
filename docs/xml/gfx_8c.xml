@@ -1,0 +1,527 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="gfx_8c" kind="file">
+    <compoundname>gfx.c</compoundname>
+    <includes refid="atk_8h" local="no">atk.h</includes>
+    <includes refid="gfx_8h" local="no">atk/gfx.h</includes>
+    <includes refid="bitmap_8h" local="no">atk/bitmap.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includes local="no">math.h</includes>
+    <includes local="no">errno.h</includes>
+    <includes refid="clrconv_8h" local="yes">clrconv.h</includes>
+    <incdepgraph>
+      <node id="2090">
+        <label>stdint.h</label>
+      </node>
+      <node id="2088">
+        <label>atk/widget.h</label>
+        <link refid="widget_8h"/>
+        <childnode refid="2087" relation="include">
+        </childnode>
+      </node>
+      <node id="2093">
+        <label>errno.h</label>
+      </node>
+      <node id="2091">
+        <label>atk/bitmap.h</label>
+        <link refid="bitmap_8h"/>
+        <childnode refid="2087" relation="include">
+        </childnode>
+        <childnode refid="2090" relation="include">
+        </childnode>
+      </node>
+      <node id="2089">
+        <label>atk/gfx.h</label>
+        <link refid="gfx_8h"/>
+        <childnode refid="2087" relation="include">
+        </childnode>
+        <childnode refid="2090" relation="include">
+        </childnode>
+      </node>
+      <node id="2087">
+        <label>atk.h</label>
+        <link refid="atk_8h"/>
+        <childnode refid="2088" relation="include">
+        </childnode>
+      </node>
+      <node id="2086">
+        <label>usr/src/libatk/src/gfx.c</label>
+        <link refid="gfx.c"/>
+        <childnode refid="2087" relation="include">
+        </childnode>
+        <childnode refid="2089" relation="include">
+        </childnode>
+        <childnode refid="2091" relation="include">
+        </childnode>
+        <childnode refid="2090" relation="include">
+        </childnode>
+        <childnode refid="2092" relation="include">
+        </childnode>
+        <childnode refid="2093" relation="include">
+        </childnode>
+        <childnode refid="2094" relation="include">
+        </childnode>
+      </node>
+      <node id="2092">
+        <label>math.h</label>
+      </node>
+      <node id="2094">
+        <label>clrconv.h</label>
+        <link refid="clrconv_8h"/>
+        <childnode refid="2087" relation="include">
+        </childnode>
+        <childnode refid="2090" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="gfx_8c_1ad14b67fdaef2472b7a218076ee8a8295" prot="public" static="no" mutable="no">
+        <type><ref refid="gfx_8h_1a8c8412155528b364a972c509c5cca18e" kindref="member">atk_gfx_t</ref> *</type>
+        <definition>atk_gfx_t* __gfx</definition>
+        <argsstring></argsstring>
+        <name>__gfx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="10" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="gfx_8c_1a9b2502bd0ce8f0310181c6e5f942971a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void __gfx_plot_pixel_32</definition>
+        <argsstring>(void *d, atk_color_t color)</argsstring>
+        <name>__gfx_plot_pixel_32</name>
+        <param>
+          <type>void *</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="12" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="12" bodyend="17"/>
+        <references refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" compoundref="clrconv_8h" startline="64" endline="80">__alphablend</references>
+        <references refid="clrconv_8h_1accad078885c0425eb1861291a1769717" compoundref="clrconv_8h" startline="37">ARGB_TO_V4F</references>
+        <references refid="atk_8h_1a170621735809dd7efded8c8517347596" compoundref="atk_8h" startline="29">ATK_COLOR_A</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43" compoundref="clrconv_8h" startline="14">V4F_TO_ARGB</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1a03463c4b1cb7f47ad907238ade0253b9" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void __gfx_plot_pixel_24</definition>
+        <argsstring>(void *d, atk_color_t color)</argsstring>
+        <name>__gfx_plot_pixel_24</name>
+        <param>
+          <type>void *</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="19" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="19" bodyend="24"/>
+        <references refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" compoundref="clrconv_8h" startline="64" endline="80">__alphablend</references>
+        <references refid="atk_8h_1a170621735809dd7efded8c8517347596" compoundref="atk_8h" startline="29">ATK_COLOR_A</references>
+        <references refid="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8" compoundref="clrconv_8h" startline="45">RGB_TO_V4F</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+        <references refid="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4" compoundref="clrconv_8h" startline="22">V4F_TO_RGB</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1a7aaa9f57c899dd3abbc89f333cf033cd" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void __gfx_plot_pixel_16</definition>
+        <argsstring>(void *d, atk_color_t color)</argsstring>
+        <name>__gfx_plot_pixel_16</name>
+        <param>
+          <type>void *</type>
+          <declname>d</declname>
+        </param>
+        <param>
+          <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="26" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="26" bodyend="31"/>
+        <references refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" compoundref="clrconv_8h" startline="64" endline="80">__alphablend</references>
+        <references refid="atk_8h_1a170621735809dd7efded8c8517347596" compoundref="atk_8h" startline="29">ATK_COLOR_A</references>
+        <references refid="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909" compoundref="clrconv_8h" startline="53">R5G6B5_TO_V4F</references>
+        <references refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" compoundref="aplus_8h" startline="102">uint16_t</references>
+        <references refid="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac" compoundref="clrconv_8h" startline="29">V4F_TO_R5G6B5</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1a6fb53066ae07aa5d373749f3cd604667" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref></type>
+        <definition>static atk_color_t __gfx_read_pixel_32</definition>
+        <argsstring>(void *d)</argsstring>
+        <name>__gfx_read_pixel_32</name>
+        <param>
+          <type>void *</type>
+          <declname>d</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="33" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="33" bodyend="37"/>
+        <references refid="clrconv_8h_1accad078885c0425eb1861291a1769717" compoundref="clrconv_8h" startline="37">ARGB_TO_V4F</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1ae7c30dc3d12e86efeeac3d10e2402ecc" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref></type>
+        <definition>static atk_color_t __gfx_read_pixel_24</definition>
+        <argsstring>(void *d)</argsstring>
+        <name>__gfx_read_pixel_24</name>
+        <param>
+          <type>void *</type>
+          <declname>d</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="39" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="39" bodyend="43"/>
+        <references refid="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8" compoundref="clrconv_8h" startline="45">RGB_TO_V4F</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1acf0e69d2f398da36b549cd8700e8ed7a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref></type>
+        <definition>static atk_color_t __gfx_read_pixel_16</definition>
+        <argsstring>(void *d)</argsstring>
+        <name>__gfx_read_pixel_16</name>
+        <param>
+          <type>void *</type>
+          <declname>d</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="45" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="45" bodyend="49"/>
+        <references refid="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909" compoundref="clrconv_8h" startline="53">R5G6B5_TO_V4F</references>
+        <references refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" compoundref="aplus_8h" startline="102">uint16_t</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1ac05b6147f547ac7cf1a6600226eaff0b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="gfx_8h_1a8c8412155528b364a972c509c5cca18e" kindref="member">atk_gfx_t</ref> *</type>
+        <definition>atk_gfx_t* atk_gfx_create</definition>
+        <argsstring>(short width, short height, short bpp, void *buffer)</argsstring>
+        <name>atk_gfx_create</name>
+        <param>
+          <type>short</type>
+          <declname>width</declname>
+        </param>
+        <param>
+          <type>short</type>
+          <declname>height</declname>
+        </param>
+        <param>
+          <type>short</type>
+          <declname>bpp</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buffer</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="53" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="53" bodyend="86"/>
+        <references refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" compoundref="gfx_8h" startline="16">atk_gfx::__get</references>
+        <references refid="gfx_8c_1a7aaa9f57c899dd3abbc89f333cf033cd" compoundref="gfx_8c" startline="26" endline="31">__gfx_plot_pixel_16</references>
+        <references refid="gfx_8c_1a03463c4b1cb7f47ad907238ade0253b9" compoundref="gfx_8c" startline="19" endline="24">__gfx_plot_pixel_24</references>
+        <references refid="gfx_8c_1a9b2502bd0ce8f0310181c6e5f942971a" compoundref="gfx_8c" startline="12" endline="17">__gfx_plot_pixel_32</references>
+        <references refid="gfx_8c_1acf0e69d2f398da36b549cd8700e8ed7a" compoundref="gfx_8c" startline="45" endline="49">__gfx_read_pixel_16</references>
+        <references refid="gfx_8c_1ae7c30dc3d12e86efeeac3d10e2402ecc" compoundref="gfx_8c" startline="39" endline="43">__gfx_read_pixel_24</references>
+        <references refid="gfx_8c_1a6fb53066ae07aa5d373749f3cd604667" compoundref="gfx_8c" startline="33" endline="37">__gfx_read_pixel_32</references>
+        <references refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" compoundref="gfx_8h" startline="15">atk_gfx::__plot</references>
+        <references refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" compoundref="gfx_8h" startline="11">atk_gfx::bpp</references>
+        <references refid="grub_8h_1a29d3773a35b844e2dbb12bb5d895ab50" compoundref="grub_8h" startline="149">bpp</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="structatk__gfx_1a00413765e42e1a347e45401e1a2e95bf" compoundref="gfx_8h" startline="13">atk_gfx::framebuffer</references>
+        <references refid="structatk__gfx_1a5dcdddc358345ad49f4015253f1acbe6" compoundref="gfx_8h" startline="9">atk_gfx::height</references>
+        <references refid="structatk__gfx_1a7f050db1e3d134473b2077ab5275b727" compoundref="gfx_8h" startline="10">atk_gfx::stride</references>
+        <references refid="structatk__gfx_1a8c8d73df98a82572a666824b52b99964" compoundref="gfx_8h" startline="8">atk_gfx::width</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1a0f767522ab60d278c9c47033b8b73ddb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void atk_gfx_set</definition>
+        <argsstring>(atk_gfx_t *gfx)</argsstring>
+        <name>atk_gfx_set</name>
+        <param>
+          <type><ref refid="gfx_8h_1a8c8412155528b364a972c509c5cca18e" kindref="member">atk_gfx_t</ref> *</type>
+          <declname>gfx</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="88" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="88" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1ab7e9db411a46b785c93e3a729737c894" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="gfx_8h_1a8c8412155528b364a972c509c5cca18e" kindref="member">atk_gfx_t</ref> *</type>
+        <definition>atk_gfx_t* atk_gfx_get</definition>
+        <argsstring>()</argsstring>
+        <name>atk_gfx_get</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="92" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="92" bodyend="94"/>
+        <references refid="gfx_8c_1ad14b67fdaef2472b7a218076ee8a8295" compoundref="gfx_8c" startline="10">__gfx</references>
+      </memberdef>
+      <memberdef kind="function" id="gfx_8c_1a553c125db6cad5a8f0176b48a2f66f1d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int atk_gfx_line</definition>
+        <argsstring>(atk_bitmap_t *b, int x0, int y0, int x1, int y1, atk_color_t color)</argsstring>
+        <name>atk_gfx_line</name>
+        <param>
+          <type><ref refid="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57" kindref="member">atk_bitmap_t</ref> *</type>
+          <declname>b</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>x0</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>y0</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>x1</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>y1</declname>
+        </param>
+        <param>
+          <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref></type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" line="98" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/gfx.c" bodystart="98" bodyend="167"/>
+        <references refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" compoundref="gfx_8h" startline="15">atk_gfx::__plot</references>
+        <references refid="clrconv_8h_1a9abc90ae1044063128acfb1505666e49" compoundref="clrconv_8h" startline="83">__SWAP</references>
+        <references refid="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78" compoundref="bitmap_8h" startline="28">ATK_BITMAP_LOCK_RDWR</references>
+        <references refid="bitmap_8c_1af2d4d028cb46ed7c8c7e2e34a15cede1" compoundref="bitmap_8c" startline="68" endline="104">atk_bitmap_lockbits</references>
+        <references refid="bitmap_8c_1abbf711383513c744fe96b307880fb3d8" compoundref="bitmap_8c" startline="106" endline="137">atk_bitmap_unlockbits</references>
+        <references refid="atk_8h_1a170621735809dd7efded8c8517347596" compoundref="atk_8h" startline="29">ATK_COLOR_A</references>
+        <references refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" compoundref="gfx_8h" startline="11">atk_gfx::bpp</references>
+        <references refid="grub_8h_1a29d3773a35b844e2dbb12bb5d895ab50" compoundref="grub_8h" startline="149">bpp</references>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+        <references refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" compoundref="aplus_8h" startline="115">uint32_t</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;<ref refid="atk_8h" kindref="compound">atk.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="gfx_8h" kindref="compound">atk/gfx.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="bitmap_8h" kindref="compound">atk/bitmap.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;math.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="clrconv_8h" kindref="compound">clrconv.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10" refid="gfx_8c_1ad14b67fdaef2472b7a218076ee8a8295" refkind="member"><highlight class="normal"><ref refid="structatk__gfx" kindref="compound">atk_gfx_t</ref>*<sp/><ref refid="gfx_8c_1ad14b67fdaef2472b7a218076ee8a8295" kindref="member">__gfx</ref>;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12" refid="gfx_8c_1a9b2502bd0ce8f0310181c6e5f942971a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="gfx_8c_1a9b2502bd0ce8f0310181c6e5f942971a" kindref="member">__gfx_plot_pixel_32</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>d,<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>color)<sp/>{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>dc<sp/>=<sp/><ref refid="clrconv_8h_1accad078885c0425eb1861291a1769717" kindref="member">ARGB_TO_V4F</ref>((*(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/>d));</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>df<sp/>=<sp/><ref refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" kindref="member">__alphablend</ref>(dc,<sp/>color,<sp/>color[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/>*(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/>d<sp/>=<sp/><ref refid="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43" kindref="member">V4F_TO_ARGB</ref>(df);</highlight></codeline>
+<codeline lineno="17"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="gfx_8c_1a03463c4b1cb7f47ad907238ade0253b9" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="gfx_8c_1a03463c4b1cb7f47ad907238ade0253b9" kindref="member">__gfx_plot_pixel_24</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>d,<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>color)<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>dc<sp/>=<sp/><ref refid="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8" kindref="member">RGB_TO_V4F</ref>((*(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/>d));</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>df<sp/>=<sp/><ref refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" kindref="member">__alphablend</ref>(dc,<sp/>color,<sp/>color[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]);</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>*(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/>d<sp/>=<sp/><ref refid="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4" kindref="member">V4F_TO_RGB</ref>(df);</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="gfx_8c_1a7aaa9f57c899dd3abbc89f333cf033cd" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="gfx_8c_1a7aaa9f57c899dd3abbc89f333cf033cd" kindref="member">__gfx_plot_pixel_16</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>d,<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>color)<sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>dc<sp/>=<sp/><ref refid="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909" kindref="member">R5G6B5_TO_V4F</ref>((*(<ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref>*)<sp/>d));</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>df<sp/>=<sp/><ref refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" kindref="member">__alphablend</ref>(dc,<sp/>color,<sp/>color[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>*(<ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref>*)<sp/>d<sp/>=<sp/><ref refid="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac" kindref="member">V4F_TO_R5G6B5</ref>(df);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33" refid="gfx_8c_1a6fb53066ae07aa5d373749f3cd604667" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="gfx_8c_1a6fb53066ae07aa5d373749f3cd604667" kindref="member">__gfx_read_pixel_32</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>d)<sp/>{</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>dc<sp/>=<sp/><ref refid="clrconv_8h_1accad078885c0425eb1861291a1769717" kindref="member">ARGB_TO_V4F</ref>((*(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/>d));</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>dc;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39" refid="gfx_8c_1ae7c30dc3d12e86efeeac3d10e2402ecc" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="gfx_8c_1ae7c30dc3d12e86efeeac3d10e2402ecc" kindref="member">__gfx_read_pixel_24</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>d)<sp/>{</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>dc<sp/>=<sp/><ref refid="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8" kindref="member">RGB_TO_V4F</ref>((*(<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>*)<sp/>d));</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>dc;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight></codeline>
+<codeline lineno="45" refid="gfx_8c_1acf0e69d2f398da36b549cd8700e8ed7a" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="gfx_8c_1acf0e69d2f398da36b549cd8700e8ed7a" kindref="member">__gfx_read_pixel_16</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>d)<sp/>{</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>dc<sp/>=<sp/><ref refid="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909" kindref="member">R5G6B5_TO_V4F</ref>((*(<ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref>*)<sp/>d));</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>dc;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53" refid="gfx_8c_1ac05b6147f547ac7cf1a6600226eaff0b" refkind="member"><highlight class="normal"><ref refid="structatk__gfx" kindref="compound">atk_gfx_t</ref>*<sp/><ref refid="gfx_8c_1ac05b6147f547ac7cf1a6600226eaff0b" kindref="member">atk_gfx_create</ref>(</highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/>width,<sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/>height,<sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><ref refid="grub_8h_1a29d3773a35b844e2dbb12bb5d895ab50" kindref="member">bpp</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buffer)<sp/>{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!(width<sp/>&amp;&amp;<sp/>height<sp/>&amp;&amp;<sp/>bpp<sp/>&amp;&amp;<sp/>buffer))<sp/>{</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structatk__gfx" kindref="compound">atk_gfx_t</ref>*<sp/>gfx<sp/>=<sp/>(<ref refid="structatk__gfx" kindref="compound">atk_gfx_t</ref>*)<sp/>malloc(width<sp/>*<sp/>height<sp/>*<sp/>(bpp<sp/>/<sp/>8));</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1a8c8d73df98a82572a666824b52b99964" kindref="member">width</ref><sp/>=<sp/>width;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1a5dcdddc358345ad49f4015253f1acbe6" kindref="member">height</ref><sp/>=<sp/>height;</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>=<sp/><ref refid="grub_8h_1a29d3773a35b844e2dbb12bb5d895ab50" kindref="member">bpp</ref>;</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1a7f050db1e3d134473b2077ab5275b727" kindref="member">stride</ref><sp/>=<sp/>width<sp/>*<sp/>(bpp<sp/>/<sp/>8);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1a00413765e42e1a347e45401e1a2e95bf" kindref="member">framebuffer</ref><sp/>=<sp/>buffer;</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(bpp)<sp/>{</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>16:</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kindref="member">__plot</ref><sp/>=<sp/><ref refid="gfx_8c_1a7aaa9f57c899dd3abbc89f333cf033cd" kindref="member">__gfx_plot_pixel_16</ref>;</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" kindref="member">__get</ref><sp/>=<sp/><ref refid="gfx_8c_1acf0e69d2f398da36b549cd8700e8ed7a" kindref="member">__gfx_read_pixel_16</ref>;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>24:</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kindref="member">__plot</ref><sp/>=<sp/><ref refid="gfx_8c_1a03463c4b1cb7f47ad907238ade0253b9" kindref="member">__gfx_plot_pixel_24</ref>;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" kindref="member">__get</ref><sp/>=<sp/><ref refid="gfx_8c_1ae7c30dc3d12e86efeeac3d10e2402ecc" kindref="member">__gfx_read_pixel_24</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>32:</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kindref="member">__plot</ref><sp/>=<sp/><ref refid="gfx_8c_1a9b2502bd0ce8f0310181c6e5f942971a" kindref="member">__gfx_plot_pixel_32</ref>;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>gfx-&gt;<ref refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" kindref="member">__get</ref><sp/>=<sp/><ref refid="gfx_8c_1a6fb53066ae07aa5d373749f3cd604667" kindref="member">__gfx_read_pixel_32</ref>;</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>free(gfx);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>gfx;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88" refid="gfx_8c_1a0f767522ab60d278c9c47033b8b73ddb" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="gfx_8c_1a0f767522ab60d278c9c47033b8b73ddb" kindref="member">atk_gfx_set</ref>(<ref refid="structatk__gfx" kindref="compound">atk_gfx_t</ref>*<sp/>gfx)<sp/>{</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>__gfx<sp/>=<sp/>gfx;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92" refid="gfx_8c_1ab7e9db411a46b785c93e3a729737c894" refkind="member"><highlight class="normal"><ref refid="structatk__gfx" kindref="compound">atk_gfx_t</ref>*<sp/><ref refid="gfx_8c_1ab7e9db411a46b785c93e3a729737c894" kindref="member">atk_gfx_get</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="gfx_8c_1ad14b67fdaef2472b7a218076ee8a8295" kindref="member">__gfx</ref>;</highlight></codeline>
+<codeline lineno="94"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight></codeline>
+<codeline lineno="98" refid="gfx_8c_1a553c125db6cad5a8f0176b48a2f66f1d" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="gfx_8c_1a553c125db6cad5a8f0176b48a2f66f1d" kindref="member">atk_gfx_line</ref>(<ref refid="structatk__bitmap" kindref="compound">atk_bitmap_t</ref>*<sp/>b,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>x0,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>y0,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>x1,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>y1,<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>color)<sp/>{</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!b)<sp/>{</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(x0<sp/>&gt;<sp/>x1)</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="clrconv_8h_1a9abc90ae1044063128acfb1505666e49" kindref="member">__SWAP</ref>(x0,<sp/>x1)</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(y0<sp/>&gt;<sp/>y1)</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="clrconv_8h_1a9abc90ae1044063128acfb1505666e49" kindref="member">__SWAP</ref>(y0,<sp/>y1)</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a" kindref="member">atk_rect_t</ref><sp/>region<sp/>=<sp/>{<sp/>x0,<sp/>y0,<sp/>x1,<sp/>y1<sp/>};</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/>buffer<sp/>=<sp/><ref refid="bitmap_8c_1af2d4d028cb46ed7c8c7e2e34a15cede1" kindref="member">atk_bitmap_lockbits</ref>(b,<sp/>region,<sp/><ref refid="bitmap_8h_1a5f29e050242724d3eb790ae6dadcae78" kindref="member">ATK_BITMAP_LOCK_RDWR</ref>);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!buffer)</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>x1<sp/>-=<sp/>x0;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/>y1<sp/>-=<sp/>y1;</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/>x0<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>y0<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>x2<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sx<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sy<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dx<sp/>=<sp/>x1;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>dy<sp/>=<sp/>y1;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>e<sp/>=<sp/>dx<sp/>-<sp/>dy;</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>e2<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ed<sp/>=<sp/>dx<sp/>+<sp/>dy<sp/>==<sp/>0<sp/>?<sp/>1<sp/>:<sp/>sqrt((</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)<sp/>(dx<sp/>*<sp/>dx)<sp/>+<sp/>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)<sp/>(dy<sp/>*<sp/>dy));</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="grub_8h_1a29d3773a35b844e2dbb12bb5d895ab50" kindref="member">bpp</ref><sp/>=<sp/>__gfx-&gt;<ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref><sp/>&gt;&gt;<sp/>3;</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>stride<sp/>=<sp/>x1<sp/>*<sp/><ref refid="grub_8h_1a29d3773a35b844e2dbb12bb5d895ab50" kindref="member">bpp</ref>;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(;;)<sp/>{</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>color[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]<sp/>=<sp/>abs(e<sp/>-<sp/>dx<sp/>+<sp/>dy)<sp/>/<sp/>ed;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__gfx-&gt;<ref refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kindref="member">__plot</ref>((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>buffer<sp/>+<sp/>(y0<sp/>*<sp/>stride)<sp/>+<sp/>(x0<sp/>*<sp/>bpp)),<sp/>color);</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>e2<sp/>=<sp/>e;</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x2<sp/>=<sp/>x0;<sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((e2<sp/>&lt;&lt;<sp/>1)<sp/>&gt;=<sp/>-dx)<sp/>{</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(x0<sp/>==<sp/>x1)</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="142"><highlight class="normal"></highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(e2<sp/>+<sp/>dy<sp/>&lt;<sp/>ed)<sp/>{</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>color[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]<sp/>=<sp/>abs(e2<sp/>-<sp/>dy)<sp/>/<sp/>ed;</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__gfx-&gt;<ref refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kindref="member">__plot</ref>((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>buffer<sp/>+<sp/>((y0<sp/>+<sp/>sy)<sp/>*<sp/>stride)<sp/>+<sp/>(x0<sp/>*<sp/>bpp)),<sp/>color);<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="147"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>e<sp/>-=<sp/>dy;</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x0<sp/>+=<sp/>sx;</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="151"><highlight class="normal"></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">((e2<sp/>&lt;&lt;<sp/>1)<sp/>&lt;=<sp/>dy)<sp/>{</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(y0<sp/>==<sp/>y1)</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(dx<sp/>-<sp/>e2<sp/>&lt;<sp/>ed)<sp/>{</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>color[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]<sp/>=<sp/>abs(dx<sp/>-<sp/>e2)<sp/>/<sp/>ed;</highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>__gfx-&gt;<ref refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kindref="member">__plot</ref>((</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>((<ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref>)<sp/>buffer<sp/>+<sp/>(y0<sp/>*<sp/>stride)<sp/>+<sp/>((x2<sp/>+<sp/>sx)<sp/>*<sp/>bpp)),<sp/>color);<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>e<sp/>+=<sp/>dx;</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y0<sp/>+=<sp/>sy;</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="bitmap_8c_1abbf711383513c744fe96b307880fb3d8" kindref="member">atk_bitmap_unlockbits</ref>(b);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/gfx.c"/>
+  </compounddef>
+</doxygen>

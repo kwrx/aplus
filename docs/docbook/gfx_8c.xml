@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<section xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="gfx_8c">
+    <title>gfx.c File Reference</title>
+    <programlisting>#include &lt;atk.h&gt;</programlisting>
+    <programlisting>#include &lt;atk/gfx.h&gt;</programlisting>
+    <programlisting>#include &lt;atk/bitmap.h&gt;</programlisting>
+    <programlisting>#include &lt;stdint.h&gt;</programlisting>
+    <programlisting>#include &lt;math.h&gt;</programlisting>
+    <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &quot;clrconv.h&quot;</programlisting>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="gfx_8h_1a8c8412155528b364a972c509c5cca18e">atk_gfx_t</link> * <link linkend="gfx_8c_1ad14b67fdaef2472b7a218076ee8a8295">__gfx</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void <link linkend="gfx_8c_1a9b2502bd0ce8f0310181c6e5f942971a">__gfx_plot_pixel_32</link> (
+void * d, <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> color)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void <link linkend="gfx_8c_1a03463c4b1cb7f47ad907238ade0253b9">__gfx_plot_pixel_24</link> (
+void * d, <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> color)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static void <link linkend="gfx_8c_1a7aaa9f57c899dd3abbc89f333cf033cd">__gfx_plot_pixel_16</link> (
+void * d, <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> color)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> <link linkend="gfx_8c_1a6fb53066ae07aa5d373749f3cd604667">__gfx_read_pixel_32</link> (
+void * d)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> <link linkend="gfx_8c_1ae7c30dc3d12e86efeeac3d10e2402ecc">__gfx_read_pixel_24</link> (
+void * d)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>static <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> <link linkend="gfx_8c_1acf0e69d2f398da36b549cd8700e8ed7a">__gfx_read_pixel_16</link> (
+void * d)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="gfx_8h_1a8c8412155528b364a972c509c5cca18e">atk_gfx_t</link> * <link linkend="gfx_8c_1ac05b6147f547ac7cf1a6600226eaff0b">atk_gfx_create</link> (
+short width, short height, short bpp, void * buffer)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>void <link linkend="gfx_8c_1a0f767522ab60d278c9c47033b8b73ddb">atk_gfx_set</link> (
+<link linkend="gfx_8h_1a8c8412155528b364a972c509c5cca18e">atk_gfx_t</link> * gfx)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="gfx_8h_1a8c8412155528b364a972c509c5cca18e">atk_gfx_t</link> * <link linkend="gfx_8c_1ab7e9db411a46b785c93e3a729737c894">atk_gfx_get</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>int <link linkend="gfx_8c_1a553c125db6cad5a8f0176b48a2f66f1d">atk_gfx_line</link> (
+<link linkend="bitmap_8h_1a999118ff4462f09cd53380b82e5c0d57">atk_bitmap_t</link> * b, int x0, int y0, int x1, int y1, <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link> color)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+    <simplesect>
+        <title>Detailed Description</title>
+    <para>Definition in file /opt/prj/aPlus/usr/src/libatk/src/gfx.c</para>
+    </simplesect>
+</section>

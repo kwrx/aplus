@@ -8,63 +8,63 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2265">
+      <node id="2470">
         <label>stdint.h</label>
       </node>
-      <node id="2273">
+      <node id="2478">
         <label>errno.h</label>
       </node>
-      <node id="2272">
+      <node id="2477">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2273" relation="include">
+        <childnode refid="2478" relation="include">
         </childnode>
-        <childnode refid="2265" relation="include">
+        <childnode refid="2470" relation="include">
         </childnode>
-        <childnode refid="2268" relation="include">
+        <childnode refid="2473" relation="include">
         </childnode>
       </node>
-      <node id="2268">
+      <node id="2473">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2265" relation="include">
+        <childnode refid="2470" relation="include">
         </childnode>
-        <childnode refid="2269" relation="include">
+        <childnode refid="2474" relation="include">
         </childnode>
-        <childnode refid="2270" relation="include">
+        <childnode refid="2475" relation="include">
         </childnode>
-        <childnode refid="2266" relation="include">
+        <childnode refid="2471" relation="include">
         </childnode>
-        <childnode refid="2271" relation="include">
+        <childnode refid="2476" relation="include">
         </childnode>
       </node>
-      <node id="2269">
+      <node id="2474">
         <label>sys/types.h</label>
       </node>
-      <node id="2271">
+      <node id="2476">
         <label>unistd.h</label>
       </node>
-      <node id="2267">
+      <node id="2472">
         <label>time.h</label>
       </node>
-      <node id="2270">
+      <node id="2475">
         <label>sys/time.h</label>
       </node>
-      <node id="2266">
+      <node id="2471">
         <label>sched.h</label>
       </node>
-      <node id="2264">
+      <node id="2469">
         <label>usr/src/libpthread/src/pthread_barrier.c</label>
         <link refid="pthread_barrier.c"/>
-        <childnode refid="2265" relation="include">
+        <childnode refid="2470" relation="include">
         </childnode>
-        <childnode refid="2266" relation="include">
+        <childnode refid="2471" relation="include">
         </childnode>
-        <childnode refid="2267" relation="include">
+        <childnode refid="2472" relation="include">
         </childnode>
-        <childnode refid="2268" relation="include">
+        <childnode refid="2473" relation="include">
         </childnode>
-        <childnode refid="2272" relation="include">
+        <childnode refid="2477" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -92,10 +92,12 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" bodystart="9" bodyend="25"/>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" bodystart="9" bodyend="26"/>
         <references refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" compoundref="pthread_8h" startline="122">pthread_barrier::curr_height</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" compoundref="pthread_8h" startline="123">pthread_barrier::init_height</references>
+        <references refid="structpthread__barrier_1a8ec820115bfcd6be50432579aac440fa" compoundref="pthread_8h" startline="124">pthread_barrier::owner</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
       </memberdef>
       <memberdef kind="function" id="pthread__barrier_8c_1a42a6ff31584d9d5e63bd8cb9dd57a2eb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> int</type>
@@ -112,7 +114,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" line="28" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" bodystart="28" bodyend="39"/>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" line="29" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" bodystart="29" bodyend="40"/>
         <references refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" compoundref="pthread_8h" startline="122">pthread_barrier::curr_height</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" compoundref="pthread_8h" startline="123">pthread_barrier::init_height</references>
@@ -132,10 +134,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" line="42" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" bodystart="42" bodyend="54"/>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" line="43" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c" bodystart="43" bodyend="58"/>
         <references refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" compoundref="pthread_8h" startline="122">pthread_barrier::curr_height</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" compoundref="pthread_8h" startline="123">pthread_barrier::init_height</references>
+        <references refid="structpthread__barrier_1a8ec820115bfcd6be50432579aac440fa" compoundref="pthread_8h" startline="124">pthread_barrier::owner</references>
+        <references refid="pthread_8h_1a822c63bc662ad86cfb2dcec50edbb42b" compoundref="pthread_8h" startline="114">PTHREAD_BARRIER_SERIAL_THREAD</references>
+        <references refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" compoundref="pthread__self_8c" startline="10" endline="27">pthread_self</references>
         <references refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09">sched_yield</references>
       </memberdef>
       </sectiondef>
@@ -155,49 +160,53 @@
 <codeline lineno="9" refid="pthread__barrier_8c_1aa71605591924fcd01057ff5e73ddd19e" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__barrier_8c_1aa71605591924fcd01057ff5e73ddd19e" kindref="member">pthread_barrier_init</ref>(<ref refid="structpthread__barrier" kindref="compound">pthread_barrier_t</ref><sp/>*barrier,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="structpthread__barrierattr" kindref="compound">pthread_barrierattr_t</ref><sp/>*attr,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>count)<sp/>{</highlight></codeline>
 <codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(barrier<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"></highlight></codeline>
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(count<sp/>==<sp/>0)<sp/>{</highlight></codeline>
 <codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="19"><highlight class="normal"></highlight></codeline>
 <codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kindref="member">curr_height</ref><sp/>=<sp/>0;</highlight></codeline>
 <codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" kindref="member">init_height</ref><sp/>=<sp/>count;</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="25"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a8ec820115bfcd6be50432579aac440fa" kindref="member">owner</ref><sp/>=<sp/><ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>();</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28" refid="pthread__barrier_8c_1a42a6ff31584d9d5e63bd8cb9dd57a2eb" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__barrier_8c_1a42a6ff31584d9d5e63bd8cb9dd57a2eb" kindref="member">pthread_barrier_destroy</ref>(<ref refid="structpthread__barrier" kindref="compound">pthread_barrier_t</ref><sp/>*barrier)<sp/>{</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(barrier<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kindref="member">curr_height</ref><sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" kindref="member">init_height</ref><sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="37"><highlight class="normal"></highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="39"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29" refid="pthread__barrier_8c_1a42a6ff31584d9d5e63bd8cb9dd57a2eb" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__barrier_8c_1a42a6ff31584d9d5e63bd8cb9dd57a2eb" kindref="member">pthread_barrier_destroy</ref>(<ref refid="structpthread__barrier" kindref="compound">pthread_barrier_t</ref><sp/>*barrier)<sp/>{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(barrier<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kindref="member">curr_height</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" kindref="member">init_height</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="41"><highlight class="normal"></highlight></codeline>
-<codeline lineno="42" refid="pthread__barrier_8c_1ad61c7efb7bd52899877f3ec8c6895d06" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__barrier_8c_1ad61c7efb7bd52899877f3ec8c6895d06" kindref="member">pthread_barrier_wait</ref>(<ref refid="structpthread__barrier" kindref="compound">pthread_barrier_t</ref><sp/>*barrier)<sp/>{</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(barrier<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"></highlight></codeline>
-<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kindref="member">curr_height</ref><sp/>+=<sp/>1;</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"></highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(barrier-&gt;<ref refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kindref="member">curr_height</ref><sp/>&lt;<sp/>barrier-&gt;<ref refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" kindref="member">init_height</ref>)</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09" kindref="member">sched_yield</ref>();</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"></highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="54"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="pthread__barrier_8c_1ad61c7efb7bd52899877f3ec8c6895d06" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__barrier_8c_1ad61c7efb7bd52899877f3ec8c6895d06" kindref="member">pthread_barrier_wait</ref>(<ref refid="structpthread__barrier" kindref="compound">pthread_barrier_t</ref><sp/>*barrier)<sp/>{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(barrier<sp/>==<sp/>NULL)<sp/>{</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>barrier-&gt;<ref refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kindref="member">curr_height</ref><sp/>+=<sp/>1;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(barrier-&gt;<ref refid="structpthread__barrier_1a3b8e6f276f11a62fb77525fe5d11b18c" kindref="member">curr_height</ref><sp/>&lt;<sp/>barrier-&gt;<ref refid="structpthread__barrier_1a71938bf4346ecc8a2f997f18df267ae0" kindref="member">init_height</ref>)</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="nanosleep_8c_1a357cd4b34c13011749dfffb42b489f09" kindref="member">sched_yield</ref>();</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread_8h_1a4c4f5f3b4f8f45d9d897847d53b11aaa" kindref="member">pthread_self</ref>()<sp/>==<sp/>barrier-&gt;<ref refid="structpthread__barrier_1a8ec820115bfcd6be50432579aac440fa" kindref="member">owner</ref>)</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="pthread_8h_1a822c63bc662ad86cfb2dcec50edbb42b" kindref="member">PTHREAD_BARRIER_SERIAL_THREAD</ref>;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_barrier.c"/>
   </compounddef>

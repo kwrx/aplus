@@ -1,4 +1,4 @@
-.TH "usr/src/libposix/include/sys/dirent.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libposix/include/sys/dirent.h" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -45,25 +45,25 @@ usr/src/libposix/include/sys/dirent.h \-
 .RI "int \fBalphasort\fP (const struct \fBdirent\fP **a, const struct \fBdirent\fP **b)"
 .br
 .ti -1c
-.RI "int \fBclosedir\fP (\fBDIR\fP *\fBd\fP)"
+.RI "int \fBclosedir\fP (\fBDIR\fP *d)"
 .br
 .ti -1c
 .RI "\fBDIR\fP * \fBopendir\fP (const char *path)"
 .br
 .ti -1c
-.RI "struct \fBdirent\fP * \fBreaddir\fP (\fBDIR\fP *\fBd\fP)"
+.RI "struct \fBdirent\fP * \fBreaddir\fP (\fBDIR\fP *d)"
 .br
 .ti -1c
-.RI "void \fBrewinddir\fP (\fBDIR\fP *\fBd\fP)"
+.RI "void \fBrewinddir\fP (\fBDIR\fP *d)"
 .br
 .ti -1c
 .RI "int \fBscandir\fP (const char *pathname, struct \fBdirent\fP ***namelist, int(*select)(const struct \fBdirent\fP *), int(*compar)(const struct \fBdirent\fP **, const struct \fBdirent\fP **))"
 .br
 .ti -1c
-.RI "void \fBseekdir\fP (\fBDIR\fP *\fBd\fP, off_t \fBoffset\fP)"
+.RI "void \fBseekdir\fP (\fBDIR\fP *d, off_t \fBoffset\fP)"
 .br
 .ti -1c
-.RI "off_t \fBtelldir\fP (\fBDIR\fP *\fBd\fP)"
+.RI "off_t \fBtelldir\fP (\fBDIR\fP *d)"
 .br
 .in -1c
 .SH "Macro Definition Documentation"
@@ -119,7 +119,7 @@ References errno, __DIR::fd, and __DIR::position\&.
 .PP
 Definition at line 13 of file opendir\&.c\&.
 .PP
-References d, errno, __DIR::fd, O_DIRECTORY, and __DIR::position\&.
+References errno, __DIR::fd, O_DIRECTORY, and __DIR::position\&.
 .PP
 .nf
 13                                {
@@ -171,7 +171,7 @@ References __DIR::position\&.
 .PP
 Definition at line 11 of file scandir\&.c\&.
 .PP
-References d, errno, opendir(), and readdir()\&.
+References errno, opendir(), and readdir()\&.
 .PP
 .nf
 11                                                                                                                                                                   {

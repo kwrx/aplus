@@ -1,0 +1,53 @@
+.TH "usr/src/libposix/src/chdir.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/chdir.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include <fcntl\&.h>\fP
+.br
+\fC#include <dirent\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBchdir\fP (const char *path)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int chdir (const char *path)"
+
+.PP
+Definition at line 6 of file chdir\&.c\&.
+.PP
+References errno, and O_DIRECTORY\&.
+.PP
+.nf
+6                             {
+7     if(!path) {
+8         errno = EINVAL;
+9         return -1;
+10     }
+11 
+12     int fd = open(path, O_RDONLY | O_DIRECTORY, 0644);
+13     if(fd < 0)
+14         return -1;
+15 
+16     fchdir(fd);
+17     close(fd);
+18     
+19     return 0;
+20 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

@@ -1,4 +1,4 @@
-.TH "src/syscall/fcntl.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/fcntl.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -169,27 +169,52 @@ Upon successful completion, the value returned shall depend on cmd\&.
 .PP
 Definition at line 72 of file fcntl\&.c\&.
 .PP
-References errno, task::fd, and kprintf()\&.
+References errno, task::fd, inode::position, schedule_append_fd(), inode::size, and TASK_MAX_FD\&.
 .PP
 .nf
 72                                               {
 73     if(!current_task)
 74         return -1;
 75         
-76     
-77     inode_t* ino = current_task->fd[fd];
-78     if(!ino) {
-79         errno = EBADF;
-80         return -1;
-81     }
-82 
-83 
-84     /* TODO */
-85     kprintf("sys_chown: TODO\&.");
-86 
-87     errno = ENOSYS;
-88     return -1;
-89 }
+76 
+77     if(fd < 0 || fd > TASK_MAX_FD) {
+78         errno = EBADF;
+79         return -1;
+80     }
+81     
+82     
+83     inode_t* ino = current_task->fd[fd];
+84     if(!ino) {
+85         errno = EBADF;
+86         return -1;
+87     }
+88 
+89 
+90     switch(request) {
+91         case F_DUPFD:
+92             return schedule_append_fd(current_task, ino);
+93         case F_GETFD:
+94             return 0;
+95         case F_SETFD:
+96             return 0;
+97         case F_GETFL:
+98             return 0;
+99         case F_SETFL:
+100             switch((int)buf) {
+101                 case O_APPEND:
+102                     ino->position = ino->size;
+103                     return 0;
+104                 case O_NONBLOCK:
+105                     return 0;
+106                 default:
+107                     errno = EINVAL;
+108                     return -1;
+109             }
+110             break;
+111     }
+112 
+113     return 0;
+114 }
 .fi
 .SS "SYSCALL (\fBsys_fcntl\fP, 19)"
 
@@ -200,7 +225,7 @@ References errno, task::fd, and kprintf()\&.
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SS "\fBinode_t\fP* vfs_root"
 
 .PP

@@ -6,56 +6,56 @@
     <includes refid="pthread_8h" local="no">pthread.h</includes>
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <incdepgraph>
-      <node id="2403">
+      <node id="2608">
         <label>stdint.h</label>
       </node>
-      <node id="2410">
+      <node id="2615">
         <label>errno.h</label>
       </node>
-      <node id="2409">
+      <node id="2614">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2410" relation="include">
+        <childnode refid="2615" relation="include">
         </childnode>
-        <childnode refid="2403" relation="include">
+        <childnode refid="2608" relation="include">
         </childnode>
-        <childnode refid="2404" relation="include">
+        <childnode refid="2609" relation="include">
         </childnode>
       </node>
-      <node id="2404">
+      <node id="2609">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2403" relation="include">
+        <childnode refid="2608" relation="include">
         </childnode>
-        <childnode refid="2405" relation="include">
+        <childnode refid="2610" relation="include">
         </childnode>
-        <childnode refid="2406" relation="include">
+        <childnode refid="2611" relation="include">
         </childnode>
-        <childnode refid="2407" relation="include">
+        <childnode refid="2612" relation="include">
         </childnode>
-        <childnode refid="2408" relation="include">
+        <childnode refid="2613" relation="include">
         </childnode>
       </node>
-      <node id="2405">
+      <node id="2610">
         <label>sys/types.h</label>
       </node>
-      <node id="2408">
+      <node id="2613">
         <label>unistd.h</label>
       </node>
-      <node id="2406">
+      <node id="2611">
         <label>sys/time.h</label>
       </node>
-      <node id="2407">
+      <node id="2612">
         <label>sched.h</label>
       </node>
-      <node id="2402">
+      <node id="2607">
         <label>usr/src/libpthread/src/pthread_key.c</label>
         <link refid="pthread_key.c"/>
-        <childnode refid="2403" relation="include">
+        <childnode refid="2608" relation="include">
         </childnode>
-        <childnode refid="2404" relation="include">
+        <childnode refid="2609" relation="include">
         </childnode>
-        <childnode refid="2409" relation="include">
+        <childnode refid="2614" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -190,7 +190,7 @@
 <codeline lineno="9" refid="pthread__key_8c_1ab931277f4deb7cb12e24a862b2af7333" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__key_8c_1ab931277f4deb7cb12e24a862b2af7333" kindref="member">pthread_key_create</ref>(<ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref><sp/>*key,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>(*destructor)(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*))<sp/>{</highlight></codeline>
 <codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!key)<sp/>{</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"></highlight></codeline>
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i;</highlight></codeline>
@@ -206,14 +206,14 @@
 <codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="26"><highlight class="normal"></highlight></codeline>
 <codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EAGAIN;</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="29"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="30"><highlight class="normal"></highlight></codeline>
 <codeline lineno="31"><highlight class="normal"></highlight></codeline>
 <codeline lineno="32" refid="pthread__key_8c_1ab28319aea4b1565728829629b0467fa6" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__key_8c_1ab28319aea4b1565728829629b0467fa6" kindref="member">pthread_key_delete</ref>(<ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref><sp/>key)<sp/>{</highlight></codeline>
 <codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(key<sp/>&gt;<sp/><ref refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" kindref="member">PTHREAD_KEYS_MAX</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="37"><highlight class="normal"></highlight></codeline>
 <codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].dtor)</highlight></codeline>
@@ -230,12 +230,12 @@
 <codeline lineno="49" refid="pthread__key_8c_1ad73e5af1b85b9f874408816bfc2b223c" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="pthread__key_8c_1ad73e5af1b85b9f874408816bfc2b223c" kindref="member">pthread_setspecific</ref>(<ref refid="pthread_8h_1a965dffa696273f72e4b513905c63a3ad" kindref="member">pthread_key_t</ref><sp/>key,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<ref refid="attribute_8h_1ae7f66047e6e39ba2bb6af8b95f00d1dd" kindref="member">value</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(key<sp/>&gt;<sp/><ref refid="pthread__internal_8h_1a0a23e66e087bcf5c253b9b2746f19a64" kindref="member">PTHREAD_KEYS_MAX</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="54"><highlight class="normal"></highlight></codeline>
 <codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].used<sp/>==<sp/>0)<sp/>{</highlight></codeline>
 <codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>EINVAL;</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
 <codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="59"><highlight class="normal"></highlight></codeline>
 <codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__key_8c_1afac43b0444afef8a4a8a6409728a2703" kindref="member">__pthread_keys</ref>[key].<ref refid="struct____pthread__key_1a35d38627e4a0de2e247671f0b5b6322a" kindref="member">value</ref><sp/>=<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*)<sp/>value;</highlight></codeline>

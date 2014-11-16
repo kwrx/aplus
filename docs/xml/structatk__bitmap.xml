@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structatk__bitmap" kind="struct" prot="public">
+    <compoundname>atk_bitmap</compoundname>
+    <includes refid="bitmap_8h" local="no">bitmap.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" prot="public" static="no" mutable="no">
+        <type><ref refid="atk_8h_1a644f976397f323e48685f16b0c4fa802" kindref="member">atk_size_t</ref></type>
+        <definition>atk_size_t atk_bitmap::size</definition>
+        <argsstring></argsstring>
+        <name>size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="16" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t atk_bitmap::stride</definition>
+        <argsstring></argsstring>
+        <name>stride</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="17" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* atk_bitmap::buffer</definition>
+        <argsstring></argsstring>
+        <name>buffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="19" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
+        <definition>uint8_t atk_bitmap::lock</definition>
+        <argsstring></argsstring>
+        <name>lock</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="20" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" prot="public" static="no" mutable="no">
+        <type>struct <ref refid="structatk__bitmap__lockdata" kindref="compound">atk_bitmap_lockdata</ref></type>
+        <definition>struct atk_bitmap_lockdata atk_bitmap::__lockdata</definition>
+        <argsstring></argsstring>
+        <name>__lockdata</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="20" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="14">
+        <label>atk_bitmap_lockdata</label>
+        <link refid="structatk__bitmap__lockdata"/>
+      </node>
+      <node id="13">
+        <label>atk_bitmap</label>
+        <link refid="structatk__bitmap"/>
+        <childnode refid="14" relation="usage">
+          <edgelabel>+__lockdata</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" line="15" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/bitmap.h" bodystart="15" bodyend="23"/>
+    <listofallmembers>
+      <member refid="structatk__bitmap_1a803fa3caa190331e1c3255d6ab19d91c" prot="public" virt="non-virtual"><scope>atk_bitmap</scope><name>__lockdata</name></member>
+      <member refid="structatk__bitmap_1a3bed7ee0d49e89b2a1dd250ee2e58ab6" prot="public" virt="non-virtual"><scope>atk_bitmap</scope><name>buffer</name></member>
+      <member refid="structatk__bitmap_1a045e533dfb5e23a575443d389f3dba95" prot="public" virt="non-virtual"><scope>atk_bitmap</scope><name>lock</name></member>
+      <member refid="structatk__bitmap_1afd44fc93403d7addaa5142944e3add03" prot="public" virt="non-virtual"><scope>atk_bitmap</scope><name>size</name></member>
+      <member refid="structatk__bitmap_1a9716a316bc05bb6997a9da73ddb0ee3b" prot="public" virt="non-virtual"><scope>atk_bitmap</scope><name>stride</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

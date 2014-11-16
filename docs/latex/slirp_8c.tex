@@ -73,7 +73,7 @@ Definition at line 28 of file slirp.\+c.
 
 
 
-References slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_\+recv(), kfree(), kmalloc(), kprintf(), slirpcard\+::netif, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, slirpcard\+::offset, netif\+::rx\+\_\+bytes, netif\+::rx\+\_\+errors, netif\+::rx\+\_\+packets, serial\+\_\+recv(), S\+L\+I\+R\+P\+\_\+\+B\+U\+F\+S\+I\+Z, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, netif\+::state, uint8\+\_\+t, and slirpcard\+::used.
+References slirpcard\+::buffer, netif\+::flags, slirpcard\+::ioport, ipv4\+\_\+recv(), kfree(), kmalloc(), kprintf(), slirpcard\+::netif, N\+E\+T\+I\+F\+\_\+\+F\+L\+A\+G\+S\+\_\+\+E\+N\+A\+B\+L\+E, slirpcard\+::offset, netif\+::rx\+\_\+bytes, netif\+::rx\+\_\+errors, netif\+::rx\+\_\+packets, serial\+\_\+recv(), S\+L\+I\+R\+P\+\_\+\+B\+U\+F\+S\+I\+Z, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+N\+D, S\+L\+I\+R\+P\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+E\+S\+C\+\_\+\+E\+S\+C, netif\+::state, uint8\+\_\+t, and slirpcard\+::used.
 
 
 \begin{DoxyCode}
@@ -88,7 +88,7 @@ References slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_
 36     
 37     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"slirp: received data\(\backslash\)n"});
 38 
-39     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t} \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d} = \hyperlink{serial_8c_abfa1d9231846e7f9820b4609e32f8f7c}{serial\_recv}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport});
+39     \hyperlink{aplus_8h_ae0430369c5a35dcdbc0bc19dcbb33a03}{uint8\_t} d = \hyperlink{serial_8c_abfa1d9231846e7f9820b4609e32f8f7c}{serial\_recv}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aed1b09924afb61043cd93bed7edea389}{ioport});
 40     \textcolor{keywordflow}{if}(\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_aca0b3836ef213a9ab9cab689175d6a38}{used} == 0) \{
 41         \textcolor{keywordflow}{if}(d != \hyperlink{slirp_8h_a7ac78b4f074c2fa92c19569ba52f8687}{SLIRP\_PACKET\_END})
 42             \textcolor{keywordflow}{return};
@@ -131,8 +131,7 @@ References slirpcard\+::buffer, d, netif\+::flags, slirpcard\+::ioport, ipv4\+\_
 76         \}
 77 
 78         \textcolor{keywordflow}{default}:
-79             \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer}[\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset}++] = 
-      \hyperlink{panic_8c_a77b5b9b7c5109d0943ef9f2e5c557fb9}{d};
+79             \hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_a3a9cd572ee740f4844706613f6c1a98d}{buffer}[\hyperlink{structslirpcard}{slirpcard}->\hyperlink{structslirpcard_adda6ed53672da7a5e56fd16007d704d0}{offset}++] = d;
 80     \}
 81     
 82 \}

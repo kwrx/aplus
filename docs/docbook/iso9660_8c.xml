@@ -4,6 +4,7 @@
     <programlisting>#include &lt;aplus.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/fs.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;string.h&gt;</programlisting>
     <programlisting>#include &lt;unistd.h&gt;</programlisting>

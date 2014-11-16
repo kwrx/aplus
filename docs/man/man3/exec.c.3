@@ -1,4 +1,4 @@
-.TH "src/exec.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/exec.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,9 +10,13 @@ src/exec.c \-
 .br
 \fC#include <aplus/mm\&.h>\fP
 .br
+\fC#include <aplus/task\&.h>\fP
+.br
 \fC#include <stdint\&.h>\fP
 .br
 \fC#include <errno\&.h>\fP
+.br
+\fC#include <grub\&.h>\fP
 .br
 
 .SS "Data Structures"
@@ -30,6 +34,10 @@ src/exec.c \-
 .RI "struct \fBelf32_phdr\fP"
 .br
 .RI "\fIELF32 Program Header\&. \fP"
+.ti -1c
+.RI "struct \fBelf32_sym_t\fP"
+.br
+.RI "\fIELF32 Symbol\&. \fP"
 .in -1c
 .SS "Macros"
 
@@ -164,6 +172,12 @@ src/exec.c \-
 .RI "#define \fBPT_HIPROC\fP   0x7FFFFFFF"
 .br
 .ti -1c
+.RI "#define \fBELF32_ST_BIND\fP(i)   ((i >> 4))"
+.br
+.ti -1c
+.RI "#define \fBELF32_ST_TYPE\fP(i)   ((i) & 0x0F)"
+.br
+.ti -1c
 .RI "#define \fBELF_DEBUG\fP"
 .br
 .RI "\fIEnable or disable debug for ELF\&. \fP"
@@ -201,6 +215,10 @@ src/exec.c \-
 .RI "typedef struct \fBelf32_phdr\fP \fBelf32_phdr_t\fP"
 .br
 .RI "\fIELF32 Program Header\&. \fP"
+.ti -1c
+.RI "typedef struct \fBelf32_sym_t\fP \fBelf32_sym_t\fP"
+.br
+.RI "\fIELF32 Symbol\&. \fP"
 .in -1c
 .SS "Functions"
 
@@ -217,6 +235,17 @@ src/exec.c \-
 .RI "void * \fBelf32_load\fP (void *image, int *vaddr, int *vsize)"
 .br
 .RI "\fILoad a ELF32 Executable image\&. \fP"
+.ti -1c
+.RI "char * \fBelf_kernel_lookup\fP (\fBuint32_t\fP symaddr)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.RI "\fICurrent task address\&. \fP"
 .in -1c
 .SH "Macro Definition Documentation"
 .PP 
@@ -232,191 +261,199 @@ if(cond) {                 \\
 .SS "#define EI_CLASS   4"
 
 .PP
-Definition at line 22 of file exec\&.c\&.
+Definition at line 28 of file exec\&.c\&.
 .SS "#define EI_DATA   5"
 
 .PP
-Definition at line 23 of file exec\&.c\&.
+Definition at line 29 of file exec\&.c\&.
 .SS "#define EI_MAG0   0"
 
 .PP
-Definition at line 18 of file exec\&.c\&.
+Definition at line 24 of file exec\&.c\&.
 .SS "#define EI_MAG1   1"
 
 .PP
-Definition at line 19 of file exec\&.c\&.
+Definition at line 25 of file exec\&.c\&.
 .SS "#define EI_MAG2   2"
 
 .PP
-Definition at line 20 of file exec\&.c\&.
+Definition at line 26 of file exec\&.c\&.
 .SS "#define EI_MAG3   3"
 
 .PP
-Definition at line 21 of file exec\&.c\&.
+Definition at line 27 of file exec\&.c\&.
 .SS "#define EI_NIDENT   16"
 
 .PP
-Definition at line 17 of file exec\&.c\&.
+Definition at line 23 of file exec\&.c\&.
 .SS "#define EI_PAD   7"
 
 .PP
-Definition at line 25 of file exec\&.c\&.
+Definition at line 31 of file exec\&.c\&.
 .SS "#define EI_VERSION   6"
 
 .PP
-Definition at line 24 of file exec\&.c\&.
+Definition at line 30 of file exec\&.c\&.
 .SS "#define ELF32_ADDRSPACE_MIN_LENGTH   0x100000"
 
 .PP
-Definition at line 7 of file exec\&.c\&.
+Definition at line 13 of file exec\&.c\&.
+.SS "#define ELF32_ST_BIND(i)   ((i >> 4))"
+
+.PP
+Definition at line 76 of file exec\&.c\&.
+.SS "#define ELF32_ST_TYPE(i)   ((i) & 0x0F)"
+
+.PP
+Definition at line 77 of file exec\&.c\&.
 .SS "#define ELF_CLASS_32   1"
 
 .PP
-Definition at line 32 of file exec\&.c\&.
+Definition at line 38 of file exec\&.c\&.
 .SS "#define ELF_CLASS_64   2"
 
 .PP
-Definition at line 33 of file exec\&.c\&.
+Definition at line 39 of file exec\&.c\&.
 .SS "#define ELF_DATA_LSB   1"
 
 .PP
-Definition at line 35 of file exec\&.c\&.
+Definition at line 41 of file exec\&.c\&.
 .SS "#define ELF_DATA_MSB   2"
 
 .PP
-Definition at line 36 of file exec\&.c\&.
+Definition at line 42 of file exec\&.c\&.
 .SS "#define ELF_DEBUG"
 
 .PP
 Enable or disable debug for ELF\&. 
 .PP
-Definition at line 72 of file exec\&.c\&.
+Definition at line 82 of file exec\&.c\&.
 .SS "#define ELF_MAG0   0x7F"
 
 .PP
-Definition at line 27 of file exec\&.c\&.
+Definition at line 33 of file exec\&.c\&.
 .SS "#define ELF_MAG1   'E'"
 
 .PP
-Definition at line 28 of file exec\&.c\&.
+Definition at line 34 of file exec\&.c\&.
 .SS "#define ELF_MAG2   'L'"
 
 .PP
-Definition at line 29 of file exec\&.c\&.
+Definition at line 35 of file exec\&.c\&.
 .SS "#define ELF_MAG3   'F'"
 
 .PP
-Definition at line 30 of file exec\&.c\&.
+Definition at line 36 of file exec\&.c\&.
 .SS "#define PT_DYNAMIC   2"
 
 .PP
-Definition at line 61 of file exec\&.c\&.
+Definition at line 67 of file exec\&.c\&.
 .SS "#define PT_HIPROC   0x7FFFFFFF"
 
 .PP
-Definition at line 67 of file exec\&.c\&.
+Definition at line 73 of file exec\&.c\&.
 .SS "#define PT_INTERP   3"
 
 .PP
-Definition at line 62 of file exec\&.c\&.
+Definition at line 68 of file exec\&.c\&.
 .SS "#define PT_LOAD   1"
 
 .PP
-Definition at line 60 of file exec\&.c\&.
+Definition at line 66 of file exec\&.c\&.
 .SS "#define PT_LOPROC   0x70000000"
 
 .PP
-Definition at line 66 of file exec\&.c\&.
+Definition at line 72 of file exec\&.c\&.
 .SS "#define PT_NOTE   4"
 
 .PP
-Definition at line 63 of file exec\&.c\&.
+Definition at line 69 of file exec\&.c\&.
 .SS "#define PT_NULL   0"
 
 .PP
-Definition at line 59 of file exec\&.c\&.
+Definition at line 65 of file exec\&.c\&.
 .SS "#define PT_PHDR   6"
 
 .PP
-Definition at line 65 of file exec\&.c\&.
+Definition at line 71 of file exec\&.c\&.
 .SS "#define PT_SHLIB   5"
 
 .PP
-Definition at line 64 of file exec\&.c\&.
+Definition at line 70 of file exec\&.c\&.
 .SS "#define SHF_ALLOC   2"
 
 .PP
-Definition at line 53 of file exec\&.c\&.
+Definition at line 59 of file exec\&.c\&.
 .SS "#define SHF_EXECINSTR   4"
 
 .PP
-Definition at line 54 of file exec\&.c\&.
+Definition at line 60 of file exec\&.c\&.
 .SS "#define SHF_MASK   0xF0000000"
 
 .PP
-Definition at line 55 of file exec\&.c\&.
+Definition at line 61 of file exec\&.c\&.
 .SS "#define SHF_WRITE   1"
 
 .PP
-Definition at line 52 of file exec\&.c\&.
+Definition at line 58 of file exec\&.c\&.
 .SS "#define SHT_DYNAMIC   6"
 
 .PP
-Definition at line 45 of file exec\&.c\&.
+Definition at line 51 of file exec\&.c\&.
 .SS "#define SHT_DYNSYM   11"
 
 .PP
-Definition at line 50 of file exec\&.c\&.
+Definition at line 56 of file exec\&.c\&.
 .SS "#define SHT_HASH   5"
 
 .PP
-Definition at line 44 of file exec\&.c\&.
+Definition at line 50 of file exec\&.c\&.
 .SS "#define SHT_NOBITS   8"
 
 .PP
-Definition at line 47 of file exec\&.c\&.
+Definition at line 53 of file exec\&.c\&.
 .SS "#define SHT_NOTE   7"
 
 .PP
-Definition at line 46 of file exec\&.c\&.
+Definition at line 52 of file exec\&.c\&.
 .SS "#define SHT_NULL   0"
 
 .PP
-Definition at line 39 of file exec\&.c\&.
+Definition at line 45 of file exec\&.c\&.
 .SS "#define SHT_PROGBITS   1"
 
 .PP
-Definition at line 40 of file exec\&.c\&.
+Definition at line 46 of file exec\&.c\&.
 .SS "#define SHT_REL   9"
 
 .PP
-Definition at line 48 of file exec\&.c\&.
+Definition at line 54 of file exec\&.c\&.
 .SS "#define SHT_RELA   4"
 
 .PP
-Definition at line 43 of file exec\&.c\&.
+Definition at line 49 of file exec\&.c\&.
 .SS "#define SHT_SHLIB   10"
 
 .PP
-Definition at line 49 of file exec\&.c\&.
+Definition at line 55 of file exec\&.c\&.
 .SS "#define SHT_STRTAB   3"
 
 .PP
-Definition at line 42 of file exec\&.c\&.
+Definition at line 48 of file exec\&.c\&.
 .SS "#define SHT_SYMTAB   2"
 
 .PP
-Definition at line 41 of file exec\&.c\&.
+Definition at line 47 of file exec\&.c\&.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef \fBuint32_t\fP \fBElf32_Addr\fP"
 
 .PP
-Definition at line 10 of file exec\&.c\&.
+Definition at line 16 of file exec\&.c\&.
 .SS "typedef \fBuint16_t\fP \fBElf32_Half\fP"
 
 .PP
-Definition at line 11 of file exec\&.c\&.
+Definition at line 17 of file exec\&.c\&.
 .SS "typedef struct \fBelf32_hdr\fP  \fBelf32_hdr_t\fP"
 
 .PP
@@ -424,7 +461,7 @@ ELF32 Header\&.
 .SS "typedef \fBuint32_t\fP \fBElf32_Off\fP"
 
 .PP
-Definition at line 12 of file exec\&.c\&.
+Definition at line 18 of file exec\&.c\&.
 .SS "typedef struct \fBelf32_phdr\fP  \fBelf32_phdr_t\fP"
 
 .PP
@@ -436,11 +473,15 @@ ELF32 Section Header\&.
 .SS "typedef int32_t \fBElf32_Sword\fP"
 
 .PP
-Definition at line 13 of file exec\&.c\&.
+Definition at line 19 of file exec\&.c\&.
+.SS "typedef struct \fBelf32_sym_t\fP  \fBelf32_sym_t\fP"
+
+.PP
+ELF32 Symbol\&. 
 .SS "typedef \fBuint32_t\fP \fBElf32_Word\fP"
 
 .PP
-Definition at line 14 of file exec\&.c\&.
+Definition at line 20 of file exec\&.c\&.
 .SH "Function Documentation"
 .PP 
 .SS "int elf32_check (\fBelf32_hdr_t\fP *hdr)"
@@ -460,36 +501,36 @@ Check for valid ELF32 header\&.
 .PP
 
 .PP
-Definition at line 132 of file exec\&.c\&.
+Definition at line 154 of file exec\&.c\&.
 .PP
 References check, elf32_hdr::e_ident, EI_CLASS, EI_DATA, EI_MAG0, EI_MAG1, EI_MAG2, EI_MAG3, ELF_CLASS_32, ELF_DATA_LSB, ELF_MAG0, ELF_MAG1, ELF_MAG2, ELF_MAG3, and errno\&.
 .PP
 .nf
-132                                   {
-133 
-134     if(!hdr) {
-135         errno = EINVAL; 
-136         return -1;
-137     }
-138 
-139     #define check(cond)             \
-140         if(cond) {                  \
-141             errno = ENOEXEC;        \
-142             return -1;              \
-143         }
-144 
-145     check(
-146         (hdr->e_ident[EI_MAG0] != ELF_MAG0) ||
-147         (hdr->e_ident[EI_MAG1] != ELF_MAG1) ||
-148         (hdr->e_ident[EI_MAG2] != ELF_MAG2) ||
-149         (hdr->e_ident[EI_MAG3] != ELF_MAG3)
-150     )
-151 
-152     check(hdr->e_ident[EI_CLASS] != ELF_CLASS_32)
-153     check(hdr->e_ident[EI_DATA] != ELF_DATA_LSB)
-154 
-155     return 0;
-156 }
+154                                   {
+155 
+156     if(!hdr) {
+157         errno = EINVAL; 
+158         return -1;
+159     }
+160 
+161     #define check(cond)             \
+162         if(cond) {                  \
+163             errno = ENOEXEC;        \
+164             return -1;              \
+165         }
+166 
+167     check(
+168         (hdr->e_ident[EI_MAG0] != ELF_MAG0) ||
+169         (hdr->e_ident[EI_MAG1] != ELF_MAG1) ||
+170         (hdr->e_ident[EI_MAG2] != ELF_MAG2) ||
+171         (hdr->e_ident[EI_MAG3] != ELF_MAG3)
+172     )
+173 
+174     check(hdr->e_ident[EI_CLASS] != ELF_CLASS_32)
+175     check(hdr->e_ident[EI_DATA] != ELF_DATA_LSB)
+176 
+177     return 0;
+178 }
 .fi
 .SS "int elf32_getspace (\fBelf32_hdr_t\fP *hdr, void **ptr, size_t *size)"
 
@@ -512,46 +553,46 @@ if success 0, otherwise -1\&.
 .PP
 
 .PP
-Definition at line 166 of file exec\&.c\&.
+Definition at line 188 of file exec\&.c\&.
 .PP
 References elf32_hdr::e_phoff, ELF32_ADDRSPACE_MIN_LENGTH, elf32_check(), kprintf(), elf32_phdr::p_memsz, elf32_phdr::p_vaddr, and uint32_t\&.
 .PP
 .nf
-166                                                                {
-167     if(elf32_check(hdr) < 0)
-168         return -1;
-169 
-170     elf32_phdr_t* phdr = (elf32_phdr_t*) ((uint32_t) hdr->e_phoff + (uint32_t) hdr);
-171     int pn = hdr->e_phnum;
-172     int ps = hdr->e_phentsize;
-173 
-174     int p = 0;
-175     int s = 0;
-176 
-177     for(int i = 0; i < pn; i++) {
-178         if(!p || p > phdr->p_vaddr)
-179             p = phdr->p_vaddr;
-180 
-181         s += phdr->p_memsz;
-182         phdr = (elf32_phdr_t*) ((uint32_t) phdr + ps);
-183     }
-184 
-185     if(s < ELF32_ADDRSPACE_MIN_LENGTH)
-186         s = ELF32_ADDRSPACE_MIN_LENGTH;
-187 
-188 #ifdef ELF_DEBUG
-189     kprintf("elf: address space at 0x%x (%d Bytes)\n", p, s);
-190 #endif
+188                                                                {
+189     if(elf32_check(hdr) < 0)
+190         return -1;
 191 
-192 
-193     if(ptr)
-194         *ptr = p;
+192     elf32_phdr_t* phdr = (elf32_phdr_t*) ((uint32_t) hdr->e_phoff + (uint32_t) hdr);
+193     int pn = hdr->e_phnum;
+194     int ps = hdr->e_phentsize;
 195 
-196     if(size)
-197         *size = s;
+196     int p = 0;
+197     int s = 0;
 198 
-199     return 0;
-200 }
+199     for(int i = 0; i < pn; i++) {
+200         if(!p || p > phdr->p_vaddr)
+201             p = phdr->p_vaddr;
+202 
+203         s += phdr->p_memsz;
+204         phdr = (elf32_phdr_t*) ((uint32_t) phdr + ps);
+205     }
+206 
+207     if(s < ELF32_ADDRSPACE_MIN_LENGTH)
+208         s = ELF32_ADDRSPACE_MIN_LENGTH;
+209 
+210 #ifdef ELF_DEBUG
+211     kprintf("elf: address space at 0x%x (%d Bytes)\n", p, s);
+212 #endif
+213 
+214 
+215     if(ptr)
+216         *ptr = (void*) p;
+217 
+218     if(size)
+219         *size = s;
+220 
+221     return 0;
+222 }
 .fi
 .SS "void* elf32_load (void *image, int *vaddr, int *vsize)"
 
@@ -574,65 +615,121 @@ Entry Point address\&.
 .PP
 
 .PP
-Definition at line 210 of file exec\&.c\&.
+Definition at line 232 of file exec\&.c\&.
 .PP
-References elf32_hdr::e_shoff, elf32_check(), elf32_getspace(), errno, kprintf(), MM_UBASE, MM_USIZE, panic(), elf32_shdr::sh_addr, elf32_shdr::sh_offset, elf32_shdr::sh_size, uint32_t, vmm_alloc(), VMM_FLAGS_DEFAULT, and VMM_FLAGS_USER\&.
+References task::context, task::cr3, elf32_hdr::e_shoff, elf32_check(), elf32_getspace(), errno, kprintf(), MM_UBASE, MM_USIZE, panic(), schedule_release(), elf32_shdr::sh_addr, elf32_shdr::sh_offset, elf32_shdr::sh_size, elf32_shdr::sh_type, SHT_NOBITS, uint32_t, vmm_alloc(), VMM_FLAGS_DEFAULT, and VMM_FLAGS_USER\&.
 .PP
 .nf
-210                                                       {
-211     if(image == NULL) {
-212         errno = EINVAL;
-213         return NULL;
-214     }
-215 
-216     if(elf32_check(image) < 0)
-217         return NULL;
-218 
-219     elf32_hdr_t* hdr = (elf32_hdr_t*) image;
-220 
-221     int iptr, isiz;
-222     if(elf32_getspace(hdr, &iptr, &isiz) != 0)
-223         panic("elf: cannot found a valid address space"); 
-224     vmm_alloc(iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-225 
-226 
-227     if(vaddr)
-228         *vaddr = iptr;
-229     if(vsize)
-230         *vsize = isiz;
-231 
-232 
-233     elf32_shdr_t* sec = (elf32_shdr_t*) ((uint32_t) hdr->e_shoff + (uint32_t) hdr);
-234     
-235     int sn = hdr->e_shnum;
-236     int ss = hdr->e_shentsize;
+232                                                       {
+233     if(image == NULL) {
+234         errno = EINVAL;
+235         return NULL;
+236     }
 237 
-238     for(int i = 0; i < sn; i++) {
-239         
-240         if(sec->sh_addr && sec->sh_offset) {
-241 
-242 #ifdef ELF_DEBUG
-243             kprintf("elf: copy section to 0x%8x (%d Bytes)\n", sec->sh_addr, sec->sh_size);
-244 #endif
-245 
+238     if(elf32_check(image) < 0)
+239         return NULL;
+240 
+241     elf32_hdr_t* hdr = (elf32_hdr_t*) image;
+242 
+243     int iptr, isiz;
+244     if(elf32_getspace(hdr, (void**) &iptr, (size_t*) &isiz) != 0)
+245         panic("elf: cannot found a valid address space"); 
 246 
-247             if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
-248                 panic("elf: section overflow");
-249             
-250             
-251             memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
-252         }
-253 
-254         sec = (elf32_shdr_t*) ((uint32_t) sec + ss);
-255     }
+247     schedule_release(current_task);
+248     vmm_alloc(current_task->context\&.cr3, iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+249 
+250 
+251     if(vaddr)
+252         *vaddr = iptr;
+253     if(vsize)
+254         *vsize = isiz;
+255 
 256 
-257 #ifdef ELF_DEBUG
-258     kprintf("elf: entrypoint at 0x%8x\n", hdr->e_entry);
-259 #endif
-260 
-261     return (void*) hdr->e_entry;
-262 }
+257     elf32_shdr_t* sec = (elf32_shdr_t*) ((uint32_t) hdr->e_shoff + (uint32_t) hdr);
+258     
+259     int sn = hdr->e_shnum;
+260     int ss = hdr->e_shentsize;
+261 
+262     for(int i = 0; i < sn; i++) {
+263         if(sec->sh_addr && sec->sh_offset) {
+264 
+265 #ifdef ELF_DEBUG
+266             kprintf("elf: copy section to 0x%8x [%d] (%d Bytes)\n", sec->sh_addr, sec->sh_type, sec->sh_size);
+267 #endif
+268 
+269             if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
+270                 panic("elf: section overflow");
+271             
+272             
+273             memcpy((void*) sec->sh_addr, (void*) ((uint32_t) hdr + sec->sh_offset), sec->sh_size);
+274             
+275             if(sec->sh_type == SHT_NOBITS)
+276                 memset((void*) sec->sh_addr, 0, sec->sh_size);
+277         }
+278 
+279         sec = (elf32_shdr_t*) ((uint32_t) sec + ss);
+280     }
+281 
+282 #ifdef ELF_DEBUG
+283     kprintf("elf: entrypoint at 0x%8x\n", hdr->e_entry);
+284 #endif
+285 
+286     return (void*) hdr->e_entry;
+287 }
 .fi
+.SS "char* elf_kernel_lookup (\fBuint32_t\fPsymaddr)"
+
+.PP
+Definition at line 291 of file exec\&.c\&.
+.PP
+References BootInfo_t::addr, ELF32_ST_TYPE, mbd, name, elf32_shdr::sh_addr, elf32_shdr::sh_size, BootInfo_t::shndx, and uint32_t\&.
+.PP
+.nf
+291                                           {
+292     elf32_shdr_t* shdr = (elf32_shdr_t*) mbd->addr;
+293     
+294     uint32_t shstrtab = shdr[mbd->shndx]\&.sh_addr;
+295     
+296     const char* strtab = NULL;
+297     elf32_sym_t* symtab = NULL;
+298 
+299     uint32_t symtabsz = 0;
+300 
+301     for(int i = 0; i < mbd->num; i++) {
+302         const char* name = (const char*) (shstrtab + shdr[i]\&.sh_name);
+303 
+304         if(strcmp(name, "\&.strtab") == 0)
+305             strtab = (const char*) shdr[i]\&.sh_addr;
+306         
+307 
+308         if(strcmp(name, "\&.symtab") == 0) {
+309             symtab = (elf32_sym_t*) shdr[i]\&.sh_addr;
+310             symtabsz = shdr[i]\&.sh_size;
+311         }
+312     }
+313 
+314 
+315     for(int i = 0; i < (symtabsz / sizeof(elf32_sym_t)); i++) {
+316         if(ELF32_ST_TYPE(symtab[i]\&.st_info) != 0x02)
+317             continue;
+318 
+319         if((symaddr >= symtab[i]\&.st_value) && (symaddr < (symtab[i]\&.st_value + symtab[i]\&.st_size))) {
+320             const char* name = (const char*) ((uint32_t) strtab + symtab[i]\&.st_name);
+321             return (char*) name;
+322         }
+323     }
+324 
+325     return NULL;
+326 }
+.fi
+.SH "Variable Documentation"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Current task address\&. 
+.PP
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

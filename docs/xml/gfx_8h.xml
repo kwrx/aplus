@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="gfx_8h" kind="file">
+    <compoundname>gfx.h</compoundname>
+    <includes refid="atk_8h" local="no">atk.h</includes>
+    <includes local="no">stdint.h</includes>
+    <includedby refid="bitmap_8c" local="no">usr/src/libatk/src/bitmap.c</includedby>
+    <includedby refid="gfx_8c" local="no">usr/src/libatk/src/gfx.c</includedby>
+    <incdepgraph>
+      <node id="2116">
+        <label>stdint.h</label>
+      </node>
+      <node id="2115">
+        <label>atk/widget.h</label>
+        <link refid="widget_8h"/>
+        <childnode refid="2114" relation="include">
+        </childnode>
+      </node>
+      <node id="2113">
+        <label>usr/src/libatk/src/include/atk/gfx.h</label>
+        <link refid="gfx.h"/>
+        <childnode refid="2114" relation="include">
+        </childnode>
+        <childnode refid="2116" relation="include">
+        </childnode>
+      </node>
+      <node id="2114">
+        <label>atk.h</label>
+        <link refid="atk_8h"/>
+        <childnode refid="2115" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2118">
+        <label>usr/src/libatk/src/bitmap.c</label>
+        <link refid="bitmap_8c"/>
+      </node>
+      <node id="2117">
+        <label>usr/src/libatk/src/include/atk/gfx.h</label>
+        <link refid="gfx.h"/>
+        <childnode refid="2118" relation="include">
+        </childnode>
+        <childnode refid="2119" relation="include">
+        </childnode>
+      </node>
+      <node id="2119">
+        <label>usr/src/libatk/src/gfx.c</label>
+        <link refid="gfx_8c"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structatk__gfx" prot="public">atk_gfx</innerclass>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="gfx_8h_1a8c8412155528b364a972c509c5cca18e" prot="public" static="no">
+        <type>struct <ref refid="structatk__gfx" kindref="compound">atk_gfx</ref></type>
+        <definition>typedef struct atk_gfx  atk_gfx_t</definition>
+        <argsstring></argsstring>
+        <name>atk_gfx_t</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="17" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_ATK_GFX_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_ATK_GFX_H</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="atk_8h" kindref="compound">atk.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="structatk__gfx" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structatk__gfx" kindref="compound">atk_gfx</ref><sp/>{</highlight></codeline>
+<codeline lineno="8" refid="structatk__gfx_1a8c8d73df98a82572a666824b52b99964" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structatk__gfx_1a8c8d73df98a82572a666824b52b99964" kindref="member">width</ref>;</highlight></codeline>
+<codeline lineno="9" refid="structatk__gfx_1a5dcdddc358345ad49f4015253f1acbe6" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref><sp/><ref refid="structatk__gfx_1a5dcdddc358345ad49f4015253f1acbe6" kindref="member">height</ref>;</highlight></codeline>
+<codeline lineno="10" refid="structatk__gfx_1a7f050db1e3d134473b2077ab5275b727" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structatk__gfx_1a7f050db1e3d134473b2077ab5275b727" kindref="member">stride</ref>;</highlight></codeline>
+<codeline lineno="11" refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" kindref="member">bpp</ref>;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="13" refid="structatk__gfx_1a00413765e42e1a347e45401e1a2e95bf" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*<sp/><ref refid="structatk__gfx_1a00413765e42e1a347e45401e1a2e95bf" kindref="member">framebuffer</ref>;</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>void<sp/>(*<ref refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" kindref="member">__plot</ref>)<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*,<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref>);</highlight></codeline>
+<codeline lineno="16" refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>(*<ref refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" kindref="member">__get</ref>)<sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">*);</highlight></codeline>
+<codeline lineno="17"><highlight class="normal">}<sp/><ref refid="gfx_8h_1a8c8412155528b364a972c509c5cca18e" kindref="member">atk_gfx_t</ref>;</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h"/>
+  </compounddef>
+</doxygen>

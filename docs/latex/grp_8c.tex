@@ -1,0 +1,60 @@
+\hypertarget{grp_8c}{\section{usr/src/libposix/src/grp.c File Reference}
+\label{grp_8c}\index{usr/src/libposix/src/grp.\+c@{usr/src/libposix/src/grp.\+c}}
+}
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+pid\+\_\+t \hyperlink{grp_8c_a744446ac24606c182bbd911772a04ca0}{getpgrp} ()
+\item 
+int \hyperlink{grp_8c_a68c3d959a84492b12576f6098ead6154}{setpgrp} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{grp_8c_a744446ac24606c182bbd911772a04ca0}{\index{grp.\+c@{grp.\+c}!getpgrp@{getpgrp}}
+\index{getpgrp@{getpgrp}!grp.\+c@{grp.\+c}}
+\subsubsection[{getpgrp}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t getpgrp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{grp_8c_a744446ac24606c182bbd911772a04ca0}
+
+
+Definition at line 6 of file grp.\+c.
+
+
+
+References errno.
+
+
+\begin{DoxyCode}
+6                 \{
+7     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+8     \textcolor{keywordflow}{return} -1;
+9 \}
+\end{DoxyCode}
+\hypertarget{grp_8c_a68c3d959a84492b12576f6098ead6154}{\index{grp.\+c@{grp.\+c}!setpgrp@{setpgrp}}
+\index{setpgrp@{setpgrp}!grp.\+c@{grp.\+c}}
+\subsubsection[{setpgrp}]{\setlength{\rightskip}{0pt plus 5cm}int setpgrp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{grp_8c_a68c3d959a84492b12576f6098ead6154}
+
+
+Definition at line 11 of file grp.\+c.
+
+
+
+References errno.
+
+
+\begin{DoxyCode}
+11               \{
+12     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+13     \textcolor{keywordflow}{return} -1;
+14 \}
+\end{DoxyCode}

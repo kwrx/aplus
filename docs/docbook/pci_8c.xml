@@ -195,6 +195,6 @@
         </simplesect>
     <simplesect>
         <title>Detailed Description</title>
-    <para>Definition in file /opt/prj/aPlus/src/arch/pci.c</para>
+    <para>Definition in file /opt/prj/aPlus/src/arch/i386/pci.c</para>
     </simplesect>
 </section>

@@ -3,6 +3,7 @@
 }
 {\ttfamily \#include $<$unistd.\+h$>$}\\*
 {\ttfamily \#include $<$sys/stat.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
 {\ttfamily \#include \char`\"{}config.\+h\char`\"{}}\\*
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -10,6 +11,10 @@
 gid\+\_\+t \hyperlink{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}{getgid} (void)
 \item 
 gid\+\_\+t \hyperlink{gid_8c_a3e7c694d68b4e62c1f275612d30b6d9d}{getegid} (void)
+\item 
+pid\+\_\+t \hyperlink{gid_8c_a48f523c98970793dfc2c5a05f6832006}{getpgid} (pid\+\_\+t pid)
+\item 
+int \hyperlink{gid_8c_ae5aae5b0275eefe79314a4673195e475}{setpgid} (pid\+\_\+t pid, pid\+\_\+t pgid)
 \item 
 int \hyperlink{gid_8c_a5dec302aecbe8f2f9be1528cd5ffeba7}{getgroups} (int len, gid\+\_\+t $\ast$\hyperlink{structlist}{list})
 \end{DoxyCompactItemize}
@@ -25,7 +30,7 @@ int \hyperlink{gid_8c_a5dec302aecbe8f2f9be1528cd5ffeba7}{getgroups} (int len, gi
 )}}\label{gid_8c_a3e7c694d68b4e62c1f275612d30b6d9d}
 
 
-Definition at line 14 of file gid.\+c.
+Definition at line 15 of file gid.\+c.
 
 
 
@@ -33,9 +38,9 @@ References getgid().
 
 
 \begin{DoxyCode}
-14                     \{
-15     \textcolor{keywordflow}{return} \hyperlink{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}{getgid}();
-16 \}
+15                     \{
+16     \textcolor{keywordflow}{return} \hyperlink{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}{getgid}();
+17 \}
 \end{DoxyCode}
 \hypertarget{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}{\index{gid.\+c@{gid.\+c}!getgid@{getgid}}
 \index{getgid@{getgid}!gid.\+c@{gid.\+c}}
@@ -46,17 +51,17 @@ References getgid().
 )}}\label{gid_8c_a58ca281cc6931c62e6a85e2edb5b4b49}
 
 
-Definition at line 6 of file gid.\+c.
+Definition at line 7 of file gid.\+c.
 
 
 \begin{DoxyCode}
-6                    \{
-7     \textcolor{keyword}{struct }stat st;
-8     \textcolor{keywordflow}{if}(fstat(STDIN\_FILENO, &st) != 0)
-9         \textcolor{keywordflow}{return} -1;
-10 
-11     \textcolor{keywordflow}{return} st.st\_gid;
-12 \}
+7                    \{
+8     \textcolor{keyword}{struct }stat st;
+9     \textcolor{keywordflow}{if}(fstat(STDIN\_FILENO, &st) != 0)
+10         \textcolor{keywordflow}{return} -1;
+11 
+12     \textcolor{keywordflow}{return} st.st\_gid;
+13 \}
 \end{DoxyCode}
 \hypertarget{gid_8c_a5dec302aecbe8f2f9be1528cd5ffeba7}{\index{gid.\+c@{gid.\+c}!getgroups@{getgroups}}
 \index{getgroups@{getgroups}!gid.\+c@{gid.\+c}}
@@ -68,11 +73,51 @@ Definition at line 6 of file gid.\+c.
 )}}\label{gid_8c_a5dec302aecbe8f2f9be1528cd5ffeba7}
 
 
-Definition at line 18 of file gid.\+c.
+Definition at line 28 of file gid.\+c.
 
 
 \begin{DoxyCode}
-18                                     \{
-19     \textcolor{keywordflow}{return} \_\_os\_getgroups(len, \hyperlink{structlist}{list});
-20 \}
+28                                     \{
+29     \textcolor{keywordflow}{return} \_\_os\_getgroups(len, \hyperlink{structlist}{list});
+30 \}
+\end{DoxyCode}
+\hypertarget{gid_8c_a48f523c98970793dfc2c5a05f6832006}{\index{gid.\+c@{gid.\+c}!getpgid@{getpgid}}
+\index{getpgid@{getpgid}!gid.\+c@{gid.\+c}}
+\subsubsection[{getpgid}]{\setlength{\rightskip}{0pt plus 5cm}pid\+\_\+t getpgid (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid}
+\end{DoxyParamCaption}
+)}}\label{gid_8c_a48f523c98970793dfc2c5a05f6832006}
+
+
+Definition at line 19 of file gid.\+c.
+
+
+\begin{DoxyCode}
+19                          \{
+20     \textcolor{keywordflow}{return} pid;
+21 \}
+\end{DoxyCode}
+\hypertarget{gid_8c_ae5aae5b0275eefe79314a4673195e475}{\index{gid.\+c@{gid.\+c}!setpgid@{setpgid}}
+\index{setpgid@{setpgid}!gid.\+c@{gid.\+c}}
+\subsubsection[{setpgid}]{\setlength{\rightskip}{0pt plus 5cm}int setpgid (
+\begin{DoxyParamCaption}
+\item[{pid\+\_\+t}]{pid, }
+\item[{pid\+\_\+t}]{pgid}
+\end{DoxyParamCaption}
+)}}\label{gid_8c_ae5aae5b0275eefe79314a4673195e475}
+
+
+Definition at line 23 of file gid.\+c.
+
+
+
+References errno.
+
+
+\begin{DoxyCode}
+23                                    \{
+24     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
+25     \textcolor{keywordflow}{return} -1;
+26 \}
 \end{DoxyCode}

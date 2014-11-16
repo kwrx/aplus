@@ -3,8 +3,10 @@
     <title>exec.c File Reference</title>
     <programlisting>#include &lt;aplus.h&gt;</programlisting>
     <programlisting>#include &lt;aplus/mm.h&gt;</programlisting>
+    <programlisting>#include &lt;aplus/task.h&gt;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;errno.h&gt;</programlisting>
+    <programlisting>#include &lt;grub.h&gt;</programlisting>
         <simplesect>
             <title> Classes </title>
             <para>
@@ -25,6 +27,13 @@
                 <itemizedlist>
                     <listitem>
                         <para>struct <link linkend="structelf32__phdr">elf32_phdr</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>struct <link linkend="structelf32__sym__t">elf32_sym_t</link></para>
                     </listitem>
                 </itemizedlist>
             </para>
@@ -335,6 +344,20 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                            <para>#define <link linkend="exec_8c_1a3b84f3e0e035d1264115f5c76227c5eb">ELF32_ST_BIND</link> ((i &gt;&gt; 4))</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="exec_8c_1a54dd2783f11c5f926d8db9250e1baa35">ELF32_ST_TYPE</link> ((i) &amp; 0x0F)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                             <para>#define <link linkend="exec_8c_1aa3ea57d3d539b6618daaaaf7af4bec80">ELF_DEBUG</link><para><emphasis>Enable or disable debug for ELF.</emphasis></para>
 </para>
                     </listitem>
@@ -409,6 +432,23 @@
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef struct <link linkend="structelf32__sym__t">elf32_sym_t</link>  <link linkend="exec_8c_1a0a07204ebf864bb143d95b4525e80938">elf32_sym_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </simplesect>
+        <simplesect>
+            <title>Variables</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="exec_8c_1a4743b3673a8794b8e7bd0b6c91a63cd5">current_task</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
         <simplesect>
             <title>Functions</title>
@@ -433,6 +473,14 @@
                     <listitem>
                         <para>void * <link linkend="exec_8c_1aeb05ad85647cdfbf15b432a9d2f32926">elf32_load</link> (
 void * image, int * vaddr, int * vsize)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>char * <link linkend="exec_8c_1ac79bb43069a3d3c097c8d95dcf0c2784">elf_kernel_lookup</link> (
+<link linkend="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</link> symaddr)</para>
                     </listitem>
                 </itemizedlist>
             </para>

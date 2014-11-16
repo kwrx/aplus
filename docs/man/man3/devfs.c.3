@@ -1,4 +1,4 @@
-.TH "src/fs/devfs.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/fs/devfs.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -25,6 +25,8 @@ src/fs/devfs.c \-
 \fC#include <aplus\&.h>\fP
 .br
 \fC#include <aplus/task\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
 .br
 
 .SS "Functions"
@@ -164,7 +166,7 @@ References inode::atime, inode::chown, inode::creat, inode::ctime, inode::dev, d
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SS "\fBinode_t\fP* devfs"
 
 .PP

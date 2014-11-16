@@ -1,4 +1,4 @@
-.TH "src/syscall/fstat.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/fstat.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -69,7 +69,7 @@ Upon successful completion, 0 shall be returned\&.
 .PP
 Definition at line 24 of file fstat\&.c\&.
 .PP
-References inode::atime, inode::ctime, inode::dev, errno, task::fd, inode::gid, inode::ino, inode::mode, inode::mtime, inode::nlink, inode::rdev, inode::size, and inode::uid\&.
+References inode::atime, inode::ctime, inode::dev, errno, task::fd, inode::gid, inode::ino, inode::mode, inode::mtime, inode::nlink, inode::rdev, inode::size, TASK_MAX_FD, and inode::uid\&.
 .PP
 .nf
 24                                        {
@@ -78,28 +78,34 @@ References inode::atime, inode::ctime, inode::dev, errno, task::fd, inode::gid, 
 27         return -1;
 28     }
 29 
-30     inode_t* ino = current_task->fd[fd];
-31     if(!ino) {
-32         errno = EBADF;
-33         return -1;
-34     }
-35     
-36     st->st_mode = ino->mode;
-37     st->st_ino = ino->ino;
-38     st->st_dev = ino->dev;
-39     st->st_uid = ino->uid;
-40     st->st_gid = ino->gid;
-41     st->st_atime = ino->atime;
-42     st->st_ctime = ino->ctime;
-43     st->st_mtime = ino->mtime;
-44     st->st_nlink = ino->nlink;
-45     st->st_size = ino->size;
-46     st->st_rdev = ino->rdev;
-47     st->st_blksize = 512;
-48     st->st_blocks = st->st_size / st->st_blksize;
-49     
-50     return 0;
-51 }
+30     if(fd < 0 || fd > TASK_MAX_FD) {
+31         errno = EBADF;
+32         return -1;
+33     }
+34     
+35 
+36     inode_t* ino = current_task->fd[fd];
+37     if(!ino) {
+38         errno = EBADF;
+39         return -1;
+40     }
+41     
+42     st->st_mode = ino->mode;
+43     st->st_ino = ino->ino;
+44     st->st_dev = ino->dev;
+45     st->st_uid = ino->uid;
+46     st->st_gid = ino->gid;
+47     st->st_atime = ino->atime;
+48     st->st_ctime = ino->ctime;
+49     st->st_mtime = ino->mtime;
+50     st->st_nlink = ino->nlink;
+51     st->st_size = ino->size;
+52     st->st_rdev = ino->rdev;
+53     st->st_blksize = 512;
+54     st->st_blocks = st->st_size / st->st_blksize;
+55     
+56     return 0;
+57 }
 .fi
 .SS "SYSCALL (\fBsys_fstat\fP, 4)"
 
@@ -110,7 +116,7 @@ References inode::atime, inode::ctime, inode::dev, errno, task::fd, inode::gid, 
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

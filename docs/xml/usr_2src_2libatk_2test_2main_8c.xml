@@ -5,116 +5,58 @@
     <includes local="no">stdio.h</includes>
     <includes local="no">signal.h</includes>
     <includes local="no">assert.h</includes>
+    <includes refid="atk_8h" local="no">atk.h</includes>
+    <includes refid="widget_8h" local="no">atk/widget.h</includes>
     <incdepgraph>
-      <node id="987">
+      <node id="1052">
         <label>usr/src/libatk/test/main.c</label>
         <link refid="usr/src/libatk/test/main.c"/>
-        <childnode refid="988" relation="include">
+        <childnode refid="1053" relation="include">
         </childnode>
-        <childnode refid="989" relation="include">
+        <childnode refid="1054" relation="include">
         </childnode>
-        <childnode refid="990" relation="include">
+        <childnode refid="1055" relation="include">
+        </childnode>
+        <childnode refid="1056" relation="include">
+        </childnode>
+        <childnode refid="1057" relation="include">
         </childnode>
       </node>
-      <node id="990">
+      <node id="1055">
         <label>assert.h</label>
       </node>
-      <node id="989">
+      <node id="1057">
+        <label>atk/widget.h</label>
+        <link refid="widget_8h"/>
+        <childnode refid="1056" relation="include">
+        </childnode>
+      </node>
+      <node id="1056">
+        <label>atk.h</label>
+        <link refid="atk_8h"/>
+        <childnode refid="1057" relation="include">
+        </childnode>
+      </node>
+      <node id="1054">
         <label>signal.h</label>
       </node>
-      <node id="988">
+      <node id="1053">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
       <sectiondef kind="func">
-      <memberdef kind="function" id="usr_2src_2libatk_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>int</type>
-        <definition>static int __test_signals__</definition>
-        <argsstring>(int sig)</argsstring>
-        <name>__test_signals__</name>
-        <param>
-          <type>int</type>
-          <declname>sig</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/test/main.c" line="6" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/test/main.c" bodystart="6" bodyend="10"/>
-      </memberdef>
-      <memberdef kind="function" id="usr_2src_2libatk_2test_2main_8c_1afe4dfd5e49215955311250c669123180" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>int</type>
-        <definition>static int test_stdio</definition>
-        <argsstring>()</argsstring>
-        <name>test_stdio</name>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/test/main.c" line="12" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/test/main.c" bodystart="12" bodyend="14"/>
-      </memberdef>
-      <memberdef kind="function" id="usr_2src_2libatk_2test_2main_8c_1a72b40b42ede33a5df17620eb3ebfbcb7" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>int</type>
-        <definition>static int test_args</definition>
-        <argsstring>(int argc, char **argv)</argsstring>
-        <name>test_args</name>
-        <param>
-          <type>int</type>
-          <declname>argc</declname>
-        </param>
-        <param>
-          <type>char **</type>
-          <declname>argv</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/test/main.c" line="16" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/test/main.c" bodystart="16" bodyend="25"/>
-      </memberdef>
-      <memberdef kind="function" id="usr_2src_2libatk_2test_2main_8c_1a1bc601ec27d4ef9c2b6ee94175fe3439" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>int</type>
-        <definition>static int test_signals</definition>
-        <argsstring>()</argsstring>
-        <name>test_signals</name>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/test/main.c" line="28" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/test/main.c" bodystart="28" bodyend="31"/>
-        <references refid="usr_2src_2libatk_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900" compoundref="usr_2src_2libatk_2test_2main_8c" startline="6" endline="10">__test_signals__</references>
-      </memberdef>
-      <memberdef kind="function" id="usr_2src_2libatk_2test_2main_8c_1a3c04138a5bfe5d72780bb7e82a18e627" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="usr_2src_2libatk_2test_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
         <definition>int main</definition>
-        <argsstring>(int argc, char **argv)</argsstring>
+        <argsstring>()</argsstring>
         <name>main</name>
-        <param>
-          <type>int</type>
-          <declname>argc</declname>
-        </param>
-        <param>
-          <type>char **</type>
-          <declname>argv</declname>
-        </param>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/test/main.c" line="34" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/test/main.c" bodystart="34" bodyend="42"/>
-        <references refid="usr_2src_2libatk_2test_2main_8c_1a72b40b42ede33a5df17620eb3ebfbcb7" compoundref="usr_2src_2libatk_2test_2main_8c" startline="16" endline="25">test_args</references>
-        <references refid="usr_2src_2libatk_2test_2main_8c_1a1bc601ec27d4ef9c2b6ee94175fe3439" compoundref="usr_2src_2libatk_2test_2main_8c" startline="28" endline="31">test_signals</references>
-        <references refid="usr_2src_2libatk_2test_2main_8c_1afe4dfd5e49215955311250c669123180" compoundref="usr_2src_2libatk_2test_2main_8c" startline="12" endline="14">test_stdio</references>
+        <location file="/opt/prj/aPlus/usr/src/libatk/test/main.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/test/main.c" bodystart="9" bodyend="11"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -126,44 +68,13 @@
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;signal.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;assert.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="4"><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight></codeline>
-<codeline lineno="6" refid="usr_2src_2libatk_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="usr_2src_2libatk_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900" kindref="member">__test_signals__</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>sig)<sp/>{</highlight></codeline>
-<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;received<sp/>signal<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/>sig);</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="atk_8h" kindref="compound">atk.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="widget_8h" kindref="compound">atk/widget.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
 <codeline lineno="8"><highlight class="normal"></highlight></codeline>
-<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="10"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight></codeline>
-<codeline lineno="12" refid="usr_2src_2libatk_2test_2main_8c_1afe4dfd5e49215955311250c669123180" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="usr_2src_2libatk_2test_2main_8c_1afe4dfd5e49215955311250c669123180" kindref="member">test_stdio</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>printf(</highlight><highlight class="stringliteral">&quot;Bla<sp/>bla<sp/>bla\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="14"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="15"><highlight class="normal"></highlight></codeline>
-<codeline lineno="16" refid="usr_2src_2libatk_2test_2main_8c_1a72b40b42ede33a5df17620eb3ebfbcb7" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="usr_2src_2libatk_2test_2main_8c_1a72b40b42ede33a5df17620eb3ebfbcb7" kindref="member">test_args</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/>argv)<sp/>{</highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(argc<sp/>==<sp/>0)</highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"></highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i;</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>argc;<sp/>i++)</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;argv[%d]<sp/>=&gt;<sp/>\&quot;%s\&quot;\n&quot;</highlight><highlight class="normal">,<sp/>i,<sp/>argv[i]);</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>1;</highlight></codeline>
-<codeline lineno="25"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"></highlight></codeline>
-<codeline lineno="27"><highlight class="normal"></highlight></codeline>
-<codeline lineno="28" refid="usr_2src_2libatk_2test_2main_8c_1a1bc601ec27d4ef9c2b6ee94175fe3439" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="usr_2src_2libatk_2test_2main_8c_1a1bc601ec27d4ef9c2b6ee94175fe3439" kindref="member">test_signals</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(signal(SIGUSR1,<sp/><ref refid="usr_2src_2libatk_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900" kindref="member">__test_signals__</ref>)<sp/>!=<sp/>SIG_ERR);</highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">raise</highlight><highlight class="normal">(SIGUSR1);</highlight></codeline>
-<codeline lineno="31"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="32"><highlight class="normal"></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight></codeline>
-<codeline lineno="34" refid="usr_2src_2libatk_2test_2main_8c_1a3c04138a5bfe5d72780bb7e82a18e627" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kindref="member">main</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">**<sp/>argv)<sp/>{</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(<ref refid="usr_2src_2libatk_2test_2main_8c_1afe4dfd5e49215955311250c669123180" kindref="member">test_stdio</ref>()<sp/>&amp;&amp;<sp/></highlight><highlight class="stringliteral">&quot;Test<sp/>stdio<sp/>failed&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(<ref refid="usr_2src_2libatk_2test_2main_8c_1a72b40b42ede33a5df17620eb3ebfbcb7" kindref="member">test_args</ref>(argc,<sp/>argv)<sp/>&amp;&amp;<sp/></highlight><highlight class="stringliteral">&quot;Test<sp/>arguments<sp/>failed&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>assert(<ref refid="usr_2src_2libatk_2test_2main_8c_1a1bc601ec27d4ef9c2b6ee94175fe3439" kindref="member">test_signals</ref>()<sp/>&gt;=<sp/>0<sp/>&amp;&amp;<sp/></highlight><highlight class="stringliteral">&quot;Test<sp/>signals<sp/>failed&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>printf(</highlight><highlight class="stringliteral">&quot;Test<sp/>OK\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
-<codeline lineno="42"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="9" refid="usr_2src_2libatk_2test_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="src_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4" kindref="member">main</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="11"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libatk/test/main.c"/>
   </compounddef>

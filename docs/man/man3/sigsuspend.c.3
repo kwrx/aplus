@@ -1,0 +1,40 @@
+.TH "usr/src/libposix/src/sigsuspend.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+usr/src/libposix/src/sigsuspend.c \- 
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <signal\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <errno\&.h>\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBsigsuspend\fP (const sigset_t *set)"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int sigsuspend (const sigset_t *set)"
+
+.PP
+Definition at line 5 of file sigsuspend\&.c\&.
+.PP
+References errno\&.
+.PP
+.nf
+5                                     {
+6     errno = ENOSYS;
+7     return -1;
+8 }
+.fi
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

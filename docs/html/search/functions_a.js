@@ -6,5 +6,6 @@ var searchData=
   ['kmalloc',['kmalloc',['../mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c',1,'mm.h']]],
   ['kprintf',['kprintf',['../debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a',1,'debug.c']]],
   ['krealloc',['krealloc',['../mm_8h.html#a2e2878c4e9b542b6e68d7ceccfdcfc86',1,'krealloc(void *, size_t):&#160;mm.c'],['../mm_8c.html#a0a2a93dff1df0b626cb5ff6d85d0553e',1,'krealloc(void *ptr, size_t size):&#160;mm.c']]],
-  ['ksprintf',['ksprintf',['../debug_8c.html#a123a367aba8cf7d2c802b6638b78a056',1,'debug.c']]]
+  ['ksprintf',['ksprintf',['../debug_8c.html#a123a367aba8cf7d2c802b6638b78a056',1,'debug.c']]],
+  ['kvmalloc',['kvmalloc',['../mm_8c.html#a0fa5db9ef345269ef8fb232a31c0b5cc',1,'mm.c']]]
 ];

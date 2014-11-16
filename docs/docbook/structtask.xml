@@ -40,6 +40,13 @@
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para>pid_t owner</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para>struct task::@4 context</para>
                     </listitem>
                 </itemizedlist>

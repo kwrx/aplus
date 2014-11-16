@@ -48,46 +48,46 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="80">
+      <node id="89">
         <label>inode</label>
         <link refid="structinode"/>
-        <childnode refid="80" relation="usage">
+        <childnode refid="89" relation="usage">
           <edgelabel>+finddir</edgelabel>
           <edgelabel>+link</edgelabel>
           <edgelabel>+parent</edgelabel>
           <edgelabel>+creat</edgelabel>
         </childnode>
-        <childnode refid="81" relation="usage">
+        <childnode refid="90" relation="usage">
           <edgelabel>+readdir</edgelabel>
         </childnode>
       </node>
-      <node id="79">
+      <node id="88">
         <label>task</label>
         <link refid="structtask"/>
-        <childnode refid="80" relation="usage">
+        <childnode refid="89" relation="usage">
           <edgelabel>+cwd</edgelabel>
           <edgelabel>+exe</edgelabel>
           <edgelabel>+fd</edgelabel>
         </childnode>
-        <childnode refid="79" relation="usage">
+        <childnode refid="88" relation="usage">
           <edgelabel>+parent</edgelabel>
         </childnode>
       </node>
-      <node id="81">
+      <node id="90">
         <label>dirent</label>
         <link refid="structdirent"/>
       </node>
-      <node id="77">
+      <node id="86">
         <label>pipeinfo</label>
         <link refid="structpipeinfo"/>
-        <childnode refid="78" relation="usage">
+        <childnode refid="87" relation="usage">
           <edgelabel>+stream</edgelabel>
         </childnode>
       </node>
-      <node id="78">
+      <node id="87">
         <label>bufio</label>
         <link refid="structbufio"/>
-        <childnode refid="79" relation="usage">
+        <childnode refid="88" relation="usage">
           <edgelabel>+task</edgelabel>
         </childnode>
       </node>

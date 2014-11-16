@@ -1,7 +1,7 @@
 var searchData=
 [
   ['pci_5fdevice_5ft',['pci_device_t',['../pci_8h.html#ab3c98ba0de1f963ef2f46200b090815b',1,'pci.h']]],
-  ['pipeinfo_5ft',['pipeinfo_t',['../pipe_8c.html#ac26d15f7a161e67a1245925bf9ec0b64',1,'pipe.c']]],
+  ['pipeinfo_5ft',['pipeinfo_t',['../fs_2pipe_8c.html#ac26d15f7a161e67a1245925bf9ec0b64',1,'pipe.c']]],
   ['pthread_5fattr_5ft',['pthread_attr_t',['../pthread_8h.html#ae242a79436919ba1cd46e38598bc17e7',1,'pthread.h']]],
   ['pthread_5fbarrier_5ft',['pthread_barrier_t',['../pthread_8h.html#a0af030d8520cb3271d895b21a5ecca34',1,'pthread.h']]],
   ['pthread_5fbarrierattr_5ft',['pthread_barrierattr_t',['../pthread_8h.html#a8b994175b42c340d079d21007eaf51c7',1,'pthread.h']]],

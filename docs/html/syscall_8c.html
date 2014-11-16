@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.8"/>
-<title>aPlus: src/arch/syscall.c File Reference</title>
+<title>aPlus: src/arch/i386/syscall.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -122,8 +122,8 @@ $(document).ready(function(){initNavTree('syscall_8c.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a7cee1b8da707d135695bc11acee66b63"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syscall_8c.html#a7cee1b8da707d135695bc11acee66b63">SYSCALL_DEBUG</a></td></tr>
-<tr class="separator:a7cee1b8da707d135695bc11acee66b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae19ed96e8d4fe9da0d4bb8c5d0a9d6e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syscall_8c.html#aae19ed96e8d4fe9da0d4bb8c5d0a9d6e">NSYSCALLS</a>&#160;&#160;&#160;1024</td></tr>
+<tr class="separator:aae19ed96e8d4fe9da0d4bb8c5d0a9d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -140,17 +140,17 @@ Variables</h2></td></tr>
 <tr class="separator:afb85e77f03c9acf2f02687360c17dd91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a7cee1b8da707d135695bc11acee66b63"></a>
+<a class="anchor" id="aae19ed96e8d4fe9da0d4bb8c5d0a9d6e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SYSCALL_DEBUG</td>
+          <td class="memname">#define NSYSCALLS&#160;&#160;&#160;1024</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="syscall_8c_source.html#l00009">9</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
+<p>Definition at line <a class="el" href="syscall_8c_source.html#l00012">12</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
 
 </div>
 </div>
@@ -169,25 +169,13 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="syscall_8c_source.html#l00081">81</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
+<p>Definition at line <a class="el" href="syscall_8c_source.html#l00095">95</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
 
-<p>References <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, and <a class="el" href="syscall_8c_source.html#l00055">syscall_invoke()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                               {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#ifdef SYSCALL_DEBUG</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;syscall: called %d (%x, %x, %x, %x, %x);&quot;</span>, r-&gt;eax, r-&gt;ebx, r-&gt;ecx, r-&gt;edx, r-&gt;esi, r-&gt;edi);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">int</span> ret = <a class="code" href="syscall_8c.html#a468aa05f3eb6adc7330d73e9bb5c6951">syscall_invoke</a>(r-&gt;eax, r-&gt;ebx, r-&gt;ecx, r-&gt;edx, r-&gt;esi, r-&gt;edi);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#ifdef SYSCALL_DEBUG</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot; returned %x\n&quot;</span>, ret);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
-<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
-<div class="ttc" id="syscall_8c_html_a468aa05f3eb6adc7330d73e9bb5c6951"><div class="ttname"><a href="syscall_8c.html#a468aa05f3eb6adc7330d73e9bb5c6951">syscall_invoke</a></div><div class="ttdeci">int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4)</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00055">syscall.c:55</a></div></div>
+<p>References <a class="el" href="syscall_8c_source.html#l00057">syscall_invoke()</a>.</p>
+<div class="fragment"><div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                               {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="syscall_8c.html#a468aa05f3eb6adc7330d73e9bb5c6951">syscall_invoke</a>(r-&gt;eax, r-&gt;ebx, r-&gt;ecx, r-&gt;edx, r-&gt;esi, r-&gt;edi);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
+<div class="ttc" id="syscall_8c_html_a468aa05f3eb6adc7330d73e9bb5c6951"><div class="ttname"><a href="syscall_8c.html#a468aa05f3eb6adc7330d73e9bb5c6951">syscall_invoke</a></div><div class="ttdeci">int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4)</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00057">syscall.c:57</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -204,52 +192,53 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="syscall_8c_source.html#l00014">14</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
+<p>Definition at line <a class="el" href="syscall_8c_source.html#l00016">16</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
 
-<p>References <a class="el" href="attribute_8h_source.html#l00031">attribute()</a>, <a class="el" href="syscall_8h_source.html#l00010">__syscall::handler</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="list_8h_source.html#l00292">list_destroy</a>, <a class="el" href="list_8h_source.html#l00253">list_foreach</a>, <a class="el" href="syscall_8h_source.html#l00011">__syscall::number</a>, <a class="el" href="list_8h_source.html#l00054">list::size</a>, <a class="el" href="syscall_8c_source.html#l00012">syscall_handlers</a>, and <a class="el" href="attribute_8h_source.html#l00083">value</a>.</p>
-<div class="fragment"><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                   {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="structlist.html">list_t</a>* syslist = <a class="code" href="attribute_8h.html#ab96abe3fdf944e75a2316807105c1b6e">attribute</a>(<span class="stringliteral">&quot;syscall&quot;</span>);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a> = (<span class="keywordtype">void</span>**) <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keyword">sizeof</span>(<span class="keywordtype">void</span>*) * syslist-&gt;<a class="code" href="structlist.html#ae581be90bd8eb7051528b61ad216de88">size</a>);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    memset(<a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>, 0, <span class="keyword">sizeof</span>(<span class="keywordtype">void</span>*) * syslist-&gt;<a class="code" href="structlist.html#ae581be90bd8eb7051528b61ad216de88">size</a>);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="list_8h.html#a1f44c976d2c698407a17fef984a5b232">list_foreach</a>(<a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>, syslist) {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="struct____syscall.html">syscall_t</a>* sys = (<a class="code" href="struct____syscall.html">syscall_t</a>*) <a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <span class="keywordflow">if</span>(<a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[sys-&gt;<a class="code" href="struct____syscall.html#a7f020a41ed9bf3daff3dfc46ee673eef">number</a>])</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;syscall: duplicate number of %d handler\n&quot;</span>);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[sys-&gt;<a class="code" href="struct____syscall.html#a7f020a41ed9bf3daff3dfc46ee673eef">number</a>] = sys-&gt;<a class="code" href="struct____syscall.html#af1d75ee98d8568f74e8421654a1081d3">handler</a>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;syscall: loaded %d handlers\n&quot;</span>, syslist-&gt;<a class="code" href="structlist.html#ae581be90bd8eb7051528b61ad216de88">size</a>);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="list_8h.html#a9c676c5a77ee9c18ccaadcb4f99fc990">list_destroy</a>(syslist);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">    #define NSYSCALLS       1024</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0, s = 0; i &lt; NSYSCALLS; i++) {</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">if</span>(<a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[i] == NULL) {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            <span class="keywordflow">if</span>(!s)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            <span class="keywordflow">if</span>(s &gt; 1)</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\t%d..%d\n&quot;</span>, i - s, i - 1);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\t%d\n&quot;</span>, i - s);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            s = 0;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        } <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            s++;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<p>References <a class="el" href="attribute_8h_source.html#l00031">attribute()</a>, <a class="el" href="syscall_8h_source.html#l00010">__syscall::handler</a>, <a class="el" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc()</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="list_8h_source.html#l00292">list_destroy</a>, <a class="el" href="list_8h_source.html#l00253">list_foreach</a>, <a class="el" href="syscall_8c_source.html#l00012">NSYSCALLS</a>, <a class="el" href="syscall_8h_source.html#l00011">__syscall::number</a>, <a class="el" href="list_8h_source.html#l00054">list::size</a>, <a class="el" href="syscall_8c_source.html#l00014">syscall_handlers</a>, and <a class="el" href="attribute_8h_source.html#l00083">value</a>.</p>
+<div class="fragment"><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                   {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="code" href="structlist.html">list_t</a>* syslist = <a class="code" href="attribute_8h.html#ab96abe3fdf944e75a2316807105c1b6e">attribute</a>(<span class="stringliteral">&quot;syscall&quot;</span>);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a> = (<span class="keywordtype">void</span>**) <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keyword">sizeof</span>(<span class="keywordtype">void</span>*) * <a class="code" href="syscall_8c.html#aae19ed96e8d4fe9da0d4bb8c5d0a9d6e">NSYSCALLS</a>);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    memset(<a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>, 0, <span class="keyword">sizeof</span>(<span class="keywordtype">void</span>*) * <a class="code" href="syscall_8c.html#aae19ed96e8d4fe9da0d4bb8c5d0a9d6e">NSYSCALLS</a>);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="list_8h.html#a1f44c976d2c698407a17fef984a5b232">list_foreach</a>(<a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>, syslist) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        <a class="code" href="struct____syscall.html">syscall_t</a>* sys = (<a class="code" href="struct____syscall.html">syscall_t</a>*) <a class="code" href="attribute_8h.html#ae7f66047e6e39ba2bb6af8b95f00d1dd">value</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordflow">if</span>(<a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[sys-&gt;<a class="code" href="struct____syscall.html#a7f020a41ed9bf3daff3dfc46ee673eef">number</a>])</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;syscall: duplicate number of %d handler\n&quot;</span>);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[sys-&gt;<a class="code" href="struct____syscall.html#a7f020a41ed9bf3daff3dfc46ee673eef">number</a>] = sys-&gt;<a class="code" href="struct____syscall.html#af1d75ee98d8568f74e8421654a1081d3">handler</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;syscall: loaded %d handlers\n&quot;</span>, syslist-&gt;<a class="code" href="structlist.html#ae581be90bd8eb7051528b61ad216de88">size</a>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="list_8h.html#a9c676c5a77ee9c18ccaadcb4f99fc990">list_destroy</a>(syslist);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i = 0, s = 0; i &lt; <a class="code" href="syscall_8c.html#aae19ed96e8d4fe9da0d4bb8c5d0a9d6e">NSYSCALLS</a>; i++) {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordflow">if</span>(<a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[i] == NULL) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <span class="keywordflow">if</span>(!s)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            <span class="keywordflow">if</span>(s &gt; 1)</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\t%d..%d\n&quot;</span>, i - s, i - 1);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;\t%d\n&quot;</span>, i - s);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            s = 0;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        } <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            s++;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
 <div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
-<div class="ttc" id="syscall_8c_html_afb85e77f03c9acf2f02687360c17dd91"><div class="ttname"><a href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a></div><div class="ttdeci">static void ** syscall_handlers</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00012">syscall.c:12</a></div></div>
+<div class="ttc" id="syscall_8c_html_afb85e77f03c9acf2f02687360c17dd91"><div class="ttname"><a href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a></div><div class="ttdeci">static void ** syscall_handlers</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00014">syscall.c:14</a></div></div>
 <div class="ttc" id="attribute_8h_html_ab96abe3fdf944e75a2316807105c1b6e"><div class="ttname"><a href="attribute_8h.html#ab96abe3fdf944e75a2316807105c1b6e">attribute</a></div><div class="ttdeci">static list_t * attribute(const char *name)</div><div class="ttdef"><b>Definition:</b> <a href="attribute_8h_source.html#l00031">attribute.h:31</a></div></div>
+<div class="ttc" id="syscall_8c_html_aae19ed96e8d4fe9da0d4bb8c5d0a9d6e"><div class="ttname"><a href="syscall_8c.html#aae19ed96e8d4fe9da0d4bb8c5d0a9d6e">NSYSCALLS</a></div><div class="ttdeci">#define NSYSCALLS</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00012">syscall.c:12</a></div></div>
 <div class="ttc" id="list_8h_html_a9c676c5a77ee9c18ccaadcb4f99fc990"><div class="ttname"><a href="list_8h.html#a9c676c5a77ee9c18ccaadcb4f99fc990">list_destroy</a></div><div class="ttdeci">#define list_destroy(list)</div><div class="ttdoc">Destroy a list. </div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00292">list.h:292</a></div></div>
 <div class="ttc" id="struct____syscall_html_af1d75ee98d8568f74e8421654a1081d3"><div class="ttname"><a href="struct____syscall.html#af1d75ee98d8568f74e8421654a1081d3">__syscall::handler</a></div><div class="ttdeci">void * handler</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8h_source.html#l00010">syscall.h:10</a></div></div>
 <div class="ttc" id="struct____syscall_html"><div class="ttname"><a href="struct____syscall.html">__syscall</a></div><div class="ttdef"><b>Definition:</b> <a href="syscall_8h_source.html#l00009">syscall.h:9</a></div></div>
@@ -310,34 +299,47 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="syscall_8c_source.html#l00055">55</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
+<p>Definition at line <a class="el" href="syscall_8c_source.html#l00057">57</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
 
-<p>References <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, and <a class="el" href="syscall_8c_source.html#l00012">syscall_handlers</a>.</p>
-<div class="fragment"><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                                                                    {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span>* handler = <a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[idx];  </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">if</span>(handler == NULL) {</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">int</span> r = 0;</div>
+<p>References <a class="el" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__()</a>, <a class="el" href="exec_8c_source.html#l00291">elf_kernel_lookup()</a>, <a class="el" href="errno_8c_source.html#l00003">errno</a>, <a class="el" href="debug_8c_source.html#l00167">kprintf()</a>, <a class="el" href="getpid_8c_source.html#l00016">sys_getpid()</a>, and <a class="el" href="syscall_8c_source.html#l00014">syscall_handlers</a>.</p>
+<div class="fragment"><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                                                                    {</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span>* handler = <a class="code" href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a>[idx];  </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">if</span>(handler == NULL) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="stringliteral">&quot;push ebx           \n&quot;</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="stringliteral">&quot;push ecx           \n&quot;</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="stringliteral">&quot;push edx           \n&quot;</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="stringliteral">&quot;push esi           \n&quot;</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="stringliteral">&quot;push edi           \n&quot;</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="stringliteral">&quot;call eax           \n&quot;</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <span class="stringliteral">&quot;add esp, 20        \n&quot;</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        : <span class="stringliteral">&quot;=a&quot;</span>(r) </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        : <span class="stringliteral">&quot;a&quot;</span>(handler), <span class="stringliteral">&quot;b&quot;</span>(p4), <span class="stringliteral">&quot;c&quot;</span>(p3), <span class="stringliteral">&quot;d&quot;</span>(p2), <span class="stringliteral">&quot;S&quot;</span>(p1), <span class="stringliteral">&quot;D&quot;</span>(p0)</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    );</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">return</span> r;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
-<div class="ttc" id="syscall_8c_html_afb85e77f03c9acf2f02687360c17dd91"><div class="ttname"><a href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a></div><div class="ttdeci">static void ** syscall_handlers</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00012">syscall.c:12</a></div></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#ifdef SYSCALL_DEBUG</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;syscall: %d call %s [%d] (%x, %x, %x, %x, %x);\n&quot;</span>, <a class="code" href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a>(), <a class="code" href="exec_8c.html#ac79bb43069a3d3c097c8d95dcf0c2784">elf_kernel_lookup</a>(handler), idx, p0, p1, p2, p3, p4);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">int</span> r = 0;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a> (</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="stringliteral">&quot;push ebx           \n&quot;</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="stringliteral">&quot;push ecx           \n&quot;</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="stringliteral">&quot;push edx           \n&quot;</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="stringliteral">&quot;push esi           \n&quot;</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="stringliteral">&quot;push edi           \n&quot;</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="stringliteral">&quot;call eax           \n&quot;</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="stringliteral">&quot;add esp, 20        \n&quot;</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        : <span class="stringliteral">&quot;=a&quot;</span>(r) </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        : <span class="stringliteral">&quot;a&quot;</span>(handler), <span class="stringliteral">&quot;b&quot;</span>(p4), <span class="stringliteral">&quot;c&quot;</span>(p3), <span class="stringliteral">&quot;d&quot;</span>(p2), <span class="stringliteral">&quot;S&quot;</span>(p1), <span class="stringliteral">&quot;D&quot;</span>(p0)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    );</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#ifdef SYSCALL_DEBUG</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a>(<span class="stringliteral">&quot;% returned %x\n&quot;</span>, r);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">return</span> r;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
+<div class="ttc" id="debug_8c_html_ac9d768b4772cc87fc88afbbbd805f96a"><div class="ttname"><a href="debug_8c.html#ac9d768b4772cc87fc88afbbbd805f96a">kprintf</a></div><div class="ttdeci">void kprintf(char *fmt,...)</div><div class="ttdoc">Formatted output conversion and print to Debug Standard Output. </div><div class="ttdef"><b>Definition:</b> <a href="debug_8c_source.html#l00167">debug.c:167</a></div></div>
+<div class="ttc" id="syscall_8c_html_afb85e77f03c9acf2f02687360c17dd91"><div class="ttname"><a href="syscall_8c.html#afb85e77f03c9acf2f02687360c17dd91">syscall_handlers</a></div><div class="ttdeci">static void ** syscall_handlers</div><div class="ttdef"><b>Definition:</b> <a href="syscall_8c_source.html#l00014">syscall.c:14</a></div></div>
 <div class="ttc" id="desc_8c_html_ad365b1ba0a341f9a84551327fe0dac7b"><div class="ttname"><a href="desc_8c.html#ad365b1ba0a341f9a84551327fe0dac7b">__asm__</a></div><div class="ttdeci">__asm__(&quot;.section .text		\n\
 	.global gdt_load	\n\
 	gdt_load:			\n\
@@ -364,6 +366,8 @@ Variables</h2></td></tr>
 						\n\
 						\n&quot;)</div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="getpid_8c_html_a81186ae980bd7a8c58c8a4d838f5decb"><div class="ttname"><a href="getpid_8c.html#a81186ae980bd7a8c58c8a4d838f5decb">sys_getpid</a></div><div class="ttdeci">pid_t sys_getpid()</div><div class="ttdef"><b>Definition:</b> <a href="getpid_8c_source.html#l00016">getpid.c:16</a></div></div>
+<div class="ttc" id="exec_8c_html_ac79bb43069a3d3c097c8d95dcf0c2784"><div class="ttname"><a href="exec_8c.html#ac79bb43069a3d3c097c8d95dcf0c2784">elf_kernel_lookup</a></div><div class="ttdeci">char * elf_kernel_lookup(uint32_t symaddr)</div><div class="ttdef"><b>Definition:</b> <a href="exec_8c_source.html#l00291">exec.c:291</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -386,7 +390,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="syscall_8c_source.html#l00012">12</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
+<p>Definition at line <a class="el" href="syscall_8c_source.html#l00014">14</a> of file <a class="el" href="syscall_8c_source.html">syscall.c</a>.</p>
 
 </div>
 </div>
@@ -395,8 +399,8 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_1a2db638ef6877e1d4473af5a81c9a08.html">arch</a></li><li class="navelem"><a class="el" href="syscall_8c.html">syscall.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_1a2db638ef6877e1d4473af5a81c9a08.html">arch</a></li><li class="navelem"><a class="el" href="dir_8aff50d7f950fd8893cfa1673a901c19.html">i386</a></li><li class="navelem"><a class="el" href="syscall_8c.html">syscall.c</a></li>
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

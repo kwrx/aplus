@@ -34,7 +34,7 @@ References pthread\+\_\+once\+::done, errno, pthread\+\_\+context\+::exitval, pt
 8                                                             \{
 9     \textcolor{keywordflow}{if}(!thread) \{
 10         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-11         \textcolor{keywordflow}{return} 1;
+11         \textcolor{keywordflow}{return} -1;
 12     \}
 13 
 14     \hyperlink{structpthread__context}{pthread\_context\_t}* ctx = (\hyperlink{structpthread__context}{pthread\_context\_t}*) thread;

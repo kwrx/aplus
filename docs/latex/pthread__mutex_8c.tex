@@ -45,7 +45,7 @@ References pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+\_\+unlock(), and pth
 9                                                  \{
 10     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} > 0) \{
 11         \textcolor{keywordflow}{if}(time(NULL) < mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time})
-12             \textcolor{keywordflow}{return} 1;
+12             \textcolor{keywordflow}{return} -1;
 13         \textcolor{keywordflow}{else} \{
 14             \hyperlink{pthread__mutex_8c_a98a732043af58199cdf7f663dbf4d805}{pthread\_mutex\_unlock}(mutex);
 15             mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} = 0;
@@ -54,7 +54,7 @@ References pthread\+\_\+mutex\+::lock, pthread\+\_\+mutex\+\_\+unlock(), and pth
 18 
 19 
 20     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} == 1)
-21         \textcolor{keywordflow}{return} 1;
+21         \textcolor{keywordflow}{return} -1;
 22 
 23     \textcolor{keywordflow}{return} 0;
 24 \}
@@ -79,12 +79,12 @@ References errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutex\+::kind, pthre
 46                                                          \{
 47     \textcolor{keywordflow}{if}(!mutex) \{
 48         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-49         \textcolor{keywordflow}{return} 1;
+49         \textcolor{keywordflow}{return} -1;
 50     \}
 51 
 52     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} == 1) \{
 53         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBUSY;
-54         \textcolor{keywordflow}{return} 1;
+54         \textcolor{keywordflow}{return} -1;
 55     \}
 56 
 57     mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 0;
@@ -118,7 +118,7 @@ References errno, pthread\+\_\+mutex\+::event, pthread\+\_\+mutexattr\+::kind, p
 26                                                                                        \{
 27     \textcolor{keywordflow}{if}(!mutex) \{
 28         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-29         \textcolor{keywordflow}{return} 1;
+29         \textcolor{keywordflow}{return} -1;
 30     \}
 31 
 32     mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 0;
@@ -154,7 +154,7 @@ References \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pth
 67                                                       \{
 68     \textcolor{keywordflow}{if}(!mutex) \{
 69         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-70         \textcolor{keywordflow}{return} 1;
+70         \textcolor{keywordflow}{return} -1;
 71     \}
 72 
 73     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} != \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}()) \{
@@ -166,7 +166,7 @@ References \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pth
 79         mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 1;
 80     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_aaf502496651f95b06be861af7902cb23}{PTHREAD\_MUTEX\_ERRORCHECK}) \{
 81         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EDEADLK;
-82         \textcolor{keywordflow}{return} 1;
+82         \textcolor{keywordflow}{return} -1;
 83     \}
 84 
 85     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_a715e9644a7183d98cb2c9dd41cb89645}{PTHREAD\_MUTEX\_RECURSIVE})
@@ -196,13 +196,13 @@ References errno, pthread\+\_\+mutex\+\_\+lock(), and pthread\+\_\+mutex\+::time
 92                                                                                            \{
 93     \textcolor{keywordflow}{if}(abstime == NULL) \{
 94         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-95         \textcolor{keywordflow}{return} 1;
+95         \textcolor{keywordflow}{return} -1;
 96     \}
 97 
 98     \textcolor{keywordflow}{if}(\hyperlink{pthread__mutex_8c_a9d5a00f9e6e279cce1e875a48cb9188d}{pthread\_mutex\_lock}(mutex) == 0)
 99         mutex->\hyperlink{structpthread__mutex_abd1e1875e0231a5dd6146adb8d6380c0}{time} = time(NULL) + abstime->tv\_sec;
 100     \textcolor{keywordflow}{else}
-101         \textcolor{keywordflow}{return} 1;
+101         \textcolor{keywordflow}{return} -1;
 102 
 103     \textcolor{keywordflow}{return} 0;
 104 \}
@@ -227,13 +227,13 @@ References \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pth
 107                                                          \{
 108     \textcolor{keywordflow}{if}(!mutex) \{
 109         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-110         \textcolor{keywordflow}{return} 1;
+110         \textcolor{keywordflow}{return} -1;
 111     \}
 112 
 113     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} != \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}()) \{
 114         \textcolor{keywordflow}{if}(\hyperlink{pthread__mutex_8c_a09a80d595723a7cb36229098892878f0}{\_\_locked\_mtx}(mutex)) \{
 115             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBUSY;
-116             \textcolor{keywordflow}{return} 1;
+116             \textcolor{keywordflow}{return} -1;
 117         \}
 118 
 119         mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} = \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}();
@@ -241,7 +241,7 @@ References \+\_\+\+\_\+locked\+\_\+mtx(), errno, pthread\+\_\+mutex\+::kind, pth
 121         mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 1;
 122     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_aaf502496651f95b06be861af7902cb23}{PTHREAD\_MUTEX\_ERRORCHECK}) \{
 123         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EDEADLK;
-124         \textcolor{keywordflow}{return} 1;
+124         \textcolor{keywordflow}{return} -1;
 125     \}
 126 
 127     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_a715e9644a7183d98cb2c9dd41cb89645}{PTHREAD\_MUTEX\_RECURSIVE})
@@ -270,7 +270,7 @@ References errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthrea
 133                                                         \{
 134     \textcolor{keywordflow}{if}(!mutex) \{
 135         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-136         \textcolor{keywordflow}{return} 1;
+136         \textcolor{keywordflow}{return} -1;
 137     \}
 138 
 139     \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a3d3ee80fcc9a148717677554d05d9d4a}{owner} == \hyperlink{pthread_8h_a4c4f5f3b4f8f45d9d897847d53b11aaa}{pthread\_self}()) \{
@@ -283,7 +283,7 @@ References errno, pthread\+\_\+mutex\+::kind, pthread\+\_\+mutex\+::lock, pthrea
 146         mutex->\hyperlink{structpthread__mutex_a039843af2bfee5ac32a1c4452108b833}{lock} = 0;
 147     \} \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}(mutex->\hyperlink{structpthread__mutex_a0a817c827021f648ceba78fb34b61f62}{kind} == \hyperlink{pthread_8h_aaf502496651f95b06be861af7902cb23}{PTHREAD\_MUTEX\_ERRORCHECK}) \{
 148         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EPERM;
-149         \textcolor{keywordflow}{return} 1;
+149         \textcolor{keywordflow}{return} -1;
 150     \}
 151 
 152     \textcolor{keywordflow}{return} 0;

@@ -15,184 +15,184 @@
     <includes local="no">errno.h</includes>
     <includes refid="slirp_8h" local="yes">slirp.h</includes>
     <incdepgraph>
-      <node id="1214">
+      <node id="1281">
         <label>sys/stat.h</label>
       </node>
-      <node id="1204">
+      <node id="1271">
         <label>stdarg.h</label>
       </node>
-      <node id="1221">
+      <node id="1288">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1202" relation="include">
+        <childnode refid="1269" relation="include">
         </childnode>
-        <childnode refid="1220" relation="include">
+        <childnode refid="1287" relation="include">
         </childnode>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1205" relation="include">
+        <childnode refid="1272" relation="include">
         </childnode>
-        <childnode refid="1210" relation="include">
+        <childnode refid="1277" relation="include">
         </childnode>
       </node>
-      <node id="1213">
+      <node id="1280">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1208" relation="include">
+        <childnode refid="1275" relation="include">
         </childnode>
-        <childnode refid="1210" relation="include">
+        <childnode refid="1277" relation="include">
         </childnode>
-        <childnode refid="1214" relation="include">
+        <childnode refid="1281" relation="include">
         </childnode>
-        <childnode refid="1215" relation="include">
+        <childnode refid="1282" relation="include">
         </childnode>
       </node>
-      <node id="1201">
+      <node id="1268">
         <label>src/net/slirp/slirp.c</label>
         <link refid="slirp.c"/>
-        <childnode refid="1202" relation="include">
+        <childnode refid="1269" relation="include">
         </childnode>
-        <childnode refid="1206" relation="include">
+        <childnode refid="1273" relation="include">
         </childnode>
-        <childnode refid="1209" relation="include">
+        <childnode refid="1276" relation="include">
         </childnode>
-        <childnode refid="1219" relation="include">
+        <childnode refid="1286" relation="include">
         </childnode>
-        <childnode refid="1212" relation="include">
+        <childnode refid="1279" relation="include">
         </childnode>
-        <childnode refid="1211" relation="include">
+        <childnode refid="1278" relation="include">
         </childnode>
-        <childnode refid="1220" relation="include">
+        <childnode refid="1287" relation="include">
         </childnode>
-        <childnode refid="1221" relation="include">
+        <childnode refid="1288" relation="include">
         </childnode>
-        <childnode refid="1205" relation="include">
+        <childnode refid="1272" relation="include">
         </childnode>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1222" relation="include">
+        <childnode refid="1289" relation="include">
         </childnode>
-        <childnode refid="1223" relation="include">
+        <childnode refid="1290" relation="include">
         </childnode>
       </node>
-      <node id="1223">
+      <node id="1290">
         <label>slirp.h</label>
         <link refid="slirp_8h"/>
       </node>
-      <node id="1203">
+      <node id="1270">
         <label>stdint.h</label>
       </node>
-      <node id="1218">
+      <node id="1285">
         <label>setjmp.h</label>
       </node>
-      <node id="1212">
+      <node id="1279">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1202" relation="include">
+        <childnode refid="1269" relation="include">
         </childnode>
-        <childnode refid="1213" relation="include">
+        <childnode refid="1280" relation="include">
         </childnode>
-        <childnode refid="1217" relation="include">
+        <childnode refid="1284" relation="include">
         </childnode>
-        <childnode refid="1210" relation="include">
+        <childnode refid="1277" relation="include">
         </childnode>
-        <childnode refid="1218" relation="include">
+        <childnode refid="1285" relation="include">
         </childnode>
       </node>
-      <node id="1222">
+      <node id="1289">
         <label>errno.h</label>
       </node>
-      <node id="1207">
+      <node id="1274">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="1202" relation="include">
+        <childnode refid="1269" relation="include">
         </childnode>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
       </node>
-      <node id="1208">
+      <node id="1275">
         <label>stddef.h</label>
       </node>
-      <node id="1220">
+      <node id="1287">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1208" relation="include">
+        <childnode refid="1275" relation="include">
         </childnode>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1210" relation="include">
+        <childnode refid="1277" relation="include">
         </childnode>
       </node>
-      <node id="1202">
+      <node id="1269">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1204" relation="include">
+        <childnode refid="1271" relation="include">
         </childnode>
-        <childnode refid="1205" relation="include">
+        <childnode refid="1272" relation="include">
         </childnode>
       </node>
-      <node id="1210">
+      <node id="1277">
         <label>sys/types.h</label>
       </node>
-      <node id="1205">
+      <node id="1272">
         <label>string.h</label>
       </node>
-      <node id="1216">
+      <node id="1283">
         <label>unistd.h</label>
       </node>
-      <node id="1217">
+      <node id="1284">
         <label>signal.h</label>
       </node>
-      <node id="1206">
+      <node id="1273">
         <label>aplus/netif.h</label>
         <link refid="netif_8h"/>
-        <childnode refid="1202" relation="include">
+        <childnode refid="1269" relation="include">
         </childnode>
-        <childnode refid="1207" relation="include">
+        <childnode refid="1274" relation="include">
         </childnode>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1208" relation="include">
+        <childnode refid="1275" relation="include">
         </childnode>
       </node>
-      <node id="1219">
+      <node id="1286">
         <label>aplus/mm.h</label>
         <link refid="mm_8h"/>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1212" relation="include">
+        <childnode refid="1279" relation="include">
         </childnode>
       </node>
-      <node id="1215">
+      <node id="1282">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1216" relation="include">
+        <childnode refid="1283" relation="include">
         </childnode>
-        <childnode refid="1210" relation="include">
+        <childnode refid="1277" relation="include">
         </childnode>
       </node>
-      <node id="1211">
+      <node id="1278">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
-      <node id="1209">
+      <node id="1276">
         <label>aplus/bufio.h</label>
         <link refid="bufio_8h"/>
-        <childnode refid="1203" relation="include">
+        <childnode refid="1270" relation="include">
         </childnode>
-        <childnode refid="1208" relation="include">
+        <childnode refid="1275" relation="include">
         </childnode>
-        <childnode refid="1210" relation="include">
+        <childnode refid="1277" relation="include">
         </childnode>
-        <childnode refid="1211" relation="include">
+        <childnode refid="1278" relation="include">
         </childnode>
-        <childnode refid="1212" relation="include">
+        <childnode refid="1279" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -246,11 +246,10 @@
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/net/slirp/slirp.c" line="28" column="1" bodyfile="/opt/prj/aPlus/src/net/slirp/slirp.c" bodystart="28" bodyend="82"/>
         <references refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" compoundref="slirp_8c" startline="18">slirpcard::buffer</references>
-        <references refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</references>
         <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
         <references refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" compoundref="slirp_8c" startline="22">slirpcard::ioport</references>
         <references refid="ipv4_8c_1aef7e4d9aa0ca33ce3ed3d39d613ebf64" compoundref="ipv4_8c" startline="71" endline="114">ipv4_recv</references>
-        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="79" endline="94">kfree</references>
+        <references refid="mm_8h_1acee1960bdb3a19cb495341ec725cafef" compoundref="mm_8c" startline="151" endline="173">kfree</references>
         <references refid="mm_8h_1a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</references>
         <references refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" compoundref="debug_8c" startline="167" endline="177">kprintf</references>
         <references refid="structslirpcard_1a4c84f5911831326cc979fe1c96c8607b" compoundref="slirp_8c" startline="23">slirpcard::netif</references>
@@ -300,7 +299,7 @@
         <references refid="structnetif_1af45fb467da3492eb4473cb9208044ac8" compoundref="netif_8h" startline="35">netif::data</references>
         <references refid="structnetif_1a07586ae7a31c1231781af7394ce41659" compoundref="netif_8h" startline="71">netif::flags</references>
         <references refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" compoundref="slirp_8c" startline="22">slirpcard::ioport</references>
-        <references refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" compoundref="iso9660_8h" startline="77">length</references>
+        <references refid="iso9660_8h_1a190b76b1f3d5bd26920300e5f073739b" compoundref="iso9660_8h" startline="76">length</references>
         <references refid="structslirpcard_1ab77a4a7b33ab2cd4a821aff9445cd134" compoundref="slirp_8c" startline="17">slirpcard::magic</references>
         <references refid="netif_8h_1a10eb923b0cb08f2b992345dd1a1bf98b" compoundref="netif_8h" startline="26">NETIF_FLAGS_ENABLE</references>
         <references refid="serial_8c_1a554c0b79338d298c39a06027b790edb5" compoundref="serial_8c" startline="11" endline="14">serial_send</references>
@@ -453,7 +452,7 @@
 <codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="debug_8c_1ac9d768b4772cc87fc88afbbbd805f96a" kindref="member">kprintf</ref>(</highlight><highlight class="stringliteral">&quot;slirp:<sp/>received<sp/>data\n&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="38"><highlight class="normal"></highlight></codeline>
-<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref><sp/>=<sp/><ref refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" kindref="member">serial_recv</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>);</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref><sp/>d<sp/>=<sp/><ref refid="serial_8c_1abfa1d9231846e7f9820b4609e32f8f7c" kindref="member">serial_recv</ref>(slirpcard-&gt;<ref refid="structslirpcard_1aed1b09924afb61043cd93bed7edea389" kindref="member">ioport</ref>);</highlight></codeline>
 <codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(slirpcard-&gt;<ref refid="structslirpcard_1aca0b3836ef213a9ab9cab689175d6a38" kindref="member">used</ref><sp/>==<sp/>0)<sp/>{</highlight></codeline>
 <codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d<sp/>!=<sp/><ref refid="slirp_8h_1a7ac78b4f074c2fa92c19569ba52f8687" kindref="member">SLIRP_PACKET_END</ref>)</highlight></codeline>
 <codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
@@ -493,7 +492,7 @@
 <codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="77"><highlight class="normal"></highlight></codeline>
 <codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">default</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref>[slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref>++]<sp/>=<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>;</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>slirpcard-&gt;<ref refid="structslirpcard_1a3a9cd572ee740f4844706613f6c1a98d" kindref="member">buffer</ref>[slirpcard-&gt;<ref refid="structslirpcard_1adda6ed53672da7a5e56fd16007d704d0" kindref="member">offset</ref>++]<sp/>=<sp/>d;</highlight></codeline>
 <codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
 <codeline lineno="82"><highlight class="normal">}</highlight></codeline>

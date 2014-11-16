@@ -118,7 +118,7 @@ $(document).ready(function(){initNavTree('closedir_8c_source.html','');});
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="closedir_8c.html#a058e669d865116ec6419ea3a52207830">   11</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="closedir_8c.html#a058e669d865116ec6419ea3a52207830">closedir</a>(<a class="code" href="struct____DIR.html">DIR</a>* <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a>) {</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="closedir_8c.html#a058e669d865116ec6419ea3a52207830">   11</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="closedir_8c.html#a058e669d865116ec6419ea3a52207830">closedir</a>(<a class="code" href="struct____DIR.html">DIR</a>* d) {</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordflow">if</span>(d == NULL) {</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keywordflow">return</span> -1;</div>
@@ -136,7 +136,6 @@ $(document).ready(function(){initNavTree('closedir_8c_source.html','');});
 <div class="ttc" id="dirent_8h_html"><div class="ttname"><a href="dirent_8h.html">dirent.h</a></div></div>
 <div class="ttc" id="closedir_8c_html_a058e669d865116ec6419ea3a52207830"><div class="ttname"><a href="closedir_8c.html#a058e669d865116ec6419ea3a52207830">closedir</a></div><div class="ttdeci">int closedir(DIR *d)</div><div class="ttdef"><b>Definition:</b> <a href="closedir_8c_source.html#l00011">closedir.c:11</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
-<div class="ttc" id="panic_8c_html_a77b5b9b7c5109d0943ef9f2e5c557fb9"><div class="ttname"><a href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a></div><div class="ttdeci">#define d(reg)</div></div>
 <div class="ttc" id="struct____DIR_html_ae243fc79067063164eb8ec212e6a9e80"><div class="ttname"><a href="struct____DIR.html#ae243fc79067063164eb8ec212e6a9e80">__DIR::fd</a></div><div class="ttdeci">int fd</div><div class="ttdef"><b>Definition:</b> <a href="dirent_8h_source.html#l00030">dirent.h:30</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -144,7 +143,7 @@ $(document).ready(function(){initNavTree('closedir_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_4e1c7ae8f9024ef006e86a9c3fc355ed.html">libposix</a></li><li class="navelem"><a class="el" href="dir_f434c0cea4b0f002ce018129171d40a3.html">src</a></li><li class="navelem"><a class="el" href="closedir_8c.html">closedir.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

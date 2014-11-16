@@ -100,11 +100,7 @@ static void __check_all_chunks_overflow() {
 #endif
 
 
-/**
- *	\brief Alloc memory from Kernel Heap.
- * 	\param size Size of data to alloc.
- *	\return Virtual Address of data.
- */
+
 #ifdef CHUNKS_CHECKING
 void* __kmalloc(size_t size, char* file, int line)
 #else

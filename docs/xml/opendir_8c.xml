@@ -10,51 +10,51 @@
     <includes local="no">string.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="2152">
+      <node id="2337">
         <label>usr/src/libposix/src/opendir.c</label>
         <link refid="opendir.c"/>
-        <childnode refid="2153" relation="include">
+        <childnode refid="2338" relation="include">
         </childnode>
-        <childnode refid="2154" relation="include">
+        <childnode refid="2339" relation="include">
         </childnode>
-        <childnode refid="2156" relation="include">
+        <childnode refid="2341" relation="include">
         </childnode>
-        <childnode refid="2157" relation="include">
+        <childnode refid="2342" relation="include">
         </childnode>
-        <childnode refid="2158" relation="include">
+        <childnode refid="2343" relation="include">
         </childnode>
-        <childnode refid="2159" relation="include">
+        <childnode refid="2344" relation="include">
         </childnode>
-        <childnode refid="2160" relation="include">
+        <childnode refid="2345" relation="include">
         </childnode>
       </node>
-      <node id="2158">
+      <node id="2343">
         <label>stdlib.h</label>
       </node>
-      <node id="2160">
+      <node id="2345">
         <label>errno.h</label>
       </node>
-      <node id="2156">
+      <node id="2341">
         <label>fcntl.h</label>
       </node>
-      <node id="2155">
+      <node id="2340">
         <label>sys/types.h</label>
       </node>
-      <node id="2159">
+      <node id="2344">
         <label>string.h</label>
       </node>
-      <node id="2154">
+      <node id="2339">
         <label>unistd.h</label>
       </node>
-      <node id="2153">
+      <node id="2338">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2154" relation="include">
+        <childnode refid="2339" relation="include">
         </childnode>
-        <childnode refid="2155" relation="include">
+        <childnode refid="2340" relation="include">
         </childnode>
       </node>
-      <node id="2157">
+      <node id="2342">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -75,7 +75,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libposix/src/opendir.c" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/opendir.c" bodystart="13" bodyend="25"/>
-        <references refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</references>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="struct____DIR_1ae243fc79067063164eb8ec212e6a9e80" compoundref="dirent_8h" startline="30">__DIR::fd</references>
         <references refid="dirent_8h_1a6afd3dd2f570069804b40e6aa24fc966" compoundref="dirent_8h" startline="42">O_DIRECTORY</references>
@@ -106,11 +105,11 @@
 <codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>NULL;</highlight></codeline>
 <codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="19"><highlight class="normal"></highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref><sp/>=<sp/>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*)<sp/>malloc(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="struct____DIR" kindref="compound">DIR</ref>));</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/>d<sp/>=<sp/>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*)<sp/>malloc(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="struct____DIR" kindref="compound">DIR</ref>));</highlight></codeline>
 <codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>d-&gt;<ref refid="struct____DIR_1ae243fc79067063164eb8ec212e6a9e80" kindref="member">fd</ref><sp/>=<sp/>fd;</highlight></codeline>
 <codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>d-&gt;<ref refid="struct____DIR_1adcec35c0ea0ed4342c5425c494554397" kindref="member">position</ref><sp/>=<sp/>0;</highlight></codeline>
 <codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>d;</highlight></codeline>
 <codeline lineno="25"><highlight class="normal">}</highlight></codeline>
 <codeline lineno="26"><highlight class="normal"></highlight></codeline>
     </programlisting>

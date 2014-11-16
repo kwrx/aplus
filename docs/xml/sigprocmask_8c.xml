@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="sigprocmask_8c" kind="file">
+    <compoundname>sigprocmask.c</compoundname>
+    <includes local="no">signal.h</includes>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">stdint.h</includes>
+    <incdepgraph>
+      <node id="2385">
+        <label>stdint.h</label>
+      </node>
+      <node id="2384">
+        <label>unistd.h</label>
+      </node>
+      <node id="2383">
+        <label>signal.h</label>
+      </node>
+      <node id="2382">
+        <label>usr/src/libposix/src/sigprocmask.c</label>
+        <link refid="sigprocmask.c"/>
+        <childnode refid="2383" relation="include">
+        </childnode>
+        <childnode refid="2384" relation="include">
+        </childnode>
+        <childnode refid="2385" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" prot="public" static="yes" mutable="no">
+        <type>sigset_t</type>
+        <definition>sigset_t __sigset</definition>
+        <argsstring></argsstring>
+        <name>__sigset</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/sigprocmask.c" line="6" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/sigprocmask.c" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="sigprocmask_8c_1a8828f2feb6a31f0ee3df4948d57616e4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sigprocmask</definition>
+        <argsstring>(int how, const sigset_t *set, sigset_t *oset)</argsstring>
+        <name>sigprocmask</name>
+        <param>
+          <type>int</type>
+          <declname>how</declname>
+        </param>
+        <param>
+          <type>const sigset_t *</type>
+          <declname>set</declname>
+        </param>
+        <param>
+          <type>sigset_t *</type>
+          <declname>oset</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/sigprocmask.c" line="8" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/sigprocmask.c" bodystart="8" bodyend="29"/>
+        <references refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" compoundref="sigprocmask_8c" startline="6">__sigset</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;signal.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>sigset_t<sp/><ref refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" kindref="member">__sigset</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8" refid="sigprocmask_8c_1a8828f2feb6a31f0ee3df4948d57616e4" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="sigprocmask_8c_1a8828f2feb6a31f0ee3df4948d57616e4" kindref="member">sigprocmask</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>how,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>sigset_t*<sp/>set,<sp/>sigset_t*<sp/>oset)<sp/>{</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(oset)</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>*oset<sp/>=<sp/><ref refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" kindref="member">__sigset</ref>;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(set<sp/>==<sp/>NULL)</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">switch</highlight><highlight class="normal">(how)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>SIG_BLOCK:</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" kindref="member">__sigset</ref><sp/>|=<sp/>*set;</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>SIG_SETMASK:</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" kindref="member">__sigset</ref><sp/>=<sp/>*set;</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">case</highlight><highlight class="normal"><sp/>SIG_UNBLOCK:</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="sigprocmask_8c_1a08b91a8e0cd0f47fe2d07a158a1d32df" kindref="member">__sigset</ref><sp/>&amp;=<sp/>~(*set);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">break</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline lineno="29"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/sigprocmask.c"/>
+  </compounddef>
+</doxygen>

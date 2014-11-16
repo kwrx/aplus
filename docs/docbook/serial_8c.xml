@@ -43,6 +43,6 @@
         </simplesect>
     <simplesect>
         <title>Detailed Description</title>
-    <para>Definition in file /opt/prj/aPlus/src/arch/serial.c</para>
+    <para>Definition in file /opt/prj/aPlus/src/arch/i386/serial.c</para>
     </simplesect>
 </section>

@@ -10,6 +10,7 @@ var searchData=
   ['recursion',['recursion',['../structpthread__mutex.html#ad0a6948ac1d12f9ec3f11fea2ac07ff9',1,'pthread_mutex']]],
   ['red_5fmask',['red_mask',['../structvesaModeInfo__t.html#a653392718e3a3c21aad77d0236ec8929',1,'vesaModeInfo_t::red_mask()'],['../grub_8h.html#a9bbaeb61ae0158164a6478df20df6d2a',1,'red_mask():&#160;grub.h']]],
   ['red_5fposition',['red_position',['../structvesaModeInfo__t.html#a96ecd4368bbcf68b97c9496939069c55',1,'vesaModeInfo_t::red_position()'],['../grub_8h.html#ac0012f5fa55e6e780ad2d34752fc092a',1,'red_position():&#160;grub.h']]],
+  ['region',['region',['../structatk__bitmap__lockdata.html#a75fc9b9740a38278200e4cbe27b15e44',1,'atk_bitmap_lockdata']]],
   ['rename',['rename',['../structinode.html#a5a309a9c4ada7e4d062162b06125a929',1,'inode']]],
   ['reserved',['reserved',['../structiso9660__pvd.html#a9bb088c4b2405eea90e203d31478a03a',1,'iso9660_pvd::reserved()'],['../structiso9660__dir.html#a6350cc135fe835f4372fcf9a0cfe0fcc',1,'iso9660_dir::reserved()'],['../iso9660_8h.html#a5827fd9642b17ceecd56a53b297aa9b8',1,'reserved():&#160;iso9660.h']]],
   ['reserved0',['reserved0',['../structvesaModeInfo__t.html#a0f912afd0a853ea123ad3a157fc579c9',1,'vesaModeInfo_t::reserved0()'],['../grub_8h.html#a91deebede3408c2739eaf833278ac98d',1,'reserved0():&#160;grub.h']]],

@@ -1,0 +1,72 @@
+.TH "atk_gfx" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+atk_gfx \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <gfx\&.h>\fP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBuint16_t\fP \fBwidth\fP"
+.br
+.ti -1c
+.RI "\fBuint16_t\fP \fBheight\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBstride\fP"
+.br
+.ti -1c
+.RI "\fBuint32_t\fP \fBbpp\fP"
+.br
+.ti -1c
+.RI "void * \fBframebuffer\fP"
+.br
+.ti -1c
+.RI "void(* \fB__plot\fP )(void *, \fBatk_color_t\fP)"
+.br
+.ti -1c
+.RI "\fBatk_color_t\fP(* \fB__get\fP )(void *)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 7 of file gfx\&.h\&.
+.SH "Field Documentation"
+.PP 
+.SS "\fBatk_color_t\fP(* atk_gfx::__get)(void *)"
+
+.PP
+Definition at line 16 of file gfx\&.h\&.
+.SS "void(* atk_gfx::__plot)(void *, \fBatk_color_t\fP)"
+
+.PP
+Definition at line 15 of file gfx\&.h\&.
+.SS "\fBuint32_t\fP atk_gfx::bpp"
+
+.PP
+Definition at line 11 of file gfx\&.h\&.
+.SS "void* atk_gfx::framebuffer"
+
+.PP
+Definition at line 13 of file gfx\&.h\&.
+.SS "\fBuint16_t\fP atk_gfx::height"
+
+.PP
+Definition at line 9 of file gfx\&.h\&.
+.SS "\fBuint32_t\fP atk_gfx::stride"
+
+.PP
+Definition at line 10 of file gfx\&.h\&.
+.SS "\fBuint16_t\fP atk_gfx::width"
+
+.PP
+Definition at line 8 of file gfx\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for aPlus from the source code\&.

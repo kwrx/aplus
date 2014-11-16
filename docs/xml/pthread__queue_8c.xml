@@ -5,60 +5,66 @@
     <includes refid="pthread__internal_8h" local="yes">pthread_internal.h</includes>
     <includes local="no">stdint.h</includes>
     <includes local="no">string.h</includes>
+    <includes local="no">stdlib.h</includes>
     <incdepgraph>
-      <node id="2446">
+      <node id="2651">
         <label>stdint.h</label>
       </node>
-      <node id="2445">
+      <node id="2658">
+        <label>stdlib.h</label>
+      </node>
+      <node id="2650">
         <label>errno.h</label>
       </node>
-      <node id="2444">
+      <node id="2649">
         <label>pthread_internal.h</label>
         <link refid="pthread__internal_8h"/>
-        <childnode refid="2445" relation="include">
+        <childnode refid="2650" relation="include">
         </childnode>
-        <childnode refid="2446" relation="include">
+        <childnode refid="2651" relation="include">
         </childnode>
-        <childnode refid="2447" relation="include">
+        <childnode refid="2652" relation="include">
         </childnode>
       </node>
-      <node id="2447">
+      <node id="2652">
         <label>pthread.h</label>
         <link refid="pthread_8h"/>
-        <childnode refid="2446" relation="include">
+        <childnode refid="2651" relation="include">
         </childnode>
-        <childnode refid="2448" relation="include">
+        <childnode refid="2653" relation="include">
         </childnode>
-        <childnode refid="2449" relation="include">
+        <childnode refid="2654" relation="include">
         </childnode>
-        <childnode refid="2450" relation="include">
+        <childnode refid="2655" relation="include">
         </childnode>
-        <childnode refid="2451" relation="include">
+        <childnode refid="2656" relation="include">
         </childnode>
       </node>
-      <node id="2443">
+      <node id="2648">
         <label>usr/src/libpthread/src/pthread_queue.c</label>
         <link refid="pthread_queue.c"/>
-        <childnode refid="2444" relation="include">
+        <childnode refid="2649" relation="include">
         </childnode>
-        <childnode refid="2446" relation="include">
+        <childnode refid="2651" relation="include">
         </childnode>
-        <childnode refid="2452" relation="include">
+        <childnode refid="2657" relation="include">
+        </childnode>
+        <childnode refid="2658" relation="include">
         </childnode>
       </node>
-      <node id="2448">
+      <node id="2653">
         <label>sys/types.h</label>
       </node>
-      <node id="2452">
+      <node id="2657">
         <label>string.h</label>
       </node>
-      <node id="2451">
+      <node id="2656">
         <label>unistd.h</label>
       </node>
-      <node id="2449">
+      <node id="2654">
         <label>sys/time.h</label>
       </node>
-      <node id="2450">
+      <node id="2655">
         <label>sched.h</label>
       </node>
     </incdepgraph>
@@ -74,7 +80,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="6" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="6" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="7" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="7" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" prot="public" static="no" mutable="no">
         <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> <ref refid="pthread__internal_8h_1acef1d04f94658c4052cd87213538f7e4" kindref="member">pthread_context_t</ref> *</type>
@@ -88,7 +94,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="8" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="8" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="9" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="pthread__queue_8c_1a0b13cae1b0e7848f7d9689241f8f93a8" prot="public" static="no" mutable="no">
         <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> <ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -102,10 +108,26 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="9" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="10" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="10" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
+      <memberdef kind="function" id="pthread__queue_8c_1a137732a2c963fc23b1b66a5bf1087067" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref> void</type>
+        <definition>PRIVATE void __pthread_dnit</definition>
+        <argsstring>()</argsstring>
+        <name>__pthread_dnit</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="13" bodyend="22"/>
+        <references refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" compoundref="pthread__queue_8c" startline="7">__current_thread</references>
+        <references refid="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" compoundref="pthread__queue_8c" startline="9">__pthread_queue</references>
+        <references refid="pthread_8h_1a7c275c509c26566b6dd95a2de1668a2f" compoundref="pthread__detach_8c" startline="12" endline="49">pthread_detach</references>
+      </memberdef>
       <memberdef kind="function" id="pthread__queue_8c_1a524e53db3985af45990760ed9068c0a9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref> void</type>
         <definition>PUBLIC void __pthread_init_queue</definition>
@@ -117,9 +139,10 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="12" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="12" bodyend="26"/>
-        <references refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" compoundref="pthread__queue_8c" startline="6">__current_thread</references>
-        <references refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" compoundref="posix_2hooks_8h" startline="34">__os_gettid</references>
+        <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" line="24" column="1" bodyfile="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c" bodystart="24" bodyend="43"/>
+        <references refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" compoundref="pthread__queue_8c" startline="7">__current_thread</references>
+        <references refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" compoundref="posix_2hooks_8h" startline="44">__os_gettid</references>
+        <references refid="pthread__queue_8c_1a137732a2c963fc23b1b66a5bf1087067" compoundref="pthread__queue_8c" startline="13" endline="22">__pthread_dnit</references>
         <references refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" compoundref="pthread__internal_8h" startline="44">pthread_context::attr</references>
         <references refid="structpthread__context_1ace03687a8a5dc35db9e23fdc96bf0667" compoundref="pthread__internal_8h" startline="45">pthread_context::cond</references>
         <references refid="structpthread__once_1acffdc3852414e4eeece3c8e7cf80ffc1" compoundref="pthread_8h" startline="68">pthread_once::done</references>
@@ -140,29 +163,46 @@
 <codeline lineno="1"><highlight class="preprocessor">#include<sp/>&quot;<ref refid="pthread__internal_8h" kindref="compound">pthread_internal.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdint.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;stdlib.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="5"><highlight class="normal"></highlight></codeline>
-<codeline lineno="6" refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>;</highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight></codeline>
-<codeline lineno="8" refid="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*<sp/><ref refid="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" kindref="member">__pthread_queue</ref><sp/>=<sp/>&amp;<ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>;</highlight></codeline>
-<codeline lineno="9" refid="pthread__queue_8c_1a0b13cae1b0e7848f7d9689241f8f93a8" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pthread__queue_8c_1a0b13cae1b0e7848f7d9689241f8f93a8" kindref="member">__pthread_counts</ref><sp/>=<sp/>1;</highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*<sp/><ref refid="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" kindref="member">__pthread_queue</ref><sp/>=<sp/>&amp;<ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>;</highlight></codeline>
+<codeline lineno="10" refid="pthread__queue_8c_1a0b13cae1b0e7848f7d9689241f8f93a8" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref><sp/><ref refid="pthread__queue_8c_1a0b13cae1b0e7848f7d9689241f8f93a8" kindref="member">__pthread_counts</ref><sp/>=<sp/>1;</highlight></codeline>
 <codeline lineno="11"><highlight class="normal"></highlight></codeline>
-<codeline lineno="12" refid="pthread__queue_8c_1a524e53db3985af45990760ed9068c0a9" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pthread__queue_8c_1a524e53db3985af45990760ed9068c0a9" kindref="member">__pthread_init_queue</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(<ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a5b7aa396dbf3c140b1a54f09568c8253" kindref="member">tid</ref>)</highlight></codeline>
-<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13" refid="pthread__queue_8c_1a137732a2c963fc23b1b66a5bf1087067" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8" kindref="member">PRIVATE</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pthread__queue_8c_1a137732a2c963fc23b1b66a5bf1087067" kindref="member">__pthread_dnit</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="structpthread__context" kindref="compound">pthread_context_t</ref>*<sp/>tmp<sp/>=<sp/><ref refid="pthread__queue_8c_1af5e1770b9b68ff239d3c16cb3587ce64" kindref="member">__pthread_queue</ref>;</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"></highlight></codeline>
-<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a5b7aa396dbf3c140b1a54f09568c8253" kindref="member">tid</ref><sp/>=<sp/><ref refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" kindref="member">__os_gettid</ref>();</highlight></codeline>
-<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a688eabe4cd81d34bed6c73abd442f54a" kindref="member">entry</ref><sp/>=<sp/>NULL;</highlight></codeline>
-<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1afb0244aa84b0403cc0df2cd6ebdb94b4" kindref="member">param</ref><sp/>=<sp/>NULL;</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" kindref="member">exitval</ref><sp/>=<sp/>NULL;</highlight></codeline>
-<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" kindref="member">once</ref>.<ref refid="structpthread__once_1acffdc3852414e4eeece3c8e7cf80ffc1" kindref="member">done</ref><sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" kindref="member">once</ref>.<ref refid="structpthread__once_1a2bebfebb49a5c75d10119824d5bba93c" kindref="member">started</ref><sp/>=<sp/>-1;</highlight></codeline>
-<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1ace03687a8a5dc35db9e23fdc96bf0667" kindref="member">cond</ref><sp/>=<sp/>NULL;</highlight></codeline>
-<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a876fe0d5cfa5b9886c90e5936b98f992" kindref="member">next</ref><sp/>=<sp/>NULL;</highlight></codeline>
-<codeline lineno="24"><highlight class="normal"></highlight></codeline>
-<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(&amp;<ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref>));</highlight></codeline>
-<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal">(tmp)<sp/>{</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(tmp<sp/>!=<sp/>&amp;<ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>)</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="pthread_8h_1a7c275c509c26566b6dd95a2de1668a2f" kindref="member">pthread_detach</ref>((<ref refid="pthread_8h_1a6766c2345d5c6fe6407d9f6b844e584a" kindref="member">pthread_t</ref>)<sp/>tmp);</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>tmp<sp/>=<sp/>tmp-&gt;next;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24" refid="pthread__queue_8c_1a524e53db3985af45990760ed9068c0a9" refkind="member"><highlight class="normal"><ref refid="pthread__internal_8h_1ad17d551e31d1828c68acf40684849b7e" kindref="member">PUBLIC</ref><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="pthread__queue_8c_1a524e53db3985af45990760ed9068c0a9" kindref="member">__pthread_init_queue</ref>()<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>init<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(init)</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/>init++;</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a5b7aa396dbf3c140b1a54f09568c8253" kindref="member">tid</ref><sp/>=<sp/><ref refid="posix_2hooks_8h_1a20babf330fa9904ff336e8b41720991d" kindref="member">__os_gettid</ref>();</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a688eabe4cd81d34bed6c73abd442f54a" kindref="member">entry</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1afb0244aa84b0403cc0df2cd6ebdb94b4" kindref="member">param</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1ab2848ec5b075681f217e57545f986c1b" kindref="member">exitval</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" kindref="member">once</ref>.<ref refid="structpthread__once_1acffdc3852414e4eeece3c8e7cf80ffc1" kindref="member">done</ref><sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a33f7f059b1d0cda2a8675d13600b6dd2" kindref="member">once</ref>.<ref refid="structpthread__once_1a2bebfebb49a5c75d10119824d5bba93c" kindref="member">started</ref><sp/>=<sp/>-1;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1ace03687a8a5dc35db9e23fdc96bf0667" kindref="member">cond</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a876fe0d5cfa5b9886c90e5936b98f992" kindref="member">next</ref><sp/>=<sp/>NULL;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>memset(&amp;<ref refid="pthread__queue_8c_1a96a17a802de12eb8e0ab0700ce2d2c13" kindref="member">__current_thread</ref>.<ref refid="structpthread__context_1a63e797747884670222fc0ea6fdf801fd" kindref="member">attr</ref>,<sp/>0,<sp/></highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(<ref refid="structpthread__attr" kindref="compound">pthread_attr_t</ref>));</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>atexit(<ref refid="pthread__queue_8c_1a137732a2c963fc23b1b66a5bf1087067" kindref="member">__pthread_dnit</ref>);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libpthread/src/pthread_queue.c"/>
   </compounddef>

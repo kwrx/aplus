@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['fastlock_5fwaiton',['fastlock_waiton',['../spinlock_8h.html#a34b538b8c053bec1d149f9a4258aca89',1,'spinlock.h']]],
-  ['fault_5fmask',['FAULT_MASK',['../desc_8c.html#aeef7411226f7c2a6d1328386a2b3832d',1,'desc.c']]],
-  ['fsys',['FSYS',['../fsys_8h.html#a21463ca997e1f7e340e85fc8b65f7eb6',1,'fsys.h']]]
+  ['gdt_5fset',['gdt_set',['../desc_8c.html#ac84b9fa6258a307e74ee3e6b8019d6c2',1,'desc.c']]],
+  ['getbit',['GETBIT',['../kheap_8c.html#a112c287ac25c656c889838c3629d822b',1,'kheap.c']]],
+  ['gid_5froot',['GID_ROOT',['../fs_8h.html#a2a5a81b6a48db264d1ec6048268ea154',1,'fs.h']]],
+  ['gid_5fsuperuser',['GID_SUPERUSER',['../task_8h.html#a6120fde6185466f2810fd0457009aaf0',1,'task.h']]]
 ];

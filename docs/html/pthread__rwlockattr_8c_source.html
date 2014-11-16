@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('pthread__rwlockattr_8c_source.html',''
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="pthread__rwlockattr_8c.html#a92e0b4a2c51bc98a312dd8173386173b">    9</a></span>&#160;<a class="code" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> <span class="keywordtype">int</span> <a class="code" href="pthread__rwlockattr_8c.html#a92e0b4a2c51bc98a312dd8173386173b">pthread_rwlockattr_init</a>(<a class="code" href="structpthread__rwlockattr.html">pthread_rwlockattr_t</a> *<a class="code" href="structpthread__context.html#a63e797747884670222fc0ea6fdf801fd">attr</a>) {</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    }</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a> = 0;</div>
@@ -129,7 +129,7 @@ $(document).ready(function(){initNavTree('pthread__rwlockattr_8c_source.html',''
 <div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="pthread__rwlockattr_8c.html#a86023a246ada8805f46a78699a0bfedb">   19</a></span>&#160;<a class="code" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> <span class="keywordtype">int</span> <a class="code" href="pthread__rwlockattr_8c.html#a86023a246ada8805f46a78699a0bfedb">pthread_rwlockattr_destroy</a>(<a class="code" href="structpthread__rwlockattr.html">pthread_rwlockattr_t</a> *<a class="code" href="structpthread__context.html#a63e797747884670222fc0ea6fdf801fd">attr</a>) {</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a> = 0;</div>
@@ -139,12 +139,12 @@ $(document).ready(function(){initNavTree('pthread__rwlockattr_8c_source.html',''
 <div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="pthread__rwlockattr_8c.html#a1e00480a4c42cfedbe0a03a625bac88c">   29</a></span>&#160;<a class="code" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> <span class="keywordtype">int</span> <a class="code" href="pthread__rwlockattr_8c.html#a1e00480a4c42cfedbe0a03a625bac88c">pthread_rwlockattr_getpshared</a>(<span class="keyword">const</span> <a class="code" href="structpthread__rwlockattr.html">pthread_rwlockattr_t</a> *<a class="code" href="structpthread__context.html#a63e797747884670222fc0ea6fdf801fd">attr</a>, <span class="keywordtype">int</span> *pshared) {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">if</span>(pshared == NULL) {</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    }</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    *pshared = attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a>;</div>
@@ -154,7 +154,7 @@ $(document).ready(function(){initNavTree('pthread__rwlockattr_8c_source.html',''
 <div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="pthread__rwlockattr_8c.html#a2500f1bbe3350f7e1492422959c67f70">   44</a></span>&#160;<a class="code" href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a> <span class="keywordtype">int</span> <a class="code" href="pthread__rwlockattr_8c.html#a2500f1bbe3350f7e1492422959c67f70">pthread_rwlockattr_setpshared</a>(<a class="code" href="structpthread__rwlockattr.html">pthread_rwlockattr_t</a> *<a class="code" href="structpthread__context.html#a63e797747884670222fc0ea6fdf801fd">attr</a>, <span class="keywordtype">int</span> pshared) {</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span>(attr == NULL) {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = EINVAL;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> 1;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> -1;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    attr-&gt;<a class="code" href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pshared</a> = pshared;</div>
@@ -163,11 +163,11 @@ $(document).ready(function(){initNavTree('pthread__rwlockattr_8c_source.html',''
 <div class="ttc" id="pthread__internal_8h_html_ad17d551e31d1828c68acf40684849b7e"><div class="ttname"><a href="pthread__internal_8h.html#ad17d551e31d1828c68acf40684849b7e">PUBLIC</a></div><div class="ttdeci">#define PUBLIC</div><div class="ttdef"><b>Definition:</b> <a href="pthread__internal_8h_source.html#l00015">pthread_internal.h:15</a></div></div>
 <div class="ttc" id="pthread__rwlockattr_8c_html_a86023a246ada8805f46a78699a0bfedb"><div class="ttname"><a href="pthread__rwlockattr_8c.html#a86023a246ada8805f46a78699a0bfedb">pthread_rwlockattr_destroy</a></div><div class="ttdeci">PUBLIC int pthread_rwlockattr_destroy(pthread_rwlockattr_t *attr)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__rwlockattr_8c_source.html#l00019">pthread_rwlockattr.c:19</a></div></div>
 <div class="ttc" id="pthread_8h_html"><div class="ttname"><a href="pthread_8h.html">pthread.h</a></div></div>
-<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00128">pthread.h:128</a></div></div>
+<div class="ttc" id="structpthread__rwlockattr_html_a8a113eba0407c92f6302fada4c4d7419"><div class="ttname"><a href="structpthread__rwlockattr.html#a8a113eba0407c92f6302fada4c4d7419">pthread_rwlockattr::pshared</a></div><div class="ttdeci">int pshared</div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00129">pthread.h:129</a></div></div>
 <div class="ttc" id="pthread__internal_8h_html"><div class="ttname"><a href="pthread__internal_8h.html">pthread_internal.h</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
 <div class="ttc" id="pthread__rwlockattr_8c_html_a2500f1bbe3350f7e1492422959c67f70"><div class="ttname"><a href="pthread__rwlockattr_8c.html#a2500f1bbe3350f7e1492422959c67f70">pthread_rwlockattr_setpshared</a></div><div class="ttdeci">PUBLIC int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int pshared)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__rwlockattr_8c_source.html#l00044">pthread_rwlockattr.c:44</a></div></div>
-<div class="ttc" id="structpthread__rwlockattr_html"><div class="ttname"><a href="structpthread__rwlockattr.html">pthread_rwlockattr</a></div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00127">pthread.h:127</a></div></div>
+<div class="ttc" id="structpthread__rwlockattr_html"><div class="ttname"><a href="structpthread__rwlockattr.html">pthread_rwlockattr</a></div><div class="ttdef"><b>Definition:</b> <a href="pthread_8h_source.html#l00128">pthread.h:128</a></div></div>
 <div class="ttc" id="structpthread__context_html_a63e797747884670222fc0ea6fdf801fd"><div class="ttname"><a href="structpthread__context.html#a63e797747884670222fc0ea6fdf801fd">pthread_context::attr</a></div><div class="ttdeci">pthread_attr_t attr</div><div class="ttdef"><b>Definition:</b> <a href="pthread__internal_8h_source.html#l00044">pthread_internal.h:44</a></div></div>
 <div class="ttc" id="pthread__rwlockattr_8c_html_a1e00480a4c42cfedbe0a03a625bac88c"><div class="ttname"><a href="pthread__rwlockattr_8c.html#a1e00480a4c42cfedbe0a03a625bac88c">pthread_rwlockattr_getpshared</a></div><div class="ttdeci">PUBLIC int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t *attr, int *pshared)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__rwlockattr_8c_source.html#l00029">pthread_rwlockattr.c:29</a></div></div>
 <div class="ttc" id="pthread__rwlockattr_8c_html_a92e0b4a2c51bc98a312dd8173386173b"><div class="ttname"><a href="pthread__rwlockattr_8c.html#a92e0b4a2c51bc98a312dd8173386173b">pthread_rwlockattr_init</a></div><div class="ttdeci">PUBLIC int pthread_rwlockattr_init(pthread_rwlockattr_t *attr)</div><div class="ttdef"><b>Definition:</b> <a href="pthread__rwlockattr_8c_source.html#l00009">pthread_rwlockattr.c:9</a></div></div>
@@ -177,7 +177,7 @@ $(document).ready(function(){initNavTree('pthread__rwlockattr_8c_source.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_c23ec9db109baf02f825a52e3d8bd742.html">libpthread</a></li><li class="navelem"><a class="el" href="dir_93ec8f7d0ab70c6b2c55924b01761aab.html">src</a></li><li class="navelem"><a class="el" href="pthread__rwlockattr_8c.html">pthread_rwlockattr.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

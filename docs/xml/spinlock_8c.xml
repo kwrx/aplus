@@ -6,36 +6,36 @@
     <includes refid="spinlock_8h" local="no">aplus/spinlock.h</includes>
     <includes refid="list_8h" local="no">aplus/list.h</includes>
     <incdepgraph>
-      <node id="1285">
+      <node id="1354">
         <label>src/spinlock.c</label>
         <link refid="spinlock.c"/>
-        <childnode refid="1286" relation="include">
+        <childnode refid="1355" relation="include">
         </childnode>
-        <childnode refid="1287" relation="include">
+        <childnode refid="1356" relation="include">
         </childnode>
-        <childnode refid="1288" relation="include">
+        <childnode refid="1357" relation="include">
         </childnode>
       </node>
-      <node id="1286">
+      <node id="1355">
         <label>stdint.h</label>
       </node>
-      <node id="1289">
+      <node id="1358">
         <label>stddef.h</label>
       </node>
-      <node id="1288">
+      <node id="1357">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1289" relation="include">
+        <childnode refid="1358" relation="include">
         </childnode>
-        <childnode refid="1286" relation="include">
+        <childnode refid="1355" relation="include">
         </childnode>
-        <childnode refid="1290" relation="include">
+        <childnode refid="1359" relation="include">
         </childnode>
       </node>
-      <node id="1290">
+      <node id="1359">
         <label>sys/types.h</label>
       </node>
-      <node id="1287">
+      <node id="1356">
         <label>aplus/spinlock.h</label>
         <link refid="spinlock_8h"/>
       </node>
@@ -136,7 +136,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/spinlock.c" line="68" column="1" bodyfile="/opt/prj/aPlus/src/spinlock.c" bodystart="68" bodyend="70"/>
-        <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="163" endline="171">schedule_yield</references>
+        <references refid="src_2sched_8c_1a4002881c26790c4390e314ce0e1ef1e8" compoundref="src_2sched_8c" startline="177" endline="185">schedule_yield</references>
       </memberdef>
       <memberdef kind="function" id="spinlock_8c_1a2bf717efcda7e5189e3192e09e49c249" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>

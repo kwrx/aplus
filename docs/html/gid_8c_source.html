@@ -110,36 +110,49 @@ $(document).ready(function(){initNavTree('gid_8c_source.html','');});
 <div class="contents">
 <a href="gid_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;sys/stat.h&gt;</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;</div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">    6</a></span>&#160;gid_t <a class="code" href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">getgid</a>(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    <span class="keyword">struct </span>stat st;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keywordflow">if</span>(fstat(STDIN_FILENO, &amp;st) != 0)</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <span class="keywordflow">return</span> -1;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordflow">return</span> st.st_gid;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;}</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="gid_8c.html#a3e7c694d68b4e62c1f275612d30b6d9d">   14</a></span>&#160;gid_t <a class="code" href="gid_8c.html#a3e7c694d68b4e62c1f275612d30b6d9d">getegid</a>(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">getgid</a>();</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="gid_8c.html#a5dec302aecbe8f2f9be1528cd5ffeba7">   18</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="gid_8c.html#a5dec302aecbe8f2f9be1528cd5ffeba7">getgroups</a>(<span class="keywordtype">int</span> len, gid_t* <a class="code" href="structlist.html">list</a>) {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> __os_getgroups(len, list);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="config_8h.html">config.h</a>&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">    7</a></span>&#160;gid_t <a class="code" href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">getgid</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">struct </span>stat st;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordflow">if</span>(fstat(STDIN_FILENO, &amp;st) != 0)</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;        <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordflow">return</span> st.st_gid;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;}</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="gid_8c.html#a3e7c694d68b4e62c1f275612d30b6d9d">   15</a></span>&#160;gid_t <a class="code" href="gid_8c.html#a3e7c694d68b4e62c1f275612d30b6d9d">getegid</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">getgid</a>();</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="gid_8c.html#a48f523c98970793dfc2c5a05f6832006">   19</a></span>&#160;pid_t <a class="code" href="gid_8c.html#a48f523c98970793dfc2c5a05f6832006">getpgid</a>(pid_t pid) {</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordflow">return</span> pid;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="gid_8c.html#ae5aae5b0275eefe79314a4673195e475">   23</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="gid_8c.html#ae5aae5b0275eefe79314a4673195e475">setpgid</a>(pid_t pid, pid_t pgid) {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOSYS;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> -1;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="gid_8c.html#a5dec302aecbe8f2f9be1528cd5ffeba7">   28</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="gid_8c.html#a5dec302aecbe8f2f9be1528cd5ffeba7">getgroups</a>(<span class="keywordtype">int</span> len, gid_t* <a class="code" href="structlist.html">list</a>) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordflow">return</span> __os_getgroups(len, list);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
+<div class="ttc" id="gid_8c_html_a48f523c98970793dfc2c5a05f6832006"><div class="ttname"><a href="gid_8c.html#a48f523c98970793dfc2c5a05f6832006">getpgid</a></div><div class="ttdeci">pid_t getpgid(pid_t pid)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00019">gid.c:19</a></div></div>
 <div class="ttc" id="config_8h_html"><div class="ttname"><a href="config_8h.html">config.h</a></div></div>
-<div class="ttc" id="gid_8c_html_a5dec302aecbe8f2f9be1528cd5ffeba7"><div class="ttname"><a href="gid_8c.html#a5dec302aecbe8f2f9be1528cd5ffeba7">getgroups</a></div><div class="ttdeci">int getgroups(int len, gid_t *list)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00018">gid.c:18</a></div></div>
-<div class="ttc" id="gid_8c_html_a58ca281cc6931c62e6a85e2edb5b4b49"><div class="ttname"><a href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">getgid</a></div><div class="ttdeci">gid_t getgid(void)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00006">gid.c:6</a></div></div>
+<div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
+<div class="ttc" id="gid_8c_html_a5dec302aecbe8f2f9be1528cd5ffeba7"><div class="ttname"><a href="gid_8c.html#a5dec302aecbe8f2f9be1528cd5ffeba7">getgroups</a></div><div class="ttdeci">int getgroups(int len, gid_t *list)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00028">gid.c:28</a></div></div>
+<div class="ttc" id="gid_8c_html_ae5aae5b0275eefe79314a4673195e475"><div class="ttname"><a href="gid_8c.html#ae5aae5b0275eefe79314a4673195e475">setpgid</a></div><div class="ttdeci">int setpgid(pid_t pid, pid_t pgid)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00023">gid.c:23</a></div></div>
+<div class="ttc" id="gid_8c_html_a58ca281cc6931c62e6a85e2edb5b4b49"><div class="ttname"><a href="gid_8c.html#a58ca281cc6931c62e6a85e2edb5b4b49">getgid</a></div><div class="ttdeci">gid_t getgid(void)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00007">gid.c:7</a></div></div>
 <div class="ttc" id="structlist_html"><div class="ttname"><a href="structlist.html">list</a></div><div class="ttdef"><b>Definition:</b> <a href="list_8h_source.html#l00050">list.h:50</a></div></div>
-<div class="ttc" id="gid_8c_html_a3e7c694d68b4e62c1f275612d30b6d9d"><div class="ttname"><a href="gid_8c.html#a3e7c694d68b4e62c1f275612d30b6d9d">getegid</a></div><div class="ttdeci">gid_t getegid(void)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00014">gid.c:14</a></div></div>
+<div class="ttc" id="gid_8c_html_a3e7c694d68b4e62c1f275612d30b6d9d"><div class="ttname"><a href="gid_8c.html#a3e7c694d68b4e62c1f275612d30b6d9d">getegid</a></div><div class="ttdeci">gid_t getegid(void)</div><div class="ttdef"><b>Definition:</b> <a href="gid_8c_source.html#l00015">gid.c:15</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_4e1c7ae8f9024ef006e86a9c3fc355ed.html">libposix</a></li><li class="navelem"><a class="el" href="dir_f434c0cea4b0f002ce018129171d40a3.html">src</a></li><li class="navelem"><a class="el" href="gid_8c.html">gid.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

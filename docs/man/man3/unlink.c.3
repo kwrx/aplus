@@ -1,4 +1,4 @@
-.TH "src/syscall/unlink.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/syscall/unlink.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -24,10 +24,15 @@ src/syscall/unlink.c \-
 .br
 \fC#include <dirent\&.h>\fP
 .br
+\fC#include <stdio\&.h>\fP
+.br
 
 .SS "Functions"
 
 .in +1c
+.ti -1c
+.RI "static char * \fBdupstr\fP (char *s)"
+.br
 .ti -1c
 .RI "int \fBsys_unlink\fP (const char *pathname)"
 .br
@@ -35,26 +40,126 @@ src/syscall/unlink.c \-
 .RI "\fBSYSCALL\fP (\fBsys_unlink\fP, 15)"
 .br
 .in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "\fBtask_t\fP * \fBcurrent_task\fP"
+.br
+.RI "\fICurrent task address\&. \fP"
+.ti -1c
+.RI "\fBinode_t\fP * \fBvfs_root\fP"
+.br
+.in -1c
 .SH "Function Documentation"
 .PP 
+.SS "static char* dupstr (char *s)\fC [static]\fP"
+
+.PP
+Definition at line 18 of file unlink\&.c\&.
+.PP
+References kmalloc()\&.
+.PP
+.nf
+18                              {
+19     char* p = (char*) kmalloc(strlen(s) + 1);
+20     strcpy(p, s);
+21 
+22     return p;
+23 }
+.fi
 .SS "int sys_unlink (const char *pathname)"
 
 .PP
-Definition at line 13 of file unlink\&.c\&.
+Definition at line 26 of file unlink\&.c\&.
 .PP
-References errno, and kprintf()\&.
+References task::cwd, dupstr(), errno, fs_finddir(), fs_unlink(), kfree(), kprintf(), inode::link, inode::mode, and vfs_root\&.
 .PP
 .nf
-13                                      {
-14     /* TODO */
-15     kprintf("sys_unlink: TODO");
-16 
-17     errno = ENOSYS;
-18     return -1;
-19 }
+26                                      {
+27     if(!pathname) {
+28         errno = EINVAL;
+29         return -1;
+30     }
+31 
+32 
+33     inode_t* cwd = NULL;
+34 
+35     if(pathname[0] == '/')
+36         cwd = vfs_root;
+37     else
+38         cwd = current_task->cwd;
+39     
+40     if(!cwd) {
+41         if(!vfs_root) {
+42             kprintf("sys_unlink: no root found for cwd\&.");
+43         
+44             errno = ENOENT;
+45             return -1;
+46         }
+47         
+48         cwd = vfs_root;
+49     }
+50     
+51     
+52     if(pathname[0] == '/')
+53         pathname++;
+54         
+55     if(pathname[0] == 0) {
+56         errno = EPERM;  
+57         return -1;
+58     }
+59     
+60     char* b = dupstr((char*) pathname);
+61     char* s = b;
+62     char* p = s;
+63     
+64     while(*s) {
+65         if((p = strchr(s, '/'))) {
+66             *p++ = 0;
+67         
+68             cwd = (inode_t*) fs_finddir(cwd, s);
+69             if(!cwd) {
+70                 errno = ENOENT;
+71                 return -1;
+72             }
+73 
+74             while(S_ISLNK(cwd->mode))
+75                 if(cwd->link)
+76                     cwd = cwd->link;
+77                 else
+78                     break;
+79 
+80             s = p;
+81         } else
+82             break;
+83     }
+84 
+85     if(*s == 0) {
+86         errno = ENOENT;
+87         return -1;
+88     }
+89 
+90     int ret = fs_unlink(cwd, s);
+91     kfree(b);
+92     
+93     return ret;
+94 }
 .fi
 .SS "SYSCALL (\fBsys_unlink\fP, 15)"
 
+.SH "Variable Documentation"
+.PP 
+.SS "\fBtask_t\fP* current_task"
+
+.PP
+Current task address\&. 
+.PP
+Definition at line 37 of file sched\&.c\&.
+.SS "\fBinode_t\fP* vfs_root"
+
+.PP
+Definition at line 19 of file vfs\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

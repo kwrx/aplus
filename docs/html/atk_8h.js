@@ -7,7 +7,21 @@ var atk_8h =
     [ "ATK_COLOR_R", "atk_8h.html#ae15b47dc39550cad42dbac4d50bc2c5c", null ],
     [ "ATK_COLOR_TRANSPARENT", "atk_8h.html#ae65816298e7a25c2ea3d12df5e0c8b28", null ],
     [ "ATK_COLOR_WHITE", "atk_8h.html#a8bd5836e5294a7a657fefd618925937d", null ],
+    [ "ATK_POS_EMPTY", "atk_8h.html#a62c95cb8fb4edb6582311705964d27dc", null ],
+    [ "ATK_POS_X", "atk_8h.html#a634d569bbadff17b0ea9198d4ce8ce72", null ],
+    [ "ATK_POS_Y", "atk_8h.html#a8d5096b073d9f2dff29445b21561d03c", null ],
+    [ "ATK_RECT_EMPTY", "atk_8h.html#a07987a4145b21a362b9bfcdc0b8295ec", null ],
+    [ "ATK_RECT_H", "atk_8h.html#abfd40a030b3974ce70f3078d626ac7a8", null ],
+    [ "ATK_RECT_W", "atk_8h.html#adaf356bd47ddf870a7757b32d65fef2a", null ],
+    [ "ATK_RECT_X", "atk_8h.html#a9f0bc3985905ebd8360a35625f76caa4", null ],
+    [ "ATK_RECT_Y", "atk_8h.html#a7f3aa5e83bd01c85e3c1e283eb2892ff", null ],
+    [ "ATK_SIZE_EMPTY", "atk_8h.html#a303de91995819d0e1b5ae6d089bfd620", null ],
+    [ "ATK_SIZE_H", "atk_8h.html#aaad1b7972db05defa86a02338218a358", null ],
+    [ "ATK_SIZE_W", "atk_8h.html#a413bc681fce80267f527fa132c151055", null ],
     [ "__attribute__", "atk_8h.html#ad4bf5e6d1454a189b8f26893b0cf6f97", null ],
     [ "atk_color_t", "atk_8h.html#a85e5d8dafaa1bf57b05a1cd0dd9d3b82", null ],
-    [ "atk_list_t", "atk_8h.html#a2c8c224ba001105422a0814f71ae5887", null ]
+    [ "atk_list_t", "atk_8h.html#a2c8c224ba001105422a0814f71ae5887", null ],
+    [ "atk_pos_t", "atk_8h.html#aee7e807eb9b4bff2e018cf10b0552fc2", null ],
+    [ "atk_rect_t", "atk_8h.html#a943bf72ffba2da2f833e6e995d84e78a", null ],
+    [ "atk_size_t", "atk_8h.html#a644f976397f323e48685f16b0c4fa802", null ]
 ];

@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="usr_2src_2libposix_2src_2tty_8c" kind="file">
+    <compoundname>tty.c</compoundname>
+    <includes local="no">termios.h</includes>
+    <includes local="no">sys/ioctl.h</includes>
+    <includes local="no">unistd.h</includes>
+    <incdepgraph>
+      <node id="363">
+        <label>usr/src/libposix/src/tty.c</label>
+        <link refid="usr/src/libposix/src/tty.c"/>
+        <childnode refid="364" relation="include">
+        </childnode>
+        <childnode refid="365" relation="include">
+        </childnode>
+        <childnode refid="366" relation="include">
+        </childnode>
+      </node>
+      <node id="364">
+        <label>termios.h</label>
+      </node>
+      <node id="365">
+        <label>sys/ioctl.h</label>
+      </node>
+      <node id="366">
+        <label>unistd.h</label>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="usr_2src_2libposix_2src_2tty_8c_1a30c3edb2b02399d64b5e8eaaf7fe40e6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>pid_t</type>
+        <definition>pid_t tcgetpgrp</definition>
+        <argsstring>(int fd)</argsstring>
+        <name>tcgetpgrp</name>
+        <param>
+          <type>int</type>
+          <declname>fd</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/tty.c" line="6" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/tty.c" bodystart="6" bodyend="12"/>
+      </memberdef>
+      <memberdef kind="function" id="usr_2src_2libposix_2src_2tty_8c_1affb89581103fbd19d7ce7e89d1a39c90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int tcsetpgrp</definition>
+        <argsstring>(int fd, pid_t pgrp)</argsstring>
+        <name>tcsetpgrp</name>
+        <param>
+          <type>int</type>
+          <declname>fd</declname>
+        </param>
+        <param>
+          <type>pid_t</type>
+          <declname>pgrp</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/tty.c" line="14" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/tty.c" bodystart="14" bodyend="16"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;termios.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/ioctl.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="usr_2src_2libposix_2src_2tty_8c_1a30c3edb2b02399d64b5e8eaaf7fe40e6" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="usr_2src_2libposix_2src_2tty_8c_1a30c3edb2b02399d64b5e8eaaf7fe40e6" kindref="member">tcgetpgrp</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd)<sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/>pid_t<sp/>pgrp;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(ioctl(fd,<sp/>TIOCGPGRP,<sp/>&amp;pgrp)<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pgrp;</highlight></codeline>
+<codeline lineno="12"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="usr_2src_2libposix_2src_2tty_8c_1affb89581103fbd19d7ce7e89d1a39c90" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="usr_2src_2libposix_2src_2tty_8c_1affb89581103fbd19d7ce7e89d1a39c90" kindref="member">tcsetpgrp</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>fd,<sp/>pid_t<sp/>pgrp)<sp/>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ioctl(fd,<sp/>TIOCSPGRP,<sp/>&amp;pgrp);</highlight></codeline>
+<codeline lineno="16"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/tty.c"/>
+  </compounddef>
+</doxygen>

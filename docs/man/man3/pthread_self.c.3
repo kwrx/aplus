@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_self.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_self.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -40,7 +40,7 @@ References __os_gettid, __pthread_queue, errno, pthread_context::next, and pthre
 10                                     {
 11     if(!__pthread_queue) {
 12         errno = ESRCH;
-13         return 0;
+13         return -1;
 14     }
 15 
 16     int tid = __os_gettid();
@@ -53,7 +53,7 @@ References __os_gettid, __pthread_queue, errno, pthread_context::next, and pthre
 23     }
 24 
 25     errno = ESRCH;
-26     return 0;
+26     return -1;
 27 }
 .fi
 .SH "Variable Documentation"

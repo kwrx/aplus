@@ -6,123 +6,123 @@
     <includes refid="syscall_8h" local="no">aplus/syscall.h</includes>
     <includes refid="task_8h" local="no">aplus/task.h</includes>
     <incdepgraph>
-      <node id="1304">
+      <node id="1373">
         <label>sys/stat.h</label>
       </node>
-      <node id="1295">
+      <node id="1364">
         <label>stdarg.h</label>
       </node>
-      <node id="1298">
+      <node id="1367">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1293" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
-        <childnode refid="1299" relation="include">
+        <childnode refid="1368" relation="include">
         </childnode>
-        <childnode refid="1294" relation="include">
+        <childnode refid="1363" relation="include">
         </childnode>
-        <childnode refid="1296" relation="include">
+        <childnode refid="1365" relation="include">
         </childnode>
-        <childnode refid="1301" relation="include">
+        <childnode refid="1370" relation="include">
         </childnode>
       </node>
-      <node id="1303">
+      <node id="1372">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1294" relation="include">
+        <childnode refid="1363" relation="include">
         </childnode>
-        <childnode refid="1300" relation="include">
+        <childnode refid="1369" relation="include">
         </childnode>
-        <childnode refid="1301" relation="include">
+        <childnode refid="1370" relation="include">
         </childnode>
-        <childnode refid="1304" relation="include">
+        <childnode refid="1373" relation="include">
         </childnode>
-        <childnode refid="1305" relation="include">
+        <childnode refid="1374" relation="include">
         </childnode>
       </node>
-      <node id="1294">
+      <node id="1363">
         <label>stdint.h</label>
       </node>
-      <node id="1297">
+      <node id="1366">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1293" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
-        <childnode refid="1298" relation="include">
+        <childnode refid="1367" relation="include">
         </childnode>
-        <childnode refid="1294" relation="include">
+        <childnode refid="1363" relation="include">
         </childnode>
       </node>
-      <node id="1308">
+      <node id="1377">
         <label>setjmp.h</label>
       </node>
-      <node id="1302">
+      <node id="1371">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1294" relation="include">
+        <childnode refid="1363" relation="include">
         </childnode>
-        <childnode refid="1293" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
-        <childnode refid="1303" relation="include">
+        <childnode refid="1372" relation="include">
         </childnode>
-        <childnode refid="1307" relation="include">
+        <childnode refid="1376" relation="include">
         </childnode>
-        <childnode refid="1301" relation="include">
+        <childnode refid="1370" relation="include">
         </childnode>
-        <childnode refid="1308" relation="include">
+        <childnode refid="1377" relation="include">
         </childnode>
       </node>
-      <node id="1300">
+      <node id="1369">
         <label>stddef.h</label>
       </node>
-      <node id="1299">
+      <node id="1368">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1300" relation="include">
+        <childnode refid="1369" relation="include">
         </childnode>
-        <childnode refid="1294" relation="include">
+        <childnode refid="1363" relation="include">
         </childnode>
-        <childnode refid="1301" relation="include">
+        <childnode refid="1370" relation="include">
         </childnode>
       </node>
-      <node id="1293">
+      <node id="1362">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1294" relation="include">
+        <childnode refid="1363" relation="include">
         </childnode>
-        <childnode refid="1295" relation="include">
+        <childnode refid="1364" relation="include">
         </childnode>
-        <childnode refid="1296" relation="include">
+        <childnode refid="1365" relation="include">
         </childnode>
       </node>
-      <node id="1301">
+      <node id="1370">
         <label>sys/types.h</label>
       </node>
-      <node id="1296">
+      <node id="1365">
         <label>string.h</label>
       </node>
-      <node id="1292">
+      <node id="1361">
         <label>src/syscall/_exit.c</label>
         <link refid="_exit.c"/>
-        <childnode refid="1293" relation="include">
+        <childnode refid="1362" relation="include">
         </childnode>
-        <childnode refid="1297" relation="include">
+        <childnode refid="1366" relation="include">
         </childnode>
-        <childnode refid="1302" relation="include">
+        <childnode refid="1371" relation="include">
         </childnode>
       </node>
-      <node id="1306">
+      <node id="1375">
         <label>unistd.h</label>
       </node>
-      <node id="1307">
+      <node id="1376">
         <label>signal.h</label>
       </node>
-      <node id="1305">
+      <node id="1374">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1306" relation="include">
+        <childnode refid="1375" relation="include">
         </childnode>
-        <childnode refid="1301" relation="include">
+        <childnode refid="1370" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -155,7 +155,7 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/src/syscall/_exit.c" line="16" column="1" bodyfile="/opt/prj/aPlus/src/syscall/_exit.c" bodystart="16" bodyend="18"/>
-        <references refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" compoundref="src_2sched_8c" startline="244" endline="246">schedule_exit</references>
+        <references refid="src_2sched_8c_1a38866ec6f9b163355973a41f15248ab1" compoundref="src_2sched_8c" startline="297" endline="302">schedule_exit</references>
       </memberdef>
       <memberdef kind="function" id="__exit_8c_1ac6f9574edcf881d9f332eb02f79f40e6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>

@@ -38,9 +38,9 @@ void $\ast$ \hyperlink{paging_8c_ae969f54f1646d5d8a871bef828a24239}{vmm\+\_\+map
 \item 
 void \hyperlink{paging_8c_ab6841aac2bf44152a7c0c12293a97440}{vmm\+\_\+umap} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$pd, void $\ast$addr, size\+\_\+t len)
 \item 
-void $\ast$ \hyperlink{paging_8c_aebed4a90dd887506ed125f9efb953c93}{vmm\+\_\+alloc} (void $\ast$vaddr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}, int \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags})
+void $\ast$ \hyperlink{paging_8c_a735dd8c8592f9924e2a5ee226929f117}{vmm\+\_\+alloc} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$vmm, void $\ast$vaddr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size}, int \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags})
 \item 
-void \hyperlink{paging_8c_a2840d14db66d94b76ebcf3adf3e971e0}{vmm\+\_\+free} (void $\ast$vaddr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
+void \hyperlink{paging_8c_a355e6cafe37d994830abeebcb69e390d}{vmm\+\_\+free} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$vmm, void $\ast$vaddr, size\+\_\+t \hyperlink{mm_8c_a854352f53b148adc24983a58a1866d66}{size})
 \item 
 void \hyperlink{paging_8c_a8828597ede1b2c5bcc5ea1a4ca7919a9}{vmm\+\_\+mapkernel} (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\+\_\+t} $\ast$\hyperlink{ipv6_8h_ab4bf83701631abccacef4ebedf8db65e}{dest})
 \item 
@@ -119,29 +119,30 @@ Definition at line 40 of file paging.\+c.
 
 
 \subsection{Function Documentation}
-\hypertarget{paging_8c_aebed4a90dd887506ed125f9efb953c93}{\index{paging.\+c@{paging.\+c}!vmm\+\_\+alloc@{vmm\+\_\+alloc}}
+\hypertarget{paging_8c_a735dd8c8592f9924e2a5ee226929f117}{\index{paging.\+c@{paging.\+c}!vmm\+\_\+alloc@{vmm\+\_\+alloc}}
 \index{vmm\+\_\+alloc@{vmm\+\_\+alloc}!paging.\+c@{paging.\+c}}
 \subsubsection[{vmm\+\_\+alloc}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ vmm\+\_\+alloc (
 \begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t} $\ast$}]{vmm, }
 \item[{void $\ast$}]{vaddr, }
 \item[{size\+\_\+t}]{size, }
 \item[{int}]{flags}
 \end{DoxyParamCaption}
-)}}\label{paging_8c_aebed4a90dd887506ed125f9efb953c93}
+)}}\label{paging_8c_a735dd8c8592f9924e2a5ee226929f117}
 
 
 Definition at line 130 of file paging.\+c.
 
 
 
-References current\+\_\+vmm, halloc(), and vmm\+\_\+map().
+References halloc(), and vmm\+\_\+map().
 
 
 \begin{DoxyCode}
-130                                                      \{
+130                                                                     \{
 131     \textcolor{keywordtype}{void}* paddr = (\textcolor{keywordtype}{void}*) \hyperlink{heap_8c_ace4a8a1fe937911a1a107c92e6d40339}{halloc}(\hyperlink{paging_8c_a3068f9054a832aa72e12ab9ad210dd99}{current\_heap}, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
 132 
-133     \hyperlink{paging_8c_ae969f54f1646d5d8a871bef828a24239}{vmm\_map}(\hyperlink{paging_8c_a9bed7071511863f81c2de43b3c3f7db9}{current\_vmm}, paddr, vaddr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}, \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags});
+133     \hyperlink{paging_8c_ae969f54f1646d5d8a871bef828a24239}{vmm\_map}(vmm, paddr, vaddr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}, \hyperlink{iso9660_8h_aa2585d779da0ab21273a8d92de9a0ebe}{flags});
 134 
 135     \textcolor{keywordflow}{return} paddr;
 136 \}
@@ -230,31 +231,32 @@ Definition at line 60 of file paging.\+c.
 62     write\_cr0(read\_cr0() | 0x80000000);
 63 \}
 \end{DoxyCode}
-\hypertarget{paging_8c_a2840d14db66d94b76ebcf3adf3e971e0}{\index{paging.\+c@{paging.\+c}!vmm\+\_\+free@{vmm\+\_\+free}}
+\hypertarget{paging_8c_a355e6cafe37d994830abeebcb69e390d}{\index{paging.\+c@{paging.\+c}!vmm\+\_\+free@{vmm\+\_\+free}}
 \index{vmm\+\_\+free@{vmm\+\_\+free}!paging.\+c@{paging.\+c}}
 \subsubsection[{vmm\+\_\+free}]{\setlength{\rightskip}{0pt plus 5cm}void vmm\+\_\+free (
 \begin{DoxyParamCaption}
+\item[{{\bf uint32\+\_\+t} $\ast$}]{vmm, }
 \item[{void $\ast$}]{vaddr, }
 \item[{size\+\_\+t}]{size}
 \end{DoxyParamCaption}
-)}}\label{paging_8c_a2840d14db66d94b76ebcf3adf3e971e0}
+)}}\label{paging_8c_a355e6cafe37d994830abeebcb69e390d}
 
 
 Definition at line 138 of file paging.\+c.
 
 
 
-References current\+\_\+vmm, hfree(), P\+D\+E\+N\+T\+R\+Y, P\+G\+S\+I\+Z\+E, P\+T\+E\+N\+T\+R\+Y, size, uint32\+\_\+t, and vmm\+\_\+umap().
+References current\+\_\+vmm, hfree(), P\+D\+E\+N\+T\+R\+Y, P\+G\+S\+I\+Z\+E, P\+T\+E\+N\+T\+R\+Y, uint32\+\_\+t, and vmm\+\_\+umap().
 
 
 \begin{DoxyCode}
-138                                         \{
+138                                                        \{
 139 
 140     \textcolor{keywordtype}{int} pages = (\hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size} / \hyperlink{paging_8c_a5f96cb6ae6670e023c407cc2f77e1704}{PGSIZE}) + 1;
 141     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} frame = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}) vaddr;
 142     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}* pd = (\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{paging_8c_a9bed7071511863f81c2de43b3c3f7db9}{current\_vmm};
 143 
-144     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size}; i++) \{
+144     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < pages; i++) \{
 145         \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}* e = &pd[\hyperlink{paging_8c_a99467af8296ea3e135297cacd1e5526f}{PDENTRY}(frame)];
 146 
 147         \textcolor{keywordflow}{if}((*e & 1) != 1)
@@ -265,7 +267,7 @@ References current\+\_\+vmm, hfree(), P\+D\+E\+N\+T\+R\+Y, P\+G\+S\+I\+Z\+E, P\+
       \hyperlink{paging_8c_a5f96cb6ae6670e023c407cc2f77e1704}{PGSIZE});
 152     \}
 153 
-154     \hyperlink{paging_8c_ab6841aac2bf44152a7c0c12293a97440}{vmm\_umap}(\hyperlink{paging_8c_a9bed7071511863f81c2de43b3c3f7db9}{current\_vmm}, vaddr, size);
+154     \hyperlink{paging_8c_ab6841aac2bf44152a7c0c12293a97440}{vmm\_umap}(vmm, vaddr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
 155 \}
 \end{DoxyCode}
 \hypertarget{paging_8c_aac183f585641487a954ca46c0d7bde31}{\index{paging.\+c@{paging.\+c}!vmm\+\_\+init@{vmm\+\_\+init}}
@@ -464,7 +466,7 @@ References mm\+\_\+align(), P\+D\+E\+N\+T\+R\+Y, P\+G\+S\+I\+Z\+E, P\+T\+E\+N\+T
 \subsubsection[{current\+\_\+heap}]{\setlength{\rightskip}{0pt plus 5cm}volatile {\bf heap\+\_\+t}$\ast$ current\+\_\+heap}}\label{paging_8c_a3068f9054a832aa72e12ab9ad210dd99}
 
 
-Definition at line 36 of file mm.\+c.
+Definition at line 45 of file mm.\+c.
 
 \hypertarget{paging_8c_a9bed7071511863f81c2de43b3c3f7db9}{\index{paging.\+c@{paging.\+c}!current\+\_\+vmm@{current\+\_\+vmm}}
 \index{current\+\_\+vmm@{current\+\_\+vmm}!paging.\+c@{paging.\+c}}
@@ -483,9 +485,12 @@ Definition at line 47 of file paging.\+c.
 \hypertarget{paging_8c_a8ffb348d372acd38099f16b08bdaf4b5}{\index{paging.\+c@{paging.\+c}!memsize@{memsize}}
 \index{memsize@{memsize}!paging.\+c@{paging.\+c}}
 \subsubsection[{memsize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf uint32\+\_\+t} memsize}}\label{paging_8c_a8ffb348d372acd38099f16b08bdaf4b5}
+\begin{DoxySeeAlso}{See also}
+\hyperlink{mm_8h}{aplus/mm.\+h} 
+\end{DoxySeeAlso}
 
 
-Definition at line 35 of file mm.\+c.
+Definition at line 44 of file mm.\+c.
 
 \hypertarget{paging_8c_a3744f58bc6d40534a3e026b2f242ab25}{\index{paging.\+c@{paging.\+c}!vmm\+\_\+queue@{vmm\+\_\+queue}}
 \index{vmm\+\_\+queue@{vmm\+\_\+queue}!paging.\+c@{paging.\+c}}

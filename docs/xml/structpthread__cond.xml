@@ -36,7 +36,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="89">
+      <node id="98">
         <label>pthread_cond</label>
         <link refid="structpthread__cond"/>
       </node>

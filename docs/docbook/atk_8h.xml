@@ -53,6 +53,83 @@
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a9f0bc3985905ebd8360a35625f76caa4">ATK_RECT_X</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a7f3aa5e83bd01c85e3c1e283eb2892ff">ATK_RECT_Y</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1adaf356bd47ddf870a7757b32d65fef2a">ATK_RECT_W</link> 2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1abfd40a030b3974ce70f3078d626ac7a8">ATK_RECT_H</link> 3</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a413bc681fce80267f527fa132c151055">ATK_SIZE_W</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1aaad1b7972db05defa86a02338218a358">ATK_SIZE_H</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a634d569bbadff17b0ea9198d4ce8ce72">ATK_POS_X</link> 0</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a8d5096b073d9f2dff29445b21561d03c">ATK_POS_Y</link> 1</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a07987a4145b21a362b9bfcdc0b8295ec">ATK_RECT_EMPTY</link> { 0, 0, 0, 0 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a303de91995819d0e1b5ae6d089bfd620">ATK_SIZE_EMPTY</link> { 0, 0 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>#define <link linkend="atk_8h_1a62c95cb8fb4edb6582311705964d27dc">ATK_POS_EMPTY</link> { 0, 0 }</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
         <simplesect>
             <title>Typedefs</title>
@@ -67,6 +144,27 @@
                 <itemizedlist>
                     <listitem>
                             <para>typedef atk_v4f  <link linkend="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82">atk_color_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef atk_v4si  <link linkend="atk_8h_1a943bf72ffba2da2f833e6e995d84e78a">atk_rect_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef atk_v2si  <link linkend="atk_8h_1a644f976397f323e48685f16b0c4fa802">atk_size_t</link></para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                            <para>typedef atk_v2si  <link linkend="atk_8h_1aee7e807eb9b4bff2e018cf10b0552fc2">atk_pos_t</link></para>
                     </listitem>
                 </itemizedlist>
             </para>

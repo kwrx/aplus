@@ -4,6 +4,7 @@
     <programlisting>#include &quot;pthread_internal.h&quot;</programlisting>
     <programlisting>#include &lt;stdint.h&gt;</programlisting>
     <programlisting>#include &lt;string.h&gt;</programlisting>
+    <programlisting>#include &lt;stdlib.h&gt;</programlisting>
         <simplesect>
             <title>Variables</title>
             <para>
@@ -30,6 +31,14 @@
         </simplesect>
         <simplesect>
             <title>Functions</title>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para><link linkend="pthread__internal_8h_1a5e151c615eda34903514212f05a5ccf8">PRIVATE</link> void <link linkend="pthread__queue_8c_1a137732a2c963fc23b1b66a5bf1087067">__pthread_dnit</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
             <para>
                 <itemizedlist>
                     <listitem>

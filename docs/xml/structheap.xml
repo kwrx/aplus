@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="63" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="63" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="66" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="66" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structheap_1a486fb531d24b9ee5f17b7ffe96689705" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -28,7 +28,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="64" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="64" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="67" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="67" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structheap_1a37f3f6d6d39562f3cca452eafebcd7ac" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
@@ -41,7 +41,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="65" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="65" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="68" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="68" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" prot="public" static="no" mutable="no">
         <type>void *(*</type>
@@ -54,7 +54,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="67" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="67" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="70" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="70" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structheap_1ae53b14c50bbb9daab4346cd0873bda02" prot="public" static="no" mutable="no">
         <type>void(*</type>
@@ -67,7 +67,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="68" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="68" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="71" bodyend="-1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -75,12 +75,12 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="46">
+      <node id="55">
         <label>heap</label>
         <link refid="structheap"/>
       </node>
     </collaborationgraph>
-    <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="62" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="62" bodyend="69"/>
+    <location file="/opt/prj/aPlus/src/include/aplus/mm.h" line="65" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/mm.h" bodystart="65" bodyend="72"/>
     <listofallmembers>
       <member refid="structheap_1a8b4bc8c3f0ed79efd52d61a27a62a130" prot="public" virt="non-virtual"><scope>heap</scope><name>alloc</name></member>
       <member refid="structheap_1a5243ef46c552fc0968aa2bcdaf6725d1" prot="public" virt="non-virtual"><scope>heap</scope><name>bitmap</name></member>

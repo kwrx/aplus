@@ -1,0 +1,48 @@
+\hypertarget{chdir_8c}{\section{usr/src/libposix/src/chdir.c File Reference}
+\label{chdir_8c}\index{usr/src/libposix/src/chdir.\+c@{usr/src/libposix/src/chdir.\+c}}
+}
+{\ttfamily \#include $<$unistd.\+h$>$}\\*
+{\ttfamily \#include $<$fcntl.\+h$>$}\\*
+{\ttfamily \#include $<$dirent.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{chdir_8c_a03af571dfb595681bfa203c83385c07b}{chdir} (const char $\ast$path)
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\hypertarget{chdir_8c_a03af571dfb595681bfa203c83385c07b}{\index{chdir.\+c@{chdir.\+c}!chdir@{chdir}}
+\index{chdir@{chdir}!chdir.\+c@{chdir.\+c}}
+\subsubsection[{chdir}]{\setlength{\rightskip}{0pt plus 5cm}int chdir (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{path}
+\end{DoxyParamCaption}
+)}}\label{chdir_8c_a03af571dfb595681bfa203c83385c07b}
+
+
+Definition at line 6 of file chdir.\+c.
+
+
+
+References errno, and O\+\_\+\+D\+I\+R\+E\+C\+T\+O\+R\+Y.
+
+
+\begin{DoxyCode}
+6                             \{
+7     \textcolor{keywordflow}{if}(!path) \{
+8         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+9         \textcolor{keywordflow}{return} -1;
+10     \}
+11 
+12     \textcolor{keywordtype}{int} fd = open(path, O\_RDONLY | \hyperlink{dirent_8h_a6afd3dd2f570069804b40e6aa24fc966}{O\_DIRECTORY}, 0644);
+13     \textcolor{keywordflow}{if}(fd < 0)
+14         \textcolor{keywordflow}{return} -1;
+15 
+16     fchdir(fd);
+17     close(fd);
+18     
+19     \textcolor{keywordflow}{return} 0;
+20 \}
+\end{DoxyCode}

@@ -79,7 +79,7 @@ References errno.
 28                                                       \{
 29     \textcolor{keywordflow}{if}(!attr) \{
 30         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-31         \textcolor{keywordflow}{return} 1;
+31         \textcolor{keywordflow}{return} -1;
 32     \}
 33 
 34     memset(attr, 0, \textcolor{keyword}{sizeof}(\hyperlink{structpthread__attr}{pthread\_attr\_t}));
@@ -107,7 +107,7 @@ References pthread\+\_\+attr\+::detachstate, and errno.
 38                                                                                      \{
 39     \textcolor{keywordflow}{if}(!attr) \{
 40         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-41         \textcolor{keywordflow}{return} 1;
+41         \textcolor{keywordflow}{return} -1;
 42     \}
 43 
 44     *detachstate = attr->\hyperlink{structpthread__attr_a2ac0f3f9d4513024bbafc7db17c25a46}{detachstate};
@@ -135,7 +135,7 @@ References errno, and pthread\+\_\+attr\+::inheritsched.
 133                                                                                  \{
 134     \textcolor{keywordflow}{if}(!attr) \{
 135         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-136         \textcolor{keywordflow}{return} 1;
+136         \textcolor{keywordflow}{return} -1;
 137     \}
 138 
 139     *inheritsched = attr->\hyperlink{structpthread__attr_ab6bef83bc858c0ffb3c8d0b461ba4396}{inheritsched};
@@ -163,7 +163,7 @@ References errno, and pthread\+\_\+attr\+::param.
 100                                                                                              \{
 101     \textcolor{keywordflow}{if}(!attr) \{
 102         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-103         \textcolor{keywordflow}{return} 1;
+103         \textcolor{keywordflow}{return} -1;
 104     \}
 105 
 106     memcpy(param, &attr->\hyperlink{structpthread__attr_a371c70c9e51a2444860395f7045bbd3e}{param}, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} sched\_param));
@@ -190,7 +190,7 @@ References errno.
 \begin{DoxyCode}
 123                                                                           \{
 124     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
-125     \textcolor{keywordflow}{return} 1;
+125     \textcolor{keywordflow}{return} -1;
 126 \}
 \end{DoxyCode}
 \hypertarget{pthread__attr_8c_af45a1519538d33ebe6440688ddd2dfbb}{\index{pthread\+\_\+attr.\+c@{pthread\+\_\+attr.\+c}!pthread\+\_\+attr\+\_\+getscope@{pthread\+\_\+attr\+\_\+getscope}}
@@ -214,7 +214,7 @@ References pthread\+\_\+attr\+::contentionscope, and errno.
 153                                                                                    \{
 154     \textcolor{keywordflow}{if}(!attr) \{
 155         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-156         \textcolor{keywordflow}{return} 1;
+156         \textcolor{keywordflow}{return} -1;
 157     \}
 158 
 159     *contentionscope = attr->\hyperlink{structpthread__attr_a1d5ca4923f6814d754208080896a360a}{contentionscope};
@@ -242,7 +242,7 @@ References errno, and pthread\+\_\+attr\+::stackaddr.
 58                                                                                    \{
 59     \textcolor{keywordflow}{if}(!attr) \{
 60         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-61         \textcolor{keywordflow}{return} 1;
+61         \textcolor{keywordflow}{return} -1;
 62     \}
 63 
 64     *stackaddr = attr->\hyperlink{structpthread__attr_a004b9c2b7c75177f4de0262277f48333}{stackaddr};
@@ -270,7 +270,7 @@ References errno, and pthread\+\_\+attr\+::stacksize.
 79                                                                                     \{
 80     \textcolor{keywordflow}{if}(!attr) \{
 81         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-82         \textcolor{keywordflow}{return} 1;
+82         \textcolor{keywordflow}{return} -1;
 83     \}
 84 
 85     *stacksize = attr->\hyperlink{structpthread__attr_a8b8eaabf2bc9b4cec33d7764bbb115d9}{stacksize};
@@ -297,7 +297,7 @@ References pthread\+\_\+attr\+::contentionscope, pthread\+\_\+attr\+::detachstat
 12                                                    \{
 13     \textcolor{keywordflow}{if}(!attr) \{
 14         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-15         \textcolor{keywordflow}{return} 1;
+15         \textcolor{keywordflow}{return} -1;
 16     \}
 17 
 18     attr->\hyperlink{structpthread__attr_a004b9c2b7c75177f4de0262277f48333}{stackaddr} = 0;
@@ -331,7 +331,7 @@ References pthread\+\_\+attr\+::detachstate, and errno.
 48                                                                               \{
 49     \textcolor{keywordflow}{if}(!attr) \{
 50         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-51         \textcolor{keywordflow}{return} 1;
+51         \textcolor{keywordflow}{return} -1;
 52     \}
 53 
 54     attr->\hyperlink{structpthread__attr_a2ac0f3f9d4513024bbafc7db17c25a46}{detachstate} = detachstate;
@@ -359,7 +359,7 @@ References errno, and pthread\+\_\+attr\+::inheritsched.
 143                                                                                 \{
 144     \textcolor{keywordflow}{if}(!attr) \{
 145         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-146         \textcolor{keywordflow}{return} 1;
+146         \textcolor{keywordflow}{return} -1;
 147     \}
 148 
 149     attr->\hyperlink{structpthread__attr_ab6bef83bc858c0ffb3c8d0b461ba4396}{inheritsched} = inheritsched;
@@ -387,7 +387,7 @@ References errno, and pthread\+\_\+attr\+::param.
 112                                                                                              \{
 113     \textcolor{keywordflow}{if}(!attr) \{
 114         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-115         \textcolor{keywordflow}{return} 1;
+115         \textcolor{keywordflow}{return} -1;
 116     \}
 117 
 118     memcpy(&attr->\hyperlink{structpthread__attr_a371c70c9e51a2444860395f7045bbd3e}{param}, param, \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct} sched\_param));
@@ -414,7 +414,7 @@ References errno.
 \begin{DoxyCode}
 128                                                                          \{
 129     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
-130     \textcolor{keywordflow}{return} 1;
+130     \textcolor{keywordflow}{return} -1;
 131 \}
 \end{DoxyCode}
 \hypertarget{pthread__attr_8c_a9d33b3c0846822f99a8b62e72612702b}{\index{pthread\+\_\+attr.\+c@{pthread\+\_\+attr.\+c}!pthread\+\_\+attr\+\_\+setscope@{pthread\+\_\+attr\+\_\+setscope}}
@@ -438,7 +438,7 @@ References pthread\+\_\+attr\+::contentionscope, and errno.
 163                                                                             \{
 164     \textcolor{keywordflow}{if}(!attr) \{
 165         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-166         \textcolor{keywordflow}{return} 1;
+166         \textcolor{keywordflow}{return} -1;
 167     \}
 168 
 169     attr->\hyperlink{structpthread__attr_a1d5ca4923f6814d754208080896a360a}{contentionscope} = contentionscope;
@@ -466,7 +466,7 @@ References errno, and pthread\+\_\+attr\+::stackaddr.
 68                                                                             \{
 69     \textcolor{keywordflow}{if}(!attr) \{
 70         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-71         \textcolor{keywordflow}{return} 1;
+71         \textcolor{keywordflow}{return} -1;
 72     \}
 73 
 74     attr->\hyperlink{structpthread__attr_a004b9c2b7c75177f4de0262277f48333}{stackaddr} = stackaddr;
@@ -494,7 +494,7 @@ References errno, and pthread\+\_\+attr\+::stacksize.
 89                                                                              \{
 90     \textcolor{keywordflow}{if}(!attr) \{
 91         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-92         \textcolor{keywordflow}{return} 1;
+92         \textcolor{keywordflow}{return} -1;
 93     \}
 94 
 95     attr->\hyperlink{structpthread__attr_a8b8eaabf2bc9b4cec33d7764bbb115d9}{stacksize} = stacksize;

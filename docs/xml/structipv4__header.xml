@@ -140,7 +140,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="51">
+      <node id="60">
         <label>ipv4_header</label>
         <link refid="structipv4__header"/>
       </node>

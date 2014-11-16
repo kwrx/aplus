@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="structatk__gfx" kind="struct" prot="public">
+    <compoundname>atk_gfx</compoundname>
+    <includes refid="gfx_8h" local="no">gfx.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structatk__gfx_1a8c8d73df98a82572a666824b52b99964" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t atk_gfx::width</definition>
+        <argsstring></argsstring>
+        <name>width</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="8" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__gfx_1a5dcdddc358345ad49f4015253f1acbe6" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t atk_gfx::height</definition>
+        <argsstring></argsstring>
+        <name>height</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="9" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__gfx_1a7f050db1e3d134473b2077ab5275b727" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t atk_gfx::stride</definition>
+        <argsstring></argsstring>
+        <name>stride</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="10" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__gfx_1a27d24c7a918386527067975cfd8da971" prot="public" static="no" mutable="no">
+        <type><ref refid="aplus_8h_1a53a0df51603c77c2aa5b9ea61b606a82" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t atk_gfx::bpp</definition>
+        <argsstring></argsstring>
+        <name>bpp</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="11" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__gfx_1a00413765e42e1a347e45401e1a2e95bf" prot="public" static="no" mutable="no">
+        <type>void *</type>
+        <definition>void* atk_gfx::framebuffer</definition>
+        <argsstring></argsstring>
+        <name>framebuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="13" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* atk_gfx::__plot)(void *, atk_color_t)</definition>
+        <argsstring>)(void *, atk_color_t)</argsstring>
+        <name>__plot</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="15" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structatk__gfx_1ae36225bc515975b602bde086de71ad24" prot="public" static="no" mutable="no">
+        <type><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref>(*</type>
+        <definition>atk_color_t(* atk_gfx::__get)(void *)</definition>
+        <argsstring>)(void *)</argsstring>
+        <name>__get</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="16" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="18">
+        <label>atk_gfx</label>
+        <link refid="structatk__gfx"/>
+      </node>
+    </collaborationgraph>
+    <location file="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" line="7" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/include/atk/gfx.h" bodystart="7" bodyend="17"/>
+    <listofallmembers>
+      <member refid="structatk__gfx_1ae36225bc515975b602bde086de71ad24" prot="public" virt="non-virtual"><scope>atk_gfx</scope><name>__get</name></member>
+      <member refid="structatk__gfx_1ad0600b98849b356fa7d12a3e4237588b" prot="public" virt="non-virtual"><scope>atk_gfx</scope><name>__plot</name></member>
+      <member refid="structatk__gfx_1a27d24c7a918386527067975cfd8da971" prot="public" virt="non-virtual"><scope>atk_gfx</scope><name>bpp</name></member>
+      <member refid="structatk__gfx_1a00413765e42e1a347e45401e1a2e95bf" prot="public" virt="non-virtual"><scope>atk_gfx</scope><name>framebuffer</name></member>
+      <member refid="structatk__gfx_1a5dcdddc358345ad49f4015253f1acbe6" prot="public" virt="non-virtual"><scope>atk_gfx</scope><name>height</name></member>
+      <member refid="structatk__gfx_1a7f050db1e3d134473b2077ab5275b727" prot="public" virt="non-virtual"><scope>atk_gfx</scope><name>stride</name></member>
+      <member refid="structatk__gfx_1a8c8d73df98a82572a666824b52b99964" prot="public" virt="non-virtual"><scope>atk_gfx</scope><name>width</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

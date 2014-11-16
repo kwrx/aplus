@@ -4,45 +4,15 @@
     <programlisting>#include &lt;stdio.h&gt;</programlisting>
     <programlisting>#include &lt;signal.h&gt;</programlisting>
     <programlisting>#include &lt;assert.h&gt;</programlisting>
+    <programlisting>#include &lt;atk.h&gt;</programlisting>
+    <programlisting>#include &lt;atk/widget.h&gt;</programlisting>
         <simplesect>
             <title>Functions</title>
             <para>
                 <itemizedlist>
                     <listitem>
-                        <para>static int <link linkend="usr_2src_2libatk_2test_2main_8c_1afd4f7f3e83f5ccc17a12c629a407c900">__test_signals__</link> (
-int sig)</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para>static int <link linkend="usr_2src_2libatk_2test_2main_8c_1afe4dfd5e49215955311250c669123180">test_stdio</link> (
+                        <para>int <link linkend="usr_2src_2libatk_2test_2main_8c_1ae66f6b31b5ad750f1fe042a706a4e3d4">main</link> (
 )</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para>static int <link linkend="usr_2src_2libatk_2test_2main_8c_1a72b40b42ede33a5df17620eb3ebfbcb7">test_args</link> (
-int argc, char ** argv)</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para>static int <link linkend="usr_2src_2libatk_2test_2main_8c_1a1bc601ec27d4ef9c2b6ee94175fe3439">test_signals</link> (
-)</para>
-                    </listitem>
-                </itemizedlist>
-            </para>
-            <para>
-                <itemizedlist>
-                    <listitem>
-                        <para>int <link linkend="usr_2src_2libatk_2test_2main_8c_1a3c04138a5bfe5d72780bb7e82a18e627">main</link> (
-int argc, char ** argv)</para>
                     </listitem>
                 </itemizedlist>
             </para>

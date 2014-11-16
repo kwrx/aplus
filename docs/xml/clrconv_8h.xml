@@ -4,40 +4,60 @@
     <compoundname>clrconv.h</compoundname>
     <includes refid="atk_8h" local="no">atk.h</includes>
     <includes local="no">stdint.h</includes>
+    <includedby refid="bitmap_8c" local="yes">usr/src/libatk/src/bitmap.c</includedby>
+    <includedby refid="gfx_8c" local="yes">usr/src/libatk/src/gfx.c</includedby>
     <incdepgraph>
-      <node id="1950">
+      <node id="2082">
         <label>stdint.h</label>
       </node>
-      <node id="1949">
+      <node id="2081">
         <label>atk/widget.h</label>
         <link refid="widget_8h"/>
-        <childnode refid="1948" relation="include">
+        <childnode refid="2080" relation="include">
         </childnode>
       </node>
-      <node id="1948">
+      <node id="2080">
         <label>atk.h</label>
         <link refid="atk_8h"/>
-        <childnode refid="1949" relation="include">
+        <childnode refid="2081" relation="include">
         </childnode>
       </node>
-      <node id="1947">
+      <node id="2079">
         <label>usr/src/libatk/src/clrconv.h</label>
         <link refid="clrconv.h"/>
-        <childnode refid="1948" relation="include">
+        <childnode refid="2080" relation="include">
         </childnode>
-        <childnode refid="1950" relation="include">
+        <childnode refid="2082" relation="include">
         </childnode>
       </node>
     </incdepgraph>
+    <invincdepgraph>
+      <node id="2084">
+        <label>usr/src/libatk/src/bitmap.c</label>
+        <link refid="bitmap_8c"/>
+      </node>
+      <node id="2085">
+        <label>usr/src/libatk/src/gfx.c</label>
+        <link refid="gfx_8c"/>
+      </node>
+      <node id="2083">
+        <label>usr/src/libatk/src/clrconv.h</label>
+        <link refid="clrconv.h"/>
+        <childnode refid="2084" relation="include">
+        </childnode>
+        <childnode refid="2085" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
       <sectiondef kind="define">
       <memberdef kind="define" id="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43" prot="public" static="no">
         <name>V4F_TO_ARGB</name>
         <param><defname>c</defname></param>
-        <initializer>(										\
-		((int32_t)(c[3] * 0xFF) &lt;&lt; 24) 	|	\
-		((int32_t)(c[2] * 0xFF) &lt;&lt; 16) 	|	\
-		((int32_t)(c[1] * 0xFF) &lt;&lt; 8) 	|	\
-		((int32_t)(c[0] * 0xFF)) 		|	\
+        <initializer>(														\
+		((int32_t)(c[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>] * 0xFF) &lt;&lt; 24) 	|		\
+		((int32_t)(c[ATK_COLOR_R] * 0xFF) &lt;&lt; 16) 	|		\
+		((int32_t)(c[ATK_COLOR_G] * 0xFF) &lt;&lt; 8) 	|		\
+		((int32_t)(c[ATK_COLOR_B] * 0xFF)) 					\
 	)</initializer>
         <briefdescription>
         </briefdescription>
@@ -50,10 +70,10 @@
       <memberdef kind="define" id="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4" prot="public" static="no">
         <name>V4F_TO_RGB</name>
         <param><defname>c</defname></param>
-        <initializer>(										\
-		((int32_t)(c[2] * 0xFF) &lt;&lt; 16) 	|	\
-		((int32_t)(c[1] * 0xFF) &lt;&lt; 8) 	|	\
-		((int32_t)(c[0] * 0xFF)) 		|	\
+        <initializer>(														\
+		((int32_t)(c[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>] * 0xFF) &lt;&lt; 16) 	|		\
+		((int32_t)(c[ATK_COLOR_G] * 0xFF) &lt;&lt; 8) 	|		\
+		((int32_t)(c[ATK_COLOR_B] * 0xFF)) 					\
 	)</initializer>
         <briefdescription>
         </briefdescription>
@@ -66,10 +86,10 @@
       <memberdef kind="define" id="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac" prot="public" static="no">
         <name>V4F_TO_R5G6B5</name>
         <param><defname>c</defname></param>
-        <initializer>(										\
-		((int16_t)(c[2] * 0x1F) &lt;&lt; 11)	|	\
-		((int16_t)(c[1] * 0x3F)	&lt;&lt; 5)	|	\
-		((int16_t)(c[0] * 0x1F))		|	\
+        <initializer>(														\
+		((int16_t)(c[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>] * 0x1F) &lt;&lt; 11)	|		\
+		((int16_t)(c[ATK_COLOR_R] * 0x3F) &lt;&lt; 5)		|		\
+		((int16_t)(c[ATK_COLOR_R] * 0x1F))					\
 	)</initializer>
         <briefdescription>
         </briefdescription>
@@ -78,6 +98,74 @@
         <inbodydescription>
         </inbodydescription>
         <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" line="29" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="clrconv_8h_1accad078885c0425eb1861291a1769717" prot="public" static="no">
+        <name>ARGB_TO_V4F</name>
+        <param><defname>c</defname></param>
+        <initializer>{											\
+		((float) ((c &gt;&gt; 24) &amp; 0xFF)) / 0xFF, 	\
+		((float) ((c &gt;&gt; 16) &amp; 0xFF)) / 0xFF,	\
+		((float) ((c &gt;&gt; 8) &amp; 0xFF)) / 0xFF,		\
+		((float) (c &amp; 0xFF)) / 0xFF				\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" line="37" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8" prot="public" static="no">
+        <name>RGB_TO_V4F</name>
+        <param><defname>c</defname></param>
+        <initializer>{											\
+		1.0, 									\
+		((float) ((c &gt;&gt; 16) &amp; 0xFF)) / 0xFF,	\
+		((float) ((c &gt;&gt; 8) &amp; 0xFF)) / 0xFF,		\
+		((float) (c &amp; 0xFF)) / 0xFF				\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" line="45" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909" prot="public" static="no">
+        <name>R5G6B5_TO_V4F</name>
+        <param><defname>c</defname></param>
+        <initializer>{											\
+		1.0, 									\
+		((float) ((c &gt;&gt; 11) &amp; 0x1F)) / 0x1F,	\
+		((float) ((c &gt;&gt; 5) &amp; 0x3F)) / 0x3F,		\
+		((float) (c &amp; 0x1F)) / 0x1F				\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" line="53" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="clrconv_8h_1a9abc90ae1044063128acfb1505666e49" prot="public" static="no">
+        <name>__SWAP</name>
+        <param><defname>x</defname></param>
+        <param><defname>y</defname></param>
+        <initializer>{						\
+		x ^= y;				\
+		y ^= x;				\
+		x ^= y;				\
+	}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" line="83" column="9" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" bodystart="83" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -104,13 +192,12 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" line="38" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" bodystart="38" bodyend="54"/>
-        <references refid="atk_8h_1a170621735809dd7efded8c8517347596" compoundref="atk_8h" startline="26">ATK_COLOR_A</references>
-        <references refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" compoundref="atk_8h" startline="29">ATK_COLOR_B</references>
-        <references refid="atk_8h_1a29a69073b13d8b13b9732b4fdabae599" compoundref="atk_8h" startline="22">ATK_COLOR_BLACK</references>
-        <references refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" compoundref="atk_8h" startline="28">ATK_COLOR_G</references>
-        <references refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" compoundref="atk_8h" startline="27">ATK_COLOR_R</references>
-        <references refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9">d</references>
+        <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" line="64" column="1" bodyfile="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h" bodystart="64" bodyend="80"/>
+        <references refid="atk_8h_1a170621735809dd7efded8c8517347596" compoundref="atk_8h" startline="29">ATK_COLOR_A</references>
+        <references refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" compoundref="atk_8h" startline="32">ATK_COLOR_B</references>
+        <references refid="atk_8h_1a29a69073b13d8b13b9732b4fdabae599" compoundref="atk_8h" startline="25">ATK_COLOR_BLACK</references>
+        <references refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" compoundref="atk_8h" startline="31">ATK_COLOR_G</references>
+        <references refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" compoundref="atk_8h" startline="30">ATK_COLOR_R</references>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -131,50 +218,84 @@
 <codeline lineno="11"><highlight class="comment"><sp/>*</highlight></codeline>
 <codeline lineno="12"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="13"><highlight class="normal"></highlight></codeline>
-<codeline lineno="14" refid="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>V4F_TO_ARGB(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="16"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[3]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>24)<sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="17"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[2]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>16)<sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="18"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[1]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>8)<sp/><sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="19"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[0]<sp/>*<sp/>0xFF))<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="14" refid="clrconv_8h_1ae1e5d1080f853c20f27978351f278d43" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>V4F_TO_ARGB(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="15"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="16"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[ATK_COLOR_A]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>24)<sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="17"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[ATK_COLOR_R]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>16)<sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[ATK_COLOR_G]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>8)<sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="19"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[ATK_COLOR_B]<sp/>*<sp/>0xFF))<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
 <codeline lineno="20"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="21"><highlight class="normal"></highlight></codeline>
-<codeline lineno="22" refid="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>V4F_TO_RGB(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="23"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="24"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[2]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>16)<sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="25"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[1]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>8)<sp/><sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="26"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[0]<sp/>*<sp/>0xFF))<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="22" refid="clrconv_8h_1aa375c3354e6d58c2f6a15e61fc5b95d4" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>V4F_TO_RGB(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="23"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="24"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[ATK_COLOR_R]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>16)<sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="25"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[ATK_COLOR_G]<sp/>*<sp/>0xFF)<sp/>&lt;&lt;<sp/>8)<sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="26"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int32_t)(c[ATK_COLOR_B]<sp/>*<sp/>0xFF))<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
 <codeline lineno="27"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="28"><highlight class="normal"></highlight></codeline>
-<codeline lineno="29" refid="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>V4F_TO_R5G6B5(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="30"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="31"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int16_t)(c[2]<sp/>*<sp/>0x1F)<sp/>&lt;&lt;<sp/>11)<sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="32"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int16_t)(c[1]<sp/>*<sp/>0x3F)<sp/>&lt;&lt;<sp/>5)<sp/><sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
-<codeline lineno="33"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int16_t)(c[0]<sp/>*<sp/>0x1F))<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="29" refid="clrconv_8h_1a37a361b71cb30457e00beba77d3ccfac" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>V4F_TO_R5G6B5(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="30"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>(<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="31"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int16_t)(c[ATK_COLOR_R]<sp/>*<sp/>0x1F)<sp/>&lt;&lt;<sp/>11)<sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="32"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int16_t)(c[ATK_COLOR_R]<sp/>*<sp/>0x3F)<sp/>&lt;&lt;<sp/>5)<sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="33"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((int16_t)(c[ATK_COLOR_R]<sp/>*<sp/>0x1F))<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
 <codeline lineno="34"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>)</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="35"><highlight class="normal"></highlight></codeline>
 <codeline lineno="36"><highlight class="normal"></highlight></codeline>
-<codeline lineno="37"><highlight class="normal"></highlight></codeline>
-<codeline lineno="38" refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" kindref="member">__alphablend</ref>(<ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>,<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>s,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>a)<sp/>{</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(a<sp/>==<sp/>0.0f)</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>;</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"></highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(a<sp/>==<sp/>1.0f)</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>s;</highlight></codeline>
+<codeline lineno="37" refid="clrconv_8h_1accad078885c0425eb1861291a1769717" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ARGB_TO_V4F(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="38"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="39"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>((c<sp/>&gt;&gt;<sp/>24)<sp/>&amp;<sp/>0xFF))<sp/>/<sp/>0xFF,<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="40"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>((c<sp/>&gt;&gt;<sp/>16)<sp/>&amp;<sp/>0xFF))<sp/>/<sp/>0xFF,<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="41"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>((c<sp/>&gt;&gt;<sp/>8)<sp/>&amp;<sp/>0xFF))<sp/>/<sp/>0xFF,<sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="42"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>(c<sp/>&amp;<sp/>0xFF))<sp/>/<sp/>0xFF<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="43"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="44"><highlight class="normal"></highlight></codeline>
-<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>ia<sp/>=<sp/>1.0f<sp/>-<sp/>a;</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>r<sp/>=<sp/><ref refid="atk_8h_1a29a69073b13d8b13b9732b4fdabae599" kindref="member">ATK_COLOR_BLACK</ref>;</highlight></codeline>
-<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]<sp/>=<sp/>1.0f;</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>]<sp/>=<sp/>(s[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>]<sp/>*<sp/>a<sp/>+<sp/>d[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>]<sp/>*<sp/>ia);</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" kindref="member">ATK_COLOR_G</ref>]<sp/>=<sp/>(s[<ref refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" kindref="member">ATK_COLOR_G</ref>]<sp/>*<sp/>a<sp/>+<sp/>d[<ref refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" kindref="member">ATK_COLOR_G</ref>]<sp/>*<sp/>ia);</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" kindref="member">ATK_COLOR_B</ref>]<sp/>=<sp/>(s[<ref refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" kindref="member">ATK_COLOR_B</ref>]<sp/>*<sp/>a<sp/>+<sp/>d[<ref refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" kindref="member">ATK_COLOR_B</ref>]<sp/>*<sp/>ia);</highlight></codeline>
+<codeline lineno="45" refid="clrconv_8h_1a19e916ae304100c410afd14f3afaa3a8" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RGB_TO_V4F(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="46"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="47"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1.0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="48"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>((c<sp/>&gt;&gt;<sp/>16)<sp/>&amp;<sp/>0xFF))<sp/>/<sp/>0xFF,<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="49"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>((c<sp/>&gt;&gt;<sp/>8)<sp/>&amp;<sp/>0xFF))<sp/>/<sp/>0xFF,<sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="50"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>(c<sp/>&amp;<sp/>0xFF))<sp/>/<sp/>0xFF<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="51"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="52"><highlight class="normal"></highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>r;</highlight></codeline>
-<codeline lineno="54"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"></highlight></codeline>
-<codeline lineno="56"><highlight class="normal"></highlight></codeline>
-<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="53" refid="clrconv_8h_1af7d04bfd25b3866ae4592547dc8a7909" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>R5G6B5_TO_V4F(c)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="54"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="55"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>1.0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="56"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>((c<sp/>&gt;&gt;<sp/>11)<sp/>&amp;<sp/>0x1F))<sp/>/<sp/>0x1F,<sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="57"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>((c<sp/>&gt;&gt;<sp/>5)<sp/>&amp;<sp/>0x3F))<sp/>/<sp/>0x3F,<sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="58"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>((float)<sp/>(c<sp/>&amp;<sp/>0x1F))<sp/>/<sp/>0x1F<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="59"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64" refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" refkind="member"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/><ref refid="clrconv_8h_1ab7d4dfdb7e512b070be9ba847e71547f" kindref="member">__alphablend</ref>(<ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>d,<sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>s,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>a)<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(a<sp/>==<sp/>0.0f)</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>d;</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(a<sp/>==<sp/>1.0f)</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>s;</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>ia<sp/>=<sp/>1.0f<sp/>-<sp/>a;</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="atk_8h_1a85e5d8dafaa1bf57b05a1cd0dd9d3b82" kindref="member">atk_color_t</ref><sp/>r<sp/>=<sp/><ref refid="atk_8h_1a29a69073b13d8b13b9732b4fdabae599" kindref="member">ATK_COLOR_BLACK</ref>;</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1a170621735809dd7efded8c8517347596" kindref="member">ATK_COLOR_A</ref>]<sp/>=<sp/>1.0f;</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>]<sp/>=<sp/>(s[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>]<sp/>*<sp/>a<sp/>+<sp/>d[<ref refid="atk_8h_1ae15b47dc39550cad42dbac4d50bc2c5c" kindref="member">ATK_COLOR_R</ref>]<sp/>*<sp/>ia);</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" kindref="member">ATK_COLOR_G</ref>]<sp/>=<sp/>(s[<ref refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" kindref="member">ATK_COLOR_G</ref>]<sp/>*<sp/>a<sp/>+<sp/>d[<ref refid="atk_8h_1a4c5c8f9331ebcd8142b22cee6075d2ac" kindref="member">ATK_COLOR_G</ref>]<sp/>*<sp/>ia);</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>r[<ref refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" kindref="member">ATK_COLOR_B</ref>]<sp/>=<sp/>(s[<ref refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" kindref="member">ATK_COLOR_B</ref>]<sp/>*<sp/>a<sp/>+<sp/>d[<ref refid="atk_8h_1ac9a57bbb2de01caedab3ca03602144bd" kindref="member">ATK_COLOR_B</ref>]<sp/>*<sp/>ia);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>r;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83" refid="clrconv_8h_1a9abc90ae1044063128acfb1505666e49" refkind="member"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__SWAP(x,<sp/>y)<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="84"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>{<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="85"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>^=<sp/>y;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="86"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>y<sp/>^=<sp/>x;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="87"><highlight class="preprocessor"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>x<sp/>^=<sp/>y;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline lineno="88"><highlight class="preprocessor"><sp/><sp/><sp/><sp/>}</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libatk/src/clrconv.h"/>
   </compounddef>

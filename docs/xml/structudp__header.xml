@@ -62,7 +62,7 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="126">
+      <node id="135">
         <label>udp_header</label>
         <link refid="structudp__header"/>
       </node>

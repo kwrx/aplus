@@ -7,128 +7,128 @@
     <includes refid="task_8h" local="no">aplus/task.h</includes>
     <includes local="no">errno.h</includes>
     <incdepgraph>
-      <node id="1362">
+      <node id="1431">
         <label>sys/stat.h</label>
       </node>
-      <node id="1353">
+      <node id="1422">
         <label>stdarg.h</label>
       </node>
-      <node id="1356">
+      <node id="1425">
         <label>aplus/attribute.h</label>
         <link refid="attribute_8h"/>
-        <childnode refid="1351" relation="include">
+        <childnode refid="1420" relation="include">
         </childnode>
-        <childnode refid="1357" relation="include">
+        <childnode refid="1426" relation="include">
         </childnode>
-        <childnode refid="1352" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1423" relation="include">
         </childnode>
-        <childnode refid="1359" relation="include">
+        <childnode refid="1428" relation="include">
         </childnode>
       </node>
-      <node id="1361">
+      <node id="1430">
         <label>aplus/fs.h</label>
         <link refid="fs_8h"/>
-        <childnode refid="1352" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
-        <childnode refid="1358" relation="include">
+        <childnode refid="1427" relation="include">
         </childnode>
-        <childnode refid="1359" relation="include">
+        <childnode refid="1428" relation="include">
         </childnode>
-        <childnode refid="1362" relation="include">
+        <childnode refid="1431" relation="include">
         </childnode>
-        <childnode refid="1363" relation="include">
+        <childnode refid="1432" relation="include">
         </childnode>
       </node>
-      <node id="1352">
+      <node id="1421">
         <label>stdint.h</label>
       </node>
-      <node id="1355">
+      <node id="1424">
         <label>aplus/syscall.h</label>
         <link refid="syscall_8h"/>
-        <childnode refid="1351" relation="include">
+        <childnode refid="1420" relation="include">
         </childnode>
-        <childnode refid="1356" relation="include">
+        <childnode refid="1425" relation="include">
         </childnode>
-        <childnode refid="1352" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
       </node>
-      <node id="1366">
+      <node id="1435">
         <label>setjmp.h</label>
       </node>
-      <node id="1360">
+      <node id="1429">
         <label>aplus/task.h</label>
         <link refid="task_8h"/>
-        <childnode refid="1352" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
-        <childnode refid="1351" relation="include">
+        <childnode refid="1420" relation="include">
         </childnode>
-        <childnode refid="1361" relation="include">
+        <childnode refid="1430" relation="include">
         </childnode>
-        <childnode refid="1365" relation="include">
+        <childnode refid="1434" relation="include">
         </childnode>
-        <childnode refid="1359" relation="include">
+        <childnode refid="1428" relation="include">
         </childnode>
-        <childnode refid="1366" relation="include">
+        <childnode refid="1435" relation="include">
         </childnode>
       </node>
-      <node id="1367">
+      <node id="1436">
         <label>errno.h</label>
       </node>
-      <node id="1358">
+      <node id="1427">
         <label>stddef.h</label>
       </node>
-      <node id="1357">
+      <node id="1426">
         <label>aplus/list.h</label>
         <link refid="list_8h"/>
-        <childnode refid="1358" relation="include">
+        <childnode refid="1427" relation="include">
         </childnode>
-        <childnode refid="1352" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
-        <childnode refid="1359" relation="include">
+        <childnode refid="1428" relation="include">
         </childnode>
       </node>
-      <node id="1350">
+      <node id="1419">
         <label>src/syscall/clone.c</label>
         <link refid="clone.c"/>
-        <childnode refid="1351" relation="include">
+        <childnode refid="1420" relation="include">
         </childnode>
-        <childnode refid="1355" relation="include">
+        <childnode refid="1424" relation="include">
         </childnode>
-        <childnode refid="1360" relation="include">
+        <childnode refid="1429" relation="include">
         </childnode>
-        <childnode refid="1367" relation="include">
+        <childnode refid="1436" relation="include">
         </childnode>
       </node>
-      <node id="1351">
+      <node id="1420">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="1352" relation="include">
+        <childnode refid="1421" relation="include">
         </childnode>
-        <childnode refid="1353" relation="include">
+        <childnode refid="1422" relation="include">
         </childnode>
-        <childnode refid="1354" relation="include">
+        <childnode refid="1423" relation="include">
         </childnode>
       </node>
-      <node id="1359">
+      <node id="1428">
         <label>sys/types.h</label>
       </node>
-      <node id="1354">
+      <node id="1423">
         <label>string.h</label>
       </node>
-      <node id="1364">
+      <node id="1433">
         <label>unistd.h</label>
       </node>
-      <node id="1365">
+      <node id="1434">
         <label>signal.h</label>
       </node>
-      <node id="1363">
+      <node id="1432">
         <label>sys/dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="1364" relation="include">
+        <childnode refid="1433" relation="include">
         </childnode>
-        <childnode refid="1359" relation="include">
+        <childnode refid="1428" relation="include">
         </childnode>
       </node>
     </incdepgraph>
@@ -144,7 +144,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/syscall/clone.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="35" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/syscall/clone.c" line="6" column="1" bodyfile="/opt/prj/aPlus/src/sched.c" bodystart="37" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -198,7 +198,7 @@ The main use of <ref refid="clone_8c_1a14a069ba6b991078484ac2b7573a5f23" kindref
 <itemizedlist>
 <listitem><para>CLONE_FILES<linebreak/>
  The calling process and the child process share the same file descriptor table.</para></listitem><listitem><para>CLONE_SIGHAND<linebreak/>
- The calling process and the child process share the same table of signal handlers.</para></listitem><listitem><para><ref refid="posix_2hooks_8h_1ac07965af2ad895ca67fdc8352303fbb5" kindref="member">CLONE_VM</ref><linebreak/>
+ The calling process and the child process share the same table of signal handlers.</para></listitem><listitem><para><ref refid="task_8h_1ac07965af2ad895ca67fdc8352303fbb5" kindref="member">CLONE_VM</ref><linebreak/>
  The calling process and the child process run in the same memory space. </para></listitem></itemizedlist>
 </para></parameterdescription>
 </parameteritem>
@@ -218,7 +218,7 @@ The main use of <ref refid="clone_8c_1a14a069ba6b991078484ac2b7573a5f23" kindref
         <location file="/opt/prj/aPlus/src/syscall/clone.c" line="32" column="1" bodyfile="/opt/prj/aPlus/src/syscall/clone.c" bodystart="32" bodyend="49"/>
         <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
         <references refid="structtask_1ab56448ae42a75825ea923bd86648f3ae" compoundref="task_8h" startline="91">task::pid</references>
-        <references refid="task_8c_1afed7d6a4dd3580596c0c925e766c4163" compoundref="task_8c" startline="51" endline="130">task_clone</references>
+        <references refid="task_8c_1afed7d6a4dd3580596c0c925e766c4163" compoundref="task_8c" startline="54" endline="133">task_clone</references>
       </memberdef>
       <memberdef kind="function" id="clone_8c_1adeb0bff3f02079d3e65a1229d6161490" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>

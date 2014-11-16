@@ -20,5 +20,12 @@
                     </listitem>
                 </itemizedlist>
             </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
+                        <para>pthread_t owner</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
         </simplesect>
 </section>

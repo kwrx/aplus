@@ -1,4 +1,4 @@
-.TH "src/fs/fs.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/fs/fs.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -9,6 +9,8 @@ src/fs/fs.c \-
 \fC#include <aplus\&.h>\fP
 .br
 \fC#include <aplus/fs\&.h>\fP
+.br
+\fC#include <aplus/mm\&.h>\fP
 .br
 \fC#include <stdint\&.h>\fP
 .br
@@ -66,183 +68,183 @@ src/fs/fs.c \-
 .SS "int fs_chown (struct \fBinode\fP *inode, uid_towner, gid_tgroup)"
 
 .PP
-Definition at line 93 of file fs\&.c\&.
+Definition at line 94 of file fs\&.c\&.
 .PP
 References inode::chown, and errno\&.
 .PP
 .nf
-93                                                              {
-94     if(inode->chown)
-95         return inode->chown(inode, owner, group);
-96         
-97     errno = ENOSYS; 
-98     return -1;
-99 }
+94                                                              {
+95     if(inode->chown)
+96         return inode->chown(inode, owner, group);
+97         
+98     errno = ENOSYS; 
+99     return -1;
+100 }
 .fi
 .SS "struct \fBinode\fP* fs_creat (struct \fBinode\fP *inode, char *name, mode_tmode)"
 
 .PP
-Definition at line 69 of file fs\&.c\&.
+Definition at line 70 of file fs\&.c\&.
 .PP
 References inode::creat, and errno\&.
 .PP
 .nf
-69                                                                       {
-70     if(inode->creat)
-71         return inode->creat(inode, name, mode);
-72     
-73     errno = ENOSYS;     
-74     return NULL;
-75 }
+70                                                                       {
+71     if(inode->creat)
+72         return inode->creat(inode, name, mode);
+73     
+74     errno = ENOSYS;     
+75     return NULL;
+76 }
 .fi
 .SS "struct \fBinode\fP* fs_finddir (struct \fBinode\fP *inode, char *name)"
 
 .PP
-Definition at line 50 of file fs\&.c\&.
+Definition at line 51 of file fs\&.c\&.
 .PP
 References errno, inode::finddir, inode::parent, and vfs_mapped()\&.
 .PP
 .nf
-50                                                            {
-51 
-52     if(strcmp(name, "\&.") == 0)
-53         return inode;
-54 
-55     if(strcmp(name, "\&.\&.") == 0)
-56         return inode->parent;
-57 
-58     inode_t* map = NULL;
-59     if((map = (inode_t*) vfs_mapped(inode, name)) != NULL)
-60         return map;
-61 
-62     if(inode->finddir)
-63         return inode->finddir(inode, name);
-64         
-65     errno = ENOSYS; 
-66     return NULL;
-67 }
+51                                                            {
+52 
+53     if(strcmp(name, "\&.") == 0)
+54         return inode;
+55 
+56     if(strcmp(name, "\&.\&.") == 0)
+57         return inode->parent;
+58 
+59     inode_t* map = NULL;
+60     if((map = (inode_t*) vfs_mapped(inode, name)) != NULL)
+61         return map;
+62 
+63     if(inode->finddir)
+64         return inode->finddir(inode, name);
+65         
+66     errno = ENOSYS; 
+67     return NULL;
+68 }
 .fi
 .SS "void fs_flush (struct \fBinode\fP *inode)"
 
 .PP
-Definition at line 101 of file fs\&.c\&.
+Definition at line 102 of file fs\&.c\&.
 .PP
 References errno, and inode::flush\&.
 .PP
 .nf
-101                                    {
-102     if(inode->flush)
-103         inode->flush(inode);
-104         
-105     errno = ENOSYS; 
-106     return;
-107 }
+102                                    {
+103     if(inode->flush)
+104         inode->flush(inode);
+105         
+106     errno = ENOSYS; 
+107     return;
+108 }
 .fi
 .SS "int fs_ioctl (struct \fBinode\fP *inode, intreq, void *buf)"
 
 .PP
-Definition at line 109 of file fs\&.c\&.
+Definition at line 110 of file fs\&.c\&.
 .PP
 References errno, and inode::ioctl\&.
 .PP
 .nf
-109                                                       {
-110     if(inode->ioctl)
-111         return inode->ioctl(inode, req, buf);
-112     
-113     errno = ENOSYS; 
-114     return -1;
-115 }
+110                                                       {
+111     if(inode->ioctl)
+112         return inode->ioctl(inode, req, buf);
+113     
+114     errno = ENOSYS; 
+115     return -1;
+116 }
 .fi
 .SS "int fs_read (struct \fBinode\fP *inode, char *ptr, intlen)"
 
 .PP
-Definition at line 16 of file fs\&.c\&.
+Definition at line 17 of file fs\&.c\&.
 .PP
 References errno, and inode::read\&.
 .PP
 .nf
-16                                                       {
-17     if(inode->read)
-18         return inode->read(inode, ptr, len);
-19     
-20     errno = ENOSYS;     
-21     return 0;
-22 }
+17                                                       {
+18     if(inode->read)
+19         return inode->read(inode, ptr, len);
+20     
+21     errno = ENOSYS;     
+22     return 0;
+23 }
 .fi
 .SS "struct \fBdirent\fP* fs_readdir (struct \fBinode\fP *inode, intindex)"
 
 .PP
-Definition at line 32 of file fs\&.c\&.
+Definition at line 33 of file fs\&.c\&.
 .PP
 References dirent::d_ino, dirent::d_name, errno, inode::ino, kmalloc(), inode::name, inode::readdir, vfs_mapped_at_index(), and vfs_mapped_count()\&.
 .PP
 .nf
-32                                                            {
-33 
-34     inode_t* map = NULL;
-35     if((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL) {
-36         struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
-37         strcpy(ent->d_name, map->name);
-38         ent->d_ino = map->ino;
-39         
-40         return ent;
-41     }
-42 
-43     if(inode->readdir)
-44         return inode->readdir(inode, index - vfs_mapped_count(inode));
-45         
-46     errno = ENOSYS; 
-47     return NULL;
-48 }
+33                                                            {
+34 
+35     inode_t* map = NULL;
+36     if((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL) {
+37         struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
+38         strcpy(ent->d_name, map->name);
+39         ent->d_ino = map->ino;
+40         
+41         return ent;
+42     }
+43 
+44     if(inode->readdir)
+45         return inode->readdir(inode, index - vfs_mapped_count(inode));
+46         
+47     errno = ENOSYS; 
+48     return NULL;
+49 }
 .fi
 .SS "int fs_rename (struct \fBinode\fP *inode, char *oldname, char *newname)"
 
 .PP
-Definition at line 77 of file fs\&.c\&.
+Definition at line 78 of file fs\&.c\&.
 .PP
 References errno, and inode::rename\&.
 .PP
 .nf
-77                                                                   {
-78     if(inode->rename)
-79         return inode->rename(inode, oldname, newname);
-80     
-81     errno = ENOSYS;     
-82     return -1;
-83 }
+78                                                                   {
+79     if(inode->rename)
+80         return inode->rename(inode, oldname, newname);
+81     
+82     errno = ENOSYS;     
+83     return -1;
+84 }
 .fi
 .SS "int fs_unlink (struct \fBinode\fP *inode, char *name)"
 
 .PP
-Definition at line 85 of file fs\&.c\&.
+Definition at line 86 of file fs\&.c\&.
 .PP
 References errno, and inode::unlink\&.
 .PP
 .nf
-85                                                 {
-86     if(inode->unlink)
-87         return inode->unlink(inode, name);
-88         
-89     errno = ENOSYS; 
-90     return -1;
-91 }
+86                                                 {
+87     if(inode->unlink)
+88         return inode->unlink(inode, name);
+89         
+90     errno = ENOSYS; 
+91     return -1;
+92 }
 .fi
 .SS "int fs_write (struct \fBinode\fP *inode, char *ptr, intlen)"
 
 .PP
-Definition at line 24 of file fs\&.c\&.
+Definition at line 25 of file fs\&.c\&.
 .PP
 References errno, and inode::write\&.
 .PP
 .nf
-24                                                        {
-25     if(inode->write)
-26         return inode->write(inode, ptr, len);
-27         
-28     errno = ENOSYS; 
-29     return 0;
-30 }
+25                                                        {
+26     if(inode->write)
+27         return inode->write(inode, ptr, len);
+28         
+29     errno = ENOSYS; 
+30     return 0;
+31 }
 .fi
 .SH "Author"
 .PP 

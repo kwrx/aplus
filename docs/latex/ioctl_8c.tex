@@ -40,21 +40,27 @@ Definition at line 15 of file ioctl.\+c.
 
 
 
-References errno, task\+::fd, and fs\+\_\+ioctl().
+References errno, task\+::fd, fs\+\_\+ioctl(), and T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D.
 
 
 \begin{DoxyCode}
 15                                           \{
 16 
-17     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{ioctl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-18     \textcolor{keywordflow}{if}(!ino) \{
-19         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
-20         \textcolor{keywordflow}{return} -1;
-21     \}
-22     
-23 
-24     \textcolor{keywordflow}{return} \hyperlink{fs_8c_afb548bce2f916933a7c7d95a48b57cdb}{fs\_ioctl}(ino, req, buf);
-25 \}
+17     \textcolor{keywordflow}{if}(fd < 0 || fd > \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}) \{
+18         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+19         \textcolor{keywordflow}{return} -1;
+20     \}
+21     
+22 
+23     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{ioctl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+24     \textcolor{keywordflow}{if}(!ino) \{
+25         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+26         \textcolor{keywordflow}{return} -1;
+27     \}
+28     
+29 
+30     \textcolor{keywordflow}{return} \hyperlink{fs_8c_afb548bce2f916933a7c7d95a48b57cdb}{fs\_ioctl}(ino, req, buf);
+31 \}
 \end{DoxyCode}
 \hypertarget{ioctl_8c_a88be2ec84300ac3760f30a5858ff7e86}{\index{ioctl.\+c@{ioctl.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!ioctl.\+c@{ioctl.\+c}}
@@ -76,5 +82,5 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 

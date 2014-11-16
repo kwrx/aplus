@@ -4,33 +4,39 @@
     <compoundname>gid.c</compoundname>
     <includes local="no">unistd.h</includes>
     <includes local="no">sys/stat.h</includes>
+    <includes local="no">errno.h</includes>
     <includes refid="config_8h" local="yes">config.h</includes>
     <incdepgraph>
-      <node id="2135">
+      <node id="2314">
         <label>sys/stat.h</label>
       </node>
-      <node id="2133">
+      <node id="2312">
         <label>usr/src/libposix/src/gid.c</label>
         <link refid="gid.c"/>
-        <childnode refid="2134" relation="include">
+        <childnode refid="2313" relation="include">
         </childnode>
-        <childnode refid="2135" relation="include">
+        <childnode refid="2314" relation="include">
         </childnode>
-        <childnode refid="2136" relation="include">
+        <childnode refid="2315" relation="include">
+        </childnode>
+        <childnode refid="2316" relation="include">
         </childnode>
       </node>
-      <node id="2136">
+      <node id="2315">
+        <label>errno.h</label>
+      </node>
+      <node id="2316">
         <label>config.h</label>
         <link refid="config_8h"/>
-        <childnode refid="2137" relation="include">
+        <childnode refid="2317" relation="include">
         </childnode>
-        <childnode refid="2134" relation="include">
+        <childnode refid="2313" relation="include">
         </childnode>
       </node>
-      <node id="2137">
+      <node id="2317">
         <label>sys/types.h</label>
       </node>
-      <node id="2134">
+      <node id="2313">
         <label>unistd.h</label>
       </node>
     </incdepgraph>
@@ -49,7 +55,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="6" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="6" bodyend="12"/>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="7" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="7" bodyend="13"/>
       </memberdef>
       <memberdef kind="function" id="gid_8c_1a3e7c694d68b4e62c1f275612d30b6d9d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>gid_t</type>
@@ -65,8 +71,47 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="14" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="14" bodyend="16"/>
-        <references refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" compoundref="gid_8c" startline="6" endline="12">getgid</references>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="15" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="15" bodyend="17"/>
+        <references refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" compoundref="gid_8c" startline="7" endline="13">getgid</references>
+      </memberdef>
+      <memberdef kind="function" id="gid_8c_1a48f523c98970793dfc2c5a05f6832006" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>pid_t</type>
+        <definition>pid_t getpgid</definition>
+        <argsstring>(pid_t pid)</argsstring>
+        <name>getpgid</name>
+        <param>
+          <type>pid_t</type>
+          <declname>pid</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="19" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="19" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="gid_8c_1ae5aae5b0275eefe79314a4673195e475" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int setpgid</definition>
+        <argsstring>(pid_t pid, pid_t pgid)</argsstring>
+        <name>setpgid</name>
+        <param>
+          <type>pid_t</type>
+          <declname>pid</declname>
+        </param>
+        <param>
+          <type>pid_t</type>
+          <declname>pgid</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="23" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="23" bodyend="26"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
       </memberdef>
       <memberdef kind="function" id="gid_8c_1a5dec302aecbe8f2f9be1528cd5ffeba7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
@@ -87,7 +132,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="18" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="18" bodyend="20"/>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c" line="28" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/gid.c" bodystart="28" bodyend="30"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -97,24 +142,34 @@
     <programlisting>
 <codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/stat.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="3"><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="config_8h" kindref="compound">config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight></codeline>
-<codeline lineno="6" refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" refkind="member"><highlight class="normal">gid_t<sp/><ref refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" kindref="member">getgid</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
-<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">stat<sp/>st;</highlight></codeline>
-<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fstat(STDIN_FILENO,<sp/>&amp;st)<sp/>!=<sp/>0)</highlight></codeline>
-<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight></codeline>
-<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>st.st_gid;</highlight></codeline>
-<codeline lineno="12"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="13"><highlight class="normal"></highlight></codeline>
-<codeline lineno="14" refid="gid_8c_1a3e7c694d68b4e62c1f275612d30b6d9d" refkind="member"><highlight class="normal">gid_t<sp/><ref refid="gid_8c_1a3e7c694d68b4e62c1f275612d30b6d9d" kindref="member">getegid</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
-<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" kindref="member">getgid</ref>();</highlight></codeline>
-<codeline lineno="16"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="17"><highlight class="normal"></highlight></codeline>
-<codeline lineno="18" refid="gid_8c_1a5dec302aecbe8f2f9be1528cd5ffeba7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="gid_8c_1a5dec302aecbe8f2f9be1528cd5ffeba7" kindref="member">getgroups</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>len,<sp/>gid_t*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
-<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>__os_getgroups(len,<sp/>list);</highlight></codeline>
-<codeline lineno="20"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="config_8h" kindref="compound">config.h</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7" refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" refkind="member"><highlight class="normal">gid_t<sp/><ref refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" kindref="member">getgid</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">stat<sp/>st;</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(fstat(STDIN_FILENO,<sp/>&amp;st)<sp/>!=<sp/>0)</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>st.st_gid;</highlight></codeline>
+<codeline lineno="13"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15" refid="gid_8c_1a3e7c694d68b4e62c1f275612d30b6d9d" refkind="member"><highlight class="normal">gid_t<sp/><ref refid="gid_8c_1a3e7c694d68b4e62c1f275612d30b6d9d" kindref="member">getegid</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<sp/>{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/><ref refid="gid_8c_1a58ca281cc6931c62e6a85e2edb5b4b49" kindref="member">getgid</ref>();</highlight></codeline>
+<codeline lineno="17"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19" refid="gid_8c_1a48f523c98970793dfc2c5a05f6832006" refkind="member"><highlight class="normal">pid_t<sp/><ref refid="gid_8c_1a48f523c98970793dfc2c5a05f6832006" kindref="member">getpgid</ref>(pid_t<sp/>pid)<sp/>{</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pid;</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23" refid="gid_8c_1ae5aae5b0275eefe79314a4673195e475" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="gid_8c_1ae5aae5b0275eefe79314a4673195e475" kindref="member">setpgid</ref>(pid_t<sp/>pid,<sp/>pid_t<sp/>pgid)<sp/>{</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="26"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28" refid="gid_8c_1a5dec302aecbe8f2f9be1528cd5ffeba7" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="gid_8c_1a5dec302aecbe8f2f9be1528cd5ffeba7" kindref="member">getgroups</ref>(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>len,<sp/>gid_t*<sp/><ref refid="structlist" kindref="compound">list</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>__os_getgroups(len,<sp/>list);</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">}</highlight></codeline>
     </programlisting>
     <location file="/opt/prj/aPlus/usr/src/libposix/src/gid.c"/>
   </compounddef>

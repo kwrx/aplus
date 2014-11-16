@@ -54,22 +54,27 @@ Definition at line 26 of file close.\+c.
 
 
 
-References errno, and task\+::fd.
+References errno, task\+::fd, and T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D.
 
 
 \begin{DoxyCode}
 26                       \{
 27     \textcolor{keywordflow}{if}(!\hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
 28         \textcolor{keywordflow}{return} -1;
-29         
-30     \textcolor{keywordflow}{if}(\hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] == 0) \{       
+29 
+30     \textcolor{keywordflow}{if}(fd > \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD} || fd < 0) \{
 31         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
 32         \textcolor{keywordflow}{return} -1;
 33     \}
-34     
-35     \hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] = 0;
-36     \textcolor{keywordflow}{return} 0;
-37 \}
+34         
+35     \textcolor{keywordflow}{if}(\hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] == 0) \{       
+36         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+37         \textcolor{keywordflow}{return} -1;
+38     \}
+39     
+40     \hyperlink{close_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd] = 0;
+41     \textcolor{keywordflow}{return} 0;
+42 \}
 \end{DoxyCode}
 \hypertarget{close_8c_af50bb9113581b84b91cad26990c7caa4}{\index{close.\+c@{close.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!close.\+c@{close.\+c}}
@@ -91,5 +96,5 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 

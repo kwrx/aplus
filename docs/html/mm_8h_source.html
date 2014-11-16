@@ -135,95 +135,106 @@ $(document).ready(function(){initNavTree('mm_8h_source.html','');});
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="task_8h.html">aplus/task.h</a>&gt;</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment"> * 0x00000000 - 0x00800000:     Kernel Reserved</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment"> * 0x00800000 - 0x00A00000:     Not available</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment"> * 0x00A00000 - 0x40000000:     User executable</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> * 0x40000000 - 0xE0000000:     Kernel Heap</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> * 0xE0000000 - 0xF0000000;     Linear Frame Buffer (User)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> * 0xF0000000 - 0xFFFFFFFF;     Kernel Heap</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">   38</a></span>&#160;<span class="preprocessor">#define MM_VBASE            0x40000000</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="mm_8h.html#afbad6879737307d726ae456844b05320">   39</a></span>&#160;<span class="preprocessor">#define MM_VSIZE            (0xFFFFFFFF - MM_VBASE)</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define CHUNKS_CHECKING</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment"> * 0x00000000 - 0x00800000:     Kernel Reserved</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment"> * 0x00800000 - 0x00A00000:     Not available</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment"> * 0x00A00000 - 0x40000000:     User executable</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment"> * 0x40000000 - 0xE0000000:     Kernel Heap</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment"> * 0xE0000000 - 0xF0000000;     Linear Frame Buffer (User)</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment"> * 0xF0000000 - 0xFFFFFFFF;     Kernel Heap</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="mm_8h.html#a1b54983be7272f850a1eef88a78db6f8">   41</a></span>&#160;<span class="preprocessor">#define MM_LBASE            0x00000000</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="mm_8h.html#a4b54a4ab7755c6c4dfebb91b75d9d956">   42</a></span>&#160;<span class="preprocessor">#define MM_LSIZE            0x00800000</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">   41</a></span>&#160;<span class="preprocessor">#define MM_VBASE            0x40000000</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="mm_8h.html#afbad6879737307d726ae456844b05320">   42</a></span>&#160;<span class="preprocessor">#define MM_VSIZE            (0xFFFFFFFF - MM_VBASE)</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="mm_8h.html#a61d9fae3cb95715f92171f153d9ff018">   44</a></span>&#160;<span class="preprocessor">#define MM_UBASE            0x00A00000</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="mm_8h.html#a600b21bbb74401132349a1325dadfdbe">   45</a></span>&#160;<span class="preprocessor">#define MM_USIZE            (MM_VBASE - MM_UBASE)</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="mm_8h.html#a1b54983be7272f850a1eef88a78db6f8">   44</a></span>&#160;<span class="preprocessor">#define MM_LBASE            0x00000000</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="mm_8h.html#a4b54a4ab7755c6c4dfebb91b75d9d956">   45</a></span>&#160;<span class="preprocessor">#define MM_LSIZE            0x00800000</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="mm_8h.html#a9da196e1c5da9da3454cbcfa6d56c96e">   49</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_PRESENT   0x01</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="mm_8h.html#a39ac3cb44ab9c4695214a59a3d199557">   50</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_RDWR      0x02</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="mm_8h.html#a4f995b267ef97c4638c27370badecb21">   51</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_USER      0x04</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="mm_8h.html#ab630ce3a249eeb08c1242b082f4e50ce">   52</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_DEFAULT   (VMM_FLAGS_PRESENT | VMM_FLAGS_RDWR)</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="mm_8h.html#a17f8a27ab3548000488ca27d70785240">   54</a></span>&#160;<span class="preprocessor">#define VMM_MAX_MEMORY      (0xFFFFFFFF - MM_VBASE)</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="mm_8h.html#a61d9fae3cb95715f92171f153d9ff018">   47</a></span>&#160;<span class="preprocessor">#define MM_UBASE            0x00A00000</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="mm_8h.html#a600b21bbb74401132349a1325dadfdbe">   48</a></span>&#160;<span class="preprocessor">#define MM_USIZE            (MM_VBASE - MM_UBASE)</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="mm_8h.html#a9da196e1c5da9da3454cbcfa6d56c96e">   52</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_PRESENT   0x01</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="mm_8h.html#a39ac3cb44ab9c4695214a59a3d199557">   53</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_RDWR      0x02</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="mm_8h.html#a4f995b267ef97c4638c27370badecb21">   54</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_USER      0x04</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="mm_8h.html#ab630ce3a249eeb08c1242b082f4e50ce">   55</a></span>&#160;<span class="preprocessor">#define VMM_FLAGS_DEFAULT   (VMM_FLAGS_PRESENT | VMM_FLAGS_RDWR)</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="mm_8h.html#ac4551bbc9efabf8378f35498f80b4679">   57</a></span>&#160;<span class="preprocessor">#define BLKSIZE             0x1000</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">   58</a></span>&#160;<span class="preprocessor">#define BLKMAGIC            0x1234</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="mm_8h.html#a17f8a27ab3548000488ca27d70785240">   57</a></span>&#160;<span class="preprocessor">#define VMM_MAX_MEMORY      (0xFFFFFFFF - MM_VBASE)</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="structheap.html">   62</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structheap.html">heap</a> {</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1">   63</a></span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>* <a class="code" href="structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1">bitmap</a>;</div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">   64</a></span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> <a class="code" href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">size</a>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">   65</a></span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> <a class="code" href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">used</a>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    </div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="structheap.html#a8b4bc8c3f0ed79efd52d61a27a62a130">   67</a></span>&#160;    <span class="keywordtype">void</span>* (*alloc) (<span class="keyword">struct </span><a class="code" href="structheap.html">heap</a>*, size_t);</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">   68</a></span>&#160;    void (*<a class="code" href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">free</a>) (<span class="keyword">struct </span><a class="code" href="structheap.html">heap</a>*, <span class="keywordtype">void</span>*, size_t);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;} <a class="code" href="mm_8h.html#ae3e9e8008e406505a3c57e4b7f17d300">heap_t</a>;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">   71</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</a>(<span class="keywordtype">void</span>* vaddr) {</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span>((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) vaddr &gt; <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>)</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        vaddr = (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) vaddr - <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">return</span> vaddr;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">   78</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</a>(<span class="keywordtype">void</span>* paddr) {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span>((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) paddr &lt; <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>)</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        paddr = (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) paddr + <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">return</span> paddr;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">   85</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">mm_align</a>(<span class="keywordtype">void</span>* vaddr) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">return</span> (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) vaddr &amp; ~0xFFF);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keywordtype">size_t</span>);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a>(<span class="keywordtype">void</span>*);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a2e2878c4e9b542b6e68d7ceccfdcfc86">krealloc</a>(<span class="keywordtype">void</span>*, <span class="keywordtype">size_t</span>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="mm_8h.html#ac4551bbc9efabf8378f35498f80b4679">   60</a></span>&#160;<span class="preprocessor">#define BLKSIZE             0x1000</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="mm_8h.html#a24ee1b93dcb4a2d30a151491245967ec">   61</a></span>&#160;<span class="preprocessor">#define BLKMAGIC            0x1234</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="structheap.html">   65</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structheap.html">heap</a> {</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1">   66</a></span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>* <a class="code" href="structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1">bitmap</a>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">   67</a></span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> <a class="code" href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">size</a>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">   68</a></span>&#160;    <a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a> <a class="code" href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">used</a>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    </div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="structheap.html#a8b4bc8c3f0ed79efd52d61a27a62a130">   70</a></span>&#160;    <span class="keywordtype">void</span>* (*alloc) (<span class="keyword">struct </span><a class="code" href="structheap.html">heap</a>*, size_t);</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">   71</a></span>&#160;    void (*<a class="code" href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">free</a>) (<span class="keyword">struct </span><a class="code" href="structheap.html">heap</a>*, <span class="keywordtype">void</span>*, size_t);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;} <a class="code" href="mm_8h.html#ae3e9e8008e406505a3c57e4b7f17d300">heap_t</a>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">   74</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</a>(<span class="keywordtype">void</span>* vaddr) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">if</span>((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) vaddr &gt; <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        vaddr = (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) vaddr - <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> vaddr;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">   81</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</a>(<span class="keywordtype">void</span>* paddr) {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span>((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) paddr &lt; <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>)</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        paddr = (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) paddr + <a class="code" href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a>);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> paddr;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">   88</a></span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">mm_align</a>(<span class="keywordtype">void</span>* vaddr) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> (<span class="keywordtype">void</span>*) ((<a class="code" href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a>) vaddr &amp; ~0xFFF);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="mm_8h_html_acb964323e95c799eb3896dce8c61d329"><div class="ttname"><a href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">mm_align</a></div><div class="ttdeci">static void * mm_align(void *vaddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00085">mm.h:85</a></div></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#ifdef CHUNKS_CHECKING</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keywordtype">void</span>* __kmalloc(<span class="keywordtype">size_t</span>, <span class="keywordtype">char</span>*, <span class="keywordtype">int</span>);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#define kmalloc(s)  __kmalloc(s, __FILE__, __LINE__)</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a>(<span class="keywordtype">size_t</span>);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keywordtype">void</span> <a class="code" href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a>(<span class="keywordtype">void</span>*);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keywordtype">void</span>* <a class="code" href="mm_8h.html#a2e2878c4e9b542b6e68d7ceccfdcfc86">krealloc</a>(<span class="keywordtype">void</span>*, <span class="keywordtype">size_t</span>);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="mm_8h_html_acb964323e95c799eb3896dce8c61d329"><div class="ttname"><a href="mm_8h.html#acb964323e95c799eb3896dce8c61d329">mm_align</a></div><div class="ttdeci">static void * mm_align(void *vaddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00088">mm.h:88</a></div></div>
 <div class="ttc" id="mm_8h_html_ae3e9e8008e406505a3c57e4b7f17d300"><div class="ttname"><a href="mm_8h.html#ae3e9e8008e406505a3c57e4b7f17d300">heap_t</a></div><div class="ttdeci">struct heap heap_t</div></div>
 <div class="ttc" id="aplus_8h_html_a53a0df51603c77c2aa5b9ea61b606a82"><div class="ttname"><a href="aplus_8h.html#a53a0df51603c77c2aa5b9ea61b606a82">uint32_t</a></div><div class="ttdeci">ax al uint32_t</div><div class="ttdef"><b>Definition:</b> <a href="aplus_8h_source.html#l00115">aplus.h:115</a></div></div>
-<div class="ttc" id="structheap_html_a5243ef46c552fc0968aa2bcdaf6725d1"><div class="ttname"><a href="structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1">heap::bitmap</a></div><div class="ttdeci">uint32_t * bitmap</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00063">mm.h:63</a></div></div>
+<div class="ttc" id="structheap_html_a5243ef46c552fc0968aa2bcdaf6725d1"><div class="ttname"><a href="structheap.html#a5243ef46c552fc0968aa2bcdaf6725d1">heap::bitmap</a></div><div class="ttdeci">uint32_t * bitmap</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00066">mm.h:66</a></div></div>
 <div class="ttc" id="mm_8h_html_a1f5d4240b2decc62c0e6eae06c72916c"><div class="ttname"><a href="mm_8h.html#a1f5d4240b2decc62c0e6eae06c72916c">kmalloc</a></div><div class="ttdeci">void * kmalloc(size_t)</div></div>
-<div class="ttc" id="mm_8h_html_a2e2878c4e9b542b6e68d7ceccfdcfc86"><div class="ttname"><a href="mm_8h.html#a2e2878c4e9b542b6e68d7ceccfdcfc86">krealloc</a></div><div class="ttdeci">void * krealloc(void *, size_t)</div><div class="ttdoc">Realloc memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00103">mm.c:103</a></div></div>
-<div class="ttc" id="structheap_html_a37f3f6d6d39562f3cca452eafebcd7ac"><div class="ttname"><a href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">heap::used</a></div><div class="ttdeci">uint32_t used</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00065">mm.h:65</a></div></div>
-<div class="ttc" id="structheap_html_a486fb531d24b9ee5f17b7ffe96689705"><div class="ttname"><a href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">heap::size</a></div><div class="ttdeci">uint32_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00064">mm.h:64</a></div></div>
+<div class="ttc" id="mm_8h_html_a2e2878c4e9b542b6e68d7ceccfdcfc86"><div class="ttname"><a href="mm_8h.html#a2e2878c4e9b542b6e68d7ceccfdcfc86">krealloc</a></div><div class="ttdeci">void * krealloc(void *, size_t)</div><div class="ttdoc">Realloc memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00182">mm.c:182</a></div></div>
+<div class="ttc" id="structheap_html_a37f3f6d6d39562f3cca452eafebcd7ac"><div class="ttname"><a href="structheap.html#a37f3f6d6d39562f3cca452eafebcd7ac">heap::used</a></div><div class="ttdeci">uint32_t used</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00068">mm.h:68</a></div></div>
+<div class="ttc" id="structheap_html_a486fb531d24b9ee5f17b7ffe96689705"><div class="ttname"><a href="structheap.html#a486fb531d24b9ee5f17b7ffe96689705">heap::size</a></div><div class="ttdeci">uint32_t size</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00067">mm.h:67</a></div></div>
 <div class="ttc" id="task_8h_html"><div class="ttname"><a href="task_8h.html">task.h</a></div></div>
-<div class="ttc" id="structheap_html"><div class="ttname"><a href="structheap.html">heap</a></div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00062">mm.h:62</a></div></div>
-<div class="ttc" id="mm_8h_html_acee1960bdb3a19cb495341ec725cafef"><div class="ttname"><a href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a></div><div class="ttdeci">void kfree(void *)</div><div class="ttdoc">Free memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00079">mm.c:79</a></div></div>
-<div class="ttc" id="mm_8h_html_a3fbcc6a4fcc3452357e636f90b925554"><div class="ttname"><a href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</a></div><div class="ttdeci">static void * mm_paddr(void *vaddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00071">mm.h:71</a></div></div>
-<div class="ttc" id="structheap_html_ae53b14c50bbb9daab4346cd0873bda02"><div class="ttname"><a href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">heap::free</a></div><div class="ttdeci">void(* free)(struct heap *, void *, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00068">mm.h:68</a></div></div>
-<div class="ttc" id="mm_8h_html_ae874c5b00fa6293a175b988b647afcc9"><div class="ttname"><a href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a></div><div class="ttdeci">#define MM_VBASE</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00038">mm.h:38</a></div></div>
-<div class="ttc" id="mm_8h_html_a5e7e52cb995fbefca3ca2a7bab8556e6"><div class="ttname"><a href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</a></div><div class="ttdeci">static void * mm_vaddr(void *paddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00078">mm.h:78</a></div></div>
+<div class="ttc" id="structheap_html"><div class="ttname"><a href="structheap.html">heap</a></div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00065">mm.h:65</a></div></div>
+<div class="ttc" id="mm_8h_html_acee1960bdb3a19cb495341ec725cafef"><div class="ttname"><a href="mm_8h.html#acee1960bdb3a19cb495341ec725cafef">kfree</a></div><div class="ttdeci">void kfree(void *)</div><div class="ttdoc">Free memory from Kernel Heap. </div><div class="ttdef"><b>Definition:</b> <a href="mm_8c_source.html#l00151">mm.c:151</a></div></div>
+<div class="ttc" id="mm_8h_html_a3fbcc6a4fcc3452357e636f90b925554"><div class="ttname"><a href="mm_8h.html#a3fbcc6a4fcc3452357e636f90b925554">mm_paddr</a></div><div class="ttdeci">static void * mm_paddr(void *vaddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00074">mm.h:74</a></div></div>
+<div class="ttc" id="structheap_html_ae53b14c50bbb9daab4346cd0873bda02"><div class="ttname"><a href="structheap.html#ae53b14c50bbb9daab4346cd0873bda02">heap::free</a></div><div class="ttdeci">void(* free)(struct heap *, void *, size_t)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00071">mm.h:71</a></div></div>
+<div class="ttc" id="mm_8h_html_ae874c5b00fa6293a175b988b647afcc9"><div class="ttname"><a href="mm_8h.html#ae874c5b00fa6293a175b988b647afcc9">MM_VBASE</a></div><div class="ttdeci">#define MM_VBASE</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00041">mm.h:41</a></div></div>
+<div class="ttc" id="mm_8h_html_a5e7e52cb995fbefca3ca2a7bab8556e6"><div class="ttname"><a href="mm_8h.html#a5e7e52cb995fbefca3ca2a7bab8556e6">mm_vaddr</a></div><div class="ttdeci">static void * mm_vaddr(void *paddr)</div><div class="ttdef"><b>Definition:</b> <a href="mm_8h_source.html#l00081">mm.h:81</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_0355137e5381b7064e986c544d4a0af5.html">src</a></li><li class="navelem"><a class="el" href="dir_17e86ab152701384703abf7b0cb4d7d2.html">include</a></li><li class="navelem"><a class="el" href="dir_cfd1fb2b98030f4f81570490591de86f.html">aplus</a></li><li class="navelem"><a class="el" href="mm_8h.html">mm.h</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

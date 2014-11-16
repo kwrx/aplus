@@ -119,7 +119,7 @@ $(document).ready(function(){initNavTree('scandir_8c_source.html','');});
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
 <div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="scandir_8c.html#a53d80292d58567db0826c243ab29166b">   11</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="scandir_8c.html#a53d80292d58567db0826c243ab29166b">scandir</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *pathname, <span class="keyword">struct</span> <a class="code" href="structdirent.html">dirent</a> ***namelist, <span class="keywordtype">int</span> (*select)(<span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structdirent.html">dirent</a> *), <span class="keywordtype">int</span> (*compar)(<span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structdirent.html">dirent</a> **, <span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structdirent.html">dirent</a> **)) {</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="code" href="struct____DIR.html">DIR</a>* <a class="code" href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a> = <a class="code" href="dirent_8h.html#afa648ff43ec9eba592716a334f243111">opendir</a>(pathname);</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="code" href="struct____DIR.html">DIR</a>* d = <a class="code" href="dirent_8h.html#afa648ff43ec9eba592716a334f243111">opendir</a>(pathname);</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordflow">if</span>(d == NULL) {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <a class="code" href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a> = ENOENT;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <span class="keywordflow">return</span> -1;</div>
@@ -158,7 +158,6 @@ $(document).ready(function(){initNavTree('scandir_8c_source.html','');});
 <div class="ttc" id="dirent_8h_html"><div class="ttname"><a href="dirent_8h.html">dirent.h</a></div></div>
 <div class="ttc" id="dirent_8h_html_aa7687571d2af8efd5153874ae6e678d9"><div class="ttname"><a href="dirent_8h.html#aa7687571d2af8efd5153874ae6e678d9">readdir</a></div><div class="ttdeci">struct dirent * readdir(DIR *d)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libposix_2src_2readdir_8c_source.html#l00015">readdir.c:15</a></div></div>
 <div class="ttc" id="errno_8c_html_ad65a8842cc674e3ddf69355898c0ecbf"><div class="ttname"><a href="errno_8c.html#ad65a8842cc674e3ddf69355898c0ecbf">errno</a></div><div class="ttdeci">int errno</div><div class="ttdef"><b>Definition:</b> <a href="errno_8c_source.html#l00003">errno.c:3</a></div></div>
-<div class="ttc" id="panic_8c_html_a77b5b9b7c5109d0943ef9f2e5c557fb9"><div class="ttname"><a href="panic_8c.html#a77b5b9b7c5109d0943ef9f2e5c557fb9">d</a></div><div class="ttdeci">#define d(reg)</div></div>
 <div class="ttc" id="scandir_8c_html_a53d80292d58567db0826c243ab29166b"><div class="ttname"><a href="scandir_8c.html#a53d80292d58567db0826c243ab29166b">scandir</a></div><div class="ttdeci">int scandir(const char *pathname, struct dirent ***namelist, int(*select)(const struct dirent *), int(*compar)(const struct dirent **, const struct dirent **))</div><div class="ttdef"><b>Definition:</b> <a href="scandir_8c_source.html#l00011">scandir.c:11</a></div></div>
 <div class="ttc" id="dirent_8h_html_afa648ff43ec9eba592716a334f243111"><div class="ttname"><a href="dirent_8h.html#afa648ff43ec9eba592716a334f243111">opendir</a></div><div class="ttdeci">DIR * opendir(const char *path)</div><div class="ttdef"><b>Definition:</b> <a href="opendir_8c_source.html#l00013">opendir.c:13</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -167,7 +166,7 @@ $(document).ready(function(){initNavTree('scandir_8c_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_4e1c7ae8f9024ef006e86a9c3fc355ed.html">libposix</a></li><li class="navelem"><a class="el" href="dir_f434c0cea4b0f002ce018129171d40a3.html">src</a></li><li class="navelem"><a class="el" href="scandir_8c.html">scandir.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:41 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -9,86 +9,86 @@
     <includedby refid="arp_8c" local="no">src/net/arp.c</includedby>
     <includedby refid="netif_8c" local="no">src/net/netif.c</includedby>
     <incdepgraph>
-      <node id="687">
+      <node id="742">
         <label>stdarg.h</label>
       </node>
-      <node id="684">
+      <node id="739">
         <label>stdint.h</label>
       </node>
-      <node id="689">
+      <node id="744">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="686" relation="include">
+        <childnode refid="741" relation="include">
         </childnode>
-        <childnode refid="684" relation="include">
+        <childnode refid="739" relation="include">
         </childnode>
       </node>
-      <node id="690">
+      <node id="745">
         <label>stddef.h</label>
       </node>
-      <node id="691">
+      <node id="746">
         <label>aplus/net/eth.h</label>
         <link refid="eth_8h"/>
-        <childnode refid="684" relation="include">
+        <childnode refid="739" relation="include">
         </childnode>
-        <childnode refid="685" relation="include">
+        <childnode refid="740" relation="include">
         </childnode>
       </node>
-      <node id="683">
+      <node id="738">
         <label>src/include/aplus/net/arp.h</label>
         <link refid="arp.h"/>
-        <childnode refid="684" relation="include">
+        <childnode refid="739" relation="include">
         </childnode>
-        <childnode refid="685" relation="include">
+        <childnode refid="740" relation="include">
         </childnode>
-        <childnode refid="691" relation="include">
+        <childnode refid="746" relation="include">
         </childnode>
-        <childnode refid="692" relation="include">
+        <childnode refid="747" relation="include">
         </childnode>
       </node>
-      <node id="686">
+      <node id="741">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="684" relation="include">
+        <childnode refid="739" relation="include">
         </childnode>
-        <childnode refid="687" relation="include">
+        <childnode refid="742" relation="include">
         </childnode>
-        <childnode refid="688" relation="include">
+        <childnode refid="743" relation="include">
         </childnode>
       </node>
-      <node id="688">
+      <node id="743">
         <label>string.h</label>
       </node>
-      <node id="685">
+      <node id="740">
         <label>aplus/netif.h</label>
         <link refid="netif_8h"/>
-        <childnode refid="686" relation="include">
+        <childnode refid="741" relation="include">
         </childnode>
-        <childnode refid="689" relation="include">
+        <childnode refid="744" relation="include">
         </childnode>
-        <childnode refid="684" relation="include">
+        <childnode refid="739" relation="include">
         </childnode>
-        <childnode refid="690" relation="include">
+        <childnode refid="745" relation="include">
         </childnode>
       </node>
-      <node id="692">
+      <node id="747">
         <label>time.h</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="695">
+      <node id="750">
         <label>src/net/netif.c</label>
         <link refid="netif_8c"/>
       </node>
-      <node id="693">
+      <node id="748">
         <label>src/include/aplus/net/arp.h</label>
         <link refid="arp.h"/>
-        <childnode refid="694" relation="include">
+        <childnode refid="749" relation="include">
         </childnode>
-        <childnode refid="695" relation="include">
+        <childnode refid="750" relation="include">
         </childnode>
       </node>
-      <node id="694">
+      <node id="749">
         <label>src/net/arp.c</label>
         <link refid="arp_8c"/>
       </node>
@@ -201,7 +201,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="69" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="69" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="72" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="72" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1a0011d810efee0f2befcd01236aeb74a3" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
@@ -214,7 +214,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="70" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="70" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="73" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="73" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1ac0b63b998e1f7fb63c33a604225a686a" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
@@ -227,7 +227,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="71" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="74" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="74" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1a045c65b958312333ba8a773fd16848ba" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1ae0430369c5a35dcdbc0bc19dcbb33a03" kindref="member">uint8_t</ref></type>
@@ -240,7 +240,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="72" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="72" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="75" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="75" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1ad21c763fa2f80cb8649108b759113b54" prot="public" static="no" mutable="no">
         <type><ref refid="aplus_8h_1a5a8b2dc9e45a9ee81a94ef304fb62505" kindref="member">uint16_t</ref></type>
@@ -253,7 +253,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="73" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="73" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="76" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="76" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1a68d057d257965f26192458ba6bd3657b" prot="public" static="no" mutable="no">
         <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
@@ -266,7 +266,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="74" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="74" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="77" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1a02d2d5b2f207d56dd8c3d33fd3d4f44b" prot="public" static="no" mutable="no">
         <type><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref></type>
@@ -279,7 +279,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="75" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="75" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="78" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="78" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1a3270389e5f50105152b1920f11844d3b" prot="public" static="no" mutable="no">
         <type><ref refid="netif_8h_1a95d524a06a1ff12a314f88bac04db658" kindref="member">macaddr_t</ref></type>
@@ -292,7 +292,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="76" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="76" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="79" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="79" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="arp_8h_1ac69159d9b06000d1fe64c701014b1b19" prot="public" static="no" mutable="no">
         <type><ref refid="netif_8h_1aea29db0d4ae23303ff7591af75c7b74a" kindref="member">ipv4_t</ref></type>
@@ -305,7 +305,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="77" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="77" bodyend="-1"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="80" column="1" bodyfile="/opt/prj/aPlus/src/include/aplus/net/arp.h" bodystart="80" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="func">
@@ -318,21 +318,12 @@
           <type>(packed)</type>
         </param>
         <briefdescription>
-<para>Alloc memory from Kernel Heap. </para>        </briefdescription>
+        </briefdescription>
         <detaileddescription>
-<para><parameterlist kind="param"><parameteritem>
-<parameternamelist>
-<parametername>size</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>Size of data to alloc. </para></parameterdescription>
-</parameteritem>
-</parameterlist>
-<simplesect kind="return"><para>Virtual Address of data. </para></simplesect>
-</para>        </detaileddescription>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="68" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/arp.h" line="71" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="44" bodyend="49"/>
       </memberdef>
       </sectiondef>
     <briefdescription>

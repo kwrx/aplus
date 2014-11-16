@@ -43,7 +43,7 @@ Definition at line 19 of file read.\+c.
 
 
 
-References errno, task\+::fd, and fs\+\_\+read().
+References errno, task\+::fd, fs\+\_\+read(), and T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D.
 
 
 \begin{DoxyCode}
@@ -51,16 +51,20 @@ References errno, task\+::fd, and fs\+\_\+read().
 20     \textcolor{keywordflow}{if}(!\hyperlink{read_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
 21         \textcolor{keywordflow}{return} -1;
 22         
-23     
-24     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{read_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-25     \textcolor{keywordflow}{if}(!ino) \{
-26         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
-27         \textcolor{keywordflow}{return} -1;
-28     \}
-29 
-30 
-31     \textcolor{keywordflow}{return} \hyperlink{fs_8c_a8e53a98b93e6b136196b2ebd99e43dcd}{fs\_read}(ino, ptr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
-32 \}
+23     \textcolor{keywordflow}{if}(fd < 0 || fd > \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}) \{
+24         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+25         \textcolor{keywordflow}{return} -1;
+26     \}
+27     
+28     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{read_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+29     \textcolor{keywordflow}{if}(!ino) \{
+30         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+31         \textcolor{keywordflow}{return} -1;
+32     \}
+33 
+34 
+35     \textcolor{keywordflow}{return} \hyperlink{fs_8c_a8e53a98b93e6b136196b2ebd99e43dcd}{fs\_read}(ino, ptr, \hyperlink{iso9660_8h_ae5dc6ffcd9b7605c7787791e40cc6bb0}{size});
+36 \}
 \end{DoxyCode}
 \hypertarget{read_8c_a8e781c261440d55684d8aed16e399270}{\index{read.\+c@{read.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!read.\+c@{read.\+c}}
@@ -82,7 +86,7 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 
 \hypertarget{read_8c_a9af8258c3554800f6613f8147544225f}{\index{read.\+c@{read.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
 \index{vfs\+\_\+root@{vfs\+\_\+root}!read.\+c@{read.\+c}}

@@ -118,7 +118,7 @@ Definition at line 72 of file fcntl.\+c.
 
 
 
-References errno, task\+::fd, and kprintf().
+References errno, task\+::fd, inode\+::position, schedule\+\_\+append\+\_\+fd(), inode\+::size, and T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D.
 
 
 \begin{DoxyCode}
@@ -126,20 +126,45 @@ References errno, task\+::fd, and kprintf().
 73     \textcolor{keywordflow}{if}(!\hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task})
 74         \textcolor{keywordflow}{return} -1;
 75         
-76     
-77     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-78     \textcolor{keywordflow}{if}(!ino) \{
-79         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
-80         \textcolor{keywordflow}{return} -1;
-81     \}
-82 
-83 
-84     \textcolor{comment}{/* TODO */}
-85     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_chown: TODO."});
-86 
-87     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = ENOSYS;
-88     \textcolor{keywordflow}{return} -1;
-89 \}
+76 
+77     \textcolor{keywordflow}{if}(fd < 0 || fd > \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}) \{
+78         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+79         \textcolor{keywordflow}{return} -1;
+80     \}
+81     
+82     
+83     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+84     \textcolor{keywordflow}{if}(!ino) \{
+85         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+86         \textcolor{keywordflow}{return} -1;
+87     \}
+88 
+89 
+90     \textcolor{keywordflow}{switch}(request) \{
+91         \textcolor{keywordflow}{case} F\_DUPFD:
+92             \textcolor{keywordflow}{return} \hyperlink{src_2sched_8c_afbffdc5298c98f92960a4fb9ba498063}{schedule\_append\_fd}(\hyperlink{fcntl_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}, ino);
+93         \textcolor{keywordflow}{case} F\_GETFD:
+94             \textcolor{keywordflow}{return} 0;
+95         \textcolor{keywordflow}{case} F\_SETFD:
+96             \textcolor{keywordflow}{return} 0;
+97         \textcolor{keywordflow}{case} F\_GETFL:
+98             \textcolor{keywordflow}{return} 0;
+99         \textcolor{keywordflow}{case} F\_SETFL:
+100             \textcolor{keywordflow}{switch}((\textcolor{keywordtype}{int})buf) \{
+101                 \textcolor{keywordflow}{case} O\_APPEND:
+102                     ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
+103                     \textcolor{keywordflow}{return} 0;
+104                 \textcolor{keywordflow}{case} O\_NONBLOCK:
+105                     \textcolor{keywordflow}{return} 0;
+106                 \textcolor{keywordflow}{default}:
+107                     \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+108                     \textcolor{keywordflow}{return} -1;
+109             \}
+110             \textcolor{keywordflow}{break};
+111     \}
+112 
+113     \textcolor{keywordflow}{return} 0;
+114 \}
 \end{DoxyCode}
 \hypertarget{fcntl_8c_a5f500fa48a3ec03f7c9627bc1abda1aa}{\index{fcntl.\+c@{fcntl.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!fcntl.\+c@{fcntl.\+c}}
@@ -161,7 +186,7 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 
 \hypertarget{fcntl_8c_a9af8258c3554800f6613f8147544225f}{\index{fcntl.\+c@{fcntl.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
 \index{vfs\+\_\+root@{vfs\+\_\+root}!fcntl.\+c@{fcntl.\+c}}

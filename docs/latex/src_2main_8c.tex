@@ -17,6 +17,7 @@
 {\ttfamily \#include $<$aplus/net/eth.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/net/ipv4.\+h$>$}\\*
 {\ttfamily \#include $<$aplus/net/ipv6.\+h$>$}\\*
+{\ttfamily \#include $<$errno.\+h$>$}\\*
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -47,60 +48,54 @@ Entry point for kernel.
 
 
 
-Definition at line 63 of file main.\+c.
+Definition at line 81 of file main.\+c.
 
 
 
-References bufio\+\_\+init(), desc\+\_\+init(), kprintf(), mbd, mkramdev(), mm\+\_\+init(), Boot\+Info\+\_\+t\+::mods\+\_\+addr, Boot\+Info\+\_\+t\+::mods\+\_\+count, netif\+\_\+init(), panic(), pci\+\_\+init(), schedule\+\_\+init(), serial\+\_\+init(), sys\+\_\+kill(), sys\+\_\+mount(), syscall\+\_\+init(), sysidle(), task\+\_\+clone(), tty\+\_\+init(), uint32\+\_\+t, and vfs\+\_\+init().
+References bufio\+\_\+init(), C\+L\+O\+N\+E\+\_\+\+F\+I\+L\+E\+S, C\+L\+O\+N\+E\+\_\+\+F\+S, C\+L\+O\+N\+E\+\_\+\+S\+I\+G\+H\+A\+N\+D, desc\+\_\+init(), kprintf(), mbd, mkramdev(), mm\+\_\+init(), Boot\+Info\+\_\+t\+::mods\+\_\+addr, Boot\+Info\+\_\+t\+::mods\+\_\+count, netif\+\_\+init(), panic(), pci\+\_\+init(), schedule\+\_\+init(), serial\+\_\+init(), sys\+\_\+mount(), syscall\+\_\+init(), sysidle(), task\+\_\+clone(), tty\+\_\+init(), uint32\+\_\+t, and vfs\+\_\+init().
 
 
 \begin{DoxyCode}
-63            \{
-64     \hyperlink{serial_8c_a459999cfa35c788b64284953a93c4b57}{serial\_init}();
-65     \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\_init}();
-66     \hyperlink{desc_8c_a6a369f578313199f231869f97e16802d}{desc\_init}();
-67     \hyperlink{syscall_8c_a15662fc3572d9f3abd72a439727767c3}{syscall\_init}();
-68     \hyperlink{vfs_8c_aca585ca14c08d6c1a07e1b886fc9749a}{vfs\_init}();
-69     \hyperlink{src_2sched_8c_a9f6f16348da2348d320d255437e6ac02}{schedule\_init}();
-70     \hyperlink{bufio_8c_a8553eb3703bbc2ac89010ccfaefe760f}{bufio\_init}();
-71     \hyperlink{pci_8c_a5c450b9e2534226b162a16de0ef6b434}{pci\_init}();
-72     \hyperlink{tty_8c_aab365abb615be7027fa0bdb2c09569cb}{tty\_init}();
-73     \hyperlink{netif_8c_af7c3254022249b2dfa78151c8f345e77}{netif\_init}();
-74     
-75 
-76     \textcolor{keywordflow}{if}(\hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a178ef95a8fbd89ec018899b9ba241d92}{mods\_count} == 0)
-77         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"no initrd module found"});
-78     
-79 
-80     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} addr = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [0];
-81     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} endp = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [1];
-82 
-83     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"initrd: module found at addess: 0x%x (%d KB)\(\backslash\)n"}, addr, (endp - addr) / 1024);
-84 
-85 
-86     \textcolor{keywordflow}{if}(!\hyperlink{ramdev_8c_a0c040a7a5a5150b0b0d18354ac6f4958}{mkramdev}(\textcolor{stringliteral}{"/dev/ram0"}, addr, endp - addr))
-87         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot create /dev/ram0"});
-88 
-89 
-90     \textcolor{keywordflow}{if}(\hyperlink{mount_8c_adbb2f2f41fa719d188b9291a25afdd98}{sys\_mount}(\textcolor{stringliteral}{"/dev/ram0"}, \textcolor{stringliteral}{"/dev/ramdisk"}, \textcolor{stringliteral}{"iso9660"}, 0, 0) != 0)
-91         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot mount ramdisk"});
+81            \{
+82     \hyperlink{serial_8c_a459999cfa35c788b64284953a93c4b57}{serial\_init}();
+83     \hyperlink{mm_8c_a25db4b3982d49366c88b6be8331b9215}{mm\_init}();
+84     \hyperlink{desc_8c_a6a369f578313199f231869f97e16802d}{desc\_init}();
+85     \hyperlink{syscall_8c_a15662fc3572d9f3abd72a439727767c3}{syscall\_init}();
+86     \hyperlink{vfs_8c_aca585ca14c08d6c1a07e1b886fc9749a}{vfs\_init}();
+87     \hyperlink{src_2sched_8c_a9f6f16348da2348d320d255437e6ac02}{schedule\_init}();
+88     \hyperlink{bufio_8c_a8553eb3703bbc2ac89010ccfaefe760f}{bufio\_init}();
+89     \hyperlink{pci_8c_a5c450b9e2534226b162a16de0ef6b434}{pci\_init}();
+90     \hyperlink{src_2fs_2tty_8c_aab365abb615be7027fa0bdb2c09569cb}{tty\_init}();
+91     \hyperlink{netif_8c_af7c3254022249b2dfa78151c8f345e77}{netif\_init}();
 92 
 93 
-94     
-95 
-96 \textcolor{comment}{/*}
-97 \textcolor{comment}{    if(fork() == 0)}
-98 \textcolor{comment}{        execl("/bin/init", "/bin/init", 0);}
-99 \textcolor{comment}{    else}
-100 \textcolor{comment}{*/}
-101     \hyperlink{task_8c_afed7d6a4dd3580596c0c925e766c4163}{task\_clone}(\hyperlink{src_2main_8c_aef7c73ff9178a16543352d9e530d8c60}{sysidle}, NULL, NULL, 0);
+94     \textcolor{keywordflow}{if}(\hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a178ef95a8fbd89ec018899b9ba241d92}{mods\_count} == 0)
+95         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"no initrd module found"});
+96     
+97 
+98     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} addr = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [0];
+99     \hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t} endp = ((\hyperlink{aplus_8h_a53a0df51603c77c2aa5b9ea61b606a82}{uint32\_t}*) \hyperlink{grub_8h_abac514a5a8c938a1de6fb08f542f5962}{mbd}->\hyperlink{structBootInfo__t_a1be510e25cd3a21bfd0d4d3b303e0543}{mods\_addr}) [1];
+100 
+101     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"initrd: module found at addess: 0x%x (%d KB)\(\backslash\)n"}, addr, (endp - addr) / 1024);
 102 
-103     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int} i = 0; i < 100000000; i++);
-104     \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"\(\backslash\)n\(\backslash\)nKILLING %d\(\backslash\)n\(\backslash\)n"}, \hyperlink{kill_8c_a67e972ab20c5a148b4c3874eb4ccccc3}{sys\_kill}(1, 1));
-105     
+103 
+104     \textcolor{keywordflow}{if}(!\hyperlink{ramdev_8c_a0c040a7a5a5150b0b0d18354ac6f4958}{mkramdev}(\textcolor{stringliteral}{"/dev/ram0"}, addr, endp - addr))
+105         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot create /dev/ram0"});
 106 
-107     \textcolor{keywordflow}{for}(;;);
-108 \}
+107 
+108 
+109     \textcolor{keywordflow}{if}(\hyperlink{mount_8c_adbb2f2f41fa719d188b9291a25afdd98}{sys\_mount}(\textcolor{stringliteral}{"/dev/ram0"}, \textcolor{stringliteral}{"/dev/ramdisk"}, \textcolor{stringliteral}{"iso9660"}, 0, 0) != 0)
+110         \hyperlink{panic_8c_a92ad17d19a46880dd5e6c99143666b4a}{panic}(\textcolor{stringliteral}{"initrd: cannot mount ramdisk"});
+111 
+112 
+113     \hyperlink{task_8c_afed7d6a4dd3580596c0c925e766c4163}{task\_clone}(\hyperlink{src_2main_8c_aef7c73ff9178a16543352d9e530d8c60}{sysidle}, NULL, NULL, \hyperlink{task_8h_abf70cffabfa4515feef97f66bae6a5c7}{CLONE\_FS} | 
+      \hyperlink{task_8h_ab062e8c87b92d645f7f4698a36e5b57a}{CLONE\_FILES} | \hyperlink{task_8h_a36c57614f62361d9a91c75d2ef1bf854}{CLONE\_SIGHAND});
+114 
+115 
+116     \textcolor{keywordflow}{for}(;;);
+117     
+118     \hyperlink{src_2main_8c_aef7c73ff9178a16543352d9e530d8c60}{sysidle}();
+119 \}
 \end{DoxyCode}
 \hypertarget{src_2main_8c_aef7c73ff9178a16543352d9e530d8c60}{\index{src/main.\+c@{src/main.\+c}!sysidle@{sysidle}}
 \index{sysidle@{sysidle}!src/main.\+c@{src/main.\+c}}
@@ -115,7 +110,7 @@ Put Kernel Task in optimized loop for powersave.
 
 
 
-Definition at line 50 of file main.\+c.
+Definition at line 52 of file main.\+c.
 
 
 
@@ -123,14 +118,30 @@ References \+\_\+\+\_\+asm\+\_\+\+\_\+(), schedule\+\_\+setpriority(), sys\+\_\+
 
 
 \begin{DoxyCode}
-50                       \{
-51     \hyperlink{src_2sched_8c_a878aa3454133f7c01a4ba15ef68b9be2}{schedule\_setpriority}(\hyperlink{task_8h_a00a0568927a39311236b718f2018c0ab}{TASK\_PRIORITY\_LOW});
-52     
-53     \hyperlink{execve_8c_af44a7e309f4bd49757f52b4178676ea7}{sys\_execve}(\textcolor{stringliteral}{"/dev/ramdisk/test"}, NULL, NULL);
-54 
-55     \textcolor{keywordflow}{for}(;;)
-56         \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"pause"});
-57 \}
+52                       \{
+53     \hyperlink{src_2sched_8c_a878aa3454133f7c01a4ba15ef68b9be2}{schedule\_setpriority}(\hyperlink{task_8h_a00a0568927a39311236b718f2018c0ab}{TASK\_PRIORITY\_LOW});
+54     
+55 
+56     \textcolor{keywordtype}{char}* \_\_argv[] = \{
+57         \textcolor{stringliteral}{"/dev/ramdisk/dash"}, 
+58         NULL
+59     \};
+60 
+61     \textcolor{keywordtype}{char}* \_\_envp[] = \{
+62         \textcolor{stringliteral}{"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk"},
+63         \textcolor{stringliteral}{"SHELL=/bin/dash"},
+64         \textcolor{stringliteral}{"USER=liveuser"},
+65         NULL
+66     \};
+67 
+68 
+69     \textcolor{comment}{//if(sys\_fork() == 0)}
+70         \hyperlink{execve_8c_af44a7e309f4bd49757f52b4178676ea7}{sys\_execve}(\_\_argv[0], \_\_argv, \_\_envp);
+71 
+72 
+73     \textcolor{keywordflow}{for}(;;)
+74         \hyperlink{desc_8c_ad365b1ba0a341f9a84551327fe0dac7b}{\_\_asm\_\_} (\textcolor{stringliteral}{"pause"});
+75 \}
 \end{DoxyCode}
 
 
@@ -144,7 +155,7 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 
 \hypertarget{src_2main_8c_a9af8258c3554800f6613f8147544225f}{\index{src/main.\+c@{src/main.\+c}!vfs\+\_\+root@{vfs\+\_\+root}}
 \index{vfs\+\_\+root@{vfs\+\_\+root}!src/main.\+c@{src/main.\+c}}

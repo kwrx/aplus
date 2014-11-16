@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/include/pthread.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/include/pthread.h" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -509,7 +509,7 @@ Definition at line 53 of file pthread\&.h\&.
 .SS "#define PTHREAD_RWLOCK_INITIALIZER   { \fBPTHREAD_MUTEX_INITIALIZER\fP, 0, 0, 0, 0, 0, 0 }"
 
 .PP
-Definition at line 142 of file pthread\&.h\&.
+Definition at line 143 of file pthread\&.h\&.
 .SS "#define PTHREAD_SCOPE_PROCESS   0"
 
 .PP
@@ -521,19 +521,19 @@ Definition at line 47 of file pthread\&.h\&.
 .SS "#define PTHREAD_SPINLOCK_INITIALIZER   { 0, 0 }"
 
 .PP
-Definition at line 154 of file pthread\&.h\&.
+Definition at line 155 of file pthread\&.h\&.
 .SS "#define SPINLOCK_LOCKED   2"
 
 .PP
-Definition at line 146 of file pthread\&.h\&.
+Definition at line 147 of file pthread\&.h\&.
 .SS "#define SPINLOCK_UNLOCKED   1"
 
 .PP
-Definition at line 145 of file pthread\&.h\&.
+Definition at line 146 of file pthread\&.h\&.
 .SS "#define SPINLOCK_USEMUTEX   3"
 
 .PP
-Definition at line 147 of file pthread\&.h\&.
+Definition at line 148 of file pthread\&.h\&.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef \fBuint32_t\fP \fBhandle_t\fP"
@@ -587,7 +587,7 @@ References errno\&.
 28                                                       {
 29     if(!attr) {
 30         errno = EINVAL;
-31         return 1;
+31         return -1;
 32     }
 33 
 34     memset(attr, 0, sizeof(pthread_attr_t));
@@ -605,7 +605,7 @@ References pthread_attr::detachstate, and errno\&.
 38                                                                                      {
 39     if(!attr) {
 40         errno = EINVAL;
-41         return 1;
+41         return -1;
 42     }
 43 
 44     *detachstate = attr->detachstate;
@@ -623,7 +623,7 @@ References errno, and pthread_attr::inheritsched\&.
 133                                                                                  {
 134     if(!attr) {
 135         errno = EINVAL;
-136         return 1;
+136         return -1;
 137     }
 138 
 139     *inheritsched = attr->inheritsched;
@@ -641,7 +641,7 @@ References errno, and pthread_attr::param\&.
 100                                                                                              {
 101     if(!attr) {
 102         errno = EINVAL;
-103         return 1;
+103         return -1;
 104     }
 105 
 106     memcpy(param, &attr->param, sizeof(struct sched_param));
@@ -658,7 +658,7 @@ References errno\&.
 .nf
 123                                                                           {
 124     errno = ENOSYS;
-125     return 1;
+125     return -1;
 126 }
 .fi
 .SS "int pthread_attr_getscope (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
@@ -672,7 +672,7 @@ References pthread_attr::contentionscope, and errno\&.
 153                                                                                    {
 154     if(!attr) {
 155         errno = EINVAL;
-156         return 1;
+156         return -1;
 157     }
 158 
 159     *contentionscope = attr->contentionscope;
@@ -690,7 +690,7 @@ References errno, and pthread_attr::stackaddr\&.
 58                                                                                    {
 59     if(!attr) {
 60         errno = EINVAL;
-61         return 1;
+61         return -1;
 62     }
 63 
 64     *stackaddr = attr->stackaddr;
@@ -708,7 +708,7 @@ References errno, and pthread_attr::stacksize\&.
 79                                                                                     {
 80     if(!attr) {
 81         errno = EINVAL;
-82         return 1;
+82         return -1;
 83     }
 84 
 85     *stacksize = attr->stacksize;
@@ -726,7 +726,7 @@ References pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthr
 12                                                    {
 13     if(!attr) {
 14         errno = EINVAL;
-15         return 1;
+15         return -1;
 16     }
 17 
 18     attr->stackaddr = 0;
@@ -750,7 +750,7 @@ References pthread_attr::detachstate, and errno\&.
 48                                                                               {
 49     if(!attr) {
 50         errno = EINVAL;
-51         return 1;
+51         return -1;
 52     }
 53 
 54     attr->detachstate = detachstate;
@@ -768,7 +768,7 @@ References errno, and pthread_attr::inheritsched\&.
 143                                                                                 {
 144     if(!attr) {
 145         errno = EINVAL;
-146         return 1;
+146         return -1;
 147     }
 148 
 149     attr->inheritsched = inheritsched;
@@ -786,7 +786,7 @@ References errno, and pthread_attr::param\&.
 112                                                                                              {
 113     if(!attr) {
 114         errno = EINVAL;
-115         return 1;
+115         return -1;
 116     }
 117 
 118     memcpy(&attr->param, param, sizeof(struct sched_param));
@@ -803,7 +803,7 @@ References errno\&.
 .nf
 128                                                                          {
 129     errno = ENOSYS;
-130     return 1;
+130     return -1;
 131 }
 .fi
 .SS "int pthread_attr_setscope (\fBpthread_attr_t\fP *attr, intcontentionscope)"
@@ -817,7 +817,7 @@ References pthread_attr::contentionscope, and errno\&.
 163                                                                             {
 164     if(!attr) {
 165         errno = EINVAL;
-166         return 1;
+166         return -1;
 167     }
 168 
 169     attr->contentionscope = contentionscope;
@@ -835,7 +835,7 @@ References errno, and pthread_attr::stackaddr\&.
 68                                                                             {
 69     if(!attr) {
 70         errno = EINVAL;
-71         return 1;
+71         return -1;
 72     }
 73 
 74     attr->stackaddr = stackaddr;
@@ -853,7 +853,7 @@ References errno, and pthread_attr::stacksize\&.
 89                                                                              {
 90     if(!attr) {
 91         errno = EINVAL;
-92         return 1;
+92         return -1;
 93     }
 94 
 95     attr->stacksize = stacksize;
@@ -863,71 +863,75 @@ References errno, and pthread_attr::stacksize\&.
 .SS "int pthread_barrier_destroy (\fBpthread_barrier_t\fP *barrier)"
 
 .PP
-Definition at line 28 of file pthread_barrier\&.c\&.
+Definition at line 29 of file pthread_barrier\&.c\&.
 .PP
 References pthread_barrier::curr_height, errno, and pthread_barrier::init_height\&.
 .PP
 .nf
-28                                                                {
-29     if(barrier == NULL) {
-30         errno = EINVAL;
-31         return 1;
-32     }
-33 
-34     barrier->curr_height = 0;
-35     barrier->init_height = 0;
-36     
-37 
-38     return 0;
-39 }
+29                                                                {
+30     if(barrier == NULL) {
+31         errno = EINVAL;
+32         return -1;
+33     }
+34 
+35     barrier->curr_height = 0;
+36     barrier->init_height = 0;
+37     
+38 
+39     return 0;
+40 }
 .fi
 .SS "int pthread_barrier_init (\fBpthread_barrier_t\fP *barrier, const \fBpthread_barrierattr_t\fP *attr, unsigned intcount)"
 
 .PP
 Definition at line 9 of file pthread_barrier\&.c\&.
 .PP
-References pthread_barrier::curr_height, errno, and pthread_barrier::init_height\&.
+References pthread_barrier::curr_height, errno, pthread_barrier::init_height, pthread_barrier::owner, and pthread_self()\&.
 .PP
 .nf
 9                                                                                                                    {
 10     if(barrier == NULL) {
 11         errno = EINVAL;
-12         return 1;
+12         return -1;
 13     }
 14 
 15     if(count == 0) {
 16         errno = EINVAL;
-17         return 1;
+17         return -1;
 18     }
 19 
 20     barrier->curr_height = 0;
 21     barrier->init_height = count;
-22     
-23 
-24     return 0;
-25 }
+22     barrier->owner = pthread_self();
+23     
+24 
+25     return 0;
+26 }
 .fi
 .SS "int pthread_barrier_wait (\fBpthread_barrier_t\fP *barrier)"
 
 .PP
-Definition at line 42 of file pthread_barrier\&.c\&.
+Definition at line 43 of file pthread_barrier\&.c\&.
 .PP
-References pthread_barrier::curr_height, errno, pthread_barrier::init_height, and sched_yield()\&.
+References pthread_barrier::curr_height, errno, pthread_barrier::init_height, pthread_barrier::owner, PTHREAD_BARRIER_SERIAL_THREAD, pthread_self(), and sched_yield()\&.
 .PP
 .nf
-42                                                             {
-43     if(barrier == NULL) {
-44         errno = EINVAL;
-45         return 1;
-46     }
-47 
-48     barrier->curr_height += 1;
-49 
-50     while(barrier->curr_height < barrier->init_height)
-51         sched_yield();
-52 
-53     return 0;
-54 }
+43                                                             {
+44     if(barrier == NULL) {
+45         errno = EINVAL;
+46         return -1;
+47     }
+48 
+49     barrier->curr_height += 1;
+50 
+51     while(barrier->curr_height < barrier->init_height)
+52         sched_yield();
+53 
+54     if(pthread_self() == barrier->owner)
+55         return PTHREAD_BARRIER_SERIAL_THREAD;
+56 
+57     return 0;
+58 }
 .fi
 .SS "int pthread_barrierattr_destroy (\fBpthread_barrierattr_t\fP *attr)"
 
@@ -940,7 +944,7 @@ References errno, and pthread_barrierattr::pshared\&.
 20                                                                     {
 21     if(attr == NULL) {
 22         errno = EINVAL;
-23         return 1;
+23         return -1;
 24     }
 25 
 26     attr->pshared = 0;
@@ -958,12 +962,12 @@ References errno, and pthread_barrierattr::pshared\&.
 31                                                                                            {
 32     if(attr == NULL) {
 33         errno = EINVAL;
-34         return 1;
+34         return -1;
 35     }
 36 
 37     if(pshared == NULL) {
 38         errno = EINVAL;
-39         return 1;
+39         return -1;
 40     }
 41     
 42     *pshared = attr->pshared;
@@ -981,7 +985,7 @@ References errno, and pthread_barrierattr::pshared\&.
 9                                                                  {
 10     if(attr == NULL) {
 11         errno = EINVAL;
-12         return 1;
+12         return -1;
 13     }
 14 
 15     attr->pshared = 0;
@@ -999,7 +1003,7 @@ References errno, and pthread_barrierattr::pshared\&.
 47                                                                                     {
 48     if(attr == NULL) {
 49         errno = EINVAL;
-50         return 1;
+50         return -1;
 51     }
 52 
 53     attr->pshared = pshared;
@@ -1059,12 +1063,12 @@ References errno, pthread_cond::semaphore, and pthread_cond::waiting\&.
 25                                                       {
 26     if(!cond) {
 27         errno = EINVAL;
-28         return 1;
+28         return -1;
 29     }
 30 
 31     if(cond->waiting) {
 32         errno = EBUSY;
-33         return 1;
+33         return -1;
 34     }
 35 
 36 
@@ -1085,7 +1089,7 @@ References errno, pthread_cond::semaphore, and pthread_cond::waiting\&.
 13                                                                                    {
 14     if(!cond) {
 15         errno = EINVAL;
-16         return 1;
+16         return -1;
 17     }
 18 
 19     cond->waiting = 0;
@@ -1136,17 +1140,17 @@ References pthread_context::cond, errno, pthread_mutex::owner, pthread_mutex_unl
 44                                                                                                                 {
 45         if(!cond) {
 46         errno = EINVAL;
-47         return 1;
+47         return -1;
 48     }
 49 
 50     if(!mutex) {
 51         errno = EINVAL;
-52         return 1;
+52         return -1;
 53     }
 54 
 55     if(mutex->owner != pthread_self()) {
 56         errno = EINVAL;
-57         return 1;
+57         return -1;
 58     }
 59 
 60     pthread_context_t* ctx = (pthread_context_t*) pthread_self();
@@ -1200,7 +1204,7 @@ References errno, and pthread_condattr::pshared\&.
 18                                                               {
 19     if(!attr) {
 20         errno = EINVAL;
-21         return 1;
+21         return -1;
 22     }
 23 
 24     attr->pshared = 0;
@@ -1218,7 +1222,7 @@ References errno, and pthread_condattr::pshared\&.
 29                                                                                      {
 30     if(!attr) {
 31         errno = EINVAL;
-32         return 1;
+32         return -1;
 33     }
 34 
 35     
@@ -1237,7 +1241,7 @@ References errno, and pthread_condattr::pshared\&.
 7                                                            {
 8     if(!attr) {
 9         errno = EINVAL;
-10         return 1;
+10         return -1;
 11     }
 12 
 13     attr->pshared = 0;
@@ -1255,7 +1259,7 @@ References errno, and pthread_condattr::pshared\&.
 41                                                                               {
 42     if(!attr) {
 43         errno = EINVAL;
-44         return 1;
+44         return -1;
 45     }
 46 
 47     attr->pshared = pshared;
@@ -1276,12 +1280,12 @@ References __os_thread_create, __pthread_counts, __pthread_handler__(), __pthrea
 40 
 41     if(!thread) {
 42         errno = EINVAL;
-43         return 1;
+43         return -1;
 44     }
 45 
 46     if(__pthread_counts > PTHREAD_THREADS_MAX) {
 47         errno = EAGAIN;
-48         return 1;
+48         return -1;
 49     }
 50 
 51     pthread_context_t* ctx = malloc(sizeof(pthread_context_t));
@@ -1329,20 +1333,20 @@ References __os_thread_kill, __pthread_queue, pthread_once::done, errno, pthread
 12                                             {
 13     if(!thread) {
 14         errno = EINVAL;
-15         return 1;
+15         return -1;
 16     }
 17 
 18     if(!__pthread_queue) {
 19         errno = ESRCH;
-20         return 1;
+20         return -1;
 21     }
 22 
 23     pthread_context_t* ctx = (pthread_context_t*) thread;
-24     if(__os_thread_kill(ctx->tid, SIGKILL) == 0)
+24     if(__os_thread_kill(ctx->tid, SIGTERM) == 0)
 25         ctx->once\&.done = 1;
 26     else {
 27         errno = ESRCH;
-28         return 1;
+28         return -1;
 29     }
 30 
 31     __pthread_counts -= 1;
@@ -1413,7 +1417,7 @@ References pthread_context::attr, errno, pthread_attr::param, and pthread_self()
 58     pthread_t thread = pthread_self();
 59     if(!thread) {
 60         errno = ESRCH;
-61         return 1;
+61         return -1;
 62     }
 63 
 64     pthread_context_t* ctx = (pthread_context_t*) thread;
@@ -1431,19 +1435,19 @@ References errno, sched_getparam(), and pthread_context::tid\&.
 26                                                                                            {
 27     if(!thread) {
 28         errno = EINVAL;
-29         return 1;
+29         return -1;
 30     }
 31 
 32     if(param == NULL) {
 33         errno = EINVAL;
-34         return 1;
+34         return -1;
 35     }
 36     
 37     pthread_context_t* ctx = (pthread_context_t*) thread;
 38     if((*policy = sched_getparam(ctx->tid, param)) != -1)
 39         return 0;
 40     
-41     return 1;
+41     return -1;
 42 }
 .fi
 .SS "void* pthread_getspecific (\fBpthread_key_t\fPkey)"
@@ -1479,7 +1483,7 @@ References pthread_once::done, errno, pthread_context::exitval, pthread_context:
 8                                                             {
 9     if(!thread) {
 10         errno = EINVAL;
-11         return 1;
+11         return -1;
 12     }
 13 
 14     pthread_context_t* ctx = (pthread_context_t*) thread;
@@ -1503,7 +1507,7 @@ References __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthre
 9                                                                               {
 10     if(!key) {
 11         errno = EINVAL;
-12         return 1;
+12         return -1;
 13     }
 14 
 15     int i;
@@ -1519,7 +1523,7 @@ References __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthre
 25     }
 26 
 27     errno = EAGAIN;
-28     return 1;
+28     return -1;
 29 }
 .fi
 .SS "int pthread_key_delete (\fBpthread_key_t\fPkey)"
@@ -1533,7 +1537,7 @@ References __pthread_keys, __pthread_key::dtor, errno, PTHREAD_KEYS_MAX, __pthre
 32                                                  {
 33     if(key > PTHREAD_KEYS_MAX) {
 34         errno = EINVAL;
-35         return 1;
+35         return -1;
 36     }
 37 
 38     if(__pthread_keys[key]\&.dtor)
@@ -1557,12 +1561,12 @@ References errno, pthread_mutex::event, pthread_mutex::kind, pthread_mutex::lock
 46                                                          {
 47     if(!mutex) {
 48         errno = EINVAL;
-49         return 1;
+49         return -1;
 50     }
 51 
 52     if(mutex->lock == 1) {
 53         errno = EBUSY;
-54         return 1;
+54         return -1;
 55     }
 56 
 57     mutex->lock = 0;
@@ -1586,7 +1590,7 @@ References errno, pthread_mutex::event, pthread_mutexattr::kind, pthread_mutex::
 26                                                                                        {
 27     if(!mutex) {
 28         errno = EINVAL;
-29         return 1;
+29         return -1;
 30     }
 31 
 32     mutex->lock = 0;
@@ -1613,7 +1617,7 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 67                                                       {
 68     if(!mutex) {
 69         errno = EINVAL;
-70         return 1;
+70         return -1;
 71     }
 72 
 73     if(mutex->owner != pthread_self()) {
@@ -1625,7 +1629,7 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 79         mutex->lock = 1;
 80     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
 81         errno = EDEADLK;
-82         return 1;
+82         return -1;
 83     }
 84 
 85     if(mutex->kind == PTHREAD_MUTEX_RECURSIVE)
@@ -1645,13 +1649,13 @@ References errno, pthread_mutex_lock(), and pthread_mutex::time\&.
 92                                                                                            {
 93     if(abstime == NULL) {
 94         errno = EINVAL;
-95         return 1;
+95         return -1;
 96     }
 97 
 98     if(pthread_mutex_lock(mutex) == 0)
 99         mutex->time = time(NULL) + abstime->tv_sec;
 100     else
-101         return 1;
+101         return -1;
 102 
 103     return 0;
 104 }
@@ -1667,13 +1671,13 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 107                                                          {
 108     if(!mutex) {
 109         errno = EINVAL;
-110         return 1;
+110         return -1;
 111     }
 112 
 113     if(mutex->owner != pthread_self()) {
 114         if(__locked_mtx(mutex)) {
 115             errno = EBUSY;
-116             return 1;
+116             return -1;
 117         }
 118 
 119         mutex->owner = pthread_self();
@@ -1681,7 +1685,7 @@ References __locked_mtx(), errno, pthread_mutex::kind, pthread_mutex::lock, pthr
 121         mutex->lock = 1;
 122     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
 123         errno = EDEADLK;
-124         return 1;
+124         return -1;
 125     }
 126 
 127     if(mutex->kind == PTHREAD_MUTEX_RECURSIVE)
@@ -1701,7 +1705,7 @@ References errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner
 133                                                         {
 134     if(!mutex) {
 135         errno = EINVAL;
-136         return 1;
+136         return -1;
 137     }
 138 
 139     if(mutex->owner == pthread_self()) {
@@ -1714,7 +1718,7 @@ References errno, pthread_mutex::kind, pthread_mutex::lock, pthread_mutex::owner
 146         mutex->lock = 0;
 147     } else if(mutex->kind == PTHREAD_MUTEX_ERRORCHECK) {
 148         errno = EPERM;
-149         return 1;
+149         return -1;
 150     }
 151 
 152     return 0;
@@ -1731,7 +1735,7 @@ References errno, pthread_mutexattr::kind, and pthread_mutexattr::pshared\&.
 20                                                                 {
 21     if(!attr) {
 22         errno = EINVAL;
-23         return 1;
+23         return -1;
 24     }
 25 
 26     attr->pshared = 0;
@@ -1751,7 +1755,7 @@ References errno, and pthread_mutexattr::pshared\&.
 32                                                                                        {
 33     if(!attr) {
 34         errno = EINVAL;
-35         return 1;
+35         return -1;
 36     }
 37 
 38     *pshared = attr->pshared;
@@ -1769,7 +1773,7 @@ References errno, and pthread_mutexattr::kind\&.
 52                                                                            {
 53     if(!attr) {
 54         errno = EINVAL;
-55         return 1;
+55         return -1;
 56     }
 57 
 58     *kind = attr->kind;
@@ -1787,7 +1791,7 @@ References errno, pthread_mutexattr::kind, pthread_mutexattr::pshared, and PTHRE
 8                                                              {
 9     if(!attr) {
 10         errno = EINVAL;
-11         return 1;
+11         return -1;
 12     }
 13 
 14     attr->pshared = 0;
@@ -1807,7 +1811,7 @@ References errno, and pthread_mutexattr::pshared\&.
 42                                                                                 {
 43     if(!attr) {
 44         errno = EINVAL;
-45         return 1;
+45         return -1;
 46     }
 47 
 48     attr->pshared = pshared;
@@ -1825,7 +1829,7 @@ References errno, and pthread_mutexattr::kind\&.
 62                                                                           {
 63     if(!attr) {
 64         errno = EINVAL;
-65         return 1;
+65         return -1;
 66     }
 67 
 68     attr->kind = kind;
@@ -1842,7 +1846,7 @@ References errno\&.
 .nf
 7                                                                                   {
 8     errno = ENOSYS;
-9     return 1;
+9     return -1;
 10 }
 .fi
 .SS "int pthread_rwlock_destroy (\fBpthread_rwlock_t\fP *lock)"
@@ -1856,18 +1860,18 @@ References errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusi
 34                                                           {
 35     if(lock == NULL) {
 36         errno = EINVAL;
-37         return 1;
+37         return -1;
 38     }
 39 
 40     pthread_t thread = pthread_self();
 41     if(!thread) {
 42         errno = EFAULT;
-43         return 1;
+43         return -1;
 44     }
 45 
 46     if(thread != lock->owner) {
 47         errno = EPERM;
-48         return 1;
+48         return -1;
 49     }
 50 
 51     pthread_mutex_destroy(&lock->rdmutex);
@@ -1893,13 +1897,13 @@ References errno, pthread_rwlock::exclusive_waiters, pthread_rwlock::num_exclusi
 10                                                                                          {
 11     if(lock == NULL) {
 12         errno = EINVAL;
-13         return 1;
+13         return -1;
 14     }
 15 
 16     pthread_t thread = pthread_self();
 17     if(!thread) {
 18         errno = EFAULT;
-19         return 1;
+19         return -1;
 20     }
 21 
 22     pthread_mutex_init(&lock->rdmutex, NULL);
@@ -1925,7 +1929,7 @@ References errno, pthread_mutex_lock(), and pthread_rwlock::rdmutex\&.
 81                                                          {
 82     if(lock == NULL) {
 83         errno = EINVAL;
-84         return 1;
+84         return -1;
 85     }
 86 
 87     return pthread_mutex_lock(&lock->rdmutex);
@@ -1942,7 +1946,7 @@ References errno, pthread_mutex_timedlock(), and pthread_rwlock::rdmutex\&.
 90                                                                                               {
 91     if(lock == NULL) {
 92         errno = EINVAL;
-93         return 1;
+93         return -1;
 94     }
 95 
 96     return pthread_mutex_timedlock(&lock->rdmutex, abstime);
@@ -1959,7 +1963,7 @@ References errno, pthread_mutex_timedlock(), and pthread_rwlock::wrmutex\&.
 108                                                                                               {
 109     if(lock == NULL) {
 110         errno = EINVAL;
-111         return 1;
+111         return -1;
 112     }
 113 
 114     return pthread_mutex_timedlock(&lock->wrmutex, abstime);
@@ -1976,7 +1980,7 @@ References errno, pthread_mutex_trylock(), and pthread_rwlock::rdmutex\&.
 63                                                             {
 64     if(lock == NULL) {
 65         errno = EINVAL;
-66         return 1;
+66         return -1;
 67     }
 68 
 69     return pthread_mutex_trylock(&lock->rdmutex);
@@ -1993,7 +1997,7 @@ References errno, pthread_mutex_trylock(), and pthread_rwlock::wrmutex\&.
 72                                                             {
 73     if(lock == NULL) {
 74         errno = EINVAL;
-75         return 1;
+75         return -1;
 76     }
 77 
 78     return pthread_mutex_trylock(&lock->wrmutex);
@@ -2010,14 +2014,14 @@ References errno, pthread_mutex_unlock(), pthread_rwlock::rdmutex, and pthread_r
 117                                                          {
 118     if(lock == NULL) {
 119         errno = EINVAL;
-120         return 1;
+120         return -1;
 121     }
 122 
 123     if(pthread_mutex_unlock(&lock->rdmutex) != 0)
-124         return 1;
+124         return -1;
 125 
 126     if(pthread_mutex_unlock(&lock->wrmutex) != 0)
-127         return 1;
+127         return -1;
 128 
 129     return 0;
 130 }
@@ -2033,7 +2037,7 @@ References errno, pthread_mutex_lock(), and pthread_rwlock::wrmutex\&.
 99                                                          {
 100     if(lock == NULL) {
 101         errno = EINVAL;
-102         return 1;
+102         return -1;
 103     }
 104 
 105     return pthread_mutex_lock(&lock->wrmutex);
@@ -2050,7 +2054,7 @@ References errno, and pthread_rwlockattr::pshared\&.
 19                                                                   {
 20     if(attr == NULL) {
 21         errno = EINVAL;
-22         return 1;
+22         return -1;
 23     }
 24 
 25     attr->pshared = 0;
@@ -2068,12 +2072,12 @@ References errno, and pthread_rwlockattr::pshared\&.
 29                                                                                          {
 30     if(attr == NULL) {
 31         errno = EINVAL;
-32         return 1;
+32         return -1;
 33     }
 34 
 35     if(pshared == NULL) {
 36         errno = EINVAL;
-37         return 1;
+37         return -1;
 38     }
 39 
 40     *pshared = attr->pshared;
@@ -2091,7 +2095,7 @@ References errno, and pthread_rwlockattr::pshared\&.
 9                                                                {
 10     if(attr == NULL) {
 11         errno = EINVAL;
-12         return 1;
+12         return -1;
 13     }
 14 
 15     attr->pshared = 0;
@@ -2109,7 +2113,7 @@ References errno, and pthread_rwlockattr::pshared\&.
 44                                                                                   {
 45     if(attr == NULL) {
 46         errno = EINVAL;
-47         return 1;
+47         return -1;
 48     }
 49 
 50     attr->pshared = pshared;
@@ -2127,7 +2131,7 @@ References __os_gettid, __pthread_queue, errno, pthread_context::next, and pthre
 10                                     {
 11     if(!__pthread_queue) {
 12         errno = ESRCH;
-13         return 0;
+13         return -1;
 14     }
 15 
 16     int tid = __os_gettid();
@@ -2140,7 +2144,7 @@ References __os_gettid, __pthread_queue, errno, pthread_context::next, and pthre
 23     }
 24 
 25     errno = ESRCH;
-26     return 0;
+26     return -1;
 27 }
 .fi
 .SS "int pthread_setcancelstate (intstate, int *oldstate)"
@@ -2153,7 +2157,7 @@ References errno\&.
 .nf
 12                                                             {
 13     errno = ENOSYS;
-14     return 1;
+14     return -1;
 15 }
 .fi
 .SS "int pthread_setcanceltype (inttype, int *oldtype)"
@@ -2166,7 +2170,7 @@ References errno\&.
 .nf
 18                                                          {
 19     errno = ENOSYS;
-20     return 1;
+20     return -1;
 21 }
 .fi
 .SS "int pthread_setconcurrency (intlevel)"
@@ -2181,7 +2185,7 @@ References pthread_context::attr, errno, pthread_attr::param, and pthread_self()
 45     pthread_t thread = pthread_self();
 46     if(!thread) {
 47         errno = ESRCH;
-48         return 1;
+48         return -1;
 49     }
 50 
 51     pthread_context_t* ctx = (pthread_context_t*) thread;
@@ -2201,12 +2205,12 @@ References errno, sched_setparam(), and pthread_context::tid\&.
 11                                                                                                 {
 12     if(!thread) {
 13         errno = EINVAL;
-14         return 1;
+14         return -1;
 15     }
 16 
 17     if(param == NULL) {
 18         errno = EINVAL;
-19         return 1;
+19         return -1;
 20     }
 21 
 22     pthread_context_t* ctx = (pthread_context_t*) thread;
@@ -2224,12 +2228,12 @@ References __pthread_keys, errno, PTHREAD_KEYS_MAX, and __pthread_key::value\&.
 49                                                                      {
 50     if(key > PTHREAD_KEYS_MAX) {
 51         errno = EINVAL;
-52         return 1;
+52         return -1;
 53     }
 54 
 55     if(__pthread_keys[key]\&.used == 0) {
 56         errno = EINVAL;
-57         return 1;
+57         return -1;
 58     }
 59 
 60     __pthread_keys[key]\&.value = (void*) value;
@@ -2247,7 +2251,7 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 19                                                           {
 20     if(!lock) {
 21         errno = EINVAL;
-22         return 1;
+22         return -1;
 23     }
 24 
 25     lock->interlock = 0;
@@ -2267,7 +2271,7 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 7                                                                     {
 8     if(!lock) {
 9         errno = EINVAL;
-10         return 1;
+10         return -1;
 11     }
 12 
 13     lock->interlock = 0;
@@ -2287,13 +2291,13 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 31                                                        {
 32     if(!lock) {
 33         errno = EINVAL;
-34         return 1;
+34         return -1;
 35     }
 36 
 37     if(pthread_mutex_lock(&lock->mutex) == 0)
 38         lock->interlock = 1;
 39     else
-40         return 1; /* errno already setted */
+40         return -1; /* errno already setted */
 41 
 42     return 0;
 43 }
@@ -2309,13 +2313,13 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 45                                                           {
 46     if(!lock) {
 47         errno = EINVAL;
-48         return 1;
+48         return -1;
 49     }
 50 
 51     if(pthread_mutex_trylock(&lock->mutex) == 0)
 52         lock->interlock = 1;
 53     else
-54         return 1; /* errno already setted */
+54         return -1; /* errno already setted */
 55 
 56     return 0;
 57 }
@@ -2331,13 +2335,13 @@ References errno, pthread_spinlock::interlock, pthread_spinlock::mutex, and pthr
 59                                                          {
 60     if(!lock) {
 61         errno = EINVAL;
-62         return 1;
+62         return -1;
 63     }
 64 
 65     if(pthread_mutex_unlock(&lock->mutex) == 0)
 66         lock->interlock = 0;
 67     else
-68         return 1; /* errno already setted */
+68         return -1; /* errno already setted */
 69     
 70     return 0;
 71 }

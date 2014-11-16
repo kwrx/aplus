@@ -1,8 +1,8 @@
-.TH "src/arch/task.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/arch/i386/task.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
-src/arch/task.c \- 
+src/arch/i386/task.c \- 
 .SH SYNOPSIS
 .br
 .PP
@@ -29,6 +29,9 @@ src/arch/task.c \-
 .br
 .ti -1c
 .RI "void \fBtask_context_switch\fP (task_env_t **old, task_env_t **new)"
+.br
+.ti -1c
+.RI "void \fBtask_switch_ack\fP ()"
 .br
 .ti -1c
 .RI "\fBtask_t\fP * \fBtask_clone\fP (void *entry, void *arg, void *stack, int \fBflags\fP)"
@@ -81,212 +84,222 @@ src/arch/task.c \-
 .SS "static int __fork_child ()\fC [static]\fP"
 
 .PP
-Definition at line 148 of file task\&.c\&.
+Definition at line 152 of file task\&.c\&.
 .PP
 References __fork_buf, task::context, task::cr3, kmalloc(), mm_align(), mm_paddr(), TASK_STACKSIZE, uint32_t, uint8_t, VMM_FLAGS_DEFAULT, VMM_FLAGS_USER, and vmm_map()\&.
 .PP
 .nf
-148                           {
-149 
-150     uint32_t oldesp = __fork_buf->esp;
-151 
-152     uint32_t stack = (uint32_t) mm_align(kmalloc(TASK_STACKSIZE));
+152                           {
 153 
-154     for(int i = 0; i < TASK_STACKSIZE; i++)
-155         ((uint8_t*) stack)[i] = ((uint8_t*) (oldesp & ~0xFFF)) [i];
-156 
+154 
+155     uint32_t oldesp = __fork_buf->esp;
+156     uint32_t stack = (uint32_t) mm_align(kmalloc(TASK_STACKSIZE));
 157 
-158     vmm_map(current_task->context\&.cr3, mm_paddr((void*) stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);  
-159 
-160     longjmp(__fork_buf, 1);
-161     return 0;
-162 }
+158     for(int i = 0; i < TASK_STACKSIZE; i++)
+159         ((uint8_t*) stack)[i] = ((uint8_t*) (oldesp & ~0xFFF)) [i];
+160 
+161 
+162     vmm_map(current_task->context\&.cr3, mm_paddr((void*) stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);  
+163 
+164     longjmp(__fork_buf, 1);
+165     return 0;
+166 }
 .fi
 .SS "\fBtask_t\fP* task_clone (void *entry, void *arg, void *stack, intflags)"
 
 .PP
-Definition at line 51 of file task\&.c\&.
+Definition at line 54 of file task\&.c\&.
 .PP
-References task::clock, CLONE_FILES, CLONE_FS, CLONE_PARENT, CLONE_SIGHAND, CLONE_VM, task::context, task::cr3, current_task, task::cwd, task::env, task::exe, task::fd, task::gid, task::image, kmalloc(), task::length, list_add(), mm_align(), mm_paddr(), task::parent, task::pid, task::priority, task::ptr, schedule_nextpid(), task::signal_handler, task::signal_sig, task::stack, task::state, TASK_MAX_FD, TASK_STACKSIZE, TASK_STATE_ALIVE, task::uid, uint32_t, task::vaddr, vmm_create(), vmm_map(), and vmm_mapkernel()\&.
+References task::clock, CLONE_FILES, CLONE_FS, CLONE_PARENT, CLONE_SIGHAND, CLONE_VM, task::context, task::cr3, current_task, task::cwd, task::env, task::exe, task::fd, task::gid, task::image, kmalloc(), kvmalloc(), task::length, list_add(), mm_paddr(), task::owner, task::parent, task::pid, task::priority, task::ptr, schedule_nextpid(), task::signal_handler, task::signal_sig, task::stack, task::state, TASK_MAX_FD, TASK_STACKSIZE, TASK_STATE_ALIVE, task::uid, uint32_t, task::vaddr, vmm_create(), vmm_map(), and vmm_mapkernel()\&.
 .PP
 .nf
-51                                                                    {
-52     if(entry == NULL)
-53         return NULL;
-54 
-55     if(stack == NULL)
-56         stack = (void*) ((int) mm_align(kmalloc(TASK_STACKSIZE * 2)) + TASK_STACKSIZE);
+54                                                                    {
+55     if(entry == NULL)
+56         return NULL;
 57 
-58     memset(stack, 0, TASK_STACKSIZE);
-59 
+58     if(stack == NULL)
+59         stack = (void*) ((int)kvmalloc(TASK_STACKSIZE * 2) + TASK_STACKSIZE);
 60 
-61     task_t* child = (task_t*) kmalloc(sizeof(task_t));
-62     memset(child, 0, sizeof(task_t));
+61     memset(stack, 0, TASK_STACKSIZE);
+62 
 63 
-64     child->pid = schedule_nextpid();
-65     child->exe = current_task->exe;
-66     child->uid = current_task->uid;
-67     child->gid = current_task->gid;
-68     
-69     child->state = TASK_STATE_ALIVE;
-70     child->priority = current_task->priority;
-71     child->clock = 0;
-72 
-73 
-74     if(flags & CLONE_FILES) {
-75         for(int i = 0; i < TASK_MAX_FD; i++)
-76             child->fd[i] = current_task->fd[i];
-77     }
-78 
-79     if(flags & CLONE_FS)
-80         child->cwd = current_task->cwd;
-81     else
-82         child->cwd = (inode_t*) vfs_root;
-83 
-84     if(flags & CLONE_PARENT)
-85         child->parent = current_task->parent;   
-86     else
-87         child->parent = current_task;
-88 
-89     if(flags & CLONE_SIGHAND) {
-90         child->signal_handler = current_task->signal_handler;
-91         child->signal_sig = current_task->signal_sig;
-92     }
-93 
-94 
-95     if(flags & CLONE_VM) {
-96         child->image\&.vaddr = current_task->image\&.vaddr;
-97         child->image\&.length = current_task->image\&.length;
-98         child->image\&.ptr = current_task->image\&.ptr;
-99 
-100         child->context\&.cr3 = current_task->context\&.cr3;
-101     } else {
+64     task_t* child = (task_t*) kmalloc(sizeof(task_t));
+65     memset(child, 0, sizeof(task_t));
+66 
+67     child->pid = schedule_nextpid();
+68     child->exe = current_task->exe;
+69     child->uid = current_task->uid;
+70     child->gid = current_task->gid;
+71     
+72     child->state = TASK_STATE_ALIVE;
+73     child->priority = current_task->priority;
+74     child->clock = 0;
+75 
+76 
+77     if(flags & CLONE_FILES) {
+78         for(int i = 0; i < TASK_MAX_FD; i++)
+79             child->fd[i] = current_task->fd[i];
+80     }
+81 
+82     if(flags & CLONE_FS)
+83         child->cwd = current_task->cwd;
+84     else
+85         child->cwd = (inode_t*) vfs_root;
+86 
+87     if(flags & CLONE_PARENT)
+88         child->parent = current_task->parent;   
+89     else
+90         child->parent = current_task;
+91 
+92     if(flags & CLONE_SIGHAND) {
+93         child->signal_handler = current_task->signal_handler;
+94         child->signal_sig = current_task->signal_sig;
+95     }
+96 
+97 
+98     child->image\&.vaddr = current_task->image\&.vaddr;
+99     child->image\&.length = current_task->image\&.length;
+100     child->image\&.ptr = current_task->image\&.ptr;
+101 
 102 
-103         child->context\&.cr3 = vmm_create();
-104         vmm_mapkernel(child->context\&.cr3);
-105 
-106         child->image\&.vaddr = current_task->image\&.vaddr;
-107         child->image\&.length = current_task->image\&.length;
-108 
-109         if(current_task->image\&.ptr) {
-110             void* addr = (void*) kmalloc(child->image\&.length);
-111             memcpy(addr, (void*) child->image\&.vaddr, child->image\&.length);
+103     if(flags & CLONE_VM) {
+104         child->context\&.cr3 = current_task->context\&.cr3;
+105         child->context\&.owner = current_task->pid;
+106     } else {
+107 
+108         child->context\&.owner = child->pid;
+109         child->context\&.cr3 = vmm_create();
+110         vmm_mapkernel(child->context\&.cr3);
+111 
 112 
-113             vmm_map(child->context\&.cr3, mm_paddr(addr), child->image\&.vaddr, child->image\&.length);
-114             child->image\&.ptr = (uint32_t) mm_paddr(addr);
-115         }
-116     }
-117 
-118     
-119     child->context\&.stack = (uint32_t) stack - TASK_STACKSIZE;
-120     child->context\&.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
-121 
-122     child->context\&.env->eax = (uint32_t) arg;
-123     child->context\&.env->eip = (uint32_t) entry;
-124     child->context\&.env->ebp = (uint32_t) child->context\&.env; 
-125 
-126     
-127 
-128     list_add(task_queue, (listval_t) child);
-129     return child;
-130 }
+113         if(current_task->image\&.vaddr && current_task->image\&.length) {
+114             void* addr = (void*) kvmalloc(child->image\&.length);
+115             memcpy(addr, (void*) child->image\&.vaddr, child->image\&.length);
+116 
+117             vmm_map(child->context\&.cr3, mm_paddr(addr), child->image\&.vaddr, child->image\&.length);
+118         }
+119     }
+120 
+121     
+122     child->context\&.stack = (uint32_t) stack - TASK_STACKSIZE;
+123     child->context\&.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+124 
+125     child->context\&.env->eax = (uint32_t) arg;
+126     child->context\&.env->eip = (uint32_t) entry;
+127     child->context\&.env->ebp = (uint32_t) child->context\&.env; 
+128 
+129     
+130 
+131     list_add(task_queue, (listval_t) child);
+132     return child;
+133 }
 .fi
 .SS "void task_context_switch (task_env_t **old, task_env_t **new)"
 
 .SS "\fBtask_t\fP* task_fork ()"
 
 .PP
-Definition at line 165 of file task\&.c\&.
+Definition at line 169 of file task\&.c\&.
 .PP
 References __fork_buf, __fork_child(), CLONE_FILES, CLONE_FS, CLONE_SIGHAND, schedule_disable(), schedule_enable(), task_clone(), and task_switch()\&.
 .PP
 .nf
-165                     {
-166     if(!current_task)
-167         return NULL;
-168 
-169     schedule_disable();
-170     task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);       
-171 
-172     if(setjmp(__fork_buf) == 1) {
-173         schedule_enable();
-174         return NULL;
-175     }
-176 
-177 
-178     task_switch(child);
-179     return child; 
-180 }
+169                     {
+170     if(!current_task)
+171         return NULL;
+172 
+173     schedule_disable();
+174     task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);   
+175 
+176     if(setjmp(__fork_buf) == 1) {
+177         schedule_enable();
+178         return NULL;
+179     }
+180 
+181     task_switch(child);
+182     return child; 
+183 }
 .fi
 .SS "int task_init ()"
 
 .PP
-Definition at line 184 of file task\&.c\&.
+Definition at line 187 of file task\&.c\&.
 .PP
 References task::context, task::cr3, task::cwd, task::env, task::gid, kernel_vmm, kmalloc(), list_add(), task::parent, task::pid, task::priority, schedule_nextpid(), task::stack, task::state, TASK_PRIORITY_REGULAR, TASK_STATE_ALIVE, task_switch(), task::uid, and uint32_t\&.
 .PP
 .nf
-184                 {
-185 
-186     extern uint32_t kernel_stack;
-187     
-188     kernel_task = current_task = (task_t*) kmalloc(sizeof(task_t));
-189     memset(current_task, 0, sizeof(task_t));
+187                 {
+188 
+189     extern uint32_t kernel_stack;
 190     
-191     
-192     current_task->context\&.env = (task_env_t*) 0;
-193     current_task->context\&.cr3 = (uint32_t) kernel_vmm;
-194     current_task->context\&.stack = (uint32_t) &kernel_stack;
-195     
-196     
-197     current_task->pid = schedule_nextpid();
-198     current_task->cwd = (inode_t*) vfs_root;
-199     current_task->uid = (uid_t) 0;
-200     current_task->gid = (gid_t) 0;
-201     
-202     current_task->state = TASK_STATE_ALIVE;
-203     current_task->priority = TASK_PRIORITY_REGULAR;
-204     current_task->parent = NULL;
-205 
-206 
-207     list_add(task_queue, (listval_t) current_task);
-208     task_switch(current_task);
+191     kernel_task = current_task = (task_t*) kmalloc(sizeof(task_t));
+192     memset(current_task, 0, sizeof(task_t));
+193     
+194     
+195     current_task->context\&.env = (task_env_t*) 0;
+196     current_task->context\&.cr3 = (uint32_t) kernel_vmm;
+197     current_task->context\&.stack = (uint32_t) &kernel_stack;
+198     
+199     
+200     current_task->pid = schedule_nextpid();
+201     current_task->cwd = (inode_t*) vfs_root;
+202     current_task->uid = (uid_t) 0;
+203     current_task->gid = (gid_t) 0;
+204     
+205     current_task->state = TASK_STATE_ALIVE;
+206     current_task->priority = TASK_PRIORITY_REGULAR;
+207     current_task->parent = NULL;
+208 
 209 
-210 
-211     return 0;
-212 }
+210     list_add(task_queue, (listval_t) current_task);
+211     task_switch(current_task);
+212 
+213 
+214     return 0;
+215 }
 .fi
 .SS "void task_switch (\fBtask_t\fP *newtask)"
 
 .PP
-Definition at line 133 of file task\&.c\&.
+Definition at line 136 of file task\&.c\&.
 .PP
-References task::context, task::cr3, current_task, task::env, task_context_switch(), and vmm_switch()\&.
+References task::context, task::cr3, current_task, task::env, task_context_switch(), task_switch_ack(), and vmm_switch()\&.
 .PP
 .nf
-133                                   {
-134     
-135     task_t* old = current_task;
-136     current_task = newtask;
-137 
-138     vmm_switch(current_task->context\&.cr3);
-139     outb(0x20, 0x20);
+136                                   {
+137     
+138     task_t* old = current_task;
+139     current_task = newtask;
 140 
-141     task_context_switch(&old->context\&.env, &current_task->context\&.env);
-142 }
+141     vmm_switch(current_task->context\&.cr3);
+142 
+143 
+144     task_switch_ack();
+145     task_context_switch(&old->context\&.env, &current_task->context\&.env);
+146 }
+.fi
+.SS "void task_switch_ack ()"
+
+.PP
+Definition at line 50 of file task\&.c\&.
+.PP
+.nf
+50                        {
+51     outb(0x20, 0x20);
+52 }
 .fi
 .SH "Variable Documentation"
 .PP 
 .SS "jmp_buf __fork_buf\fC [static]\fP"
 
 .PP
-Definition at line 146 of file task\&.c\&.
+Definition at line 150 of file task\&.c\&.
 .SS "\fBtask_t\fP* current_task"
 
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SS "\fBuint32_t\fP* current_vmm"
 
 .PP
@@ -296,7 +309,7 @@ Definition at line 46 of file paging\&.c\&.
 .PP
 Kernel task address\&. 
 .PP
-Definition at line 40 of file sched\&.c\&.
+Definition at line 42 of file sched\&.c\&.
 .SS "\fBuint32_t\fP* kernel_vmm"
 
 .PP
@@ -306,7 +319,7 @@ Definition at line 47 of file paging\&.c\&.
 .PP
 List of all Task\&. 
 .PP
-Definition at line 46 of file sched\&.c\&.
+Definition at line 48 of file sched\&.c\&.
 .SS "volatile \fBinode_t\fP* vfs_root"
 
 .PP

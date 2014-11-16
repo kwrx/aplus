@@ -1,4 +1,4 @@
-.TH "usr/src/libpthread/src/pthread_attr.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "usr/src/libpthread/src/pthread_attr.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -95,7 +95,7 @@ References errno\&.
 28                                                       {
 29     if(!attr) {
 30         errno = EINVAL;
-31         return 1;
+31         return -1;
 32     }
 33 
 34     memset(attr, 0, sizeof(pthread_attr_t));
@@ -113,7 +113,7 @@ References pthread_attr::detachstate, and errno\&.
 38                                                                                      {
 39     if(!attr) {
 40         errno = EINVAL;
-41         return 1;
+41         return -1;
 42     }
 43 
 44     *detachstate = attr->detachstate;
@@ -131,7 +131,7 @@ References errno, and pthread_attr::inheritsched\&.
 133                                                                                  {
 134     if(!attr) {
 135         errno = EINVAL;
-136         return 1;
+136         return -1;
 137     }
 138 
 139     *inheritsched = attr->inheritsched;
@@ -149,7 +149,7 @@ References errno, and pthread_attr::param\&.
 100                                                                                              {
 101     if(!attr) {
 102         errno = EINVAL;
-103         return 1;
+103         return -1;
 104     }
 105 
 106     memcpy(param, &attr->param, sizeof(struct sched_param));
@@ -166,7 +166,7 @@ References errno\&.
 .nf
 123                                                                           {
 124     errno = ENOSYS;
-125     return 1;
+125     return -1;
 126 }
 .fi
 .SS "\fBPUBLIC\fP int pthread_attr_getscope (const \fBpthread_attr_t\fP *attr, int *contentionscope)"
@@ -180,7 +180,7 @@ References pthread_attr::contentionscope, and errno\&.
 153                                                                                    {
 154     if(!attr) {
 155         errno = EINVAL;
-156         return 1;
+156         return -1;
 157     }
 158 
 159     *contentionscope = attr->contentionscope;
@@ -198,7 +198,7 @@ References errno, and pthread_attr::stackaddr\&.
 58                                                                                    {
 59     if(!attr) {
 60         errno = EINVAL;
-61         return 1;
+61         return -1;
 62     }
 63 
 64     *stackaddr = attr->stackaddr;
@@ -216,7 +216,7 @@ References errno, and pthread_attr::stacksize\&.
 79                                                                                     {
 80     if(!attr) {
 81         errno = EINVAL;
-82         return 1;
+82         return -1;
 83     }
 84 
 85     *stacksize = attr->stacksize;
@@ -234,7 +234,7 @@ References pthread_attr::contentionscope, pthread_attr::detachstate, errno, pthr
 12                                                    {
 13     if(!attr) {
 14         errno = EINVAL;
-15         return 1;
+15         return -1;
 16     }
 17 
 18     attr->stackaddr = 0;
@@ -258,7 +258,7 @@ References pthread_attr::detachstate, and errno\&.
 48                                                                               {
 49     if(!attr) {
 50         errno = EINVAL;
-51         return 1;
+51         return -1;
 52     }
 53 
 54     attr->detachstate = detachstate;
@@ -276,7 +276,7 @@ References errno, and pthread_attr::inheritsched\&.
 143                                                                                 {
 144     if(!attr) {
 145         errno = EINVAL;
-146         return 1;
+146         return -1;
 147     }
 148 
 149     attr->inheritsched = inheritsched;
@@ -294,7 +294,7 @@ References errno, and pthread_attr::param\&.
 112                                                                                              {
 113     if(!attr) {
 114         errno = EINVAL;
-115         return 1;
+115         return -1;
 116     }
 117 
 118     memcpy(&attr->param, param, sizeof(struct sched_param));
@@ -311,7 +311,7 @@ References errno\&.
 .nf
 128                                                                          {
 129     errno = ENOSYS;
-130     return 1;
+130     return -1;
 131 }
 .fi
 .SS "\fBPUBLIC\fP int pthread_attr_setscope (\fBpthread_attr_t\fP *attr, intcontentionscope)"
@@ -325,7 +325,7 @@ References pthread_attr::contentionscope, and errno\&.
 163                                                                             {
 164     if(!attr) {
 165         errno = EINVAL;
-166         return 1;
+166         return -1;
 167     }
 168 
 169     attr->contentionscope = contentionscope;
@@ -343,7 +343,7 @@ References errno, and pthread_attr::stackaddr\&.
 68                                                                             {
 69     if(!attr) {
 70         errno = EINVAL;
-71         return 1;
+71         return -1;
 72     }
 73 
 74     attr->stackaddr = stackaddr;
@@ -361,7 +361,7 @@ References errno, and pthread_attr::stacksize\&.
 89                                                                              {
 90     if(!attr) {
 91         errno = EINVAL;
-92         return 1;
+92         return -1;
 93     }
 94 
 95     attr->stacksize = stacksize;

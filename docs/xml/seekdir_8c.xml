@@ -11,53 +11,53 @@
     <includes local="no">errno.h</includes>
     <includes local="no">sys/types.h</includes>
     <incdepgraph>
-      <node id="2188">
+      <node id="2373">
         <label>stdlib.h</label>
       </node>
-      <node id="2190">
+      <node id="2375">
         <label>errno.h</label>
       </node>
-      <node id="2182">
+      <node id="2367">
         <label>usr/src/libposix/src/seekdir.c</label>
         <link refid="seekdir.c"/>
-        <childnode refid="2183" relation="include">
+        <childnode refid="2368" relation="include">
         </childnode>
-        <childnode refid="2184" relation="include">
+        <childnode refid="2369" relation="include">
         </childnode>
-        <childnode refid="2186" relation="include">
+        <childnode refid="2371" relation="include">
         </childnode>
-        <childnode refid="2187" relation="include">
+        <childnode refid="2372" relation="include">
         </childnode>
-        <childnode refid="2188" relation="include">
+        <childnode refid="2373" relation="include">
         </childnode>
-        <childnode refid="2189" relation="include">
+        <childnode refid="2374" relation="include">
         </childnode>
-        <childnode refid="2190" relation="include">
+        <childnode refid="2375" relation="include">
         </childnode>
-        <childnode refid="2185" relation="include">
+        <childnode refid="2370" relation="include">
         </childnode>
       </node>
-      <node id="2186">
+      <node id="2371">
         <label>fcntl.h</label>
       </node>
-      <node id="2185">
+      <node id="2370">
         <label>sys/types.h</label>
       </node>
-      <node id="2189">
+      <node id="2374">
         <label>string.h</label>
       </node>
-      <node id="2184">
+      <node id="2369">
         <label>unistd.h</label>
       </node>
-      <node id="2183">
+      <node id="2368">
         <label>dirent.h</label>
         <link refid="dirent_8h"/>
-        <childnode refid="2184" relation="include">
+        <childnode refid="2369" relation="include">
         </childnode>
-        <childnode refid="2185" relation="include">
+        <childnode refid="2370" relation="include">
         </childnode>
       </node>
-      <node id="2187">
+      <node id="2372">
         <label>stdio.h</label>
       </node>
     </incdepgraph>
@@ -103,7 +103,7 @@
 <codeline lineno="10"><highlight class="normal"></highlight></codeline>
 <codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="12"><highlight class="normal"></highlight></codeline>
-<codeline lineno="13" refid="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" kindref="member">seekdir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/><ref refid="panic_8c_1a77b5b9b7c5109d0943ef9f2e5c557fb9" kindref="member">d</ref>,<sp/>off_t<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>)<sp/>{</highlight></codeline>
+<codeline lineno="13" refid="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="seekdir_8c_1a58829cca160034015b3dddc17bb502ab" kindref="member">seekdir</ref>(<ref refid="struct____DIR" kindref="compound">DIR</ref>*<sp/>d,<sp/>off_t<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>)<sp/>{</highlight></codeline>
 <codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(d)</highlight></codeline>
 <codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>d-&gt;<ref refid="struct____DIR_1adcec35c0ea0ed4342c5425c494554397" kindref="member">position</ref><sp/>=<sp/><ref refid="ipv4_8h_1ac681806181c80437cfab37335f62ff39" kindref="member">offset</ref>;</highlight></codeline>
 <codeline lineno="16"><highlight class="normal">}</highlight></codeline>

@@ -7,6 +7,7 @@ var task_8c =
     [ "task_fork", "task_8c.html#aa547121ba0907a969075a9d7530a98fb", null ],
     [ "task_init", "task_8c.html#a30500c422833c90d6f42e44e2efb04a7", null ],
     [ "task_switch", "task_8c.html#a1b2086f34fd20264fae9ed90c4bc2645", null ],
+    [ "task_switch_ack", "task_8c.html#a95af5e989199ecb9dd3cd23c264c6944", null ],
     [ "__fork_buf", "task_8c.html#a65552f86d5e6567721f1d1afcb34e7ab", null ],
     [ "current_task", "task_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5", null ],
     [ "current_vmm", "task_8c.html#a9bed7071511863f81c2de43b3c3f7db9", null ],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['chdir_2ec',['chdir.c',['../chdir_8c.html',1,'']]],
   ['chkfail_2ec',['chkfail.c',['../chkfail_8c.html',1,'']]],
   ['chown_2ec',['chown.c',['../chown_8c.html',1,'']]],
   ['clone_2ec',['clone.c',['../clone_8c.html',1,'']]],

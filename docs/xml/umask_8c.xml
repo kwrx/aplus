@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="umask_8c" kind="file">
+    <compoundname>umask.c</compoundname>
+    <includes local="no">unistd.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes local="no">sys/stat.h</includes>
+    <incdepgraph>
+      <node id="2414">
+        <label>sys/stat.h</label>
+      </node>
+      <node id="2413">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2412">
+        <label>unistd.h</label>
+      </node>
+      <node id="2411">
+        <label>usr/src/libposix/src/umask.c</label>
+        <link refid="umask.c"/>
+        <childnode refid="2412" relation="include">
+        </childnode>
+        <childnode refid="2413" relation="include">
+        </childnode>
+        <childnode refid="2414" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="umask_8c_1a8788159ad927954699f80970a1d04462" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>mode_t</type>
+        <definition>mode_t umask</definition>
+        <argsstring>(mode_t mask)</argsstring>
+        <name>umask</name>
+        <param>
+          <type>mode_t</type>
+          <declname>mask</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/umask.c" line="6" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/umask.c" bodystart="6" bodyend="8"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;unistd.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/stat.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6" refid="umask_8c_1a8788159ad927954699f80970a1d04462" refkind="member"><highlight class="normal">mode_t<sp/><ref refid="umask_8c_1a8788159ad927954699f80970a1d04462" kindref="member">umask</ref>(mode_t<sp/>mask)<sp/>{</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>(mask<sp/>&amp;<sp/>0777)<sp/>&amp;<sp/>(S_IWGRP<sp/>|<sp/>S_IWOTH);</highlight></codeline>
+<codeline lineno="8"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/umask.c"/>
+  </compounddef>
+</doxygen>

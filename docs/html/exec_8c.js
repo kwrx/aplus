@@ -3,6 +3,7 @@ var exec_8c =
     [ "elf32_hdr", "structelf32__hdr.html", "structelf32__hdr" ],
     [ "elf32_shdr", "structelf32__shdr.html", "structelf32__shdr" ],
     [ "elf32_phdr", "structelf32__phdr.html", "structelf32__phdr" ],
+    [ "elf32_sym_t", "structelf32__sym__t.html", "structelf32__sym__t" ],
     [ "check", "exec_8c.html#a9b7ee5bbb263671ca310a70e0d1526e9", null ],
     [ "EI_CLASS", "exec_8c.html#a5b508cacf6662e4bc0e98ffe1eb61636", null ],
     [ "EI_DATA", "exec_8c.html#a79c714b4bf89638ff576e163d7d2144f", null ],
@@ -14,6 +15,8 @@ var exec_8c =
     [ "EI_PAD", "exec_8c.html#aed24a379d553d0e36853949dd6ddd6c1", null ],
     [ "EI_VERSION", "exec_8c.html#aac8694b14e6500d9dc5047ef62518845", null ],
     [ "ELF32_ADDRSPACE_MIN_LENGTH", "exec_8c.html#ac12ef0a698cec32392148178e777a3a4", null ],
+    [ "ELF32_ST_BIND", "exec_8c.html#a3b84f3e0e035d1264115f5c76227c5eb", null ],
+    [ "ELF32_ST_TYPE", "exec_8c.html#a54dd2783f11c5f926d8db9250e1baa35", null ],
     [ "ELF_CLASS_32", "exec_8c.html#a49574a2fb2e62bcff73812b26da8fe69", null ],
     [ "ELF_CLASS_64", "exec_8c.html#a24ed2e132c3545d8d8d680f2ca2cd7fb", null ],
     [ "ELF_DATA_LSB", "exec_8c.html#a2746b48aac96a65735bed83598d5d68a", null ],
@@ -55,8 +58,11 @@ var exec_8c =
     [ "elf32_phdr_t", "exec_8c.html#a6c037736a997fdd28ed9f6b734261b23", null ],
     [ "elf32_shdr_t", "exec_8c.html#ad7b97ddfcb82a63cd28a9cb88f21984a", null ],
     [ "Elf32_Sword", "exec_8c.html#a30ce6352cf03c667272698ada477da95", null ],
+    [ "elf32_sym_t", "exec_8c.html#a0a07204ebf864bb143d95b4525e80938", null ],
     [ "Elf32_Word", "exec_8c.html#af5924ece606c732e86f8263a19408e45", null ],
     [ "elf32_check", "exec_8c.html#a2dc58db2f806ea913fdcb272f8ca618a", null ],
     [ "elf32_getspace", "exec_8c.html#acfcbb641f4d43807d78c5f37bff2e9bc", null ],
-    [ "elf32_load", "exec_8c.html#aeb05ad85647cdfbf15b432a9d2f32926", null ]
+    [ "elf32_load", "exec_8c.html#aeb05ad85647cdfbf15b432a9d2f32926", null ],
+    [ "elf_kernel_lookup", "exec_8c.html#ac79bb43069a3d3c097c8d95dcf0c2784", null ],
+    [ "current_task", "exec_8c.html#a4743b3673a8794b8e7bd0b6c91a63cd5", null ]
 ];

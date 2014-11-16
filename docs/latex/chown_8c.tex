@@ -68,14 +68,13 @@ References errno, task\+::fd, fs\+\_\+chown(), im\+\_\+superuser(), kprintf(), a
 28     
 29     
 30     \textcolor{keywordtype}{int} fd = \hyperlink{open_8c_ab7835c4352479c7a3d7af78c138e81c1}{sys\_open}(filename, O\_RDONLY, 0644);
-31     \textcolor{keywordflow}{if}(fd < 0) \{
-32         \hyperlink{debug_8c_ac9d768b4772cc87fc88afbbbd805f96a}{kprintf}(\textcolor{stringliteral}{"sys\_chown: %s."}, strerror(\hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno}));
-33         \textcolor{keywordflow}{return} -1;
-34     \}
-35     
-36     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{chown_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-37     \textcolor{keywordflow}{return} \hyperlink{fs_8c_a2928203c42eba392963b57bfed7b65c4}{fs\_chown}(ino, owner, group);
-38 \}
+31     \textcolor{keywordflow}{if}(fd < 0)
+32         \textcolor{keywordflow}{return} -1;
+33     
+34     
+35     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{chown_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+36     \textcolor{keywordflow}{return} \hyperlink{fs_8c_a2928203c42eba392963b57bfed7b65c4}{fs\_chown}(ino, owner, group);
+37 \}
 \end{DoxyCode}
 \hypertarget{chown_8c_a72db0d5fe4733e59ef6b0dd96495a4d1}{\index{chown.\+c@{chown.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!chown.\+c@{chown.\+c}}
@@ -97,5 +96,5 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 

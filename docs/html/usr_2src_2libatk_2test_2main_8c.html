@@ -113,199 +113,34 @@ $(document).ready(function(){initNavTree('usr_2src_2libatk_2test_2main_8c.html',
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;signal.h&gt;</code><br />
 <code>#include &lt;assert.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="atk_8h_source.html">atk.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="widget_8h_source.html">atk/widget.h</a>&gt;</code><br />
 </div>
 <p><a href="usr_2src_2libatk_2test_2main_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afd4f7f3e83f5ccc17a12c629a407c900"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html#afd4f7f3e83f5ccc17a12c629a407c900">__test_signals__</a> (int sig)</td></tr>
-<tr class="separator:afd4f7f3e83f5ccc17a12c629a407c900"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe4dfd5e49215955311250c669123180"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html#afe4dfd5e49215955311250c669123180">test_stdio</a> ()</td></tr>
-<tr class="separator:afe4dfd5e49215955311250c669123180"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72b40b42ede33a5df17620eb3ebfbcb7"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html#a72b40b42ede33a5df17620eb3ebfbcb7">test_args</a> (int argc, char **argv)</td></tr>
-<tr class="separator:a72b40b42ede33a5df17620eb3ebfbcb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bc601ec27d4ef9c2b6ee94175fe3439"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html#a1bc601ec27d4ef9c2b6ee94175fe3439">test_signals</a> ()</td></tr>
-<tr class="separator:a1bc601ec27d4ef9c2b6ee94175fe3439"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)</td></tr>
-<tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
+<tr class="separator:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="afd4f7f3e83f5ccc17a12c629a407c900"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int __test_signals__ </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>sig</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00006">6</a> of file <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html">main.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;                                     {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;    printf(<span class="stringliteral">&quot;received signal %d\n&quot;</span>, sig);</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;}</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a3c04138a5bfe5d72780bb7e82a18e627"></a>
+<a class="anchor" id="ae66f6b31b5ad750f1fe042a706a4e3d4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int main </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>argc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char **&#160;</td>
-          <td class="paramname"><em>argv</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00034">34</a> of file <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html">main.c</a>.</p>
-
-<p>References <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00016">test_args()</a>, <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00028">test_signals()</a>, and <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00012">test_stdio()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                {</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    assert(<a class="code" href="usr_2src_2libatk_2test_2main_8c.html#afe4dfd5e49215955311250c669123180">test_stdio</a>() &amp;&amp; <span class="stringliteral">&quot;Test stdio failed&quot;</span>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    assert(<a class="code" href="usr_2src_2libatk_2test_2main_8c.html#a72b40b42ede33a5df17620eb3ebfbcb7">test_args</a>(argc, argv) &amp;&amp; <span class="stringliteral">&quot;Test arguments failed&quot;</span>);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    assert(<a class="code" href="usr_2src_2libatk_2test_2main_8c.html#a1bc601ec27d4ef9c2b6ee94175fe3439">test_signals</a>() &gt;= 0 &amp;&amp; <span class="stringliteral">&quot;Test signals failed&quot;</span>);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    printf(<span class="stringliteral">&quot;Test OK\n&quot;</span>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_a1bc601ec27d4ef9c2b6ee94175fe3439"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#a1bc601ec27d4ef9c2b6ee94175fe3439">test_signals</a></div><div class="ttdeci">static int test_signals()</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00028">main.c:28</a></div></div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_a72b40b42ede33a5df17620eb3ebfbcb7"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#a72b40b42ede33a5df17620eb3ebfbcb7">test_args</a></div><div class="ttdeci">static int test_args(int argc, char **argv)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00016">main.c:16</a></div></div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_afe4dfd5e49215955311250c669123180"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#afe4dfd5e49215955311250c669123180">test_stdio</a></div><div class="ttdeci">static int test_stdio()</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00012">main.c:12</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a72b40b42ede33a5df17620eb3ebfbcb7"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int test_args </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>argc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char **&#160;</td>
-          <td class="paramname"><em>argv</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00016">16</a> of file <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html">main.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                                            {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">if</span>(argc == 0)</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">int</span> i;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">for</span>(i = 0; i &lt; argc; i++)</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        printf(<span class="stringliteral">&quot;argv[%d] =&gt; \&quot;%s\&quot;\n&quot;</span>, i, argv[i]);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="a1bc601ec27d4ef9c2b6ee94175fe3439"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int test_signals </td>
-          <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00028">28</a> of file <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html">main.c</a>.</p>
-
-<p>References <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00006">__test_signals__()</a>.</p>
-<div class="fragment"><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                          {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    assert(signal(SIGUSR1, <a class="code" href="usr_2src_2libatk_2test_2main_8c.html#afd4f7f3e83f5ccc17a12c629a407c900">__test_signals__</a>) != SIG_ERR);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">raise</span>(SIGUSR1);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
-<div class="ttc" id="usr_2src_2libatk_2test_2main_8c_html_afd4f7f3e83f5ccc17a12c629a407c900"><div class="ttname"><a href="usr_2src_2libatk_2test_2main_8c.html#afd4f7f3e83f5ccc17a12c629a407c900">__test_signals__</a></div><div class="ttdeci">static int __test_signals__(int sig)</div><div class="ttdef"><b>Definition:</b> <a href="usr_2src_2libatk_2test_2main_8c_source.html#l00006">main.c:6</a></div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a class="anchor" id="afe4dfd5e49215955311250c669123180"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static int test_stdio </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00012">12</a> of file <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html">main.c</a>.</p>
-<div class="fragment"><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;                        {</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keywordflow">return</span> printf(<span class="stringliteral">&quot;Bla bla bla\n&quot;</span>);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;}</div>
+<p>Definition at line <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html#l00009">9</a> of file <a class="el" href="usr_2src_2libatk_2test_2main_8c_source.html">main.c</a>.</p>
+<div class="fragment"><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;           {</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -315,7 +150,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_88d4425b71c248820f76f8cc7a718e04.html">usr</a></li><li class="navelem"><a class="el" href="dir_ad28aaba48d2c38b82664458471fa334.html">src</a></li><li class="navelem"><a class="el" href="dir_425f1d86d53c9d3e80d2d726a823d2ee.html">libatk</a></li><li class="navelem"><a class="el" href="dir_05c02e0122f5694a1a7f4b0c5bdc5982.html">test</a></li><li class="navelem"><a class="el" href="usr_2src_2libatk_2test_2main_8c.html">main.c</a></li>
-    <li class="footer">Generated on Fri Nov 14 2014 22:54:42 for aPlus by
+    <li class="footer">Generated on Sun Nov 16 2014 22:09:59 for aPlus by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

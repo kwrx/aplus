@@ -40,7 +40,7 @@ References errno, and pthread\+\_\+rwlockattr\+::pshared.
 19                                                                   \{
 20     \textcolor{keywordflow}{if}(attr == NULL) \{
 21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-22         \textcolor{keywordflow}{return} 1;
+22         \textcolor{keywordflow}{return} -1;
 23     \}
 24 
 25     attr->\hyperlink{structpthread__rwlockattr_a8a113eba0407c92f6302fada4c4d7419}{pshared} = 0;
@@ -68,12 +68,12 @@ References errno, and pthread\+\_\+rwlockattr\+::pshared.
 29                                                                                          \{
 30     \textcolor{keywordflow}{if}(attr == NULL) \{
 31         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-32         \textcolor{keywordflow}{return} 1;
+32         \textcolor{keywordflow}{return} -1;
 33     \}
 34 
 35     \textcolor{keywordflow}{if}(pshared == NULL) \{
 36         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-37         \textcolor{keywordflow}{return} 1;
+37         \textcolor{keywordflow}{return} -1;
 38     \}
 39 
 40     *pshared = attr->\hyperlink{structpthread__rwlockattr_a8a113eba0407c92f6302fada4c4d7419}{pshared};
@@ -100,7 +100,7 @@ References errno, and pthread\+\_\+rwlockattr\+::pshared.
 9                                                                \{
 10     \textcolor{keywordflow}{if}(attr == NULL) \{
 11         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-12         \textcolor{keywordflow}{return} 1;
+12         \textcolor{keywordflow}{return} -1;
 13     \}
 14 
 15     attr->\hyperlink{structpthread__rwlockattr_a8a113eba0407c92f6302fada4c4d7419}{pshared} = 0;
@@ -128,7 +128,7 @@ References errno, and pthread\+\_\+rwlockattr\+::pshared.
 44                                                                                   \{
 45     \textcolor{keywordflow}{if}(attr == NULL) \{
 46         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-47         \textcolor{keywordflow}{return} 1;
+47         \textcolor{keywordflow}{return} -1;
 48     \}
 49 
 50     attr->\hyperlink{structpthread__rwlockattr_a8a113eba0407c92f6302fada4c4d7419}{pshared} = pshared;

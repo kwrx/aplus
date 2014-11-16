@@ -1,4 +1,4 @@
-.TH "src/panic.c" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/panic.c" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -10,6 +10,8 @@ src/panic.c \-
 .br
 \fC#include <aplus/task\&.h>\fP
 .br
+\fC#include <aplus/mm\&.h>\fP
+.br
 \fC#include <aplus/fs\&.h>\fP
 .br
 \fC#include <aplus/list\&.h>\fP
@@ -17,16 +19,6 @@ src/panic.c \-
 \fC#include <errno\&.h>\fP
 .br
 
-.SS "Macros"
-
-.in +1c
-.ti -1c
-.RI "#define \fBd\fP(reg)"
-.br
-.ti -1c
-.RI "#define \fB_d\fP()"
-.br
-.in -1c
 .SS "Functions"
 
 .in +1c
@@ -35,9 +27,9 @@ src/panic.c \-
 .br
 .RI "\fIPrint last error number\&. \fP"
 .ti -1c
-.RI "static void \fBdump_registers\fP ()"
+.RI "static void \fBdump_cpu\fP (regs_t *r)"
 .br
-.RI "\fIPrint current registers\&. \fP"
+.RI "\fIPrint current registers & cpu status\&. \fP"
 .ti -1c
 .RI "static void \fBdump_stacktrace\fP (int count)"
 .br
@@ -45,6 +37,14 @@ src/panic.c \-
 .RI "static void \fBdump_task\fP ()"
 .br
 .RI "\fIPrint all and current task\&. \fP"
+.ti -1c
+.RI "static void \fBdump_mmu\fP ()"
+.br
+.RI "\fIPrint MMU State\&. \fP"
+.ti -1c
+.RI "void \fBpanic_r\fP (char *msg, regs_t *r)"
+.br
+.RI "\fIGo in Kernel Panic, dump exception registers, halt system\&. \fP"
 .ti -1c
 .RI "void \fBpanic\fP (char *msg)"
 .br
@@ -66,154 +66,168 @@ src/panic.c \-
 .br
 .RI "\fIKernel task address\&. \fP"
 .in -1c
-.SH "Macro Definition Documentation"
-.PP 
-.SS "#define _d()"
-\fBValue:\fP
-.PP
-.nf
-;                                \\
-		kprintf("\n");
-.fi
-.SS "#define d(reg)"
-\fBValue:\fP
-.PP
-.nf
-;                             \\
-		kprintf(#reg ": 0x%x\t\t", read_##reg());
-.fi
 .SH "Function Documentation"
 .PP 
+.SS "static void dump_cpu (regs_t *r)\fC [static]\fP"
+
+.PP
+Print current registers & cpu status\&. 
+.PP
+Definition at line 25 of file panic\&.c\&.
+.PP
+References kprintf(), and pit_getticks()\&.
+.PP
+.nf
+25                                 {
+26     kprintf("CPU:\n");
+27 
+28     if(r) {
+29         kprintf("eip: 0x%8x\n", r->eip);
+30         kprintf("err: 0x%8x\n", r->err_code);
+31         kprintf("int: 0x%8x\n", r->int_no);
+32         kprintf("esp: 0x%8x\n", r->esp);
+33         kprintf("usp: 0x%8x\n", r->useresp);
+34     }
+35 
+36     kprintf("pit: %dms\n", pit_getticks());
+37 
+38     kprintf("\n\n");
+39 }
+.fi
 .SS "static void dump_errno ()\fC [static]\fP"
 
 .PP
 Print last error number\&. 
 .PP
-Definition at line 16 of file panic\&.c\&.
+Definition at line 17 of file panic\&.c\&.
 .PP
 References errno, and kprintf()\&.
 .PP
 .nf
-16                          {
-17     kprintf("errno: %d - %s\n", errno, strerror(errno));
-18 }
+17                          {
+18     kprintf("errno: %d - %s\n", errno, strerror(errno));
+19 }
 .fi
-.SS "static void dump_registers ()\fC [static]\fP"
+.SS "static void dump_mmu ()\fC [static]\fP"
 
 .PP
-Print current registers\&. 
+Print MMU State\&. 
 .PP
-Definition at line 24 of file panic\&.c\&.
+Definition at line 95 of file panic\&.c\&.
 .PP
-References _d, cs, d, ds, eax, ebp, ebx, ecx, edi, edx, eflags, eip, es, esi, esp, fs, gs, and kprintf()\&.
+References kprintf(), mm_getheap(), heap::size, and heap::used\&.
 .PP
 .nf
-24                              {
-25 
-26     kprintf("Registers:\n");
-27 
-28     #define d(reg);                             \
-29         kprintf(#reg ": 0x%x\t\t", read_##reg());
-30         
-31     #define _d();                               \
-32         kprintf("\n");  
-33             
-34     d(eax);
-35     d(ebx);
-36     d(ecx);
-37     d(edx);
-38     d(esi);
-39     d(edi);
-40     _d();
-41     d(eip);
-42     d(eflags);
-43     d(esp);
-44     d(ebp);
-45     _d();
-46     d(cs);
-47     d(ds);
-48     d(es);
-49     d(fs);
-50     d(gs);
-51     _d();
-52     d(cr0);
-53     d(cr2);
-54     d(cr3);
-55     d(cr4);
-56     _d();
-57     _d();
-58     
-59     #undef d
-60     #undef _d
-61 }
+95                        {
+96     kprintf("Memory:\n");
+97 
+98     heap_t* h = (heap_t*) mm_getheap();
+99 
+100     kprintf("\tUsed: %d MB (%d Bytes)\n", (h->used / 1024 / 1024), h->used);
+101     kprintf("\tSize: %d MB (%d Bytes)\n", (h->size / 1024 / 1024), h->size);
+102 
+103     kprintf("\n\n");
+104 }
 .fi
 .SS "static void dump_stacktrace (intcount)\fC [static]\fP"
 Print a stacktrace\&. 
 .PP
-Definition at line 67 of file panic\&.c\&.
+Definition at line 45 of file panic\&.c\&.
 .PP
-References kprintf()\&.
+References __asm__(), eip, elf_kernel_lookup(), esp, kprintf(), and uint32_t\&.
 .PP
 .nf
-67                                        {
-68     kprintf("Stack trace:\n");
-69     kprintf("TODO\n\n");
-70 }
+45                                        {
+46     kprintf("Stack trace:\n");
+47     
+48     int* esp = NULL; 
+49     __asm__("mov eax, ebp" : "=a"(esp));
+50 
+51 
+52     for(int i = 0; i < count; i++) {
+53         int eip = *(++esp);
+54         kprintf("[%d] 0x%x - %s\n", i, eip, elf_kernel_lookup(eip));
+55         
+56 
+57         esp = (uint32_t*) *(--esp);
+58         if(!esp)
+59             break;
+60     }
+61 
+62     kprintf("\n\n");
+63 }
 .fi
 .SS "static void dump_task ()\fC [static]\fP"
 
 .PP
 Print all and current task\&. 
 .PP
-Definition at line 76 of file panic\&.c\&.
+Definition at line 69 of file panic\&.c\&.
 .PP
 References task::exe, kprintf(), list_foreach, inode::name, task::pid, and value\&.
 .PP
 .nf
-76                         {
-77     kprintf("Task:\n");
-78     
-79     list_foreach(value, task_queue) {
-80         task_t* task = (task_t*) value;
-81         kprintf(" # %d: ", task->pid);
-82         
-83         if(task->exe)
-84             kprintf("%s ", task->exe->name);
-85         else
-86             kprintf("unknown ");
-87             
-88         if(task == current_task)
-89             kprintf("(current) ");
-90             
-91         if(task == kernel_task)
-92             kprintf("(kernel) ");
-93             
-94         kprintf("\n\n");
-95     }
-96 }
+69                         {
+70     kprintf("Task:\n");
+71     
+72     list_foreach(value, task_queue) {
+73         task_t* task = (task_t*) value;
+74         kprintf(" # %d: ", task->pid);
+75         
+76         if(task->exe)
+77             kprintf("%s ", task->exe->name);
+78         else
+79             kprintf("unknown ");
+80             
+81         if(task == current_task)
+82             kprintf("(current) ");
+83             
+84         if(task == kernel_task)
+85             kprintf("(kernel) ");
+86             
+87         kprintf("\n\n");
+88     }
+89 }
 .fi
 .SS "void panic (char *msg)"
 
 .PP
 Go in Kernel Panic, halt system\&. 
 .PP
-Definition at line 102 of file panic\&.c\&.
+Definition at line 130 of file panic\&.c\&.
 .PP
-References __asm__(), dump_errno(), dump_registers(), dump_stacktrace(), dump_task(), and kprintf()\&.
+References panic_r()\&.
 .PP
 .nf
-102                       {
-103     __asm__ ("cli");
-104     kprintf("panic: \"%s\"\n", msg);
-105     
-106     
-107     dump_registers();
-108     dump_stacktrace(6);
-109     dump_task();
-110     dump_errno();
-111     
-112     for(;;);
-113 }
+130                       {
+131     panic_r(msg, NULL);
+132 }
+.fi
+.SS "void panic_r (char *msg, regs_t *r)"
+
+.PP
+Go in Kernel Panic, dump exception registers, halt system\&. 
+.PP
+Definition at line 111 of file panic\&.c\&.
+.PP
+References __asm__(), dump_cpu(), dump_errno(), dump_mmu(), dump_stacktrace(), dump_task(), and kprintf()\&.
+.PP
+.nf
+111                                    {
+112     __asm__ ("cli");
+113     kprintf("panic: \"%s\"\n", msg);
+114     
+115     
+116     
+117     dump_cpu(r);
+118 
+119     dump_stacktrace(6);
+120     dump_task();
+121     dump_errno();
+122     dump_mmu(); 
+123 
+124     for(;;);
+125 }
 .fi
 .SH "Variable Documentation"
 .PP 
@@ -222,19 +236,19 @@ References __asm__(), dump_errno(), dump_registers(), dump_stacktrace(), dump_ta
 .PP
 Current task address\&. 
 .PP
-Definition at line 35 of file sched\&.c\&.
+Definition at line 37 of file sched\&.c\&.
 .SS "\fBtask_t\fP* kernel_task"
 
 .PP
 Kernel task address\&. 
 .PP
-Definition at line 40 of file sched\&.c\&.
+Definition at line 42 of file sched\&.c\&.
 .SS "\fBlist_t\fP* task_queue"
 
 .PP
 List of all Task\&. 
 .PP
-Definition at line 46 of file sched\&.c\&.
+Definition at line 48 of file sched\&.c\&.
 .SH "Author"
 .PP 
 Generated automatically by Doxygen for aPlus from the source code\&.

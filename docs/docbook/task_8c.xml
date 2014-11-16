@@ -81,6 +81,14 @@ task_env_t ** old, task_env_t ** new)</para>
             <para>
                 <itemizedlist>
                     <listitem>
+                        <para>void <link linkend="task_8c_1a95af5e989199ecb9dd3cd23c264c6944">task_switch_ack</link> (
+)</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+            <para>
+                <itemizedlist>
+                    <listitem>
                         <para><link linkend="task_8h_1a8aeef2cdb643462b97cd459a8e68cad3">task_t</link> * <link linkend="task_8c_1afed7d6a4dd3580596c0c925e766c4163">task_clone</link> (
 void * entry, void * arg, void * stack, int flags)</para>
                     </listitem>
@@ -121,6 +129,6 @@ void * entry, void * arg, void * stack, int flags)</para>
         </simplesect>
     <simplesect>
         <title>Detailed Description</title>
-    <para>Definition in file /opt/prj/aPlus/src/arch/task.c</para>
+    <para>Definition in file /opt/prj/aPlus/src/arch/i386/task.c</para>
     </simplesect>
 </section>

@@ -7,72 +7,72 @@
     <includedby refid="src_2main_8c" local="no">src/main.c</includedby>
     <includedby refid="ipv4_8c" local="no">src/net/ipv4.c</includedby>
     <incdepgraph>
-      <node id="718">
+      <node id="773">
         <label>stdarg.h</label>
       </node>
-      <node id="715">
+      <node id="770">
         <label>stdint.h</label>
       </node>
-      <node id="720">
+      <node id="775">
         <label>aplus/pci.h</label>
         <link refid="pci_8h"/>
-        <childnode refid="717" relation="include">
+        <childnode refid="772" relation="include">
         </childnode>
-        <childnode refid="715" relation="include">
+        <childnode refid="770" relation="include">
         </childnode>
       </node>
-      <node id="721">
+      <node id="776">
         <label>stddef.h</label>
       </node>
-      <node id="717">
+      <node id="772">
         <label>aplus.h</label>
         <link refid="aplus_8h"/>
-        <childnode refid="715" relation="include">
+        <childnode refid="770" relation="include">
         </childnode>
-        <childnode refid="718" relation="include">
+        <childnode refid="773" relation="include">
         </childnode>
-        <childnode refid="719" relation="include">
+        <childnode refid="774" relation="include">
         </childnode>
       </node>
-      <node id="719">
+      <node id="774">
         <label>string.h</label>
       </node>
-      <node id="716">
+      <node id="771">
         <label>aplus/netif.h</label>
         <link refid="netif_8h"/>
-        <childnode refid="717" relation="include">
+        <childnode refid="772" relation="include">
         </childnode>
-        <childnode refid="720" relation="include">
+        <childnode refid="775" relation="include">
         </childnode>
-        <childnode refid="715" relation="include">
+        <childnode refid="770" relation="include">
         </childnode>
-        <childnode refid="721" relation="include">
+        <childnode refid="776" relation="include">
         </childnode>
       </node>
-      <node id="714">
+      <node id="769">
         <label>src/include/aplus/net/ipv4.h</label>
         <link refid="ipv4.h"/>
-        <childnode refid="715" relation="include">
+        <childnode refid="770" relation="include">
         </childnode>
-        <childnode refid="716" relation="include">
+        <childnode refid="771" relation="include">
         </childnode>
       </node>
     </incdepgraph>
     <invincdepgraph>
-      <node id="723">
+      <node id="778">
         <label>src/main.c</label>
         <link refid="src_2main_8c"/>
       </node>
-      <node id="724">
+      <node id="779">
         <label>src/net/ipv4.c</label>
         <link refid="ipv4_8c"/>
       </node>
-      <node id="722">
+      <node id="777">
         <label>src/include/aplus/net/ipv4.h</label>
         <link refid="ipv4.h"/>
-        <childnode refid="723" relation="include">
+        <childnode refid="778" relation="include">
         </childnode>
-        <childnode refid="724" relation="include">
+        <childnode refid="779" relation="include">
         </childnode>
       </node>
     </invincdepgraph>
@@ -404,21 +404,12 @@
           <type>(packed)</type>
         </param>
         <briefdescription>
-<para>Alloc memory from Kernel Heap. </para>        </briefdescription>
+        </briefdescription>
         <detaileddescription>
-<para><parameterlist kind="param"><parameteritem>
-<parameternamelist>
-<parametername>size</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>Size of data to alloc. </para></parameterdescription>
-</parameteritem>
-</parameterlist>
-<simplesect kind="return"><para>Virtual Address of data. </para></simplesect>
-</para>        </detaileddescription>
+        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="46" column="1" bodyfile="/opt/prj/aPlus/src/arch/desc.c" bodystart="44" bodyend="49"/>
+        <location file="/opt/prj/aPlus/src/include/aplus/net/ipv4.h" line="46" column="1" bodyfile="/opt/prj/aPlus/src/arch/i386/desc.c" bodystart="44" bodyend="49"/>
       </memberdef>
       </sectiondef>
     <briefdescription>

@@ -1,4 +1,4 @@
-.TH "src/include/aplus/mm.h" 3 "Fri Nov 14 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
+.TH "src/include/aplus/mm.h" 3 "Sun Nov 16 2014" "Version 0.1" "aPlus" \" -*- nroff -*-
 .ad l
 .nh
 .SH NAME
@@ -97,55 +97,55 @@ src/include/aplus/mm.h \-
 .SS "#define BLKMAGIC   0x1234"
 
 .PP
-Definition at line 58 of file mm\&.h\&.
+Definition at line 61 of file mm\&.h\&.
 .SS "#define BLKSIZE   0x1000"
 
 .PP
-Definition at line 57 of file mm\&.h\&.
+Definition at line 60 of file mm\&.h\&.
 .SS "#define MM_LBASE   0x00000000"
 
 .PP
-Definition at line 41 of file mm\&.h\&.
+Definition at line 44 of file mm\&.h\&.
 .SS "#define MM_LSIZE   0x00800000"
 
 .PP
-Definition at line 42 of file mm\&.h\&.
+Definition at line 45 of file mm\&.h\&.
 .SS "#define MM_UBASE   0x00A00000"
 
 .PP
-Definition at line 44 of file mm\&.h\&.
+Definition at line 47 of file mm\&.h\&.
 .SS "#define MM_USIZE   (\fBMM_VBASE\fP - \fBMM_UBASE\fP)"
 
 .PP
-Definition at line 45 of file mm\&.h\&.
+Definition at line 48 of file mm\&.h\&.
 .SS "#define MM_VBASE   0x40000000"
 
 .PP
-Definition at line 38 of file mm\&.h\&.
+Definition at line 41 of file mm\&.h\&.
 .SS "#define MM_VSIZE   (0xFFFFFFFF - MM_VBASE)"
 
 .PP
-Definition at line 39 of file mm\&.h\&.
+Definition at line 42 of file mm\&.h\&.
 .SS "#define VMM_FLAGS_DEFAULT   (\fBVMM_FLAGS_PRESENT\fP | \fBVMM_FLAGS_RDWR\fP)"
 
 .PP
-Definition at line 52 of file mm\&.h\&.
+Definition at line 55 of file mm\&.h\&.
 .SS "#define VMM_FLAGS_PRESENT   0x01"
 
 .PP
-Definition at line 49 of file mm\&.h\&.
+Definition at line 52 of file mm\&.h\&.
 .SS "#define VMM_FLAGS_RDWR   0x02"
 
 .PP
-Definition at line 50 of file mm\&.h\&.
+Definition at line 53 of file mm\&.h\&.
 .SS "#define VMM_FLAGS_USER   0x04"
 
 .PP
-Definition at line 51 of file mm\&.h\&.
+Definition at line 54 of file mm\&.h\&.
 .SS "#define VMM_MAX_MEMORY   (0xFFFFFFFF - MM_VBASE)"
 
 .PP
-Definition at line 54 of file mm\&.h\&.
+Definition at line 57 of file mm\&.h\&.
 .SH "Typedef Documentation"
 .PP 
 .SS "typedef struct \fBheap\fP  \fBheap_t\fP"
@@ -164,27 +164,34 @@ Free memory from Kernel Heap\&.
 .PP
 
 .PP
-Definition at line 79 of file mm\&.c\&.
+Definition at line 151 of file mm\&.c\&.
 .PP
-References BLKMAGIC, hfree(), mm_align(), mm_paddr(), and size\&.
+References BLKMAGIC, hfree(), mm_align(), and mm_paddr()\&.
 .PP
 .nf
-79                       {
-80     if(!ptr)
-81         return;
-82         
-83     
-84     block_t* block = (block_t*) ptr;
-85     if(block->magic != BLKMAGIC)
-86         return;
-87         
-88     size_t size = block->size;
-89     block->size = 0;
-90     block->magic = 0;
-91     
-92     
-93     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
-94 }
+151                       {
+152     if(!ptr)
+153         return;
+154         
+155     
+156     block_t* block = (block_t*) ptr;
+157     block--;
+158 
+159     if(block->magic != BLKMAGIC)
+160         return;
+161 
+162 
+163     size_t size = block->size;
+164     block->size = 0;
+165     block->magic = 0;
+166     
+167 #ifdef CHUNKS_CHECKING
+168     block->file = 0;
+169     block->line = 0;
+170 #endif
+171     
+172     hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+173 }
 .fi
 .SS "void* kmalloc (size_t)"
 
@@ -207,78 +214,80 @@ Virtual Address of data\&.
 .PP
 
 .PP
-Definition at line 103 of file mm\&.c\&.
+Definition at line 182 of file mm\&.c\&.
 .PP
 References BLKMAGIC, kfree(), and kmalloc()\&.
 .PP
 .nf
-103                                        {
-104     if(ptr == NULL)
-105         return kmalloc(size);
-106         
-107     if(size == 0) {
-108         kfree(ptr);
-109         return NULL;
-110     }   
-111 
-112     block_t* block = (block_t*) ptr;
-113     if(block->magic != BLKMAGIC)
-114         return NULL;
-115         
-116     void* newptr = kmalloc(size);
-117     if(!newptr)
-118         return NULL;
-119         
-120     if(size > block->size)
-121         size = block->size;
-122         
-123     memcpy(newptr, ptr, size);
-124     kfree(ptr);
-125     
-126     return newptr;
-127 }
+182                                        {
+183     if(ptr == NULL)
+184         return kmalloc(size);
+185         
+186     if(size == 0) {
+187         kfree(ptr);
+188         return NULL;
+189     }   
+190 
+191     block_t* block = (block_t*) ptr;
+192     block--;
+193 
+194     if(block->magic != BLKMAGIC)
+195         return NULL;
+196         
+197     void* newptr = kmalloc(size);
+198     if(!newptr)
+199         return NULL;
+200         
+201     if(size > block->size)
+202         size = block->size;
+203         
+204     memcpy(newptr, ptr, size);
+205     kfree(ptr);
+206     
+207     return newptr;
+208 }
 .fi
 .SS "static void* mm_align (void *vaddr)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 85 of file mm\&.h\&.
+Definition at line 88 of file mm\&.h\&.
 .PP
 References uint32_t\&.
 .PP
 .nf
-85                                           {
-86     return (void*) ((uint32_t) vaddr & ~0xFFF);
-87 }
+88                                           {
+89     return (void*) ((uint32_t) vaddr & ~0xFFF);
+90 }
 .fi
 .SS "static void* mm_paddr (void *vaddr)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 71 of file mm\&.h\&.
+Definition at line 74 of file mm\&.h\&.
 .PP
 References MM_VBASE, and uint32_t\&.
 .PP
 .nf
-71                                           {
-72     if((uint32_t) vaddr > MM_VBASE)
-73         vaddr = (void*) ((uint32_t) vaddr - MM_VBASE);
-74         
-75     return vaddr;
-76 }
+74                                           {
+75     if((uint32_t) vaddr > MM_VBASE)
+76         vaddr = (void*) ((uint32_t) vaddr - MM_VBASE);
+77         
+78     return vaddr;
+79 }
 .fi
 .SS "static void* mm_vaddr (void *paddr)\fC [inline]\fP, \fC [static]\fP"
 
 .PP
-Definition at line 78 of file mm\&.h\&.
+Definition at line 81 of file mm\&.h\&.
 .PP
 References MM_VBASE, and uint32_t\&.
 .PP
 .nf
-78                                           {
-79     if((uint32_t) paddr < MM_VBASE)
-80         paddr = (void*) ((uint32_t) paddr + MM_VBASE);
-81         
-82     return paddr;
-83 }
+81                                           {
+82     if((uint32_t) paddr < MM_VBASE)
+83         paddr = (void*) ((uint32_t) paddr + MM_VBASE);
+84         
+85     return paddr;
+86 }
 .fi
 .SH "Author"
 .PP 

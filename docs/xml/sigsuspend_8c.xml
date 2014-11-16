@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.8">
+  <compounddef id="sigsuspend_8c" kind="file">
+    <compoundname>sigsuspend.c</compoundname>
+    <includes local="no">signal.h</includes>
+    <includes local="no">sys/types.h</includes>
+    <includes local="no">errno.h</includes>
+    <incdepgraph>
+      <node id="2390">
+        <label>errno.h</label>
+      </node>
+      <node id="2389">
+        <label>sys/types.h</label>
+      </node>
+      <node id="2388">
+        <label>signal.h</label>
+      </node>
+      <node id="2387">
+        <label>usr/src/libposix/src/sigsuspend.c</label>
+        <link refid="sigsuspend.c"/>
+        <childnode refid="2388" relation="include">
+        </childnode>
+        <childnode refid="2389" relation="include">
+        </childnode>
+        <childnode refid="2390" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="sigsuspend_8c_1a651e913fac32255355993a3d7ca193c8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sigsuspend</definition>
+        <argsstring>(const sigset_t *set)</argsstring>
+        <name>sigsuspend</name>
+        <param>
+          <type>const sigset_t *</type>
+          <declname>set</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/opt/prj/aPlus/usr/src/libposix/src/sigsuspend.c" line="5" column="1" bodyfile="/opt/prj/aPlus/usr/src/libposix/src/sigsuspend.c" bodystart="5" bodyend="8"/>
+        <references refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" compoundref="errno_8c" startline="3">errno</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;signal.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sys/types.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;errno.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight></codeline>
+<codeline lineno="5" refid="sigsuspend_8c_1a651e913fac32255355993a3d7ca193c8" refkind="member"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="sigsuspend_8c_1a651e913fac32255355993a3d7ca193c8" kindref="member">sigsuspend</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>sigset_t*<sp/>set)<sp/>{</highlight></codeline>
+<codeline lineno="6"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="errno_8c_1ad65a8842cc674e3ddf69355898c0ecbf" kindref="member">errno</ref><sp/>=<sp/>ENOSYS;</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-1;</highlight></codeline>
+<codeline lineno="8"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="/opt/prj/aPlus/usr/src/libposix/src/sigsuspend.c"/>
+  </compounddef>
+</doxygen>

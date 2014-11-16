@@ -41,39 +41,46 @@ Definition at line 18 of file lseek.\+c.
 
 
 
-References errno, task\+::fd, inode\+::position, and inode\+::size.
+References errno, task\+::fd, inode\+::position, inode\+::size, and T\+A\+S\+K\+\_\+\+M\+A\+X\+\_\+\+F\+D.
 
 
 \begin{DoxyCode}
 18                                         \{
-19     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{lseek_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
-20     \textcolor{keywordflow}{if}(!ino) \{
+19 
+20     \textcolor{keywordflow}{if}(fd < 0 || fd > \hyperlink{task_8h_aa0beab24d02a2ccd5d273dea188af93d}{TASK\_MAX\_FD}) \{
 21         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
 22         \textcolor{keywordflow}{return} -1;
 23     \}
 24     
-25     
-26     \textcolor{keywordflow}{if}(pos > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
-27         pos = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
-28     
-29     \textcolor{keywordflow}{switch}(dir) \{
-30         \textcolor{keywordflow}{case} SEEK\_SET:
-31             ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = pos;
-32             \textcolor{keywordflow}{break};
-33         \textcolor{keywordflow}{case} SEEK\_END:
-34             ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} - pos;
-35             \textcolor{keywordflow}{break};
-36         \textcolor{keywordflow}{case} SEEK\_CUR:
-37             ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = (ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} + pos > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} ? ino->
+25 
+26     \hyperlink{structinode}{inode\_t}* ino = \hyperlink{lseek_8c_a4743b3673a8794b8e7bd0b6c91a63cd5}{current\_task}->\hyperlink{structtask_afeeb6bafaefe505e6a730dd4e0be5a1a}{fd}[fd];
+27     \textcolor{keywordflow}{if}(!ino) \{
+28         \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EBADF;
+29         \textcolor{keywordflow}{return} -1;
+30     \}
+31     
+32     
+33     \textcolor{keywordflow}{if}(pos > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size})
+34         pos = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size};
+35     
+36     \textcolor{keywordflow}{switch}(dir) \{
+37         \textcolor{keywordflow}{case} SEEK\_SET:
+38             ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = pos;
+39             \textcolor{keywordflow}{break};
+40         \textcolor{keywordflow}{case} SEEK\_END:
+41             ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} - pos;
+42             \textcolor{keywordflow}{break};
+43         \textcolor{keywordflow}{case} SEEK\_CUR:
+44             ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} = (ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} + pos > ino->\hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} ? ino->
       \hyperlink{structinode_a53722b1b60b7136ce0204b66527bb400}{size} : ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position} + pos);
-38             \textcolor{keywordflow}{break};
-39         \textcolor{keywordflow}{default}:
-40             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
-41             \textcolor{keywordflow}{return} -1;
-42     \}
-43     
-44     \textcolor{keywordflow}{return} ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position};
-45 \}
+45             \textcolor{keywordflow}{break};
+46         \textcolor{keywordflow}{default}:
+47             \hyperlink{errno_8c_ad65a8842cc674e3ddf69355898c0ecbf}{errno} = EINVAL;
+48             \textcolor{keywordflow}{return} -1;
+49     \}
+50     
+51     \textcolor{keywordflow}{return} ino->\hyperlink{structinode_a5756f61233e40d01652094d29b5daf6c}{position};
+52 \}
 \end{DoxyCode}
 \hypertarget{lseek_8c_adf9807ac9976dd75922da3de250cf9b1}{\index{lseek.\+c@{lseek.\+c}!S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}}
 \index{S\+Y\+S\+C\+A\+L\+L@{S\+Y\+S\+C\+A\+L\+L}!lseek.\+c@{lseek.\+c}}
@@ -95,5 +102,5 @@ Current task address.
 
 
 
-Definition at line 35 of file sched.\+c.
+Definition at line 37 of file sched.\+c.
 
