@@ -87,7 +87,6 @@ inode_t* mkramdev(char* path, uint32_t addr, uint32_t size) {
 	ino->userdata = (void*) bufio_alloc_raw((void*) addr, size);
 	ino->size = size;
 
-
 	return ino;
 }
 

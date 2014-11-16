@@ -237,7 +237,6 @@ void schedule_release(task_t* task) {
 		return;
 
 #ifdef DEBUG
-	void* x = kmalloc(1000);
 	heap_t* h = (heap_t*) mm_getheap();
 	int prevmm = h->used;
 #endif
@@ -264,7 +263,6 @@ void schedule_release(task_t* task) {
 
 
 #ifdef DEBUG
-	kfree(x);
 	kprintf("task: realesed memory for %d Bytes\n", prevmm - h->used);
 #endif
 }

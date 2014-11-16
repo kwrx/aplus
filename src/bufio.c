@@ -69,7 +69,7 @@ bufio_t* bufio_alloc(size_t size) {
 	buffers_length += size;
 
 
-	bufio_t* buf = (bufio_t*) kmalloc(size);
+	bufio_t* buf = (bufio_t*) kmalloc(sizeof(bufio_t));
 	buf->raw = addr;
 	buf->size = size;
 	buf->type = 0;
@@ -97,7 +97,7 @@ bufio_t* bufio_alloc_raw(void* raw, size_t size) {
 
 	buffers_length += size;
 
-	bufio_t* buf = (bufio_t*) kmalloc(size);
+	bufio_t* buf = (bufio_t*) kmalloc(sizeof(bufio_t));
 	buf->raw = raw;
 	buf->size = size;
 	buf->type = 0;

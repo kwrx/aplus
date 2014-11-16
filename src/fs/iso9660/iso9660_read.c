@@ -37,13 +37,9 @@ int iso9660_read(inode_t* ino, char* buf, int size) {
 	if(!dev)
 		return 0;
 
-	void* tbuf = (void*) kmalloc(((size / ISO9660_SECTOR_SIZE) + 1) * ISO9660_SECTOR_SIZE);
 	
-	dev->position = (off_t) ino->userdata + (ino->position / ISO9660_SECTOR_SIZE);
-	fs_read(dev, tbuf, ((size / ISO9660_SECTOR_SIZE) + 1) * ISO9660_SECTOR_SIZE);
-
-	memcpy(buf, (void*) ((uint32_t) tbuf + (ino->position % ISO9660_SECTOR_SIZE)), size);
-	kfree(tbuf);
+	dev->position = (off_t) ino->userdata + ino->position;
+	fs_read(dev, buf, size);
 
 	return size;
 }

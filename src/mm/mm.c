@@ -162,11 +162,16 @@ void kfree(void* ptr) {
 
 	if(block->magic != BLKMAGIC)
 		return;
-		
+
+
 	size_t size = block->size;
 	block->size = 0;
 	block->magic = 0;
 	
+#ifdef CHUNKS_CHECKING
+	block->file = 0;
+	block->line = 0;
+#endif
 	
 	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
 }

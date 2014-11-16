@@ -15,10 +15,11 @@ static char** __args_dup(char** a) {
 		return NULL;
 
 	char** p = (char**) kmalloc(255 * sizeof(char*));
-	int i = 0;
+	memset(p, 0, 255 * sizeof(char*));
 
+	int i = 0;
 	while(a[i]) {
-		p[i] = (char*) kmalloc(strlen(a[i]));
+		p[i] = (char*) kmalloc(strlen(a[i]) + 1);
 		strcpy(p[i], a[i]);
 
 		i++;

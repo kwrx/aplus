@@ -22,10 +22,8 @@ uint32_t iso9660_getroot(inode_t* dev) {
 		return 0;
 	}
 
-	uint32_t ret = (uint32_t) pvd->rootdir;
-	kfree(pvd);
 
-	return ret;
+	return (uint32_t) pvd->rootdir;
 }
 
 

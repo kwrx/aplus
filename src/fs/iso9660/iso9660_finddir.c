@@ -40,6 +40,7 @@ inode_t* iso9660_finddir(inode_t* ino, char* name) {
 	iso9660_dir_t* nodes = (iso9660_dir_t*) kmalloc(iso9660_getlsb32(dir->length));
 	iso9660_dir_t* snodes = nodes;
 
+
 	dev->position = iso9660_getlsb32(dir->lba) * ISO9660_SECTOR_SIZE;
 	if(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length)) {
 		kfree(nodes);
@@ -52,12 +53,12 @@ inode_t* iso9660_finddir(inode_t* ino, char* name) {
 			return 0;
 		}
 
-
 		char* nodename = (char*) kmalloc(nodes->idlen);
 		memset(nodename, 0, nodes->idlen);
 
 		strncpy(nodename, nodes->reserved, nodes->idlen);
 		iso9660_checkname(nodename);
+
 
 		if(strcmp(nodename, name) == 0)
 			break;

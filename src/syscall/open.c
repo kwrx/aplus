@@ -17,8 +17,8 @@ extern inode_t* vfs_root;
 
 
 static char* dupstr(char* s) {
-	char* p = (char*) kmalloc(strlen(s));
-	strncpy(p, s, strlen(s));
+	char* p = (char*) kmalloc(strlen(s) + 1);
+	strcpy(p, s);
 
 	return p;
 }

@@ -39,6 +39,8 @@
 #include <aplus/net/ipv4.h>
 #include <aplus/net/ipv6.h>
 
+#include <errno.h>
+
 
 extern inode_t* vfs_root;
 extern task_t* current_task;
@@ -49,21 +51,24 @@ extern task_t* current_task;
  */
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_LOW);
-
+	
 
 	char* __argv[] = {
-		"/dev/ramdisk/test", NULL
+		"/dev/ramdisk/test", 
+		NULL
 	};
 
 	char* __envp[] = {
 		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk",
 		"SHELL=/bin/sh",
 		"USER=liveuser",
+		NULL
 	};
 
 
 	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
+
 
 	for(;;)
 		__asm__ ("pause");
@@ -84,7 +89,7 @@ int main() {
 	pci_init();
 	tty_init();
 	netif_init();
-	
+
 
 	if(mbd->mods_count == 0)
 		panic("no initrd module found");

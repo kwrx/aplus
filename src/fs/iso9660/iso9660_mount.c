@@ -32,6 +32,7 @@ int iso9660_mount(inode_t* dev, inode_t* ino, int flags) {
 	ino->userdata = (void*) iso9660_getroot();
 	ino->readdir = iso9660_readdir;
 	ino->finddir = iso9660_finddir;
+
 	
 	return 0;
 }
