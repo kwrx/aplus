@@ -2,6 +2,7 @@
 #include <aplus/fs.h>
 #include <aplus/task.h>
 #include <aplus/spinlock.h>
+#include <aplus/mm.h>
 
 #include <stdint.h>
 #include <string.h>
@@ -50,6 +51,7 @@ inode_t* iso9660_finddir(inode_t* ino, char* name) {
 			kfree(snodes);
 			return 0;
 		}
+
 
 		char* nodename = (char*) kmalloc(nodes->idlen);
 		memset(nodename, 0, nodes->idlen);

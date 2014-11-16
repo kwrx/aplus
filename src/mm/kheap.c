@@ -28,7 +28,6 @@
 #include <grub.h>
 
 
-
 #define BITMAP_SET(bmp, bit)	\
 	bmp[bit / 32] |= (1 << (bit % 32))
 	
@@ -56,7 +55,10 @@ static int bitmap_first(heap_t* heap, size_t size) {
 	if(size == 0)
 		return -1;
 		
-	for(int i = 0; i < heap->size; i++) {	
+
+	int hsize = heap->size / BLKSIZE;
+
+	for(int i = 0; i < hsize; i++) {	
 		for(int j = 0, f = 0; j < size; j++) {
 			if(BITMAP_TST(heap->bitmap, (i + j)))
 				continue;
@@ -81,15 +83,16 @@ void* bitmap_alloc(heap_t* heap, size_t size) {
 		
 	if(heap->used >= heap->size)
 		return 0;
+
+	if(!size)
+		return 0;
 		
 	
-	if(size % BLKSIZE) {
-		size /= BLKSIZE;
-		size += 1;
-	}else {
-		size /= BLKSIZE;
-	}	
-		
+	
+	size /= BLKSIZE;
+	size += 1;
+	
+
 	int index = bitmap_first(heap, size);
 	if(index == -1)
 		return 0;
@@ -98,7 +101,7 @@ void* bitmap_alloc(heap_t* heap, size_t size) {
 		BITMAP_SET(heap->bitmap, (index + i));
 	
 	
-	heap->used += size;
+	heap->used += (size * BLKSIZE);
 	
 	return (void*) (index * BLKSIZE);
 }
@@ -110,21 +113,20 @@ void bitmap_free(heap_t* heap, void* addr, size_t size) {
 	if(!heap->bitmap)
 		return;
 		
-		
+
 	if(size % BLKSIZE) {
 		size /= BLKSIZE;
 		size += 1;
 	}else {
 		size /= BLKSIZE;
-	}	
-		
+	}
 	
 	int index = GETBIT(addr);
 	for(int i = 0; i < size; i++)
 		BITMAP_CLR(heap->bitmap, (index + i));
 		
 		
-	heap->used -= size;
+	heap->used -= (size * BLKSIZE);
 }
 
 
@@ -132,11 +134,11 @@ void bitmap_free(heap_t* heap, void* addr, size_t size) {
 int kheap_init() {
 
 	kheap.bitmap = (uint32_t*) __bitmap;
-	kheap.size = memsize / BLKSIZE;
+	kheap.size = memsize;
 	kheap.alloc = bitmap_alloc;
 	kheap.free = bitmap_free;
 	
-	memset(kheap.bitmap, 0, kheap.size);
+	memset(kheap.bitmap, 0, (kheap.size / BLKSIZE));
 	
 	mm_setheap(&kheap);
 	

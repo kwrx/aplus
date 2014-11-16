@@ -1,10 +1,14 @@
 #include <aplus.h>
 #include <aplus/mm.h>
+#include <aplus/task.h>
 
 #include <stdint.h>
 #include <errno.h>
 
 #include <grub.h>
+
+
+extern task_t* current_task;
 
 #define ELF32_ADDRSPACE_MIN_LENGTH		0x100000
 
@@ -239,7 +243,9 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 	int iptr, isiz;
 	if(elf32_getspace(hdr, (void**) &iptr, (size_t*) &isiz) != 0)
 		panic("elf: cannot found a valid address space"); 
-	vmm_alloc(iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
+	schedule_release(current_task);
+	vmm_alloc(current_task->context.cr3, iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 
 
 	if(vaddr)
@@ -290,16 +296,14 @@ char* elf_kernel_lookup(uint32_t symaddr) {
 	const char* strtab = NULL;
 	elf32_sym_t* symtab = NULL;
 
-	uint32_t strtabsz = 0;
 	uint32_t symtabsz = 0;
 
 	for(int i = 0; i < mbd->num; i++) {
 		const char* name = (const char*) (shstrtab + shdr[i].sh_name);
 
-		if(strcmp(name, ".strtab") == 0) {
+		if(strcmp(name, ".strtab") == 0)
 			strtab = (const char*) shdr[i].sh_addr;
-			strtabsz = shdr[i].sh_size;
-		}
+		
 
 		if(strcmp(name, ".symtab") == 0) {
 			symtab = (elf32_sym_t*) shdr[i].sh_addr;

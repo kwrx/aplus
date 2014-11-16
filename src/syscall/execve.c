@@ -10,6 +10,25 @@
 extern task_t* current_task;
 
 
+static char** __args_dup(char** a) {
+	if(!a)
+		return NULL;
+
+	char** p = (char**) kmalloc(255 * sizeof(char*));
+	int i = 0;
+
+	while(a[i]) {
+		p[i] = (char*) kmalloc(strlen(a[i]));
+		strcpy(p[i], a[i]);
+
+		i++;
+	}
+
+	return p;
+}
+
+
+
 /**
  *	\brief Executes the program pointed to by filename.\n
 		filename must be either a binary executable, or a script starting with a line of the form.\n
@@ -57,7 +76,8 @@ int sys_execve(char* filename, char** argv, char** environ) {
 	void (*entry) () = (void (*) ()) elf32_load(image, &vaddr, &vsize);
 	if(entry) {
 
-		schedule_release(current_task);
+		argv = __args_dup(argv);
+		environ = __args_dup(environ);
 
 		current_task->exe = current_task->fd[fd];
 		current_task->argv = argv;

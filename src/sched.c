@@ -236,11 +236,37 @@ void schedule_release(task_t* task) {
 	if(!task)
 		return;
 
+#ifdef DEBUG
+	void* x = kmalloc(1000);
+	heap_t* h = (heap_t*) mm_getheap();
+	int prevmm = h->used;
+#endif
+
+	if(task->argv) {
+		for(int i = 0; task->argv[i]; i++)
+			kfree(task->argv[i]);
+	
+		kfree(task->argv);
+	}
+
+	if(task->envp) {
+		for(int i = 0; task->envp[i]; i++)
+			kfree(task->envp[i]);
+
+		kfree(task->envp);
+	}
+
 	if(task->image.ptr)
 		kfree((void*) task->image.ptr);
 
-	if(task->image.vaddr && task->image.length)
-		vmm_free(task->image.vaddr, task->image.length);
+	if(task->image.vaddr && task->image.length && task->context.cr3)
+		vmm_free(task->context.cr3, task->image.vaddr, task->image.length);
+
+
+#ifdef DEBUG
+	kfree(x);
+	kprintf("task: realesed memory for %d Bytes\n", prevmm - h->used);
+#endif
 }
 
 /**
@@ -257,8 +283,10 @@ void schedule_exit2(task_t* task, int status) {
 	task->state = TASK_STATE_DEAD;
 	task->exitcode = status;
 	
-	if(task->context.owner == task->pid)
-		schedule_release(task);
+	if(task->context.owner != task->pid)
+		task->context.cr3 = 0;
+		
+	schedule_release(task);
 }
 
 
@@ -327,9 +355,9 @@ void* schedule_sbrk(ptrdiff_t increment) {
 	increment = (increment & ~0xFFF) + 0x1000;
 
 	if(increment > 0)
-		vmm_alloc(current_task->image.vaddr + current_task->image.length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+		vmm_alloc(current_task->context.cr3, current_task->image.vaddr + current_task->image.length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 	else
-		vmm_free(current_task->image.vaddr + current_task->image.length, increment);	
+		vmm_free(current_task->context.cr3, current_task->image.vaddr + current_task->image.length, increment);	
 
 	current_task->image.length += increment;
 

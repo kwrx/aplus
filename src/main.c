@@ -62,7 +62,7 @@ static void sysidle() {
 	};
 
 
-	if(sys_fork() == 0)
+	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 
 	for(;;)
@@ -100,9 +100,9 @@ int main() {
 		panic("initrd: cannot create /dev/ram0");
 
 
+
 	if(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0)
 		panic("initrd: cannot mount ramdisk");
-
 
 
 	task_clone(sysidle, NULL, NULL, 0xFF);

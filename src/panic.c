@@ -1,5 +1,6 @@
 #include <aplus.h>
 #include <aplus/task.h>
+#include <aplus/mm.h>
 #include <aplus/fs.h>
 #include <aplus/list.h>
 #include <errno.h>
@@ -19,15 +20,21 @@ static void dump_errno() {
 
 
 /**
- *	\brief Print current registers.
+ *	\brief Print current registers & cpu status.
  */
-static void dump_registers(regs_t* r) {
-	kprintf("Registers:\n");
-	kprintf("eip: 0x%8x\n", r->eip);
-	kprintf("err: 0x%8x\n", r->err_code);
-	kprintf("int: 0x%8x\n", r->int_no);
-	kprintf("esp: 0x%8x\n", r->esp);
-	kprintf("usp: 0x%8x\n", r->useresp);
+static void dump_cpu(regs_t* r) {
+	kprintf("CPU:\n");
+
+	if(r) {
+		kprintf("eip: 0x%8x\n", r->eip);
+		kprintf("err: 0x%8x\n", r->err_code);
+		kprintf("int: 0x%8x\n", r->int_no);
+		kprintf("esp: 0x%8x\n", r->esp);
+		kprintf("usp: 0x%8x\n", r->useresp);
+	}
+
+	kprintf("pit: %dms\n", pit_getticks());
+
 	kprintf("\n\n");
 }
 
@@ -38,7 +45,7 @@ static void dump_registers(regs_t* r) {
 static void dump_stacktrace(int count) {
 	kprintf("Stack trace:\n");
 	
-	int* esp; 
+	int* esp = NULL; 
 	__asm__("mov eax, ebp" : "=a"(esp));
 
 
@@ -82,6 +89,21 @@ static void dump_task() {
 }
 
 
+/**
+ *	\brief Print MMU State.
+ */
+static void dump_mmu() {
+	kprintf("Memory:\n");
+
+	heap_t* h = (heap_t*) mm_getheap();
+
+	kprintf("\tUsed: %d MB (%d Bytes)\n", (h->used / 1024 / 1024), h->used);
+	kprintf("\tSize: %d MB (%d Bytes)\n", (h->size / 1024 / 1024), h->size);
+
+	kprintf("\n\n");
+}
+
+
 
 /**
  *	\brief Go in Kernel Panic, dump exception registers, halt system.
@@ -91,13 +113,14 @@ void panic_r(char* msg, regs_t* r) {
 	kprintf("panic: \"%s\"\n", msg);
 	
 	
-	if(r)
-		dump_registers(r);
+	
+	dump_cpu(r);
 
 	dump_stacktrace(6);
 	dump_task();
 	dump_errno();
-	
+	dump_mmu();	
+
 	for(;;);
 }
 

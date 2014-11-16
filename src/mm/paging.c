@@ -127,15 +127,15 @@ void vmm_umap(uint32_t* pd, void* addr, size_t len) {
 }
 
 
-void* vmm_alloc(void* vaddr, size_t size, int flags) {
+void* vmm_alloc(uint32_t* vmm, void* vaddr, size_t size, int flags) {
 	void* paddr = (void*) halloc(current_heap, size);
 
-	vmm_map(current_vmm, paddr, vaddr, size, flags);
+	vmm_map(vmm, paddr, vaddr, size, flags);
 
 	return paddr;
 }
 
-void vmm_free(void* vaddr, size_t size) {
+void vmm_free(uint32_t* vmm, void* vaddr, size_t size) {
 
 	int pages = (size / PGSIZE) + 1;
 	uint32_t frame = (uint32_t) vaddr;
@@ -151,7 +151,7 @@ void vmm_free(void* vaddr, size_t size) {
 		hfree(current_heap, table[PTENTRY(frame)] & ~0xFFF, PGSIZE);
 	}
 
-	vmm_umap(current_vmm, vaddr, size);
+	vmm_umap(vmm, vaddr, size);
 }
 
 void vmm_mapkernel(uint32_t* dest) {

@@ -9,13 +9,15 @@
 #define SYSCALL_DEBUG
 #endif
 
+#define NSYSCALLS		1024
+
 static void** syscall_handlers = NULL;
 
 int syscall_init() {
 	list_t* syslist = attribute("syscall");
 
-	syscall_handlers = (void**) kmalloc(sizeof(void*) * syslist->size);
-	memset(syscall_handlers, 0, sizeof(void*) * syslist->size);
+	syscall_handlers = (void**) kmalloc(sizeof(void*) * NSYSCALLS);
+	memset(syscall_handlers, 0, sizeof(void*) * NSYSCALLS);
 
 	list_foreach(value, syslist) {
 		syscall_t* sys = (syscall_t*) value;
@@ -31,7 +33,7 @@ int syscall_init() {
 
 
 #ifdef DEBUG
-	#define NSYSCALLS		1024
+	
 
 	for(int i = 0, s = 0; i < NSYSCALLS; i++) {
 		if(syscall_handlers[i] == NULL) {

@@ -56,7 +56,7 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 		return NULL;
 
 	if(stack == NULL)
-		stack = (void*) ((int) mm_align(kmalloc(TASK_STACKSIZE * 2)) + TASK_STACKSIZE);
+		stack = (void*) ((int)kvmalloc(TASK_STACKSIZE * 2) + TASK_STACKSIZE);
 
 	memset(stack, 0, TASK_STACKSIZE);
 
@@ -111,7 +111,7 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 
 
 		if(current_task->image.vaddr && current_task->image.length) {
-			void* addr = (void*) kmalloc(child->image.length);
+			void* addr = (void*) kvmalloc(child->image.length);
 			memcpy(addr, (void*) child->image.vaddr, child->image.length);
 
 			vmm_map(child->context.cr3, mm_paddr(addr), child->image.vaddr, child->image.length);

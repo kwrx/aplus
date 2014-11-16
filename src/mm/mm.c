@@ -24,19 +24,31 @@
 #include <stdint.h>
 #include <string.h>
 
-
+#include <aplus.h>
 #include <aplus/mm.h>
 #include <aplus/list.h>
+#include <aplus/task.h>
 
 #include <grub.h>
 
 
 
+/**
+ *	\see aplus/mm.h
+ */
+#ifdef CHUNKS_CHECKING
+#define CHUNK_MAGIC		0x12345678
+#endif
+
+
 uint32_t memsize;
-volatile heap_t* current_heap;
+heap_t* current_heap;
 
 extern uint32_t* current_vmm;
 extern uint32_t* kernel_vmm;
+
+extern task_t* current_task;
+extern task_t* kernel_task;
 
 extern list_t* vmm_queue;
 
@@ -44,11 +56,48 @@ extern list_t* vmm_queue;
 typedef struct block {
 	uint16_t magic;
 	size_t size;
+
+#ifdef CHUNKS_CHECKING
+	char* file;
+	int line;
+#endif
 } __attribute__((packed)) block_t;
 
 
 
 
+#ifdef CHUNKS_CHECKING
+static void __check_all_chunks_overflow() {
+	if(current_task != kernel_task)
+		return;
+
+	schedule_disable();
+	vmm_disable();
+	
+	int e = 0;
+	for(uint32_t frame = 0; frame < current_heap->size; frame += 0x1000) {
+		block_t* block = (block_t*) frame;
+		if(block->magic != BLKMAGIC)
+			continue;
+
+
+		if(*(uint32_t*) (frame + block->size + sizeof(block_t)) != CHUNK_MAGIC) {
+			kprintf("mm: chunk overflow at 0x%x (%x) allocated from %s (%d)\n", frame, block->size, block->file, block->line);
+			e++;
+
+		 	*(uint32_t*) (frame + block->size + sizeof(block_t)) = CHUNK_MAGIC;
+		}
+
+		frame += block->size & ~0xFFF;
+	}
+	
+	if(e)
+		kprintf("There was %d chunks overflow\n", e);
+
+	vmm_enable();
+	schedule_enable();
+}
+#endif
 
 
 /**
@@ -56,7 +105,15 @@ typedef struct block {
  * 	\param size Size of data to alloc.
  *	\return Virtual Address of data.
  */
-void* kmalloc(size_t size) {
+#ifdef CHUNKS_CHECKING
+void* __kmalloc(size_t size, char* file, int line)
+#else
+void* kmalloc(size_t size) 
+#endif
+{
+
+	size += sizeof(block_t);
+
 	void* addr = (void*) halloc(current_heap, size);
 	if(!addr)
 		panic("halloc(): failed!");
@@ -68,9 +125,28 @@ void* kmalloc(size_t size) {
 	block->magic = BLKMAGIC;
 	block->size = size;
 
+#ifdef CHUNKS_CHECKING
+	block->file = file;
+	block->line = line;
+
+	*(uint32_t*) ((uint32_t) block + size + sizeof(block_t)) = CHUNK_MAGIC;
+
+	__check_all_chunks_overflow();
+#endif
+
 	return (void*) ((uint32_t) block + sizeof(block_t));
 }
 
+
+void* kvmalloc(size_t size) {
+	void* addr = (void*) halloc(current_heap, size);
+	if(!addr)
+		panic("halloc(): failed!");
+
+
+	addr = mm_vaddr(addr);
+	return addr;
+}
 
 /**
  *	\brief Free memory from Kernel Heap.
@@ -82,6 +158,8 @@ void kfree(void* ptr) {
 		
 	
 	block_t* block = (block_t*) ptr;
+	block--;
+
 	if(block->magic != BLKMAGIC)
 		return;
 		
@@ -110,6 +188,8 @@ void* krealloc(void* ptr, size_t size) {
 	}	
 
 	block_t* block = (block_t*) ptr;
+	block--;
+
 	if(block->magic != BLKMAGIC)
 		return NULL;
 		
@@ -138,7 +218,7 @@ void mm_setheap(heap_t* heap) {
 /**
  *	\brief Get current heap for memory operations.
  */
-volatile heap_t* mm_getheap() {
+heap_t* mm_getheap() {
 	return current_heap;
 }
 
