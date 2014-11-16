@@ -20,6 +20,11 @@ int sys_write(int fd, void* ptr, size_t size) {
 	if(!current_task)
 		return -1;
 		
+	if(fd < 0 || fd > TASK_MAX_FD) {
+		errno = EBADF;
+		return -1;
+	}
+	
 	
 	inode_t* ino = current_task->fd[fd];
 	if(!ino) {

@@ -14,10 +14,9 @@ extern task_t* current_task;
 
 int sys_stat(const char* filename, struct stat* st) {
 	int fd = sys_open(filename, O_RDONLY, 0644);
-	if(fd < 0) {
-		kprintf("sys_stat: %s.", strerror(errno));		
+	if(fd < 0)
 		return -1;
-	}
+	
 	int ret = sys_fstat(fd, st);
 	sys_close(fd);
 

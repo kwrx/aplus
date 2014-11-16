@@ -106,6 +106,11 @@ syscall5(24, mount)
 syscall1(25, umount)
 syscall2(26, umount2)
 syscall5(27, openpty)
+syscall2(28, symlink)
+syscall1(29, fchdir)
+syscall1(30, pipe)
+syscall3(31, waitpid)
+syscall0(32, getppid)
 
 #ifdef __aplus__
 syscall2(80, aplus_readdir)

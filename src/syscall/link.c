@@ -12,11 +12,7 @@
 #include <dirent.h>
 
 int sys_link(char* filename, char* link) {
-	/* TODO */
-	kprintf("sys_link: TODO");
-
-	errno = ENOSYS;
-	return -1;
+	return sys_symlink(filename, link);
 }
 
 SYSCALL(sys_link, 8);

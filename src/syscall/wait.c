@@ -15,18 +15,7 @@ int sys_wait(int* status) {
 		return -1;
 	}
 
-	task_t* child = (task_t*) schedule_child();
-	if(child == NULL) {
-		errno = ECHILD;
-		return -1;
-	}
-
-	int exitcode = schedule_wait(child);
-
-	if(status)
-		*status = exitcode;
-
-	return child->pid;
+	return sys_waitpid(-1, status, 0);
 }
 
 SYSCALL(sys_wait, 16);

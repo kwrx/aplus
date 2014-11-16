@@ -54,7 +54,7 @@ static void dump_stacktrace(int count) {
 		kprintf("[%d] 0x%x - %s\n", i, eip, elf_kernel_lookup(eip));
 		
 
-		esp = *(--esp);
+		esp = (uint32_t*) *(--esp);
 		if(!esp)
 			break;
 	}

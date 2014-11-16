@@ -136,21 +136,7 @@ int sys_open(char* filename, int flags, mode_t mode) {
 		return -1;
 	
 	
-	inode_t** fd = NULL;
-	for(int i = 0; i < TASK_MAX_FD; i++) {
-		if(current_task->fd[i] == 0) {
-			fd = &current_task->fd[i];
-			break;
-		}
-	}
-	
-	if(fd == NULL) {
-		errno = EMFILE;
-		return -1;
-	}
-	
-	*fd = ino;
-	return 0;
+	return schedule_append_fd(current_task, ino);
 }
 
 SYSCALL(sys_open, 10);

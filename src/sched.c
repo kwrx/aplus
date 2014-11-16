@@ -29,6 +29,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include <errno.h>
+
 /**
  *	\brief Current task address
  */
@@ -255,15 +257,16 @@ void schedule_release(task_t* task) {
 		kfree(task->envp);
 	}
 
-	if(task->image.ptr)
+	if(task->image.ptr && task->context.owner == task->pid)
 		kfree((void*) task->image.ptr);
 
-	if(task->image.vaddr && task->image.length && task->context.cr3)
+	if(task->image.vaddr && task->image.length && task->context.owner == task->pid)
 		vmm_free(task->context.cr3, task->image.vaddr, task->image.length);
+		
 
 
 #ifdef DEBUG
-	kprintf("task: realesed memory for %d Bytes\n", prevmm - h->used);
+	kprintf("task: released memory for %d Bytes\n", prevmm - h->used);
 #endif
 }
 
@@ -281,8 +284,6 @@ void schedule_exit2(task_t* task, int status) {
 	task->state = TASK_STATE_DEAD;
 	task->exitcode = status;
 	
-	if(task->context.owner != task->pid)
-		task->context.cr3 = 0;
 		
 	schedule_release(task);
 }
@@ -360,5 +361,25 @@ void* schedule_sbrk(ptrdiff_t increment) {
 	current_task->image.length += increment;
 
 	return brk;
+}
+
+
+int schedule_append_fd(task_t* t, inode_t* ino) {
+
+	if(!(t && ino)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	for(int i = 0; i < TASK_MAX_FD; i++) {
+		if(t->fd[i] == 0) {
+			t->fd[i] = ino;
+			
+			return i;
+		}
+	}
+	
+	errno = EMFILE;
+	return -1;
 }
 

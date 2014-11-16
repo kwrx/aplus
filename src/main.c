@@ -54,13 +54,13 @@ static void sysidle() {
 	
 
 	char* __argv[] = {
-		"/dev/ramdisk/test", 
+		"/dev/ramdisk/dash", 
 		NULL
 	};
 
 	char* __envp[] = {
 		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk",
-		"SHELL=/bin/sh",
+		"SHELL=/bin/dash",
 		"USER=liveuser",
 		NULL
 	};
@@ -110,7 +110,7 @@ int main() {
 		panic("initrd: cannot mount ramdisk");
 
 
-	task_clone(sysidle, NULL, NULL, 0xFF);
+	task_clone(sysidle, NULL, NULL, CLONE_FS | CLONE_FILES | CLONE_SIGHAND);
 
 
 	for(;;);

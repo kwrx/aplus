@@ -28,10 +28,9 @@ int sys_chown(char* filename, uid_t owner, gid_t group) {
 	
 	
 	int fd = sys_open(filename, O_RDONLY, 0644);
-	if(fd < 0) {
-		kprintf("sys_chown: %s.", strerror(errno));
+	if(fd < 0)
 		return -1;
-	}
+	
 	
 	inode_t* ino = current_task->fd[fd];
 	return fs_chown(ino, owner, group);

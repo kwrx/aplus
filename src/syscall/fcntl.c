@@ -73,6 +73,12 @@ int sys_fcntl(int fd, int request, void* buf) {
 	if(!current_task)
 		return -1;
 		
+
+	if(fd < 0 || fd > TASK_MAX_FD) {
+		errno = EBADF;
+		return -1;
+	}
+	
 	
 	inode_t* ino = current_task->fd[fd];
 	if(!ino) {
@@ -81,11 +87,30 @@ int sys_fcntl(int fd, int request, void* buf) {
 	}
 
 
-	/* TODO */
-	kprintf("sys_chown: TODO.");
+	switch(request) {
+		case F_DUPFD:
+			return schedule_append_fd(current_task, ino);
+		case F_GETFD:
+			return 0;
+		case F_SETFD:
+			return 0;
+		case F_GETFL:
+			return 0;
+		case F_SETFL:
+			switch((int)buf) {
+				case O_APPEND:
+					ino->position = ino->size;
+					return 0;
+				case O_NONBLOCK:
+					return 0;
+				default:
+					errno = EINVAL;
+					return -1;
+			}
+			break;
+	}
 
-	errno = ENOSYS;
-	return -1;
+	return 0;
 }
 
 SYSCALL(sys_fcntl, 19);
