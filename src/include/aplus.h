@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
-
+#include <config.h>
 
 #define read_reg(n)												\
 	static inline uint32_t read_##n() {							\
@@ -144,7 +144,7 @@ typedef struct regs {
 
 
 #ifndef DEBUG
-#define kprintf(a, b...);
+#define kprintf(a, b...)
 #endif
 
 

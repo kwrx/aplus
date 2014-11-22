@@ -144,7 +144,7 @@ int netif_add(netif_t* netdev) {
 	}
 
 
-
+#ifdef NETIF_DEBUG
 	kprintf("\n%s:\tipv4\t%d.%d.%d.%d\n\tnetmask\t%d.%d.%d.%d\n",
 			netdev->name,
 			netdev->ipv4[0],
@@ -207,6 +207,7 @@ int netif_add(netif_t* netdev) {
 			netdev->dns.secondary.ipv6[6],
 			netdev->dns.secondary.ipv6[7]
 	);
+#endif
 
 	return list_add(lst_netif, (listval_t) netdev);
 }

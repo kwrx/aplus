@@ -27,6 +27,8 @@
 #define GID_ROOT		0
 
 
+
+
 #include <stdint.h>
 #include <stddef.h>
 #include <sys/types.h>
@@ -59,9 +61,9 @@ typedef struct inode {
 	struct dirent* (*readdir) (struct inode* inode, int index);
 	struct inode* (*finddir) (struct inode* inode, char* name);
 	struct inode* (*creat) (struct inode* inode, char* name, mode_t mode);
-	
-	int (*rename) (struct inode* inode, char* oldname, char* newname);
 	int (*unlink) (struct inode* inode, char* name);
+	
+	int (*rename) (struct inode* inode, char* newname);
 	int (*chown) (struct inode* inode, uid_t owner, gid_t group);
 	void (*flush) (struct inode* inode);
 	

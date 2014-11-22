@@ -160,24 +160,6 @@ size_t vasprintf(char * buf, const char *fmt, va_list args) {
 
 
 /**
- *	\brief Formatted output conversion and print to Debug Standard Output.
- *	\param fmt Format of string.
- *	\param ... Arguments.
- */
-void kprintf(char* fmt, ...) {
-	static char __kprintf_buf[1024];
-	memset(__kprintf_buf, 0, 1024);
-	
-	va_list lst;
-	va_start(lst, fmt);
-	vasprintf(__kprintf_buf, fmt, lst);
-	va_end(lst);
-	
-	debug_puts(__kprintf_buf);
-}
-
-
-/**
  *	\brief Formatted output conversion and print to buffer.
  * 	\param buf Buffer output.
  *	\param fmt Format of string.
@@ -190,6 +172,31 @@ void ksprintf(char* buf, char* fmt, ...) {
 	vasprintf(buf, fmt, lst);
 	va_end(lst);
 
+}
+
+/**
+ *	\brief Formatted output conversion and print to Debug Standard Output.
+ *	\param fmt Format of string.
+ *	\param ... Arguments.
+ */
+#undef kprintf
+void kprintf(char* fmt, ...) {
+	static char __kprintf_buf[1024];
+	static char __kprintf_buf_tm[32];
+
+	memset(__kprintf_buf, 0, 1024);
+	memset(__kprintf_buf_tm, 0, 32);
+	
+	va_list lst;
+	va_start(lst, fmt);
+	vasprintf(__kprintf_buf, fmt, lst);
+	va_end(lst);
+
+
+	ksprintf(__kprintf_buf_tm, "[%d] ", pit_getticks());
+	
+	debug_puts(__kprintf_buf_tm);
+	debug_puts(__kprintf_buf);
 }
 
 

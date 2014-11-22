@@ -82,6 +82,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 
 	inode_t* ent = (inode_t*) fs_finddir(cwd, s);
 
+
 	if(flags & O_EXCL) {
 		if(ent) {
 			errno = EEXIST;
@@ -90,11 +91,14 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 	}
 
 
+
 	if(flags & O_CREAT)
 		if(!ent)
-			ent = (inode_t*) fs_creat(cwd, s, mode);
-		
-
+			if(flags & O_VIRT)
+				ent = (inode_t*) vfs_mknod(cwd, s, mode);
+			else
+				ent = (inode_t*) fs_creat(cwd, s, mode);
+	
 	if(!ent) {
 		errno = ENOENT;
 		return NULL;

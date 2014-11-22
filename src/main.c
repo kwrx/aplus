@@ -51,23 +51,6 @@ extern task_t* current_task;
  */
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_LOW);
-	
-
-	char* __argv[] = {
-		"/dev/ramdisk/dash", 
-		NULL
-	};
-
-	char* __envp[] = {
-		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk",
-		"SHELL=/bin/dash",
-		"USER=liveuser",
-		NULL
-	};
-
-
-	//if(sys_fork() == 0)
-		sys_execve(__argv[0], __argv, __envp);
 
 
 	for(;;)
@@ -105,15 +88,30 @@ int main() {
 		panic("initrd: cannot create /dev/ram0");
 
 
-
 	if(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0)
 		panic("initrd: cannot mount ramdisk");
 
 
-	task_clone(sysidle, NULL, NULL, CLONE_FS | CLONE_FILES | CLONE_SIGHAND);
+	if(sys_mount(NULL, "/dev/proc", "procfs", 0, 0) != 0)
+		panic("procfs: cannot mount /dev/proc");
 
+	if(sys_symlink("/dev/proc", "/proc") != 0)
+		panic("procfs: cannot create link for /proc");
 
-	for(;;);
+	char* __argv[] = {
+		"/dev/ramdisk/test", 
+		NULL
+	};
+
+	char* __envp[] = {
+		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk",
+		"SHELL=/bin/dash",
+		"USER=liveuser",
+		NULL
+	};
+
+	//if(sys_fork() == 0)
+		sys_execve(__argv[0], __argv, __envp);
 	
 	sysidle();
 }

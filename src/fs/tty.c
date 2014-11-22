@@ -32,8 +32,10 @@ cc_t ttydefchars[NCCS] = {
 static void __default_tty_output(tty_t* tty, void* ptr, size_t size) {
 	char* ctr = (char*) ptr;
 	
+#ifdef DEBUG
 	for(int i = 0; i < size; i++)
-		kprintf("%c", ctr[i]);
+		debug_putc(ctr[i]);
+#endif
 }
 
 int tty_ioctl(inode_t* ino, int cmd, void* buf) {

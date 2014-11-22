@@ -61,7 +61,7 @@ extern inode_t* vfs_root;
 		signals when out-of-band data is available, using the value of the third argument, arg, taken 
 		as type int.\n
 		Positive values indicate a process ID; negative values, other than -1, indicate a process group ID.\n
-		If fildes does not refer to a socket, the results are unspecified\n\n\n\n
+		If fildes does not refer to a socket, the results are unspecified.\n\n\n\n
     
  * 	\param fd File descriptor.
  * 	\param request Request operation.
@@ -88,8 +88,16 @@ int sys_fcntl(int fd, int request, void* buf) {
 
 
 	switch(request) {
-		case F_DUPFD:
-			return schedule_append_fd(current_task, ino);
+		case F_DUPFD: {
+			int nfd = (int) buf;
+			if(nfd < 0 || nfd > TASK_MAX_FD) {
+				errno = EINVAL;
+				return -1;
+			}
+
+			current_task->fd[nfd] = ino;
+			return nfd;
+		}
 		case F_GETFD:
 			return 0;
 		case F_SETFD:

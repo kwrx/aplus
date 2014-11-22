@@ -5,9 +5,6 @@
 
 #include <errno.h>
 
-#ifdef DEBUG
-#define SYSCALL_DEBUG
-#endif
 
 #define NSYSCALLS		1024
 
@@ -32,7 +29,7 @@ int syscall_init() {
 	list_destroy(syslist);
 
 
-#ifdef DEBUG
+#ifdef SYSCALL_DEBUG
 	
 
 	for(int i = 0, s = 0; i < NSYSCALLS; i++) {

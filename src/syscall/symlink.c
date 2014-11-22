@@ -22,7 +22,7 @@ int sys_symlink(char* path, char* link) {
 		return -1;
 	}
 
-	int dfd = sys_open(link, O_CREAT | O_EXCL | O_RDONLY, S_IFLNK);
+	int dfd = sys_open(link, O_CREAT | O_EXCL | O_RDONLY | O_VIRT, S_IFLNK);
 	if(dfd < 0)
 		return -1;
 

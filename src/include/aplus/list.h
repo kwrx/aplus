@@ -229,6 +229,26 @@ static inline listval_t list_head(list_t* list) {
 	return (listval_t) tmp->value;
 }
 
+/**
+ * \brief Get value at an index in the list.
+ * \param list Pointer to list.
+ * \param index Index to value.
+ * \return A Value if success, otherwise NULL.
+ */
+static inline listval_t list_at_index(list_t* list, int index) {
+	if(!list || !list->body)
+		return (listval_t) NULL;
+
+	if(index < 0)
+		return (listval_t) NULL;
+
+	for(listval_t value = list_head(list); value; value = list_next(list, value))
+		if(index-- == 0)
+			return value;
+
+	return (listval_t) NULL;
+}
+
 
 /**
  * \brief Lock a list for safe operations on it.

@@ -3,6 +3,10 @@
 #include <signal.h>
 
 
+#ifndef F_DUPFD
+#define F_DUPFD			0
+#endif
+
 
 extern char** environ;
 extern int main(int, char**, char**);
@@ -11,8 +15,18 @@ extern int __bss_start;
 extern int _end;
 
 extern int __sigtramp(int sig);
+extern void __libc_init_array();
+extern void __libc_fini_array();
 
+void _init() {
+	fcntl(open("/dev/stdin", 0, 0644), F_DUPFD, 0);
+	fcntl(open("/dev/stdout", 0, 0644), F_DUPFD, 1);
+	fcntl(open("/dev/stderr", 0, 0644), F_DUPFD, 2);
+}
 
+void _fini() {
+	
+}
 
 static int __default_sighandler__(int sig) {
 	signal(sig, __default_sighandler__);
@@ -20,7 +34,7 @@ static int __default_sighandler__(int sig) {
 }
 
 
-#if 0
+/*
 static void __do_global_ctors() {
 	extern int __ctors_start;
 	extern int __ctors_end;
@@ -46,7 +60,8 @@ static void __do_global_dtors() {
 		fs++;
 	}
 }
-#endif
+*/
+
 
 static void __init_traps() {
 	signal(SIGABRT, __default_sighandler__);
@@ -76,20 +91,19 @@ void _start() {
 			argc += 1;
 
 
-	open("/dev/stdin", 0, 0644);
-	open("/dev/stdout", 0, 0644);
-	open("/dev/stderr", 0, 0644);
-
-
+	__libc_init_array();
 
 	__install_sighandler(__sigtramp);
 	_init_signal();
 	__init_traps();
 
 #if 0
-	atexit(__do_global_dtors);
+	//atexit(__do_global_dtors);
 	__do_global_ctors();
 #endif
 
-	exit(main(argc, argv, environ));
+	int ret = main(argc, argv, environ);
+
+	__libc_fini_array();
+	exit(ret);
 }

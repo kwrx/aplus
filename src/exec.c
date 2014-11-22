@@ -20,6 +20,14 @@ typedef int32_t Elf32_Sword;
 typedef uint32_t Elf32_Word;
 
 
+#define ET_NONE				0
+#define ET_REL				1
+#define ET_EXEC				2
+#define ET_DYN				3
+#define ET_CORE				4
+#define ET_LOPROC			0xFF00
+#define ET_HIPROC			0xFFFF
+
 #define EI_NIDENT			16
 #define EI_MAG0				0
 #define EI_MAG1				1
@@ -60,7 +68,19 @@ typedef uint32_t Elf32_Word;
 #define SHF_EXECINSTR		4
 #define SHF_MASK			0xF0000000
 
+#define SHN_UNDEF			0
+#define SHN_LORESERVE		0xFF00
+#define SHN_LOPROC			0xFF00
+#define SHN_HIPROC			0xFF1F
+#define SHN_ABS				0xFFF1
+#define SHN_COMMON			0xFFF2
+#define SHN_HIRESERVE		0xFFFF
 
+#define STB_LOCAL			0
+#define STB_GLOBAL			1
+#define STB_WEAK			2
+#define STB_LOPROC			13
+#define STB_HIPROC			15
 
 #define PT_NULL				0
 #define PT_LOAD				1
@@ -76,10 +96,23 @@ typedef uint32_t Elf32_Word;
 #define ELF32_ST_BIND(i)	((i >> 4))
 #define ELF32_ST_TYPE(i)	((i) & 0x0F)
 
+#define STT_NOTYPE			0
+#define STT_OBJECT			1
+#define STT_FUNC			2
+#define STT_SECTION			3
+#define STT_FILE			4
+#define STT_LOPROC			13
+#define STT_HIPROC			15
+
+#define ELF32_R_SYM(i)		((i) >> 8)
+#define ELF32_R_TYPE(i)		(i & 0xFF)
+#define ELF32_R_INFO(s, t)	(((s << 8) | (t & 0xFF)))
+
+
 /**
  *	\brief Enable or disable debug for ELF.
  */
-#define ELF_DEBUG
+
 
 
 /**
@@ -149,9 +182,10 @@ typedef struct elf32_sym_t {
 /**
  *	\brief Check for valid ELF32 header.
  *	\param hdr ELF32 Header.
+ *	\param type Type of executable.
  * 	\return 0 for valid header or -1 in case of errors.
  */
-int elf32_check(elf32_hdr_t* hdr) {
+int elf32_check(elf32_hdr_t* hdr, int type) {
 
 	if(!hdr) {
 		errno = EINVAL;	
@@ -173,6 +207,7 @@ int elf32_check(elf32_hdr_t* hdr) {
 
 	check(hdr->e_ident[EI_CLASS] != ELF_CLASS_32)
 	check(hdr->e_ident[EI_DATA] != ELF_DATA_LSB)
+	check(hdr->e_type != type)
 
 	return 0;
 }
@@ -186,7 +221,7 @@ int elf32_check(elf32_hdr_t* hdr) {
  *	\return if success 0, otherwise -1.
  */
 int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
-	if(elf32_check(hdr) < 0)
+	if(elf32_check(hdr, ET_EXEC) < 0)
 		return -1;
 
 	elf32_phdr_t* phdr = (elf32_phdr_t*) ((uint32_t) hdr->e_phoff + (uint32_t) hdr);
@@ -235,7 +270,7 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 		return NULL;
 	}
 
-	if(elf32_check(image) < 0)
+	if(elf32_check(image, ET_EXEC) < 0)
 		return NULL;
 
 	elf32_hdr_t* hdr = (elf32_hdr_t*) image;

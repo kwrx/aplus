@@ -75,9 +75,9 @@ struct inode* fs_creat (struct inode* inode, char* name, mode_t mode) {
 	return NULL;
 }
 	
-int fs_rename (struct inode* inode, char* oldname, char* newname) {
+int fs_rename (struct inode* inode, char* newname) {
 	if(inode->rename)
-		return inode->rename(inode, oldname, newname);
+		return inode->rename(inode, newname);
 	
 	errno = ENOSYS;		
 	return -1;

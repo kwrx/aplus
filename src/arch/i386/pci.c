@@ -156,7 +156,7 @@ int pci_init() {
 
 				pci_load_device(&pci_devices[i], bus, dev, func);
 
-#if 1
+#ifdef PCI_DEBUG
 				kprintf("pci: %d:%d.%d: [%x:%x] (rev %x class %x iobase %x mmio %x type %x int %d pin %d)\n",
 							pci_devices[i].bus,
 							pci_devices[i].dev,

@@ -12,17 +12,26 @@ typedef struct __DIR {
 
 struct dirent {
 	int d_ino;
-	char d_name[];
+	char d_name[255];
 };
 
 
-#ifndef O_DIRECTORY
-#define O_DIRECTORY		00200000
+#ifdef O_DIRECTORY
+#undef O_DIRECTORY
 #endif
 
-#ifndef O_NOFOLLOW
-#define O_NOFOLLOW		00400000
+#ifdef O_NOFOLLOW
+#undef O_NOFOLLOW
 #endif
+
+#ifdef O_VIRT
+#undef O_VIRT
+#endif
+
+
+#define O_DIRECTORY		00000200000
+#define O_NOFOLLOW		00000400000
+#define O_VIRT			02000000000
 
 
 #ifdef __cplusplus

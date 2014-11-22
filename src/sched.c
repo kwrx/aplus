@@ -265,7 +265,7 @@ void schedule_release(task_t* task) {
 		
 
 
-#ifdef DEBUG
+#ifdef SCHED_DEBUG
 	kprintf("task: released memory for %d Bytes\n", prevmm - h->used);
 #endif
 }

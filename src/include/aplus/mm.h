@@ -23,11 +23,9 @@
 #define _MM_H
 
 #include <stdint.h>
+#include <aplus.h>
 #include <aplus/task.h>
 
-#ifdef DEBUG
-#define CHUNKS_CHECKING
-#endif
 
 /*
  * 0x00000000 - 0x00800000:		Kernel Reserved
