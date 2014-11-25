@@ -1,0 +1,4 @@
+LIBRARY lib.dll
+
+EXPORTS
+shared_func

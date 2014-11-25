@@ -2,6 +2,16 @@
 #define _DL_H
 
 #include <stdint.h>
+#include <stddef.h>
+
+/*#define DL_DEBUG*/
+
+
+
+extern void* (*__dl_realloc) (void* ptr, size_t size);
+extern int (*__dl_printf) (char* fmt, ...);
+extern void* __dl_malloc(size_t size);
+extern void __dl_free(void* ptr);
 
 #define PUBLIC
 #define PRIVATE static
@@ -13,231 +23,199 @@ typedef int32_t Elf32_Sword;
 typedef uint32_t Elf32_Word;
 
 
-#define ET_NONE				0
-#define ET_REL				1
-#define ET_EXEC				2
-#define ET_DYN				3
-#define ET_CORE				4
-#define ET_LOPROC			0xFF00
-#define ET_HIPROC			0xFFFF
-
-#define EI_NIDENT			16
-#define EI_MAG0				0
-#define EI_MAG1				1
-#define EI_MAG2				2
-#define EI_MAG3				3
-#define EI_CLASS			4
-#define EI_DATA				5
-#define EI_VERSION			6
-#define EI_PAD				7
-
-#define ELF_MAG0			0x7F
-#define ELF_MAG1			'E'
-#define ELF_MAG2			'L'
-#define ELF_MAG3			'F'
-
-#define ELF_CLASS_32		1
-#define ELF_CLASS_64		2
-
-#define ELF_DATA_LSB		1
-#define ELF_DATA_MSB		2
 
 
-#define SHT_NULL			0
-#define SHT_PROGBITS		1
-#define SHT_SYMTAB			2
-#define SHT_STRTAB			3
-#define SHT_RELA			4
-#define SHT_HASH			5
-#define SHT_DYNAMIC			6
-#define SHT_NOTE			7
-#define SHT_NOBITS			8
-#define SHT_REL				9
-#define SHT_SHLIB			10
-#define SHT_DYNSYM			11
+#define DLL_ADDRESS_SIZE	0x100000
 
-#define SHF_WRITE			1
-#define SHF_ALLOC			2
-#define SHF_EXECINSTR		4
-#define SHF_MASK			0xF0000000
-
-#define SHN_UNDEF			0
-#define SHN_LORESERVE		0xFF00
-#define SHN_LOPROC			0xFF00
-#define SHN_HIPROC			0xFF1F
-#define SHN_ABS				0xFFF1
-#define SHN_COMMON			0xFFF2
-#define SHN_HIRESERVE		0xFFFF
-
-#define STB_LOCAL			0
-#define STB_GLOBAL			1
-#define STB_WEAK			2
-#define STB_LOPROC			13
-#define STB_HIPROC			15
-
-#define PT_NULL				0
-#define PT_LOAD				1
-#define PT_DYNAMIC			2
-#define PT_INTERP			3
-#define PT_NOTE				4
-#define PT_SHLIB			5
-#define PT_PHDR				6
-#define PT_LOPROC			0x70000000
-#define PT_HIPROC			0x7FFFFFFF
+#define PE_MACHINE_i32		0x014C
+#define PE_MACHINE_i64		0x0200
+#define PE_MACHINE_AMD64	0x8664
 
 
-#define ELF32_ST_BIND(i)	((i >> 4))
-#define ELF32_ST_TYPE(i)	((i) & 0x0F)
+#define PE_FLAGS_NOREL		(1 << 0)
+#define PE_FLAGS_EXEC		(1 << 1)
+#define PE_FLAGS_NOCOFFLN	(1 << 2)
+#define PE_FLAGS_NOCOFFSYM	(1 << 3)
+#define PE_FLAGS_2GB_VA		(1 << 5)
+#define PE_FLAGS_DWORD		(1 << 6)
+#define PE_FLAGS_NODEBUG	(1 << 7)
+#define PE_FLAGS_SYSTEM		(1 << 9)
+#define PE_FLAGS_DLL		(1 << 10)
+
+#define PE_MAGIC_32BIT		0x10B
+#define PE_MAGIC_64BIT		0x20B
+#define PE_MAGIC_ROM		0x107
+
+#define PE_DLL_REL			(1 << 4)
+#define PE_DLL_CHECK		(1 << 5)
+#define PE_DLL_DEP			(1 << 6)
+#define PE_DLL_SOCIAL		(1 << 7)
+#define PE_DLL_SEH			(1 << 8)
+#define PE_DLL_BIND			(1 << 9)
+#define PE_DLL_WDM			(1 << 11)
+
+#define PE_SECT_CODE		0x0020
+#define PE_SECT_IDATA		0x0040
+#define PE_SECT_UDATA		0x0080
+#define PE_SECT_INFO		0x0200
+
+#define PE_DATADIR_EXPORT	0
+#define PE_DATADIR_IMPORT	1
+#define PE_DATADIR_RES		2
+#define PE_DATADIR_EXCEPT	3
+#define PE_DATADOR_SEC		4
+#define PE_DATADIR_BASEREL	5
+#define PE_DATADIR_DEBUG	6
+#define PE_DATADIR_DESC		7
+#define PE_DATADIR_MACHINE	8
+#define PE_DATADIR_TLS		9
+#define PE_DATADIR_CONFIG	10
+#define PE_DATADIR_COM		14
+
+#define PE_REL_ABS			0
+#define PE_REL_HIGH			1
+#define PE_REL_LOW			2
+#define PE_REL_HIGHLOW		3
+#define PE_REL_HIGHADJ		4
+#define PE_REL_MIPS_JMP		5
+#define PE_REL_SECTION		6
+#define PE_REL_REL32		7
 
 
-#define STT_NOTYPE			0
-#define STT_OBJECT			1
-#define STT_FUNC			2
-#define STT_SECTION			3
-#define STT_FILE			4
-#define STT_LOPROC			13
-#define STT_HIPROC			15
+#define RVA(base, addr)		\
+	((uint32_t) base + (uint32_t) addr)
 
-#define ELF32_R_SYM(i)		((i) >> 8)
-#define ELF32_R_TYPE(i)		(i & 0xFF)
-#define ELF32_R_INFO(s, t)	(((s << 8) | (t & 0xFF)))
+#define VA(base, addr)		\
+	((uint32_t) base - (uint32_t) addr)
 
 
-#define DT_NULL				0
-#define DT_NEEDED			1
-#define DT_PLTRELSZ			2
-#define DT_PLTGOT			3
-#define DT_HASH				4
-#define DT_STRTAB			5
-#define DT_SYMTAB			6
-#define DT_RELA				7
-#define DT_RELASZ			8
-#define DT_RELAENT			9
-#define DT_STRSZ			10
-#define DT_SYMENT			11
-#define DT_INIT				12
-#define DT_FINI				13
-#define DT_SONAME			14
-#define DT_RPATH			15
-#define DT_SYMBOLIC			16
-#define DT_REL				17
-#define DT_RELSZ			18
-#define DT_RELENT			19
-#define DT_PLTREL			20
-#define DT_DEBUG			21
-#define DT_TEXTREL			22
-#define DT_JMPREL			23
-#define DT_LOPROC			0x70000000
-#define DT_HIPROC			0x7FFFFFFF
+#define PE_R_TYPE(x)		\
+	((x & 0xF000) >> 12)
+
+#define PE_R_OFFSET(x)		\
+	(x & 0x0FFF)
+
+typedef struct pe_dos_header {
+	uint16_t e_magic;
+	uint16_t e_cblp;
+	uint16_t e_cp;
+	uint16_t e_crlc;
+	uint16_t e_cparhdr;
+	uint16_t e_minalloc;
+	uint16_t e_maxalloc;
+	uint16_t e_ss;
+	uint16_t e_sp;
+	uint16_t e_csum;
+	uint16_t e_ip;
+	uint16_t e_cs;
+	uint16_t e_lfarlc;
+	uint16_t e_ovno;
+	uint16_t e_res[4];
+	uint16_t e_oemid;
+	uint16_t e_oeminfo;
+	uint16_t e_res2[10];
+	uint32_t e_lfanew;
+} __attribute__((packed)) pe_dos_header_t;
 
 
-#define R_386_NONE			0
-#define R_386_32			1
-#define R_386_PC32			2
-
-/**
- *	\brief Enable or disable debug for ELF.
- */
-#define ELF_DEBUG
-
-
-/**
- *	\brief ELF32 Header.
- */
-typedef struct elf32_hdr {
-	uint8_t e_ident[EI_NIDENT];
-	Elf32_Half e_type;
-	Elf32_Half e_machine;
-	Elf32_Word e_version;
-	Elf32_Addr e_entry;
-	Elf32_Off e_phoff;
-	Elf32_Off e_shoff;
-	Elf32_Word e_flags;
-	Elf32_Half e_ehsize;
-	Elf32_Half e_phentsize;
-	Elf32_Half e_phnum;
-	Elf32_Half e_shentsize;
-	Elf32_Half e_shnum;
-	Elf32_Half e_shstrndx;
-} elf32_hdr_t;
-
-/**
- *	\brief ELF32 Section Header.
- */
-typedef struct elf32_shdr {
-	Elf32_Word sh_name;
-	Elf32_Word sh_type;
-	Elf32_Word sh_flags;
-	Elf32_Addr sh_addr;
-	Elf32_Off sh_offset;
-	Elf32_Word sh_size;
-	Elf32_Word sh_link;
-	Elf32_Word sh_info;
-	Elf32_Word sh_addralign;
-	Elf32_Word sh_entsize;
-} elf32_shdr_t;
+typedef struct pe_file_header {
+	uint16_t machine;
+	uint16_t numofsect;
+	uint32_t timestamp;
+	uint32_t symtab;
+	uint32_t symcount;
+	uint16_t sizeof_opt;
+	uint16_t flags;
+} __attribute__((packed)) pe_file_header_t;
 
 
-/**
- *	\brief ELF32 Program Header.
- */
-typedef struct elf32_phdr {
-	Elf32_Word p_type;
-	Elf32_Off p_offset;
-	Elf32_Addr p_vaddr;
-	Elf32_Addr p_paddr;
-	Elf32_Word p_filesz;
-	Elf32_Word p_memsz;
-	Elf32_Word p_flags;
-	Elf32_Word p_align;
-} elf32_phdr_t;
+typedef struct pe_opt_header {
+	uint16_t magic;
+	uint16_t linker;
+	uint32_t sizeof_code;
+	uint32_t sizeof_initdata;
+	uint32_t sizeof_dnitdata;
+	uint32_t entry;
+	uint32_t baseof_code;
+	uint32_t baseof_data;
+	uint32_t baseof_image;
+	uint32_t section_align;
+	uint32_t file_align;
+	uint32_t reserved0;
+	uint32_t version;
+	uint32_t reserved1;
+	uint32_t reserved2;
+	uint32_t sizeof_image;
+	uint32_t sizeof_headers;
+	uint32_t checksum;
+	uint16_t reserved3;
+	uint16_t dll_flags;
+	uint32_t sizeof_stack_r;
+	uint32_t sizeof_stack_c;
+	uint32_t sizeof_heap_r;
+	uint32_t sizeof_heap_c;
+	uint32_t flags;
+	uint32_t datadir_count;
+	uint32_t datadir_addr;
+} __attribute__((packed)) pe_opt_header_t;
 
 
-/**
- *	\brief ELF32 Symbol.
- */
-typedef struct elf32_sym_t {
-	Elf32_Word st_name;
-	Elf32_Addr st_value;
-	Elf32_Word st_size;
-	uint8_t st_info;
-	uint8_t st_other;
-	Elf32_Half st_shndx;
-} elf32_sym_t;
+typedef struct pe_section_header {
+	char name[8];
+	uint32_t paddr;
+	uint32_t vaddr;
+	uint32_t size;
+	uint32_t ptr_rawdata;
+	uint32_t ptr_rel;
+	uint32_t ptr_ln;
+	uint16_t numof_rel;
+	uint16_t numof_ln;
+	uint32_t flags;
+} __attribute__((packed)) pe_section_header_t;
 
 
-/**
- *	\brief ELF32 Dynamic section
- */
-typedef struct {
-	Elf32_Sword d_tag;
-	union {
-		Elf32_Word d_val;
-		Elf32_Addr d_ptr;
-	} d_un;
-} elf32_dyn_t;
+typedef struct pe_nt_header {
+	uint32_t signature;
+	pe_file_header_t file_header;
+	pe_opt_header_t opt_header;
+} __attribute__((packed)) pe_nt_header_t;
 
 
+typedef struct pe_datadir {
+	uint32_t rva;
+	uint32_t size;
+} __attribute__((packed)) pe_datadir_t;
 
-typedef struct {
-	Elf32_Addr r_offset;
-	Elf32_Word r_info;
-} elf32_rel_t;
 
-typedef struct {
-	Elf32_Addr r_offset;
-	Elf32_Word r_info;
-	Elf32_Sword r_addend;
-} elf32_rela_t;
+typedef struct pe_export {
+	uint32_t flags;
+	uint32_t timestamp;
+	uint32_t version;
+	uint32_t name;
+	uint32_t base;
+	uint32_t numof_funcs;
+	uint32_t numof_names;
+	uint32_t** addrof_funcs;
+	uint32_t** addrof_names;
+	uint16_t** addrof_sort;
+} __attribute__((packed)) pe_export_t;
 
+
+typedef struct pe_base_rel {
+	uint32_t vaddr;
+	uint32_t size;
+	uint16_t values;
+} __attribute__((packed)) pe_base_rel_t;
 
 /**
  *	\brief Runtime loaded symbol
  */
-typedef struct {
+typedef struct rtsym {
 	char name[255];
-	void* handler;
+	void* addr;
 	int flags;
+
+	struct rtsym* next;
 } rtsym_t;
 
 /**
@@ -251,6 +229,5 @@ typedef struct {
 
 	rtsym_t* symbols;
 } dll_t;
-
 
 #endif

@@ -99,7 +99,7 @@ int main() {
 		panic("procfs: cannot create link for /proc");
 
 	char* __argv[] = {
-		"/dev/ramdisk/test", 
+		"/dev/ramdisk/main", 
 		NULL
 	};
 
@@ -112,7 +112,9 @@ int main() {
 
 	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
+
 	
 	sysidle();
 }
+
 

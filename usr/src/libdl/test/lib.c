@@ -1,5 +1,5 @@
+#include <stdio.h>
 
-
-int shared_func(char* ptr) {
-	return (int) ptr;
+__attribute__((dllexport)) int shared_func() {
+	printf("Hello World");
 }

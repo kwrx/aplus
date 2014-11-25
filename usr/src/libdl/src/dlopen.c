@@ -11,132 +11,171 @@
 #include "dl.h"
 
 
+static void define_sym(dll_t* dll, char* name, void* addr, int flags) {
+	rtsym_t* rt = (rtsym_t*) __dl_malloc(sizeof(rtsym_t));
+	memset(rt, 0, sizeof(rtsym_t));
 
-
-static void* elf_section(elf32_hdr_t* hdr, char* name, size_t* size) {
-
-	elf32_shdr_t* shdr = (elf32_shdr_t*) ((uint32_t) hdr + hdr->e_shoff);
-	elf32_shdr_t* shstrtab = (elf32_shdr_t*) ((uint32_t) hdr + shdr[hdr->e_shstrndx].sh_offset);
-
-	int sn = hdr->e_shnum;
-	int ss = hdr->e_shentsize;
+	strcpy(rt->name, name);
+	rt->addr = addr;
+	rt->flags = flags;
+	rt->next = dll->symbols;
 	
-	int i;
-	for(i = 0; i < sn; i++) {
-		if(strcmp(name, (char*) ((uint32_t) shstrtab + shdr->sh_name)) == 0) {
-			if(size)
-				*size = shdr->sh_size;
-
-
-			return (void*) ((uint32_t) hdr + shdr->sh_offset);
-		}
-	
-		shdr = (elf32_shdr_t*) ((uint32_t) shdr + ss);
-	}
-
-	return NULL;
+	dll->symbols = rt;
 }
 
+static int pe_check(pe_dos_header_t* hdr, int flags) {
+#ifdef DL_DEBUG
+	__dl_printf("libdl: checking valid dll\n");
+#endif
 
-static void* elf_dynamic(elf32_hdr_t* hdr, int type) {
-	size_t sz;
-	elf32_dyn_t* dyn = elf_section(hdr, ".dynamic", &sz);
-	if(!dyn)
-		return NULL;
-
-	int i;
-	for(i = 0; i < (sz / sizeof(elf32_dyn_t)); i++) {
-		if(dyn[i].d_tag == type)
-			return (void*) ((uint32_t) hdr + dyn[i].d_un.d_ptr);
-	}
-
-	return NULL;
-}
-
-
-static int elf32_check(elf32_hdr_t* hdr, int type) {
-
-	if(!hdr) {
-		errno = EINVAL;	
+	if(memcmp(&hdr->e_magic, "MZ", 2) != 0) {
+		__dl_printf("libdl: No MZ Signature.\n");	
 		return -1;
 	}
 
-	#define check(cond)				\
-		if(cond) {					\
-			errno = ENOEXEC;		\
-			return -1;				\
-		}
+	pe_nt_header_t* nt = (pe_nt_header_t*) RVA(hdr, hdr->e_lfanew); 
+	if(memcmp(&nt->signature, "PE\0\0", 4) != 0) {
+		__dl_printf("libdl: No PE Signature.\n");		
+		return -1;
+	}
 
-	check(
-		(hdr->e_ident[EI_MAG0] != ELF_MAG0) ||
-		(hdr->e_ident[EI_MAG1] != ELF_MAG1) ||
-		(hdr->e_ident[EI_MAG2] != ELF_MAG2) ||
-		(hdr->e_ident[EI_MAG3] != ELF_MAG3)
-	)
+	if(nt->file_header.machine != PE_MACHINE_i32) {
+		__dl_printf("libdl: Invalid machine type %d.\n", nt->file_header.machine);
+		return -1;
+	}
 
-	check(hdr->e_ident[EI_CLASS] != ELF_CLASS_32)
-	check(hdr->e_ident[EI_DATA] != ELF_DATA_LSB)
-	check(hdr->e_type != type)
+#ifdef DL_DEBUG
+	__dl_printf("libdl: success!\n");
+#endif
 
 	return 0;
 }
 
-static int elf_process(elf32_hdr_t* hdr, elf32_sym_t* symtab, char* strtab) {
-	elf32_shdr_t* shdr = (elf32_shdr_t*) ((uint32_t) hdr + hdr->e_shoff);
-	
-	int i;
-	for(i = 0; i < hdr->e_shnum; i++) {
-		if(shdr[i].sh_type == SHT_NOBITS) {
-			if(shdr[i].sh_size == 0)
-				continue;
 
-			if(shdr[i].sh_flags & SHF_ALLOC) {
-				void* vm = malloc(shdr[i].sh_size);
-				memset(vm, 0, shdr[i].sh_size);
+static void pe_load(dll_t* dll) {
 
-				shdr[i].sh_offset = (uint32_t) vm - (uint32_t) hdr;
-			}
-		}
-	}
+	pe_dos_header_t* hdr = (pe_dos_header_t*) dll->image;
+	pe_nt_header_t* nt = (pe_nt_header_t*) RVA(hdr->e_lfanew, hdr);
 
-	for(i = 0; i < hdr->e_shnum; i++) {
-		if(shdr[i].sh_type == SHT_REL) {
+	uint32_t size = nt->opt_header.sizeof_image;
 
-			elf_rel_t* rltab = (elf32_rel_t*) ((uint32_t) hdr + shdr[i].sh_offset);			
+	void* space = __dl_malloc(size);
+#ifdef DL_DEBUG
+	__dl_printf("libdl: loading into new space address at 0x%x (%d Bytes)\n", space, size);
+#endif
 
-			int idx;
-			for(idx = 0; idx < (shdr[i].sh_size / shdr[i].sh_entsize); idx++) {
-				 elf32_shdr_t* shtgt = shdr[shdr[i].sh_info];
+	memset(space, 0, size);
+	memcpy(space, dll->image, dll->imagesz);
 
-				uint32_t symval = 0;
-				if(ELF32_R_SYM(rltab[idx].r_info) != SHN_UNDEF) {
-					elf32_sym_t* sym = &symtab[ELF32_R_SYM(rltab[idx].r_info)];
+	__dl_free(dll->image);
 
-					if(sym->st_shndx == SHN_UNDEF) {
-						if(!(ELF32_ST_BIND(sym->st_info) & STB_WEAK)) {
-							printf("Undefined external symbol: %s\n", (char*) ((uint32_t) strtab + sym->st_name));
-							return -1;
-						}
-					} else if(sym->st_shndx == SHN_ABS)
-						symval = sym->st_value;
-					else
-						symval = (uint32_t) hdr + sym->st_value + shdr[sym->st_shndx].sh_offset;
-				}
-
-				int* ref = (int*) ((int)hdr + shdr[
-
-				switch(ELF32_R_TYPE(rltab[idx].r_info)) {
-					case R_386_NONE:
-						break;
-					case R_386_32:
-						
-				}
-			} 
-		}
-	}
-
+	dll->image = space;
+	dll->imagesz = size;
 }
 
+
+static void pe_do_reloc(dll_t* dll, uint32_t offset) {
+	pe_dos_header_t* hdr = (pe_dos_header_t*) dll->image;
+	pe_nt_header_t* nt = (pe_nt_header_t*) RVA(hdr->e_lfanew, hdr);
+
+	uint32_t* v = (uint32_t*) RVA(offset, hdr);
+	*v = VA(*v, nt->opt_header.baseof_image);
+	*v = RVA(*v, hdr);
+}
+
+static void pe_reloc(dll_t* dll) {
+	pe_dos_header_t* hdr = (pe_dos_header_t*) dll->image;
+	pe_nt_header_t* nt = (pe_nt_header_t*) RVA(hdr->e_lfanew, hdr);
+	pe_section_header_t* shdr = (pe_section_header_t*) ((uint32_t) &nt->opt_header + nt->file_header.sizeof_opt);
+
+
+#ifdef DL_DEBUG
+	__dl_printf("libdl: reloc sections\n");
+#endif
+	int i;
+	for(i = 0; i < nt->file_header.numofsect; i++) {
+		if(!(shdr[i].flags & 0x7F))
+			continue;
+
+#ifdef DL_DEBUG
+	__dl_printf("libdl: reloc section (%x) %s from 0x%x to 0x%x (%d Bytes)\n", shdr[i].flags, shdr[i].name, shdr[i].ptr_rawdata, RVA(shdr[i].vaddr, hdr), shdr[i].size);
+#endif
+
+		memset((void*) RVA(shdr[i].vaddr, hdr), 0, shdr[i].size);
+
+		
+		if(shdr[i].size)
+			memcpy((void*) RVA(shdr[i].vaddr, hdr), (void*) RVA(shdr[i].ptr_rawdata, hdr), shdr[i].size);
+	}
+
+	pe_datadir_t* datadir = (pe_datadir_t*) &nt->opt_header.datadir_addr;
+	pe_base_rel_t* rel = (pe_base_rel_t*) RVA(datadir[PE_DATADIR_BASEREL].rva, hdr);
+
+
+#ifdef DL_DEBUG
+	__dl_printf("libdl: reloc base (%d Bytes)\n", datadir[PE_DATADIR_BASEREL].size);
+#endif
+	for(i = 0; i < datadir[PE_DATADIR_BASEREL].size; i++) {
+		int p;
+		uint16_t* v = &rel->values;
+
+		for(p = 0; p < (datadir[PE_DATADIR_BASEREL].size - 8) / sizeof(*v); p++) {
+			switch(PE_R_TYPE(v[p])) {
+				case PE_REL_ABS:
+					break;
+				case PE_REL_HIGHLOW:
+					pe_do_reloc(dll, rel->vaddr + PE_R_OFFSET(v[p]));
+					break;
+				default:
+					__dl_printf("Unsupported relocation %d (%d)\n", p, PE_R_TYPE(v[p]));
+					break;
+			}
+		}
+
+		i += rel->size;
+		rel = (pe_base_rel_t*) ((uint32_t) rel + rel->size);
+	}
+}
+
+
+static void pe_load_exports(dll_t* dll) {
+
+	pe_dos_header_t* hdr = (pe_dos_header_t*) dll->image;
+	pe_nt_header_t* nt = (pe_nt_header_t*) RVA(hdr->e_lfanew, hdr);
+	
+	pe_datadir_t* datadir = (pe_datadir_t*) &nt->opt_header.datadir_addr;
+	pe_export_t* exports = (pe_export_t*) RVA(datadir[PE_DATADIR_EXPORT].rva, hdr);
+
+
+#ifdef DL_DEBUG
+	__dl_printf("libdl: .edata at 0x%x (%d Bytes)\n", datadir[PE_DATADIR_EXPORT].rva, datadir[PE_DATADIR_EXPORT].size);
+	__dl_printf("libdl: export directory\n\tflags: %x\n\ttimestamp: %d\n\tversion: %d\n\tname: %x\n\tnumof_funcs: %x\n\tnumof_names: %x\n", exports->flags,
+																																			exports->timestamp,
+																																			exports->version,
+																																			exports->name,
+																																			exports->numof_funcs,
+																																			exports->numof_names);
+
+	__dl_printf("\taddrof_funcs: 0x%x\n\taddrof_names: 0x%x\n\taddrof_sort: 0x%x\n", exports->addrof_funcs, hdr, exports->addrof_names, exports->addrof_sort);
+#endif
+
+
+	uint32_t* names = (uint32_t*) RVA(exports->addrof_names, hdr);
+	uint32_t* funcs = (uint32_t*) RVA(exports->addrof_funcs, hdr);
+	uint16_t* sort = (uint16_t*) RVA(exports->addrof_sort, hdr);
+
+	int i;
+	for(i = 0; i < exports->numof_funcs; i++) {
+		char* name = (char*) RVA(names[i], hdr);
+		void* addr = (void*) RVA(funcs[sort[i]], hdr);
+
+		define_sym(dll, name, addr, 0);
+
+#ifdef DL_DEBUG
+		__dl_printf("libdl: exported symbol %s at 0x%x\n", name, addr);
+#endif
+	}
+}
 
 void* dlopen(const char* filename, int flag) {
 	if(!filename) {
@@ -144,13 +183,14 @@ void* dlopen(const char* filename, int flag) {
 		return NULL;
 	}
 
-	FILE* fp = fopen(filename, "rb");
-	if(!fp) {
+
+	int fp = open(filename, O_RDONLY, 0644);
+	if(fp < 0) {
 		errno = ENOENT;
 		return NULL;
 	}
 
-	dll_t* dll = (dll_t*) malloc(sizeof(dll_t));
+	dll_t* dll = (dll_t*) __dl_malloc(sizeof(dll_t));
 	memset(dll, 0, sizeof(dll_t));
 
 	strcpy(dll->name, filename);
@@ -159,17 +199,24 @@ void* dlopen(const char* filename, int flag) {
 	dll->imagesz = 0;
 	dll->symbols = NULL;
 
-	fseek(fp, 0, SEEK_END);
-	dll->imagesz = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
+	lseek(fp, 0, SEEK_END);
+	dll->imagesz = lseek(fp, 0, SEEK_CUR);
+	lseek(fp, 0, SEEK_SET);
 
-	dll->image = malloc(dll->imagesz);
-	fread(dll->image, 1, dll->imagesz, fp);
-	fclose(fp);
+	dll->image = (void*) __dl_malloc(dll->imagesz);
+	if(read(fp, dll->image, dll->imagesz) != dll->imagesz) {
+		__dl_free(dll->image);
+		__dl_free(dll);
 
-	if(elf32_check(dll->image, ET_DYN) != 0) {
-		free(dll->image);
-		free(dll);
+		errno = EIO;
+		return NULL;
+	}
+
+	close(fp);
+
+	if(pe_check(dll->image, 0) != 0) {
+		__dl_free(dll->image);
+		__dl_free(dll);
 
 		errno = ENOEXEC;
 		return NULL;
@@ -177,27 +224,11 @@ void* dlopen(const char* filename, int flag) {
 
 	if(flag == RTLD_NOLOAD)
 		return dll;
-
-
-
-	size_t symtabsz;
-	char* strtab = elf_dynamic(dll->image, DT_STRTAB);
-	elf32_sym_t* symtab = elf_section(dll->image, ".dynsym", &symtabsz);
-
-
-	if(!(strtab && symtab)) {
-		free(dll->image);
-		free(dll);
-
-		errno = ENOEXEC;
-		return NULL;
-	}
-
-
-	int i;
-	for(i = 0; i < (symtabsz / sizeof(elf32_sym_t)); i++) {
-		printf("[%d] %s: 0x%x (%d)\n", i, (char*) (symtab[i].st_name + (uint32_t) strtab), symtab[i].st_value, symtab[i].st_info);
-	}
 	
+
+	pe_load(dll);
+	pe_reloc(dll);
+	pe_load_exports(dll);
+
 	return dll;
 }

@@ -18,9 +18,9 @@ CXX			:= @CXX@
 LD			:= @LD@
 AR			:= @AR@
 
-WARNINGS	:= -Wall -Wno-return-type -Wno-implicit-int
+WARNINGS	:= -Wall -Wno-return-type -Wno-implicit-int -Wno-implicit-function-declaration
 
-CFLAGS		:= -O2 $(WARNINGS)
+CFLAGS		:= -O2 $(WARNINGS) 
 CXXFLAGS	:= -O2 $(WARNINGS)
 LDFLAGS		:=
 ARFLAGS		:= -rcs
