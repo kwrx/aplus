@@ -9,6 +9,7 @@
 //#define SYSCALL_DEBUG
 #define ELF_DEBUG
 #define SCHED_DEBUG
+#define SHM_DEBUG
 
 #define CHUNKS_CHECKING
 

@@ -1,5 +1,6 @@
 /* Script for ld -Ur: link w/out relocation, do create constructors */
 OUTPUT_FORMAT(pe-i386)
+SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib");
 SECTIONS
 {
   .text  :

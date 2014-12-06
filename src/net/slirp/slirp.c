@@ -1,6 +1,5 @@
 #include <aplus.h>
 #include <aplus/netif.h>
-#include <aplus/bufio.h>
 #include <aplus/mm.h>
 #include <aplus/task.h>
 #include <aplus/spinlock.h>

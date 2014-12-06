@@ -78,9 +78,10 @@ static void pe_do_reloc(dll_t* dll, uint32_t offset) {
 	pe_dos_header_t* hdr = (pe_dos_header_t*) dll->image;
 	pe_nt_header_t* nt = (pe_nt_header_t*) RVA(hdr->e_lfanew, hdr);
 
-	uint32_t* v = (uint32_t*) RVA(offset, hdr);
-	*v = VA(*v, nt->opt_header.baseof_image);
-	*v = RVA(*v, hdr);
+	int delta = (int) dll->image - (int) nt->opt_header.baseof_image;
+
+	int* v = (int*) RVA(offset, hdr);
+	*v += delta;
 }
 
 static void pe_reloc(dll_t* dll) {
@@ -93,13 +94,19 @@ static void pe_reloc(dll_t* dll) {
 	__dl_printf("libdl: reloc sections\n");
 #endif
 	int i;
-	for(i = 0; i < nt->file_header.numofsect; i++) {
+	for(i = nt->file_header.numofsect - 1; i >= 0 ; i--) {
 		if(!(shdr[i].flags & 0x7F))
 			continue;
 
 #ifdef DL_DEBUG
 	__dl_printf("libdl: reloc section (%x) %s from 0x%x to 0x%x (%d Bytes)\n", shdr[i].flags, shdr[i].name, shdr[i].ptr_rawdata, RVA(shdr[i].vaddr, hdr), shdr[i].size);
+	
+	int p;
+	for(p = 0; p < 128; p++)
+		__dl_printf("%x ", ((char*) RVA(shdr[i].ptr_rawdata, hdr))[p] & 0xFF);
+	__dl_printf("\n\n");
 #endif
+
 
 		memset((void*) RVA(shdr[i].vaddr, hdr), 0, shdr[i].size);
 
@@ -113,13 +120,27 @@ static void pe_reloc(dll_t* dll) {
 
 
 #ifdef DL_DEBUG
-	__dl_printf("libdl: reloc base (%d Bytes)\n", datadir[PE_DATADIR_BASEREL].size);
+	__dl_printf("libdl: .reloc 0x%x (%d Bytes)\n", datadir[PE_DATADIR_BASEREL].rva, datadir[PE_DATADIR_BASEREL].size);
 #endif
+
+
+	if(rel->size > datadir[PE_DATADIR_BASEREL].size) {
+		__dl_printf("libdl: relocation corrupted or invalid\n");
+		return;
+	}
+
+
+
+
 	for(i = 0; i < datadir[PE_DATADIR_BASEREL].size; i++) {
 		int p;
 		uint16_t* v = &rel->values;
 
-		for(p = 0; p < (datadir[PE_DATADIR_BASEREL].size - 8) / sizeof(*v); p++) {
+#ifdef DL_DEBUG
+		__dl_printf("libdl: reloc block of offset 0x%x (%x)\n", rel->vaddr, (rel->size - 8) / sizeof(*v));
+#endif
+
+		for(p = 0; p < (rel->size - 8) / sizeof(*v); p++) {
 			switch(PE_R_TYPE(v[p])) {
 				case PE_REL_ABS:
 					break;
@@ -149,14 +170,14 @@ static void pe_load_exports(dll_t* dll) {
 
 #ifdef DL_DEBUG
 	__dl_printf("libdl: .edata at 0x%x (%d Bytes)\n", datadir[PE_DATADIR_EXPORT].rva, datadir[PE_DATADIR_EXPORT].size);
-	__dl_printf("libdl: export directory\n\tflags: %x\n\ttimestamp: %d\n\tversion: %d\n\tname: %x\n\tnumof_funcs: %x\n\tnumof_names: %x\n", exports->flags,
+	__dl_printf("libdl: export directory\n\tflags: %x\n\ttimestamp: %d\n\tversion: %d\n\tname: %s\n\tnumof_funcs: %x\n\tnumof_names: %x\n", exports->flags,
 																																			exports->timestamp,
 																																			exports->version,
-																																			exports->name,
+																																			RVA(exports->name, hdr),
 																																			exports->numof_funcs,
 																																			exports->numof_names);
 
-	__dl_printf("\taddrof_funcs: 0x%x\n\taddrof_names: 0x%x\n\taddrof_sort: 0x%x\n", exports->addrof_funcs, hdr, exports->addrof_names, exports->addrof_sort);
+	__dl_printf("\taddrof_funcs: 0x%x\n\taddrof_names: 0x%x\n\taddrof_sort: 0x%x\n", exports->addrof_funcs, exports->addrof_names, exports->addrof_sort);
 #endif
 
 
@@ -229,6 +250,10 @@ void* dlopen(const char* filename, int flag) {
 	pe_load(dll);
 	pe_reloc(dll);
 	pe_load_exports(dll);
+
+#ifdef DL_DEBUG
+	__dl_printf("libdl: library successful loaded\n");
+#endif
 
 	return dll;
 }

@@ -24,7 +24,11 @@
 
 #include <stdint.h>
 #include <aplus.h>
+#include <aplus/mm.h>
+#include <aplus/list.h>
 #include <aplus/fs.h>
+#include <aplus/shm.h>
+
 
 #include <signal.h>
 #include <sys/types.h>
@@ -105,6 +109,8 @@ typedef struct task {
 	inode_t* cwd;
 	inode_t* exe;
 	inode_t* fd[TASK_MAX_FD];
+
+	list_t* shmmap;
 	
 	struct {
 		uint32_t vaddr;

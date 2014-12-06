@@ -23,8 +23,8 @@ int ipv6_recv(netif_t* netif, void* buf, size_t length, int type) {
 
 	switch(ip->protocol) {
 		case IPV6_PROTO_UDP:
-			//if(udp_recv(__params) == 0)
-			//	return 0;
+			if(udp_recv(__params) == 0)
+				return 0;
 			return length;
 		
 		case IPV6_PROTO_TCP:

@@ -28,7 +28,7 @@ all: $(OUTPUT)
 
 $(OUTPUT): $(SRCDIR)/crt0.c
 	@echo "CC   " $(notdir $@)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@ -lsys
 
 
 test: $(TSTDIR)/main

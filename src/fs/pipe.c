@@ -1,9 +1,9 @@
 #include <aplus.h>
 #include <aplus/fs.h>
-#include <aplus/bufio.h>
 #include <aplus/mm.h>
 #include <aplus/spinlock.h>
 #include <aplus/task.h>
+#include <aplus/shm.h>
 
 #include <stdio.h>
 #include <stddef.h>
@@ -18,43 +18,71 @@ extern task_t* current_task;
 
 
 typedef struct pipeinfo {
-	bufio_t* stream;
+	void* stream;
 	off_t read_offset;
 	off_t write_offset;
+	uint32_t size;
 } pipeinfo_t;
 
 
 int pipe_read(inode_t* inode, char* ptr, int len) {
 	pipeinfo_t* pipe = inode->userdata;
-	
+	shm_chunk_t* chunk = (shm_chunk_t*) pipe->stream;
+
 	spinlock_waiton(pipe->read_offset + len > pipe->write_offset);
 	
-	bufio_seek(pipe->stream, pipe->read_offset % pipe->stream->size, SEEK_SET);
-	
-	size_t tolen = 0;
-	while((tolen = bufio_read(pipe->stream, (void*) ((off_t) ptr + (off_t) tolen), len)) < len)
-		bufio_seek(pipe->stream, 0, SEEK_SET);
-		
-	pipe->write_offset = bufio_tell(pipe->stream);
+	int p;
+	for(p = 0; p < (len / pipe->size); p++) {
+		memcpy(
+			(void*) ((uint32_t) ptr + (p * pipe->size)),
+			(void*) ((uint32_t) chunk->addr + (pipe->read_offset % pipe->size)),
+			pipe->size
+		);
+
+		pipe->read_offset += pipe->size;
+	}
+
+	if(len % pipe->size)
+		memcpy(
+			(void*) ((uint32_t) ptr + (p * pipe->size)),
+			(void*) ((uint32_t) chunk->addr + (pipe->read_offset % pipe->size)),
+			len % pipe->size
+		);
+
+
+	pipe->read_offset += len % pipe->size;
 	return (int) len;
 }
 
 int pipe_write(inode_t* inode, char* ptr, int len) {
 	pipeinfo_t* pipe = inode->userdata;
-	bufio_seek(pipe->stream, pipe->write_offset % pipe->stream->size, SEEK_SET);
-	
-	size_t tolen = 0;
-	while((tolen = bufio_write(pipe->stream, (void*) ((off_t) ptr + (off_t) tolen), len)) < len)
-		bufio_seek(pipe->stream, 0, SEEK_SET);
-		
-	pipe->write_offset = bufio_tell(pipe->stream);
+	shm_chunk_t* chunk = (shm_chunk_t*) pipe->stream;
+
+	int p;
+	for(p = 0; p < (len / pipe->size); p++) {
+		memcpy(
+			(void*) ((uint32_t) chunk->addr + (pipe->write_offset % pipe->size)),
+			(void*) ((uint32_t) ptr + (p * pipe->size)),
+			pipe->size
+		);
+
+		pipe->write_offset += pipe->size;
+	}
+
+	if(len % pipe->size)
+		memcpy(
+			(void*) ((uint32_t) chunk->addr + (pipe->write_offset % pipe->size)),
+			(void*) ((uint32_t) ptr + (p * pipe->size)),
+			len % pipe->size
+		);
+
+	pipe->write_offset += len % pipe->size;
 	return (int) len;
 }
 
 void pipe_flush(inode_t* inode) {
 	pipeinfo_t* pipe = inode->userdata;
-	
-	bufio_free(pipe->stream);
+	shm_release_chunk((shm_chunk_t*) pipe->stream);
 	kfree(pipe);
 }
 
@@ -63,7 +91,8 @@ void pipe_flush(inode_t* inode) {
 int pipe_create(inode_t inodes[2]) {
 
 	pipeinfo_t* pipe = (pipeinfo_t*) kmalloc(sizeof(pipeinfo_t));
-	pipe->stream = (bufio_t*) bufio_alloc(BUFSIZ);
+	pipe->size = BUFSIZ;
+	pipe->stream = (void*) shm_acquire_chunk(&pipe->size);
 	pipe->read_offset = 0;
 	pipe->write_offset = 0;
 
@@ -79,7 +108,7 @@ int pipe_create(inode_t inodes[2]) {
 		inodes[i].gid = current_task->gid;
 		inodes[i].mode = S_IFIFO;
 		inodes[i].userdata = (void*) pipe;
-		inodes[i].size = (size_t) BUFSIZ;
+		inodes[i].size = (size_t) pipe->size;
 	}
 	
 	

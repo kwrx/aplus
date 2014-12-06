@@ -1,5 +1,6 @@
 /* Script for ld -r: link without relocation */
 OUTPUT_FORMAT(pe-i386)
+SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib");
 SECTIONS
 {
   .text  :

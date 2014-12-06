@@ -1,7 +1,7 @@
 #include <aplus.h>
 #include <aplus/fs.h>
 #include <aplus/task.h>
-#include <aplus/bufio.h>
+#include <aplus/shm.h>
 
 #include <stdint.h>
 #include <unistd.h>
@@ -31,8 +31,13 @@ int ramdev_read(inode_t* ino, char* buf, int size) {
 	if(!size)
 		return 0;
 
-	bufio_seek(ino->userdata, ino->position, SEEK_SET);
-	size = bufio_read(ino->userdata, buf, size);
+	
+	if(shm_check_chunk(ino->userdata) < 0)
+		return 0;
+
+	shm_chunk_t* chunk = (shm_chunk_t*) ino->userdata;
+
+	memcpy(buf, (void*) (chunk->addr + ino->position), size);	
 	ino->position += size;
 	return size;
 }
@@ -56,8 +61,13 @@ int ramdev_write(inode_t* ino, char* buf, int size) {
 	if(!size)
 		return 0;
 
-	bufio_seek(ino->userdata, ino->position, SEEK_SET);
-	size = bufio_write(ino->userdata, buf, size);
+
+	if(shm_check_chunk(ino->userdata) < 0)
+		return 0;
+
+	shm_chunk_t* chunk = (shm_chunk_t*) ino->userdata;
+
+	memcpy((void*) (chunk->addr + ino->position), buf, size);	
 	ino->position += size;
 	return size;
 }
@@ -69,7 +79,7 @@ void ramdev_flush(inode_t* ino) {
 	if(!ino->userdata)
 		return;
 
-	bufio_free(ino->userdata);
+	shm_release_chunk(ino->userdata);
 }
 
 
@@ -84,9 +94,15 @@ inode_t* mkramdev(char* path, uint32_t addr, uint32_t size) {
 	ino->read = ramdev_read;
 	ino->write = ramdev_write;
 	ino->flush = ramdev_flush;
-	ino->userdata = (void*) bufio_alloc_raw((void*) addr, size);
 	ino->size = size;
 
+
+	void* shm;
+	if((shm = (void*) shm_acquire(path, (uint32_t*) &ino->size)) == NULL)
+		panic("Cannot acquire Shared Memory Space");
+
+
+	memcpy(shm, (void*) addr, size);
 	return ino;
 }
 

@@ -1,0 +1,9 @@
+ARCH		:= i686
+CP			:= cp
+RM			:= rm
+CC			:= $(ARCH)-aplus-gcc
+LD			:= $(ARCH)-aplus-gcc
+DLL			:= $(ARCH)-aplus-gcc -Wl,-mi386pe_aplus -Wl,--export-all-symbols -Wl,--dll -nostartfiles
+MOD			:= $(DLL)
+
+PREFIX		:= /opt/prj/aPlus/ramdisk

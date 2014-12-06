@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-/*#define DL_DEBUG*/
+#define DL_DEBUG
 
 
 

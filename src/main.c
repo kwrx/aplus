@@ -68,7 +68,6 @@ int main() {
 	syscall_init();
 	vfs_init();
 	schedule_init();
-	bufio_init();
 	pci_init();
 	tty_init();
 	netif_init();
@@ -95,16 +94,24 @@ int main() {
 	if(sys_mount(NULL, "/dev/proc", "procfs", 0, 0) != 0)
 		panic("procfs: cannot mount /dev/proc");
 
+	if(sys_mount(NULL, "/dev/tmp", "tmpfs", 0, 0) != 0)
+		panic("tmpfs: cannot mount /dev/tmp");
+
 	if(sys_symlink("/dev/proc", "/proc") != 0)
 		panic("procfs: cannot create link for /proc");
 
+	if(sys_symlink("/dev/tmp", "/tmp") != 0)
+		panic("tmpfs: cannot link for /tmp");
+
+
 	char* __argv[] = {
-		"/dev/ramdisk/main", 
+		"/dev/ramdisk/bin/init", 
 		NULL
 	};
 
+
 	char* __envp[] = {
-		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk",
+		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk/bin",
 		"SHELL=/bin/dash",
 		"USER=liveuser",
 		NULL

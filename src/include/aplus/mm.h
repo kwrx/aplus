@@ -24,7 +24,6 @@
 
 #include <stdint.h>
 #include <aplus.h>
-#include <aplus/task.h>
 
 
 /*
@@ -56,7 +55,7 @@
 
 
 #define BLKSIZE				0x1000
-#define BLKMAGIC			0x1234
+#define BLKMAGIC			0xF7A2
 
 
 

@@ -1,5 +1,6 @@
 /* Default linker script, for normal executables */
 OUTPUT_FORMAT(pei-i386)
+SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib");
 SECTIONS
 {
   /* Make the virtual address and file offset synced if the alignment is
