@@ -7,6 +7,8 @@
 #include <dlfcn.h>
 #include <string.h>
 
+#include <atk.h>
+
 #define MOD_PATH		"/dev/ramdisk/mod"
 
 static int initmod(void* dl) {
@@ -19,7 +21,7 @@ static int initmod(void* dl) {
 }
 
 int main(int argc, char** argv) {
-	DIR* d = opendir(MOD_PATH);
+	/*DIR* d = opendir(MOD_PATH);
 	assert(d);
 
 	struct dirent* ent;
@@ -36,7 +38,16 @@ int main(int argc, char** argv) {
 		exit(0);
 	}
 
-	closedir(d);
+	closedir(d);*/
+
+
+	atk_color_t clr = ATK_COLOR_WHITE;
+	clr[ATK_COLOR_A] = 0.1f;
+	atk_gfx_set(atk_gfx_create(800, 600, 32, 0xFD000000));
+	atk_gfx_fill_rectangle(atk_bitmap_from_framebuffer(), 100, 100, 300, 300, clr);
+	atk_gfx_fill_rectangle(atk_bitmap_from_framebuffer(), 200, 200, 300, 300, clr);
+
+	for(;;);
 
 	return 0;
 }

@@ -18,7 +18,7 @@ TSTDIR		:= test
 
 WARNINGS	:= -w
 
-CFLAGS		:= -O2 $(WARNINGS)
+CFLAGS		:= -Ofast -mfpmath=sse -msse2 $(WARNINGS)
 CXXFLAGS	:= -O2 $(WARNINGS)
 LDFLAGS		:=
 ARFLAGS		:=

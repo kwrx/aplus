@@ -162,7 +162,7 @@ void vmm_mapkernel(uint32_t* dest) {
 	vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT);
 
 	// Map Linear Frame Buffer
-	vmm_map(dest, (void*) 0xE0000000, (void*) 0xE0000000, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	vmm_map(dest, (void*) mbd->vbe_mode_info->physbase, (void*) mbd->vbe_mode_info->physbase, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 }
 
 

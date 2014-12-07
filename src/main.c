@@ -104,6 +104,9 @@ int main() {
 		panic("tmpfs: cannot link for /tmp");
 
 
+	kprintf("VRAM: 0x%x\n", mbd->vbe_mode_info->physbase);
+
+
 	char* __argv[] = {
 		"/dev/ramdisk/bin/init", 
 		NULL

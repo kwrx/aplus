@@ -6,6 +6,7 @@
 #endif
 
 
+#if 1
 typedef int atk_v2si __attribute__ ((vector_size(sizeof(int) * 2)));
 typedef int atk_v3si __attribute__ ((vector_size(sizeof(int) * 4)));
 typedef int atk_v4si __attribute__ ((vector_size(sizeof(int) * 4)));
@@ -13,6 +14,15 @@ typedef int atk_v4si __attribute__ ((vector_size(sizeof(int) * 4)));
 typedef float atk_v2f __attribute__ ((vector_size(sizeof(float) * 2)));
 typedef float atk_v3f __attribute__ ((vector_size(sizeof(float) * 4)));
 typedef float atk_v4f __attribute__ ((vector_size(sizeof(float) * 4)));
+#else
+typedef int atk_v2si[2];
+typedef int atk_v3si[3];
+typedef int atk_v4si[4];
+
+typedef float atk_v2f[2];
+typedef float atk_v3f[3];
+typedef float atk_v4f[4];
+#endif
 
 typedef atk_v4f atk_color_t;
 typedef atk_v4si atk_rect_t;

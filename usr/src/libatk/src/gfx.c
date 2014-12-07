@@ -9,25 +9,67 @@
 
 atk_gfx_t* __gfx;
 
-static void __gfx_plot_pixel_32(void* d, atk_color_t color) {
-	atk_color_t dc = ARGB_TO_V4F((*(uint32_t*) d));
-	atk_color_t df = __alphablend(dc, color, color[ATK_COLOR_A]);
+static void __gfx_plot_pixel_32(void* d, atk_color_t color, int width) {
+	if(color[ATK_COLOR_A] == 0.0)
+		return;
 
-	*(uint32_t*) d = V4F_TO_ARGB(df);
+	if(color[ATK_COLOR_A] == 1.0) {
+		uint32_t dd = V4F_TO_ARGB(color);
+
+		for(register int i = 0; i < width; i++)
+			((uint32_t*) d)[i] = dd;
+
+		return;
+	}
+
+	for(register int i = 0; i < width; i++) {
+		atk_color_t dc = ARGB_TO_V4F(((uint32_t*) d)[i]);
+		atk_color_t df = __alphablend(dc, color, color[ATK_COLOR_A]);
+
+		((uint32_t*) d)[i] = V4F_TO_ARGB(df);
+	}
 }
 
-static void __gfx_plot_pixel_24(void* d, atk_color_t color) {
-	atk_color_t dc = RGB_TO_V4F((*(uint32_t*) d));
-	atk_color_t df = __alphablend(dc, color, color[ATK_COLOR_A]);
+static void __gfx_plot_pixel_24(void* d, atk_color_t color, int width) {
+	if(color[ATK_COLOR_A] == 0.0)
+		return;
 
-	*(uint32_t*) d = V4F_TO_RGB(df);
+	if(color[ATK_COLOR_A] == 1.0) {
+		uint32_t dd = V4F_TO_RGB(color);
+
+		for(register int i = 0; i < width; i++)
+			((uint32_t*) d)[i] = dd;
+
+		return;
+	}
+
+	for(register int i = 0; i < width; i++) {
+		atk_color_t dc = RGB_TO_V4F(((uint32_t*) d)[i]);
+		atk_color_t df = __alphablend(dc, color, color[ATK_COLOR_A]);
+
+		((uint32_t*) d)[i] = V4F_TO_RGB(df);
+	}
 }
 
-static void __gfx_plot_pixel_16(void* d, atk_color_t color) {
-	atk_color_t dc = R5G6B5_TO_V4F((*(uint16_t*) d));
-	atk_color_t df = __alphablend(dc, color, color[ATK_COLOR_A]);
+static void __gfx_plot_pixel_16(void* d, atk_color_t color, int width) {
+	if(color[ATK_COLOR_A] == 0.0)
+		return;
 
-	*(uint16_t*) d = V4F_TO_R5G6B5(df);
+	if(color[ATK_COLOR_A] == 1.0) {
+		uint16_t dd = V4F_TO_R5G6B5(color);
+
+		for(register int i = 0; i < width; i++)
+			((uint16_t*) d)[i] = dd;
+
+		return;
+	}
+
+	for(register int i = 0; i < width; i++) {
+		atk_color_t dc = R5G6B5_TO_V4F(((uint16_t*) d)[i]);
+		atk_color_t df = __alphablend(dc, color, color[ATK_COLOR_A]);
+
+		((uint16_t*) d)[i] = V4F_TO_R5G6B5(df);
+	}
 }
 
 static atk_color_t __gfx_read_pixel_32(void* d) {
@@ -95,6 +137,31 @@ atk_gfx_t* atk_gfx_get() {
 
 
 
+int atk_gfx_clear(atk_bitmap_t* b, atk_color_t color) {
+	if(!b) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	color[ATK_COLOR_A] = 1.0f;
+	for(int p = (int) b->buffer, i = 0; i < b->size[ATK_SIZE_H]; i++, p += b->stride)
+		__gfx->__plot((void*) p, color, b->size[ATK_SIZE_W]);
+
+	return 0;
+}
+
+
+int atk_gfx_fill_rectangle(atk_bitmap_t* b, int x, int y, int w, int h, atk_color_t color) {
+	atk_rect_t region = { x, y, w, h };
+	void* buffer = atk_bitmap_lockbits(b, region, ATK_BITMAP_LOCK_RDWR);
+
+	int stride = w * (__gfx->bpp >> 3);
+	for(int p = (int) buffer, i = 0; i < h; i++, p += stride)
+		__gfx->__plot((void*) p, color, w);
+
+	atk_bitmap_unlockbits(b);
+}
+
 int atk_gfx_line(atk_bitmap_t* b, int x0, int y0, int x1, int y1, atk_color_t color) {
 
 	if(!b) {
@@ -131,7 +198,7 @@ int atk_gfx_line(atk_bitmap_t* b, int x0, int y0, int x1, int y1, atk_color_t co
 
 	for(;;) {
 		color[ATK_COLOR_A] = abs(e - dx + dy) / ed;
-		__gfx->__plot((void*) ((uint32_t) buffer + (y0 * stride) + (x0 * bpp)), color);
+		__gfx->__plot((void*) ((uint32_t) buffer + (y0 * stride) + (x0 * bpp)), color, 1);
 		
 		e2 = e;
 		x2 = x0;	
@@ -142,7 +209,7 @@ int atk_gfx_line(atk_bitmap_t* b, int x0, int y0, int x1, int y1, atk_color_t co
 
 			if(e2 + dy < ed) {
 				color[ATK_COLOR_A] = abs(e2 - dy) / ed;
-				__gfx->__plot((void*) ((uint32_t) buffer + ((y0 + sy) * stride) + (x0 * bpp)), color);		
+				__gfx->__plot((void*) ((uint32_t) buffer + ((y0 + sy) * stride) + (x0 * bpp)), color, 1);		
 			}
 
 			e -= dy;
@@ -155,7 +222,7 @@ int atk_gfx_line(atk_bitmap_t* b, int x0, int y0, int x1, int y1, atk_color_t co
 
 			if(dx - e2 < ed) {
 				color[ATK_COLOR_A] = abs(dx - e2) / ed;
-				__gfx->__plot((void*) ((uint32_t) buffer + (y0 * stride) + ((x2 + sx) * bpp)), color);		
+				__gfx->__plot((void*) ((uint32_t) buffer + (y0 * stride) + ((x2 + sx) * bpp)), color, 1);		
 			}
 
 			e += dx;

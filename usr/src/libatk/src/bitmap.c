@@ -44,7 +44,21 @@ atk_bitmap_t* atk_bitmap_create(uint16_t width, uint16_t height) {
 		return NULL;
 	}
 
-	return atk_create_bitmap_for_data(width, height, data);
+	return atk_bitmap_create_for_data(width, height, data);
+}
+
+
+atk_bitmap_t* atk_bitmap_from_framebuffer() {
+	static atk_bitmap_t b;
+	memset(&b, 0, sizeof(atk_bitmap_t));
+
+	b.size[ATK_SIZE_W] = __gfx->width;
+	b.size[ATK_SIZE_H] = __gfx->height;
+	b.stride = __gfx->width * (__gfx->bpp / 8);
+	b.lock = 0;
+	b.buffer = __gfx->framebuffer;
+
+	return &b;
 }
 
 int atk_destroy_bitmap(atk_bitmap_t* b) {
@@ -114,7 +128,7 @@ void atk_bitmap_unlockbits(atk_bitmap_t* b) {
 
 		int stride = b->__lockdata.region[ATK_RECT_W] * (__gfx->bpp >> 3);
 
-		for(register int i = 0,
+		for( int i = 0,
 						 s = 0, 
 						 p = (b->stride * b->__lockdata.region[ATK_RECT_Y]) + (b->__lockdata.region[ATK_RECT_X] * (__gfx->bpp >> 3));
 				i < b->__lockdata.region[ATK_RECT_H];

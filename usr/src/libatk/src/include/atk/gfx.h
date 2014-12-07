@@ -12,7 +12,7 @@ typedef struct atk_gfx {
 	
 	void* framebuffer;
 
-	void (*__plot) (void*, atk_color_t);
+	void (*__plot) (void*, atk_color_t, int);
 	atk_color_t (*__get) (void*);
 } atk_gfx_t;
 
