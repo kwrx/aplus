@@ -50,7 +50,7 @@ extern task_t* current_task;
  *	\brief Put Kernel Task in optimized loop for powersave.
  */
 static void sysidle() {
-	schedule_setpriority(TASK_PRIORITY_LOW);
+	schedule_setpriority(TASK_PRIORITY_MIN);
 
 
 	for(;;)
@@ -120,11 +120,13 @@ int main() {
 		NULL
 	};
 
+
+task_clone(sysidle, NULL, NULL, 0xFF);
 	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 
 	
-	sysidle();
+	
 }
 
 

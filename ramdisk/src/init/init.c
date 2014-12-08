@@ -47,7 +47,8 @@ int main(int argc, char** argv) {
 	atk_gfx_fill_rectangle(atk_bitmap_from_framebuffer(), 100, 100, 300, 300, clr);
 	atk_gfx_fill_rectangle(atk_bitmap_from_framebuffer(), 200, 200, 300, 300, clr);
 
-	for(;;);
+	for(;;) 
+		sched_yield();
 
 	return 0;
 }

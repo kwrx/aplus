@@ -10,6 +10,7 @@
 __asm__ (
 	".global task_context_switch		\n"
 	"task_context_switch:				\n"
+	"	cli								\n"
 	"	push ebp						\n"
 	"	mov ebp, esp					\n"
 	"	pushf							\n"
@@ -134,9 +135,20 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 
 
 void task_switch(task_t* newtask) {
-	
+
+	__asm__("cli");
+
 	task_t* old = current_task;
 	current_task = newtask;
+
+#ifdef SCHED_TIMING_DEBUG
+	if(current_task->timing_tm != sys_time(NULL)) {
+		current_task->timing_tm = sys_time(NULL);
+
+		kprintf("task: [%d] %d %%\n", current_task->pid, (current_task->clock - current_task->timing_last_clock) / 10);
+		current_task->timing_last_clock = current_task->clock;
+	}
+#endif
 
 	vmm_switch(current_task->context.cr3);
 

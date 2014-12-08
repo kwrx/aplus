@@ -129,7 +129,11 @@ typedef struct task {
 	uint32_t priority;
 	uint32_t clock;
 	int exitcode;
-	
+
+#ifdef SCHED_TIMING_DEBUG
+	uint32_t timing_last_clock;
+	uint32_t timing_tm;
+#endif
 	
 	struct task* parent;
 } task_t;
