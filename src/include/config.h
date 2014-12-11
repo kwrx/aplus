@@ -12,7 +12,9 @@
 //#define SCHED_TIMING_DEBUG
 #define SHM_DEBUG
 
-#define CHUNKS_CHECKING
+#define CHUNKS_CHECKING				1
 
+
+#define HAVE_SSE					1
 
 #endif

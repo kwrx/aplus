@@ -53,7 +53,7 @@ inode_t* iso9660_finddir(inode_t* ino, char* name) {
 			return 0;
 		}
 
-		char* nodename = (char*) kmalloc(nodes->idlen);
+		char* nodename = (char*) kmalloc(ISO9660_NAME_LENGTH);
 		memset(nodename, 0, nodes->idlen);
 
 		strncpy(nodename, nodes->reserved, nodes->idlen);

@@ -108,9 +108,7 @@ void* kmalloc(size_t size)
 #endif
 {
 
-	size += sizeof(block_t);
-
-	void* addr = (void*) halloc(current_heap, size);
+	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
 	if(!addr)
 		panic("halloc(): failed!");
 
@@ -135,7 +133,7 @@ void* kmalloc(size_t size)
 
 
 void* kvmalloc(size_t size) {
-	void* addr = (void*) halloc(current_heap, size);
+	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
 	if(!addr)
 		panic("halloc(): failed!");
 
@@ -149,6 +147,10 @@ void* kvmalloc(size_t size) {
  * 	\param ptr Pointer to data allocated.
  */
 void kfree(void* ptr) {
+#ifdef CHUNKS_CHECKING
+	__check_all_chunks_overflow();
+#endif
+
 	if(!ptr)
 		return;
 		
@@ -169,7 +171,7 @@ void kfree(void* ptr) {
 	block->line = 0;
 #endif
 	
-	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+	hfree(current_heap, mm_paddr(mm_align(ptr)), size + sizeof(block_t));
 }
 
 

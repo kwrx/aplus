@@ -81,6 +81,7 @@ int _EXFUN(utimes, (const char *__path, const struct timeval *__tvp));
 int _EXFUN(getitimer, (int __which, struct itimerval *__value));
 int _EXFUN(setitimer, (int __which, const struct itimerval *__restrict __value,
 					struct itimerval *__restrict __ovalue));
+int _EXFUN(nanosleep, (const struct timespec* req, struct timespec* rem));
 
 #ifdef __cplusplus
 }

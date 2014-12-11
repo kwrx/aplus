@@ -1,0 +1,26 @@
+SHELL	:= /bin/bash
+PATH	:= /opt/cross/usr/bin:$(PATH)
+
+TARGET		:= i686-aplus
+PREFIX		:= /usr
+PREFIX2		:= /usr/$(TARGET)
+OUTPUT		:= librt.a
+
+SYSROOT		:= /opt/cross
+
+PACKAGE		:= librt
+VERSION		:= 1.0.0
+
+SRCDIR		:= src
+TSTDIR		:= test
+
+
+
+WARNINGS	:= -w
+
+CFLAGS		:= -O2 $(WARNINGS)
+CXXFLAGS	:= -O2 $(WARNINGS)
+LDFLAGS		:=
+ARFLAGS		:=
+
+

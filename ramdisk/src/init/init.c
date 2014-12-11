@@ -8,6 +8,12 @@
 #include <string.h>
 
 #include <atk.h>
+#include <atk/bitmap.h>
+
+#include <cairo/cairo.h>
+
+#include <png.h>
+
 
 #define MOD_PATH		"/dev/ramdisk/mod"
 
@@ -19,6 +25,19 @@ static int initmod(void* dl) {
 	init();
 	return 0;
 }
+
+static void readpng(png_structp png, void* buf, int size) {
+	int fd = png_get_io_ptr(png);
+	read(fd, buf, size);
+}
+
+#define RGB_TO_V4F(c)							\
+	{											\
+		((float) ((c >> 24) & 0xFF)) / 0xFF,	\
+		((float) ((c >> 16) & 0xFF)) / 0xFF,	\
+		((float) ((c >> 8) & 0xFF)) / 0xFF,		\
+		((float) (c & 0xFF)) / 0xFF				\
+	}
 
 int main(int argc, char** argv) {
 	/*DIR* d = opendir(MOD_PATH);
@@ -41,11 +60,13 @@ int main(int argc, char** argv) {
 	closedir(d);*/
 
 
-	atk_color_t clr = ATK_COLOR_WHITE;
-	clr[ATK_COLOR_A] = 0.1f;
-	atk_gfx_set(atk_gfx_create(800, 600, 32, 0xFD000000));
-	atk_gfx_fill_rectangle(atk_bitmap_from_framebuffer(), 100, 100, 300, 300, clr);
-	atk_gfx_fill_rectangle(atk_bitmap_from_framebuffer(), 200, 200, 300, 300, clr);
+	cairo_surface_t* surface = cairo_image_surface_create_for_data(0xFD000000, CAIRO_FORMAT_ARGB32, 800, 600, 800 * 4);
+	cairo_t* cr = cairo_create(surface);
+
+	cairo_set_line_width(cr, 0.1);
+	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	cairo_rectangle(cr, 0.25, 0.25, 0.5, 0.5);
+	cairo_stroke(cr); 
 
 	for(;;) 
 		sched_yield();

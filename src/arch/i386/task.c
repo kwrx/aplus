@@ -7,6 +7,10 @@
 
 #include <setjmp.h>
 
+#if HAVE_SSE
+#define SSE_ALIGN(x)	(((uint32_t) x & 0x10) + 0x10)
+#endif
+
 __asm__ (
 	".global task_context_switch		\n"
 	"task_context_switch:				\n"
@@ -51,6 +55,7 @@ extern void task_context_switch(task_env_t** old, task_env_t** new);
 void task_switch_ack() {
 	outb(0x20, 0x20);
 }
+
 
 task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	if(entry == NULL)
@@ -145,13 +150,17 @@ void task_switch(task_t* newtask) {
 	if(current_task->timing_tm != sys_time(NULL)) {
 		current_task->timing_tm = sys_time(NULL);
 
-		kprintf("task: [%d] %d %%\n", current_task->pid, (current_task->clock - current_task->timing_last_clock) / 10);
+		kprintf("task: [%d] %d %%\n", current_task->pid, (current_task->clock - current_task->timing_last_clock) / CLOCKS_PER_SEC * 100);
 		current_task->timing_last_clock = current_task->clock;
 	}
 #endif
 
 	vmm_switch(current_task->context.cr3);
-
+	
+#if HAVE_SSE
+	__asm__ ("fxsave [eax]" : : "a"(SSE_ALIGN(old->context.fpu)));
+	__asm__ ("fxrstor [eax]" : : "a"(SSE_ALIGN(current_task->context.fpu)));
+#endif
 
 	task_switch_ack();
 	task_context_switch(&old->context.env, &current_task->context.env);

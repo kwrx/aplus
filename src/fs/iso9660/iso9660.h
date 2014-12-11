@@ -26,6 +26,8 @@
 #define ISO9660_FLAGS_EXTFLAGS					(1 << 4)
 #define ISO9660_FLAGS_NOTLAST					(1 << 7)
 
+#define ISO9660_NAME_LENGTH						(1024)
+
 typedef struct iso9660_volume_descriptor {
 	int8_t type;
 	char id[5];

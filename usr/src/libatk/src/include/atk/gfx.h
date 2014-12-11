@@ -2,6 +2,7 @@
 #define _ATK_GFX_H
 
 #include <atk.h>
+#include <atk/bitmap.h>
 #include <stdint.h>
 
 typedef struct atk_gfx {
@@ -14,6 +15,13 @@ typedef struct atk_gfx {
 
 	void (*__plot) (void*, atk_color_t, int);
 	atk_color_t (*__get) (void*);
+
+
+	struct {
+		atk_bitmap_t* bitmap;
+		atk_mask_t* mask;
+		atk_color_t color;
+	} __c;
 } atk_gfx_t;
 
 #endif

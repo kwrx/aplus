@@ -58,6 +58,9 @@ struct sched_param {
 #endif
 };
 
+
+void sched_yield();
+
 #ifdef __cplusplus
 }
 #endif

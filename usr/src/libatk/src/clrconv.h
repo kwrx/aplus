@@ -3,6 +3,7 @@
 
 #include <atk.h>
 #include <stdint.h>
+#include <assert.h>
 
 /*
  *
@@ -60,6 +61,16 @@
 
 
 
+#define __SWAP(x, y)		\
+	{						\
+		x ^= y;				\
+		y ^= x;				\
+		x ^= y;				\
+	}
+
+#define __CLAMP(x)					\
+		x = x > 1.0f ? 1.0f - x : x
+
 
 static inline atk_color_t __alphablend(atk_color_t d, atk_color_t s, float a) {
 	if(a == 0.0f)
@@ -69,24 +80,17 @@ static inline atk_color_t __alphablend(atk_color_t d, atk_color_t s, float a) {
 		return s;
 
 	float ia = 1.0f - a;
-	
+
 	atk_color_t r = ATK_COLOR_BLACK;
 	r[ATK_COLOR_A] = 1.0f;
-	r[ATK_COLOR_R] = (s[ATK_COLOR_R] * a + d[ATK_COLOR_R] * ia);
-	r[ATK_COLOR_G] = (s[ATK_COLOR_G] * a + d[ATK_COLOR_G] * ia);
-	r[ATK_COLOR_B] = (s[ATK_COLOR_B] * a + d[ATK_COLOR_B] * ia);
+	r[ATK_COLOR_R] = a * (s[ATK_COLOR_R] - d[ATK_COLOR_R]) + d[ATK_COLOR_R]; 
+	r[ATK_COLOR_G] = a * (s[ATK_COLOR_G] - d[ATK_COLOR_G]) + d[ATK_COLOR_G]; 
+	r[ATK_COLOR_B] = a * (s[ATK_COLOR_B] - d[ATK_COLOR_B]) + d[ATK_COLOR_B];
 	
-
 	return r;
 }
 
 
-#define __SWAP(x, y)		\
-	{						\
-		x ^= y;				\
-		y ^= x;				\
-		x ^= y;				\
-	}
 
 
 #endif

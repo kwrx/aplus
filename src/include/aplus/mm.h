@@ -27,8 +27,7 @@
 
 
 /*
- * 0x00000000 - 0x00800000:		Kernel Reserved
- * 0x00800000 - 0x00A00000:		Not available
+ * 0x00000000 - 0x00A00000:		Kernel Reserved
  * 0x00A00000 - 0x40000000: 	User executable
  * 0x40000000 - 0xE0000000:		Kernel Heap
  * 0xE0000000 - 0xF0000000;		Linear Frame Buffer (User)
@@ -61,8 +60,8 @@
 
 typedef struct heap {
 	uint32_t* bitmap;
-	uint32_t size;
-	uint32_t used;
+	uint64_t size;
+	uint64_t used;
 	
 	void* (*alloc) (struct heap*, size_t);
 	void (*free) (struct heap*, void*, size_t);

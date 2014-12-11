@@ -142,8 +142,8 @@ int kheap_init() {
 	
 	mm_setheap(&kheap);
 	
-	// Alloc first 4MB (reserved physical kernel area)
-	halloc(&kheap, (size_t) 0x400000);
+	// Alloc first 6MB (reserved physical kernel area)
+	halloc(&kheap, (size_t) 0x800000);
 	
 
 	return 0;

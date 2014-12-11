@@ -121,12 +121,13 @@ int main() {
 	};
 
 
-task_clone(sysidle, NULL, NULL, 0xFF);
+
+	task_clone(sysidle, NULL, NULL, 0xFF);
+
+
 	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 
-	
-	
 }
 
 

@@ -97,8 +97,10 @@ typedef struct task {
 	struct {
 		task_env_t* env;
 		uint32_t stack;
-
 		uint32_t cr3;
+#if HAVE_SSE
+		uint8_t fpu[1024];
+#endif
 		pid_t owner;
 	} context;
 

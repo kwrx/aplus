@@ -4,7 +4,7 @@ O 	:= init
 
 all: $(O)
 $(O):
-	$(CC) -O2 -mfpmath=sse -msse2 *.c -o $@ -ldl -latk -lposix -lm
+	$(CC) -s -w -O2 -msse2 -mfpmath=sse *.c -o $@ -ldl -lcairo -lpixman-1 -latk -lpng -lz -lposix -lm
 
 clean:
 	-$(RM) $(O)
